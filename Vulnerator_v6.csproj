@@ -355,6 +355,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="readme.md" />
     <Resource Include="Resources\U_CCI_List.xml" />
   </ItemGroup>
   <ItemGroup>
