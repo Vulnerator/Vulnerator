@@ -1,0 +1,216 @@
+﻿using System;
+using System.Data.SQLite;
+using System.IO;
+
+namespace Vulnerator.Model
+{
+    public class FindingsDatabaseActions
+    {
+        private static string findingsDatabaseFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        private static string findingsDatabaseFile = findingsDatabaseFilePath + @"\Vulnerator\Findings.sqlite";
+        public static string findingsDatabaseConnection = @"Data Source = " + findingsDatabaseFilePath + @"\Vulnerator\Findings.sqlite; Version=3;";
+        public static SQLiteConnection sqliteConnection = new SQLiteConnection(findingsDatabaseConnection);
+        public SQLiteTransaction sqLiteTransaction;
+
+        public FindingsDatabaseActions()
+        {
+            CreateFindingsDatabase();
+        }
+
+        private void CreateFindingsDatabase()
+        {
+            if (File.Exists(findingsDatabaseFile) && !findingsDatabaseFile.IsFileInUse())
+            { File.Delete(findingsDatabaseFile); }
+            SQLiteConnection.CreateFile(findingsDatabaseFile);
+            sqliteConnection.Open();
+            using (SQLiteCommand sqliteCommand = new SQLiteCommand("", sqliteConnection))
+            {
+                CreateScapScoresTable(sqliteCommand);
+                CreateAssetsTable(sqliteCommand);
+                CreateFileNamesTable(sqliteCommand);
+                CreateVulnerabilityTable(sqliteCommand);
+                CreateUniqueFindingTable(sqliteCommand);
+                CreateGroupsTable(sqliteCommand);
+                CreateFindingTypesTable(sqliteCommand);
+                CreateVulnerabilitySourcesTable(sqliteCommand);
+                CreateFindingStatusTable(sqliteCommand);
+                InsertFindingTypes(sqliteCommand);
+                InsertFindingStatuses(sqliteCommand);
+                InsertAcasVulnerabilitySource(sqliteCommand);
+            }
+        }
+
+        public void RefreshFindingsDatabase()
+        {
+            using (SQLiteCommand sqliteCommand = new SQLiteCommand("", sqliteConnection))
+            {
+                sqliteCommand.CommandText = "SELECT COUNT(*) FROM Assets;";
+                if (Convert.ToInt32(sqliteCommand.ExecuteScalar()) >= 1)
+                {
+                    DropFindingsDatabaseTableIndex(sqliteCommand);
+                    DropFindingsDatabaseTables(sqliteCommand);
+                    CreateScapScoresTable(sqliteCommand);
+                    CreateAssetsTable(sqliteCommand);
+                    CreateFileNamesTable(sqliteCommand);
+                    CreateVulnerabilityTable(sqliteCommand);
+                    CreateUniqueFindingTable(sqliteCommand);
+                    CreateGroupsTable(sqliteCommand);
+                    CreateFindingTypesTable(sqliteCommand);
+                    CreateVulnerabilitySourcesTable(sqliteCommand);
+                    CreateFindingStatusTable(sqliteCommand);
+                    InsertFindingTypes(sqliteCommand);
+                    InsertFindingStatuses(sqliteCommand);
+                    InsertAcasVulnerabilitySource(sqliteCommand);
+                }
+            }
+        }
+
+        private void CreateScapScoresTable(SQLiteCommand sqliteCommand)
+        {
+            sqliteCommand.CommandText = "CREATE TABLE ScapScores (" +
+                "ScapScore INTEGER, AssetIndex INTEGER, SourceIndex INTEGER);";
+            sqliteCommand.ExecuteNonQuery();
+        }
+
+        private void CreateAssetsTable(SQLiteCommand sqliteCommand)
+        {
+            sqliteCommand.CommandText = "CREATE TABLE Assets (" +
+                "AssetIndex INTEGER PRIMARY KEY, AssetIdToReport TEXT UNIQUE ON CONFLICT IGNORE, " +
+                "HostName TEXT, IpAddress TEXT, OperatingSystem TEXT, IsCredentialed TEXT, " +
+                "Found21745 TEXT, Found26917 TEXT, GroupIndex INTEGER NOT NULL, " +
+                "FOREIGN KEY(GroupIndex) REFERENCES Groups(GroupIndex) ON UPDATE CASCADE);";
+            sqliteCommand.ExecuteNonQuery();
+        }
+
+        private void CreateFileNamesTable(SQLiteCommand sqliteCommand)
+        {
+            sqliteCommand.CommandText = "CREATE TABLE FileNames (" +
+                "FileNameIndex INTEGER PRIMARY KEY, FileName TEXT UNIQUE ON CONFLICT IGNORE);";
+            sqliteCommand.ExecuteNonQuery();
+        }
+
+        private void CreateVulnerabilitySourcesTable(SQLiteCommand sqliteCommand)
+        {
+            sqliteCommand.CommandText = "CREATE TABLE VulnerabilitySources (" +
+                "SourceIndex INTEGER PRIMARY KEY, Source TEXT UNIQUE ON CONFLICT IGNORE);";
+            sqliteCommand.ExecuteNonQuery();
+        }
+
+        private void CreateVulnerabilityTable(SQLiteCommand sqliteCommand)
+        {
+            sqliteCommand.CommandText = "CREATE TABLE Vulnerability (" +
+                "VulnerabilityIndex INTEGER PRIMARY KEY, VulnId TEXT, " +
+                "VulnTitle TEXT, Description TEXT, RiskStatement TEXT, IaControl TEXT, " +
+                "CciReference TEXT, CPEs TEXT, CrossReferences TEXT, " +
+                "IavmNumber TEXT, FixText TEXT, PluginPublishedDate TEXT, " +
+                "PluginModifiedDate TEXT, PatchPublishedDate TEXT, Age TEXT, " +
+                "RawRisk TEXT, Impact TEXT, RuleId TEXT UNIQUE ON CONFLICT IGNORE);";
+            sqliteCommand.ExecuteNonQuery();
+        }
+
+        private void CreateUniqueFindingTable(SQLiteCommand sqliteCommand)
+        {
+            sqliteCommand.CommandText = "CREATE TABLE UniqueFinding (" +
+                "Comments TEXT, FindingDetails TEXT, PluginOutput TEXT, LastObserved TEXT, " +
+                "FindingTypeIndex INTEGER NOT NULL, SourceIndex INTEGER NOT NULL, " +
+                "FileNameIndex INTEGER NOT NULL, VulnerabilityIndex INTEGER NOT NULL, " +
+                "StatusIndex INTEGER NOT NULL, AssetIndex INTEGER NOT NULL, " +
+                "FOREIGN KEY(FindingTypeIndex) REFERENCES FindingTypes(FindingTypeIndex) ON UPDATE CASCADE, " +
+                "FOREIGN KEY(SourceIndex) REFERENCES VulnerabilitySources(SourceIndex) ON UPDATE CASCADE, " +
+                "FOREIGN KEY(FileNameIndex) REFERENCES FileNames(FileNameIndex) ON UPDATE CASCADE, " +
+                "FOREIGN KEY(VulnerabilityIndex) REFERENCES Vulnerability(VulnerabilityIndex) ON UPDATE CASCADE, " +
+                "FOREIGN KEY(StatusIndex) REFERENCES FindingStatuses(StatusIndex) ON UPDATE CASCADE, " +
+                "FOREIGN KEY(AssetIndex) REFERENCES FindingStatuses(AssetIndex) ON UPDATE CASCADE);";
+            sqliteCommand.ExecuteNonQuery();
+        }
+
+        private void CreateGroupsTable(SQLiteCommand sqliteCommand)
+        {
+            sqliteCommand.CommandText = "CREATE TABLE Groups (" +
+                "GroupIndex INTEGER PRIMARY KEY, GroupName TEXT UNIQUE ON CONFLICT IGNORE);";
+            sqliteCommand.ExecuteNonQuery();
+        }
+
+        private void CreateFindingTypesTable(SQLiteCommand sqliteCommand)
+        {
+            sqliteCommand.CommandText = "CREATE TABLE FindingTypes (" +
+                 "FindingTypeIndex INTEGER PRIMARY KEY, FindingType TEXT UNIQUE ON CONFLICT IGNORE);";
+            sqliteCommand.ExecuteNonQuery();
+        }
+
+        private void CreateFindingStatusTable(SQLiteCommand sqliteCommand)
+        {
+            sqliteCommand.CommandText = "CREATE TABLE FindingStatuses (" +
+                "StatusIndex INTEGER PRIMARY KEY, Status TEXT UNIQUE ON CONFLICT IGNORE);";
+            sqliteCommand.ExecuteNonQuery();
+        }
+
+        private void InsertFindingTypes(SQLiteCommand sqliteCommand)
+        {
+            sqliteCommand.CommandText = "INSERT INTO FindingTypes VALUES (NULL, 'ACAS'); " +
+                "INSERT INTO FindingTypes VALUES (NULL, 'CKL');" +
+                "INSERT INTO FindingTypes VALUES (NULL, 'XCCDF');" +
+                "INSERT INTO FindingTypes VALUES (NULL, 'WASSP');";
+            sqliteCommand.ExecuteNonQuery();
+        }
+
+        private void InsertFindingStatuses(SQLiteCommand sqliteCommand)
+        {
+            sqliteCommand.CommandText = "INSERT INTO FindingStatuses VALUES (NULL, 'Ongoing');" +
+                "INSERT INTO FindingStatuses VALUES (NULL, 'Not Reviewed');" +
+                "INSERT INTO FindingStatuses VALUES (NULL, 'Not Applicable');" +
+                "INSERT INTO FindingStatuses VALUES (NULL, 'Completed');";
+            sqliteCommand.ExecuteNonQuery();
+        }
+
+        private void InsertAcasVulnerabilitySource(SQLiteCommand sqliteCommand)
+        {
+            sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources VALUES (" +
+                "NULL, 'Assured Compliance Assessment Solution (ACAS)')";
+            sqliteCommand.ExecuteNonQuery();
+        }
+
+        private void DropFindingsDatabaseTableIndex(SQLiteCommand sqliteCommand)
+        {
+            sqliteCommand.CommandText = "DROP INDEX IF EXISTS Assets.index_asset; " +
+                "DROP INDEX IF EXISTS Vulnerability.index_vulnid; " +
+                "DROP INDEX IF EXISTS Vulnerability.index_impact; " +
+                "DROP INDEX IF EXISTS Vulnerability.index_rawrisk;";
+            sqliteCommand.ExecuteNonQuery();
+        }
+
+        private void DropFindingsDatabaseTables(SQLiteCommand sqliteCommand)
+        {
+            sqliteCommand.CommandText = "DROP TABLE IF EXISTS UniqueFinding; " +
+                "DROP TABLE IF EXISTS ScapScores; " +
+                "DROP TABLE IF EXISTS Assets; " +
+                "DROP TABLE IF EXISTS Groups; " +
+                "DROP TABLE IF EXISTS FileNames; " +
+                "DROP TABLE IF EXISTS Vulnerability; " +
+                "DROP TABLE IF EXISTS FindingTypes; " +
+                "DROP TABLE IF EXISTS FindingStatuses; " +
+                "DROP TABLE IF EXISTS VulnerabilitySources;";
+            sqliteCommand.ExecuteNonQuery();
+        }
+
+        public void DeleteFindingsDatabase()
+        {
+            if (sqliteConnection.State.ToString().Equals("Open"))
+            { sqliteConnection.Close(); }
+            File.Delete(findingsDatabaseFile);
+        }
+
+        public void IndexDatabase()
+        {
+            using (SQLiteCommand sqlitecommand = sqliteConnection.CreateCommand())
+            {
+                string indexAsset = "CREATE INDEX index_asset ON Assets (AssetIdToReport);";
+                string indexVulnerability = "CREATE INDEX index_vulnid ON Vulnerability (VulnId);";
+                string indexImpact = "CREATE INDEX index_impact ON Vulnerability (Impact);";
+                string indexRawRisk = "CREATE INDEX index_rawrisk ON Vulnerability (RawRisk);";
+                sqlitecommand.CommandText = indexAsset + indexVulnerability + indexImpact + indexRawRisk;
+                sqlitecommand.ExecuteNonQuery();
+            }
+        }
+    }
+}
