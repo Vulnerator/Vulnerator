@@ -1,56 +1,274 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="The official distribution of the vulnerability parsing utility.">
+        <meta name="author" content="Alex Kuchta">
+        <link rel="icon" href="">
+        <title>Vulnerator</title>
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+        <!-- Bootstrap core CSS -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="css/jumbotron.css" rel="stylesheet">
+        <link href="css/styles.css" rel="stylesheet">
+        <link href="font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet">
 
-    <title>Vulnerator by Vulnerator</title>
-  </head>
+        <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+        <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+        <script src="js/ie-emulation-modes-warning.js"></script>
+        <script src="https://use.typekit.net/lcg5gtk.js"></script>
+        <script>try{Typekit.load({ async: true });}catch(e){}</script>
 
-  <body>
-    <header>
-      <div class="inner">
-        <h1>Vulnerator</h1>
-        <h2>The official distribution of the vulnerability parsing utility.</h2>
-        <a href="https://github.com/Vulnerator/Vulnerator" class="button"><small>View project on</small> GitHub</a>
-      </div>
-    </header>
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <!-- Main jumbotron for a primary marketing message or call to action -->
+        <div class="jumbotron">
+            <div class="container">
+                <table class="headerTable">
+                    <tr>
+                        <td><h1 class="whiteText">Vulnerator</h1></td>
+                        <td class="rightAlignedTableCell" rowspan="2">
+                            <a href="https://github.com/Vulnerator/Vulnerator" class="btn btn-primary btn-lg hidden-xs" id="githubButton" target="_blank">
+                                <table>
+                                    <tr>
+                                        <td rowspan="2"><i class="fa fa-github-alt fa-3x" aria-hidden="true"></i></td>
+                                        <td class="leftAlignedTableCell"><small>View project on</small></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="leftAlignedTableCell">GitHub</td>
+                                    </tr>
+                                </table>
+                            </a>
+                            <p class="emphaticText" id="pulseParagraph"></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><p class="emphaticText">The official distribution of the vulnerability parsing utility.</p></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3 col-md-2 hidden-xs"> <!-- Large Screen Download Buttons -->
+                    <a href="https://github.com/Vulnerator/Vulnerator/releases/latest" class="btn btn-primary btn-lg" target="_blank">
+                        <table>
+                            <tr>
+                                <td rowspan="2"><i class="fa fa-windows fa-2x" aria-hidden="true"></i></td>
+                                <td class="leftAlignedTableCell"><small>Get the latest</small></td>
+                            </tr>
+                            <tr>
+                                <td class="leftAlignedTableCell">Release</td>
+                            </tr>
+                        </table>
+                    </a>
+                    <a href="https://github.com/Vulnerator/Vulnerator/zipball/master" class="btn btn-primary btn-lg">
+                        <table>
+                            <tr>
+                                <td rowspan="2"><i class="fa fa-file-archive-o fa-2x" aria-hidden="true"></i></td>
+                                <td class="leftAlignedTableCell"><small>Get the source</small></td>
+                            </tr>
+                            <tr>
+                                <td class="leftAlignedTableCell">.zip file</td>
+                            </tr>
+                        </table>
+                    </a>
+                    <a href="https://github.com/Vulnerator/Vulnerator/tarball/master" class="btn btn-primary btn-lg">
+                        <table>
+                            <tr>
+                                <td rowspan="2"><i class="fa fa-file-archive-o fa-2x" aria-hidden="true"></i></td>
+                                <td class="leftAlignedTableCell"><small>Get the source</small></td>
+                            </tr>
+                            <tr>
+                                <td class="leftAlignedTableCell">.tar.gz file</td>
+                            </tr>
+                        </table>
+                    </a>
+                </div> <!-- /Large Screen Download Buttons -->
+                <div class="col-xs-12 visible-xs-block text-center"> <!-- Small Screen Download Buttons -->
+                    <a href="https://github.com/Vulnerator/Vulnerator/releases/latest" class="btn btn-primary btn-lg" target="_blank">
+                        <table>
+                            <tr>
+                                <td rowspan="2"><i class="fa fa-windows fa-2x" aria-hidden="true"></i></td>
+                                <td class="leftAlignedTableCell"><small>Get the latest</small></td>
+                            </tr>
+                            <tr>
+                                <td class="leftAlignedTableCell">Release</td>
+                            </tr>
+                        </table>
+                    </a>
+                    <a href="https://github.com/Vulnerator/Vulnerator/zipball/master" class="btn btn-primary btn-lg">
+                        <table>
+                            <tr>
+                                <td rowspan="2"><i class="fa fa-file-archive-o fa-2x" aria-hidden="true"></i></td>
+                                <td class="leftAlignedTableCell"><small>Get the source</small></td>
+                            </tr>
+                            <tr>
+                                <td class="leftAlignedTableCell">.zip file</td>
+                            </tr>
+                        </table>
+                    </a>
+                    <a href="https://github.com/Vulnerator/Vulnerator/tarball/master" class="btn btn-primary btn-lg">
+                        <table>
+                            <tr>
+                                <td rowspan="2"><i class="fa fa-file-archive-o fa-2x" aria-hidden="true"></i></td>
+                                <td class="leftAlignedTableCell"><small>Get the source</small></td>
+                            </tr>
+                            <tr>
+                                <td class="leftAlignedTableCell">.tar.gz file</td>
+                            </tr>
+                        </table>
+                    </a>
+                    <a href="https://github.com/Vulnerator/Vulnerator" class="btn btn-primary btn-lg" target="_blank">
+                        <table>
+                            <tr>
+                                <td rowspan="2"><i class="fa fa-github-alt fa-2x" aria-hidden="true"></i></td>
+                                <td class="leftAlignedTableCell"><small>View project</small></td>
+                            </tr>
+                            <tr>
+                                <td class="leftAlignedTableCell"><small>on</small> GitHub</td>
+                            </tr>
+                        </table>
+                    </a>
+                </div> <!-- /Small Screen Download Buttons -->
+                <div class="col-xs-12 col-sm-6 col-md-7"> <!-- Main Body Content -->
+                    <h2><span class="emphaticText">//</span> Get Started</h2>
+                    <p>To begin, please select a download option to the left:</p>
+                    <ul>
+                        <li><strong>Release: </strong> The latest compiled version of the software - unless you are a coder or want to review the source for the application, this is the button for you.</li>
+                        <li><strong>.zip: </strong> A compressed folder containing the latest source for the application<sup>1</sup></li>
+                        <li><strong>.tar.gz: </strong> A compressed folder containing the latest source for the application<sup>1</sup></li>
+                    </ul>
+                    <hr class="featurette-divider">
+                    <p class="text-muted">
+                        <sup>1</sup>If you are interested in viewing the source (or contributing), we recommend forking the repository on GitHub
+                    </p>
+                    <hr class="featurette-divider">
+                    <h2><span class="emphaticText">//</span> Using the Release</h2>
+                    <p>
+                        Once you have downloaded the latest release file, unzip the contents into a folder<sup>2</sup>.  It is important that you extract all of the files, as there are hidden dependancies included with the visible executable ("*.exe") file.
+                    </p>
+                    <hr class="featurette-divider">
+                    <p class="text-muted">
+                        <sup>2</sup>The release ZIP file contains a folder containing the executable and all dependencies - you can either extract this folder directly or extract its contents into a folder of your choice.
+                    </p>
+                    <hr class="featurette-divider">
+                    <p>
+                        Once extracted, launch the application by double-clicking the "Vulnerator.exe" file within the folder it was extracted to.  If a shortcut is desired, one can be created by right-clicking the "Vulnerator.exe" file and selecting "Send To", then "Desktop (Create Shortcut)".
+                    </p>
+                    <h2><span class="emphaticText">//</span> Further Information</h2>
+                    <p>
+                        For a detailed guide on how to use the various features of the software, stop by the <a href="https://github.com/Vulnerator/Vulnerator/wiki">Wiki Page</a> and puruse the various articles.  If you have any questions, issues, or suggestions, please feel free to reach out via the Gitter IM chat, located in the bottom right-hand corner of the screen, or create a new issue in the <a href="https://github.com/Vulnerator/Vulnerator/issues">Vulnerator Issue Tracker</a>.<br/><br/>Thank you for your continued support for the project!
+                    </p>
+                </div> <!-- /Main Body Content -->
+                <div class="col-xs-12 col-sm-3 col-md-3" id="issuesSidebar"> <!-- Pulse Sidebar -->
+                    <h2><span class="emphaticText">//</span> Latest Issues</h2>
+                </div> <!-- /Pulse Sidebar -->
+            </div>
+        </div> <!-- /container -->
+        
+        <!-- Bootstrap core JavaScript -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+        <script src="js/bootstrap.min.js"></script>
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <script src="js/ie10-viewport-bug-workaround.js"></script>
+        <script src="js/require.js"></script>
+        <script src="vendors/jquery-2.1.0.min.js"></script>
+        <script src="vendors/underscore-min.js"></script>
+        <script src="js/gh3.js"></script>
+        <script>
+            Gh3.Search.repos({
+                q: 'repo:Vulnerator/Vulnerator'
+            }, {}, function (err, res) {
+                ParseRepo(res);
+            });
+            
+            function ParseRepo(response) {
+                var pulse = document.getElementById("pulseParagraph");
+                var forkNode = document.createElement('i');
+                forkNode.className = 'fa fa-code-fork';
+                forkNode.setAttribute('aria-hidden', 'true');
+                var forks = document.createTextNode(' : ' + response[0].forks_count);
+                
+                var watchNode = document.createElement('i');
+                watchNode.className = 'fa fa-eye';
+                watchNode.setAttribute('aria-hidden', 'true');
+                var watchers = document.createTextNode(' : ' + response[0].watchers_count);
+                
+                var eyeNode = document.createElement('i');
+                eyeNode.className = 'fa fa-star';
+                eyeNode.setAttribute('aria-hidden', 'true');
+                var stargazers = document.createTextNode(' : ' + response[0].stargazers_count);
+                
+                var pulseTextSeparator1 = document.createTextNode(' | ');
+                var pulseTextSeparator2 = document.createTextNode(' | ');
+                pulse.appendChild(forkNode);
+                pulse.appendChild(forks);
+                pulse.appendChild(pulseTextSeparator1);
+                pulse.appendChild(watchNode);
+                pulse.appendChild(watchers);
+                pulse.appendChild(pulseTextSeparator2);
+                pulse.appendChild(eyeNode);
+                pulse.appendChild(stargazers);
+            }
+        </script>
+        <script>
+            Gh3.Search.issues({
+                q:      'repo:Vulnerator/Vulnerator+state:open',
+                sort:   'created',
+                order:  'desc'
+            }, {}, function (err, res) {
+                ParseIssues(res);
+            });
+            
+            function ParseIssues(response) {
+                var issues = document.getElementById("issuesSidebar");
+                var countNode = document.createElement('p');
+                var countText = document.createTextNode('Total Open Issues: ' + response.length);
+                countNode.appendChild(countText);
+                issues.appendChild(countNode);
+                
+                var issuesLinkNode = document.createElement('a');
+                issuesLinkNode.title = 'View All Issues';
+                issuesLinkNode.href = 'https://github.com/Vulnerator/Vulnerator/issues';
+                issuesLinkNode.target = '_blank';
+                var issuesLinkText = document.createTextNode('View All Issues');
+                issuesLinkNode.appendChild(issuesLinkText);
+                issues.appendChild(issuesLinkNode);
+                
+                for (i = 0; i < 5; i++) {
+                    var titleNode = document.createElement('p');
+                    var titleText = document.createTextNode(response[i].title);
+                    titleNode.appendChild(titleText);
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h2>
-<a id="todo" class="anchor" href="#todo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>TODO:</h2>
+                    var numberNode = document.createElement('p');
+                    numberNode.className = 'text-muted';
+                    var smallNode = document.createElement('small');
+                    var numberText = document.createTextNode('Issue Number: ' + response[i].number);
+                    smallNode.appendChild(numberText);
+                    numberNode.appendChild(smallNode);
 
-<p>Complete this page (or create custom one)!</p>
-        </section>
+                    var issueNode = document.createElement('div');
+                    issueNode.className = 'issue';
+                    issueNode.appendChild(titleNode);
+                    issueNode.appendChild(numberNode);
 
-        <aside id="sidebar">
-          <a href="https://github.com/Vulnerator/Vulnerator/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/Vulnerator/Vulnerator/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
-
-          <p class="repo-owner"><a href="https://github.com/Vulnerator/Vulnerator"></a> is maintained by <a href="https://github.com/Vulnerator">Vulnerator</a>.</p>
-
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
-    </div>
-
-  
-  </body>
+                    issues.appendChild(issueNode);
+                }
+            }
+        </script>
+    </body>
 </html>
