@@ -50,11 +50,14 @@
                                     </tr>
                                 </table>
                             </a>
-                            <p class="emphaticText" id="pulseParagraph"></p>
+                            <p class="emphaticText hidden-xs" id="largePulseParagraph"></p>
                         </td>
                     </tr>
                     <tr>
-                        <td><p class="emphaticText">The official distribution of the vulnerability parsing utility.</p></td>
+                        <td>
+                            <p class="emphaticText">The official distribution of the vulnerability parsing utility.</p>
+                            <p class="whiteText visible-xs-block" id="smallPulseParagraph"></p>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -197,32 +200,55 @@
             });
             
             function ParseRepo(response) {
-                var pulse = document.getElementById("pulseParagraph");
-                var forkNode = document.createElement('i');
-                forkNode.className = 'fa fa-code-fork';
-                forkNode.setAttribute('aria-hidden', 'true');
-                var forks = document.createTextNode(' : ' + response[0].forks_count);
-                
-                var watchNode = document.createElement('i');
-                watchNode.className = 'fa fa-eye';
-                watchNode.setAttribute('aria-hidden', 'true');
-                var watchers = document.createTextNode(' : ' + response[0].watchers_count);
-                
-                var eyeNode = document.createElement('i');
-                eyeNode.className = 'fa fa-star';
-                eyeNode.setAttribute('aria-hidden', 'true');
-                var stargazers = document.createTextNode(' : ' + response[0].stargazers_count);
-                
+                //Parse to large node
+                var largePulse = document.getElementById("largePulseParagraph");
+                var largeForkNode = document.createElement('i');
+                largeForkNode.className = 'fa fa-code-fork';
+                largeForkNode.setAttribute('aria-hidden', 'true');
+                var largeForks = document.createTextNode(' : ' + response[0].forks_count);
+                var largeWatchNode = document.createElement('i');
+                largeWatchNode.className = 'fa fa-eye';
+                largeWatchNode.setAttribute('aria-hidden', 'true');
+                var largeWatchers = document.createTextNode(' : ' + response[0].watchers_count);
+                var largeEyeNode = document.createElement('i');
+                largeEyeNode.className = 'fa fa-star';
+                largeEyeNode.setAttribute('aria-hidden', 'true');
+                var largeStargazers = document.createTextNode(' : ' + response[0].stargazers_count);
                 var pulseTextSeparator1 = document.createTextNode(' | ');
                 var pulseTextSeparator2 = document.createTextNode(' | ');
-                pulse.appendChild(forkNode);
-                pulse.appendChild(forks);
-                pulse.appendChild(pulseTextSeparator1);
-                pulse.appendChild(watchNode);
-                pulse.appendChild(watchers);
-                pulse.appendChild(pulseTextSeparator2);
-                pulse.appendChild(eyeNode);
-                pulse.appendChild(stargazers);
+                largePulse.appendChild(largeForkNode);
+                largePulse.appendChild(largeForks);
+                largePulse.appendChild(pulseTextSeparator1);
+                largePulse.appendChild(largeWatchNode);
+                largePulse.appendChild(largeWatchers);
+                largePulse.appendChild(pulseTextSeparator2);
+                largePulse.appendChild(largeEyeNode);
+                largePulse.appendChild(largeStargazers);
+                
+                //Parse to small node
+                var smallPulse = document.getElementById("smallPulseParagraph");
+                var smallForkNode = document.createElement('i');
+                smallForkNode.className = 'fa fa-code-fork';
+                smallForkNode.setAttribute('aria-hidden', 'true');
+                var smallForks = document.createTextNode(' : ' + response[0].forks_count);
+                var smallWatchNode = document.createElement('i');
+                smallWatchNode.className = 'fa fa-eye';
+                smallWatchNode.setAttribute('aria-hidden', 'true');
+                var smallWatchers = document.createTextNode(' : ' + response[0].watchers_count);
+                var smallEyeNode = document.createElement('i');
+                smallEyeNode.className = 'fa fa-star';
+                smallEyeNode.setAttribute('aria-hidden', 'true');
+                var smallStargazers = document.createTextNode(' : ' + response[0].stargazers_count);
+                var pulseTextSeparator3 = document.createTextNode(' | ');
+                var pulseTextSeparator4 = document.createTextNode(' | ');
+                smallPulse.appendChild(smallForkNode);
+                smallPulse.appendChild(smallForks);
+                smallPulse.appendChild(pulseTextSeparator3);
+                smallPulse.appendChild(smallWatchNode);
+                smallPulse.appendChild(smallWatchers);
+                smallPulse.appendChild(pulseTextSeparator4);
+                smallPulse.appendChild(smallEyeNode);
+                smallPulse.appendChild(smallStargazers);
             }
         </script>
         <script>
