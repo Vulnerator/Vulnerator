@@ -1644,7 +1644,7 @@ namespace Vulnerator.ViewModel
 					}
 				case "tbSoftware":
 					{
-						VisitSoftwareForge();
+						VisitGithub();
 						break;
 					}
 				default:
@@ -1670,7 +1670,7 @@ namespace Vulnerator.ViewModel
 
 		private void EmailJeffV()
 		{
-			string mailTo = "mailto:Jeff.Vanerwegen@QinetiQ-NA.com";
+			string mailTo = "mailto:Jeff.Vanerwegen@Vencore.com";
 			try
 			{
 				System.Diagnostics.Process.Start(mailTo);
@@ -1716,9 +1716,9 @@ namespace Vulnerator.ViewModel
 			}
 		}
 
-		private void VisitSoftwareForge()
+		private void VisitGithub()
 		{
-			string goTo = "https://software.forge.mil/sf/projects/vulnerator";
+			string goTo = "https://github.com/Vulnerator/Vulnerator";
 			try
 			{
 				System.Diagnostics.Process.Start(goTo);

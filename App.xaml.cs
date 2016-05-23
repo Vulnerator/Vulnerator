@@ -87,7 +87,7 @@ namespace Vulnerator
         [Conditional("RELEASE")]
         private void ProcessError()
         {
-            MessageBox.Show(@"The application has encountered an error; please notify the developer via the SoftwareForge site at https://software.forge.mil/ (PKI Enabled).", 
+            MessageBox.Show(@"The application has encountered an error; please notify the developer via the SoftwareForge site at https://github.com/Vulnerator/Vulnerator", 
                 "Application Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }

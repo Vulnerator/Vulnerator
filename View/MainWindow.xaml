@@ -267,7 +267,7 @@
                         <TextBlock Name="tbSoftware"
                                    Margin="0,0,104,0"
                                    Style="{StaticResource styleHyperlinkTextBlock}"
-                                   Text="Software Forge Project Page"
+                                   Text="GitHub Project Page"
                                    TextWrapping="NoWrap">
                             <TextBlock.InputBindings>
                                 <MouseBinding Command="{Binding AboutLinksCommand}"

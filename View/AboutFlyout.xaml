@@ -146,7 +146,7 @@
                                 Grid.Row="7" 
                                 VerticalAlignment="Top">
             <TextBlock Name="tbSoftware" TextWrapping="NoWrap"
-                                   Text="Software Forge Project Page"
+                                   Text="GitHub Project Page"
                                    Style="{StaticResource styleHyperlinkTextBlock}" 
                        Margin="0,0,104,0">
                 <TextBlock.InputBindings>
