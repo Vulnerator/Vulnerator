@@ -102,6 +102,11 @@
     <!--  Buttons at the top of the window for Theme and About  -->
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
+            <Button x:Name="bNews"
+                    Command="{Binding HandleFlyoutsCommand}"
+                    CommandParameter="{Binding Path=Content,
+											   RelativeSource={RelativeSource Self}}"
+                    Content="news" />
             <Button x:Name="bAbout"
                     Command="{Binding HandleFlyoutsCommand}"
                     CommandParameter="{Binding Path=Content,
@@ -112,14 +117,23 @@
                     CommandParameter="{Binding Path=Content,
 											   RelativeSource={RelativeSource Self}}"
                     Content="theme" />
-            <Button x:Name="bNews"
-                    Content="news" />
         </Controls:WindowCommands>
     </Controls:MetroWindow.RightWindowCommands>
 
     <!--  Flyout Control  -->
     <Controls:MetroWindow.Flyouts>
         <Controls:FlyoutsControl>
+            <Controls:Flyout x:Name="flyNews"
+                             Height="Auto"
+                             HorizontalAlignment="Left"
+                             Header="News"
+                             IsModal="True"
+                             IsOpen="{Binding NewsFlyoutIsOpen}"
+                             IsPinned="False"
+                             Position="Top"
+                             Theme="Adapt">
+                
+            </Controls:Flyout>
             <!--  About Flyout  -->
             <Controls:Flyout x:Name="flyAbout"
                              Height="Auto"
