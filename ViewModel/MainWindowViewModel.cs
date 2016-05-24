@@ -111,7 +111,21 @@ namespace Vulnerator.ViewModel
 			}
 		}
 
-		private AsyncObservableCollection<Iavm> _iavms;
+        private string _newsFlyoutIsOpen = "False";
+        public string NewsFlyoutIsOpen
+        {
+            get { return _newsFlyoutIsOpen; }
+            set
+            {
+                if (_newsFlyoutIsOpen != value)
+                {
+                    _newsFlyoutIsOpen = value;
+                    OnPropertyChanged("NewsFlyoutIsOpen");
+                }
+            }
+        }
+
+        private AsyncObservableCollection<Iavm> _iavms;
 		public AsyncObservableCollection<Iavm> IavmList
 		{
 			get { return _iavms; }
@@ -1557,7 +1571,9 @@ namespace Vulnerator.ViewModel
 				{ ToggleImportMitigationsFlyout(); break; }
 				case "about":
 				{ ToggleAboutFlyout(); break; }
-				default:
+                case "news":
+                { ToggleNewsFlyout(); break; }
+                default:
 				{ break; }
 			}
 			
@@ -1572,6 +1588,7 @@ namespace Vulnerator.ViewModel
 			AboutFlyoutIsOpen = "False";
 			AdvancedFlyoutIsOpen = "False";
 			ImportFlyoutIsOpen = "False";
+            NewsFlyoutIsOpen = "False";
 		}
 
 		private void ToggleEmailOptionsFlyout()
@@ -1583,7 +1600,8 @@ namespace Vulnerator.ViewModel
 			ThemeFlyoutIsOpen = "False";
 			AboutFlyoutIsOpen = "False";
 			ImportFlyoutIsOpen = "False";
-		}
+            NewsFlyoutIsOpen = "False";
+        }
 
 		private void ToggleImportMitigationsFlyout()
 		{
@@ -1594,7 +1612,8 @@ namespace Vulnerator.ViewModel
 			ThemeFlyoutIsOpen = "False";
 			AboutFlyoutIsOpen = "False";
 			AdvancedFlyoutIsOpen = "False";
-		}
+            NewsFlyoutIsOpen = "False";
+        }
 
 		private void ToggleAboutFlyout()
 		{
@@ -1605,7 +1624,20 @@ namespace Vulnerator.ViewModel
 			ThemeFlyoutIsOpen = "False";
 			ImportFlyoutIsOpen = "False";
 			AdvancedFlyoutIsOpen = "False";
-		}
+            NewsFlyoutIsOpen = "False";
+        }
+
+        private void ToggleNewsFlyout()
+        {
+            if (NewsFlyoutIsOpen == "False")
+            { NewsFlyoutIsOpen = "True"; }
+            else
+            { NewsFlyoutIsOpen = "False"; }
+            ThemeFlyoutIsOpen = "False";
+            ImportFlyoutIsOpen = "False";
+            AdvancedFlyoutIsOpen = "False";
+            AboutFlyoutIsOpen= "False";
+        }
 
 		#endregion
 
