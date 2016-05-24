@@ -43,31 +43,36 @@
         <vm:UpdateSystemGroupConverter x:Key="UpdateSystemGroupConverter" />
         <vm:UpdateSystemConverter x:Key="UpdateSystemConverter" />
 
-        <v:AutoRefreshCollectionViewSource x:Key="SystemGroupListCollectionViewSource" Source="{Binding SystemGroupList}">
+        <v:AutoRefreshCollectionViewSource x:Key="SystemGroupListCollectionViewSource"
+                                           Source="{Binding SystemGroupList}">
             <v:AutoRefreshCollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="GroupNameAndMacLevel" />
             </v:AutoRefreshCollectionViewSource.SortDescriptions>
         </v:AutoRefreshCollectionViewSource>
 
-        <v:AutoRefreshCollectionViewSource x:Key="MonitoredSystemListCollectionViewSource" Source="{Binding MonitoredSystemList}">
+        <v:AutoRefreshCollectionViewSource x:Key="MonitoredSystemListCollectionViewSource"
+                                           Source="{Binding MonitoredSystemList}">
             <v:AutoRefreshCollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="SystemNameAndIp" />
             </v:AutoRefreshCollectionViewSource.SortDescriptions>
         </v:AutoRefreshCollectionViewSource>
 
-        <v:AutoRefreshCollectionViewSource x:Key="MonitoredSystemListForUpdatingCollectionViewSource" Source="{Binding MonitoredSystemListForUpdating}">
+        <v:AutoRefreshCollectionViewSource x:Key="MonitoredSystemListForUpdatingCollectionViewSource"
+                                           Source="{Binding MonitoredSystemListForUpdating}">
             <v:AutoRefreshCollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="SystemGroupAndNameAndIp" />
             </v:AutoRefreshCollectionViewSource.SortDescriptions>
         </v:AutoRefreshCollectionViewSource>
 
-        <v:AutoRefreshCollectionViewSource x:Key="ContactTitleListCollectionViewSource" Source="{Binding ContactTitleList}">
+        <v:AutoRefreshCollectionViewSource x:Key="ContactTitleListCollectionViewSource"
+                                           Source="{Binding ContactTitleList}">
             <v:AutoRefreshCollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="ContactTitleName" />
             </v:AutoRefreshCollectionViewSource.SortDescriptions>
         </v:AutoRefreshCollectionViewSource>
 
-        <v:AutoRefreshCollectionViewSource x:Key="SystemGroupListForUpdatingCollectionViewSource" Source="{Binding SystemGroupListForUpdating}">
+        <v:AutoRefreshCollectionViewSource x:Key="SystemGroupListForUpdatingCollectionViewSource"
+                                           Source="{Binding SystemGroupListForUpdating}">
             <v:AutoRefreshCollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="GroupName" />
             </v:AutoRefreshCollectionViewSource.SortDescriptions>
@@ -83,7 +88,8 @@
                   RenderOptions.BitmapScalingMode="HighQuality"
                   RenderOptions.EdgeMode="Aliased">
                 <Grid.OpacityMask>
-                    <VisualBrush Stretch="Uniform" Visual="{DynamicResource appbar_graph_bar}" />
+                    <VisualBrush Stretch="Uniform"
+                                 Visual="{DynamicResource appbar_graph_bar}" />
                 </Grid.OpacityMask>
             </Grid>
         </DataTemplate>
@@ -99,13 +105,15 @@
             <Button x:Name="bAbout"
                     Command="{Binding HandleFlyoutsCommand}"
                     CommandParameter="{Binding Path=Content,
-                                               RelativeSource={RelativeSource Self}}"
+											   RelativeSource={RelativeSource Self}}"
                     Content="about" />
             <Button x:Name="bTheme"
                     Command="{Binding HandleFlyoutsCommand}"
                     CommandParameter="{Binding Path=Content,
-                                               RelativeSource={RelativeSource Self}}"
+											   RelativeSource={RelativeSource Self}}"
                     Content="theme" />
+            <Button x:Name="bNews"
+                    Content="news" />
         </Controls:WindowCommands>
     </Controls:MetroWindow.RightWindowCommands>
 
@@ -122,162 +130,172 @@
                              IsPinned="False"
                              Position="Left"
                              Theme="Adapt">
-                <Grid Width="275"
-                      Height="Auto"
-                      HorizontalAlignment="Left"
-                      VerticalAlignment="Top">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="70" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="30" />
-                        <RowDefinition Height="30" />
-                        <RowDefinition Height="78" />
-                        <RowDefinition Height="30" />
-                        <RowDefinition Height="85" />
-                        <RowDefinition Height="30" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Image Grid.RowSpan="2"
-                           Width="65"
-                           Height="65"
-                           Margin="5,5,0,0"
-                           HorizontalAlignment="Left"
-                           VerticalAlignment="Top"
-                           Source="pack://application:,,,/Resources/chart.ico" />
-                    <Label Grid.Column="1"
-                           HorizontalAlignment="Left"
-                           VerticalAlignment="Top"
-                           Content="Vulnerator"
-                           Style="{StaticResource styleDescriptionHeader}" />
-                    <Grid Grid.Row="1" Grid.Column="1">
+                <StackPanel VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            Width="Auto"
+                            Height="Auto"
+                            Margin="5,0">
+                    <Grid Width="Auto"
+                          Height="Auto"
+                          HorizontalAlignment="Left"
+                          Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="68" />
+                            <ColumnDefinition Width="100" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <Label Width="66"
-                               Height="30"
-                               HorizontalAlignment="Left"
-                               VerticalAlignment="Top"
-                               Content="Version:"
-                               Style="{StaticResource styleSecondLevelHeader}" />
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Image Grid.RowSpan="3"
+                               Height="80"
+                               Margin="0,5,0,0"
+                               HorizontalAlignment="Stretch"
+                               VerticalAlignment="Stretch"
+                               Source="pack://application:,,,/Resources/chart.ico" />
                         <Label Grid.Column="1"
-                               Width="127"
-                               Height="30"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Top"
-                               Content="{Binding FileVersion}"
-                               Style="{StaticResource styleSecondLevelHeader}" />
+                               Content="Vulnerator"
+                               Style="{StaticResource styleDescriptionHeader}" />
+                        <TextBlock Name="tbKcs"
+                                   Margin="5,0"
+                                   Grid.Column="1"
+                                   Grid.Row="2"
+                                   Style="{StaticResource styleHyperlinkTextBlock}"
+                                   Text="Maintained by Kuchta Creative Services, LLC"
+                                   TextWrapping="NoWrap"
+                                   VerticalAlignment="Top">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding AboutLinksCommand}"
+                                              CommandParameter="{Binding ElementName=tbKcs,
+																		 Path=Name}"
+                                              MouseAction="LeftClick" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                        <Grid Grid.Row="1"
+                              Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Label HorizontalAlignment="Left"
+                                   VerticalAlignment="Top"
+                                   Content="Version:"
+                                   Style="{StaticResource styleSecondLevelHeader}" />
+                            <Label Grid.Column="1"
+                                   Width="Auto"
+                                   Height="Auto"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Top"
+                                   Content="{Binding FileVersion}"
+                                   Style="{StaticResource styleSecondLevelHeader}" />
+                        </Grid>
                     </Grid>
-                    <Label Grid.Row="2"
-                           Grid.ColumnSpan="2"
-                           Width="95"
-                           Height="30"
-                           Margin="2,0,0,0"
+                    <Label Height="30"
                            HorizontalAlignment="Left"
                            VerticalAlignment="Top"
                            Content="Credits"
                            Style="{StaticResource styleSecondLevelHeader}" />
-                    <StackPanel Grid.Row="3"
-                                Grid.RowSpan="2"
-                                Grid.ColumnSpan="2"
-                                Height="80"
-                                Margin="7,0,0,0"
-                                VerticalAlignment="Top">
-                        <TextBlock Name="tbAlex"
-                                   Margin="0,0,44,0"
-                                   Style="{StaticResource styleHyperlinkTextBlock}"
-                                   Text="Alex Kuchta - Redesign, ACAS Integration"
-                                   TextWrapping="NoWrap">
-                            <TextBlock.InputBindings>
-                                <MouseBinding Command="{Binding AboutLinksCommand}"
-                                              CommandParameter="{Binding ElementName=tbAlex,
-                                                                         Path=Name}"
-                                              MouseAction="LeftClick" />
-                            </TextBlock.InputBindings>
-                        </TextBlock>
-                        <TextBlock Name="tbJeffV"
-                                   Style="{StaticResource styleHyperlinkTextBlock}"
-                                   Text="Jeff Vanerwegen - WASSP, SCAP, CKL Integration"
-                                   TextWrapping="NoWrap">
-                            <TextBlock.InputBindings>
-                                <MouseBinding Command="{Binding AboutLinksCommand}"
-                                              CommandParameter="{Binding ElementName=tbJeffV,
-                                                                         Path=Name}"
-                                              MouseAction="LeftClick" />
-                            </TextBlock.InputBindings>
-                        </TextBlock>
-                        <TextBlock Name="tbRick"
-                                   Margin="0,0,80,0"
-                                   Style="{StaticResource styleHyperlinkTextBlock}"
-                                   Text="Rick Murphy - POA&amp;M Integration"
-                                   TextWrapping="NoWrap">
-                            <TextBlock.InputBindings>
-                                <MouseBinding Command="{Binding AboutLinksCommand}"
-                                              CommandParameter="{Binding ElementName=tbRick,
-                                                                         Path=Name}"
-                                              MouseAction="LeftClick" />
-                            </TextBlock.InputBindings>
-                        </TextBlock>
-                        <TextBlock Name="tbJeffP"
-                                   Margin="0,0,157,0"
-                                   Style="{StaticResource styleHyperlinkTextBlock}"
-                                   Text="Jeff Purcell - Creator"
-                                   TextWrapping="NoWrap">
-                            <TextBlock.InputBindings>
-                                <MouseBinding Command="{Binding AboutLinksCommand}"
-                                              CommandParameter="{Binding ElementName=tbJeffP,
-                                                                         Path=Name}"
-                                              MouseAction="LeftClick" />
-                            </TextBlock.InputBindings>
-                        </TextBlock>
-                    </StackPanel>
-                    <Label Grid.Row="4"
-                           Grid.ColumnSpan="2"
-                           Width="95"
-                           Height="30"
-                           Margin="2,0,0,0"
-                           HorizontalAlignment="Left"
+                    <TextBlock Name="tbAlex"
+                               Margin="5,0"
+                               Style="{StaticResource styleHyperlinkTextBlock}"
+                               Text="Alex Kuchta - Redesign, ACAS Integration"
+                               TextWrapping="NoWrap">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="{Binding AboutLinksCommand}"
+                                          CommandParameter="{Binding ElementName=tbAlex,
+																		 Path=Name}"
+                                          MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                    <TextBlock Name="tbJeffV"
+                               Margin="5,0"
+                               Style="{StaticResource styleHyperlinkTextBlock}"
+                               Text="Jeff Vanerwegen - WASSP, SCAP, CKL Integration"
+                               TextWrapping="NoWrap">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="{Binding AboutLinksCommand}"
+                                          CommandParameter="{Binding ElementName=tbJeffV,
+																		 Path=Name}"
+                                          MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                    <TextBlock Name="tbRick"
+                               Margin="5,0"
+                               Style="{StaticResource styleHyperlinkTextBlock}"
+                               Text="Rick Murphy - POA&amp;M Integration"
+                               TextWrapping="NoWrap">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="{Binding AboutLinksCommand}"
+                                          CommandParameter="{Binding ElementName=tbRick,
+																		 Path=Name}"
+                                          MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                    <TextBlock Name="tbJeffP"
+                               Margin="5,0"
+                               Style="{StaticResource styleHyperlinkTextBlock}"
+                               Text="Jeff Purcell - Creator"
+                               TextWrapping="NoWrap">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="{Binding AboutLinksCommand}"
+                                          CommandParameter="{Binding ElementName=tbJeffP,
+																		 Path=Name}"
+                                          MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                    <Label HorizontalAlignment="Left"
                            VerticalAlignment="Top"
                            Content="Description"
                            Style="{StaticResource styleSecondLevelHeader}" />
-                    <TextBlock Grid.Row="5"
-                               Grid.ColumnSpan="2"
-                               Height="80"
-                               Margin="7,0,10,0"
+                    <TextBlock Margin="5,0"
                                VerticalAlignment="Top"
-                               Text="Aggregates data from the following sources:                                &#10;- ACAS CSV / Nessus Reports                                &#10;- DISA STIG Viewer Checklists                                &#10;- WASSP Mitigation / XACTA Reports                                &#10;- SCC / ACAS SCAP Benchmarks"
+                               Text="Aggregates data from the following sources: &#10;- ACAS CSV / Nessus Reports &#10;- DISA STIG Viewer Checklists &#10;- WASSP Mitigation / XACTA Reports &#10;- SCC / ACAS SCAP Benchmarks"
                                TextWrapping="Wrap" />
-                    <Label Grid.Row="6"
-                           Grid.ColumnSpan="2"
-                           Width="95"
-                           Height="30"
-                           Margin="2,0,0,0"
-                           HorizontalAlignment="Left"
+                    <Label HorizontalAlignment="Left"
                            VerticalAlignment="Top"
                            Content="Useful Links"
                            Style="{StaticResource styleSecondLevelHeader}" />
-                    <StackPanel Grid.Row="7"
-                                Grid.ColumnSpan="2"
-                                Height="67"
-                                Margin="7,0,10,0"
-                                VerticalAlignment="Top">
-                        <TextBlock Name="tbSoftware"
-                                   Margin="0,0,104,0"
-                                   Style="{StaticResource styleHyperlinkTextBlock}"
-                                   Text="Software Forge Project Page"
-                                   TextWrapping="NoWrap">
-                            <TextBlock.InputBindings>
-                                <MouseBinding Command="{Binding AboutLinksCommand}"
-                                              CommandParameter="{Binding ElementName=tbSoftware,
-                                                                         Path=Name}"
-                                              MouseAction="LeftClick" />
-                            </TextBlock.InputBindings>
-                        </TextBlock>
-                    </StackPanel>
-                </Grid>
+                    <TextBlock Name="tbProject"
+                               Margin="5,0"
+                               Style="{StaticResource styleHyperlinkTextBlock}"
+                               Text="Project Page"
+                               TextWrapping="NoWrap">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="{Binding AboutLinksCommand}"
+                                          CommandParameter="{Binding ElementName=tbProject,
+																		 Path=Name}"
+                                          MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                    <TextBlock Name="tbWiki"
+                               Margin="5,0"
+                               Style="{StaticResource styleHyperlinkTextBlock}"
+                               Text="Wiki Page"
+                               TextWrapping="NoWrap">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="{Binding AboutLinksCommand}"
+                                          CommandParameter="{Binding ElementName=tbWiki,
+																		 Path=Name}"
+                                          MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                    <TextBlock Name="tbRepo"
+                               Margin="5,0"
+                               Style="{StaticResource styleHyperlinkTextBlock}"
+                               Text="GitHub Repository"
+                               TextWrapping="NoWrap">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="{Binding AboutLinksCommand}"
+                                          CommandParameter="{Binding ElementName=tbRepo,
+																		 Path=Name}"
+                                          MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                </StackPanel>
             </Controls:Flyout>
             <!--  Theme Manager Flyout  -->
             <Controls:Flyout x:Name="flyThemeManager"
@@ -301,7 +319,8 @@
                                 Height="37"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Top">
-                        <Label Content="Background Color" Style="{StaticResource styleSecondLevelHeader}" />
+                        <Label Content="Background Color"
+                               Style="{StaticResource styleSecondLevelHeader}" />
                     </StackPanel>
                     <StackPanel Grid.Row="1"
                                 Width="164"
@@ -327,7 +346,8 @@
                                 Height="37"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Top">
-                        <Label Content="Accent Color" Style="{StaticResource styleSecondLevelHeader}" />
+                        <Label Content="Accent Color"
+                               Style="{StaticResource styleSecondLevelHeader}" />
                     </StackPanel>
                     <StackPanel Grid.Row="3"
                                 Height="38"
@@ -545,8 +565,8 @@
                              Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                              Controls:TextBoxHelper.Watermark="&quot;Mitigations.txt&quot; Location"
                              Text="{Binding ImportMitigationTextFileName,
-                                            Mode=TwoWay,
-                                            UpdateSourceTrigger=PropertyChanged}"
+											Mode=TwoWay,
+											UpdateSourceTrigger=PropertyChanged}"
                              TextWrapping="Wrap" />
                     <Button x:Name="bMitTxtImport"
                             Height="26"
@@ -602,7 +622,8 @@
                              IsPinned="False"
                              Position="Left"
                              Theme="Adapt">
-                <Grid Height="Auto" Margin="5,0,0,0">
+                <Grid Height="Auto"
+                      Margin="5,0,0,0">
                     <Label Width="242"
                            Height="41"
                            VerticalAlignment="Top"
@@ -648,16 +669,18 @@
                             Minimum="0"
                             TickFrequency="1"
                             Value="{Binding InnerText,
-                                            Mode=OneTime,
-                                            Source={StaticResource XmlConfig},
-                                            XPath=iavmEmailOptionsFlyout/iavmFilterOne}">
+											Mode=OneTime,
+											Source={StaticResource XmlConfig},
+											XPath=iavmEmailOptionsFlyout/iavmFilterOne}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="PreviewMouseUp">
                                 <i:InvokeCommandAction Command="{Binding UpdateDictionaryCommand}">
                                     <i:InvokeCommandAction.CommandParameter>
                                         <MultiBinding Converter="{StaticResource CommandConverter}">
-                                            <Binding ElementName="iavmFilterOne" Path="Name" />
-                                            <Binding ElementName="iavmFilterOne" Path="Value" />
+                                            <Binding ElementName="iavmFilterOne"
+                                                     Path="Name" />
+                                            <Binding ElementName="iavmFilterOne"
+                                                     Path="Value" />
                                         </MultiBinding>
                                     </i:InvokeCommandAction.CommandParameter>
                                 </i:InvokeCommandAction>
@@ -675,16 +698,18 @@
                             Minimum="0"
                             TickFrequency="1"
                             Value="{Binding InnerText,
-                                            Mode=OneTime,
-                                            Source={StaticResource XmlConfig},
-                                            XPath=iavmEmailOptionsFlyout/iavmFilterTwo}">
+											Mode=OneTime,
+											Source={StaticResource XmlConfig},
+											XPath=iavmEmailOptionsFlyout/iavmFilterTwo}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="PreviewMouseUp">
                                 <i:InvokeCommandAction Command="{Binding UpdateDictionaryCommand}">
                                     <i:InvokeCommandAction.CommandParameter>
                                         <MultiBinding Converter="{StaticResource CommandConverter}">
-                                            <Binding ElementName="iavmFilterTwo" Path="Name" />
-                                            <Binding ElementName="iavmFilterTwo" Path="Value" />
+                                            <Binding ElementName="iavmFilterTwo"
+                                                     Path="Name" />
+                                            <Binding ElementName="iavmFilterTwo"
+                                                     Path="Value" />
                                         </MultiBinding>
                                     </i:InvokeCommandAction.CommandParameter>
                                 </i:InvokeCommandAction>
@@ -702,16 +727,18 @@
                             Minimum="0"
                             TickFrequency="1"
                             Value="{Binding InnerText,
-                                            Mode=OneTime,
-                                            Source={StaticResource XmlConfig},
-                                            XPath=iavmEmailOptionsFlyout/iavmFilterThree}">
+											Mode=OneTime,
+											Source={StaticResource XmlConfig},
+											XPath=iavmEmailOptionsFlyout/iavmFilterThree}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="PreviewMouseUp">
                                 <i:InvokeCommandAction Command="{Binding UpdateDictionaryCommand}">
                                     <i:InvokeCommandAction.CommandParameter>
                                         <MultiBinding Converter="{StaticResource CommandConverter}">
-                                            <Binding ElementName="iavmFilterThree" Path="Name" />
-                                            <Binding ElementName="iavmFilterThree" Path="Value" />
+                                            <Binding ElementName="iavmFilterThree"
+                                                     Path="Name" />
+                                            <Binding ElementName="iavmFilterThree"
+                                                     Path="Value" />
                                         </MultiBinding>
                                     </i:InvokeCommandAction.CommandParameter>
                                 </i:InvokeCommandAction>
@@ -729,16 +756,18 @@
                             Minimum="0"
                             TickFrequency="1"
                             Value="{Binding InnerText,
-                                            Mode=OneTime,
-                                            Source={StaticResource XmlConfig},
-                                            XPath=iavmEmailOptionsFlyout/iavmFilterFour}">
+											Mode=OneTime,
+											Source={StaticResource XmlConfig},
+											XPath=iavmEmailOptionsFlyout/iavmFilterFour}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="PreviewMouseUp">
                                 <i:InvokeCommandAction Command="{Binding UpdateDictionaryCommand}">
                                     <i:InvokeCommandAction.CommandParameter>
                                         <MultiBinding Converter="{StaticResource CommandConverter}">
-                                            <Binding ElementName="iavmFilterFour" Path="Name" />
-                                            <Binding ElementName="iavmFilterFour" Path="Value" />
+                                            <Binding ElementName="iavmFilterFour"
+                                                     Path="Name" />
+                                            <Binding ElementName="iavmFilterFour"
+                                                     Path="Value" />
                                         </MultiBinding>
                                     </i:InvokeCommandAction.CommandParameter>
                                 </i:InvokeCommandAction>
@@ -752,8 +781,8 @@
                            VerticalAlignment="Top"
                            HorizontalContentAlignment="Right"
                            Content="{Binding Value,
-                                             Converter={StaticResource StringJoiner},
-                                             ElementName=iavmFilterOne}" />
+											 Converter={StaticResource StringJoiner},
+											 ElementName=iavmFilterOne}" />
                     <Label Width="73"
                            Height="26"
                            Margin="159,125,0,0"
@@ -761,8 +790,8 @@
                            VerticalAlignment="Top"
                            HorizontalContentAlignment="Right"
                            Content="{Binding Value,
-                                             Converter={StaticResource StringJoiner},
-                                             ElementName=iavmFilterTwo}" />
+											 Converter={StaticResource StringJoiner},
+											 ElementName=iavmFilterTwo}" />
                     <Label Width="73"
                            Height="26"
                            Margin="159,178,0,0"
@@ -770,8 +799,8 @@
                            VerticalAlignment="Top"
                            HorizontalContentAlignment="Right"
                            Content="{Binding Value,
-                                             Converter={StaticResource StringJoiner},
-                                             ElementName=iavmFilterThree}" />
+											 Converter={StaticResource StringJoiner},
+											 ElementName=iavmFilterThree}" />
                     <Label Width="73"
                            Height="26"
                            Margin="159,235,0,0"
@@ -779,8 +808,8 @@
                            VerticalAlignment="Top"
                            HorizontalContentAlignment="Right"
                            Content="{Binding Value,
-                                             Converter={StaticResource StringJoiner},
-                                             ElementName=iavmFilterFour}" />
+											 Converter={StaticResource StringJoiner},
+											 ElementName=iavmFilterFour}" />
                     <Label Width="415"
                            Height="39"
                            Margin="265,0,0,0"
@@ -802,13 +831,15 @@
                             VerticalAlignment="Top"
                             BorderBrush="#FFCCCCCC"
                             BorderThickness="1">
-                        <ScrollViewer Width="Auto" Height="Auto">
-                            <Grid Width="Auto" Height="Auto">
+                        <ScrollViewer Width="Auto"
+                                      Height="Auto">
+                            <Grid Width="Auto"
+                                  Height="Auto">
                                 <Label HorizontalAlignment="Left"
                                        VerticalAlignment="Top"
                                        Content="{Binding Value,
-                                                         Converter={StaticResource StringJoiner},
-                                                         ElementName=iavmFilterOne}"
+														 Converter={StaticResource StringJoiner},
+														 ElementName=iavmFilterOne}"
                                        Style="{StaticResource styleSecondLevelHeader}" />
                                 <TextBox Height="111"
                                          Margin="5,31,5,0"
@@ -819,7 +850,8 @@
                                          MaxLength="2000"
                                          SpellCheck.IsEnabled="True"
                                          TextWrapping="Wrap" />
-                                <Label Margin="0,147,235,626" Content="Awaiting Input..." />
+                                <Label Margin="0,147,235,626"
+                                       Content="Awaiting Input..." />
                                 <Button Width="110"
                                         Height="26"
                                         Margin="169,147,120,626"
@@ -836,8 +868,8 @@
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Top"
                                        Content="{Binding Value,
-                                                         Converter={StaticResource StringJoiner},
-                                                         ElementName=iavmFilterTwo}"
+														 Converter={StaticResource StringJoiner},
+														 ElementName=iavmFilterTwo}"
                                        Style="{StaticResource styleSecondLevelHeader}" />
                                 <TextBox Height="111"
                                          Margin="5,204,5,0"
@@ -848,7 +880,8 @@
                                          MaxLength="2000"
                                          SpellCheck.IsEnabled="True"
                                          TextWrapping="Wrap" />
-                                <Label Margin="0,320,235,453" Content="Awaiting Input..." />
+                                <Label Margin="0,320,235,453"
+                                       Content="Awaiting Input..." />
                                 <Button Width="110"
                                         Height="26"
                                         Margin="169,320,120,453"
@@ -865,8 +898,8 @@
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Top"
                                        Content="{Binding Value,
-                                                         Converter={StaticResource StringJoiner},
-                                                         ElementName=iavmFilterThree}"
+														 Converter={StaticResource StringJoiner},
+														 ElementName=iavmFilterThree}"
                                        Style="{StaticResource styleSecondLevelHeader}" />
                                 <TextBox Height="111"
                                          Margin="5,377,5,0"
@@ -877,7 +910,8 @@
                                          MaxLength="2000"
                                          SpellCheck.IsEnabled="True"
                                          TextWrapping="Wrap" />
-                                <Label Margin="0,493,235,280" Content="Awaiting Input..." />
+                                <Label Margin="0,493,235,280"
+                                       Content="Awaiting Input..." />
                                 <Button Width="110"
                                         Height="26"
                                         Margin="169,493,120,280"
@@ -894,8 +928,8 @@
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Top"
                                        Content="{Binding Value,
-                                                         Converter={StaticResource StringJoiner},
-                                                         ElementName=iavmFilterFour}"
+														 Converter={StaticResource StringJoiner},
+														 ElementName=iavmFilterFour}"
                                        Style="{StaticResource styleSecondLevelHeader}" />
                                 <TextBox Height="111"
                                          Margin="5,550,5,0"
@@ -906,7 +940,8 @@
                                          MaxLength="2000"
                                          SpellCheck.IsEnabled="True"
                                          TextWrapping="Wrap" />
-                                <Label Margin="0,666,235,107" Content="Awaiting Input..." />
+                                <Label Margin="0,666,235,107"
+                                       Content="Awaiting Input..." />
                                 <Button Width="110"
                                         Height="26"
                                         Margin="169,666,120,107"
@@ -921,7 +956,6 @@
                                         Style="{DynamicResource MetroFlatButton}" />
                             </Grid>
                         </ScrollViewer>
-
                     </Border>
                     <Border Width="426"
                             Height="Auto"
@@ -930,15 +964,18 @@
                             VerticalAlignment="Top"
                             BorderBrush="#FFCCCCCC"
                             BorderThickness="1">
-                        <ScrollViewer Width="Auto" Height="Auto">
-                            <Grid Width="Auto" Height="Auto">
+                        <ScrollViewer Width="Auto"
+                                      Height="Auto">
+                            <Grid Width="Auto"
+                                  Height="Auto">
                                 <Label HorizontalAlignment="Left"
                                        VerticalAlignment="Top"
                                        Content="{Binding Value,
-                                                         Converter={StaticResource StringJoiner},
-                                                         ElementName=iavmFilterOne}"
+														 Converter={StaticResource StringJoiner},
+														 ElementName=iavmFilterOne}"
                                        Style="{StaticResource styleSecondLevelHeader}" />
-                                <Label Margin="0,147,235,626" Content="Awaiting Input..." />
+                                <Label Margin="0,147,235,626"
+                                       Content="Awaiting Input..." />
                                 <Button Width="110"
                                         Height="26"
                                         Margin="180,147,120,626"
@@ -955,10 +992,11 @@
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Top"
                                        Content="{Binding Value,
-                                                         Converter={StaticResource StringJoiner},
-                                                         ElementName=iavmFilterTwo}"
+														 Converter={StaticResource StringJoiner},
+														 ElementName=iavmFilterTwo}"
                                        Style="{StaticResource styleSecondLevelHeader}" />
-                                <Label Margin="0,320,235,453" Content="Awaiting Input..." />
+                                <Label Margin="0,320,235,453"
+                                       Content="Awaiting Input..." />
                                 <Button Width="110"
                                         Height="26"
                                         Margin="180,320,120,453"
@@ -975,10 +1013,11 @@
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Top"
                                        Content="{Binding Value,
-                                                         Converter={StaticResource StringJoiner},
-                                                         ElementName=iavmFilterThree}"
+														 Converter={StaticResource StringJoiner},
+														 ElementName=iavmFilterThree}"
                                        Style="{StaticResource styleSecondLevelHeader}" />
-                                <Label Margin="0,493,235,280" Content="Awaiting Input..." />
+                                <Label Margin="0,493,235,280"
+                                       Content="Awaiting Input..." />
                                 <Button Width="110"
                                         Height="26"
                                         Margin="180,493,120,280"
@@ -995,10 +1034,11 @@
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Top"
                                        Content="{Binding Value,
-                                                         Converter={StaticResource StringJoiner},
-                                                         ElementName=iavmFilterFour}"
+														 Converter={StaticResource StringJoiner},
+														 ElementName=iavmFilterFour}"
                                        Style="{StaticResource styleSecondLevelHeader}" />
-                                <Label Margin="0,666,235,107" Content="Awaiting Input..." />
+                                <Label Margin="0,666,235,107"
+                                       Content="Awaiting Input..." />
                                 <Button Width="110"
                                         Height="26"
                                         Margin="180,666,120,107"
@@ -1061,7 +1101,8 @@
                 <TabItem x:Name="tabReport"
                          Header="Reporting"
                          KeyboardNavigation.TabNavigation="Continue">
-                    <Grid x:Name="gridReport" Margin="0">
+                    <Grid x:Name="gridReport"
+                          Margin="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="250" />
                             <ColumnDefinition Width="*" />
@@ -1126,16 +1167,18 @@
                                                  Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                                  GroupName="PackageType"
                                                  IsChecked="{Binding InnerText,
-                                                                     Converter={StaticResource StringToBool},
-                                                                     Mode=OneTime,
-                                                                     Source={StaticResource XmlConfig},
-                                                                     XPath=reportingTab/rbDiacap}"
+																	 Converter={StaticResource StringToBool},
+																	 Mode=OneTime,
+																	 Source={StaticResource XmlConfig},
+																	 XPath=reportingTab/rbDiacap}"
                                                  IsEnabled="{Binding IsEnabled}"
                                                  TabIndex="1">
                                         <RadioButton.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </RadioButton.CommandParameter>
                                     </RadioButton>
@@ -1150,16 +1193,18 @@
                                                  Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                                  GroupName="PackageType"
                                                  IsChecked="{Binding InnerText,
-                                                                     Converter={StaticResource StringToBool},
-                                                                     Mode=OneTime,
-                                                                     Source={StaticResource XmlConfig},
-                                                                     XPath=reportingTab/rbRmf}"
+																	 Converter={StaticResource StringToBool},
+																	 Mode=OneTime,
+																	 Source={StaticResource XmlConfig},
+																	 XPath=reportingTab/rbRmf}"
                                                  IsEnabled="{Binding IsEnabled}"
                                                  TabIndex="2">
                                         <RadioButton.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </RadioButton.CommandParameter>
                                     </RadioButton>
@@ -1187,16 +1232,18 @@
                                               Content="Critical"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbCritical}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbCritical}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="3">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1208,16 +1255,18 @@
                                               Content="CAT I"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbCatI}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbCatI}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="8">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1228,16 +1277,18 @@
                                               Content="High"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbHigh}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbHigh}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="4">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1249,16 +1300,18 @@
                                               Content="CAT II"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbCatII}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbCatII}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="9">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1269,16 +1322,18 @@
                                               Content="Medium"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbMedium}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbMedium}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="5">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1290,16 +1345,18 @@
                                               Content="CAT III"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbCatIII}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbCatIII}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="10">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1310,16 +1367,18 @@
                                               Content="Low"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbLow}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbLow}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="6">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1331,16 +1390,18 @@
                                               Content="CAT IV"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbCatIV}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbCatIV}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="11">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1351,16 +1412,18 @@
                                               Content="Informational"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbInfo}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbInfo}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="7">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1387,16 +1450,18 @@
                                               Content="Ongoing"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbOpen}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbOpen}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="12">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1408,16 +1473,18 @@
                                               Content="Not Applicable"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbNotApplicable}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbNotApplicable}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="14">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1428,16 +1495,18 @@
                                               Content="Not Reviewed"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbNotReviewed}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbNotReviewed}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="13">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1449,16 +1518,18 @@
                                               Content="Completed"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbCompleted}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbCompleted}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="15">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1485,16 +1556,18 @@
                                               Content="POA&amp;M / RAR"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbPoamRar}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbPoamRar}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="16">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1506,16 +1579,18 @@
                                               Content="Discrepancies"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbDiscrepancies}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbDiscrepancies}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="18">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1526,16 +1601,18 @@
                                               Content="Asset Overview"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbAssetOverview}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbAssetOverview}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="17">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1551,8 +1628,10 @@
                                               TabIndex="19">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1566,16 +1645,18 @@
                                               Content="ACAS Scan Output (*.nessus Only)"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbAcasOutput}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbAcasOutput}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="20">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1593,8 +1674,10 @@
                                               TabIndex="21">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1619,16 +1702,18 @@
                                               Content="All Findings"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbAllFindings}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbAllFindings}"
                                               IsEnabled="False"
                                               TabIndex="22">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1639,16 +1724,18 @@
                                               Content="By System"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbBySystem}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbBySystem}"
                                               IsEnabled="False"
                                               TabIndex="23">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1660,16 +1747,18 @@
                                               Content="By Group"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbByGroup}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbByGroup}"
                                               IsEnabled="False"
                                               TabIndex="24">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1694,16 +1783,18 @@
                                               Content="Group ACAS"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbMergeAcas}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbMergeAcas}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="25">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1715,16 +1806,18 @@
                                               Content="Group CKL"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbMergeCkl}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbMergeCkl}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="26">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1735,16 +1828,18 @@
                                               Content="Group XCCDF"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbMergeXccdf}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbMergeXccdf}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="27">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1756,16 +1851,18 @@
                                               Content="Group WASSP"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbMergeWassp}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbMergeWassp}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="28">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -1785,16 +1882,18 @@
                                          IsEnabled="{Binding IsEnabled}"
                                          TabIndex="29"
                                          Text="{Binding InnerText,
-                                                        Mode=OneTime,
-                                                        Source={StaticResource XmlConfig},
-                                                        XPath=reportingTab/tbEmassOrg}">
+														Mode=OneTime,
+														Source={StaticResource XmlConfig},
+														XPath=reportingTab/tbEmassOrg}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="LostFocus">
                                             <i:InvokeCommandAction Command="{Binding UpdateDictionaryCommand}">
                                                 <i:InvokeCommandAction.CommandParameter>
                                                     <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                        <Binding ElementName="tbEmassOrg" Path="Name" />
-                                                        <Binding ElementName="tbEmassOrg" Path="Text" />
+                                                        <Binding ElementName="tbEmassOrg"
+                                                                 Path="Name" />
+                                                        <Binding ElementName="tbEmassOrg"
+                                                                 Path="Text" />
                                                     </MultiBinding>
                                                 </i:InvokeCommandAction.CommandParameter>
                                             </i:InvokeCommandAction>
@@ -1812,16 +1911,18 @@
                                          IsEnabled="{Binding IsEnabled}"
                                          TabIndex="30"
                                          Text="{Binding InnerText,
-                                                        Mode=OneTime,
-                                                        Source={StaticResource XmlConfig},
-                                                        XPath=reportingTab/tbEmassName}">
+														Mode=OneTime,
+														Source={StaticResource XmlConfig},
+														XPath=reportingTab/tbEmassName}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="LostFocus">
                                             <i:InvokeCommandAction Command="{Binding UpdateDictionaryCommand}">
                                                 <i:InvokeCommandAction.CommandParameter>
                                                     <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                        <Binding ElementName="tbEmassName" Path="Name" />
-                                                        <Binding ElementName="tbEmassName" Path="Text" />
+                                                        <Binding ElementName="tbEmassName"
+                                                                 Path="Name" />
+                                                        <Binding ElementName="tbEmassName"
+                                                                 Path="Text" />
                                                     </MultiBinding>
                                                 </i:InvokeCommandAction.CommandParameter>
                                             </i:InvokeCommandAction>
@@ -1843,8 +1944,10 @@
                                             <i:InvokeCommandAction Command="{Binding UpdateDictionaryCommand}">
                                                 <i:InvokeCommandAction.CommandParameter>
                                                     <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                        <Binding ElementName="tbEmassNumber" Path="Name" />
-                                                        <Binding ElementName="tbEmassNumber" Path="Text" />
+                                                        <Binding ElementName="tbEmassNumber"
+                                                                 Path="Name" />
+                                                        <Binding ElementName="tbEmassNumber"
+                                                                 Path="Text" />
                                                     </MultiBinding>
                                                 </i:InvokeCommandAction.CommandParameter>
                                             </i:InvokeCommandAction>
@@ -1875,8 +1978,10 @@
                                             <i:InvokeCommandAction Command="{Binding UpdateDictionaryCommand}">
                                                 <i:InvokeCommandAction.CommandParameter>
                                                     <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                        <Binding ElementName="tbEmassEmail" Path="Name" />
-                                                        <Binding ElementName="tbEmassEmail" Path="Text" />
+                                                        <Binding ElementName="tbEmassEmail"
+                                                                 Path="Name" />
+                                                        <Binding ElementName="tbEmassEmail"
+                                                                 Path="Text" />
                                                     </MultiBinding>
                                                 </i:InvokeCommandAction.CommandParameter>
                                             </i:InvokeCommandAction>
@@ -2016,17 +2121,20 @@
                                 </DataGridTemplateColumn>
                                 <DataGridTemplateColumn Width="1.25*">
                                     <DataGridTemplateColumn.HeaderStyle>
-                                        <Style BasedOn="{StaticResource MetroDataGridColumnHeader}" TargetType="DataGridColumnHeader">
-                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                            <Setter Property="Padding" Value="0,0,0,3" />
+                                        <Style BasedOn="{StaticResource MetroDataGridColumnHeader}"
+                                               TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment"
+                                                    Value="Stretch" />
+                                            <Setter Property="Padding"
+                                                    Value="0,0,0,3" />
                                         </Style>
                                     </DataGridTemplateColumn.HeaderStyle>
                                     <DataGridTemplateColumn.HeaderTemplate>
                                         <DataTemplate>
                                             <vm:CommandEnabledComboBox Command="{Binding DataContext.UpdateAllSystemNamesCommand,
-                                                                                         RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+																						 RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                                                        CommandParameter="{Binding SelectedItem.GroupNameAndMacLevel,
-                                                                                                  RelativeSource={RelativeSource Self}}"
+																								  RelativeSource={RelativeSource Self}}"
                                                                        Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                                                        Controls:TextBoxHelper.ClearTextButton="True"
                                                                        Controls:TextBoxHelper.Watermark="Group Name"
@@ -2036,17 +2144,22 @@
                                                                        ItemsSource="{Binding Source={StaticResource SystemGroupListCollectionViewSource}}"
                                                                        SelectedValuePath="GroupNameAndMacLevel">
                                                 <vm:CommandEnabledComboBox.Style>
-                                                    <Style BasedOn="{StaticResource {x:Type ComboBox}}" TargetType="{x:Type vm:CommandEnabledComboBox}">
-                                                        <Setter Property="BorderThickness" Value="0" />
+                                                    <Style BasedOn="{StaticResource {x:Type ComboBox}}"
+                                                           TargetType="{x:Type vm:CommandEnabledComboBox}">
+                                                        <Setter Property="BorderThickness"
+                                                                Value="0" />
                                                     </Style>
                                                 </vm:CommandEnabledComboBox.Style>
                                             </vm:CommandEnabledComboBox>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.HeaderTemplate>
                                     <DataGridTemplateColumn.CellStyle>
-                                        <Style BasedOn="{StaticResource MetroDataGridCell}" TargetType="DataGridCell">
-                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                            <Setter Property="Padding" Value="0,0,6,0" />
+                                        <Style BasedOn="{StaticResource MetroDataGridCell}"
+                                               TargetType="DataGridCell">
+                                            <Setter Property="HorizontalContentAlignment"
+                                                    Value="Stretch" />
+                                            <Setter Property="Padding"
+                                                    Value="0,0,6,0" />
                                         </Style>
                                     </DataGridTemplateColumn.CellStyle>
                                     <DataGridTemplateColumn.CellTemplate>
@@ -2059,11 +2172,13 @@
                                                       IsSynchronizedWithCurrentItem="False"
                                                       ItemsSource="{Binding Source={StaticResource SystemGroupListCollectionViewSource}}"
                                                       Text="{Binding FileSystemName,
-                                                                     Mode=TwoWay,
-                                                                     UpdateSourceTrigger=PropertyChanged}">
+																	 Mode=TwoWay,
+																	 UpdateSourceTrigger=PropertyChanged}">
                                                 <ComboBox.Style>
-                                                    <Style BasedOn="{StaticResource MetroComboBox}" TargetType="ComboBox">
-                                                        <Setter Property="BorderThickness" Value="0" />
+                                                    <Style BasedOn="{StaticResource MetroComboBox}"
+                                                           TargetType="ComboBox">
+                                                        <Setter Property="BorderThickness"
+                                                                Value="0" />
                                                     </Style>
                                                 </ComboBox.Style>
                                             </ComboBox>
@@ -2140,7 +2255,8 @@
                                     </StackPanel>
                                 </Grid>
 
-                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                <ScrollViewer Grid.Row="1"
+                                              VerticalScrollBarVisibility="Auto">
                                     <StackPanel>
                                         <Label HorizontalAlignment="Left"
                                                Content="Database Location"
@@ -2164,7 +2280,7 @@
                                             </Grid.ColumnDefinitions>
                                             <Button x:Name="bMitDatabaseCreate"
                                                     Width="{Binding ElementName=bMitImport,
-                                                                    Path=ActualWidth}"
+																	Path=ActualWidth}"
                                                     Margin="5,0,0,5"
                                                     HorizontalAlignment="Left"
                                                     VerticalAlignment="Top"
@@ -2177,7 +2293,7 @@
                                             <Button x:Name="bMitLocationBrowse"
                                                     Grid.Column="1"
                                                     Width="{Binding ElementName=bMitImport,
-                                                                    Path=ActualWidth}"
+																	Path=ActualWidth}"
                                                     Margin="5,0,5,5"
                                                     HorizontalAlignment="Right"
                                                     VerticalAlignment="Top"
@@ -2204,8 +2320,8 @@
                                                  IsEnabled="{Binding IsEnabled}"
                                                  TabIndex="4"
                                                  Text="{Binding AddMitigationId,
-                                                                UpdateSourceTrigger=PropertyChanged,
-                                                                ValidatesOnDataErrors=True}"
+																UpdateSourceTrigger=PropertyChanged,
+																ValidatesOnDataErrors=True}"
                                                  VerticalScrollBarVisibility="Auto"
                                                  TextWrapping="Wrap" />
                                         <Label HorizontalAlignment="Left"
@@ -2289,7 +2405,7 @@
                                                     VerticalAlignment="Top"
                                                     Command="{Binding HandleFlyoutsCommand}"
                                                     CommandParameter="{Binding Content,
-                                                                               RelativeSource={RelativeSource Self}}"
+																			   RelativeSource={RelativeSource Self}}"
                                                     Content="Import Mitigations"
                                                     FontSize="12"
                                                     IsEnabled="{Binding IsEnabled}"
@@ -2298,7 +2414,7 @@
                                             <Button x:Name="bMitTextSave"
                                                     Grid.Column="1"
                                                     Width="{Binding ElementName=bMitImport,
-                                                                    Path=ActualWidth}"
+																	Path=ActualWidth}"
                                                     Margin="5,0,5,5"
                                                     HorizontalAlignment="Right"
                                                     VerticalAlignment="Top"
@@ -2379,8 +2495,8 @@
                                             </DataGridTemplateColumn>
                                             <DataGridCheckBoxColumn Width=".2*"
                                                                     Binding="{Binding IsChecked,
-                                                                                      Mode=TwoWay,
-                                                                                      UpdateSourceTrigger=PropertyChanged}"
+																					  Mode=TwoWay,
+																					  UpdateSourceTrigger=PropertyChanged}"
                                                                     ElementStyle="{DynamicResource MetroDataGridCheckBox}"
                                                                     Header="Select"
                                                                     IsReadOnly="False">
@@ -2389,15 +2505,15 @@
                                                         <CheckBox x:Name="allMits"
                                                                   Command="{Binding SelectCheckboxCommand}"
                                                                   CommandParameter="{Binding Name,
-                                                                                             RelativeSource={RelativeSource Self}}"
+																							 RelativeSource={RelativeSource Self}}"
                                                                   Content="SELECT"
                                                                   Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                                                   Controls:ToggleButtonHelper.ContentDirection="RightToLeft"
                                                                   DataContext="{StaticResource MainWindowViewModel}"
                                                                   FontWeight="SemiBold"
                                                                   IsChecked="{Binding MitigationsAreChecked,
-                                                                                      Mode=TwoWay,
-                                                                                      UpdateSourceTrigger=PropertyChanged}"
+																					  Mode=TwoWay,
+																					  UpdateSourceTrigger=PropertyChanged}"
                                                                   IsEnabled="{Binding IsEnabled}" />
                                                     </DataTemplate>
                                                 </DataGridCheckBoxColumn.HeaderTemplate>
@@ -2414,7 +2530,7 @@
                                                 VerticalAlignment="Top"
                                                 Command="{Binding DeleteButtonsCommand}"
                                                 CommandParameter="{Binding Name,
-                                                                           RelativeSource={RelativeSource Self}}"
+																		   RelativeSource={RelativeSource Self}}"
                                                 Content="Delete Mitigations"
                                                 FontSize="12"
                                                 IsEnabled="{Binding IsEnabled}"
@@ -2422,7 +2538,7 @@
                                                 TabIndex="12" />
                                         <Button x:Name="bMitTextClear"
                                                 Width="{Binding ElementName=bMitDelete,
-                                                                Path=ActualWidth}"
+																Path=ActualWidth}"
                                                 Margin="5,0,5,5"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Top"
@@ -2482,7 +2598,8 @@
                                                KeyboardNavigation.IsTabStop="False" />
                                     </StackPanel>
                                 </Grid>
-                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                <ScrollViewer Grid.Row="1"
+                                              VerticalScrollBarVisibility="Auto">
                                     <StackPanel Grid.Row="1">
                                         <Label HorizontalAlignment="Left"
                                                Content="Vulnerability Status"
@@ -2497,9 +2614,9 @@
                                                  IsReadOnly="True"
                                                  TabIndex="4"
                                                  Text="{Binding SelectedItem.MitigationStatus,
-                                                                ElementName=dgUpdateMitigations,
-                                                                Mode=TwoWay,
-                                                                UpdateSourceTrigger=PropertyChanged}"
+																ElementName=dgUpdateMitigations,
+																Mode=TwoWay,
+																UpdateSourceTrigger=PropertyChanged}"
                                                  TextWrapping="Wrap" />
                                         <ComboBox Margin="5,0,5,5"
                                                   HorizontalAlignment="Stretch"
@@ -2526,9 +2643,9 @@
                                                  IsReadOnly="True"
                                                  TabIndex="1"
                                                  Text="{Binding SelectedItem.MitigationGroupName,
-                                                                ElementName=dgUpdateMitigations,
-                                                                Mode=TwoWay,
-                                                                UpdateSourceTrigger=PropertyChanged}"
+																ElementName=dgUpdateMitigations,
+																Mode=TwoWay,
+																UpdateSourceTrigger=PropertyChanged}"
                                                  TextWrapping="Wrap" />
                                         <ComboBox Margin="5,0,5,5"
                                                   HorizontalAlignment="Stretch"
@@ -2570,9 +2687,9 @@
                                                  IsReadOnly="True"
                                                  TabIndex="6"
                                                  Text="{Binding SelectedItem.MitigationText,
-                                                                ElementName=dgUpdateMitigations,
-                                                                Mode=TwoWay,
-                                                                UpdateSourceTrigger=PropertyChanged}"
+																ElementName=dgUpdateMitigations,
+																Mode=TwoWay,
+																UpdateSourceTrigger=PropertyChanged}"
                                                  VerticalScrollBarVisibility="Auto"
                                                  TextWrapping="Wrap" />
                                         <Label Content="Updated Text"
@@ -2595,7 +2712,7 @@
                                                  TextWrapping="Wrap" />
                                         <Button x:Name="bUpdateMitigation"
                                                 Width="{Binding ElementName=bMitDelete_Copy,
-                                                                Path=ActualWidth}"
+																Path=ActualWidth}"
                                                 Margin="5,0,5,5"
                                                 HorizontalAlignment="Left"
                                                 Command="{Binding UpdateMitigationCommand}"
@@ -2606,15 +2723,18 @@
                                                 TabIndex="8">
                                             <Button.CommandParameter>
                                                 <MultiBinding Converter="{StaticResource StringSeparator}">
-                                                    <Binding ElementName="dgUpdateMitigations" Path="SelectedItem.MitigationVulnerabilityId" />
-                                                    <Binding ElementName="dgUpdateMitigations" Path="SelectedItem.MitigationGroupName" />
+                                                    <Binding ElementName="dgUpdateMitigations"
+                                                             Path="SelectedItem.MitigationVulnerabilityId" />
+                                                    <Binding ElementName="dgUpdateMitigations"
+                                                             Path="SelectedItem.MitigationGroupName" />
                                                 </MultiBinding>
                                             </Button.CommandParameter>
                                         </Button>
                                     </StackPanel>
                                 </ScrollViewer>
 
-                                <Grid Grid.Row="1" Grid.Column="1">
+                                <Grid Grid.Row="1"
+                                      Grid.Column="1">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="Auto" />
@@ -2680,8 +2800,8 @@
                                             </DataGridTemplateColumn>
                                             <DataGridCheckBoxColumn Width=".2*"
                                                                     Binding="{Binding IsChecked,
-                                                                                      Mode=TwoWay,
-                                                                                      UpdateSourceTrigger=PropertyChanged}"
+																					  Mode=TwoWay,
+																					  UpdateSourceTrigger=PropertyChanged}"
                                                                     ElementStyle="{DynamicResource MetroDataGridCheckBox}"
                                                                     Header="Select"
                                                                     IsReadOnly="False">
@@ -2690,15 +2810,15 @@
                                                         <CheckBox x:Name="allMits"
                                                                   Command="{Binding SelectCheckboxCommand}"
                                                                   CommandParameter="{Binding Name,
-                                                                                             RelativeSource={RelativeSource Self}}"
+																							 RelativeSource={RelativeSource Self}}"
                                                                   Content="SELECT"
                                                                   Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                                                   Controls:ToggleButtonHelper.ContentDirection="RightToLeft"
                                                                   DataContext="{StaticResource MainWindowViewModel}"
                                                                   FontWeight="SemiBold"
                                                                   IsChecked="{Binding MitigationsAreChecked,
-                                                                                      Mode=TwoWay,
-                                                                                      UpdateSourceTrigger=PropertyChanged}"
+																					  Mode=TwoWay,
+																					  UpdateSourceTrigger=PropertyChanged}"
                                                                   IsEnabled="{Binding IsEnabled}" />
                                                     </DataTemplate>
                                                 </DataGridCheckBoxColumn.HeaderTemplate>
@@ -2711,7 +2831,7 @@
                                                 Orientation="Horizontal">
                                         <Button x:Name="bMitTextClear_Copy"
                                                 Width="{Binding ElementName=bMitDelete_Copy,
-                                                                Path=ActualWidth}"
+																Path=ActualWidth}"
                                                 Margin="5,0,5,5"
                                                 Command="{Binding ClearMitigationSelectionCommand}"
                                                 Content="Clear Selection"
@@ -2723,7 +2843,7 @@
                                                 Margin="5,0,5,5"
                                                 Command="{Binding DeleteButtonsCommand}"
                                                 CommandParameter="{Binding Name,
-                                                                           RelativeSource={RelativeSource Self}}"
+																		   RelativeSource={RelativeSource Self}}"
                                                 Content="Delete Mitigations"
                                                 FontSize="12"
                                                 IsEnabled="{Binding IsEnabled}"
@@ -2762,7 +2882,8 @@
                                    KeyboardNavigation.IsTabStop="False"
                                    Style="{StaticResource styleDescriptionHeader}" />
                         </Grid>
-                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <ScrollViewer Grid.Row="1"
+                                      VerticalScrollBarVisibility="Auto">
                             <StackPanel>
                                 <Label Grid.Row="1"
                                        HorizontalAlignment="Left"
@@ -2785,20 +2906,22 @@
                                               HorizontalAlignment="Left"
                                               Command="{Binding UpdateDictionaryCommand}"
                                               Content="{Binding Value,
-                                                                Converter={StaticResource StringJoiner},
-                                                                ElementName=iavmFilterOne}"
+																Converter={StaticResource StringJoiner},
+																ElementName=iavmFilterOne}"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=iavmComplianceTab/reportingSubTab/cbNotifyOne}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=iavmComplianceTab/reportingSubTab/cbNotifyOne}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="1">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -2809,20 +2932,22 @@
                                               HorizontalAlignment="Left"
                                               Command="{Binding UpdateDictionaryCommand}"
                                               Content="{Binding Value,
-                                                                Converter={StaticResource StringJoiner},
-                                                                ElementName=iavmFilterThree}"
+																Converter={StaticResource StringJoiner},
+																ElementName=iavmFilterThree}"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=iavmComplianceTab/reportingSubTab/cbNotifyThree}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=iavmComplianceTab/reportingSubTab/cbNotifyThree}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="3">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -2832,20 +2957,22 @@
                                               HorizontalAlignment="Left"
                                               Command="{Binding UpdateDictionaryCommand}"
                                               Content="{Binding Value,
-                                                                Converter={StaticResource StringJoiner},
-                                                                ElementName=iavmFilterTwo}"
+																Converter={StaticResource StringJoiner},
+																ElementName=iavmFilterTwo}"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=iavmComplianceTab/reportingSubTab/cbNotifyTwo}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=iavmComplianceTab/reportingSubTab/cbNotifyTwo}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="2">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -2856,20 +2983,22 @@
                                               HorizontalAlignment="Left"
                                               Command="{Binding UpdateDictionaryCommand}"
                                               Content="{Binding Value,
-                                                                Converter={StaticResource StringJoiner},
-                                                                ElementName=iavmFilterFour}"
+																Converter={StaticResource StringJoiner},
+																ElementName=iavmFilterFour}"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=iavmComplianceTab/reportingSubTab/cbNotifyFour}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=iavmComplianceTab/reportingSubTab/cbNotifyFour}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="4">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -2891,8 +3020,10 @@
                                             <i:InvokeCommandAction Command="{Binding UpdateDictionaryCommand}">
                                                 <i:InvokeCommandAction.CommandParameter>
                                                     <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                        <Binding ElementName="tbNotifyingEmail" Path="Name" />
-                                                        <Binding ElementName="tbNotifyingEmail" Path="Text" />
+                                                        <Binding ElementName="tbNotifyingEmail"
+                                                                 Path="Name" />
+                                                        <Binding ElementName="tbNotifyingEmail"
+                                                                 Path="Text" />
                                                     </MultiBinding>
                                                 </i:InvokeCommandAction.CommandParameter>
                                             </i:InvokeCommandAction>
@@ -2929,16 +3060,18 @@
                                                  Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                                  GroupName="AuthenticationMethod"
                                                  IsChecked="{Binding InnerText,
-                                                                     Converter={StaticResource StringToBool},
-                                                                     Mode=OneTime,
-                                                                     Source={StaticResource XmlConfig},
-                                                                     XPath=iavmComplianceTab/reportingSubTab/rbPki}"
+																	 Converter={StaticResource StringToBool},
+																	 Mode=OneTime,
+																	 Source={StaticResource XmlConfig},
+																	 XPath=iavmComplianceTab/reportingSubTab/rbPki}"
                                                  IsEnabled="{Binding IsEnabled}"
                                                  TabIndex="6">
                                         <RadioButton.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </RadioButton.CommandParameter>
                                     </RadioButton>
@@ -2952,30 +3085,32 @@
                                                  Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                                  GroupName="AuthenticationMethod"
                                                  IsChecked="{Binding InnerText,
-                                                                     Converter={StaticResource StringToBool},
-                                                                     Mode=OneTime,
-                                                                     Source={StaticResource XmlConfig},
-                                                                     XPath=iavmComplianceTab/reportingSubTab/rbNone}"
+																	 Converter={StaticResource StringToBool},
+																	 Mode=OneTime,
+																	 Source={StaticResource XmlConfig},
+																	 XPath=iavmComplianceTab/reportingSubTab/rbNone}"
                                                  IsEnabled="{Binding IsEnabled}"
                                                  TabIndex="7">
                                         <RadioButton.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </RadioButton.CommandParameter>
                                     </RadioButton>
                                     <Button x:Name="bAdvancedOptions"
                                             Grid.Row="1"
                                             Width="{Binding ElementName=bIavmReport,
-                                                            Path=ActualWidth}"
+															Path=ActualWidth}"
                                             Margin="5,0,5,5"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Top"
                                             BorderThickness="0,0,0,0"
                                             Command="{Binding HandleFlyoutsCommand}"
                                             CommandParameter="{Binding Content,
-                                                                       RelativeSource={RelativeSource Self}}"
+																	   RelativeSource={RelativeSource Self}}"
                                             Content="Email Options"
                                             FontSize="12"
                                             IsEnabled="{Binding IsEnabled}"
@@ -2985,7 +3120,7 @@
                                             Grid.Row="1"
                                             Grid.Column="1"
                                             Width="{Binding ElementName=bIavmReport,
-                                                            Path=ActualWidth}"
+															Path=ActualWidth}"
                                             Margin="5,0,5,5"
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Top"
@@ -3015,20 +3150,22 @@
                                               Margin="5,0,5,5"
                                               Command="{Binding UpdateDictionaryCommand}"
                                               Content="{Binding Value,
-                                                                Converter={StaticResource StringJoiner},
-                                                                ElementName=iavmFilterOne}"
+																Converter={StaticResource StringJoiner},
+																ElementName=iavmFilterOne}"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=iavmComplianceTab/reportingSubTab/cbReportOne}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=iavmComplianceTab/reportingSubTab/cbReportOne}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="10">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -3038,20 +3175,22 @@
                                               HorizontalAlignment="Left"
                                               Command="{Binding UpdateDictionaryCommand}"
                                               Content="{Binding Value,
-                                                                Converter={StaticResource StringJoiner},
-                                                                ElementName=iavmFilterThree}"
+																Converter={StaticResource StringJoiner},
+																ElementName=iavmFilterThree}"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=iavmComplianceTab/reportingSubTab/cbReportThree}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=iavmComplianceTab/reportingSubTab/cbReportThree}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="12">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -3061,20 +3200,22 @@
                                               HorizontalAlignment="Left"
                                               Command="{Binding UpdateDictionaryCommand}"
                                               Content="{Binding Value,
-                                                                Converter={StaticResource StringJoiner},
-                                                                ElementName=iavmFilterTwo}"
+																Converter={StaticResource StringJoiner},
+																ElementName=iavmFilterTwo}"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=iavmComplianceTab/reportingSubTab/cbReportTwo}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=iavmComplianceTab/reportingSubTab/cbReportTwo}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="11">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -3085,20 +3226,22 @@
                                               HorizontalAlignment="Left"
                                               Command="{Binding UpdateDictionaryCommand}"
                                               Content="{Binding Value,
-                                                                Converter={StaticResource StringJoiner},
-                                                                ElementName=iavmFilterFour}"
+																Converter={StaticResource StringJoiner},
+																ElementName=iavmFilterFour}"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=iavmComplianceTab/reportingSubTab/cbReportFour}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=iavmComplianceTab/reportingSubTab/cbReportFour}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="13">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -3118,16 +3261,18 @@
                                               Content="PDF"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=iavmComplianceTab/reportingSubTab/cbIavmPdf}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=iavmComplianceTab/reportingSubTab/cbIavmPdf}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="14">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -3139,16 +3284,18 @@
                                               Content="Excel"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="{Binding InnerText,
-                                                                  Converter={StaticResource StringToBool},
-                                                                  Mode=OneTime,
-                                                                  Source={StaticResource XmlConfig},
-                                                                  XPath=iavmComplianceTab/reportingSubTab/cbIavmExcel}"
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=iavmComplianceTab/reportingSubTab/cbIavmExcel}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="15">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
@@ -3164,7 +3311,8 @@
                                         TabIndex="16" />
                             </StackPanel>
                         </ScrollViewer>
-                        <Grid Grid.Row="1" Grid.Column="1">
+                        <Grid Grid.Row="1"
+                              Grid.Column="1">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="Auto" />
@@ -3185,10 +3333,14 @@
                                       ScrollViewer.VerticalScrollBarVisibility="Auto"
                                       SelectionUnit="FullRow">
                                 <DataGrid.Columns>
-                                    <DataGridCheckBoxColumn Width=".1*" Header="Select" />
-                                    <DataGridTextColumn Width=".15*" Header="Vulnerability ID" />
-                                    <DataGridTextColumn Width=".65*" Header="Vulnerability Title" />
-                                    <DataGridTextColumn Width=".1*" Header="Count" />
+                                    <DataGridCheckBoxColumn Width=".1*"
+                                                            Header="Select" />
+                                    <DataGridTextColumn Width=".15*"
+                                                        Header="Vulnerability ID" />
+                                    <DataGridTextColumn Width=".65*"
+                                                        Header="Vulnerability Title" />
+                                    <DataGridTextColumn Width=".1*"
+                                                        Header="Count" />
                                 </DataGrid.Columns>
                             </DataGrid>
                             <Grid Grid.Row="2">
@@ -3237,8 +3389,8 @@
                                 <DataGrid.Columns>
                                     <DataGridCheckBoxColumn Width=".2*"
                                                             Binding="{Binding IsChecked,
-                                                                              Mode=TwoWay,
-                                                                              UpdateSourceTrigger=PropertyChanged}"
+																			  Mode=TwoWay,
+																			  UpdateSourceTrigger=PropertyChanged}"
                                                             ElementStyle="{DynamicResource MetroDataGridCheckBox}"
                                                             Header="Select"
                                                             IsReadOnly="False">
@@ -3247,14 +3399,14 @@
                                                 <CheckBox x:Name="allIavms"
                                                           Command="{Binding SelectCheckboxCommand}"
                                                           CommandParameter="{Binding Name,
-                                                                                     RelativeSource={RelativeSource Self}}"
+																					 RelativeSource={RelativeSource Self}}"
                                                           Content="SELECT"
                                                           Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                                           DataContext="{StaticResource MainWindowViewModel}"
                                                           FontWeight="SemiBold"
                                                           IsChecked="{Binding IavmsAreChecked,
-                                                                              Mode=TwoWay,
-                                                                              UpdateSourceTrigger=PropertyChanged}"
+																			  Mode=TwoWay,
+																			  UpdateSourceTrigger=PropertyChanged}"
                                                           IsEnabled="{Binding IsEnabled}" />
                                             </DataTemplate>
                                         </DataGridCheckBoxColumn.HeaderTemplate>
@@ -3334,13 +3486,13 @@
                             <Button x:Name="bIavmDelete"
                                     Grid.Row="4"
                                     Width="{Binding ElementName=bIavmReport,
-                                                    Path=ActualWidth}"
+													Path=ActualWidth}"
                                     Margin="5,0,5,5"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Command="{Binding DeleteButtonsCommand}"
                                     CommandParameter="{Binding Name,
-                                                               RelativeSource={RelativeSource Self}}"
+															   RelativeSource={RelativeSource Self}}"
                                     Content="Delete IAVM(s)"
                                     FontSize="12"
                                     IsEnabled="{Binding IsEnabled}"
@@ -3402,7 +3554,8 @@
                                                KeyboardNavigation.IsTabStop="False" />
                                     </StackPanel>
                                 </Grid>
-                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                <ScrollViewer Grid.Row="1"
+                                              VerticalScrollBarVisibility="Auto">
                                     <StackPanel Grid.Row="1">
                                         <Label HorizontalAlignment="Left"
                                                Content="Database Location"
@@ -3423,7 +3576,7 @@
                                             </Grid.ColumnDefinitions>
                                             <Button x:Name="bNewVulneratorManagedDbBrowse_Copy"
                                                     Width="{Binding ElementName=importContactsButton,
-                                                                    Path=ActualWidth}"
+																	Path=ActualWidth}"
                                                     Margin="5,0,5,5"
                                                     HorizontalAlignment="Left"
                                                     VerticalAlignment="Top"
@@ -3435,7 +3588,7 @@
                                             <Button x:Name="bVulneratorManagedDbBrowse_Copy"
                                                     Grid.Column="1"
                                                     Width="{Binding ElementName=importContactsButton,
-                                                                    Path=ActualWidth}"
+																	Path=ActualWidth}"
                                                     Margin="5,0,5,5"
                                                     HorizontalAlignment="Right"
                                                     VerticalAlignment="Top"
@@ -3454,7 +3607,7 @@
                                                  Controls:TextBoxHelper.Watermark="Point of Contact Name"
                                                  TabIndex="4"
                                                  Text="{Binding AddContactName,
-                                                                UpdateSourceTrigger=LostFocus}"
+																UpdateSourceTrigger=LostFocus}"
                                                  TextWrapping="NoWrap" />
                                         <TextBox Margin="5,0,5,5"
                                                  HorizontalAlignment="Stretch"
@@ -3462,7 +3615,8 @@
                                                  Controls:TextBoxHelper.Watermark="Point of Contact Email"
                                                  TabIndex="6"
                                                  TextWrapping="NoWrap">
-                                            <Binding Path="AddContactEmail" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding Path="AddContactEmail"
+                                                     UpdateSourceTrigger="PropertyChanged">
                                                 <Binding.ValidationRules>
                                                     <v:EmailValidationRule />
                                                 </Binding.ValidationRules>
@@ -3520,8 +3674,8 @@
                                                  Controls:TextBoxHelper.Watermark="New System IP Address"
                                                  TabIndex="10"
                                                  Text="{Binding AddContactSystemIp,
-                                                                UpdateSourceTrigger=LostFocus,
-                                                                Mode=TwoWay}"
+																UpdateSourceTrigger=LostFocus,
+																Mode=TwoWay}"
                                                  TextWrapping="NoWrap" />
                                         <Grid>
                                             <Grid.ColumnDefinitions>
@@ -3538,7 +3692,7 @@
                                                     TabIndex="12" />
                                             <Button Grid.Column="1"
                                                     Width="{Binding ElementName=importContactsButton,
-                                                                    Path=ActualWidth}"
+																	Path=ActualWidth}"
                                                     Margin="5,0,5,5"
                                                     HorizontalAlignment="Right"
                                                     VerticalAlignment="Top"
@@ -3550,7 +3704,8 @@
                                         </Grid>
                                     </StackPanel>
                                 </ScrollViewer>
-                                <Grid Grid.Row="1" Grid.Column="1">
+                                <Grid Grid.Row="1"
+                                      Grid.Column="1">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="Auto" />
@@ -3573,8 +3728,8 @@
                                         <DataGrid.Columns>
                                             <DataGridCheckBoxColumn Width="1*"
                                                                     Binding="{Binding IsChecked,
-                                                                                      Mode=TwoWay,
-                                                                                      UpdateSourceTrigger=PropertyChanged}"
+																					  Mode=TwoWay,
+																					  UpdateSourceTrigger=PropertyChanged}"
                                                                     ElementStyle="{DynamicResource MetroDataGridCheckBox}"
                                                                     Header="Select"
                                                                     IsReadOnly="False">
@@ -3583,14 +3738,14 @@
                                                         <CheckBox x:Name="selectAllContactsCheckbox"
                                                                   Command="{Binding SelectCheckboxCommand}"
                                                                   CommandParameter="{Binding Name,
-                                                                                             RelativeSource={RelativeSource Self}}"
+																							 RelativeSource={RelativeSource Self}}"
                                                                   Content="SELECT"
                                                                   Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                                                   DataContext="{StaticResource MainWindowViewModel}"
                                                                   FontWeight="SemiBold"
                                                                   IsChecked="{Binding ContactsAreChecked,
-                                                                                      Mode=TwoWay,
-                                                                                      UpdateSourceTrigger=PropertyChanged}"
+																					  Mode=TwoWay,
+																					  UpdateSourceTrigger=PropertyChanged}"
                                                                   IsEnabled="{Binding IsEnabled}" />
                                                     </DataTemplate>
                                                 </DataGridCheckBoxColumn.HeaderTemplate>
@@ -3659,7 +3814,7 @@
                                             HorizontalAlignment="Right"
                                             Command="{Binding DeleteButtonsCommand}"
                                             CommandParameter="{Binding Name,
-                                                                       RelativeSource={RelativeSource Self}}"
+																	   RelativeSource={RelativeSource Self}}"
                                             Content="Delete Contact(s)"
                                             FontSize="12"
                                             IsEnabled="{Binding IsEnabled}"
@@ -3713,9 +3868,11 @@
                                                KeyboardNavigation.IsTabStop="False" />
                                     </StackPanel>
                                 </Grid>
-                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                <ScrollViewer Grid.Row="1"
+                                              VerticalScrollBarVisibility="Auto">
                                     <StackPanel Grid.Row="1">
-                                        <Label Content="Update Single Contact" Style="{DynamicResource styleSecondLevelHeader}" />
+                                        <Label Content="Update Single Contact"
+                                               Style="{DynamicResource styleSecondLevelHeader}" />
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="70" />
@@ -3732,10 +3889,10 @@
                                                      Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                                      Controls:TextBoxHelper.Watermark="Select a POC"
                                                      DataContext="{Binding SelectedItem,
-                                                                           ElementName=contactsDataGrid}"
+																		   ElementName=contactsDataGrid}"
                                                      TabIndex="1"
                                                      Text="{Binding ContactName,
-                                                                    Mode=OneWay}"
+																	Mode=OneWay}"
                                                      TextWrapping="NoWrap" />
                                         </Grid>
                                         <Grid>
@@ -3754,10 +3911,10 @@
                                                      Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                                      Controls:TextBoxHelper.Watermark="Select a POC"
                                                      DataContext="{Binding SelectedItem,
-                                                                           ElementName=contactsDataGrid}"
+																		   ElementName=contactsDataGrid}"
                                                      TabIndex="2"
                                                      Text="{Binding ContactTitle,
-                                                                    Mode=OneWay}"
+																	Mode=OneWay}"
                                                      TextWrapping="NoWrap" />
                                         </Grid>
                                         <Grid>
@@ -3777,10 +3934,11 @@
                                                      Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                                      Controls:TextBoxHelper.Watermark="Select a POC"
                                                      DataContext="{Binding SelectedItem,
-                                                                           ElementName=contactsDataGrid}"
+																		   ElementName=contactsDataGrid}"
                                                      TabIndex="3"
                                                      TextWrapping="NoWrap">
-                                                <Binding Path="ContactEmail" UpdateSourceTrigger="PropertyChanged">
+                                                <Binding Path="ContactEmail"
+                                                         UpdateSourceTrigger="PropertyChanged">
                                                     <Binding.ValidationRules>
                                                         <v:EmailValidationRule />
                                                     </Binding.ValidationRules>
@@ -3810,7 +3968,7 @@
                                                       SelectedValuePath="GroupName"
                                                       TabIndex="4"
                                                       Text="{Binding SelectedContact.ContactGroupName,
-                                                                     Mode=OneWay}" />
+																	 Mode=OneWay}" />
                                         </Grid>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
@@ -3834,8 +3992,8 @@
                                                       SelectedValuePath="MacLevelNumber"
                                                       TabIndex="5"
                                                       Text="{Binding SelectedItem.ContactGroupMacLevel,
-                                                                     ElementName=contactsDataGrid,
-                                                                     Mode=OneWay}" />
+																	 ElementName=contactsDataGrid,
+																	 Mode=OneWay}" />
                                         </Grid>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
@@ -3854,10 +4012,10 @@
                                                      Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                                      Controls:TextBoxHelper.Watermark="Select a POC"
                                                      DataContext="{Binding SelectedItem,
-                                                                           ElementName=contactsDataGrid}"
+																		   ElementName=contactsDataGrid}"
                                                      TabIndex="6"
                                                      Text="{Binding ContactSystemIp,
-                                                                    Mode=OneWay}"
+																	Mode=OneWay}"
                                                      TextWrapping="NoWrap" />
                                         </Grid>
                                         <Grid>
@@ -3877,10 +4035,10 @@
                                                      Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                                      Controls:TextBoxHelper.Watermark="Select a POC"
                                                      DataContext="{Binding SelectedItem,
-                                                                           ElementName=contactsDataGrid}"
+																		   ElementName=contactsDataGrid}"
                                                      TabIndex="7"
                                                      Text="{Binding ContactSystemName,
-                                                                    Mode=OneWay}"
+																	Mode=OneWay}"
                                                      TextWrapping="NoWrap" />
                                         </Grid>
                                         <Grid>
@@ -3889,7 +4047,7 @@
                                                 <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
                                             <Button Width="{Binding ElementName=deleteContactsButton_Copy,
-                                                                    Path=ActualWidth}"
+																	Path=ActualWidth}"
                                                     Margin="5,0,5,5"
                                                     HorizontalAlignment="Left"
                                                     VerticalAlignment="Top"
@@ -3900,23 +4058,33 @@
                                                     TabIndex="8">
                                                 <Button.CommandParameter>
                                                     <MultiBinding Converter="{StaticResource ContactInfoStringSeparator}">
-                                                        <Binding ElementName="contactsDataGrid" Path="SelectedItem.ContactName" />
-                                                        <Binding ElementName="contactsDataGrid" Path="SelectedItem.ContactGroupName" />
-                                                        <Binding ElementName="contactsDataGrid" Path="SelectedItem.ContactSystemName" />
-                                                        <Binding ElementName="updateContactNameTextbox" Path="Text" />
-                                                        <Binding ElementName="updateContactTitleTextbox" Path="Text" />
-                                                        <Binding ElementName="updateContactEmailTextbox" Path="Text" />
-                                                        <Binding ElementName="updateContactGroupCombobox" Path="Text" />
-                                                        <Binding ElementName="updateContactMacCombobox" Path="Text" />
-                                                        <Binding ElementName="updateContactSystemIpTextbox" Path="Text" />
-                                                        <Binding ElementName="updateContactSystemNameTextbox" Path="Text" />
+                                                        <Binding ElementName="contactsDataGrid"
+                                                                 Path="SelectedItem.ContactName" />
+                                                        <Binding ElementName="contactsDataGrid"
+                                                                 Path="SelectedItem.ContactGroupName" />
+                                                        <Binding ElementName="contactsDataGrid"
+                                                                 Path="SelectedItem.ContactSystemName" />
+                                                        <Binding ElementName="updateContactNameTextbox"
+                                                                 Path="Text" />
+                                                        <Binding ElementName="updateContactTitleTextbox"
+                                                                 Path="Text" />
+                                                        <Binding ElementName="updateContactEmailTextbox"
+                                                                 Path="Text" />
+                                                        <Binding ElementName="updateContactGroupCombobox"
+                                                                 Path="Text" />
+                                                        <Binding ElementName="updateContactMacCombobox"
+                                                                 Path="Text" />
+                                                        <Binding ElementName="updateContactSystemIpTextbox"
+                                                                 Path="Text" />
+                                                        <Binding ElementName="updateContactSystemNameTextbox"
+                                                                 Path="Text" />
                                                     </MultiBinding>
                                                 </Button.CommandParameter>
                                             </Button>
                                             <Button x:Name="bNotificationCancel_Copy"
                                                     Grid.Column="1"
                                                     Width="{Binding ElementName=deleteContactsButton_Copy,
-                                                                    Path=ActualWidth}"
+																	Path=ActualWidth}"
                                                     Margin="5,0,5,5"
                                                     HorizontalAlignment="Right"
                                                     VerticalAlignment="Top"
@@ -3926,7 +4094,8 @@
                                                     Style="{StaticResource MetroFlatButton}"
                                                     TabIndex="9" />
                                         </Grid>
-                                        <Label Content="Update Group List" Style="{DynamicResource styleSecondLevelHeader}" />
+                                        <Label Content="Update Group List"
+                                               Style="{DynamicResource styleSecondLevelHeader}" />
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="70" />
@@ -3971,9 +4140,9 @@
                                                      Controls:TextBoxHelper.Watermark="Select a group"
                                                      TabIndex="11"
                                                      Text="{Binding Text,
-                                                                    Converter={StaticResource ObtainFirstStringValue},
-                                                                    ElementName=updateGroupComboBox,
-                                                                    Mode=OneWay}"
+																	Converter={StaticResource ObtainFirstStringValue},
+																	ElementName=updateGroupComboBox,
+																	Mode=OneWay}"
                                                      TextWrapping="NoWrap" />
                                         </Grid>
                                         <Grid>
@@ -3999,9 +4168,9 @@
                                                       SelectedValuePath="MacLevelNumber"
                                                       TabIndex="12"
                                                       Text="{Binding Text,
-                                                                     Converter={StaticResource ObtainSecondStringValue},
-                                                                     ElementName=updateGroupComboBox,
-                                                                     Mode=OneWay}" />
+																	 Converter={StaticResource ObtainSecondStringValue},
+																	 ElementName=updateGroupComboBox,
+																	 Mode=OneWay}" />
                                         </Grid>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
@@ -4009,7 +4178,7 @@
                                                 <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
                                             <Button Width="{Binding ElementName=deleteContactsButton_Copy,
-                                                                    Path=ActualWidth}"
+																	Path=ActualWidth}"
                                                     Margin="5,0,5,5"
                                                     HorizontalAlignment="Left"
                                                     VerticalAlignment="Top"
@@ -4020,14 +4189,16 @@
                                                     TabIndex="13">
                                                 <Button.CommandParameter>
                                                     <MultiBinding Converter="{StaticResource UpdateSystemGroupConverter}">
-                                                        <Binding ElementName="updateGroupNewNameTextbox" Path="Text" />
-                                                        <Binding ElementName="updateGroupNewMacLevelTextbox" Path="Text" />
+                                                        <Binding ElementName="updateGroupNewNameTextbox"
+                                                                 Path="Text" />
+                                                        <Binding ElementName="updateGroupNewMacLevelTextbox"
+                                                                 Path="Text" />
                                                     </MultiBinding>
                                                 </Button.CommandParameter>
                                             </Button>
                                             <Button Grid.Column="1"
                                                     Width="{Binding ElementName=deleteContactsButton_Copy,
-                                                                    Path=ActualWidth}"
+																	Path=ActualWidth}"
                                                     Margin="5,0,5,5"
                                                     HorizontalAlignment="Right"
                                                     VerticalAlignment="Top"
@@ -4037,7 +4208,8 @@
                                                     Style="{StaticResource MetroFlatButton}"
                                                     TabIndex="14" />
                                         </Grid>
-                                        <Label Content="Update System List" Style="{DynamicResource styleSecondLevelHeader}" />
+                                        <Label Content="Update System List"
+                                               Style="{DynamicResource styleSecondLevelHeader}" />
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="70" />
@@ -4084,9 +4256,9 @@
                                                       ItemsSource="{Binding Source={StaticResource SystemGroupListForUpdatingCollectionViewSource}}"
                                                       TabIndex="16"
                                                       Text="{Binding Text,
-                                                                     Converter={StaticResource ObtainFirstStringValue},
-                                                                     ElementName=updateSystemCombobox,
-                                                                     Mode=OneWay}" />
+																	 Converter={StaticResource ObtainFirstStringValue},
+																	 ElementName=updateSystemCombobox,
+																	 Mode=OneWay}" />
                                         </Grid>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
@@ -4106,9 +4278,9 @@
                                                      Controls:TextBoxHelper.Watermark="Select a system"
                                                      TabIndex="17"
                                                      Text="{Binding Text,
-                                                                    Converter={StaticResource ObtainSecondStringValue},
-                                                                    ElementName=updateSystemCombobox,
-                                                                    Mode=OneWay}"
+																	Converter={StaticResource ObtainSecondStringValue},
+																	ElementName=updateSystemCombobox,
+																	Mode=OneWay}"
                                                      TextWrapping="NoWrap" />
                                         </Grid>
                                         <Grid>
@@ -4134,12 +4306,12 @@
                                                      Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                                      Controls:TextBoxHelper.Watermark="Select a system"
                                                      DataContext="{Binding SelectedItem,
-                                                                           ElementName=contactsDataGrid}"
+																		   ElementName=contactsDataGrid}"
                                                      TabIndex="18"
                                                      Text="{Binding Text,
-                                                                    Converter={StaticResource ObtainThirdStringValue},
-                                                                    ElementName=updateSystemCombobox,
-                                                                    Mode=OneWay}"
+																	Converter={StaticResource ObtainThirdStringValue},
+																	ElementName=updateSystemCombobox,
+																	Mode=OneWay}"
                                                      TextWrapping="NoWrap" />
                                         </Grid>
                                         <Grid>
@@ -4148,7 +4320,7 @@
                                                 <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
                                             <Button Width="{Binding ElementName=deleteContactsButton_Copy,
-                                                                    Path=ActualWidth}"
+																	Path=ActualWidth}"
                                                     Margin="5,0,5,5"
                                                     HorizontalAlignment="Left"
                                                     VerticalAlignment="Top"
@@ -4159,15 +4331,18 @@
                                                     TabIndex="19">
                                                 <Button.CommandParameter>
                                                     <MultiBinding Converter="{StaticResource UpdateSystemConverter}">
-                                                        <Binding ElementName="updateSystemNewGroupComboBox" Path="Text" />
-                                                        <Binding ElementName="updateSystemNewNameTextbox" Path="Text" />
-                                                        <Binding ElementName="updateSystemNewIpTextbox" Path="Text" />
+                                                        <Binding ElementName="updateSystemNewGroupComboBox"
+                                                                 Path="Text" />
+                                                        <Binding ElementName="updateSystemNewNameTextbox"
+                                                                 Path="Text" />
+                                                        <Binding ElementName="updateSystemNewIpTextbox"
+                                                                 Path="Text" />
                                                     </MultiBinding>
                                                 </Button.CommandParameter>
                                             </Button>
                                             <Button Grid.Column="1"
                                                     Width="{Binding ElementName=deleteContactsButton_Copy,
-                                                                    Path=ActualWidth}"
+																	Path=ActualWidth}"
                                                     Margin="5,0,5,5"
                                                     HorizontalAlignment="Right"
                                                     VerticalAlignment="Top"
@@ -4179,7 +4354,8 @@
                                         </Grid>
                                     </StackPanel>
                                 </ScrollViewer>
-                                <Grid Grid.Row="1" Grid.Column="1">
+                                <Grid Grid.Row="1"
+                                      Grid.Column="1">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="Auto" />
@@ -4202,8 +4378,8 @@
                                         <DataGrid.Columns>
                                             <DataGridCheckBoxColumn Width="1*"
                                                                     Binding="{Binding IsChecked,
-                                                                                      Mode=TwoWay,
-                                                                                      UpdateSourceTrigger=PropertyChanged}"
+																					  Mode=TwoWay,
+																					  UpdateSourceTrigger=PropertyChanged}"
                                                                     ElementStyle="{DynamicResource MetroDataGridCheckBox}"
                                                                     Header="Select"
                                                                     IsReadOnly="False">
@@ -4212,14 +4388,14 @@
                                                         <CheckBox x:Name="selectAllContactsCheckbox"
                                                                   Command="{Binding SelectCheckboxCommand}"
                                                                   CommandParameter="{Binding Name,
-                                                                                             RelativeSource={RelativeSource Self}}"
+																							 RelativeSource={RelativeSource Self}}"
                                                                   Content="SELECT"
                                                                   Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                                                   DataContext="{StaticResource MainWindowViewModel}"
                                                                   FontWeight="SemiBold"
                                                                   IsChecked="{Binding ContactsAreChecked,
-                                                                                      Mode=TwoWay,
-                                                                                      UpdateSourceTrigger=PropertyChanged}"
+																					  Mode=TwoWay,
+																					  UpdateSourceTrigger=PropertyChanged}"
                                                                   IsEnabled="{Binding IsEnabled}" />
                                                     </DataTemplate>
                                                 </DataGridCheckBoxColumn.HeaderTemplate>
@@ -4288,7 +4464,7 @@
                                             HorizontalAlignment="Right"
                                             Command="{Binding DeleteButtonsCommand}"
                                             CommandParameter="{Binding Name,
-                                                                       RelativeSource={RelativeSource Self}}"
+																	   RelativeSource={RelativeSource Self}}"
                                             Content="Delete Contact(s)"
                                             FontSize="12"
                                             IsEnabled="{Binding IsEnabled}"

@@ -315,11 +315,11 @@ namespace Vulnerator
                         case "CCI_REF":
                             {
                                 string cciRef = string.Empty;
-                                string cciRefAttributeData = ObtainAttributeDataNodeValue(xmlReader);
+                                string cciRefData = ObtainAttributeDataNodeValue(xmlReader);
                                 foreach (DataRow cciControlDataRow in joinedCciDatatable.AsEnumerable().Where(
-                                    x => x["CciRef"].Equals(cciRefAttributeData)))
-                                { cciRef = cciRef + cciControlDataRow["CciRef"] + Environment.NewLine; }
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("FixText", cciRef));
+                                    x => x["CciRef"].Equals(cciRefData)))
+                                { cciRef = cciRef + cciControlDataRow["CciControl"] + Environment.NewLine; }
+                                sqliteCommand.Parameters.Add(new SQLiteParameter("CciReference", cciRef));
                                 break;
                             }
                         case "STIGRef":

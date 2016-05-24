@@ -255,9 +255,6 @@
     <Compile Include="ViewModel\ObtainFirstSplitStringValueConverter.cs" />
     <Compile Include="ViewModel\UpdateSystemConverter.cs" />
     <Compile Include="ViewModel\UpdateSystemGroupConverter.cs" />
-    <Compile Include="View\AboutFlyout.xaml.cs">
-      <DependentUpon>AboutFlyout.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\AutoRefreshCollectionViewSource.cs" />
     <Compile Include="View\BlankFieldValidationRule.cs" />
     <Compile Include="View\CloseReportWorkbook.xaml.cs">
@@ -279,10 +276,6 @@
     <Page Include="Resources\IconsNonShared.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\AboutFlyout.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\CloseReportWorkbook.xaml">
       <SubType>Designer</SubType>

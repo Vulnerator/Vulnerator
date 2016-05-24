@@ -1642,12 +1642,27 @@ namespace Vulnerator.ViewModel
 						EmailJeffP();
 						break;
 					}
-				case "tbSoftware":
+				case "tbProject":
 					{
-						VisitSoftwareForge();
+                        VisitProjectPage();
 						break;
 					}
-				default:
+                case "tbWiki":
+                    {
+                        VisitWikiPage();
+                        break;
+                    }
+                case "tbRepo":
+                    {
+                        VisitRepo();
+                        break;
+                    }
+                case "tbKcs":
+                    {
+                        VisitKcs();
+                        break;
+                    }
+                default:
 					{ break; }
 			}
 		}
@@ -1716,9 +1731,9 @@ namespace Vulnerator.ViewModel
 			}
 		}
 
-		private void VisitSoftwareForge()
+		private void VisitProjectPage()
 		{
-			string goTo = "https://software.forge.mil/sf/projects/vulnerator";
+			string goTo = "https://vulnerator.github.io/Vulnerator";
 			try
 			{
 				System.Diagnostics.Process.Start(goTo);
@@ -1732,11 +1747,59 @@ namespace Vulnerator.ViewModel
 			}
 		}
 
-		#endregion
+        private void VisitWikiPage()
+        {
+            string goTo = "https://github.com/Vulnerator/Vulnerator/wiki";
+            try
+            {
+                System.Diagnostics.Process.Start(goTo);
+            }
+            catch (Exception exception)
+            {
+                WriteLog.LogWriter(exception, string.Empty);
+                View.NoInternetApplication internetWarning = new View.NoInternetApplication();
+                internetWarning.ShowDialog();
+                return;
+            }
+        }
 
-		#region SaveMitigationsCommand
+        private void VisitRepo()
+        {
+            string goTo = "https://github.com/Vulnerator/Vulnerator";
+            try
+            {
+                System.Diagnostics.Process.Start(goTo);
+            }
+            catch (Exception exception)
+            {
+                WriteLog.LogWriter(exception, string.Empty);
+                View.NoInternetApplication internetWarning = new View.NoInternetApplication();
+                internetWarning.ShowDialog();
+                return;
+            }
+        }
 
-		public ICommand SaveMitigationsCommand
+        private void VisitKcs()
+        {
+            string goTo = "https://kuchtacreativeservices.com";
+            try
+            {
+                System.Diagnostics.Process.Start(goTo);
+            }
+            catch (Exception exception)
+            {
+                WriteLog.LogWriter(exception, string.Empty);
+                View.NoInternetApplication internetWarning = new View.NoInternetApplication();
+                internetWarning.ShowDialog();
+                return;
+            }
+        }
+
+        #endregion
+
+        #region SaveMitigationsCommand
+
+        public ICommand SaveMitigationsCommand
 		{
 			get { return new DelegateCommand(SaveMitigations); }
 		}

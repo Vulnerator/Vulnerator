@@ -774,15 +774,15 @@ namespace Vulnerator.Model
                     {
                         sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", groupToDelete.Split(delimiterArray, StringSplitOptions.None)[0].Trim()));
                         sqliteCommand.CommandText = "SELECT COUNT(1) FROM PointsOfContact WHERE GroupName = @GroupName";
-                        if ((int)sqliteCommand.ExecuteScalar() == 1)
+                        if ((long)sqliteCommand.ExecuteScalar() != 0)
                         { return "Unable to delete group; please ensure no contacts are associated with \"" + groupToDelete.Split(delimiterArray, StringSplitOptions.None)[0].Trim() + "\""; }
 
                         sqliteCommand.CommandText = "SELECT COUNT(1) FROM Systems WHERE GroupName = @GroupName";
-                        if ((int)sqliteCommand.ExecuteScalar() == 1)
+                        if ((long)sqliteCommand.ExecuteScalar() != 0)
                         { return "Unable to delete group; please ensure no systems are associated with \"" + groupToDelete.Split(delimiterArray, StringSplitOptions.None)[0].Trim() + "\""; }
 
                         sqliteCommand.CommandText = "SELECT COUNT(1) FROM Mitigations WHERE GroupName = @GroupName";
-                        if ((int)sqliteCommand.ExecuteScalar() == 1)
+                        if ((long)sqliteCommand.ExecuteScalar() != 0)
                         { return "Unable to delete group; please ensure no mitigations are associated with \"" + groupToDelete.Split(delimiterArray, StringSplitOptions.None)[0].Trim() + "\""; }
 
                         sqliteCommand.CommandText = "DELETE FROM SystemGroups WHERE GroupName = @GroupName";
@@ -845,14 +845,14 @@ namespace Vulnerator.Model
                         sqliteCommand.Parameters.Add(new SQLiteParameter("UpdatedSystemIp", updateSystemParameters.UpdatedSystemIP.Trim()));
 
                         sqliteCommand.CommandText = "SELECT COUNT(1) FROM Systems WHERE SystemHostName = @UpdatedSystemName AND SystemIpAddress = @UpdatedSystemIp AND GroupName = @UpdatedSystemGroup";
-                        if ((int)sqliteCommand.ExecuteScalar() != 0)
+                        if ((long)sqliteCommand.ExecuteScalar() != 0)
                         {
                             return "\"" + updateSystemParameters.UpdatedSystemName.Trim() + "\" already exists with the IP address \"" + updateSystemParameters.UpdatedSystemIP.Trim() + "\" in \"" + updateSystemParameters.UpdatedSystemGroup.Trim() +
                                 "\"; please provide a different system group, name, or IP";
                         }
 
                         sqliteCommand.CommandText = "SELECT COUNT(1) FROM Systems WHERE SystemIpAddress = @UpdatedSystemIp and GroupName = @UpdatedSystemGroup";
-                        if ((int)sqliteCommand.ExecuteScalar() != 0)
+                        if ((long)sqliteCommand.ExecuteScalar() != 0)
                         {
                             return "A system with the IP address \"" + updateSystemParameters.UpdatedSystemIP.Trim() + "\" already exists in \"" + updateSystemParameters.UpdatedSystemGroup.Trim() + "\"; please provide a different IP address or select a new group";
                         }
@@ -920,7 +920,7 @@ namespace Vulnerator.Model
                         sqliteCommand.Parameters.Add(new SQLiteParameter("SystemIp", systemIp));
 
                         sqliteCommand.CommandText = "SELECT COUNT(1) FROM PointsOfContact WHERE SystemHostName = @SystemName AND SystemIpAddress = @SystemIp AND GroupName = @SystemGroup";
-                        if ((int)sqliteCommand.ExecuteScalar() != 0)
+                        if ((long)sqliteCommand.ExecuteScalar() != 0)
                         {
                             return "One or more contact(s) associated with \"" + systemName + "\" (IP address \"" + systemIp + "\") in \"" + systemGroup +
                                 "\"; please remove all associations to the system and try again.";
@@ -962,9 +962,9 @@ namespace Vulnerator.Model
                     "SELECT COUNT(1) FROM SystemGroups WHERE GroupName = @GroupName", sqliteConnection))
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", groupName));
-                    if ((int)sqliteCommand.ExecuteScalar() == 0)
+                    if ((long)sqliteCommand.ExecuteScalar() == 0)
                     {
-                        if (!String.IsNullOrWhiteSpace(groupMacLevel))
+                        if (!string.IsNullOrWhiteSpace(groupMacLevel))
                         {
                             sqliteCommand.Parameters.Add(new SQLiteParameter("MacLevel", groupMacLevel));
                             sqliteCommand.CommandText = "INSERT INTO SystemGroups VALUES (@GroupName, @MacLevel)";
@@ -1009,7 +1009,7 @@ namespace Vulnerator.Model
 
                     sqliteCommand.CommandText = "SELECT COUNT(1) FROM Systems WHERE SystemHostName = @SystemName AND SystemIpAddress = @SystemIpAddress AND " +
                         "GroupName = @GroupName";
-                    if ((int)sqliteCommand.ExecuteScalar() == 0)
+                    if ((long)sqliteCommand.ExecuteScalar() == 0)
                     {
                         if (!String.IsNullOrWhiteSpace(systemIp))
                         {
@@ -1039,7 +1039,7 @@ namespace Vulnerator.Model
                     sqliteCommand.Parameters.Add(new SQLiteParameter("vulnerabilityId", vulnerabilityId));
                     sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", groupName));
 
-                    if ((int)sqliteCommand.ExecuteScalar() > 0)
+                    if ((long)sqliteCommand.ExecuteScalar() != 0)
                     { return "\"" + groupName + "\" already contains a mitigation for Vulnerability ID " + "\"" + vulnerabilityId + "\""; }
                     else
                     {
@@ -1073,7 +1073,7 @@ namespace Vulnerator.Model
                     sqliteCommand.Parameters.Add(new SQLiteParameter("ContactEmail", email));
                     sqliteCommand.CommandText = "SELECT COUNT(1) FROM PointsOfContact WHERE Name = @ContactName AND Title = @ContactTitle AND SystemHostName = @SystemName " +
                             "AND SystemIpAddress = @SystemIpAddress AND GroupName = @GroupName";
-                    if ((int)sqliteCommand.ExecuteScalar() == 0)
+                    if ((long)sqliteCommand.ExecuteScalar() == 0)
                     {
                         sqliteCommand.Parameters.Add(filterPreferences[0]);
                         sqliteCommand.Parameters.Add(filterPreferences[1]);
@@ -1134,7 +1134,7 @@ namespace Vulnerator.Model
                 {
                     sqliteCommand.CommandText = "SELECT COUNT(1) FROM PointsOfContact WHERE Title = @ContactTitle";
                     sqliteCommand.Parameters.Add(new SQLiteParameter("ContactTitle", contactTitle));
-                    if ((int)sqliteCommand.ExecuteScalar() != 0)
+                    if ((long)sqliteCommand.ExecuteScalar() != 0)
                     {
                         sqliteCommand.CommandText = "SELECT TOP(1) FilterOneInclusion, FilterTwoInclusion, FilterThreeInclusion, FilterFourInclusion FROM " +
                             "PointsOfContact WHERE Title = @ContactTitle";
