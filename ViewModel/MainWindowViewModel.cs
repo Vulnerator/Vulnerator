@@ -22,6 +22,7 @@ namespace Vulnerator.ViewModel
 		public static UpdateSystemGroupParameters updateSystemGroupParameters = new UpdateSystemGroupParameters();
 		public static UpdateSystemParameters updateSystemParameters = new UpdateSystemParameters();
 		public static FindingsDatabaseActions findingsDatabaseActions;
+        public GitHubActions githubActions;
 		public VulneratorDatabaseActions vulneratorDatabaseActions;
 		public static DataSet cciDs = new DataSet();
 		public string cciFileLocation = Directory.GetCurrentDirectory().ToString() + @"\U_CCI_List.xml";
@@ -32,16 +33,7 @@ namespace Vulnerator.ViewModel
 		private BackgroundWorker backgroundWorker;
 		private SaveFileDialog saveExcelFile;
 		private SaveFileDialog savePdfFile;
-		public static DataTable rawAcasFindingsDataTable = CreateFindingsDataTable();
-		public static DataTable mergedAcasFindingsDataTable = rawAcasFindingsDataTable.Clone();
-		public static DataTable rawCklFindingsDataTable = CreateFindingsDataTable();
-		public static DataTable mergedCklFindingsDataTable = rawCklFindingsDataTable.Clone();
-		public static DataTable rawXccdfFindingsDataTable = CreateFindingsDataTable();
-		public static DataTable mergedXccdfFindingsDataTable = rawXccdfFindingsDataTable.Clone();
-		public static DataTable rawWasspFindingsDataTable = CreateFindingsDataTable();
-		public static DataTable mergedWasspFindingsDataTable = rawWasspFindingsDataTable.Clone();
-		public static DataSet rawFindingsByAsset = new DataSet();
-		public static DataSet rawFindingsByGroup = new DataSet();
+
 
 		#region Properties
 
@@ -278,6 +270,34 @@ namespace Vulnerator.ViewModel
 				}
 			}
 		}
+
+        private AsyncObservableCollection<Issue> _issueList;
+        public AsyncObservableCollection<Issue> IssueList
+        {
+            get { return _issueList; }
+            set
+            {
+                if (_issueList != value)
+                {
+                    _issueList = value;
+                    OnPropertyChanged("IssueList");
+                }
+            }
+        }
+
+        private AsyncObservableCollection<Release> _releaseList;
+        public AsyncObservableCollection<Release> ReleaseList
+        {
+            get { return _releaseList; }
+            set
+            {
+                if (_releaseList != value)
+                {
+                    _releaseList = value;
+                    OnPropertyChanged("ReleaseList");
+                }
+            }
+        }
 
 		private string _addMitigationId;
 		public string AddMitigationId
@@ -816,6 +836,8 @@ namespace Vulnerator.ViewModel
 			MonitoredSystemList = new AsyncObservableCollection<MonitoredSystem>();
 			MonitoredSystemListForUpdating = new AsyncObservableCollection<UpdatableMonitoredSystem>();
 			SystemGroupListForUpdating = new AsyncObservableCollection<UpdatableSystemGroup>();
+            IssueList = new AsyncObservableCollection<Issue>();
+            ReleaseList = new AsyncObservableCollection<Release>();
 			vulneratorDatabaseActions.CreateVulneratorDatabase();
 			findingsDatabaseActions = new FindingsDatabaseActions();
 			vulneratorDatabaseActions.PopulateGuiLists(this);
@@ -836,6 +858,9 @@ namespace Vulnerator.ViewModel
 			MacLevelList.Add(new MacLevel("I"));
 			MacLevelList.Add(new MacLevel("II"));
 			MacLevelList.Add(new MacLevel("III"));
+            githubActions = new GitHubActions();
+            githubActions.GetGitHubIssues(IssueList);
+            githubActions.GetGitHubReleases(ReleaseList);
 		}
 
 		#endregion
