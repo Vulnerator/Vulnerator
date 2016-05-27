@@ -1,7 +1,7 @@
 ﻿using MahApps.Metro;
 using System;
-using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Vulnerator.Model;
 using Vulnerator.ViewModel;
@@ -130,6 +130,5 @@ namespace Vulnerator
         }
 
         #endregion
-
     }
 }

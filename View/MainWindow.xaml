@@ -123,6 +123,7 @@
     <!--  Flyout Control  -->
     <Controls:MetroWindow.Flyouts>
         <Controls:FlyoutsControl>
+            <!-- News Flyout -->
             <Controls:Flyout x:Name="flyNews"
                              Height="Auto"
                              HorizontalAlignment="Left"
@@ -132,7 +133,170 @@
                              IsPinned="False"
                              Position="Top"
                              Theme="Adapt">
-                
+                <Grid Height="Auto"
+                      Width="Auto">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Label Content="Open Issues"
+                           Grid.Row="0"
+                           Style="{DynamicResource styleDescriptionHeader}" />
+                    <StackPanel Orientation="Horizontal"
+                                Grid.Row="1">
+                        <Label Content="Open Issue Count: " />
+                        <Label Content="{Binding IssueList.Count}" />
+                    </StackPanel>
+                    <ListBox IsSynchronizedWithCurrentItem="True"
+                             ItemsSource="{Binding IssueList}"
+                             Grid.Row="2"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             Margin="5,0,5,5">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,0,0,30"
+                                      HorizontalAlignment="Stretch">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="{Binding Title}"
+                                               FontSize="24"
+                                               HorizontalAlignment="Stretch"
+                                               TextWrapping="Wrap"
+                                               Grid.Row="0"
+                                               Margin="0,0,0,5" />
+                                    <StackPanel Orientation="Horizontal"
+                                                Grid.Row="1"
+                                                HorizontalAlignment="Stretch"
+                                                Margin="0,0,0,5">
+                                        <Controls:PackIconMaterial Kind="Pound"
+                                                                   ToolTip="Issue Number" />
+                                        <TextBlock Text=" : "
+                                                   HorizontalAlignment="Left" />
+                                        <TextBlock Text="{Binding Number}"
+                                                   HorizontalAlignment="Left" />
+                                        <TextBlock Text="     |     "
+                                                   HorizontalAlignment="Left" />
+                                        <Controls:PackIconMaterial Kind="CommentMultipleOutline"
+                                                                   ToolTip="Comments" />
+                                        <TextBlock Text=" : "
+                                                   HorizontalAlignment="Left" />
+                                        <TextBlock Text="{Binding Comments}"
+                                                   HorizontalAlignment="Left" />
+                                        <TextBlock Text="     |     "
+                                                   HorizontalAlignment="Left" />
+                                        <Controls:PackIconMaterial Kind="FlagOutline"
+                                                                   ToolTip="MileStone" />
+                                        <TextBlock Text=" : "
+                                                   HorizontalAlignment="Left" />
+                                        <TextBlock Text="{Binding Milestone}"
+                                                   HorizontalAlignment="Left" />
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding Body}"
+                                               HorizontalAlignment="Stretch"
+                                               TextWrapping="Wrap"
+                                               Grid.Row="2"
+                                               Margin="0,0,0,5"/>
+                                    <StackPanel Orientation="Horizontal"
+                                                Grid.Row="3"
+                                                HorizontalAlignment="Stretch"
+                                                Margin="0,0,0,5">
+                                        <Controls:PackIconMaterial Kind="Web" />
+                                        <TextBlock Text=" View on GitHub"
+                                                   Style="{StaticResource styleHyperlinkTextBlock}"
+                                                   HorizontalAlignment="Stretch"
+                                                   TextWrapping="Wrap">
+                                            <TextBlock.InputBindings>
+                                                <MouseBinding Command="{Binding GitHubLinksCommand}"
+                                                              CommandParameter="{Binding HtmlUrl}"
+                                                              MouseAction="LeftClick" />
+                                            </TextBlock.InputBindings>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Label Content="Release Updates"
+                           Style="{DynamicResource styleDescriptionHeader}"
+                           Grid.Column="1" />
+                    <StackPanel Orientation="Horizontal"
+                                Grid.Row="1"
+                                Grid.Column="1">
+                        <Label Content="Release Count: " />
+                        <Label Content="{Binding ReleaseList.Count}" />
+                    </StackPanel>
+                    <ListBox IsSynchronizedWithCurrentItem="True"
+                             ItemsSource="{Binding ReleaseList}"
+                             Grid.Row="2"
+                             Grid.Column="1"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             Margin="5,0,5,5">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,0,0,30"
+                                      HorizontalAlignment="Stretch">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="{Binding Name}"
+                                               FontSize="24"
+                                               HorizontalAlignment="Stretch"
+                                               TextWrapping="Wrap"
+                                               Grid.Row="0"
+                                               Margin="0,0,0,5" />
+                                    <StackPanel Orientation="Horizontal"
+                                                Grid.Row="1"
+                                                HorizontalAlignment="Stretch"
+                                                Margin="0,0,0,5">
+                                        <Controls:PackIconMaterial Kind="Tag"
+                                                                   ToolTip="Tag" />
+                                        <TextBlock Text=" : "
+                                                   HorizontalAlignment="Left" />
+                                        <TextBlock Text="{Binding TagName}"
+                                                   HorizontalAlignment="Left" />
+                                        <TextBlock Text="     |     "
+                                                   HorizontalAlignment="Left" />
+                                        <Controls:PackIconMaterial Kind="Calendar"
+                                                                   ToolTip="Date Created" />
+                                        <TextBlock Text=" : "
+                                                   HorizontalAlignment="Left" />
+                                        <TextBlock Text="{Binding CreatedAt}"
+                                                   HorizontalAlignment="Left" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal"
+                                                Grid.Row="2"
+                                                HorizontalAlignment="Stretch"
+                                                Margin="0,0,0,5">
+                                        <Controls:PackIconMaterial Kind="Web" />
+                                        <TextBlock Text=" View on GitHub"
+                                                   Style="{StaticResource styleHyperlinkTextBlock}"
+                                                   HorizontalAlignment="Stretch"
+                                                   TextWrapping="Wrap">
+                                            <TextBlock.InputBindings>
+                                                <MouseBinding Command="{Binding GitHubLinksCommand}"
+                                                              CommandParameter="{Binding HtmlUrl}"
+                                                              MouseAction="LeftClick" />
+                                            </TextBlock.InputBindings>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
             </Controls:Flyout>
             <!--  About Flyout  -->
             <Controls:Flyout x:Name="flyAbout"
@@ -143,7 +307,7 @@
                              IsOpen="{Binding AboutFlyoutIsOpen}"
                              IsPinned="False"
                              Position="Left"
-                             Theme="Adapt">
+                             Theme="Adapt" >
                 <StackPanel VerticalAlignment="Stretch"
                             HorizontalAlignment="Stretch"
                             Width="Auto"

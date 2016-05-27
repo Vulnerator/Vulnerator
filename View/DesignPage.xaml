@@ -1,0 +1,169 @@
+﻿<Page x:Class="Vulnerator.View.DesignPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+      xmlns:v="clr-namespace:Vulnerator.View"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="600"
+      Height="Auto"
+      Width="Auto"
+      Title="DesignPage">
+
+    <Grid Height="Auto"
+          Width="Auto">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="30" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Label Content="Open Issues"
+               Grid.Row="0"
+               Style="{DynamicResource styleDescriptionHeader}" />
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="1">
+            <Label Content="Open Issue Count: " />
+            <Label Content="{Binding IssueList.Count}" />
+        </StackPanel>
+        <ListBox IsSynchronizedWithCurrentItem="True"
+                 ItemsSource="{Binding IssueList}"
+                 Grid.Row="2"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 Margin="5,0,5,5">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="0,0,0,30"
+                          HorizontalAlignment="Stretch">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{Binding Title}"
+                                   FontSize="24"
+                                   HorizontalAlignment="Stretch"
+                                   TextWrapping="Wrap"
+                                   Grid.Row="0"
+                                   Margin="0,0,0,5" />
+                        <StackPanel Orientation="Horizontal"
+                                    Grid.Row="1"
+                                    HorizontalAlignment="Stretch">
+                            <Controls:PackIconMaterial Kind="Pound"
+                                                       ToolTip="Issue Number" />
+                            <TextBlock Text=" : "
+                                       HorizontalAlignment="Left" />
+                            <TextBlock Text="{Binding Number}"
+                                       HorizontalAlignment="Left" />
+                            <TextBlock Text="     |     "
+                                       HorizontalAlignment="Left" />
+                            <Controls:PackIconMaterial Kind="CommentMultipleOutline"
+                                                       ToolTip="Comments" />
+                            <TextBlock Text=" : "
+                                       HorizontalAlignment="Left" />
+                            <TextBlock Text="{Binding Comments}"
+                                       HorizontalAlignment="Left" />
+                            <TextBlock Text="     |     "
+                                       HorizontalAlignment="Left" />
+                            <Controls:PackIconMaterial Kind="FlagOutline"
+                                                       ToolTip="MileStone" />
+                            <TextBlock Text=" : "
+                                       HorizontalAlignment="Left" />
+                            <TextBlock Text="{Binding Milestone}"
+                                       HorizontalAlignment="Left" />
+                        </StackPanel>
+                        <TextBlock Text="{Binding Body}"
+                                   HorizontalAlignment="Stretch"
+                                   TextWrapping="Wrap"
+                                   Grid.Row="2" />
+                        <TextBlock Text="View on GitHub"
+                                   Style="{DynamicResource styleHyperlinkTextBlock}"
+                                   v:TextBlockExtensions.Url="{Binding HtmlUrl}"
+                                   HorizontalAlignment="Stretch"
+                                   TextWrapping="Wrap"
+                                   Grid.Row="3">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding GitHubLinksCommand}"
+                                              CommandParameter="{Binding RelativeSource={RelativeSource Self},
+																		 Path=v:TextBlockExtensions.Url}"
+                                              MouseAction="LeftClick" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Label Content="Release Updates"
+               Style="{DynamicResource styleDescriptionHeader}"
+               Grid.Column="1"/>
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="1"
+                    Grid.Column="1">
+            <Label Content="Release Count: " />
+            <Label Content="{Binding ReleaseList.Count}" />
+        </StackPanel>
+        <ListBox IsSynchronizedWithCurrentItem="True"
+                 ItemsSource="{Binding ReleaseList}"
+                 Grid.Row="2"
+                 Grid.Column="1"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 Margin="5,0,5,5">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="0,0,0,30"
+                          HorizontalAlignment="Stretch">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{Binding Name}"
+                                   FontSize="24"
+                                   HorizontalAlignment="Stretch"
+                                   TextWrapping="Wrap"
+                                   Grid.Row="0"
+                                   Margin="0,0,0,5" />
+                        <StackPanel Orientation="Horizontal"
+                                    Grid.Row="1"
+                                    HorizontalAlignment="Stretch">
+                            <Controls:PackIconMaterial Kind="Tag"
+                                                       ToolTip="Tag" />
+                            <TextBlock Text=" : "
+                                       HorizontalAlignment="Left" />
+                            <TextBlock Text="{Binding TagName}"
+                                       HorizontalAlignment="Left" />
+                            <TextBlock Text="     |     "
+                                       HorizontalAlignment="Left" />
+                            <Controls:PackIconMaterial Kind="Calendar"
+                                                       ToolTip="Date Created" />
+                            <TextBlock Text=" : "
+                                       HorizontalAlignment="Left" />
+                            <TextBlock Text="{Binding CreatedAt}"
+                                       HorizontalAlignment="Left" />
+                        </StackPanel>
+                        <TextBlock Text="View on GitHub"
+                                   Style="{DynamicResource styleHyperlinkTextBlock}"
+                                   v:TextBlockExtensions.Url="{Binding HtmlUrl}"
+                                   HorizontalAlignment="Stretch"
+                                   TextWrapping="Wrap"
+                                   Grid.Row="2">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding GitHubLinksCommand}"
+                                              CommandParameter="{Binding RelativeSource={RelativeSource Self},
+																		 Path=v:TextBlockExtensions.Url}"
+                                              MouseAction="LeftClick" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Page>
