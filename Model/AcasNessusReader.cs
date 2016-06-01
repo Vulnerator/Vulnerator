@@ -290,7 +290,7 @@ namespace Vulnerator.Model
                                 { sqliteCommand.Parameters.Add(new SQLiteParameter("CrossReferences", xmlReader.Value)); }
                                 else
                                 { sqliteCommand.Parameters["CrossReferences"].Value = 
-                                    sqliteCommand.Parameters["CrossReferences"].Value + xmlReader.Value + Environment.NewLine; 
+                                    sqliteCommand.Parameters["CrossReferences"].Value + Environment.NewLine + xmlReader.Value; 
                                 }
                                 if (xmlReader.Value.Contains("IAV"))
                                 { sqliteCommand.Parameters.Add(new SQLiteParameter("IavmNumber", xmlReader.Value)); }
@@ -299,13 +299,12 @@ namespace Vulnerator.Model
                         case "cve":
                             {
                                 xmlReader.Read();
-                                xmlReader.Read();
                                 if (!sqliteCommand.Parameters.Contains("CrossReferences"))
                                 { sqliteCommand.Parameters.Add(new SQLiteParameter("CrossReferences", xmlReader.Value)); }
                                 else
                                 {
                                     sqliteCommand.Parameters["CrossReferences"].Value =
-                                      sqliteCommand.Parameters["CrossReferences"].Value + xmlReader.Value + Environment.NewLine;
+                                      sqliteCommand.Parameters["CrossReferences"].Value + Environment.NewLine + xmlReader.Value;
                                 }
                                 break;
                             }
@@ -318,7 +317,7 @@ namespace Vulnerator.Model
                                 else
                                 {
                                     sqliteCommand.Parameters["CPEs"].Value =
-                                      sqliteCommand.Parameters["CPEs"].Value + xmlReader.Value + Environment.NewLine;
+                                      sqliteCommand.Parameters["CPEs"].Value + Environment.NewLine + xmlReader.Value;
                                 }
                                 break;
                             }

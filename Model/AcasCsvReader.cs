@@ -181,6 +181,8 @@ namespace Vulnerator
                 { sqliteCommand.Parameters.Add(new SQLiteParameter("Impact", csvReader.GetField("Risk Factor"))); }
                 if (!String.IsNullOrWhiteSpace(csvReader.GetField("STIG Severity")))
                 { sqliteCommand.Parameters.Add(new SQLiteParameter("RawRisk", csvReader.GetField("STIG Severity"))); }
+                sqliteCommand.Parameters.Add(new SQLiteParameter(
+                    "CrossReferences", csvReader.GetField("Cross References").Replace(",", Environment.NewLine).Replace(" #", ":")));
                 if (csvReader.GetField("Cross References").Contains("IAV"))
                 { sqliteCommand.Parameters.Add(new SQLiteParameter("IavmNumber", ObtainIavmNumber(csvReader.GetField("Cross References")))); }
                 sqliteCommand.Parameters.Add(new SQLiteParameter("PluginModifiedDate", csvReader.GetField("Plugin Modification Date")));
