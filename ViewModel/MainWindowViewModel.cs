@@ -967,7 +967,17 @@ namespace Vulnerator.ViewModel
 							configAlter.WriteSettingsToDictionary("rbPki", (!bool.Parse(commandParameters.controlValue)).ToString()); 
 							break;
 						}
-					default:
+                    case "rbHostIdentifier":
+                        {
+                            configAlter.WriteSettingsToDictionary("rbIpIdentifier", (!bool.Parse(commandParameters.controlValue)).ToString());
+                            break;
+                        }
+                    case "rbIpIdentifier":
+                        {
+                            configAlter.WriteSettingsToDictionary("rbHostIdentifier", (!bool.Parse(commandParameters.controlValue)).ToString());
+                            break;
+                        }
+                    default:
 						{
 							break;
 						}

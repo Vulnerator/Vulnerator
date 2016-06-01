@@ -23,6 +23,7 @@ namespace Vulnerator.Model
         private string xccdfTitle = string.Empty;
         private string acasXccdfHostName = string.Empty;
         private string acasXccdfHostIp = string.Empty;
+        private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
 
         public string ReadXccdfFile(string fileName, ObservableCollection<MitigationItem> mitigationsList, string systemName)
         {
@@ -265,10 +266,7 @@ namespace Vulnerator.Model
                                 if (!sqliteCommand.Parameters.Contains("IpAddress"))
                                 { sqliteCommand.Parameters.Add(new SQLiteParameter("IpAddress", xmlReader.Value)); }
                                 else
-                                {
-                                    sqliteCommand.Parameters["IpAddress"].Value = 
-                                        sqliteCommand.Parameters["IpAddress"].Value + xmlReader.Value + Environment.NewLine;
-                                }
+                                { sqliteCommand.Parameters["IpAddress"].Value += @"/" + xmlReader.Value; }
                                 break;
                             }
                         default:
@@ -277,7 +275,7 @@ namespace Vulnerator.Model
                 }
                 else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("cdf:target-facts"))
                 {
-                    if (sqliteCommand.Parameters.Contains("HostName"))
+                    if (sqliteCommand.Parameters.Contains("HostName") && UserPrefersHostName)
                     {
                         sqliteCommand.Parameters.Add(new SQLiteParameter(
                             "AssetIdToReport", sqliteCommand.Parameters["HostName"].Value));
@@ -376,7 +374,7 @@ namespace Vulnerator.Model
                         case "xccdf:target-facts":
                             {
                                 GetAcasXccdfTargetInfo(xmlReader, sqliteCommand);
-                                if (sqliteCommand.Parameters.Contains("HostName"))
+                                if (sqliteCommand.Parameters.Contains("HostName") && UserPrefersHostName)
                                 {
                                     sqliteCommand.Parameters.Add(new SQLiteParameter(
                                       "AssetIdToReport", sqliteCommand.Parameters["HostName"].Value));
@@ -436,10 +434,7 @@ namespace Vulnerator.Model
                                 if (!sqliteCommand.Parameters.Contains("IpAddress"))
                                 { sqliteCommand.Parameters.Add(new SQLiteParameter("IpAddress", xmlReader.Value)); }
                                 else
-                                {
-                                    sqliteCommand.Parameters["IpAddress"].Value = sqliteCommand.Parameters["IpAddress"].Value +
-                                        Environment.NewLine + xmlReader.Value;
-                                }
+                                { sqliteCommand.Parameters["IpAddress"].Value += @"/" + xmlReader.Value; }
                                 break;
                             }
                         default:

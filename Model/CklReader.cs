@@ -27,6 +27,7 @@ namespace Vulnerator
             "VulnId", "VulnTitle", "Description", "RiskStatement", "IaControl", "CciReference", "CPEs", "CrossReferences", 
             "IavmNumber", "FixText", "PluginPublishedDate", "PluginModifiedDate", "PatchPublishedDate", "Age", "RawRisk", "Impact", "RuleId" };
         private string[] uniqueFindingTableColumns = new string[] { "Comments", "FindingDetails", "PluginOutput", "LastObserved" };
+        private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
 
         /// <summary>
         /// Reads *.ckl files exported from the DISA STIG Viewer and writes the results to the appropriate DataTables.
@@ -112,12 +113,21 @@ namespace Vulnerator
 
         private void CreateAddAssetCommand(SQLiteCommand sqliteCommand)
         {
-            sqliteCommand.Parameters.Add(new SQLiteParameter("IpAddress", workingSystem.IpAddress));
-            sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", workingSystem.HostName));
-            if (!string.IsNullOrWhiteSpace(workingSystem.HostName))
-            { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", workingSystem.HostName)); }
+            if (!string.IsNullOrWhiteSpace(workingSystem.IpAddress))
+            { sqliteCommand.Parameters.Add(new SQLiteParameter("IpAddress", workingSystem.IpAddress)); }
             else
-            { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", workingSystem.IpAddress)); }
+            { sqliteCommand.Parameters.Add(new SQLiteParameter("IpAddress", "IP Not Provided")); }
+            
+            if (!string.IsNullOrWhiteSpace(workingSystem.HostName))
+            { sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", workingSystem.HostName)); }
+            else
+            { sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", "Host Name Not Provided")); }
+
+            if (UserPrefersHostName)
+            { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", sqliteCommand.Parameters["HostName"].Value)); }
+            else
+            { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", sqliteCommand.Parameters["IpAddress"].Value)); }
+
             sqliteCommand.CommandText = "INSERT INTO Assets (AssetIdToReport, HostName, IpAddress, GroupIndex) VALUES " +
                 "(@AssetIdToReport, @HostName, @IpAddress, " +
                 "(SELECT GroupIndex FROM Groups WHERE GroupName = @GroupName));";

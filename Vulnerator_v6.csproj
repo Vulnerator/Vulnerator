@@ -238,13 +238,11 @@
     <Compile Include="Model\PersonnelList.cs" />
     <Compile Include="Model\SqlCommandParameters.cs" />
     <Compile Include="Model\StatusItem.cs" />
-    <Compile Include="Model\StigScapDiscrepancies.cs" />
     <Compile Include="Model\UpdateContactParameters.cs" />
     <Compile Include="Model\UpdatableMonitoredSystem.cs" />
     <Compile Include="Model\UpdatableSystemGroup.cs" />
     <Compile Include="Model\UpdateSystemGroupParameters.cs" />
     <Compile Include="Model\UpdateSystemParameters.cs" />
-    <Compile Include="Model\WasspSystem.cs" />
     <Compile Include="ViewModel\CommandEnabledComboBox.cs" />
     <Compile Include="ViewModel\ContactInfoSeparatorConverter.cs" />
     <Compile Include="ViewModel\EmailPersonnelLabelJoiner.cs" />

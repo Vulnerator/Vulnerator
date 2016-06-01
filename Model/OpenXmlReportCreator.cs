@@ -45,6 +45,8 @@ namespace Vulnerator.Model
         private bool CklFindingsShouldBeMerged { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbMergeCkl")); } }
         private bool XccdfFindingsShouldBeMerged { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbMergeXccdf")); } }
         private bool WasspFindingsShouldBeMerged { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbMergeWassp")); } }
+        private bool UserRequiresComments { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbComments")); } }
+        private bool UserRequiresFindingDetails { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbFindingDetails")); } }
         private Dictionary<string, int> sharedStringDictionary = new Dictionary<string, int>();
         private int sharedStringMaxIndex = 0;
         private string ContactOrganization = ConfigAlter.ReadSettingsFromDictionary("tbEmassOrg");
@@ -617,14 +619,26 @@ namespace Vulnerator.Model
             { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["CciReference"].ToString(), 24); }
             WriteCellValue(poamOpenXmlWriter, ContactOrganization + ", " + ContactName + ", " + ContactNumber + ", " + ContactEmail, 20);
             WriteCellValue(poamOpenXmlWriter, sqliteDataReader["VulnId"].ToString(), 24);
-            if (!String.IsNullOrWhiteSpace(sqliteDataReader["RawRisk"].ToString()))
+            if (!string.IsNullOrWhiteSpace(sqliteDataReader["RawRisk"].ToString()))
             { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["RawRisk"].ToString(), 24); }
             else
             { WriteCellValue(poamOpenXmlWriter, ConvertAcasSeverityToDisaCategory(sqliteDataReader["Impact"].ToString()), 24); }
             if (mitigation != null)
             { WriteCellValue(poamOpenXmlWriter, mitigation.MitigationText, 20); }
             else
-            { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["FindingDetails"].ToString(), 20); }
+            {
+                string mitigationText = string.Empty;
+                if (UserRequiresComments)
+                { mitigationText = sqliteDataReader["Comments"].ToString(); }
+                if (UserRequiresFindingDetails)
+                {
+                    if (string.IsNullOrWhiteSpace(mitigationText))
+                    { mitigationText = sqliteDataReader["FindingDetails"].ToString(); }
+                    else
+                    { mitigationText += doubleCarriageReturn + sqliteDataReader["FindingDetails"].ToString(); }
+                }
+                WriteCellValue(poamOpenXmlWriter, mitigationText, 20);
+            }
             WriteCellValue(poamOpenXmlWriter, string.Empty, 24);
             WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
             WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
@@ -817,13 +831,33 @@ namespace Vulnerator.Model
             else if (sqliteDataReader["Status"].ToString().Equals("Completed"))
             {
                 WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-                WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Comments"].ToString(), 20);
+                string mitigationText = string.Empty;
+                if (UserRequiresComments)
+                { mitigationText = sqliteDataReader["Comments"].ToString(); }
+                if (UserRequiresFindingDetails)
+                {
+                    if (string.IsNullOrWhiteSpace(mitigationText))
+                    { mitigationText = sqliteDataReader["FindingDetails"].ToString(); }
+                    else
+                    { mitigationText += doubleCarriageReturn + sqliteDataReader["FindingDetails"].ToString(); }
+                }
+                WriteCellValue(rarOpenXmlWriter, mitigationText, 20);
                 WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
                 WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24);
             }
             else
             {
-                WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Comments"].ToString(), 20);
+                string mitigationText = string.Empty;
+                if (UserRequiresComments)
+                { mitigationText = sqliteDataReader["Comments"].ToString(); }
+                if (UserRequiresFindingDetails)
+                {
+                    if (string.IsNullOrWhiteSpace(mitigationText))
+                    { mitigationText = sqliteDataReader["FindingDetails"].ToString(); }
+                    else
+                    { mitigationText += doubleCarriageReturn + sqliteDataReader["FindingDetails"].ToString(); }
+                }
+                WriteCellValue(rarOpenXmlWriter, mitigationText, 20);
                 WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
                 WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
                 WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24);
