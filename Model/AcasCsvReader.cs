@@ -22,6 +22,7 @@ namespace Vulnerator
         private string[] timezoneDelimiter = { " UTC" };
         private string dateTimeFormat = "MMM d, yyyy hh:mm:ss";
         private string vulneratorDatabaseConnection = @"Data Source = " + ConfigAlter.ReadSettingsFromDictionary("tbMitDbLocation");
+        private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
 
         /// <summary>
         /// Reads *.csv files exported from within ACAS and writes the results to the appropriate DataTables.
@@ -131,7 +132,10 @@ namespace Vulnerator
                 if (!String.IsNullOrWhiteSpace(csvReader.GetField("DNS Name")))
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", csvReader.GetField("DNS Name")));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", csvReader.GetField("DNS Name")));
+                    if (UserPrefersHostName)
+                    { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", csvReader.GetField("DNS Name"))); }
+                    else
+                    { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", csvReader.GetField("IP Address"))); }
                 }
                 else
                 { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", csvReader.GetField("IP Address"))); }

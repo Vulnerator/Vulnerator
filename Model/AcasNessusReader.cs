@@ -23,6 +23,8 @@ namespace Vulnerator.Model
             "VulnId", "VulnTitle", "Description", "RiskStatement", "IaControl", "CciReference", "CPEs", "CrossReferences", 
             "IavmNumber", "FixText", "PluginPublishedDate", "PluginModifiedDate", "PatchPublishedDate", "Age", "RawRisk", "Impact", "RuleId" };
         private string[] uniqueFindingTableColumns = new string[] { "Comments", "FindingDetails", "PluginOutput", "LastObserved" };
+        private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
+        int i = 1;
 
         /// <summary>
         /// Reads *.nessus files exported from within ACAS and writes the results to the appropriate DataTables.
@@ -204,7 +206,7 @@ namespace Vulnerator.Model
             sqliteCommand.Parameters.Add(new SQLiteParameter("Status", "Ongoing"));
             sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "ACAS"));
             sqliteCommand.Parameters.Add(new SQLiteParameter("Source", "Assured Compliance Assessment Solution (ACAS)"));
-            if (!String.IsNullOrWhiteSpace(workingSystem.HostName))
+            if (UserPrefersHostName && !workingSystem.HostName.Equals("Host Name Not Provided"))
             { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", workingSystem.HostName)); }
             else
             { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", workingSystem.IpAddress)); }
@@ -337,15 +339,14 @@ namespace Vulnerator.Model
             {
                 sqliteCommand.Parameters.Add(new SQLiteParameter("IpAddress", workingSystem.IpAddress));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("IsCredentialed", workingSystem.CredentialedScan));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", workingSystem.IpAddress));
-                if (!String.IsNullOrWhiteSpace(workingSystem.HostName))
-                {
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", workingSystem.HostName));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", workingSystem.HostName));
-                }
+                if (string.IsNullOrWhiteSpace(workingSystem.HostName))
+                { workingSystem.HostName = "Host Name Not Provided"; }
+                sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", workingSystem.HostName));
+                if (UserPrefersHostName && !workingSystem.HostName.Equals("Host Name Not Provided"))
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", workingSystem.HostName)); }
                 else
                 { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", workingSystem.IpAddress)); }
-                if (!String.IsNullOrWhiteSpace(workingSystem.OperatingSystem))
+                if (!string.IsNullOrWhiteSpace(workingSystem.OperatingSystem))
                 { sqliteCommand.Parameters.Add(new SQLiteParameter("OperatingSystem", workingSystem.OperatingSystem)); }
                 sqliteCommand.CommandText = "INSERT INTO Assets (, GroupIndex) VALUES (, " +
                     "(SELECT GroupIndex FROM Groups WHERE GroupName = @GroupName));";

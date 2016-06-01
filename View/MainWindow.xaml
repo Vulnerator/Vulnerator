@@ -24,7 +24,9 @@
                       Icon="/Vulnerator;component/Resources/chart.ico"
                       KeyboardNavigation.TabNavigation="Continue"
                       ResizeMode="CanResize"
-                      mc:Ignorable="d">
+                      mc:Ignorable="d"
+                      d:DesignHeight="1500"
+                      d:DesignWidth="1000">
 
     <Controls:MetroWindow.Resources>
         <vm:MyXmlDataProvider x:Key="XmlConfig"
@@ -1726,6 +1728,7 @@
                                         <RowDefinition />
                                         <RowDefinition />
                                         <RowDefinition />
+                                        <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <CheckBox x:Name="cbPoamRar"
                                               Grid.Row="0"
@@ -1762,7 +1765,7 @@
 																  Source={StaticResource XmlConfig},
 																  XPath=reportingTab/cbDiscrepancies}"
                                               IsEnabled="{Binding IsEnabled}"
-                                              TabIndex="18">
+                                              TabIndex="21">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name"
@@ -1803,7 +1806,7 @@
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="False"
                                               IsEnabled="False"
-                                              TabIndex="19">
+                                              TabIndex="22">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name"
@@ -1814,7 +1817,7 @@
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
                                     <CheckBox x:Name="cbAcasOutput"
-                                              Grid.Row="2"
+                                              Grid.Row="3"
                                               Grid.ColumnSpan="2"
                                               Margin="5,0,0,5"
                                               HorizontalAlignment="Left"
@@ -1828,7 +1831,32 @@
 																  Source={StaticResource XmlConfig},
 																  XPath=reportingTab/cbAcasOutput}"
                                               IsEnabled="{Binding IsEnabled}"
-                                              TabIndex="20">
+                                              TabIndex="19">
+                                        <CheckBox.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource CommandConverter}">
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                            </MultiBinding>
+                                        </CheckBox.CommandParameter>
+                                    </CheckBox>
+                                    <CheckBox x:Name="cbStigDetails"
+                                              Grid.Row="2"
+                                              Grid.ColumnSpan="2"
+                                              Margin="5,0,0,5"
+                                              HorizontalAlignment="Left"
+                                              VerticalAlignment="Top"
+                                              Command="{Binding UpdateDictionaryCommand}"
+                                              Content="STIG Details &amp; Review"
+                                              Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
+                                              IsChecked="{Binding InnerText,
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbStigDetails}"
+                                              IsEnabled="{Binding IsEnabled}"
+                                              TabIndex="18">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name"
@@ -1839,7 +1867,7 @@
                                         </CheckBox.CommandParameter>
                                     </CheckBox>
                                     <CheckBox x:Name="cbOsUser"
-                                              Grid.Row="3"
+                                              Grid.Row="4"
                                               Grid.ColumnSpan="2"
                                               Margin="5,0,0,5"
                                               HorizontalAlignment="Left"
@@ -1849,7 +1877,7 @@
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               IsChecked="False"
                                               IsEnabled="False"
-                                              TabIndex="21">
+                                              TabIndex="20">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name"
@@ -1885,7 +1913,7 @@
 																  Source={StaticResource XmlConfig},
 																  XPath=reportingTab/cbAllFindings}"
                                               IsEnabled="False"
-                                              TabIndex="22">
+                                              TabIndex="23">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name"
@@ -1907,7 +1935,7 @@
 																  Source={StaticResource XmlConfig},
 																  XPath=reportingTab/cbBySystem}"
                                               IsEnabled="False"
-                                              TabIndex="23">
+                                              TabIndex="24">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name"
@@ -1930,7 +1958,119 @@
 																  Source={StaticResource XmlConfig},
 																  XPath=reportingTab/cbByGroup}"
                                               IsEnabled="False"
-                                              TabIndex="24">
+                                              TabIndex="25">
+                                        <CheckBox.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource CommandConverter}">
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                            </MultiBinding>
+                                        </CheckBox.CommandParameter>
+                                    </CheckBox>
+                                </Grid>
+                                <Label HorizontalAlignment="Stretch"
+                                       Content="System Identifier to Report"
+                                       KeyboardNavigation.IsTabStop="False"
+                                       Style="{StaticResource styleSecondLevelHeader}" />
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <RadioButton x:Name="rbHostIdentifier"
+                                                 Margin="5,0,0,5"
+                                                 HorizontalAlignment="Left"
+                                                 VerticalAlignment="Top"
+                                                 Command="{Binding UpdateDictionaryCommand}"
+                                                 Content="Asset Host Name (IP Address Fallback)"
+                                                 Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
+                                                 GroupName="AssetIdentifier"
+                                                 IsChecked="{Binding InnerText,
+																	 Converter={StaticResource StringToBool},
+																	 Mode=OneTime,
+																	 Source={StaticResource XmlConfig},
+																	 XPath=reportingTab/rbHostIdentifier}"
+                                                 IsEnabled="{Binding IsEnabled}"
+                                                 TabIndex="26">
+                                        <RadioButton.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource CommandConverter}">
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                            </MultiBinding>
+                                        </RadioButton.CommandParameter>
+                                    </RadioButton>
+                                    <RadioButton x:Name="rbIpIdentifier"
+                                                 Margin="5,0,0,5"
+                                                 Grid.Row="1"
+                                                 HorizontalAlignment="Left"
+                                                 VerticalAlignment="Top"
+                                                 Command="{Binding UpdateDictionaryCommand}"
+                                                 Content="Asset IP Address (Host Name Fallback)"
+                                                 Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
+                                                 GroupName="AssetIdentifier"
+                                                 IsChecked="{Binding InnerText,
+																	 Converter={StaticResource StringToBool},
+																	 Mode=OneTime,
+																	 Source={StaticResource XmlConfig},
+																	 XPath=reportingTab/rbIpIdentifier}"
+                                                 IsEnabled="{Binding IsEnabled}"
+                                                 TabIndex="27">
+                                        <RadioButton.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource CommandConverter}">
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                            </MultiBinding>
+                                        </RadioButton.CommandParameter>
+                                    </RadioButton>
+                                </Grid>
+                                <Label HorizontalAlignment="Stretch"
+                                       Content="STIG Mitigation Text Location"
+                                       KeyboardNavigation.IsTabStop="False"
+                                       Style="{StaticResource styleSecondLevelHeader}" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <CheckBox x:Name="cbComments"
+                                              Margin="5,0,0,5"
+                                              Command="{Binding UpdateDictionaryCommand}"
+                                              Content="Comments"
+                                              Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
+                                              IsChecked="{Binding InnerText,
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbComments}"
+                                              TabIndex="28"
+                                              IsEnabled="{Binding IsEnabled}">
+                                        <CheckBox.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource CommandConverter}">
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                            </MultiBinding>
+                                        </CheckBox.CommandParameter>
+                                    </CheckBox>
+                                    <CheckBox x:Name="cbFindingDetails"
+                                              Margin="5,0,0,5"
+                                              Grid.Column="1"
+                                              Command="{Binding UpdateDictionaryCommand}"
+                                              Content="Finding Details"
+                                              Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
+                                              IsChecked="{Binding InnerText,
+																  Converter={StaticResource StringToBool},
+																  Mode=OneTime,
+																  Source={StaticResource XmlConfig},
+																  XPath=reportingTab/cbFindingDetails}"
+                                              TabIndex="29"
+                                              IsEnabled="{Binding IsEnabled}">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name"
@@ -1966,7 +2106,7 @@
 																  Source={StaticResource XmlConfig},
 																  XPath=reportingTab/cbMergeAcas}"
                                               IsEnabled="{Binding IsEnabled}"
-                                              TabIndex="25">
+                                              TabIndex="30">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name"
@@ -1989,7 +2129,7 @@
 																  Source={StaticResource XmlConfig},
 																  XPath=reportingTab/cbMergeCkl}"
                                               IsEnabled="{Binding IsEnabled}"
-                                              TabIndex="26">
+                                              TabIndex="32">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name"
@@ -2011,7 +2151,7 @@
 																  Source={StaticResource XmlConfig},
 																  XPath=reportingTab/cbMergeXccdf}"
                                               IsEnabled="{Binding IsEnabled}"
-                                              TabIndex="27">
+                                              TabIndex="31">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name"
@@ -2034,7 +2174,7 @@
 																  Source={StaticResource XmlConfig},
 																  XPath=reportingTab/cbMergeWassp}"
                                               IsEnabled="{Binding IsEnabled}"
-                                              TabIndex="28">
+                                              TabIndex="33">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name"
@@ -2058,7 +2198,7 @@
                                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                                          Controls:TextBoxHelper.Watermark="Organization (ex. NAVAIR)"
                                          IsEnabled="{Binding IsEnabled}"
-                                         TabIndex="29"
+                                         TabIndex="34"
                                          Text="{Binding InnerText,
 														Mode=OneTime,
 														Source={StaticResource XmlConfig},
@@ -2087,7 +2227,7 @@
                                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                                          Controls:TextBoxHelper.Watermark="Name (First Last)"
                                          IsEnabled="{Binding IsEnabled}"
-                                         TabIndex="30"
+                                         TabIndex="35"
                                          Text="{Binding InnerText,
 														Mode=OneTime,
 														Source={StaticResource XmlConfig},
@@ -2116,7 +2256,7 @@
                                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                                          Controls:TextBoxHelper.Watermark="Number (Digits Only)"
                                          IsEnabled="{Binding IsEnabled}"
-                                         TabIndex="31">
+                                         TabIndex="36">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="LostFocus">
                                             <i:InvokeCommandAction Command="{Binding UpdateDictionaryCommand}">
@@ -2150,7 +2290,7 @@
                                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                                          Controls:TextBoxHelper.Watermark="Email (Match eMASS)"
                                          IsEnabled="{Binding IsEnabled}"
-                                         TabIndex="32">
+                                         TabIndex="37">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="LostFocus">
                                             <i:InvokeCommandAction Command="{Binding UpdateDictionaryCommand}">
@@ -2189,7 +2329,7 @@
                                         FontSize="12"
                                         IsEnabled="{Binding IsEnabled}"
                                         Style="{StaticResource MetroFlatButton}"
-                                        TabIndex="33" />
+                                        TabIndex="38" />
                                 <Button x:Name="bCkl"
                                         Margin="5,0,5,5"
                                         HorizontalAlignment="Stretch"
@@ -2200,7 +2340,7 @@
                                         FontSize="12"
                                         IsEnabled="{Binding IsEnabled}"
                                         Style="{StaticResource MetroFlatButton}"
-                                        TabIndex="34" />
+                                        TabIndex="39" />
                                 <Button x:Name="bXccdf"
                                         Margin="5,0,5,5"
                                         HorizontalAlignment="Stretch"
@@ -2211,7 +2351,7 @@
                                         FontSize="12"
                                         IsEnabled="{Binding IsEnabled}"
                                         Style="{StaticResource MetroFlatButton}"
-                                        TabIndex="35" />
+                                        TabIndex="40" />
                                 <Button x:Name="bWassp"
                                         Margin="5,0,5,5"
                                         HorizontalAlignment="Stretch"
@@ -2222,7 +2362,7 @@
                                         FontSize="12"
                                         IsEnabled="{Binding IsEnabled}"
                                         Style="{StaticResource MetroFlatButton}"
-                                        TabIndex="36" />
+                                        TabIndex="41" />
                                 <Button x:Name="bExecute"
                                         Margin="5,0,5,5"
                                         HorizontalAlignment="Stretch"
@@ -2232,7 +2372,7 @@
                                         FontSize="12"
                                         IsEnabled="{Binding IsEnabled}"
                                         Style="{StaticResource MetroFlatButton}"
-                                        TabIndex="37" />
+                                        TabIndex="42" />
                                 <Button x:Name="bClearFiles"
                                         Margin="5,0,5,5"
                                         HorizontalAlignment="Stretch"
@@ -2243,7 +2383,7 @@
                                         FontSize="12"
                                         IsEnabled="{Binding IsEnabled}"
                                         Style="{StaticResource MetroFlatButton}"
-                                        TabIndex="38" />
+                                        TabIndex="43" />
                             </StackPanel>
                         </ScrollViewer>
                         <DataGrid x:Name="dgFiles"

@@ -10,6 +10,7 @@ namespace Vulnerator.Model
     class WasspReader
     {
         private string fileNameWithoutPath = string.Empty;
+        private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
 
         public string ReadWassp(string fileName, ObservableCollection<MitigationItem> mitigationsList, string systemName)
         {
@@ -154,12 +155,11 @@ namespace Vulnerator.Model
 
         private void RetrieveAndWriteHostInformation(SQLiteCommand sqliteCommand, XmlReader xmlReader)
         {
-            sqliteCommand.Parameters.Add(new SQLiteParameter(
-                                            "HostName", ObtainItemValue(xmlReader)));
-            sqliteCommand.Parameters.Add(new SQLiteParameter(
-                "AssetIdToReport", sqliteCommand.Parameters["HostName"].Value));
+            sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", ObtainItemValue(xmlReader)));
             sqliteCommand.Parameters.Add(new SQLiteParameter(
                 "IpAddress", "Not Provided"));
+            sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", sqliteCommand.Parameters["HostName"].Value));
+
             sqliteCommand.CommandText = SetSqliteCommandText("Assets");
             InsertAssetCommand(sqliteCommand);
         }

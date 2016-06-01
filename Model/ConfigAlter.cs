@@ -138,12 +138,12 @@ namespace Vulnerator.Model
                 {
                     XDocument oldXmlConfigCheck = XDocument.Load(xmlFile);
                     string xelementOldNode = oldXmlConfigCheck.Descendants().FirstOrDefault(x => x.Name.LocalName.Equals("tbMitDbLocation")).Value;
-                    oldXmlConfigCheck = null;
-                    if (xelementOldNode.Contains(".sdf"))
-                    {
-                        File.Delete(xmlFile);
-                        File.Delete(xelementOldNode);
-                    }
+                    if (!string.IsNullOrWhiteSpace(xelementOldNode) && xelementOldNode.Contains(".sdf"))
+                    { File.Delete(xelementOldNode); }
+
+                    XElement newestNode = oldXmlConfigCheck.Descendants().FirstOrDefault(x => x.Name.LocalName.Equals("cbFindingDetails"));
+                    if (newestNode == null)
+                    { File.Delete(xmlFile); }
                 }
                 
                 if (!File.Exists(xmlFile))
@@ -170,6 +170,7 @@ namespace Vulnerator.Model
                                 new XElement("cbPoamRar", "True"),
                                 new XElement("cbAssetOverview", "True"),
                                 new XElement("cbDiscrepancies", "True"),
+                                new XElement("cbStigDetails", "True"),
                                 new XElement("cbAcasOutput", "True"),
                                 new XElement("cbOsUser", "True"),
                                 new XElement("cbPdfSum", "False"),
@@ -183,7 +184,11 @@ namespace Vulnerator.Model
                                 new XElement("tbEmassEmail", string.Empty),
                                 new XElement("cbAllFindings", "False"),
                                 new XElement("cbBySystem", "False"),
-                                new XElement("cbByGroup", "False")
+                                new XElement("cbByGroup", "False"),
+                                new XElement("rbHostIdentifier", "True"),
+                                new XElement("rbIpIdentifier", "False"),
+                                new XElement("cbComments", "True"),
+                                new XElement("cbFindingDetails", "True")
                             ),
                             new XElement("mitigationsTab",
                                 new XElement("createSubTab",
