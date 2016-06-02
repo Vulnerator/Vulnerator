@@ -41,6 +41,7 @@ namespace Vulnerator.Model
         private bool PoamAndRarTabsAreNeeded { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbPoamRar")); } }
         private bool DiscrepanciesTabIsNeeded { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbDiscrepancies")); } }
         private bool AcasOutputTabIsNeeded { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbAcasOutput")); } }
+        private bool StigDetailsTabIsNeeded { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbStigDetails")); } }
         private bool AcasFindingsShouldBeMerged { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbMergeAcas")); } }
         private bool CklFindingsShouldBeMerged { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbMergeCkl")); } }
         private bool XccdfFindingsShouldBeMerged { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbMergeXccdf")); } }
@@ -65,6 +66,7 @@ namespace Vulnerator.Model
         private OpenXmlWriter rarOpenXmlWriter;
         private OpenXmlWriter acasOutputOpenXmlWriter;
         private OpenXmlWriter discrepanciesOpenXmlWriter;
+        private OpenXmlWriter stigDetailsOpenXmlWriter;
 
         #endregion Member Variables
 
@@ -106,20 +108,19 @@ namespace Vulnerator.Model
                     }
 
                     if (AcasOutputTabIsNeeded)
-                    { WriteIndividualAcasOutput(mitigationList); }
+                    { WriteIndividualAcasOutput(); }
 
                     if (DiscrepanciesTabIsNeeded)
                     { WriteIndividualDiscrepancies(mitigationList); }
 
+                    if (StigDetailsTabIsNeeded)
+                    { WriteStigDetailItems(); }
+
                     EndSpreadsheets();
                     CreateSharedStringPart(workbookPart);
                 }
-                #if DEBUG
-                ValidateFile(fileName);
+
                 return "Excel report creation successful";
-                #else
-                return "Excel report creation successful";
-                #endif
             }
             catch (Exception exception)
             {
@@ -141,6 +142,8 @@ namespace Vulnerator.Model
             { StartAcasOutput(workbookPart, sheets); }
             if (DiscrepanciesTabIsNeeded)
             { StartDiscrepancies(workbookPart, sheets); }
+            if (StigDetailsTabIsNeeded)
+            { StartStigDetails(workbookPart, sheets); }
         }
 
         private void WriteFindingsToPoamAndRar(string findingType, bool findingsAreMerged, AsyncObservableCollection<MitigationItem> mitigationList)
@@ -180,9 +183,12 @@ namespace Vulnerator.Model
             { EndAcasOutput(); }
             if (DiscrepanciesTabIsNeeded)
             { EndDiscrepancies(); }
+
+            if (StigDetailsTabIsNeeded)
+            { EndStigDetails(); }
         }
 
-#region Create Asset Overview
+        #region Create Asset Overview
 
         private void StartAssetOverview(WorkbookPart workbookPart, Sheets sheets)
         {
@@ -419,9 +425,9 @@ namespace Vulnerator.Model
             assetOverviewOpenXmlWriter.WriteEndElement();
         }
 
-#endregion Create Asset Overview
+        #endregion Create Asset Overview
 
-#region Create POA&M
+        #region Create POA&M
 
         private void StartPoam(WorkbookPart workbookPart, Sheets sheets)
         {
@@ -675,9 +681,9 @@ namespace Vulnerator.Model
             poamOpenXmlWriter.WriteEndElement();
         }
 
-#endregion Create POA&M
+        #endregion Create POA&M
 
-#region Create RAR
+        #region Create RAR
 
         private void StartRar(WorkbookPart workbookPart, Sheets sheets)
         {
@@ -886,14 +892,14 @@ namespace Vulnerator.Model
             rarOpenXmlWriter.WriteEndElement();
         }
 
-#endregion Create RAR
+        #endregion Create RAR
 
-#region Create ACAS Output
+        #region Create ACAS Output
 
         private void StartAcasOutput(WorkbookPart workbookPart, Sheets sheets)
         {
             WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
-            Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "ACAS Output" };
+            Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "ACAS Output & Review" };
             sheetIndex++;
             sheets.Append(sheet);
             acasOutputOpenXmlWriter = OpenXmlWriter.Create(worksheetPart);
@@ -923,6 +929,9 @@ namespace Vulnerator.Model
             acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 15U, Max = 15U, Width = 25.00d, CustomWidth = true });
             acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 16U, Max = 16U, Width = 25.00d, CustomWidth = true });
             acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 17U, Max = 17U, Width = 25.00d, CustomWidth = true });
+            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 18U, Max = 18U, Width = 25.00d, CustomWidth = true });
+            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 19U, Max = 19U, Width = 15.00d, CustomWidth = true });
+            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 20U, Max = 20U, Width = 35.00d, CustomWidth = true });
             acasOutputOpenXmlWriter.WriteEndElement();
         }
 
@@ -946,10 +955,13 @@ namespace Vulnerator.Model
             WriteCellValue(acasOutputOpenXmlWriter, "Last Observed Date", 4);
             WriteCellValue(acasOutputOpenXmlWriter, "Patch Publication Date", 4);
             WriteCellValue(acasOutputOpenXmlWriter, "Scan Filename", 4);
+            WriteCellValue(acasOutputOpenXmlWriter, "Group Name", 4);
+            WriteCellValue(acasOutputOpenXmlWriter, "Review Status", 4);
+            WriteCellValue(acasOutputOpenXmlWriter, "Notes", 4);
             acasOutputOpenXmlWriter.WriteEndElement();
         }
 
-        private void WriteIndividualAcasOutput(AsyncObservableCollection<MitigationItem> mitigationList)
+        private void WriteIndividualAcasOutput()
         {
             using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
             {
@@ -959,18 +971,6 @@ namespace Vulnerator.Model
                 {
                     while (sqliteDataReader.Read())
                     {
-                        MitigationItem mitigation = mitigationList.FirstOrDefault(
-                            x => x.MitigationGroupName.Equals(sqliteDataReader["GroupName"].ToString()) &&
-                            x.MitigationVulnerabilityId.Equals(sqliteDataReader["VulnId"].ToString()));
-
-                        if (mitigation != null)
-                        {
-                            if (!FilterByStatus(mitigation.MitigationStatus))
-                            { return; }
-                        }
-                        else if (!FilterByStatus(sqliteDataReader["Status"].ToString()))
-                        { return; }
-
                         acasOutputOpenXmlWriter.WriteStartElement(new Row());
                         WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["VulnId"].ToString(), 24);
                         WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["VulnTitle"].ToString(), 20);
@@ -990,6 +990,9 @@ namespace Vulnerator.Model
                         WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["LastObserved"].ToString(), 24);
                         WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["PatchPublishedDate"].ToString(), 24);
                         WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["FileName"].ToString(), 24);
+                        WriteCellValue(acasOutputOpenXmlWriter, string.Empty, 24);
+                        WriteCellValue(acasOutputOpenXmlWriter, string.Empty, 24);
+                        WriteCellValue(acasOutputOpenXmlWriter, string.Empty, 20);
                         acasOutputOpenXmlWriter.WriteEndElement();
                     }
                 }
@@ -1003,9 +1006,113 @@ namespace Vulnerator.Model
             acasOutputOpenXmlWriter.Dispose();
         }
 
-#endregion Create Acas Output
+        #endregion Create Acas Output
 
-#region Create Discrepancies
+        #region Create STIG Details
+
+        private void StartStigDetails(WorkbookPart workbookPart, Sheets sheets)
+        {
+            WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+            Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "STIG Details & Review" };
+            sheetIndex++;
+            sheets.Append(sheet);
+            stigDetailsOpenXmlWriter = OpenXmlWriter.Create(worksheetPart);
+            stigDetailsOpenXmlWriter.WriteStartElement(new Worksheet());
+            WriteStigDetailsColumns();
+            stigDetailsOpenXmlWriter.WriteStartElement(new SheetData());
+            WriteStigDetailsHeaderRow();
+        }
+
+        private void WriteStigDetailsColumns()
+        {
+            stigDetailsOpenXmlWriter.WriteStartElement(new Columns());
+            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 1U, Max = 1U, Width = 20.00d, CustomWidth = true });
+            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 2U, Max = 2U, Width = 10.00d, CustomWidth = true });
+            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 25.00d, CustomWidth = true });
+            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 4U, Max = 4U, Width = 25.00d, CustomWidth = true });
+            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 5U, Max = 5U, Width = 10.00d, CustomWidth = true });
+            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 6U, Max = 6U, Width = 15.00d, CustomWidth = true });
+            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 7U, Max = 7U, Width = 35.00d, CustomWidth = true });
+            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 8U, Max = 8U, Width = 35.00d, CustomWidth = true });
+            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 9U, Max = 9U, Width = 20.00d, CustomWidth = true });
+            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 10U, Max = 10U, Width = 20.00d, CustomWidth = true });
+            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 11U, Max = 11U, Width = 15.00d, CustomWidth = true });
+            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 12U, Max = 12U, Width = 35.00d, CustomWidth = true });
+            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 13U, Max = 13U, Width = 35.00d, CustomWidth = true });
+            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 14U, Max = 14U, Width = 35.00d, CustomWidth = true });
+            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 15U, Max = 15U, Width = 25.00d, CustomWidth = true });
+            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 16U, Max = 16U, Width = 15.00d, CustomWidth = true });
+            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 17U, Max = 17U, Width = 35.00d, CustomWidth = true });
+            stigDetailsOpenXmlWriter.WriteEndElement();
+        }
+
+        private void WriteStigDetailsHeaderRow()
+        {
+            stigDetailsOpenXmlWriter.WriteStartElement(new Row());
+            WriteCellValue(stigDetailsOpenXmlWriter, "STIG Title", 4);
+            WriteCellValue(stigDetailsOpenXmlWriter, "STIG ID", 4);
+            WriteCellValue(stigDetailsOpenXmlWriter, "Rule ID", 4);
+            WriteCellValue(stigDetailsOpenXmlWriter, "STIG Name", 4);
+            WriteCellValue(stigDetailsOpenXmlWriter, "Risk Factor", 4);
+            WriteCellValue(stigDetailsOpenXmlWriter, "STIG Severity", 4);
+            WriteCellValue(stigDetailsOpenXmlWriter, "Description", 4);
+            WriteCellValue(stigDetailsOpenXmlWriter, "Solution", 4);
+            WriteCellValue(stigDetailsOpenXmlWriter, "Host Name", 4);
+            WriteCellValue(stigDetailsOpenXmlWriter, "IP Address", 4);
+            WriteCellValue(stigDetailsOpenXmlWriter, "Status", 4);
+            WriteCellValue(stigDetailsOpenXmlWriter, "Comments", 4);
+            WriteCellValue(stigDetailsOpenXmlWriter, "Finding Details", 4);
+            WriteCellValue(stigDetailsOpenXmlWriter, "File Name", 4);
+            WriteCellValue(stigDetailsOpenXmlWriter, "Group Name", 4);
+            WriteCellValue(stigDetailsOpenXmlWriter, "Review Status", 4);
+            WriteCellValue(stigDetailsOpenXmlWriter, "Notes", 4);
+            stigDetailsOpenXmlWriter.WriteEndElement();
+        }
+
+        private void WriteStigDetailItems()
+        {
+            using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+            {
+                sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "CKL"));
+                sqliteCommand.CommandText = SetSqliteCommandText("CKL", false);
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                {
+                    while (sqliteDataReader.Read())
+                    {
+                        stigDetailsOpenXmlWriter.WriteStartElement(new Row());
+                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["VulnTitle"].ToString(), 20);
+                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["VulnId"].ToString(), 24);
+                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["RuleId"].ToString(), 24);
+                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["Source"].ToString(), 24);
+                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["Impact"].ToString(), 24);
+                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["RawRisk"].ToString(), 24);
+                        WriteCellValue(stigDetailsOpenXmlWriter, NormalizeCellValue(sqliteDataReader["Description"].ToString()), 20);
+                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["FixText"].ToString(), 20);
+                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["HostName"].ToString(), 24);
+                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["IpAddress"].ToString(), 20);
+                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24);
+                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["Comments"].ToString(), 20);
+                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["FindingDetails"].ToString(), 20);
+                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["FileName"].ToString(), 24);
+                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["GroupName"].ToString(), 24);
+                        WriteCellValue(stigDetailsOpenXmlWriter, string.Empty, 24);
+                        WriteCellValue(stigDetailsOpenXmlWriter, string.Empty, 20);
+                        stigDetailsOpenXmlWriter.WriteEndElement();
+                    }
+                }
+            }
+        }
+
+        private void EndStigDetails()
+        {
+            stigDetailsOpenXmlWriter.WriteEndElement();
+            stigDetailsOpenXmlWriter.WriteEndElement();
+            stigDetailsOpenXmlWriter.Dispose();
+        }
+
+        #endregion
+
+        #region Create Discrepancies
 
         private void StartDiscrepancies(WorkbookPart workbookPart, Sheets sheets)
         {
@@ -1105,7 +1212,7 @@ namespace Vulnerator.Model
 
 #endregion Create Discrepancies
 
-#region Handle Cell Data
+        #region Handle Cell Data
 
         private void WriteCellValue(OpenXmlWriter openXmlWriter, string cellValue, int styleIndex)
         {
@@ -1151,9 +1258,9 @@ namespace Vulnerator.Model
             }
         }
 
-#endregion Handle Cell Data
+        #endregion Handle Cell Data
 
-#region Data Preparation
+        #region Data Preparation
 
         private bool FilterBySeverity(string impact, string rawRisk)
         {
@@ -1343,35 +1450,9 @@ namespace Vulnerator.Model
             return itemList;
         }
 
-        private void ValidateFile(string fileName)
-        {
-            OpenXmlValidator validator = new OpenXmlValidator();
-            int count = 0;
-            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(fileName, false))
-            {
-                Console.WriteLine();
-                Console.WriteLine();
-                
-                Console.WriteLine("***** Now Validating " + fileName + " *****");
-                foreach (ValidationErrorInfo error in validator.Validate(spreadsheetDocument))
-                {
-                    count++;
-                    Console.WriteLine();
-                    Console.WriteLine("<============================>");
-                    Console.WriteLine("Error " + count);
-                    Console.WriteLine("Description: " + error.Description);
-                    Console.WriteLine("Path: " + error.Path.XPath);
-                    Console.WriteLine("Part: " + error.Part.Uri);
-                    
-                }
-                Console.WriteLine();
-                Console.WriteLine("***** Validation completed; " + count + " errors found. *****");
-            }  
-        }
+        #endregion Data Preparation
 
-#endregion Data Preparation
-
-#region Create Stylesheet
+        #region Create Stylesheet
 
         private Stylesheet CreateStylesheet()
         {
@@ -1505,7 +1586,7 @@ namespace Vulnerator.Model
             return cellFormat;
         }
 
-#endregion Create Stylesheet
+        #endregion Create Stylesheet
 
         private string SetSqliteCommandText(string findingType, bool isMerged)
         {
