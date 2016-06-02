@@ -1396,10 +1396,21 @@ namespace Vulnerator.Model
             assetName = assetName.Replace("\r\n", "__");
             string outputPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\AcasScanOutput_TextFiles";
             string outputTextFile = string.Empty;
-            if (cellValue.Contains("Title:"))
-            { outputTextFile = outputPath + @"\" + assetName + "_" + pluginId + "_VulnerabilityDescription.txt"; }
+
+            if (!AcasFindingsShouldBeMerged)
+            {
+                if (cellValue.Contains("Title:"))
+                { outputTextFile = outputPath + @"\" + assetName + "_" + pluginId + "_VulnerabilityDescription.txt"; }
+                else
+                { outputTextFile = outputPath + @"\" + assetName + "_" + pluginId + "_ScanOutput.txt"; }
+            }
             else
-            { outputTextFile = outputPath + @"\" + assetName + "_" + pluginId + "_ScanOutput.txt"; }
+            {
+                if (cellValue.Contains("Title:"))
+                { outputTextFile = outputPath + @"\" + pluginId + "_VulnerabilityDescription.txt"; }
+                else
+                { outputTextFile = outputPath + @"\" + pluginId + "_ScanOutput.txt"; }
+            }
             if (!Directory.Exists(outputPath))
             { Directory.CreateDirectory(outputPath); }
             if (!File.Exists(outputTextFile))
