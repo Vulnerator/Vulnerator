@@ -1503,7 +1503,8 @@ namespace Vulnerator.ViewModel
 			bool SummaryTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbAssetOverview"));
 			bool DiscrepanciesTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbDiscrepancies"));
 			bool AcasOutputTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbAcasOutput"));
-			if (PoamAndRarAreNeeded || SummaryTabIsNeeded || DiscrepanciesTabIsNeeded || AcasOutputTabIsNeeded)
+            bool StigDetailsTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbStigDetails"));
+			if (PoamAndRarAreNeeded || SummaryTabIsNeeded || DiscrepanciesTabIsNeeded || AcasOutputTabIsNeeded || StigDetailsTabIsNeeded)
 			{ return true; }
 			else
 			{ return false; }
