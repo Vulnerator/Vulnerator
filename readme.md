@@ -1,7 +1,7 @@
 ﻿# Vulnerator
 ## The official distribution of the vulnerability parsing utility.
 
-[![Join the chat at https://gitter.im/Vulnerator/Vulnerator](https://badges.gitter.im/Vulnerator/Vulnerator.svg)](https://gitter.im/Vulnerator/Vulnerator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) <= Click this if you'd like to talk to a real, live person!
+[![Join the chat at https://gitter.im/Vulnerator/Vulnerator](https://badges.gitter.im/Vulnerator/Vulnerator.svg)](https://gitter.im/Vulnerator/Vulnerator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) :arrow_left: Click this if you'd like to talk to a real, live person!
 
 ### Helpful Links:
 To get started, please check out (and bookmark!) the following locations - they are a treasure trove of knowledge (which I am told is power, and who doesn't want to be all-powerful?)!  
