@@ -2724,7 +2724,7 @@
                                                     Command="{Binding HandleFlyoutsCommand}"
                                                     CommandParameter="{Binding Content,
 																			   RelativeSource={RelativeSource Self}}"
-                                                    Content="Import Mitigations"
+                                                    Content="Import Mitigation(s)"
                                                     FontSize="12"
                                                     IsEnabled="{Binding IsEnabled}"
                                                     Style="{StaticResource MetroFlatButton}"
