@@ -1753,7 +1753,7 @@ namespace Vulnerator.ViewModel
 
 		private void EmailJeffV()
 		{
-			string mailTo = "mailto:Jeff.Vanerwegen@QinetiQ-NA.com";
+			string mailTo = "mailto:Jeff.Vanerwegen@Vencore.com";
 			try
 			{
 				System.Diagnostics.Process.Start(mailTo);
