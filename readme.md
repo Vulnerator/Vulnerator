@@ -9,7 +9,8 @@ To get started, please check out (and bookmark!) the following locations - they 
 * **Vulnerator Project Page:** https://vulnerator.github.io/Vulnerator/
 * **Software Releases:**  https://github.com/Vulnerator/Vulnerator/releases
 * **Wiki Page(s):** https://github.com/Vulnerator/Vulnerator/wiki
-* **Issue Tracker:** https://github.com/Vulnerator/Vulnerator/issues
+* **Issue Tracker:** https://github.com/Vulnerator/Vulnerator/issues  
+* **Change Log:** https://github.com/Vulnerator/Vulnerator/wiki/Change-Log  
 
 ### QuickStart Guide
 Now that you have familiarized yourelf with the available resources (you did click the links, didn't you?), jump in to using the software!  
