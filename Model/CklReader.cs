@@ -234,7 +234,12 @@ namespace Vulnerator
                         { stigInfoValue = "V?"; }
                     }
                     if (stigInfoPortion.Equals("releaseinfo"))
-                    { stigInfoValue = "R" + stigInfoValue.Split(' ')[1].Split(' ')[0].Trim(); }
+                    {
+                        if (!string.IsNullOrWhiteSpace(stigInfoValue))
+                        { stigInfoValue = "R" + stigInfoValue.Split(' ')[1].Split(' ')[0].Trim(); }
+                        else
+                        { stigInfoValue = "R?"; }
+                    }
                     return stigInfoValue;
                 }
                 else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("SI_DATA"))
