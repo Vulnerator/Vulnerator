@@ -12,7 +12,7 @@ To get started, please check out (and bookmark!) the following locations - they 
 * **Issue Tracker:** https://github.com/Vulnerator/Vulnerator/issues
 
 ### QuickStart Guide
-Now that you have familiarized yourelf with the available resources (you did click the links, didn't you?), jump in to using the software!  
+Now that you have familiarized yourself with the available resources (you did click the links, didn't you?), jump in to using the software!  
 
 1. Download the software from the [Releases](https://github.com/Vulnerator/Vulnerator/releases) page
   * **Note:** Chances are, unless you are a coder or interested in seeing "under the hood", you want the compiled release (the download without the word "Source" in it)
