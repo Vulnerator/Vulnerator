@@ -65,6 +65,7 @@ namespace Vulnerator.Model
                         { release.TagName = "No Tag Name Assigned"; }
                         release.HtmlUrl = releases[i].HtmlUrl;
                         release.CreatedAt = releases[i].CreatedAt.Date.ToLongDateString();
+                        release.Downloads = releases[i].Assets[0].DownloadCount;
                         releaseList.Add(release);
                     }
                 }

@@ -277,6 +277,14 @@
                                                    HorizontalAlignment="Left" />
                                         <TextBlock Text="{Binding CreatedAt}"
                                                    HorizontalAlignment="Left" />
+                                        <TextBlock Text="     |     "
+                                                   HorizontalAlignment="Left" />
+                                        <Controls:PackIconModern Kind="Download"
+                                                                 ToolTip="Download Count" />
+                                        <TextBlock Text=" : "
+                                                   HorizontalAlignment="Left" />
+                                        <TextBlock Text="{Binding Downloads}"
+                                                   HorizontalAlignment="Left" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal"
                                                 Grid.Row="2"
