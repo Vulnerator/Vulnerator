@@ -1,7 +1,6 @@
 ﻿using MahApps.Metro;
 using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using Vulnerator.Model;
 using Vulnerator.ViewModel;
@@ -25,6 +24,7 @@ namespace Vulnerator
                 myXmlDataProvider.Source = xmlPath;
                 myXmlDataProvider.XPath = "preferencesRoot";
             }
+            
 
             // Set theme at startup
             // TODO: Make more "MVVM-friendly"
