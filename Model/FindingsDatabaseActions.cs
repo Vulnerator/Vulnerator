@@ -92,7 +92,7 @@ namespace Vulnerator.Model
         private void CreateVulnerabilitySourcesTable(SQLiteCommand sqliteCommand)
         {
             sqliteCommand.CommandText = "CREATE TABLE VulnerabilitySources (" +
-                "SourceIndex INTEGER PRIMARY KEY, Source TEXT UNIQUE ON CONFLICT IGNORE);";
+                "SourceIndex INTEGER PRIMARY KEY, Source TEXT UNIQUE ON CONFLICT IGNORE, Version TEXT, Release TEXT);";
             sqliteCommand.ExecuteNonQuery();
         }
 
@@ -101,10 +101,10 @@ namespace Vulnerator.Model
             sqliteCommand.CommandText = "CREATE TABLE Vulnerability (" +
                 "VulnerabilityIndex INTEGER PRIMARY KEY, VulnId TEXT, " +
                 "VulnTitle TEXT, Description TEXT, RiskStatement TEXT, IaControl TEXT, " +
-                "CciReference TEXT, CPEs TEXT, CrossReferences TEXT, " +
+                "NistControl TEXT, CPEs TEXT, CrossReferences TEXT, " +
                 "IavmNumber TEXT, FixText TEXT, PluginPublishedDate TEXT, " +
                 "PluginModifiedDate TEXT, PatchPublishedDate TEXT, Age TEXT, " +
-                "RawRisk TEXT, Impact TEXT, RuleId TEXT UNIQUE ON CONFLICT IGNORE);";
+                "RawRisk TEXT, Impact TEXT, RuleId TEXT UNIQUE ON CONFLICT IGNORE, CciNumber TEXT);";
             sqliteCommand.ExecuteNonQuery();
         }
 
