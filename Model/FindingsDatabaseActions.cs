@@ -166,7 +166,7 @@ namespace Vulnerator.Model
         private void InsertAcasVulnerabilitySource(SQLiteCommand sqliteCommand)
         {
             sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources VALUES (" +
-                "NULL, 'Assured Compliance Assessment Solution (ACAS)')";
+                "NULL, 'Assured Compliance Assessment Solution (ACAS)', NULL, NULL)";
             sqliteCommand.ExecuteNonQuery();
         }
 

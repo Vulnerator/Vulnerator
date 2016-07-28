@@ -20,7 +20,7 @@ namespace Vulnerator.Model
     {
         private string dateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
         private string[] vulnerabilityTableColumns = new string[] { 
-            "VulnId", "VulnTitle", "Description", "RiskStatement", "IaControl", "CciReference", "CPEs", "CrossReferences", 
+            "VulnId", "VulnTitle", "Description", "RiskStatement", "IaControl", "NistControl", "CPEs", "CrossReferences", 
             "IavmNumber", "FixText", "PluginPublishedDate", "PluginModifiedDate", "PatchPublishedDate", "Age", "RawRisk", "Impact", "RuleId" };
         private string[] uniqueFindingTableColumns = new string[] { "Comments", "FindingDetails", "PluginOutput", "LastObserved" };
         private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
@@ -122,7 +122,7 @@ namespace Vulnerator.Model
         {
             using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
             {
-                sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources VALUES (NULL, 'Assured Compliance Assessment Solution (ACAS)');";
+                sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources VALUES (NULL, 'Assured Compliance Assessment Solution (ACAS)', NULL, NULL);";
                 sqliteCommand.ExecuteNonQuery();
             }
         }

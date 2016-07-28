@@ -622,7 +622,7 @@ namespace Vulnerator.Model
             if (IsDiacapPackage)
             { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["IaControl"].ToString(), 24); }
             else
-            { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["CciReference"].ToString(), 24); }
+            { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["NistControl"].ToString(), 24); }
             WriteCellValue(poamOpenXmlWriter, ContactOrganization + ", " + ContactName + ", " + ContactNumber + ", " + ContactEmail, 20);
             WriteCellValue(poamOpenXmlWriter, sqliteDataReader["VulnId"].ToString(), 24);
             if (!string.IsNullOrWhiteSpace(sqliteDataReader["RawRisk"].ToString()))
@@ -810,7 +810,7 @@ namespace Vulnerator.Model
             if (IsDiacapPackage)
             { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["IaControl"].ToString(), 24); }
             else
-            { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["CciReference"].ToString(), 24); }
+            { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["NistControl"].ToString(), 24); }
             WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Source"].ToString(), 24);
             WriteCellValue(rarOpenXmlWriter, sqliteDataReader["VulnId"].ToString(), 24);
             WriteCellValue(rarOpenXmlWriter, sqliteDataReader["VulnTitle"].ToString(), 20);
@@ -1604,7 +1604,7 @@ namespace Vulnerator.Model
             if (isMerged)
             {
                 return "SELECT GroupName, VulnId, RuleId, VulnTitle, RawRisk, Impact, Description, IaControl, " +
-                    "CciReference, Status, Source, Comments, FindingDetails, " +
+                    "NistControl, Status, Source, Comments, FindingDetails, " +
                     "GROUP_CONCAT(DISTINCT AssetIdToReport) AS AssetIdToReport FROM UniqueFinding " +
                     "NATURAL JOIN FindingTypes NATURAL JOIN VulnerabilitySources " +
                     "NATURAL JOIN FindingStatuses NATURAL JOIN Vulnerability NATURAL JOIN Groups " +

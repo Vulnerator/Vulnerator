@@ -125,12 +125,12 @@ namespace Vulnerator.Model
                                     case "NIST":
                                         {
                                             xmlReader.Read();
-                                            if (!sqliteCommand.Parameters.Contains("CciReference"))
-                                            { sqliteCommand.Parameters.Add(new SQLiteParameter("CciReference", xmlReader.Value)); }
+                                            if (!sqliteCommand.Parameters.Contains("NistControl"))
+                                            { sqliteCommand.Parameters.Add(new SQLiteParameter("NistControl", xmlReader.Value)); }
                                             else
                                             {
-                                                sqliteCommand.Parameters["CciReference"].Value =
-                                                    sqliteCommand.Parameters["CciReference"].Value + Environment.NewLine +
+                                                sqliteCommand.Parameters["NistControl"].Value =
+                                                    sqliteCommand.Parameters["NistControl"].Value + Environment.NewLine +
                                                     xmlReader.Value;
                                             }
                                             break;
@@ -264,8 +264,8 @@ namespace Vulnerator.Model
             sqliteCommand.CommandText = SetSqliteCommandText("Vulnerability");
             foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
             {
-                if (parameter.ParameterName.Equals("CciReference"))
-                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(84, "@CciReference, "); }
+                if (parameter.ParameterName.Equals("NistControl"))
+                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(84, "@NistControl, "); }
                 if (parameter.ParameterName.Equals("IaControl"))
                 { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(84, "@IaControl, "); }
                 if (parameter.ParameterName.Equals("FixText"))
@@ -273,8 +273,8 @@ namespace Vulnerator.Model
             }
             foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
             {
-                if (parameter.ParameterName.Equals("CciReference"))
-                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, "CciReference, "); }
+                if (parameter.ParameterName.Equals("NistControl"))
+                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, "NistControl, "); }
                 if (parameter.ParameterName.Equals("IaControl"))
                 { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, "IaControl, "); }
                 if (parameter.ParameterName.Equals("FixText"))
