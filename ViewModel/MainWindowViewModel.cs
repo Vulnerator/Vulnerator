@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using log4net;
+using Microsoft.Win32;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -17,6 +18,8 @@ namespace Vulnerator.ViewModel
 	{
 		public static ConfigAlter configAlter;
 		public static CommandParameters commandParameters = new CommandParameters();
+        public Logger logger = new Logger();
+        public static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 		public static UpdateMitigationParameters updateMitigationParameters = new UpdateMitigationParameters();
 		public static UpdateContactParameters updateContactParameters = new UpdateContactParameters();
 		public static UpdateSystemGroupParameters updateSystemGroupParameters = new UpdateSystemGroupParameters();
@@ -809,7 +812,10 @@ namespace Vulnerator.ViewModel
 
 		public MainWindowViewModel()
 		{
-			if (File.Exists(Environment.GetFolderPath(
+            logger.Setup();
+            log.Info("Initializing application.");
+
+            if (File.Exists(Environment.GetFolderPath(
 				Environment.SpecialFolder.ApplicationData) + @"\Vulnerator\VulneratorV6Log.txt"))
 			{
 				File.Delete(Environment.GetFolderPath(
@@ -865,51 +871,10 @@ namespace Vulnerator.ViewModel
 
 		#endregion
 
-		#region Findings DataTable Creator
-
-		public static DataTable CreateFindingsDataTable()
-		{
-			DataTable findingsDataTable = new DataTable();
-			findingsDataTable.Columns.Add("FindingType", typeof(string));
-			findingsDataTable.Columns.Add("Source", typeof(string));
-			findingsDataTable.Columns.Add("RuleId", typeof(string));
-			findingsDataTable.Columns.Add("VulnId", typeof(string));
-			findingsDataTable.Columns.Add("VulnTitle", typeof(string));
-			findingsDataTable.Columns.Add("Description", typeof(string));
-			findingsDataTable.Columns.Add("RiskStatement", typeof(string));
-			findingsDataTable.Columns.Add("Impact", typeof(string));
-			findingsDataTable.Columns.Add("RawRisk", typeof(string));
-			findingsDataTable.Columns.Add("Status", typeof(string));
-			findingsDataTable.Columns.Add("FixText", typeof(string));
-			findingsDataTable.Columns.Add("IpAddress", typeof(string));
-			findingsDataTable.Columns.Add("HostName", typeof(string));
-			findingsDataTable.Columns.Add("CrossReferences", typeof(string));
-			findingsDataTable.Columns.Add("Cpe", typeof(string));
-			findingsDataTable.Columns.Add("IavmNumber", typeof(string));
-			findingsDataTable.Columns.Add("IaControl", typeof(string));
-			findingsDataTable.Columns.Add("CciRef", typeof(string));
-			findingsDataTable.Columns.Add("LastObserved", typeof(string));
-			findingsDataTable.Columns.Add("PluginPublicationDate", typeof(string));
-			findingsDataTable.Columns.Add("PluginModificationDate", typeof(string));
-			findingsDataTable.Columns.Add("PatchPublicationDate", typeof(string));
-			findingsDataTable.Columns.Add("Age", typeof(string));
-			findingsDataTable.Columns.Add("PluginOutput", typeof(string));
-			findingsDataTable.Columns.Add("Comments", typeof(string));
-			findingsDataTable.Columns.Add("FindingDetails", typeof(string));
-			findingsDataTable.Columns.Add("SystemName", typeof(string));
-			findingsDataTable.Columns.Add("FileName", typeof(string));
-			return findingsDataTable;
-		}
-
-		#endregion
-
 		#region MainWindowViewModel Destructor
 
 		~MainWindowViewModel()
-		{
-			configAlter.WriteSettingsToConfigurationXml();
-			//findingsDatabaseActions.DeleteFindingsDatabase();
-		}
+		{ configAlter.WriteSettingsToConfigurationXml(); }
 
 		#endregion
 

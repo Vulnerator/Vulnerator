@@ -224,6 +224,7 @@
     <Compile Include="Model\FindingsDatabaseActions.cs" />
     <Compile Include="Model\GitHubActions.cs" />
     <Compile Include="Model\Issue.cs" />
+    <Compile Include="Model\Logger.cs" />
     <Compile Include="Model\MonitoredSystem.cs" />
     <Compile Include="Model\ContactTitle.cs" />
     <Compile Include="Model\Release.cs" />
