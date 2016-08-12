@@ -91,27 +91,6 @@ namespace Vulnerator.Model
             }
         }
 
-        private string _contactGroupMacLevel
-        {
-            get;
-            set;
-        }
-        /// <summary>
-        /// MAC level of the system group that the created Contact is to be associated with
-        /// </summary>
-        public string ContactGroupMacLevel
-        {
-            get { return _contactGroupMacLevel; }
-            set
-            {
-                if (_contactGroupMacLevel != value)
-                {
-                    _contactGroupMacLevel = value;
-                    OnPropertyChanged("ContactGroupMacLevel");
-                }
-            }
-        }
-
         private string _contactSystemIp
         {
             get;
@@ -186,12 +165,11 @@ namespace Vulnerator.Model
         /// <param name="contactSystemIp">IP address of the system that the created Contact is to be associated with</param>
         /// <param name="contactSystemName">Host name of the system that the created Contact is to be associated with</param>
         /// <param name="isChecked">Boolean value determining whether the Contact is checked in the GUI DataGrid</param>
-        public Contact(string contactName, string contactGroupName, string contactGroupMacLevel, string contactEmail, string contactTitle, 
+        public Contact(string contactName, string contactGroupName, string contactEmail, string contactTitle, 
             string contactSystemIp, string contactSystemName, bool isChecked)
         {
             this._contactName = contactName;
             this._contactGroupName = contactGroupName;
-            this._contactGroupMacLevel = contactGroupMacLevel;
             this._contactEmail = contactEmail;
             this._contactTitle = contactTitle;
             this._contactSystemIp = contactSystemIp;

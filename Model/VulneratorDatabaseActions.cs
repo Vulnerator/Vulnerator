@@ -111,12 +111,8 @@ namespace Vulnerator.Model
             {
                 while (sqliteDataReader.Read())
                 {
-                    mainWindowViewModel.SystemGroupList.Add(
-                        new SystemGroup(
-                            sqliteDataReader.GetString(0) + " : MAC " +
-                            sqliteDataReader.GetString(1)));
-                    mainWindowViewModel.SystemGroupListForUpdating.Add(
-                        new UpdatableSystemGroup(sqliteDataReader.GetString(0)));
+                    mainWindowViewModel.SystemGroupList.Add(new SystemGroup(sqliteDataReader.GetString(0)));
+                    mainWindowViewModel.SystemGroupListForUpdating.Add(new UpdatableSystemGroup(sqliteDataReader.GetString(0)));
                 }
             }
         }
@@ -124,7 +120,7 @@ namespace Vulnerator.Model
         private void PopulateContactList(SQLiteCommand sqliteCommand, MainWindowViewModel mainWindowViewModel)
         {
             sqliteCommand.CommandText = "SELECT PointsOfContact.Name, PointsOfContact.Title, PointsOfContact.Email, PointsOfContact.SystemHostName, " +
-                            "PointsOfContact.SystemIpAddress, SystemGroups.GroupName, SystemGroups.MacLevel FROM PointsOfContact INNER JOIN SystemGroups ON PointsOfContact.GroupName = SystemGroups.GroupName";
+                            "PointsOfContact.SystemIpAddress, SystemGroups.GroupName, FROM PointsOfContact INNER JOIN SystemGroups ON PointsOfContact.GroupName = SystemGroups.GroupName";
             using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
             {
                 while (sqliteDataReader.Read())
@@ -133,7 +129,6 @@ namespace Vulnerator.Model
                         new Contact(
                             sqliteDataReader.GetString(0),
                             sqliteDataReader.GetString(5),
-                            sqliteDataReader.GetString(6),
                             sqliteDataReader.GetString(2),
                             sqliteDataReader.GetString(1),
                             sqliteDataReader.GetString(4),
@@ -196,23 +191,18 @@ namespace Vulnerator.Model
         /// <param name="vulnerabilityStatus">The status of the vulnerabilities being imported</param>
         /// <param name="mainWindowViewModel">MainWindowViewModel class housing all GUI elements to be updated</param>
         /// <returns>String value</returns>
-        public string ImportMitigations(string mitigationsTextFile, string systemGroupName, string systemGroupMacLevel, string vulnerabilityStatus, MainWindowViewModel mainWindowViewModel)
+        public string ImportMitigations(string mitigationsTextFile, string systemGroupName, string vulnerabilityStatus, MainWindowViewModel mainWindowViewModel)
         {
             try
             {
-                if (systemGroupName.Contains(": MAC"))
-                {
-                    systemGroupMacLevel = systemGroupName.Split(':')[1].Trim();
-                    systemGroupName = systemGroupName.Split(':')[0].Trim();
-                }
                 using (SQLiteConnection sqliteConnection = new SQLiteConnection(vulneratorDatabaseConnection))
                 {
                     sqliteConnection.Open();
 
-                    string lookupAndInsertGroupInDatabaseResult = LookupAndInsertGroupInDatabase(sqliteConnection, systemGroupName, systemGroupMacLevel);
+                    string lookupAndInsertGroupInDatabaseResult = LookupAndInsertGroupInDatabase(sqliteConnection, systemGroupName);
                     if (!lookupAndInsertGroupInDatabaseResult.Contains("Success"))
                     { return lookupAndInsertGroupInDatabaseResult; }
-                    guiActions.InsertGroupInObservableCollections(systemGroupName, systemGroupMacLevel, mainWindowViewModel);
+                    guiActions.InsertGroupInObservableCollections(systemGroupName, mainWindowViewModel);
 
                     foreach (string line in File.ReadLines(mitigationsTextFile))
                     {
@@ -260,7 +250,7 @@ namespace Vulnerator.Model
         /// <param name="findingText">The mitigation / remediation text</param>
         /// <param name="mainWindowViewModel">MainWindowViewModel class housing all GUI elements to be updated</param>
         /// <returns>String value</returns>
-        public string AddMitigation(string vulnerabilityIdNumbers, string vulnerabilityStatus, string systemGroupName, string systemGroupMacLevel, string findingText, MainWindowViewModel mainWindowViewModel)
+        public string AddMitigation(string vulnerabilityIdNumbers, string vulnerabilityStatus, string systemGroupName, string findingText, MainWindowViewModel mainWindowViewModel)
         {
             try
             {
@@ -270,20 +260,13 @@ namespace Vulnerator.Model
                     using (SQLiteCommand sqliteCommand = new SQLiteCommand(
                         "", SQLiteConnection))
                     {
-                        if (systemGroupName.Contains(": MAC"))
-                        {
-                            systemGroupMacLevel = systemGroupName.Split(':')[1].Trim();
-                            systemGroupName = systemGroupName.Split(':')[0].Trim();
-                            sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", systemGroupName));
-                        }
-                        else
-                        { sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", systemGroupName)); }
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", systemGroupName));
 
-                        string lookupAndInsertGroupResult = LookupAndInsertGroupInDatabase(SQLiteConnection, systemGroupName, systemGroupMacLevel);
+                        string lookupAndInsertGroupResult = LookupAndInsertGroupInDatabase(SQLiteConnection, systemGroupName);
                         if (!lookupAndInsertGroupResult.Contains("Success"))
                         { return lookupAndInsertGroupResult; }
 
-                        guiActions.InsertGroupInObservableCollections(systemGroupName, systemGroupMacLevel, mainWindowViewModel);
+                        guiActions.InsertGroupInObservableCollections(systemGroupName, mainWindowViewModel);
 
                         if (vulnerabilityIdNumbers.Contains("\r\n"))
                         {
@@ -333,7 +316,7 @@ namespace Vulnerator.Model
         /// <param name="mainWindowViewModel">MainWindowViewModel class housing all GUI elements to be updated</param>
         /// <returns>String value</returns>
         public string UpdateMitigation(string vulnerabilityIdNumber, string updatedVulnerabilityStatus, string currentSystemGroupName, string updatedSystemGroupName,
-            string updatedSystemGroupMacLevel, string updatedFindingText, MainWindowViewModel mainWindowViewModel)
+            string updatedFindingText, MainWindowViewModel mainWindowViewModel)
         {
             string[] currentMitigationData = new string[4];
 
@@ -360,19 +343,12 @@ namespace Vulnerator.Model
                         }
                         if (!string.IsNullOrWhiteSpace(updatedSystemGroupName))
                         {
-                            if (updatedSystemGroupName.Contains(": MAC"))
-                            {
-                                updatedSystemGroupMacLevel = updatedSystemGroupName.Split(':')[1].Trim();
-                                updatedSystemGroupName = updatedSystemGroupName.Split(':')[0].Trim();
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("updatedSystemGroupName", updatedSystemGroupName));
-                            }
-                            else
-                            { sqliteCommand.Parameters.Add(new SQLiteParameter("updatedSystemGroupName", updatedSystemGroupName)); }
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("updatedSystemGroupName", updatedSystemGroupName));
 
-                            string lookupAndInsertGroupResult = LookupAndInsertGroupInDatabase(SQLiteConnection, updatedSystemGroupName, updatedSystemGroupMacLevel);
+                            string lookupAndInsertGroupResult = LookupAndInsertGroupInDatabase(SQLiteConnection, updatedSystemGroupName);
                             if (!lookupAndInsertGroupResult.Contains("Success"))
                             { return lookupAndInsertGroupResult; }
-                            guiActions.InsertGroupInObservableCollections(updatedSystemGroupName, updatedSystemGroupMacLevel, mainWindowViewModel);
+                            guiActions.InsertGroupInObservableCollections(updatedSystemGroupName, mainWindowViewModel);
                         }
                         else
                         { sqliteCommand.Parameters.Add(new SQLiteParameter("updatedSystemGroupName", currentMitigationData[3])); }
@@ -396,7 +372,7 @@ namespace Vulnerator.Model
                 }
 
                 guiActions.UpdateMitigationObservableCollection(vulnerabilityIdNumber, currentSystemGroupName, updatedFindingText, updatedVulnerabilityStatus, updatedSystemGroupName,
-                    updatedSystemGroupMacLevel, mainWindowViewModel);
+                    mainWindowViewModel);
 
                 return "Mitigation update successful";
             }
@@ -462,7 +438,7 @@ namespace Vulnerator.Model
         /// <param name="mainWindowViewModel">MainWindowViewModel class housing all GUI elements to be updated</param>
         /// <returns>String value</returns>
         public string AddContact(string contactName, string contactTitle, string contactEmail, string contactSystemName, string contactSystemIp, string contactGroupName,
-            string contactGroupMacLevel, MainWindowViewModel mainWindowViewModel)
+            MainWindowViewModel mainWindowViewModel)
         {
             try
             {
@@ -472,21 +448,11 @@ namespace Vulnerator.Model
                 using (SQLiteConnection sqliteConnection = new SQLiteConnection(vulneratorDatabaseConnection))
                 {
                     sqliteConnection.Open();
-                    
-                    if (contactGroupName.Contains(":"))
-                    {
-                        if (String.IsNullOrWhiteSpace(contactGroupMacLevel))
-                        {
-                            string[] macLevelDelimiter = new string[] { ": MAC" };
-                            contactGroupMacLevel = contactGroupName.Split(macLevelDelimiter, StringSplitOptions.None)[1].Trim();
-                        }
-                        contactGroupName = contactGroupName.Split(':')[0].Trim();
-                    }
 
-                    string lookupAndInsertGroupResult = LookupAndInsertGroupInDatabase(sqliteConnection, contactGroupName, contactGroupMacLevel);
+                    string lookupAndInsertGroupResult = LookupAndInsertGroupInDatabase(sqliteConnection, contactGroupName);
                     if (!lookupAndInsertGroupResult.Contains("Success"))
                     { return lookupAndInsertGroupResult; }
-                    guiActions.InsertGroupInObservableCollections(contactGroupName, contactGroupMacLevel, mainWindowViewModel);
+                    guiActions.InsertGroupInObservableCollections(contactGroupName, mainWindowViewModel);
 
                     if (contactSystemName.Contains(":"))
                     {
@@ -507,11 +473,11 @@ namespace Vulnerator.Model
                     guiActions.InsertSystemInObservableCollections(contactSystemName, contactSystemIp, contactGroupName, mainWindowViewModel);
 
                     string contactLookupAndInsertionResult = LookupAndInsertContactInDatabase(sqliteConnection, contactName, contactTitle, contactEmail, contactGroupName,
-                        contactGroupMacLevel, contactSystemName, contactSystemIp, filterPreferences);
+                        contactSystemName, contactSystemIp, filterPreferences);
                     if (!contactLookupAndInsertionResult.Equals("Success"))
                     { return contactLookupAndInsertionResult; }
 
-                    guiActions.InsertContactInObservableCollection(contactName, contactTitle, contactEmail, contactGroupName, contactGroupMacLevel, contactSystemName, contactSystemIp, mainWindowViewModel);
+                    guiActions.InsertContactInObservableCollection(contactName, contactTitle, contactEmail, contactGroupName, contactSystemName, contactSystemIp, mainWindowViewModel);
                     guiActions.InsertTitleInObservableCollection(contactTitle, mainWindowViewModel);
                     
                     sqliteConnection.Close();
@@ -557,11 +523,10 @@ namespace Vulnerator.Model
 
                         if (!selectedContactToUpdate.ContactGroupName.Equals(updateContactParameters.NewGroupName))
                         {
-                            string lookupAndInsertGroupResult = LookupAndInsertGroupInDatabase(sqliteConnection, updateContactParameters.NewGroupName,
-                                updateContactParameters.NewGroupMacLevel);
+                            string lookupAndInsertGroupResult = LookupAndInsertGroupInDatabase(sqliteConnection, updateContactParameters.NewGroupName);
                             if (!lookupAndInsertGroupResult.Contains("Success"))
                             { return lookupAndInsertGroupResult; }
-                            guiActions.InsertGroupInObservableCollections(updateContactParameters.NewGroupName, updateContactParameters.NewGroupMacLevel, mainWindowViewModel);
+                            guiActions.InsertGroupInObservableCollections(updateContactParameters.NewGroupName, mainWindowViewModel);
                         }
 
                         string ipToHostNameVerification = VerifyIpToSingleHostName(sqliteConnection, updateContactParameters.NewSystemName, updateContactParameters.NewSystemIp, updateContactParameters.NewGroupName);
@@ -598,9 +563,6 @@ namespace Vulnerator.Model
 
                             if (!existingContact.ContactGroupName.Equals(updateContactParameters.NewGroupName))
                             { existingContact.ContactGroupName = updateContactParameters.NewGroupName; }
-
-                            if (!existingContact.ContactGroupMacLevel.Equals(updateContactParameters.NewGroupMacLevel))
-                            { existingContact.ContactGroupMacLevel = updateContactParameters.NewGroupMacLevel; }
 
                             if (!existingContact.ContactSystemIp.Equals(updateContactParameters.NewSystemIp))
                             { existingContact.ContactSystemIp = updateContactParameters.NewSystemIp; }
@@ -680,7 +642,7 @@ namespace Vulnerator.Model
         /// <param name="updateGroupMacLevel">Updated Mac Level for the group being modified</param>
         /// <param name="mainWindowViewModel">MainWindowViewModel class housing all GUI elements to be updated</param>
         /// <returns>String value</returns>
-        public string UpdateGroup(string currentGroup, string updatedGroupName, string updateGroupMacLevel, MainWindowViewModel mainWindowViewModel)
+        public string UpdateGroup(string currentGroup, string updatedGroupName, MainWindowViewModel mainWindowViewModel)
         {
             try
             {
@@ -698,14 +660,12 @@ namespace Vulnerator.Model
                         currentGroup = currentGroup.Split(':')[0].Trim();
                         sqliteCommand.Parameters.Add(new SQLiteParameter("CurrentGroupName", currentGroup));
                         sqliteCommand.Parameters.Add(new SQLiteParameter("UpdatedGroupName", updatedGroupName));
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("UpdatedGroupMacLevel", updateGroupMacLevel));
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("CurrentGroupMacLevel", currentGroupMacLevel));
 
                         if (!currentGroup.Equals(updatedGroupName))
                         {
                             if (!String.IsNullOrWhiteSpace(updatedGroupName))
                             {
-                                string lookupGroupResult = LookupAndInsertGroupInDatabase(sqliteConnection, updatedGroupName, updateGroupMacLevel);
+                                string lookupGroupResult = LookupAndInsertGroupInDatabase(sqliteConnection, updatedGroupName);
                                 if (!lookupGroupResult.Equals("Success"))
                                 { return lookupGroupResult; }
 
@@ -726,7 +686,7 @@ namespace Vulnerator.Model
                     sqliteConnection.Close();
                 }
 
-                guiActions.UpdateGroupObservableCollections(currentGroup, updatedGroupName, updateGroupMacLevel, mainWindowViewModel);
+                guiActions.UpdateGroupObservableCollections(currentGroup, updatedGroupName, mainWindowViewModel);
                 guiActions.UpdateGroupInSystemObservableCollection(currentGroup, updatedGroupName, mainWindowViewModel);
 
                 foreach (MitigationItem mitigationItem in mainWindowViewModel.MitigationList)
@@ -740,7 +700,6 @@ namespace Vulnerator.Model
                     if (contact.ContactGroupName.Equals(currentGroup))
                     {
                         contact.ContactGroupName = updatedGroupName;
-                        contact.ContactGroupMacLevel = updateGroupMacLevel;
                     }
                 }
 
@@ -792,7 +751,7 @@ namespace Vulnerator.Model
                     sqliteConnection.Close();
                 }
 
-                var existingSystemGroup = mainWindowViewModel.SystemGroupList.FirstOrDefault(x => x.GroupNameAndMacLevel.Contains(groupToDelete));
+                var existingSystemGroup = mainWindowViewModel.SystemGroupList.FirstOrDefault(x => x.GroupName.Contains(groupToDelete));
                 if (existingSystemGroup != null)
                 {
                     mainWindowViewModel.SystemGroupList.Remove(existingSystemGroup);
@@ -954,7 +913,7 @@ namespace Vulnerator.Model
             }
         }
 
-        private string LookupAndInsertGroupInDatabase(SQLiteConnection sqliteConnection, string groupName, string groupMacLevel)
+        private string LookupAndInsertGroupInDatabase(SQLiteConnection sqliteConnection, string groupName)
         {
             try
             {
@@ -964,15 +923,9 @@ namespace Vulnerator.Model
                     sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", groupName));
                     if ((long)sqliteCommand.ExecuteScalar() == 0)
                     {
-                        if (!string.IsNullOrWhiteSpace(groupMacLevel))
-                        {
-                            sqliteCommand.Parameters.Add(new SQLiteParameter("MacLevel", groupMacLevel));
-                            sqliteCommand.CommandText = "INSERT INTO SystemGroups VALUES (@GroupName, @MacLevel)";
+                            sqliteCommand.CommandText = "INSERT INTO SystemGroups VALUES (@GroupName, NULL)";
                             sqliteCommand.ExecuteNonQuery();
                             return "Success";
-                        }
-                        else
-                        { return "The group \"" + groupName + "\" does not exist in the database; please provide a MAC level for \"" + groupName + "\""; }
                     }
                     else
                     { return "Success"; }
@@ -1059,7 +1012,7 @@ namespace Vulnerator.Model
         }
 
         private string LookupAndInsertContactInDatabase(SQLiteConnection sqliteConnection, string contactName, string title, string email, string groupName,
-            string groupMacLevel, string systemName, string systemIp, List<SQLiteParameter> filterPreferences)
+            string systemName, string systemIp, List<SQLiteParameter> filterPreferences)
         {
             try
             {
@@ -1170,22 +1123,22 @@ namespace Vulnerator.Model
 
     public class GuiActions
     {
-        public void InsertGroupInObservableCollections(string groupName, string macLevel, MainWindowViewModel mainWindowViewModel)
+        public void InsertGroupInObservableCollections(string groupName, MainWindowViewModel mainWindowViewModel)
         {
-            var existingGroupName = mainWindowViewModel.SystemGroupList.FirstOrDefault(x => x.GroupNameAndMacLevel.Contains(groupName) && x.GroupNameAndMacLevel.Contains(macLevel));
+            var existingGroupName = mainWindowViewModel.SystemGroupList.FirstOrDefault(x => x.GroupName.Contains(groupName));
             if (existingGroupName == null)
-            { mainWindowViewModel.SystemGroupList.Add(new SystemGroup(groupName + " : MAC " + macLevel)); }
+            { mainWindowViewModel.SystemGroupList.Add(new SystemGroup(groupName)); }
 
             var existingUpdatableGroupName = mainWindowViewModel.SystemGroupListForUpdating.FirstOrDefault(x => x.GroupName.Equals(groupName));
             if (existingUpdatableGroupName == null)
             { mainWindowViewModel.SystemGroupListForUpdating.Add(new UpdatableSystemGroup(groupName)); }
         }
 
-        public void UpdateGroupObservableCollections(string currentGroupName, string updatedGroupName, string updatedGroupMacLevel, MainWindowViewModel mainWindowViewModel)
+        public void UpdateGroupObservableCollections(string currentGroupName, string updatedGroupName, MainWindowViewModel mainWindowViewModel)
         {
-            var existingGroup = mainWindowViewModel.SystemGroupList.FirstOrDefault(x => x.GroupNameAndMacLevel.Contains(currentGroupName));
+            var existingGroup = mainWindowViewModel.SystemGroupList.FirstOrDefault(x => x.GroupName.Contains(currentGroupName));
             if (existingGroup != null)
-            { existingGroup.GroupNameAndMacLevel = updatedGroupName + " : MAC " + updatedGroupMacLevel; }
+            { existingGroup.GroupName = updatedGroupName; }
 
             var existingUpdateGroup = mainWindowViewModel.SystemGroupListForUpdating.FirstOrDefault(x => x.GroupName.Contains(currentGroupName));
             if (existingUpdateGroup != null)
@@ -1193,7 +1146,7 @@ namespace Vulnerator.Model
         }
 
         public void UpdateMitigationObservableCollection(string vulnerabityId, string currentSystemGroupName, string updatedFindingText, string updatedVulnerabilityStatus,
-            string updatedSystemGroupName, string updatedSystemGroupMacLevel, MainWindowViewModel mainWindowViewModel)
+            string updatedSystemGroupName, MainWindowViewModel mainWindowViewModel)
         {
             var mitigationItemToUpdate = mainWindowViewModel.MitigationList.FirstOrDefault(x => (x.MitigationVulnerabilityId.Equals(vulnerabityId)) &&
                     (x.MitigationGroupName.Equals(currentSystemGroupName)));
@@ -1236,13 +1189,13 @@ namespace Vulnerator.Model
             }
         }
 
-        public void InsertContactInObservableCollection(string contactName, string title, string email, string groupName, string groupMacLevel,
+        public void InsertContactInObservableCollection(string contactName, string title, string email, string groupName,
             string systemName, string systemIp, MainWindowViewModel mainWindowViewModel)
         {
             var existingContact = mainWindowViewModel.ContactList.FirstOrDefault(x => x.ContactName.Equals(contactName) && x.ContactTitle.Equals(title) &&
                             x.ContactGroupName.Equals(groupName) && x.ContactSystemName.Equals(systemName) && x.ContactSystemIp.Equals(systemIp));
             if (existingContact == null)
-            { mainWindowViewModel.ContactList.Add(new Contact(contactName, groupName, groupMacLevel, email, title, systemIp, systemName, false)); }
+            { mainWindowViewModel.ContactList.Add(new Contact(contactName, groupName, email, title, systemIp, systemName, false)); }
         }
 
         public void InsertTitleInObservableCollection(string title, MainWindowViewModel mainWindowViewModel)

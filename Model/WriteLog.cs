@@ -18,12 +18,23 @@ namespace Vulnerator.Model
                     { Directory.CreateDirectory(logPath); }
 
                     using (FileStream fs = new FileStream(logFile, FileMode.Append, FileAccess.Write))
-                    using (StreamWriter sw = new StreamWriter(fs))
                     {
-                        sw.WriteLine(DateTime.Now);
-                        sw.WriteLine(fileName);
-                        sw.WriteLine(exception);
-                        sw.Close();
+                        using (StreamWriter sw = new StreamWriter(fs))
+                        {
+                        if (!string.IsNullOrWhiteSpace(fileName))
+                            { sw.WriteLine("File Name :: " + fileName); }
+                            sw.WriteLine(DateTime.Now + " :: " + exception.Message);
+                            sw.WriteLine("Source :: " + exception.Source);
+                            if (exception.InnerException != null)
+                            { sw.WriteLine("Inner Exception :: " + exception.InnerException); }
+                            sw.WriteLine();
+                            sw.WriteLine("*************** BEGIN STACK TRACE ***************");
+                            sw.WriteLine(exception.StackTrace);
+                            sw.WriteLine("*************** END STACK TRACE ***************");
+                            sw.WriteLine();
+                            sw.WriteLine();
+                            sw.Close();
+                        }
                     }
                 }
                 catch
@@ -33,6 +44,14 @@ namespace Vulnerator.Model
                 {
                     if (!Directory.Exists(logPath))
                     { Directory.CreateDirectory(logPath); }
+                    using (FileStream fs = new FileStream(logFile, FileMode.Append, FileAccess.Write))
+                    using (StreamWriter sw = new StreamWriter(fs))
+                    {
+                        sw.WriteLine(DateTime.Now);
+                        sw.WriteLine(fileName);
+                        sw.WriteLine(exception);
+                        sw.Close();
+                    }
                 }
                 catch
                 { return; }

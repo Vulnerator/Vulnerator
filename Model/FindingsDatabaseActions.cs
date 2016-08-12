@@ -1,5 +1,7 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.IO;
 
 namespace Vulnerator.Model
@@ -9,46 +11,24 @@ namespace Vulnerator.Model
         private static string findingsDatabaseFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         private static string findingsDatabaseFile = findingsDatabaseFilePath + @"\Vulnerator\Findings.sqlite";
         public static string findingsDatabaseConnection = @"Data Source = " + findingsDatabaseFilePath + @"\Vulnerator\Findings.sqlite; Version=3;";
+        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         public static SQLiteConnection sqliteConnection = new SQLiteConnection(findingsDatabaseConnection);
         public SQLiteTransaction sqLiteTransaction;
 
         public FindingsDatabaseActions()
-        {
-            CreateFindingsDatabase();
-        }
+        { CreateFindingsDatabase(); }
 
         private void CreateFindingsDatabase()
         {
-            if (File.Exists(findingsDatabaseFile) && !findingsDatabaseFile.IsFileInUse())
-            { File.Delete(findingsDatabaseFile); }
-            SQLiteConnection.CreateFile(findingsDatabaseFile);
-            sqliteConnection.Open();
-            using (SQLiteCommand sqliteCommand = new SQLiteCommand("", sqliteConnection))
+            try
             {
-                CreateScapScoresTable(sqliteCommand);
-                CreateAssetsTable(sqliteCommand);
-                CreateFileNamesTable(sqliteCommand);
-                CreateVulnerabilityTable(sqliteCommand);
-                CreateUniqueFindingTable(sqliteCommand);
-                CreateGroupsTable(sqliteCommand);
-                CreateFindingTypesTable(sqliteCommand);
-                CreateVulnerabilitySourcesTable(sqliteCommand);
-                CreateFindingStatusTable(sqliteCommand);
-                InsertFindingTypes(sqliteCommand);
-                InsertFindingStatuses(sqliteCommand);
-                InsertAcasVulnerabilitySource(sqliteCommand);
-            }
-        }
-
-        public void RefreshFindingsDatabase()
-        {
-            using (SQLiteCommand sqliteCommand = new SQLiteCommand("", sqliteConnection))
-            {
-                sqliteCommand.CommandText = "SELECT COUNT(*) FROM Assets;";
-                if (Convert.ToInt32(sqliteCommand.ExecuteScalar()) >= 1)
+                log.Info("Creating findings database.");
+                if (File.Exists(findingsDatabaseFile) && !findingsDatabaseFile.IsFileInUse())
+                { File.Delete(findingsDatabaseFile); }
+                SQLiteConnection.CreateFile(findingsDatabaseFile);
+                sqliteConnection.Open();
+                using (SQLiteCommand sqliteCommand = new SQLiteCommand("", sqliteConnection))
                 {
-                    DropFindingsDatabaseTableIndex(sqliteCommand);
-                    DropFindingsDatabaseTables(sqliteCommand);
                     CreateScapScoresTable(sqliteCommand);
                     CreateAssetsTable(sqliteCommand);
                     CreateFileNamesTable(sqliteCommand);
@@ -62,6 +42,48 @@ namespace Vulnerator.Model
                     InsertFindingStatuses(sqliteCommand);
                     InsertAcasVulnerabilitySource(sqliteCommand);
                 }
+                log.Info("Findings database created successfully.");
+            }
+            catch(Exception exception)
+            {
+                log.Error("Findings database creation failed.");
+                log.Debug("Exception details:", exception);
+            }
+        }
+        
+        public void RefreshFindingsDatabase()
+        {
+            try
+            {
+                log.Info("Refreshing findings database.");
+                using (SQLiteCommand sqliteCommand = new SQLiteCommand("", sqliteConnection))
+                {
+                    sqliteCommand.CommandText = "SELECT COUNT(*) FROM Assets;";
+                    if (Convert.ToInt32(sqliteCommand.ExecuteScalar()) >= 1)
+                    {
+                        DropFindingsDatabaseTableIndex(sqliteCommand);
+                        DropFindingsDatabaseTables(sqliteCommand);
+                        CreateScapScoresTable(sqliteCommand);
+                        CreateAssetsTable(sqliteCommand);
+                        CreateFileNamesTable(sqliteCommand);
+                        CreateVulnerabilityTable(sqliteCommand);
+                        CreateUniqueFindingTable(sqliteCommand);
+                        CreateGroupsTable(sqliteCommand);
+                        CreateFindingTypesTable(sqliteCommand);
+                        CreateVulnerabilitySourcesTable(sqliteCommand);
+                        CreateFindingStatusTable(sqliteCommand);
+                        InsertFindingTypes(sqliteCommand);
+                        InsertFindingStatuses(sqliteCommand);
+                        InsertAcasVulnerabilitySource(sqliteCommand);
+                    }
+                }
+                log.Info("Findings database refeshed successfully.");
+            }
+            catch (Exception exception)
+            {
+                log.Error("Findings database refresh failed.");
+                log.Debug("Exception details:", exception);
+                throw;
             }
         }
 
@@ -92,7 +114,7 @@ namespace Vulnerator.Model
         private void CreateVulnerabilitySourcesTable(SQLiteCommand sqliteCommand)
         {
             sqliteCommand.CommandText = "CREATE TABLE VulnerabilitySources (" +
-                "SourceIndex INTEGER PRIMARY KEY, Source TEXT UNIQUE ON CONFLICT IGNORE);";
+                "SourceIndex INTEGER PRIMARY KEY, Source TEXT UNIQUE ON CONFLICT IGNORE, Version TEXT, Release TEXT);";
             sqliteCommand.ExecuteNonQuery();
         }
 
@@ -101,10 +123,10 @@ namespace Vulnerator.Model
             sqliteCommand.CommandText = "CREATE TABLE Vulnerability (" +
                 "VulnerabilityIndex INTEGER PRIMARY KEY, VulnId TEXT, " +
                 "VulnTitle TEXT, Description TEXT, RiskStatement TEXT, IaControl TEXT, " +
-                "CciReference TEXT, CPEs TEXT, CrossReferences TEXT, " +
+                "NistControl TEXT, CPEs TEXT, CrossReferences TEXT, " +
                 "IavmNumber TEXT, FixText TEXT, PluginPublishedDate TEXT, " +
                 "PluginModifiedDate TEXT, PatchPublishedDate TEXT, Age TEXT, " +
-                "RawRisk TEXT, Impact TEXT, RuleId TEXT UNIQUE ON CONFLICT IGNORE);";
+                "RawRisk TEXT, Impact TEXT, RuleId TEXT UNIQUE ON CONFLICT IGNORE, CciNumber TEXT);";
             sqliteCommand.ExecuteNonQuery();
         }
 
@@ -166,7 +188,7 @@ namespace Vulnerator.Model
         private void InsertAcasVulnerabilitySource(SQLiteCommand sqliteCommand)
         {
             sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources VALUES (" +
-                "NULL, 'Assured Compliance Assessment Solution (ACAS)')";
+                "NULL, 'Assured Compliance Assessment Solution (ACAS)', NULL, NULL)";
             sqliteCommand.ExecuteNonQuery();
         }
 

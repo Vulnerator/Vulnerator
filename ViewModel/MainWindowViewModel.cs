@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using log4net;
+using Microsoft.Win32;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -17,6 +18,8 @@ namespace Vulnerator.ViewModel
 	{
 		public static ConfigAlter configAlter;
 		public static CommandParameters commandParameters = new CommandParameters();
+        public Logger logger = new Logger();
+        public static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 		public static UpdateMitigationParameters updateMitigationParameters = new UpdateMitigationParameters();
 		public static UpdateContactParameters updateContactParameters = new UpdateContactParameters();
 		public static UpdateSystemGroupParameters updateSystemGroupParameters = new UpdateSystemGroupParameters();
@@ -187,20 +190,6 @@ namespace Vulnerator.ViewModel
 			}
 		}
 
-		private AsyncObservableCollection<MacLevel> _macLevelList;
-		public AsyncObservableCollection<MacLevel> MacLevelList
-		{
-			get { return _macLevelList; }
-			set
-			{
-				if (_macLevelList != value)
-				{
-					_macLevelList = value;
-					OnPropertyChanged("MacLevelList");
-				}
-			}
-		}
-
 		private AsyncObservableCollection<Contact> _contactList;
 		public AsyncObservableCollection<Contact> ContactList
 		{
@@ -327,20 +316,6 @@ namespace Vulnerator.ViewModel
 			}
 		}
 
-		private string _addMitigationMacLevel;
-		public string AddMitigationMacLevel
-		{
-			get { return _addMitigationMacLevel; }
-			set
-			{
-				if (_addMitigationMacLevel != value)
-				{
-					_addMitigationMacLevel = value;
-					OnPropertyChanged("AddMitigationMacLevel");
-				}
-			}
-		}
-
 		private string _mitigationGroupNameToUpdate;
 		public string MitigationGroupNameToUpdate
 		{
@@ -393,20 +368,6 @@ namespace Vulnerator.ViewModel
 				{
 					_updateMitigationStatus = value;
 					OnPropertyChanged("UpdateMitigationStatus");
-				}
-			}
-		}
-
-		private string _updateMitigationMacLevel;
-		public string UpdateMitigationMacLevel
-		{
-			get { return _updateMitigationMacLevel; }
-			set
-			{
-				if (_updateMitigationMacLevel != value)
-				{
-					_updateMitigationMacLevel = value;
-					OnPropertyChanged("UpdateMitigationMacLevel");
 				}
 			}
 		}
@@ -705,20 +666,6 @@ namespace Vulnerator.ViewModel
 			}
 		}
 
-		private string _addContactMacLevel;
-		public string AddContactMacLevel
-		{
-			get { return _addContactMacLevel; }
-			set
-			{
-				if (_addContactMacLevel != value)
-				{
-					_addContactMacLevel = value;
-					OnPropertyChanged("AddContactMacLevel");
-				}
-			}
-		}
-
 		private string _addContactSystemIp;
 		public string AddContactSystemIp
 		{
@@ -809,7 +756,10 @@ namespace Vulnerator.ViewModel
 
 		public MainWindowViewModel()
 		{
-			if (File.Exists(Environment.GetFolderPath(
+            logger.Setup();
+            log.Info("Initializing application.");
+
+            if (File.Exists(Environment.GetFolderPath(
 				Environment.SpecialFolder.ApplicationData) + @"\Vulnerator\VulneratorV6Log.txt"))
 			{
 				File.Delete(Environment.GetFolderPath(
@@ -853,11 +803,6 @@ namespace Vulnerator.ViewModel
 			StatusItemList.Add(new StatusItem("Ongoing"));
 			StatusItemList.Add(new StatusItem("Completed"));
 			StatusItemList.Add(new StatusItem("False Positive"));
-
-			MacLevelList = new AsyncObservableCollection<MacLevel>();
-			MacLevelList.Add(new MacLevel("I"));
-			MacLevelList.Add(new MacLevel("II"));
-			MacLevelList.Add(new MacLevel("III"));
             githubActions = new GitHubActions();
             githubActions.GetGitHubIssues(IssueList);
             githubActions.GetGitHubReleases(ReleaseList);
@@ -865,51 +810,10 @@ namespace Vulnerator.ViewModel
 
 		#endregion
 
-		#region Findings DataTable Creator
-
-		public static DataTable CreateFindingsDataTable()
-		{
-			DataTable findingsDataTable = new DataTable();
-			findingsDataTable.Columns.Add("FindingType", typeof(string));
-			findingsDataTable.Columns.Add("Source", typeof(string));
-			findingsDataTable.Columns.Add("RuleId", typeof(string));
-			findingsDataTable.Columns.Add("VulnId", typeof(string));
-			findingsDataTable.Columns.Add("VulnTitle", typeof(string));
-			findingsDataTable.Columns.Add("Description", typeof(string));
-			findingsDataTable.Columns.Add("RiskStatement", typeof(string));
-			findingsDataTable.Columns.Add("Impact", typeof(string));
-			findingsDataTable.Columns.Add("RawRisk", typeof(string));
-			findingsDataTable.Columns.Add("Status", typeof(string));
-			findingsDataTable.Columns.Add("FixText", typeof(string));
-			findingsDataTable.Columns.Add("IpAddress", typeof(string));
-			findingsDataTable.Columns.Add("HostName", typeof(string));
-			findingsDataTable.Columns.Add("CrossReferences", typeof(string));
-			findingsDataTable.Columns.Add("Cpe", typeof(string));
-			findingsDataTable.Columns.Add("IavmNumber", typeof(string));
-			findingsDataTable.Columns.Add("IaControl", typeof(string));
-			findingsDataTable.Columns.Add("CciRef", typeof(string));
-			findingsDataTable.Columns.Add("LastObserved", typeof(string));
-			findingsDataTable.Columns.Add("PluginPublicationDate", typeof(string));
-			findingsDataTable.Columns.Add("PluginModificationDate", typeof(string));
-			findingsDataTable.Columns.Add("PatchPublicationDate", typeof(string));
-			findingsDataTable.Columns.Add("Age", typeof(string));
-			findingsDataTable.Columns.Add("PluginOutput", typeof(string));
-			findingsDataTable.Columns.Add("Comments", typeof(string));
-			findingsDataTable.Columns.Add("FindingDetails", typeof(string));
-			findingsDataTable.Columns.Add("SystemName", typeof(string));
-			findingsDataTable.Columns.Add("FileName", typeof(string));
-			return findingsDataTable;
-		}
-
-		#endregion
-
 		#region MainWindowViewModel Destructor
 
 		~MainWindowViewModel()
-		{
-			configAlter.WriteSettingsToConfigurationXml();
-			//findingsDatabaseActions.DeleteFindingsDatabase();
-		}
+		{ configAlter.WriteSettingsToConfigurationXml(); }
 
 		#endregion
 
@@ -1898,13 +1802,8 @@ namespace Vulnerator.ViewModel
 			}
 			if (!String.IsNullOrWhiteSpace(AddMitigationGroupName))
 			{
-				if (String.IsNullOrWhiteSpace(AddMitigationMacLevel) && !AddMitigationGroupName.Contains(" : MAC"))
-				{
-					ProgressLabelText = "Please enter a MAC Level (I, II, III) for the new group entry";
-					return;
-				}
 				vulneratorDatabaseActions = new VulneratorDatabaseActions();
-				ProgressLabelText = vulneratorDatabaseActions.AddMitigation(AddMitigationId, AddMitigationStatus, AddMitigationGroupName, AddMitigationMacLevel, AddMitigationText, this);
+				ProgressLabelText = vulneratorDatabaseActions.AddMitigation(AddMitigationId, AddMitigationStatus, AddMitigationGroupName, AddMitigationText, this);
 			}
 			else
 			{
@@ -1916,7 +1815,6 @@ namespace Vulnerator.ViewModel
 			{
 				AddMitigationId = string.Empty;
 				AddMitigationStatus = string.Empty;
-				AddMitigationMacLevel = string.Empty;
 				MitigationGroupNameToUpdate = string.Empty;
 				AddMitigationGroupName = string.Empty;
 				AddMitigationText = string.Empty;
@@ -1946,22 +1844,13 @@ namespace Vulnerator.ViewModel
 				ProgressLabelText = "Please select a mitigation to update";
 				return;
 			}
-			if (!String.IsNullOrWhiteSpace(UpdateMitigationGroupName))
-			{
-				if (String.IsNullOrWhiteSpace(UpdateMitigationMacLevel) && !UpdateMitigationGroupName.Contains(" : MAC"))
-				{
-					ProgressLabelText = "Please enter a MAC Level (I, II, III) for the new group entry";
-					return;
-				}
-			}
 			vulneratorDatabaseActions = new VulneratorDatabaseActions();
 			ProgressLabelText = vulneratorDatabaseActions.UpdateMitigation(updateMitigationParameters.VulnerabilityId, UpdateMitigationStatus, updateMitigationParameters.CurrentGroupName,
-				UpdateMitigationGroupName, UpdateMitigationMacLevel, UpdateMitigationText, this);
+				UpdateMitigationGroupName, UpdateMitigationText, this);
 
 			if (ProgressLabelText.Contains("successful"))
 			{
 				UpdateMitigationGroupName = string.Empty;
-				UpdateMitigationMacLevel = string.Empty;
 				UpdateMitigationStatus = string.Empty;
 				UpdateMitigationText = string.Empty;
 			}
@@ -1997,14 +1886,8 @@ namespace Vulnerator.ViewModel
 			}
 			if (!String.IsNullOrWhiteSpace(AddMitigationGroupName))
 			{
-				if (String.IsNullOrWhiteSpace(AddMitigationMacLevel) && !AddMitigationGroupName.Contains(" : MAC"))
-				{
-					ProgressLabelText = "Please enter a MAC Level (I, II, III) for the new group entry";
-					return;
-				}
 				vulneratorDatabaseActions = new VulneratorDatabaseActions();
-				ProgressLabelText = vulneratorDatabaseActions.ImportMitigations(ImportMitigationTextFileName, AddMitigationGroupName, AddMitigationMacLevel, 
-					AddMitigationStatus, this);
+				ProgressLabelText = vulneratorDatabaseActions.ImportMitigations(ImportMitigationTextFileName, AddMitigationGroupName, AddMitigationStatus, this);
 			}
 			else
 			{
@@ -2014,7 +1897,6 @@ namespace Vulnerator.ViewModel
 			if (ProgressLabelText.Contains("successful"))
 			{
 				AddMitigationStatus = string.Empty;
-				AddMitigationMacLevel = string.Empty;
 				AddMitigationGroupName = string.Empty;
 				ImportMitigationTextFileName = string.Empty;
 			}
@@ -2065,14 +1947,13 @@ namespace Vulnerator.ViewModel
 			}
 			vulneratorDatabaseActions = new VulneratorDatabaseActions();
 			ProgressLabelText = vulneratorDatabaseActions.AddContact(AddContactName, AddContactTitle, AddContactEmail, AddContactSystemHostName, AddContactSystemIp, 
-				AddContactGroupName, AddContactMacLevel, this);
+				AddContactGroupName, this);
 			if (ProgressLabelText.Contains("successful"))
 			{
 				AddContactName = string.Empty;
 				AddContactTitle = string.Empty;
 				AddContactEmail = string.Empty;
 				AddContactGroupName = string.Empty;
-				AddContactMacLevel = string.Empty;
 				AddContactSystemIp = string.Empty;
 				AddContactSystemHostName = string.Empty;
 			}
@@ -2160,8 +2041,7 @@ namespace Vulnerator.ViewModel
 				return;
 			}
 			vulneratorDatabaseActions = new VulneratorDatabaseActions();
-			ProgressLabelText = vulneratorDatabaseActions.UpdateGroup(SelectedSystemGroupToUpdate, updateSystemGroupParameters.UpdatedSystemGroupName,
-				updateSystemGroupParameters.UpdatedSystemGroupMacLevel, this);
+			ProgressLabelText = vulneratorDatabaseActions.UpdateGroup(SelectedSystemGroupToUpdate, updateSystemGroupParameters.UpdatedSystemGroupName, this);
 
 			if (ProgressLabelText.Contains("successful"))
 			{

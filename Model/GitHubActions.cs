@@ -54,7 +54,7 @@ namespace Vulnerator.Model
                 if (NetworkInterface.GetIsNetworkAvailable())
                 {
                     GitHubClient githubClient = new GitHubClient(new ProductHeaderValue("Vulnerator"));
-                    var releases = await githubClient.Release.GetAll("Vulnerator", "Vulnerator");
+                    var releases = await githubClient.Repository.Release.GetAll("Vulnerator", "Vulnerator");
                     for (int i = 0; i < releases.Count; i++)
                     {
                         Release release = new Release();
@@ -65,6 +65,7 @@ namespace Vulnerator.Model
                         { release.TagName = "No Tag Name Assigned"; }
                         release.HtmlUrl = releases[i].HtmlUrl;
                         release.CreatedAt = releases[i].CreatedAt.Date.ToLongDateString();
+                        release.Downloads = releases[i].Assets[0].DownloadCount;
                         releaseList.Add(release);
                     }
                 }

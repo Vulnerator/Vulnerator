@@ -14,6 +14,7 @@ namespace Vulnerator.Model
         public string TagName { get; set; }
         public string HtmlUrl { get; set; }
         public string CreatedAt { get; set; }
+        public int Downloads { get; set; }
 
         public ICommand GitHubLinksCommand
         { get { return new DelegateCommand(GitHubLinks); } }

@@ -24,7 +24,7 @@ namespace Vulnerator
         private string groupName = string.Empty;
         private string fileNameWithoutPath = string.Empty;
         private string[] vulnerabilityTableColumns = new string[] { 
-            "VulnId", "VulnTitle", "Description", "RiskStatement", "IaControl", "CciReference", "CPEs", "CrossReferences", 
+            "VulnId", "VulnTitle", "Description", "RiskStatement", "IaControl", "NistControl", "CPEs", "CrossReferences", 
             "IavmNumber", "FixText", "PluginPublishedDate", "PluginModifiedDate", "PatchPublishedDate", "Age", "RawRisk", "Impact", "RuleId" };
         private string[] uniqueFindingTableColumns = new string[] { "Comments", "FindingDetails", "PluginOutput", "LastObserved" };
         private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
@@ -234,7 +234,12 @@ namespace Vulnerator
                         { stigInfoValue = "V?"; }
                     }
                     if (stigInfoPortion.Equals("releaseinfo"))
-                    { stigInfoValue = "R" + stigInfoValue.Split(' ')[1].Split(' ')[0].Trim(); }
+                    {
+                        if (!string.IsNullOrWhiteSpace(stigInfoValue))
+                        { stigInfoValue = "R" + stigInfoValue.Split(' ')[1].Split(' ')[0].Trim(); }
+                        else
+                        { stigInfoValue = "R?"; }
+                    }
                     return stigInfoValue;
                 }
                 else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("SI_DATA"))
@@ -329,7 +334,7 @@ namespace Vulnerator
                                 foreach (DataRow cciControlDataRow in joinedCciDatatable.AsEnumerable().Where(
                                     x => x["CciRef"].Equals(cciRefData)))
                                 { cciRef = cciRef + cciControlDataRow["CciControl"] + Environment.NewLine; }
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("CciReference", cciRef));
+                                sqliteCommand.Parameters.Add(new SQLiteParameter("NistControl", cciRef));
                                 break;
                             }
                         case "STIGRef":
