@@ -23,8 +23,6 @@ namespace Vulnerator.Model
         }
 
         public StatusItem(string item)
-        {
-            this._item = item;
-        }
+        { this._item = item; }
     }
 }

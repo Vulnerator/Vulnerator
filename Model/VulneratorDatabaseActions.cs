@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -16,6 +17,7 @@ namespace Vulnerator.Model
         private static string vulneratorDatabaseFilePath = ConfigAlter.ReadSettingsFromDictionary("tbMitDbLocation");
         private static string vulneratorDatabaseConnection = @"Data Source = " + vulneratorDatabaseFilePath + "; Version=3;";
         private GuiActions guiActions = new GuiActions();
+        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
         /// <summary>
         /// Create the database in which Vulnerator stores mitigation, system, project, and

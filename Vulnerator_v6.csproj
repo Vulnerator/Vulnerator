@@ -234,7 +234,6 @@
     <Compile Include="Model\HTMLtoXML.cs" />
     <Compile Include="Model\Iavm.cs" />
     <Compile Include="Model\WorkingSystem.cs" />
-    <Compile Include="Model\RssItem.cs" />
     <Compile Include="Model\SystemGroup.cs" />
     <Compile Include="Model\MitigationItem.cs" />
     <Compile Include="Model\MitigationsTextParser.cs" />

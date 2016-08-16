@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using log4net;
+using System;
 using System.Windows.Input;
 using Vulnerator.ViewModel;
 
@@ -10,6 +7,7 @@ namespace Vulnerator.Model
 {
     public class Release
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         public string Name { get; set; }
         public string TagName { get; set; }
         public string HtmlUrl { get; set; }
@@ -22,12 +20,11 @@ namespace Vulnerator.Model
         private void GitHubLinks(object param)
         {
             try
-            {
-                System.Diagnostics.Process.Start(param.ToString());
-            }
+            { System.Diagnostics.Process.Start(param.ToString()); }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, string.Empty);
+                log.Error("Unable to obtain launch GitHub link due to a lack of internet connection.");
+                log.Debug("Exception details: " + exception);
                 View.NoInternetApplication internetWarning = new View.NoInternetApplication();
                 internetWarning.ShowDialog();
                 return;
