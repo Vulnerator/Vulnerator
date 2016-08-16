@@ -1,4 +1,5 @@
-﻿using Octokit;
+﻿using log4net;
+using Octokit;
 using System;
 using System.Net.NetworkInformation;
 
@@ -6,6 +7,7 @@ namespace Vulnerator.Model
 {
     public class GitHubActions
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         public async void GetGitHubIssues(AsyncObservableCollection<Issue> issueList)
         {
             try
@@ -38,13 +40,17 @@ namespace Vulnerator.Model
                 }
                 else
                 {
+                    log.Warn("Github issues are only available if an internet connection is present.");
                     Issue issue = new Issue();
                     issue.Title = "Network connection unavailable";
                     issueList.Add(issue);
                 }
             }
             catch (Exception exception)
-            {  WriteLog.LogWriter(exception, string.Empty); }
+            {
+                log.Error("Unable to retrieve GitHub Vulnerator issue listing.");
+                log.Debug("Exception details: " + exception);
+            }
         }
 
         public async void GetGitHubReleases(AsyncObservableCollection<Release> releaseList)
@@ -69,9 +75,14 @@ namespace Vulnerator.Model
                         releaseList.Add(release);
                     }
                 }
+                else
+                { log.Warn("GitHub releases are only available if an internet connection is available."); }
             }
             catch (Exception exception)
-            { WriteLog.LogWriter(exception, string.Empty); }
+            {
+                log.Error("Unable to retrieve GitHub Vulnerator release listing.");
+                log.Debug("Exception details: " + exception);
+            }
         }
     }
 }

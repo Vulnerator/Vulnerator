@@ -1324,7 +1324,7 @@ namespace Vulnerator.ViewModel
 			findingsDatabaseActions.IndexDatabase();
 
 			stopWatch.Stop();
-			WriteLog.DiagnosticsInformation(string.Empty, "Processing complete; " + excelReportStatus + "; " + pdfReportStatus, stopWatch.Elapsed.ToString());
+			log.Info("Processing complete; " + excelReportStatus + "; " + pdfReportStatus + "; Elapsed time: " + stopWatch.Elapsed.ToString());
 			SetGuiProperties("Processing complete; " + excelReportStatus + "; " + pdfReportStatus, "Collapsed", true, null, null);
 		}
 
@@ -1339,7 +1339,7 @@ namespace Vulnerator.ViewModel
 				fileStopWatch.Start();
 				file.Status = "Processing...";
 				ProgressLabelText = "Processing File " + (FileList.IndexOf(file) + 1).ToString() + "...";
-				WriteLog.DiagnosticsInformation(file.FileName, "Beginning processing of", string.Empty);
+                log.Info("Begin processing of " + file.FileName);
 				switch (file.FileType)
 				{
 					case "ACAS - CSV":
@@ -1381,13 +1381,15 @@ namespace Vulnerator.ViewModel
 						}
 					default:
 						{
-							WriteLog.DiagnosticsInformation(file.FileName, "File type not recognized for", string.Empty);
+                            log.Error(file.FileName + " file type is unrecognized.");
 							break;
 						}
 				}
-
-				WriteLog.DiagnosticsInformation(file.FileName, "Finished processing of", fileStopWatch.Elapsed.ToString());
-				fileStopWatch.Stop();
+                fileStopWatch.Stop();
+                if (file.Status.Equals("Processed"))
+                { log.Info(file.FileName + " successfully processed; Elapsed time: " + fileStopWatch.Elapsed.ToString()); }
+				else
+                { log.Error(file.FileName + " processing failed; Elapsed time: " + fileStopWatch.Elapsed.ToString()); }
 				fileStopWatch.Reset();
 			}
 		}
@@ -1428,19 +1430,19 @@ namespace Vulnerator.ViewModel
 		
 		private string CreateExcelReports()
 		{
-			WriteLog.DiagnosticsInformation(Path.GetFileName(saveExcelFile.FileName), "Creating Excel report", string.Empty);
+            log.Info("Begin creation of " + saveExcelFile.FileName);
 			fileStopWatch.Start();
 			OpenXmlReportCreator openXmlReportCreator = new OpenXmlReportCreator();
 			if (!openXmlReportCreator.CreateExcelReport(saveExcelFile.FileName, MitigationList).Contains("successful"))
 			{
-				WriteLog.DiagnosticsInformation(saveExcelFile.FileName, "Excel report creation failed", fileStopWatch.Elapsed.ToString());
+                log.Error("Creation of " + saveExcelFile.FileName + " failed; Elapsed time: " + fileStopWatch.Elapsed.ToString());
 				fileStopWatch.Stop();
 				fileStopWatch.Reset();
 				return "Excel report creation error; see log for details";
 			}
 			else
 			{
-				WriteLog.DiagnosticsInformation(saveExcelFile.FileName, "Finished creating Excel report", fileStopWatch.Elapsed.ToString());
+                log.Info(saveExcelFile.FileName + " created successfully; Elapsed time: " + fileStopWatch.Elapsed.ToString());
 				fileStopWatch.Stop();
 				fileStopWatch.Reset();
 				return "Excel report created successfully";
@@ -1469,20 +1471,20 @@ namespace Vulnerator.ViewModel
 
 		private string CreatePdfReport()
 		{
-			WriteLog.DiagnosticsInformation(Path.GetFileName(saveExcelFile.FileName), "Creating PDF report", string.Empty);
-			fileStopWatch.Start();
+            log.Info("Begin creation of " + savePdfFile.FileName);
+            fileStopWatch.Start();
 			PdfReportCreator pdfReportCreator = new PdfReportCreator();
 			if (!pdfReportCreator.PdfWriter(savePdfFile.FileName.ToString(), SystemNameForReporting).Equals("Success"))
 			{
-				WriteLog.DiagnosticsInformation(saveExcelFile.FileName, "PDF report creation failed", fileStopWatch.Elapsed.ToString());
-				fileStopWatch.Stop();
+                log.Error("Creation of " + savePdfFile.FileName + " failed; Elapsed time: " + fileStopWatch.Elapsed.ToString());
+                fileStopWatch.Stop();
 				fileStopWatch.Reset();
 				return "PDF report creation error; see log for details";
 			}
 			else
 			{
-				WriteLog.DiagnosticsInformation(saveExcelFile.FileName, "Finished creating PDF report", fileStopWatch.Elapsed.ToString());
-				fileStopWatch.Stop();
+                log.Info(savePdfFile.FileName + " created successfully; Elapsed time: " + fileStopWatch.Elapsed.ToString());
+                fileStopWatch.Stop();
 				fileStopWatch.Reset();
 				return "PDF summary created successfully"; 
 			}

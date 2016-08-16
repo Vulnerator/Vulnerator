@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using log4net;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Vulnerator.Model;
@@ -28,6 +29,7 @@ namespace Vulnerator
             "IavmNumber", "FixText", "PluginPublishedDate", "PluginModifiedDate", "PatchPublishedDate", "Age", "RawRisk", "Impact", "RuleId" };
         private string[] uniqueFindingTableColumns = new string[] { "Comments", "FindingDetails", "PluginOutput", "LastObserved" };
         private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
+        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
         /// <summary>
         /// Reads *.ckl files exported from the DISA STIG Viewer and writes the results to the appropriate DataTables.
@@ -42,7 +44,7 @@ namespace Vulnerator
             {
                 if (fileName.IsFileInUse())
                 {
-                    WriteLog.DiagnosticsInformation(fileName, "File is in use; please close any open instances and try again.", string.Empty);
+                    log.Error(fileName + " is in use; please close any open instances and try again.");
                     return "Failed; File In Use";
                 }
                 fileNameWithoutPath = Path.GetFileName(fileName);
@@ -54,7 +56,7 @@ namespace Vulnerator
                         sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "CKL"));
                         CreateAddGroupNameCommand(systemName, sqliteCommand);
                         CreateAddFileNameCommand(fileNameWithoutPath, sqliteCommand);
-                        XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSetings();
+                        XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
                         using (XmlReader xmlReader = XmlReader.Create(fileName, xmlReaderSettings))
                         {
                             while (xmlReader.Read())
@@ -92,464 +94,618 @@ namespace Vulnerator
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, fileName);
+                log.Error("Unable to process CKL file.");
+                log.Debug("Exception details:", exception);
                 return "Failed; See Log";
             }
         }
 
         private void CreateAddGroupNameCommand(string groupName, SQLiteCommand sqliteCommand)
         {
-            sqliteCommand.CommandText = "INSERT INTO Groups VALUES (NULL, @GroupName);";
-            sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", groupName));
-            sqliteCommand.ExecuteNonQuery();
+            try
+            {
+                sqliteCommand.CommandText = "INSERT INTO Groups VALUES (NULL, @GroupName);";
+                sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", groupName));
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to insert GroupName into Groups.");
+                throw exception;
+            }
         }
 
         private void CreateAddFileNameCommand(string fileName, SQLiteCommand sqliteCommand)
         {
-            sqliteCommand.CommandText = "INSERT INTO FileNames VALUES (NULL, @FileName);";
-            sqliteCommand.Parameters.Add(new SQLiteParameter("FileName", fileNameWithoutPath));
-            sqliteCommand.ExecuteNonQuery();
+            try
+            {
+                sqliteCommand.CommandText = "INSERT INTO FileNames VALUES (NULL, @FileName);";
+                sqliteCommand.Parameters.Add(new SQLiteParameter("FileName", fileNameWithoutPath));
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to insert new filename into FileNames.");
+                throw exception;
+            }
         }
 
         private void CreateAddAssetCommand(SQLiteCommand sqliteCommand)
         {
-            if (!string.IsNullOrWhiteSpace(workingSystem.IpAddress))
-            { sqliteCommand.Parameters.Add(new SQLiteParameter("IpAddress", workingSystem.IpAddress)); }
-            else
-            { sqliteCommand.Parameters.Add(new SQLiteParameter("IpAddress", "IP Not Provided")); }
-            
-            if (!string.IsNullOrWhiteSpace(workingSystem.HostName))
-            { sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", workingSystem.HostName)); }
-            else
-            { sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", "Host Name Not Provided")); }
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(workingSystem.IpAddress))
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("IpAddress", workingSystem.IpAddress)); }
+                else
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("IpAddress", "IP Not Provided")); }
 
-            if (UserPrefersHostName)
-            { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", sqliteCommand.Parameters["HostName"].Value)); }
-            else
-            { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", sqliteCommand.Parameters["IpAddress"].Value)); }
+                if (!string.IsNullOrWhiteSpace(workingSystem.HostName))
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", workingSystem.HostName)); }
+                else
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", "Host Name Not Provided")); }
 
-            sqliteCommand.CommandText = "INSERT INTO Assets (AssetIdToReport, HostName, IpAddress, GroupIndex) VALUES " +
-                "(@AssetIdToReport, @HostName, @IpAddress, " +
-                "(SELECT GroupIndex FROM Groups WHERE GroupName = @GroupName));";
-            sqliteCommand.ExecuteNonQuery();
+                if (UserPrefersHostName)
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", sqliteCommand.Parameters["HostName"].Value)); }
+                else
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", sqliteCommand.Parameters["IpAddress"].Value)); }
+
+                sqliteCommand.CommandText = "INSERT INTO Assets (AssetIdToReport, HostName, IpAddress, GroupIndex) VALUES " +
+                    "(@AssetIdToReport, @HostName, @IpAddress, " +
+                    "(SELECT GroupIndex FROM Groups WHERE GroupName = @GroupName));";
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to insert new asset into Assets.");
+                throw exception;
+            }
         }
 
         private void CreateAddSourceCommand(SQLiteCommand sqliteCommand)
         {
-            sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources VALUES (NULL, @Source);";
-            sqliteCommand.ExecuteNonQuery();
+            try
+            {
+                sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources VALUES (NULL, @Source, NULL, NULL);";
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to insert new source into VulnerabilitySources.");
+                throw exception;
+            }
         }
 
-        private XmlReaderSettings GenerateXmlReaderSetings()
+        private XmlReaderSettings GenerateXmlReaderSettings()
         {
-            XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
-            xmlReaderSettings.IgnoreWhitespace = true;
-            xmlReaderSettings.IgnoreComments = true;
-            xmlReaderSettings.ValidationType = ValidationType.Schema;
-            xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessInlineSchema;
-            xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessSchemaLocation;
-            return xmlReaderSettings;
+            try
+            {
+                XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
+                xmlReaderSettings.IgnoreWhitespace = true;
+                xmlReaderSettings.IgnoreComments = true;
+                xmlReaderSettings.ValidationType = ValidationType.Schema;
+                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessInlineSchema;
+                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessSchemaLocation;
+                return xmlReaderSettings;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate XmlReaderSettings.");
+                throw exception;
+            }
         }
 
         private WorkingSystem ObtainSystemInformation(XmlReader xmlReader)
         {
-            WorkingSystem workingsystem = new WorkingSystem();
-
-            while (xmlReader.Read())
+            try
             {
-                if (xmlReader.IsStartElement())
-                {
-                    switch (xmlReader.Name)
-                    {
-                        case "HOST_NAME":
-                            {
-                                workingsystem.HostName = ObtainCurrentNodeValue(xmlReader);
-                                break;
-                            }
-                        case "HOST_IP":
-                            {
-                                workingsystem.IpAddress = ObtainCurrentNodeValue(xmlReader);
-                                break;
-                            }
-                        default:
-                            { break; }
-                    }
-                }
-                else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ASSET"))
-                { break; }
-            }
+                WorkingSystem workingsystem = new WorkingSystem();
 
-            return workingsystem;
-        }
-
-        private void ObtainStigInfo(XmlReader xmlReader)
-        {
-            xmlReader.Read();
-            if (xmlReader.Name.Equals("STIG_TITLE"))
-            { stigInfo = ObtainCurrentNodeValue(xmlReader); }
-            else
-            {
                 while (xmlReader.Read())
                 {
-                    if (xmlReader.IsStartElement() && xmlReader.Name.Equals("SID_NAME"))
+                    if (xmlReader.IsStartElement())
                     {
-                        xmlReader.Read();
-                        switch (xmlReader.Value)
+                        switch (xmlReader.Name)
                         {
-                            case "version":
+                            case "HOST_NAME":
                                 {
-                                    versionInfo = ObtainStigInfoSubNodeValue(xmlReader);
+                                    workingsystem.HostName = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
-                            case "releaseinfo":
+                            case "HOST_IP":
                                 {
-                                    releaseInfo = ObtainStigInfoSubNodeValue(xmlReader);
+                                    workingsystem.IpAddress = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             default:
                                 { break; }
                         }
                     }
-                    else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("STIG_INFO"))
+                    else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ASSET"))
                     { break; }
                 }
+
+                return workingsystem;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to obtain host system information.");
+                throw exception;
+            }
+        }
+
+        private void ObtainStigInfo(XmlReader xmlReader)
+        {
+            try
+            {
+                xmlReader.Read();
+                if (xmlReader.Name.Equals("STIG_TITLE"))
+                { stigInfo = ObtainCurrentNodeValue(xmlReader); }
+                else
+                {
+                    while (xmlReader.Read())
+                    {
+                        if (xmlReader.IsStartElement() && xmlReader.Name.Equals("SID_NAME"))
+                        {
+                            xmlReader.Read();
+                            switch (xmlReader.Value)
+                            {
+                                case "version":
+                                    {
+                                        versionInfo = ObtainStigInfoSubNodeValue(xmlReader);
+                                        break;
+                                    }
+                                case "releaseinfo":
+                                    {
+                                        releaseInfo = ObtainStigInfoSubNodeValue(xmlReader);
+                                        break;
+                                    }
+                                default:
+                                    { break; }
+                            }
+                        }
+                        else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("STIG_INFO"))
+                        { break; }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to obtain STIG information.");
+                throw exception;
             }
         }
 
         private string ObtainStigInfoSubNodeValue(XmlReader xmlReader)
         {
-            string stigInfoPortion = xmlReader.Value;
-            string stigInfoValue = string.Empty;
-            while (xmlReader.Read())
+            try
             {
-                if (xmlReader.IsStartElement() && xmlReader.Name.Equals("SID_DATA"))
+                string stigInfoPortion = xmlReader.Value;
+                string stigInfoValue = string.Empty;
+                while (xmlReader.Read())
                 {
-                    xmlReader.Read();
-                    stigInfoValue = xmlReader.Value;
-                    if (stigInfoPortion.Equals("version"))
+                    if (xmlReader.IsStartElement() && xmlReader.Name.Equals("SID_DATA"))
                     {
-                        if (!string.IsNullOrWhiteSpace(stigInfoValue))
-                        { stigInfoValue = "V" + stigInfoValue; }
-                        else
-                        { stigInfoValue = "V?"; }
-                    }
-                    if (stigInfoPortion.Equals("releaseinfo"))
-                    {
-                        if (!string.IsNullOrWhiteSpace(stigInfoValue))
-                        { stigInfoValue = "R" + stigInfoValue.Split(' ')[1].Split(' ')[0].Trim(); }
-                        else
-                        { stigInfoValue = "R?"; }
-                    }
-                    return stigInfoValue;
-                }
-                else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("SI_DATA"))
-                {
-                    if (string.IsNullOrWhiteSpace(stigInfoValue))
-                    {
-                        switch (stigInfoPortion)
+                        xmlReader.Read();
+                        stigInfoValue = xmlReader.Value;
+                        if (stigInfoPortion.Equals("version"))
                         {
-                            case "version":
-                                { return "V?"; }
-                            case "releaseinfo":
-                                { return "R?"; }
-                            default:
-                                { return string.Empty; }
+                            if (!string.IsNullOrWhiteSpace(stigInfoValue))
+                            { stigInfoValue = "V" + stigInfoValue; }
+                            else
+                            { stigInfoValue = "V?"; }
                         }
+                        if (stigInfoPortion.Equals("releaseinfo"))
+                        {
+                            if (!string.IsNullOrWhiteSpace(stigInfoValue))
+                            { stigInfoValue = "R" + stigInfoValue.Split(' ')[1].Split(' ')[0].Trim(); }
+                            else
+                            { stigInfoValue = "R?"; }
+                        }
+                        return stigInfoValue;
                     }
-                    return stigInfoValue;
+                    else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("SI_DATA"))
+                    {
+                        if (string.IsNullOrWhiteSpace(stigInfoValue))
+                        {
+                            switch (stigInfoPortion)
+                            {
+                                case "version":
+                                    { return "V?"; }
+                                case "releaseinfo":
+                                    { return "R?"; }
+                                default:
+                                    { return string.Empty; }
+                            }
+                        }
+                        return stigInfoValue;
+                    }
+                    else
+                    { continue; }
                 }
-                else
-                { continue; }
+                return "Read too far!";
             }
-            return "Read too far!";
+            catch (Exception exception)
+            {
+                log.Error("Unable to obtain the value from the STIG Info sub-node");
+                throw exception;
+            }
         }
 
         private void ParseVulnNode(XmlReader xmlReader, SQLiteCommand sqliteCommand)
         {
-            while (xmlReader.Read())
+            try
             {
-                ParseStigDataNodes(xmlReader, sqliteCommand);
-                ParseRemainingVulnSubNodes(xmlReader, sqliteCommand);
-                CreateAddSourceCommand(sqliteCommand);
-                sqliteCommand.CommandText = SetInitialSqliteCommandText("Vulnerability");
-                sqliteCommand.CommandText = InsertParametersIntoSqliteCommandText(sqliteCommand, "Vulnerability");
-                sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.CommandText = SetInitialSqliteCommandText("UniqueFinding");
-                sqliteCommand.CommandText = InsertParametersIntoSqliteCommandText(sqliteCommand, "UniqueFinding");
-                sqliteCommand.ExecuteNonQuery();
-                return;
+                while (xmlReader.Read())
+                {
+                    ParseStigDataNodes(xmlReader, sqliteCommand);
+                    ParseRemainingVulnSubNodes(xmlReader, sqliteCommand);
+                    CreateAddSourceCommand(sqliteCommand);
+                    sqliteCommand.CommandText = SetInitialSqliteCommandText("Vulnerability");
+                    sqliteCommand.CommandText = InsertParametersIntoSqliteCommandText(sqliteCommand, "Vulnerability");
+                    sqliteCommand.ExecuteNonQuery();
+                    sqliteCommand.CommandText = SetInitialSqliteCommandText("UniqueFinding");
+                    sqliteCommand.CommandText = InsertParametersIntoSqliteCommandText(sqliteCommand, "UniqueFinding");
+                    sqliteCommand.ExecuteNonQuery();
+                    return;
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to parse Vuln node.");
+                throw exception;
             }
         }
 
         private void ParseStigDataNodes(XmlReader xmlReader, SQLiteCommand sqliteCommand)
         {
-            while (xmlReader.Read())
+            try
             {
-                if (xmlReader.IsStartElement() && xmlReader.Name.Equals("VULN_ATTRIBUTE"))
+                while (xmlReader.Read())
                 {
-                    xmlReader.Read();
-                    switch (xmlReader.Value)
+                    if (xmlReader.IsStartElement() && xmlReader.Name.Equals("VULN_ATTRIBUTE"))
                     {
-                        case "Vuln_Num":
-                            {
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("VulnId", ObtainAttributeDataNodeValue(xmlReader)));
-                                break;
-                            }
-                        case "Severity":
-                            {
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("Impact", ConvertSeverityToImpact(ObtainAttributeDataNodeValue(xmlReader))));
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("RawRisk", 
-                                    ConvertImpactToRawRisk(sqliteCommand.Parameters["Impact"].Value.ToString())));
-                                break;
-                            }
-                        case "Rule_ID":
-                            {
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("RuleId", ObtainAttributeDataNodeValue(xmlReader)));
-                                break;
-                            }
-                        case "Rule_Title":
-                            {
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("VulnTitle", ObtainAttributeDataNodeValue(xmlReader)));
-                                break;
-                            }
-                        case "Vuln_Discuss":
-                            {
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("Description", ObtainAttributeDataNodeValue(xmlReader)));
-                                break;
-                            }
-                        case "IA_Controls":
-                            {
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("IaControl", ObtainAttributeDataNodeValue(xmlReader)));
-                                break;
-                            }
-                        case "Fix_Text":
-                            {
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("FixText", ObtainAttributeDataNodeValue(xmlReader)));
-                                break;
-                            }
-                        case "CCI_REF":
-                            {
-                                string cciRef = string.Empty;
-                                string cciRefData = ObtainAttributeDataNodeValue(xmlReader);
-                                foreach (DataRow cciControlDataRow in joinedCciDatatable.AsEnumerable().Where(
-                                    x => x["CciRef"].Equals(cciRefData)))
-                                { cciRef = cciRef + cciControlDataRow["CciControl"] + Environment.NewLine; }
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("NistControl", cciRef));
-                                break;
-                            }
-                        case "STIGRef":
-                            {
-                                if (!string.IsNullOrWhiteSpace(stigInfo))
-                                { sqliteCommand.Parameters.Add(new SQLiteParameter("Source", stigInfo)); }
-                                else
+                        xmlReader.Read();
+                        switch (xmlReader.Value)
+                        {
+                            case "Vuln_Num":
                                 {
-                                    string stigTitle = ObtainAttributeDataNodeValue(xmlReader);
-                                    if (stigTitle.Contains("Benchmark"))
-                                    { stigTitle = stigTitle.Split(new string[] { "Benchmark" }, StringSplitOptions.None)[0].Trim(); }
-                                    if (stigTitle.Contains("Release"))
-                                    { stigTitle = stigTitle.Replace("Release: ", "R"); }
-                                    else
-                                    { stigTitle = stigTitle + " " + releaseInfo; }
-                                    stigTitle = stigTitle.Insert(stigTitle.Length - 3, " " + versionInfo);
-                                    if (Regex.IsMatch(stigTitle, @"V\dR"))
-                                    { stigTitle = stigTitle.Insert(stigTitle.Length - 3, " "); }
-                                    if (!stigTitle.Contains("::"))
-                                    { stigTitle = stigTitle.Insert(stigTitle.Length - 5, ":: "); }
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source", stigTitle));
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("VulnId", ObtainAttributeDataNodeValue(xmlReader)));
+                                    break;
                                 }
-                                break;
-                            }
-                        default:
-                            { break; }
+                            case "Severity":
+                                {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Impact", ConvertSeverityToImpact(ObtainAttributeDataNodeValue(xmlReader))));
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("RawRisk",
+                                        ConvertImpactToRawRisk(sqliteCommand.Parameters["Impact"].Value.ToString())));
+                                    break;
+                                }
+                            case "Rule_ID":
+                                {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("RuleId", ObtainAttributeDataNodeValue(xmlReader)));
+                                    break;
+                                }
+                            case "Rule_Title":
+                                {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("VulnTitle", ObtainAttributeDataNodeValue(xmlReader)));
+                                    break;
+                                }
+                            case "Vuln_Discuss":
+                                {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Description", ObtainAttributeDataNodeValue(xmlReader)));
+                                    break;
+                                }
+                            case "IA_Controls":
+                                {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("IaControl", ObtainAttributeDataNodeValue(xmlReader)));
+                                    break;
+                                }
+                            case "Fix_Text":
+                                {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("FixText", ObtainAttributeDataNodeValue(xmlReader)));
+                                    break;
+                                }
+                            case "CCI_REF":
+                                {
+                                    string cciRef = string.Empty;
+                                    string cciRefData = ObtainAttributeDataNodeValue(xmlReader);
+                                    foreach (DataRow cciControlDataRow in joinedCciDatatable.AsEnumerable().Where(
+                                        x => x["CciRef"].Equals(cciRefData)))
+                                    { cciRef = cciRef + cciControlDataRow["CciControl"] + Environment.NewLine; }
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("NistControl", cciRef));
+                                    break;
+                                }
+                            case "STIGRef":
+                                {
+                                    if (!string.IsNullOrWhiteSpace(stigInfo))
+                                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Source", stigInfo)); }
+                                    else
+                                    {
+                                        string stigTitle = ObtainAttributeDataNodeValue(xmlReader);
+                                        if (stigTitle.Contains("Benchmark"))
+                                        { stigTitle = stigTitle.Split(new string[] { "Benchmark" }, StringSplitOptions.None)[0].Trim(); }
+                                        if (stigTitle.Contains("Release"))
+                                        { stigTitle = stigTitle.Replace("Release: ", "R"); }
+                                        else
+                                        { stigTitle = stigTitle + " " + releaseInfo; }
+                                        stigTitle = stigTitle.Insert(stigTitle.Length - 3, " " + versionInfo);
+                                        if (Regex.IsMatch(stigTitle, @"V\dR"))
+                                        { stigTitle = stigTitle.Insert(stigTitle.Length - 3, " "); }
+                                        if (!stigTitle.Contains("::"))
+                                        { stigTitle = stigTitle.Insert(stigTitle.Length - 5, ":: "); }
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Source", stigTitle));
+                                    }
+                                    break;
+                                }
+                            default:
+                                { break; }
+                        }
                     }
+                    else if (xmlReader.IsStartElement() && xmlReader.Name.Equals("STATUS"))
+                    { return; }
                 }
-                else if (xmlReader.IsStartElement() && xmlReader.Name.Equals("STATUS"))
-                { return; }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to parse STIG data node.");
+                throw exception;
             }
         }
 
         private void ParseRemainingVulnSubNodes(XmlReader xmlReader, SQLiteCommand sqliteCommand)
         {
-            sqliteCommand.Parameters.Add(new SQLiteParameter("Status", MakeStatusUseable(ObtainCurrentNodeValue(xmlReader))));
-            while (xmlReader.Read())
+            try
             {
-                if (xmlReader.IsStartElement())
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Status", MakeStatusUseable(ObtainCurrentNodeValue(xmlReader))));
+                while (xmlReader.Read())
                 {
-                    switch (xmlReader.Name)
+                    if (xmlReader.IsStartElement())
                     {
-                        case "FINDING_DETAILS":
-                            {
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("FindingDetails", ObtainCurrentNodeValue(xmlReader)));
-                                break;
-                            }
-                        case "COMMENTS":
-                            {
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("Comments", ObtainCurrentNodeValue(xmlReader)));
-                                break;
-                            }
-                        default:
-                            { break; }
+                        switch (xmlReader.Name)
+                        {
+                            case "FINDING_DETAILS":
+                                {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("FindingDetails", ObtainCurrentNodeValue(xmlReader)));
+                                    break;
+                                }
+                            case "COMMENTS":
+                                {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Comments", ObtainCurrentNodeValue(xmlReader)));
+                                    break;
+                                }
+                            default:
+                                { break; }
+                        }
                     }
+                    else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("VULN"))
+                    { return; }
                 }
-                else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("VULN"))
-                { return; }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to parse Vuln sub-node.");
+                throw exception;
             }
         }
 
         private string SetInitialSqliteCommandText(string tableName)
         {
-            switch (tableName)
+            try
             {
-                case "Vulnerability":
-                    {
-                        return "INSERT INTO Vulnerability () VALUES ();";
-                    }
-                case "UniqueFinding":
-                    {
-                        return "INSERT INTO UniqueFinding (FindingTypeIndex, SourceIndex, StatusIndex, " +
-                            "FileNameIndex, VulnerabilityIndex, AssetIndex) VALUES (" +
-                            "(SELECT FindingTypeIndex FROM FindingTypes WHERE FindingType = @FindingType), " +
-                            "(SELECT SourceIndex FROM VulnerabilitySources WHERE Source = @Source), " +
-                            "(SELECT StatusIndex FROM FindingStatuses WHERE Status = @Status), " +
-                            "(SELECT FileNameIndex FROM FileNames WHERE FileName = @FileName), " +
-                            "(SELECT VulnerabilityIndex FROM Vulnerability WHERE RuleId = @RuleId), " +
-                            "(SELECT AssetIndex FROM Assets WHERE AssetIdToReport = @AssetIdToReport));";
-                    }
-                default:
-                    { return string.Empty; }
+                switch (tableName)
+                {
+                    case "Vulnerability":
+                        {
+                            return "INSERT INTO Vulnerability () VALUES ();";
+                        }
+                    case "UniqueFinding":
+                        {
+                            return "INSERT INTO UniqueFinding (FindingTypeIndex, SourceIndex, StatusIndex, " +
+                                "FileNameIndex, VulnerabilityIndex, AssetIndex) VALUES (" +
+                                "(SELECT FindingTypeIndex FROM FindingTypes WHERE FindingType = @FindingType), " +
+                                "(SELECT SourceIndex FROM VulnerabilitySources WHERE Source = @Source), " +
+                                "(SELECT StatusIndex FROM FindingStatuses WHERE Status = @Status), " +
+                                "(SELECT FileNameIndex FROM FileNames WHERE FileName = @FileName), " +
+                                "(SELECT VulnerabilityIndex FROM Vulnerability WHERE RuleId = @RuleId), " +
+                                "(SELECT AssetIndex FROM Assets WHERE AssetIdToReport = @AssetIdToReport));";
+                        }
+                    default:
+                        { return string.Empty; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to set initial SQLite command text.");
+                throw exception;
             }
         }
 
         private string InsertParametersIntoSqliteCommandText(SQLiteCommand sqliteCommand, string tableName)
         {
-            switch (tableName)
+            try
             {
-                case "Vulnerability":
-                    {
-                        foreach (SQLiteParameter sqliteParameter in sqliteCommand.Parameters)
+                switch (tableName)
+                {
+                    case "Vulnerability":
                         {
-                            if (Array.IndexOf(vulnerabilityTableColumns, sqliteParameter.ParameterName) >= 0)
-                            { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(37, "@" + sqliteParameter.ParameterName + ", "); }
+                            foreach (SQLiteParameter sqliteParameter in sqliteCommand.Parameters)
+                            {
+                                if (Array.IndexOf(vulnerabilityTableColumns, sqliteParameter.ParameterName) >= 0)
+                                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(37, "@" + sqliteParameter.ParameterName + ", "); }
+                            }
+                            foreach (SQLiteParameter sqliteParameter in sqliteCommand.Parameters)
+                            {
+                                if (Array.IndexOf(vulnerabilityTableColumns, sqliteParameter.ParameterName) >= 0)
+                                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, sqliteParameter.ParameterName + ", "); }
+                            }
+                            break;
                         }
-                        foreach (SQLiteParameter sqliteParameter in sqliteCommand.Parameters)
+                    case "UniqueFinding":
                         {
-                            if (Array.IndexOf(vulnerabilityTableColumns, sqliteParameter.ParameterName) >= 0)
-                            { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, sqliteParameter.ParameterName + ", "); }
+                            foreach (SQLiteParameter sqliteParameter in sqliteCommand.Parameters)
+                            {
+                                if (Array.IndexOf(uniqueFindingTableColumns, sqliteParameter.ParameterName) >= 0)
+                                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(126, "@" + sqliteParameter.ParameterName + ", "); }
+                            }
+                            foreach (SQLiteParameter sqliteParameter in sqliteCommand.Parameters)
+                            {
+                                if (Array.IndexOf(uniqueFindingTableColumns, sqliteParameter.ParameterName) >= 0)
+                                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, sqliteParameter.ParameterName + ", "); }
+                            }
+                            break;
                         }
-                        break;
-                    }
-                case "UniqueFinding":
-                    {
-                        foreach (SQLiteParameter sqliteParameter in sqliteCommand.Parameters)
-                        {
-                            if (Array.IndexOf(uniqueFindingTableColumns, sqliteParameter.ParameterName) >= 0)
-                            { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(126, "@" + sqliteParameter.ParameterName + ", "); }
-                        }
-                        foreach (SQLiteParameter sqliteParameter in sqliteCommand.Parameters)
-                        {
-                            if (Array.IndexOf(uniqueFindingTableColumns, sqliteParameter.ParameterName) >= 0)
-                            { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, sqliteParameter.ParameterName + ", "); }
-                        }
-                        break;
-                    }
-                default:
-                    { break; }
-            }
+                    default:
+                        { break; }
+                }
 
-            return sqliteCommand.CommandText.Replace(", )", ")");
+                return sqliteCommand.CommandText.Replace(", )", ")");
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to insert parameters into SQLite command text.");
+                throw exception;
+            }
         }
 
         private string ObtainAttributeDataNodeValue(XmlReader xmlReader)
         {
-            while (!xmlReader.Name.Equals("ATTRIBUTE_DATA"))
-            { xmlReader.Read(); }
-            xmlReader.Read();
-            return xmlReader.Value;
+            try
+            {
+                while (!xmlReader.Name.Equals("ATTRIBUTE_DATA"))
+                { xmlReader.Read(); }
+                xmlReader.Read();
+                return xmlReader.Value;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to obtain Attribute Data node value.");
+                throw exception;
+            }
         }
 
         private string ObtainCurrentNodeValue(XmlReader xmlReader)
         {
-            xmlReader.Read();
-            return xmlReader.Value;
+            try
+            {
+                xmlReader.Read();
+                return xmlReader.Value;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to obtain currently accessed node value.");
+                throw exception;
+            }
         }
 
         private string ConvertImpactToRawRisk(string severity)
         {
-            switch (severity)
+            try
             {
-                case "High":
-                    { return "I"; }
-                case "Medium":
-                    { return "II"; }
-                case "Low":
-                    { return "III"; }
-                case "Unknown":
-                    { return "Unknown"; }
-                default:
-                    { return "Unknown"; }
+                switch (severity)
+                {
+                    case "High":
+                        { return "I"; }
+                    case "Medium":
+                        { return "II"; }
+                    case "Low":
+                        { return "III"; }
+                    case "Unknown":
+                        { return "Unknown"; }
+                    default:
+                        { return "Unknown"; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to convert impact to raw risk.");
+                throw exception;
             }
         }
 
         private string ConvertSeverityToImpact(string severity)
         {
-            switch (severity)
+            try
             {
-                case "high":
-                    { return "High"; }
-                case "medium":
-                    { return "Medium"; }
-                case "low":
-                    { return "Low"; }
-                case "unknown":
-                    { return "Unknown"; }
-                default:
-                    { return "Unknown"; }
+                switch (severity)
+                {
+                    case "high":
+                        { return "High"; }
+                    case "medium":
+                        { return "Medium"; }
+                    case "low":
+                        { return "Low"; }
+                    case "unknown":
+                        { return "Unknown"; }
+                    default:
+                        { return "Unknown"; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to convert severity to impact.");
+                throw exception;
             }
         }
 
         private string MakeStatusUseable(string status)
         {
-            switch (status)
+            try
             {
-                case "NotAFinding":
-                    { return "Completed"; }
-                case "Not_Reviewed":
-                    { return "Not Reviewed"; }
-                case "Open":
-                    { return "Ongoing"; }
-                case "Not_Applicable":
-                    { return "Not Applicable";}
-                default:
-                    { return status; }
+                switch (status)
+                {
+                    case "NotAFinding":
+                        { return "Completed"; }
+                    case "Not_Reviewed":
+                        { return "Not Reviewed"; }
+                    case "Open":
+                        { return "Ongoing"; }
+                    case "Not_Applicable":
+                        { return "Not Applicable"; }
+                    default:
+                        { return status; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to parse status to a usable state.");
+                throw exception;
             }
         }
 
         private static DataTable CreateCciDataTable()
         {
-            DataTable cciItemDataTable = MainWindowViewModel.cciDs.Tables["cci_item"];
-            DataTable referencesDataTable = MainWindowViewModel.cciDs.Tables["references"];
-            DataTable referenceDataTable = MainWindowViewModel.cciDs.Tables["reference"];
-
-            joinedCciDatatable = new DataTable();
-            joinedCciDatatable.Columns.Add("CciRef", typeof(string));
-            joinedCciDatatable.Columns.Add("CciControl", typeof(string));
-
-            var query =
-                from cciItem in cciItemDataTable.AsEnumerable()
-                join references in referencesDataTable.AsEnumerable()
-                on cciItem["cci_item_id"] equals references["cci_item_id"]
-                join reference in referenceDataTable.AsEnumerable()
-                on references["references_id"] equals reference["references_id"]
-                select cciItem.ItemArray.Concat(reference.ItemArray).ToArray(); 
-
-            foreach (object[] values in query)
+            try
             {
-                DataRow cciRow = joinedCciDatatable.NewRow();
-                cciRow["CciRef"] = values[7].ToString();
-                cciRow["CciControl"] = values[13].ToString();
-                joinedCciDatatable.Rows.Add(cciRow);
+                DataTable cciItemDataTable = MainWindowViewModel.cciDs.Tables["cci_item"];
+                DataTable referencesDataTable = MainWindowViewModel.cciDs.Tables["references"];
+                DataTable referenceDataTable = MainWindowViewModel.cciDs.Tables["reference"];
+
+                joinedCciDatatable = new DataTable();
+                joinedCciDatatable.Columns.Add("CciRef", typeof(string));
+                joinedCciDatatable.Columns.Add("CciControl", typeof(string));
+
+                var query =
+                    from cciItem in cciItemDataTable.AsEnumerable()
+                    join references in referencesDataTable.AsEnumerable()
+                    on cciItem["cci_item_id"] equals references["cci_item_id"]
+                    join reference in referenceDataTable.AsEnumerable()
+                    on references["references_id"] equals reference["references_id"]
+                    select cciItem.ItemArray.Concat(reference.ItemArray).ToArray();
+
+                foreach (object[] values in query)
+                {
+                    DataRow cciRow = joinedCciDatatable.NewRow();
+                    cciRow["CciRef"] = values[7].ToString();
+                    cciRow["CciControl"] = values[13].ToString();
+                    joinedCciDatatable.Rows.Add(cciRow);
+                }
+                return joinedCciDatatable;
             }
-            return joinedCciDatatable;
+            catch (Exception exception)
+            {
+                log.Error("Unable to create CCI DataTable.");
+                log.Debug("Exception details:", exception);
+                throw;
+            }
         }
     }
 }

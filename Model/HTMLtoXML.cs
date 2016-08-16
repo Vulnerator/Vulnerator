@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,7 @@ namespace Vulnerator.Model
 {
     public class HTMLtoXML
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         public string Convert(string fileName)
         {
             try
@@ -333,9 +335,8 @@ namespace Vulnerator.Model
             }
             catch (Exception exception)
             {
-
-                WriteLog.LogWriter(exception, fileName);
-
+                log.Error("Unable to parse WASSP HTML file to XML format.");
+                log.Debug("Exception details: " + exception);
                 return "Failed; See Log";
             }
         }
