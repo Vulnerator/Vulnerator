@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace Vulnerator.Model
         private static string xmlFile = xmlPath + @"\Vulnerator_Config.xml";
         public static Dictionary<string, string> configDic = new Dictionary<string, string>();
         public static XDocument xdocumentConfigurationXmlFile;
+        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
         #region CreateSettingsDictionary
 
@@ -23,10 +25,10 @@ namespace Vulnerator.Model
         /// </summary>
         public void CreateSettingsDictionary()
         {
-            xdocumentConfigurationXmlFile = XDocument.Load(xmlFile);
-
             try
             {
+                log.Info("Creating settings dictionary.");
+                xdocumentConfigurationXmlFile = XDocument.Load(xmlFile);
                 XElement rootElement = xdocumentConfigurationXmlFile.Element("preferencesRoot");
                 XElement reportingTabElement = rootElement.Element("reportingTab");
                 XElement mitigationsTabElement = rootElement.Element("mitigationsTab");
@@ -52,7 +54,8 @@ namespace Vulnerator.Model
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, string.Empty);
+                log.Error("Unable to create settings dictionary.");
+                log.Debug("Exception details: " + exception);
             }
         }
 
@@ -67,17 +70,26 @@ namespace Vulnerator.Model
         /// <returns>String Value</returns>
         public static string ReadSettingsFromDictionary(string dicKey)
         {
-            if (dicKey != null)
+            try
             {
-                string dicVal;
-                configDic.TryGetValue(dicKey, out dicVal);
-                return dicVal;
-            }
+                if (dicKey != null)
+                {
+                    string dicVal;
+                    configDic.TryGetValue(dicKey, out dicVal);
+                    return dicVal;
+                }
 
-            else
+                else
+                {
+                    string dicVal = string.Empty;
+                    return dicVal;
+                }
+            }
+            catch (Exception exception)
             {
-                string dicVal = string.Empty;
-                return dicVal;
+                log.Error("Unable to read setting value for " + dicKey + ".");
+                log.Debug("Exception details: " + exception);
+                return string.Empty;
             }
         }
 
@@ -92,8 +104,16 @@ namespace Vulnerator.Model
         /// <param name="dicVal">Dictionary value to be updated</param>
         public void WriteSettingsToDictionary(string dicKey, string dicVal)
         {
-            if (dicKey != null)
-            { configDic[dicKey] = dicVal; }
+            try
+            {
+                if (dicKey != null)
+                { configDic[dicKey] = dicVal; }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to write value to dictionary for " + dicKey + ".");
+                log.Debug("Exception details: " + exception);
+            }
         }
 
         #endregion
@@ -107,6 +127,7 @@ namespace Vulnerator.Model
         {
             try
             {
+                log.Info("Writing settings values fro dictionary to configuration XML.");
                 foreach (string key in configDic.Keys)
                 {
                     string value;
@@ -117,7 +138,10 @@ namespace Vulnerator.Model
                 xdocumentConfigurationXmlFile.Save(xmlFile);
             }
             catch (Exception exception)
-            { WriteLog.LogWriter(exception, string.Empty); }
+            {
+                log.Error("Unable to write settings from dictionary to configuration XML.");
+                log.Debug("Exception details: " + exception);
+            }
         }
 
         #endregion
@@ -131,23 +155,32 @@ namespace Vulnerator.Model
         {
             try
             {
+                
                 if (!Directory.Exists(xmlPath))
                 { Directory.CreateDirectory(xmlPath); }
 
                 if (File.Exists(xmlFile))
                 {
+                    log.Info("Verifying XML configuration file is current.");
                     XDocument oldXmlConfigCheck = XDocument.Load(xmlFile);
                     string xelementOldNode = oldXmlConfigCheck.Descendants().FirstOrDefault(x => x.Name.LocalName.Equals("tbMitDbLocation")).Value;
                     if (!string.IsNullOrWhiteSpace(xelementOldNode) && xelementOldNode.Contains(".sdf"))
-                    { File.Delete(xelementOldNode); }
+                    {
+                        log.Info("Deleting deprecated XML configuration file.");
+                        File.Delete(xelementOldNode);
+                    }
 
                     XElement newestNode = oldXmlConfigCheck.Descendants().FirstOrDefault(x => x.Name.LocalName.Equals("cbFindingDetails"));
                     if (newestNode == null)
-                    { File.Delete(xmlFile); }
+                    {
+                        log.Info("Deleting deprecated XML configuration file.");
+                        File.Delete(xmlFile);
+                    }
                 }
                 
                 if (!File.Exists(xmlFile))
                 {
+                    log.Info("Creating XML configuration file.");
                     XDocument configDoc = new XDocument(
                         new XDeclaration("1.0", "utf-8", "True"),
                         new XElement("preferencesRoot",
@@ -231,14 +264,15 @@ namespace Vulnerator.Model
                     );
                     configDoc.Save(xmlFile);
                 }
+                log.Info("XML configuration file created successfully.");
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, string.Empty);
+                log.Error("Creation of XML configuration file failed.");
+                log.Debug("Exception details: " + exception);
             }
         }
 
         #endregion
-
     }
 }

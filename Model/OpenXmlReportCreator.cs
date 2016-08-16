@@ -1,7 +1,7 @@
 ﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Validation;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,7 +18,6 @@ namespace Vulnerator.Model
     class OpenXmlReportCreator
     {
         #region Member Variables
-
         private int IavmFilterOne { get { return int.Parse(ConfigAlter.ReadSettingsFromDictionary("iavmFilterOne")); } }
         private int IavmFilterTwo { get { return int.Parse(ConfigAlter.ReadSettingsFromDictionary("iavmFilterTwo")); } }
         private int IavmFilterThree { get { return int.Parse(ConfigAlter.ReadSettingsFromDictionary("iavmFilterThree")); } }
@@ -60,6 +59,7 @@ namespace Vulnerator.Model
         private UInt32Value sheetIndex = 1;
         private string[] delimiter = new string[] { ",\r\n" };
         string doubleCarriageReturn = Environment.NewLine + Environment.NewLine;
+        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
         private OpenXmlWriter assetOverviewOpenXmlWriter;
         private OpenXmlWriter poamOpenXmlWriter;
@@ -76,6 +76,7 @@ namespace Vulnerator.Model
             {
                 using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Create(fileName, SpreadsheetDocumentType.Workbook))
                 {
+                    log.Info("Creating workbook framework.");
                     WorkbookPart workbookPart = spreadsheetDocument.AddWorkbookPart();
                     WorkbookStylesPart workbookStylesPart = workbookPart.AddNewPart<WorkbookStylesPart>();
                     workbookStylesPart.Stylesheet = CreateStylesheet();
@@ -85,6 +86,7 @@ namespace Vulnerator.Model
 
                     if (AssetOverviewTabIsNeeded)
                     {
+                        log.Info("Creating Asset Overview tab.");
                         WriteFindingTypeHeaderRowOne("ACAS");
                         WriteFindingTypeHeaderRowTwo("ACAS");
                         WriteAssetOverviewItems("ACAS");
@@ -101,6 +103,7 @@ namespace Vulnerator.Model
 
                     if (PoamAndRarTabsAreNeeded)
                     {
+                        log.Info("Creating POA&M and RAR tabs.");
                         WriteFindingsToPoamAndRar("ACAS", AcasFindingsShouldBeMerged, mitigationList);
                         WriteFindingsToPoamAndRar("CKL", CklFindingsShouldBeMerged, mitigationList);
                         WriteFindingsToPoamAndRar("XCCDF", XccdfFindingsShouldBeMerged, mitigationList);
@@ -108,14 +111,24 @@ namespace Vulnerator.Model
                     }
 
                     if (AcasOutputTabIsNeeded)
-                    { WriteIndividualAcasOutput(); }
+                    {
+                        log.Info("Creating ACAS Output tab.");
+                        WriteIndividualAcasOutput();
+                    }
 
                     if (DiscrepanciesTabIsNeeded)
-                    { WriteIndividualDiscrepancies(mitigationList); }
+                    {
+                        log.Info("Creating Discrepancies tab.");
+                        WriteIndividualDiscrepancies(mitigationList);
+                    }
 
                     if (StigDetailsTabIsNeeded)
-                    { WriteStigDetailItems(); }
+                    {
+                        log.Info("Creating STIG Details tab.");
+                        WriteStigDetailItems();
+                    }
 
+                    log.Info("Finalizing workbook.");
                     EndSpreadsheets();
                     CreateSharedStringPart(workbookPart);
                 }
@@ -124,196 +137,262 @@ namespace Vulnerator.Model
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, fileName);
+                log.Error("Unable to create " + fileName + " (Excel Report).");
+                log.Debug("Exception details: " + exception);
                 return "Excel report creation failed - see log for details";
             }
         }
 
         private void StartSpreadsheets(WorkbookPart workbookPart, Sheets sheets)
         {
-            if (AssetOverviewTabIsNeeded)
-            { StartAssetOverview(workbookPart, sheets); }
-            if (PoamAndRarTabsAreNeeded)
+            try
             {
-                StartPoam(workbookPart, sheets);
-                StartRar(workbookPart, sheets);
+                if (AssetOverviewTabIsNeeded)
+                { StartAssetOverview(workbookPart, sheets); }
+                if (PoamAndRarTabsAreNeeded)
+                {
+                    StartPoam(workbookPart, sheets);
+                    StartRar(workbookPart, sheets);
+                }
+                if (AcasOutputTabIsNeeded)
+                { StartAcasOutput(workbookPart, sheets); }
+                if (DiscrepanciesTabIsNeeded)
+                { StartDiscrepancies(workbookPart, sheets); }
+                if (StigDetailsTabIsNeeded)
+                { StartStigDetails(workbookPart, sheets); }
             }
-            if (AcasOutputTabIsNeeded)
-            { StartAcasOutput(workbookPart, sheets); }
-            if (DiscrepanciesTabIsNeeded)
-            { StartDiscrepancies(workbookPart, sheets); }
-            if (StigDetailsTabIsNeeded)
-            { StartStigDetails(workbookPart, sheets); }
+            catch (Exception exception)
+            {
+                log.Error("Spreadsheet creation failed to initialize properly.");
+                throw exception;
+            }
         }
 
         private void WriteFindingsToPoamAndRar(string findingType, bool findingsAreMerged, AsyncObservableCollection<MitigationItem> mitigationList)
         {
-            using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+            try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
-                sqliteCommand.CommandText = SetSqliteCommandText(findingType, findingsAreMerged);
-                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
-                    while (sqliteDataReader.Read())
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
+                    sqliteCommand.CommandText = SetSqliteCommandText(findingType, findingsAreMerged);
+                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
-                        if (sqliteDataReader["VulnId"].ToString().Equals("Plugin"))
-                        { continue; }
-                        if (!FilterBySeverity(sqliteDataReader["Impact"].ToString(), sqliteDataReader["RawRisk"].ToString()))
-                        { continue; }
-                        if (!FilterByStatus(sqliteDataReader["Status"].ToString()))
-                        { continue; }
+                        while (sqliteDataReader.Read())
+                        {
+                            if (sqliteDataReader["VulnId"].ToString().Equals("Plugin"))
+                            { continue; }
+                            if (!FilterBySeverity(sqliteDataReader["Impact"].ToString(), sqliteDataReader["RawRisk"].ToString()))
+                            { continue; }
+                            if (!FilterByStatus(sqliteDataReader["Status"].ToString()))
+                            { continue; }
 
-                        WriteFindingToPoam(sqliteDataReader, mitigationList);
-                        WriteFindingToRar(sqliteDataReader, mitigationList);
+                            WriteFindingToPoam(sqliteDataReader, mitigationList);
+                            WriteFindingToRar(sqliteDataReader, mitigationList);
+                        }
                     }
                 }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to write findings to the POA&M and/or RAR tab(s).");
+                throw exception;
             }
         }
 
         private void EndSpreadsheets()
         {
-            if (AssetOverviewTabIsNeeded)
-            { EndAssetOverview(); }
-            if (PoamAndRarTabsAreNeeded)
+            try
             {
-                EndPoam();
-                EndRar();
-            }
-            if (AcasOutputTabIsNeeded)
-            { EndAcasOutput(); }
-            if (DiscrepanciesTabIsNeeded)
-            { EndDiscrepancies(); }
+                if (AssetOverviewTabIsNeeded)
+                { EndAssetOverview(); }
+                if (PoamAndRarTabsAreNeeded)
+                {
+                    EndPoam();
+                    EndRar();
+                }
+                if (AcasOutputTabIsNeeded)
+                { EndAcasOutput(); }
+                if (DiscrepanciesTabIsNeeded)
+                { EndDiscrepancies(); }
 
-            if (StigDetailsTabIsNeeded)
-            { EndStigDetails(); }
+                if (StigDetailsTabIsNeeded)
+                { EndStigDetails(); }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to finalize spreadsheets.");
+                throw exception;
+            }
         }
 
         #region Create Asset Overview
 
         private void StartAssetOverview(WorkbookPart workbookPart, Sheets sheets)
         {
-            WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
-            Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "Asset Overview" };
-            sheetIndex++;
-            sheets.Append(sheet);
-            assetOverviewOpenXmlWriter = OpenXmlWriter.Create(worksheetPart);
-            assetOverviewOpenXmlWriter.WriteStartElement(new Worksheet());
-            WriteAssetOverviewColumns();
-            assetOverviewOpenXmlWriter.WriteStartElement(new SheetData());
-            WriteAssetOverviewHeaderRowOne();
+            try
+            {
+                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "Asset Overview" };
+                sheetIndex++;
+                sheets.Append(sheet);
+                assetOverviewOpenXmlWriter = OpenXmlWriter.Create(worksheetPart);
+                assetOverviewOpenXmlWriter.WriteStartElement(new Worksheet());
+                WriteAssetOverviewColumns();
+                assetOverviewOpenXmlWriter.WriteStartElement(new SheetData());
+                WriteAssetOverviewHeaderRowOne();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to initialize Asset Overview tab.");
+                throw exception;
+            }
         }
 
         private void WriteAssetOverviewColumns()
         {
-            assetOverviewOpenXmlWriter.WriteStartElement(new Columns());
-            assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 1U, Max = 1U, Width = 30d, CustomWidth = true });
-            assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 2U, Max = 2U, Width = 30d, CustomWidth = true });
-            assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 30d, CustomWidth = true });
-            assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 4U, Max = 4U, Width = 60d, CustomWidth = true });
-            assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 5U, Max = 5U, Width = 30d, CustomWidth = true });
-            assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 7U, Max = 7U, Width = 15d, CustomWidth = true });
-            assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 8U, Max = 8U, Width = 15d, CustomWidth = true });
-            assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 9U, Max = 9U, Width = 15d, CustomWidth = true });
-            assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 10U, Max = 10U, Width = 15d, CustomWidth = true });
-            assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 11U, Max = 11U, Width = 15d, CustomWidth = true });
-            assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 12U, Max = 12U, Width = 15d, CustomWidth = true });
-            assetOverviewOpenXmlWriter.WriteEndElement();
+            try
+            {
+                assetOverviewOpenXmlWriter.WriteStartElement(new Columns());
+                assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 1U, Max = 1U, Width = 30d, CustomWidth = true });
+                assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 2U, Max = 2U, Width = 30d, CustomWidth = true });
+                assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 30d, CustomWidth = true });
+                assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 4U, Max = 4U, Width = 60d, CustomWidth = true });
+                assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 5U, Max = 5U, Width = 30d, CustomWidth = true });
+                assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 7U, Max = 7U, Width = 15d, CustomWidth = true });
+                assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 8U, Max = 8U, Width = 15d, CustomWidth = true });
+                assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 9U, Max = 9U, Width = 15d, CustomWidth = true });
+                assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 10U, Max = 10U, Width = 15d, CustomWidth = true });
+                assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 11U, Max = 11U, Width = 15d, CustomWidth = true });
+                assetOverviewOpenXmlWriter.WriteElement(new Column() { Min = 12U, Max = 12U, Width = 15d, CustomWidth = true });
+                assetOverviewOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate Asset Overview tab columns.");
+                throw exception;
+            }
         }
 
         private void WriteAssetOverviewHeaderRowOne()
         {
-            assetOverviewOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(assetOverviewOpenXmlWriter, "Asset Overview", 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            assetOverviewOpenXmlWriter.WriteEndElement();
-            assetOverviewRowCounterIndex++;
+            try
+            {
+                assetOverviewOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(assetOverviewOpenXmlWriter, "Asset Overview", 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                assetOverviewOpenXmlWriter.WriteEndElement();
+                assetOverviewRowCounterIndex++;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate first Asset Overview header row.");
+                throw exception;
+            }
         }
 
         private void WriteFindingTypeHeaderRowOne(string findingType)
         {
-            assetOverviewOpenXmlWriter.WriteElement(new Row());
-            assetOverviewRowCounterIndex++;
-            assetOverviewOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(assetOverviewOpenXmlWriter, findingType + " Asset Insight", 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
-            assetOverviewOpenXmlWriter.WriteEndElement();
-            assetOverviewMergeCellReferences.Add("A" + assetOverviewRowCounterIndex.ToString() + ":K" + assetOverviewRowCounterIndex.ToString());
-            assetOverviewRowCounterIndex++;
-
+            try
+            {
+                assetOverviewOpenXmlWriter.WriteElement(new Row());
+                assetOverviewRowCounterIndex++;
+                assetOverviewOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(assetOverviewOpenXmlWriter, findingType + " Asset Insight", 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 3);
+                assetOverviewOpenXmlWriter.WriteEndElement();
+                assetOverviewMergeCellReferences.Add("A" + assetOverviewRowCounterIndex.ToString() + ":K" + assetOverviewRowCounterIndex.ToString());
+                assetOverviewRowCounterIndex++;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate first Finding Type header row.");
+                throw exception;
+            }
         }
 
         private void WriteFindingTypeHeaderRowTwo(string findingType)
         {
-            assetOverviewOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(assetOverviewOpenXmlWriter, "Host Name", 17);
-            WriteCellValue(assetOverviewOpenXmlWriter, "IP Address", 17);
-            WriteCellValue(assetOverviewOpenXmlWriter, "Group Name", 17);
-            switch (findingType)
+            try
             {
-                case "ACAS":
-                    {
-                        WriteCellValue(assetOverviewOpenXmlWriter, "Operating System", 17);
-                        break;
-                    }
-                default:
-                    {
-                        WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 17);
-                        break;
-                    }
+                assetOverviewOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(assetOverviewOpenXmlWriter, "Host Name", 17);
+                WriteCellValue(assetOverviewOpenXmlWriter, "IP Address", 17);
+                WriteCellValue(assetOverviewOpenXmlWriter, "Group Name", 17);
+                switch (findingType)
+                {
+                    case "ACAS":
+                        {
+                            WriteCellValue(assetOverviewOpenXmlWriter, "Operating System", 17);
+                            break;
+                        }
+                    default:
+                        {
+                            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 17);
+                            break;
+                        }
+                }
+                WriteCellValue(assetOverviewOpenXmlWriter, "File Name", 17);
+                WriteCellValue(assetOverviewOpenXmlWriter, "CAT I", 6);
+                WriteCellValue(assetOverviewOpenXmlWriter, "CAT II", 7);
+                WriteCellValue(assetOverviewOpenXmlWriter, "CAT III", 8);
+                WriteCellValue(assetOverviewOpenXmlWriter, "CAT IV", 9);
+                WriteCellValue(assetOverviewOpenXmlWriter, "Total", 17);
+                switch (findingType)
+                {
+                    case "ACAS":
+                        {
+                            WriteCellValue(assetOverviewOpenXmlWriter, "Credentialed", 17);
+                            break;
+                        }
+                    case "XCCDF":
+                        {
+                            WriteCellValue(assetOverviewOpenXmlWriter, "SCAP Score", 17);
+                            break;
+                        }
+                    default:
+                        {
+                            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 17);
+                            break;
+                        }
+                }
+                assetOverviewOpenXmlWriter.WriteEndElement();
+                assetOverviewRowCounterIndex++;
             }
-            WriteCellValue(assetOverviewOpenXmlWriter, "File Name", 17);
-            WriteCellValue(assetOverviewOpenXmlWriter, "CAT I", 6);
-            WriteCellValue(assetOverviewOpenXmlWriter, "CAT II", 7);
-            WriteCellValue(assetOverviewOpenXmlWriter, "CAT III", 8);
-            WriteCellValue(assetOverviewOpenXmlWriter, "CAT IV", 9);
-            WriteCellValue(assetOverviewOpenXmlWriter, "Total", 17);
-            switch (findingType)
+            catch (Exception exception)
             {
-                case "ACAS":
-                    {
-                        WriteCellValue(assetOverviewOpenXmlWriter, "Credentialed", 17);
-                        break;
-                    }
-                case "XCCDF":
-                    {
-                        WriteCellValue(assetOverviewOpenXmlWriter, "SCAP Score", 17);
-                        break;
-                    }
-                default:
-                    {
-                        WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 17);
-                        break;
-                    }
+                log.Error("Unable to generate second Finding Type header row.");
+                throw exception;
             }
-            assetOverviewOpenXmlWriter.WriteEndElement();
-            assetOverviewRowCounterIndex++;
         }
 
         private void WriteAssetOverviewItems(string findingType)
         {
-            List<AssetOverviewLineItem> assetList = new List<AssetOverviewLineItem>();
-            using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+            try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
-                sqliteCommand.CommandText = @"SELECT 
+                List<AssetOverviewLineItem> assetList = new List<AssetOverviewLineItem>();
+                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
+                    sqliteCommand.CommandText = @"SELECT 
                     AssetIdToReport, HostName, IpAddress, GroupName,
                     SUM(CASE WHEN (RawRisk = 'I' OR Impact = 'Critical' OR Impact = 'High') AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatI,
                     SUM(CASE WHEN (RawRisk = 'II' OR Impact = 'Medium') AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatII,
@@ -334,95 +413,125 @@ namespace Vulnerator.Model
                     NATURAL JOIN FindingStatuses
                     WHERE FindingType = @FindingType  
                     GROUP BY AssetIdToReport, FileName;";
-                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
-                {
-                    while (sqliteDataReader.Read())
-                    { WriteAssetOverviewRow(sqliteDataReader, findingType); }
+                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                    {
+                        while (sqliteDataReader.Read())
+                        { WriteAssetOverviewRow(sqliteDataReader, findingType); }
+                    }
                 }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to write Asset Overview items.");
+                throw exception;
             }
         }
 
         private void WriteAssetOverviewRow(SQLiteDataReader sqliteDataReader, string findingType)
         {
-            assetOverviewOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["HostName"].ToString(), 18);
-            WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["IpAddress"].ToString(), 18);
-            WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["GroupName"].ToString(), 18);
-            WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["OperatingSystem"].ToString(), 18);
-            WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["FileName"].ToString(), 18);
-            WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["CatI"].ToString(), 11);
-            WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["CatII"].ToString(), 12);
-            WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["CatIII"].ToString(), 13);
-            WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["CatIV"].ToString(), 14);
-            WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["Total"].ToString(), 18);
-            switch (findingType)
+            try
             {
-                case "ACAS":
-                    {
-                        switch (sqliteDataReader["IsCredentialed"].ToString())
+                assetOverviewOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["HostName"].ToString(), 18);
+                WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["IpAddress"].ToString(), 18);
+                WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["GroupName"].ToString(), 18);
+                WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["OperatingSystem"].ToString(), 18);
+                WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["FileName"].ToString(), 18);
+                WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["CatI"].ToString(), 11);
+                WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["CatII"].ToString(), 12);
+                WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["CatIII"].ToString(), 13);
+                WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["CatIV"].ToString(), 14);
+                WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["Total"].ToString(), 18);
+                switch (findingType)
+                {
+                    case "ACAS":
                         {
-                            case "true":
-                                {
-                                    WriteCellValue(assetOverviewOpenXmlWriter, "Yes", 18);
-                                    break;
-                                }
-                            case "false":
-                                {
-                                    string credentialedString = SetCredentialedString(sqliteDataReader["IpAddress"].ToString());
-                                    WriteCellValue(assetOverviewOpenXmlWriter, credentialedString, 18);
-                                    break;
-                                }
-                            case "":
-                                {
-                                    WriteCellValue(assetOverviewOpenXmlWriter, "Unknown", 18);
-                                    break;
-                                }
-                            case "No":
-                                {
-                                    string credentialedString = SetCredentialedString(sqliteDataReader["IpAddress"].ToString());
-                                    WriteCellValue(assetOverviewOpenXmlWriter, credentialedString, 18);
-                                    break;
-                                }
-                            case "Yes":
-                                {
-                                    WriteCellValue(assetOverviewOpenXmlWriter, "Yes", 18);
-                                    break;
-                                }
-                            default:
-                                { break; }
+                            switch (sqliteDataReader["IsCredentialed"].ToString())
+                            {
+                                case "true":
+                                    {
+                                        WriteCellValue(assetOverviewOpenXmlWriter, "Yes", 18);
+                                        break;
+                                    }
+                                case "false":
+                                    {
+                                        string credentialedString = SetCredentialedString(sqliteDataReader["IpAddress"].ToString());
+                                        WriteCellValue(assetOverviewOpenXmlWriter, credentialedString, 18);
+                                        break;
+                                    }
+                                case "":
+                                    {
+                                        WriteCellValue(assetOverviewOpenXmlWriter, "Unknown", 18);
+                                        break;
+                                    }
+                                case "No":
+                                    {
+                                        string credentialedString = SetCredentialedString(sqliteDataReader["IpAddress"].ToString());
+                                        WriteCellValue(assetOverviewOpenXmlWriter, credentialedString, 18);
+                                        break;
+                                    }
+                                case "Yes":
+                                    {
+                                        WriteCellValue(assetOverviewOpenXmlWriter, "Yes", 18);
+                                        break;
+                                    }
+                                default:
+                                    { break; }
+                            }
+                            break;
                         }
-                        break;
-                    }
-                case "XCCDF":
-                    {
-                        WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 18);
-                        break;
-                    }
-                default:
-                    {
-                        WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 18);
-                        break;
-                    }
+                    case "XCCDF":
+                        {
+                            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 18);
+                            break;
+                        }
+                    default:
+                        {
+                            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 18);
+                            break;
+                        }
+                }
+                assetOverviewOpenXmlWriter.WriteEndElement();
+                assetOverviewRowCounterIndex++;
             }
-            assetOverviewOpenXmlWriter.WriteEndElement();
-            assetOverviewRowCounterIndex++;
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate Asset Overview header row.");
+                throw exception;
+            }
         }
 
         private void EndAssetOverview()
         {
-            assetOverviewOpenXmlWriter.WriteEndElement();
-            WriteAssetOverviewMergeCells();
-            assetOverviewOpenXmlWriter.WriteEndElement();
-            assetOverviewOpenXmlWriter.Dispose();
+            try
+            {
+                assetOverviewOpenXmlWriter.WriteEndElement();
+                WriteAssetOverviewMergeCells();
+                assetOverviewOpenXmlWriter.WriteEndElement();
+                assetOverviewOpenXmlWriter.Dispose();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to finalize Asset Overview tab.");
+                throw exception;
+            }
         }
 
         private void WriteAssetOverviewMergeCells()
         {
-            assetOverviewMergeCellReferences.Add("A1:K1");
-            assetOverviewOpenXmlWriter.WriteStartElement(new MergeCells());
-            foreach (string reference in assetOverviewMergeCellReferences)
-            { assetOverviewOpenXmlWriter.WriteElement(new MergeCell() { Reference = reference }); }
-            assetOverviewOpenXmlWriter.WriteEndElement();
+            try
+            {
+                assetOverviewMergeCellReferences.Add("A1:K1");
+                assetOverviewOpenXmlWriter.WriteStartElement(new MergeCells());
+                foreach (string reference in assetOverviewMergeCellReferences)
+                { assetOverviewOpenXmlWriter.WriteElement(new MergeCell() { Reference = reference }); }
+                assetOverviewOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate Asset Overview MergeCells element.");
+                throw exception;
+            }
         }
 
         #endregion Create Asset Overview
@@ -431,254 +540,341 @@ namespace Vulnerator.Model
 
         private void StartPoam(WorkbookPart workbookPart, Sheets sheets)
         {
-            WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
-            Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "POA&M" };
-            sheetIndex++;
-            sheets.Append(sheet);
-            poamOpenXmlWriter = OpenXmlWriter.Create(worksheetPart);
-            poamOpenXmlWriter.WriteStartElement(new Worksheet());
-            WritePoamColumns();
-            poamOpenXmlWriter.WriteStartElement(new SheetData());
-            poamOpenXmlWriter.WriteElement(new Row() { Hidden = true });
-            WritePoamHeaderRowOne();
-            WritePoamHeaderRowTwo();
-            WritePoamHeaderRowThree();
-            WritePoamHeaderRowFour();
-            WritePoamHeaderRowFive();
-            WritePoamHeaderRowSix();
-
+            try
+            {
+                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "POA&M" };
+                sheetIndex++;
+                sheets.Append(sheet);
+                poamOpenXmlWriter = OpenXmlWriter.Create(worksheetPart);
+                poamOpenXmlWriter.WriteStartElement(new Worksheet());
+                WritePoamColumns();
+                poamOpenXmlWriter.WriteStartElement(new SheetData());
+                poamOpenXmlWriter.WriteElement(new Row() { Hidden = true });
+                WritePoamHeaderRowOne();
+                WritePoamHeaderRowTwo();
+                WritePoamHeaderRowThree();
+                WritePoamHeaderRowFour();
+                WritePoamHeaderRowFive();
+                WritePoamHeaderRowSix();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to initialize POA&M tab.");
+                throw exception;
+            }
         }
 
         private void WritePoamColumns()
         {
-            poamOpenXmlWriter.WriteStartElement(new Columns());
-            poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 4.43, Max = 1, Min = 1 });
-            poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 32.29, Max = 2, Min = 2 });
-            poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 24.43, Max = 3, Min = 3 });
-            poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 24.43, Max = 4, Min = 4 });
-            poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 10.57, Max = 5, Min = 5 });
-            poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 10.57, Max = 6, Min = 6 });
-            poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 24.43, Max = 7, Min = 7 });
-            poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 10.57, Max = 8, Min = 8 });
-            poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 24.43, Max = 9, Min = 9 });
-            poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 24.43, Max = 10, Min = 10 });
-            poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 24.43, Max = 11, Min = 11 });
-            poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 24.43, Max = 12, Min = 12 });
-            poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 24.43, Max = 13, Min = 13 });
-            poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 10.57, Max = 14, Min = 14 });
-            poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 32.29, Max = 15, Min = 15 });
-            poamOpenXmlWriter.WriteEndElement();
+            try
+            {
+                poamOpenXmlWriter.WriteStartElement(new Columns());
+                poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 4.43, Max = 1, Min = 1 });
+                poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 32.29, Max = 2, Min = 2 });
+                poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 24.43, Max = 3, Min = 3 });
+                poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 24.43, Max = 4, Min = 4 });
+                poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 10.57, Max = 5, Min = 5 });
+                poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 10.57, Max = 6, Min = 6 });
+                poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 24.43, Max = 7, Min = 7 });
+                poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 10.57, Max = 8, Min = 8 });
+                poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 24.43, Max = 9, Min = 9 });
+                poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 24.43, Max = 10, Min = 10 });
+                poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 24.43, Max = 11, Min = 11 });
+                poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 24.43, Max = 12, Min = 12 });
+                poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 24.43, Max = 13, Min = 13 });
+                poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 10.57, Max = 14, Min = 14 });
+                poamOpenXmlWriter.WriteElement(new Column() { CustomWidth = true, Width = 32.29, Max = 15, Min = 15 });
+                poamOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate POA&M columns.");
+                throw exception;
+            }
         }
 
         private void WritePoamHeaderRowOne()
         {
-            poamOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(poamOpenXmlWriter, "Date Exported:", 19);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
-            WriteCellValue(poamOpenXmlWriter, DateTime.Now.ToLongDateString(), 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, "System Type:", 19);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, "OMB Project ID:", 19);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            poamOpenXmlWriter.WriteEndElement();
+            try
+            {
+                poamOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(poamOpenXmlWriter, "Date Exported:", 19);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
+                WriteCellValue(poamOpenXmlWriter, DateTime.Now.ToLongDateString(), 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, "System Type:", 19);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, "OMB Project ID:", 19);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                poamOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate first POA&M header row.");
+                throw exception;
+            }
         }
 
         private void WritePoamHeaderRowTwo()
         {
-            poamOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(poamOpenXmlWriter, "Exported By:", 19);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
-            WriteCellValue(poamOpenXmlWriter, ContactName, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            poamOpenXmlWriter.WriteEndElement();
+            try
+            {
+                poamOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(poamOpenXmlWriter, "Exported By:", 19);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
+                WriteCellValue(poamOpenXmlWriter, ContactName, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                poamOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate second POA&M header row.");
+                throw exception;
+            }
         }
 
         private void WritePoamHeaderRowThree()
         {
-            poamOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(poamOpenXmlWriter, "DoD Component:", 19);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, "POC Name:", 19);
-            WriteCellValue(poamOpenXmlWriter, ContactName, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
-            poamOpenXmlWriter.WriteEndElement();
+            try
+            {
+                poamOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(poamOpenXmlWriter, "DoD Component:", 19);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, "POC Name:", 19);
+                WriteCellValue(poamOpenXmlWriter, ContactName, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
+                poamOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate third POA&M header row.");
+                throw exception;
+            }
         }
 
         private void WritePoamHeaderRowFour()
         {
-            poamOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(poamOpenXmlWriter, @"System / Project Name:", 19);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
-            WriteCellValue(poamOpenXmlWriter, ContactName, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, "POC Phone:", 19);
-            WriteCellValue(poamOpenXmlWriter, ContactNumber, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, "Security Costs:", 19);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            poamOpenXmlWriter.WriteEndElement();
+            try
+            {
+                poamOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(poamOpenXmlWriter, @"System / Project Name:", 19);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
+                WriteCellValue(poamOpenXmlWriter, ContactName, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, "POC Phone:", 19);
+                WriteCellValue(poamOpenXmlWriter, ContactNumber, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, "Security Costs:", 19);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                poamOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate fourth POA&M header row.");
+                throw exception;
+            }
         }
 
         private void WritePoamHeaderRowFive()
         {
-            poamOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(poamOpenXmlWriter, "DoD IT Registration No:", 19);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, "POC Email:", 19);
-            WriteCellValue(poamOpenXmlWriter, ContactEmail, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
-            poamOpenXmlWriter.WriteEndElement();
+            try
+            {
+                poamOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(poamOpenXmlWriter, "DoD IT Registration No:", 19);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, "POC Email:", 19);
+                WriteCellValue(poamOpenXmlWriter, ContactEmail, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 19);
+                poamOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate fifth POA&M header row.");
+                throw exception;
+            }
         }
 
         private void WritePoamHeaderRowSix()
         {
-            poamOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(poamOpenXmlWriter, "Control Vulnerability Description", 16);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 16);
-            WriteCellValue(poamOpenXmlWriter, @"Security Control Number (NC/NA controls only)", 16);
-            WriteCellValue(poamOpenXmlWriter, @"Office/Org", 16);
-            WriteCellValue(poamOpenXmlWriter, "Security Checks", 16);
-            WriteCellValue(poamOpenXmlWriter, "Raw Severity Value", 16);
-            WriteCellValue(poamOpenXmlWriter, "Mitigations", 16);
-            WriteCellValue(poamOpenXmlWriter, "Severity Value", 16);
-            WriteCellValue(poamOpenXmlWriter, "Resources Required", 16);
-            WriteCellValue(poamOpenXmlWriter, "Scheduled Completion Date", 16);
-            WriteCellValue(poamOpenXmlWriter, "Milestone with Completion Dates", 16);
-            WriteCellValue(poamOpenXmlWriter, "Milestone Changes", 16);
-            WriteCellValue(poamOpenXmlWriter, "Source Identifying Control Vulnerability", 16);
-            WriteCellValue(poamOpenXmlWriter, "Status", 16);
-            WriteCellValue(poamOpenXmlWriter, "Comments", 16);
-            poamOpenXmlWriter.WriteEndElement();
+            try
+            {
+                poamOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(poamOpenXmlWriter, "Control Vulnerability Description", 16);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 16);
+                WriteCellValue(poamOpenXmlWriter, @"Security Control Number (NC/NA controls only)", 16);
+                WriteCellValue(poamOpenXmlWriter, @"Office/Org", 16);
+                WriteCellValue(poamOpenXmlWriter, "Security Checks", 16);
+                WriteCellValue(poamOpenXmlWriter, "Raw Severity Value", 16);
+                WriteCellValue(poamOpenXmlWriter, "Mitigations", 16);
+                WriteCellValue(poamOpenXmlWriter, "Severity Value", 16);
+                WriteCellValue(poamOpenXmlWriter, "Resources Required", 16);
+                WriteCellValue(poamOpenXmlWriter, "Scheduled Completion Date", 16);
+                WriteCellValue(poamOpenXmlWriter, "Milestone with Completion Dates", 16);
+                WriteCellValue(poamOpenXmlWriter, "Milestone Changes", 16);
+                WriteCellValue(poamOpenXmlWriter, "Source Identifying Control Vulnerability", 16);
+                WriteCellValue(poamOpenXmlWriter, "Status", 16);
+                WriteCellValue(poamOpenXmlWriter, "Comments", 16);
+                poamOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate sixth POA&M header row.");
+                throw exception;
+            }
         }
 
         private void WriteFindingToPoam(SQLiteDataReader sqliteDataReader, AsyncObservableCollection<MitigationItem> mitigationList)
         {
-            MitigationItem mitigation = mitigationList.FirstOrDefault(
-                x => x.MitigationGroupName.Equals(sqliteDataReader["GroupName"].ToString()) &&
-                    x.MitigationVulnerabilityId.Equals(sqliteDataReader["VulnId"].ToString()));
-
-            if (mitigation != null)
+            try
             {
-                if (!FilterByStatus(mitigation.MitigationStatus))
-                { return; }
-            }
-            else if (!FilterByStatus(sqliteDataReader["Status"].ToString()))
-            { return; }
+                MitigationItem mitigation = mitigationList.FirstOrDefault(
+                    x => x.MitigationGroupName.Equals(sqliteDataReader["GroupName"].ToString()) &&
+                        x.MitigationVulnerabilityId.Equals(sqliteDataReader["VulnId"].ToString()));
 
-            poamOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(poamOpenXmlWriter, poamRowCounterIndex.ToString(), 16);
-            string descriptionCellValue = "Title: " + Environment.NewLine + sqliteDataReader["VulnTitle"].ToString() + doubleCarriageReturn +
-                "Description: " + Environment.NewLine + sqliteDataReader["Description"].ToString() + doubleCarriageReturn +
-                "Devices Affected:" + Environment.NewLine + sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine);
-            descriptionCellValue = NormalizeCellValue(descriptionCellValue);
-            descriptionCellValue = LargeCellValueHandler(descriptionCellValue, sqliteDataReader["VulnId"].ToString(),
-                sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine));
-            WriteCellValue(poamOpenXmlWriter, descriptionCellValue, 20);
-            if (IsDiacapPackage)
-            { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["IaControl"].ToString(), 24); }
-            else
-            { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["NistControl"].ToString(), 24); }
-            WriteCellValue(poamOpenXmlWriter, ContactOrganization + ", " + ContactName + ", " + ContactNumber + ", " + ContactEmail, 20);
-            WriteCellValue(poamOpenXmlWriter, sqliteDataReader["VulnId"].ToString(), 24);
-            if (!string.IsNullOrWhiteSpace(sqliteDataReader["RawRisk"].ToString()))
-            { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["RawRisk"].ToString(), 24); }
-            else
-            { WriteCellValue(poamOpenXmlWriter, ConvertAcasSeverityToDisaCategory(sqliteDataReader["Impact"].ToString()), 24); }
-            if (mitigation != null)
-            { WriteCellValue(poamOpenXmlWriter, mitigation.MitigationText, 20); }
-            else
-            {
-                string mitigationText = string.Empty;
-                if (UserRequiresComments)
-                { mitigationText = sqliteDataReader["Comments"].ToString(); }
-                if (UserRequiresFindingDetails)
+                if (mitigation != null)
                 {
-                    if (string.IsNullOrWhiteSpace(mitigationText))
-                    { mitigationText = sqliteDataReader["FindingDetails"].ToString(); }
-                    else
-                    { mitigationText += doubleCarriageReturn + sqliteDataReader["FindingDetails"].ToString(); }
+                    if (!FilterByStatus(mitigation.MitigationStatus))
+                    { return; }
                 }
-                WriteCellValue(poamOpenXmlWriter, mitigationText, 20);
+                else if (!FilterByStatus(sqliteDataReader["Status"].ToString()))
+                { return; }
+
+                poamOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(poamOpenXmlWriter, poamRowCounterIndex.ToString(), 16);
+                string descriptionCellValue = "Title: " + Environment.NewLine + sqliteDataReader["VulnTitle"].ToString() + doubleCarriageReturn +
+                    "Description: " + Environment.NewLine + sqliteDataReader["Description"].ToString() + doubleCarriageReturn +
+                    "Devices Affected:" + Environment.NewLine + sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine);
+                descriptionCellValue = NormalizeCellValue(descriptionCellValue);
+                descriptionCellValue = LargeCellValueHandler(descriptionCellValue, sqliteDataReader["VulnId"].ToString(),
+                    sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine));
+                WriteCellValue(poamOpenXmlWriter, descriptionCellValue, 20);
+                if (IsDiacapPackage)
+                { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["IaControl"].ToString(), 24); }
+                else
+                { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["NistControl"].ToString(), 24); }
+                WriteCellValue(poamOpenXmlWriter, ContactOrganization + ", " + ContactName + ", " + ContactNumber + ", " + ContactEmail, 20);
+                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["VulnId"].ToString(), 24);
+                if (!string.IsNullOrWhiteSpace(sqliteDataReader["RawRisk"].ToString()))
+                { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["RawRisk"].ToString(), 24); }
+                else
+                { WriteCellValue(poamOpenXmlWriter, ConvertAcasSeverityToDisaCategory(sqliteDataReader["Impact"].ToString()), 24); }
+                if (mitigation != null)
+                { WriteCellValue(poamOpenXmlWriter, mitigation.MitigationText, 20); }
+                else
+                {
+                    string mitigationText = string.Empty;
+                    if (UserRequiresComments)
+                    { mitigationText = sqliteDataReader["Comments"].ToString(); }
+                    if (UserRequiresFindingDetails)
+                    {
+                        if (string.IsNullOrWhiteSpace(mitigationText))
+                        { mitigationText = sqliteDataReader["FindingDetails"].ToString(); }
+                        else
+                        { mitigationText += doubleCarriageReturn + sqliteDataReader["FindingDetails"].ToString(); }
+                    }
+                    WriteCellValue(poamOpenXmlWriter, mitigationText, 20);
+                }
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 24);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Source"].ToString(), 24);
+                if (mitigation != null)
+                { WriteCellValue(poamOpenXmlWriter, mitigation.MitigationStatus, 24); }
+                else
+                { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24); }
+                /*WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Comments"].ToString(), 20);*/
+                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine), 20);
+                poamOpenXmlWriter.WriteEndElement();
+                poamRowCounterIndex++;
             }
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 24);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Source"].ToString(), 24);
-            if (mitigation != null)
-            { WriteCellValue(poamOpenXmlWriter, mitigation.MitigationStatus, 24); }
-            else
-            { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24); }
-            /*WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Comments"].ToString(), 20);*/
-            WriteCellValue(poamOpenXmlWriter, sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine), 20);
-            poamOpenXmlWriter.WriteEndElement();
-            poamRowCounterIndex++;
+            catch (Exception exception)
+            {
+                log.Error("Unable to write finding to POA&M.");
+                throw exception;
+            }
         }
 
         private void EndPoam()
         {
-            poamOpenXmlWriter.WriteEndElement();
-            WritePoamMergeCells();
-            poamOpenXmlWriter.WriteEndElement();
-            poamOpenXmlWriter.Dispose();
+            try
+            {
+                poamOpenXmlWriter.WriteEndElement();
+                WritePoamMergeCells();
+                poamOpenXmlWriter.WriteEndElement();
+                poamOpenXmlWriter.Dispose();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to finalize POA&M tab.");
+                throw exception;
+            }
         }
 
         private void WritePoamMergeCells()
         {
-            string[] mergeCellArray = new string[] { 
-                "A1:O1", "A2:B2", "A3:B3", "A4:B4", "A5:B5", "A6:B6", "A7:B7", "C2:H2", "C3:H3", 
-                "C4:H4", "C5:H5", "C6:H6", "I2:I3", "J2:K3", "J4:K4", "J5:K5", "J6:K6", "L2:L3", 
+            try
+            {
+                string[] mergeCellArray = new string[] {
+                "A1:O1", "A2:B2", "A3:B3", "A4:B4", "A5:B5", "A6:B6", "A7:B7", "C2:H2", "C3:H3",
+                "C4:H4", "C5:H5", "C6:H6", "I2:I3", "J2:K3", "J4:K4", "J5:K5", "J6:K6", "L2:L3",
                 "M2:O3", "M5:O5", "L4:O4", "L6:O6" };
-            poamOpenXmlWriter.WriteStartElement(new MergeCells());
-            foreach (string mergeCell in mergeCellArray)
-            { poamOpenXmlWriter.WriteElement(new MergeCell() { Reference = mergeCell }); }
-            poamOpenXmlWriter.WriteEndElement();
+                poamOpenXmlWriter.WriteStartElement(new MergeCells());
+                foreach (string mergeCell in mergeCellArray)
+                { poamOpenXmlWriter.WriteElement(new MergeCell() { Reference = mergeCell }); }
+                poamOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate POA&M MergeCells element.");
+                throw exception;
+            }
         }
 
         #endregion Create POA&M
@@ -687,209 +883,297 @@ namespace Vulnerator.Model
 
         private void StartRar(WorkbookPart workbookPart, Sheets sheets)
         {
-            WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
-            Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "RAR" };
-            sheetIndex++;
-            sheets.Append(sheet);
-            rarOpenXmlWriter = OpenXmlWriter.Create(worksheetPart);
-            rarOpenXmlWriter.WriteStartElement(new Worksheet());
-            WriteRarColumns();
-            rarOpenXmlWriter.WriteStartElement(new SheetData());
-            WriteRarHeaderRowOne();
-            WriteRarHeaderRowTwo();
-            WriteRarHeaderRowThree();
-            WriteRarHeaderRowFour();
-            WriteRarHeaderRowFive();
-            WriteRarHeaderRowSix();
+            try
+            {
+                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "RAR" };
+                sheetIndex++;
+                sheets.Append(sheet);
+                rarOpenXmlWriter = OpenXmlWriter.Create(worksheetPart);
+                rarOpenXmlWriter.WriteStartElement(new Worksheet());
+                WriteRarColumns();
+                rarOpenXmlWriter.WriteStartElement(new SheetData());
+                WriteRarHeaderRowOne();
+                WriteRarHeaderRowTwo();
+                WriteRarHeaderRowThree();
+                WriteRarHeaderRowFour();
+                WriteRarHeaderRowFive();
+                WriteRarHeaderRowSix();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to initialize RAR tab.");
+                throw exception;
+            }
         }
 
         private void WriteRarColumns()
         {
-            rarOpenXmlWriter.WriteStartElement(new Columns());
-            rarOpenXmlWriter.WriteElement(new Column() { Min = 1U, Max = 1U, Width = 16.86d, CustomWidth = true });
-            rarOpenXmlWriter.WriteElement(new Column() { Min = 2U, Max = 2U, Width = 16.86d, CustomWidth = true });
-            rarOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 16.86d, CustomWidth = true });
-            rarOpenXmlWriter.WriteElement(new Column() { Min = 4U, Max = 4U, Width = 31.86d, CustomWidth = true });
-            rarOpenXmlWriter.WriteElement(new Column() { Min = 5U, Max = 5U, Width = 13.71d, CustomWidth = true });
-            rarOpenXmlWriter.WriteElement(new Column() { Min = 6U, Max = 6U, Width = 14.14d, CustomWidth = true });
-            rarOpenXmlWriter.WriteElement(new Column() { Min = 7U, Max = 7U, Width = 13.00d, CustomWidth = true });
-            rarOpenXmlWriter.WriteElement(new Column() { Min = 8U, Max = 8U, Width = 23.14d, CustomWidth = true });
-            rarOpenXmlWriter.WriteElement(new Column() { Min = 9U, Max = 9U, Width = 23.14d, CustomWidth = true });
-            rarOpenXmlWriter.WriteElement(new Column() { Min = 10U, Max = 10U, Width = 13.00d, CustomWidth = true });
-            rarOpenXmlWriter.WriteElement(new Column() { Min = 11U, Max = 11U, Width = 17.29d, CustomWidth = true });
-            rarOpenXmlWriter.WriteElement(new Column() { Min = 12U, Max = 12U, Width = 17.29d, CustomWidth = true });
-            rarOpenXmlWriter.WriteElement(new Column() { Min = 13U, Max = 13U, Width = 31.86d, CustomWidth = true });
-            rarOpenXmlWriter.WriteEndElement();
+            try
+            {
+                rarOpenXmlWriter.WriteStartElement(new Columns());
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 1U, Max = 1U, Width = 16.86d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 2U, Max = 2U, Width = 16.86d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 16.86d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 4U, Max = 4U, Width = 31.86d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 5U, Max = 5U, Width = 13.71d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 6U, Max = 6U, Width = 14.14d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 7U, Max = 7U, Width = 13.00d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 8U, Max = 8U, Width = 23.14d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 9U, Max = 9U, Width = 23.14d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 10U, Max = 10U, Width = 13.00d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 11U, Max = 11U, Width = 17.29d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 12U, Max = 12U, Width = 17.29d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 13U, Max = 13U, Width = 31.86d, CustomWidth = true });
+                rarOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate RAR columns.");
+                throw exception;
+            }
         }
 
         private void WriteRarHeaderRowOne()
         {
-            rarOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(rarOpenXmlWriter, "System Name and Version:", 23);
-            WriteCellValue(rarOpenXmlWriter, string.Empty, 23);
-            WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-            rarOpenXmlWriter.WriteEndElement();
+            try
+            {
+                rarOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(rarOpenXmlWriter, "System Name and Version:", 23);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 23);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
+                rarOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate first RAR header row.");
+                throw exception;
+            }
         }
 
         private void WriteRarHeaderRowTwo()
         {
-            rarOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(rarOpenXmlWriter, "Date(s) of Testing:", 23);
-            WriteCellValue(rarOpenXmlWriter, string.Empty, 23);
-            WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-            rarOpenXmlWriter.WriteEndElement();
+            try
+            {
+                rarOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(rarOpenXmlWriter, "Date(s) of Testing:", 23);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 23);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
+                rarOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate second RAR header row.");
+                throw exception;
+            }
         }
 
         private void WriteRarHeaderRowThree()
         {
-            rarOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(rarOpenXmlWriter, "Date of Report:", 23);
-            WriteCellValue(rarOpenXmlWriter, string.Empty, 23);
-            WriteCellValue(rarOpenXmlWriter, DateTime.Now.ToLongDateString(), 20);
-            WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-            rarOpenXmlWriter.WriteEndElement();
+            try
+            {
+                rarOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(rarOpenXmlWriter, "Date of Report:", 23);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 23);
+                WriteCellValue(rarOpenXmlWriter, DateTime.Now.ToLongDateString(), 20);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
+                rarOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate third RAR header row.");
+                throw exception;
+            }
         }
 
         private void WriteRarHeaderRowFour()
         {
-            string contactInfo = ContactName + ", " + ContactNumber + ", " + ContactEmail;
-            rarOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(rarOpenXmlWriter, "POC Information:", 23);
-            WriteCellValue(rarOpenXmlWriter, string.Empty, 23);
-            WriteCellValue(rarOpenXmlWriter, contactInfo, 20);
-            WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-            rarOpenXmlWriter.WriteEndElement();
+            try
+            {
+                string contactInfo = ContactName + ", " + ContactNumber + ", " + ContactEmail;
+                rarOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(rarOpenXmlWriter, "POC Information:", 23);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 23);
+                WriteCellValue(rarOpenXmlWriter, contactInfo, 20);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
+                rarOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate fourth RAR header row.");
+                throw exception;
+            }
         }
 
         private void WriteRarHeaderRowFive()
         {
-            rarOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(rarOpenXmlWriter, "Risk Assessment Method:", 23);
-            WriteCellValue(rarOpenXmlWriter, string.Empty, 23);
-            WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-            rarOpenXmlWriter.WriteEndElement();
+            try
+            {
+                rarOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(rarOpenXmlWriter, "Risk Assessment Method:", 23);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 23);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
+                rarOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate fifth RAR header row.");
+                throw exception;
+            }
         }
 
         private void WriteRarHeaderRowSix()
         {
-            rarOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(rarOpenXmlWriter, "Identifier Applicable Security Control (1)", 15);
-            WriteCellValue(rarOpenXmlWriter, "Source of Discovery or Test Tool Name (2)", 15);
-            WriteCellValue(rarOpenXmlWriter, "Test ID or Threat IDs (3)", 15);
-            WriteCellValue(rarOpenXmlWriter, @"Description of Vulnerability / Weakness (4)", 15);
-            WriteCellValue(rarOpenXmlWriter, "Raw Risk (CAT I, II, III) (5)", 15);
-            WriteCellValue(rarOpenXmlWriter, "Impact (6)", 15);
-            WriteCellValue(rarOpenXmlWriter, "Likelihood (7)", 15);
-            WriteCellValue(rarOpenXmlWriter, "Mitigation Description (8)", 15);
-            WriteCellValue(rarOpenXmlWriter, "Remediation Description (9)", 15);
-            WriteCellValue(rarOpenXmlWriter, "Residual Risk (10)", 15);
-            WriteCellValue(rarOpenXmlWriter, "Status (11)", 15);
-            WriteCellValue(rarOpenXmlWriter, "Comment (12)", 15);
-            WriteCellValue(rarOpenXmlWriter, "Devices Affected (13)", 15);
-            rarOpenXmlWriter.WriteEndElement();
+            try
+            {
+                rarOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(rarOpenXmlWriter, "Identifier Applicable Security Control (1)", 15);
+                WriteCellValue(rarOpenXmlWriter, "Source of Discovery or Test Tool Name (2)", 15);
+                WriteCellValue(rarOpenXmlWriter, "Test ID or Threat IDs (3)", 15);
+                WriteCellValue(rarOpenXmlWriter, @"Description of Vulnerability / Weakness (4)", 15);
+                WriteCellValue(rarOpenXmlWriter, "Raw Risk (CAT I, II, III) (5)", 15);
+                WriteCellValue(rarOpenXmlWriter, "Impact (6)", 15);
+                WriteCellValue(rarOpenXmlWriter, "Likelihood (7)", 15);
+                WriteCellValue(rarOpenXmlWriter, "Mitigation Description (8)", 15);
+                WriteCellValue(rarOpenXmlWriter, "Remediation Description (9)", 15);
+                WriteCellValue(rarOpenXmlWriter, "Residual Risk (10)", 15);
+                WriteCellValue(rarOpenXmlWriter, "Status (11)", 15);
+                WriteCellValue(rarOpenXmlWriter, "Comment (12)", 15);
+                WriteCellValue(rarOpenXmlWriter, "Devices Affected (13)", 15);
+                rarOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate sixth RAR header row.");
+                throw exception;
+            }
         }
 
         private void WriteFindingToRar(SQLiteDataReader sqliteDataReader, AsyncObservableCollection<MitigationItem> mitigationList)
         {
-            MitigationItem mitigation = mitigationList.FirstOrDefault(
-                x => x.MitigationGroupName.Equals(sqliteDataReader["GroupName"].ToString()) &&
-                    x.MitigationVulnerabilityId.Equals(sqliteDataReader["VulnId"].ToString()));
-
-            if (mitigation != null)
+            try
             {
-                if (!FilterByStatus(mitigation.MitigationStatus))
+                MitigationItem mitigation = mitigationList.FirstOrDefault(
+                    x => x.MitigationGroupName.Equals(sqliteDataReader["GroupName"].ToString()) &&
+                        x.MitigationVulnerabilityId.Equals(sqliteDataReader["VulnId"].ToString()));
+
+                if (mitigation != null)
+                {
+                    if (!FilterByStatus(mitigation.MitigationStatus))
+                    { return; }
+                }
+                else if (!FilterByStatus(sqliteDataReader["Status"].ToString()))
                 { return; }
-            }
-            else if (!FilterByStatus(sqliteDataReader["Status"].ToString()))
-            { return; }
 
-            rarOpenXmlWriter.WriteStartElement(new Row());
-            if (IsDiacapPackage)
-            { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["IaControl"].ToString(), 24); }
-            else
-            { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["NistControl"].ToString(), 24); }
-            WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Source"].ToString(), 24);
-            WriteCellValue(rarOpenXmlWriter, sqliteDataReader["VulnId"].ToString(), 24);
-            WriteCellValue(rarOpenXmlWriter, sqliteDataReader["VulnTitle"].ToString(), 20);
-            if (!String.IsNullOrWhiteSpace(sqliteDataReader["RawRisk"].ToString()))
-            { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["RawRisk"].ToString(), 24); }
-            else
-            { WriteCellValue(rarOpenXmlWriter, ConvertAcasSeverityToDisaCategory(sqliteDataReader["Impact"].ToString()), 24); }
-            WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Impact"].ToString(), 24);
-            WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
-            if (mitigation != null && mitigation.MitigationStatus.Equals("Completed"))
-            {
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-                WriteCellValue(rarOpenXmlWriter, mitigation.MitigationText, 20);
+                rarOpenXmlWriter.WriteStartElement(new Row());
+                if (IsDiacapPackage)
+                { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["IaControl"].ToString(), 24); }
+                else
+                { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["NistControl"].ToString(), 24); }
+                WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Source"].ToString(), 24);
+                WriteCellValue(rarOpenXmlWriter, sqliteDataReader["VulnId"].ToString(), 24);
+                WriteCellValue(rarOpenXmlWriter, sqliteDataReader["VulnTitle"].ToString(), 20);
+                if (!string.IsNullOrWhiteSpace(sqliteDataReader["RawRisk"].ToString()))
+                { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["RawRisk"].ToString(), 24); }
+                else
+                { WriteCellValue(rarOpenXmlWriter, ConvertAcasSeverityToDisaCategory(sqliteDataReader["Impact"].ToString()), 24); }
+                WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Impact"].ToString(), 24);
                 WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
-                WriteCellValue(rarOpenXmlWriter, mitigation.MitigationStatus, 24);
-            }
-            else if (mitigation != null)
-            {
-                WriteCellValue(rarOpenXmlWriter, mitigation.MitigationText, 20);
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
-                WriteCellValue(rarOpenXmlWriter, mitigation.MitigationStatus, 24);
-            }
-            else if (sqliteDataReader["Status"].ToString().Equals("Completed"))
-            {
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-                string mitigationText = string.Empty;
-                if (UserRequiresComments)
-                { mitigationText = sqliteDataReader["Comments"].ToString(); }
-                if (UserRequiresFindingDetails)
+                if (mitigation != null && mitigation.MitigationStatus.Equals("Completed"))
                 {
-                    if (string.IsNullOrWhiteSpace(mitigationText))
-                    { mitigationText = sqliteDataReader["FindingDetails"].ToString(); }
-                    else
-                    { mitigationText += doubleCarriageReturn + sqliteDataReader["FindingDetails"].ToString(); }
+                    WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
+                    WriteCellValue(rarOpenXmlWriter, mitigation.MitigationText, 20);
+                    WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
+                    WriteCellValue(rarOpenXmlWriter, mitigation.MitigationStatus, 24);
                 }
-                WriteCellValue(rarOpenXmlWriter, mitigationText, 20);
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
-                WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24);
-            }
-            else
-            {
-                string mitigationText = string.Empty;
-                if (UserRequiresComments)
-                { mitigationText = sqliteDataReader["Comments"].ToString(); }
-                if (UserRequiresFindingDetails)
+                else if (mitigation != null)
                 {
-                    if (string.IsNullOrWhiteSpace(mitigationText))
-                    { mitigationText = sqliteDataReader["FindingDetails"].ToString(); }
-                    else
-                    { mitigationText += doubleCarriageReturn + sqliteDataReader["FindingDetails"].ToString(); }
+                    WriteCellValue(rarOpenXmlWriter, mitigation.MitigationText, 20);
+                    WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
+                    WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
+                    WriteCellValue(rarOpenXmlWriter, mitigation.MitigationStatus, 24);
                 }
-                WriteCellValue(rarOpenXmlWriter, mitigationText, 20);
+                else if (sqliteDataReader["Status"].ToString().Equals("Completed"))
+                {
+                    WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
+                    string mitigationText = string.Empty;
+                    if (UserRequiresComments)
+                    { mitigationText = sqliteDataReader["Comments"].ToString(); }
+                    if (UserRequiresFindingDetails)
+                    {
+                        if (string.IsNullOrWhiteSpace(mitigationText))
+                        { mitigationText = sqliteDataReader["FindingDetails"].ToString(); }
+                        else
+                        { mitigationText += doubleCarriageReturn + sqliteDataReader["FindingDetails"].ToString(); }
+                    }
+                    WriteCellValue(rarOpenXmlWriter, mitigationText, 20);
+                    WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
+                    WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24);
+                }
+                else
+                {
+                    string mitigationText = string.Empty;
+                    if (UserRequiresComments)
+                    { mitigationText = sqliteDataReader["Comments"].ToString(); }
+                    if (UserRequiresFindingDetails)
+                    {
+                        if (string.IsNullOrWhiteSpace(mitigationText))
+                        { mitigationText = sqliteDataReader["FindingDetails"].ToString(); }
+                        else
+                        { mitigationText += doubleCarriageReturn + sqliteDataReader["FindingDetails"].ToString(); }
+                    }
+                    WriteCellValue(rarOpenXmlWriter, mitigationText, 20);
+                    WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
+                    WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
+                    WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24);
+                }
                 WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
-                WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24);
+                WriteCellValue(rarOpenXmlWriter, sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine), 20);
+                rarOpenXmlWriter.WriteEndElement();
             }
-            WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-            WriteCellValue(rarOpenXmlWriter, sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine), 20);
-            rarOpenXmlWriter.WriteEndElement();
+            catch (Exception exception)
+            {
+                log.Error("Unable to write finding to RAR.");
+                throw exception;
+            }
         }
 
         private void EndRar()
         {
-            rarOpenXmlWriter.WriteEndElement();
-            WriteRarMergeCells();
-            rarOpenXmlWriter.WriteEndElement();
-            rarOpenXmlWriter.Dispose();
+            try
+            {
+                rarOpenXmlWriter.WriteEndElement();
+                WriteRarMergeCells();
+                rarOpenXmlWriter.WriteEndElement();
+                rarOpenXmlWriter.Dispose();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to finalize RAR tab.");
+                throw exception;
+            }
         }
 
         private void WriteRarMergeCells()
         {
-            string[] mergeCellArray = new string[] {
+            try
+            {
+                string[] mergeCellArray = new string[] {
                 "A1:B1", "A2:B2", "A3:B3", "A4:B4", "A5:B5",
                 "C1:D1", "C2:D2", "C3:D3", "C4:D4", "C5:D5", "E1:M5"};
-            rarOpenXmlWriter.WriteStartElement(new MergeCells());
-            foreach (string mergeCell in mergeCellArray)
-            { rarOpenXmlWriter.WriteElement(new MergeCell() { Reference = mergeCell }); }
-            rarOpenXmlWriter.WriteEndElement();
+                rarOpenXmlWriter.WriteStartElement(new MergeCells());
+                foreach (string mergeCell in mergeCellArray)
+                { rarOpenXmlWriter.WriteElement(new MergeCell() { Reference = mergeCell }); }
+                rarOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate RAR MergeCells element.");
+                throw exception;
+            }
         }
 
         #endregion Create RAR
@@ -898,112 +1182,152 @@ namespace Vulnerator.Model
 
         private void StartAcasOutput(WorkbookPart workbookPart, Sheets sheets)
         {
-            WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
-            Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "ACAS Output & Review" };
-            sheetIndex++;
-            sheets.Append(sheet);
-            acasOutputOpenXmlWriter = OpenXmlWriter.Create(worksheetPart);
-            acasOutputOpenXmlWriter.WriteStartElement(new Worksheet());
-            WriteAcasOutputColumns();
-            acasOutputOpenXmlWriter.WriteStartElement(new SheetData());
-            WriteAcasOutputHeaderRow();
+            try
+            {
+                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "ACAS Output & Review" };
+                sheetIndex++;
+                sheets.Append(sheet);
+                acasOutputOpenXmlWriter = OpenXmlWriter.Create(worksheetPart);
+                acasOutputOpenXmlWriter.WriteStartElement(new Worksheet());
+                WriteAcasOutputColumns();
+                acasOutputOpenXmlWriter.WriteStartElement(new SheetData());
+                WriteAcasOutputHeaderRow();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to initialize ACAS Output tab.");
+                throw exception;
+            }
         }
 
         private void WriteAcasOutputColumns()
         {
-            acasOutputOpenXmlWriter.WriteStartElement(new Columns());
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 1U, Max = 1U, Width = 10.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 2U, Max = 2U, Width = 20.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 15.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 4U, Max = 4U, Width = 15.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 5U, Max = 5U, Width = 20.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 6U, Max = 6U, Width = 20.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 7U, Max = 7U, Width = 35.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 8U, Max = 8U, Width = 35.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 9U, Max = 9U, Width = 35.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 10U, Max = 10U, Width = 35.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 11U, Max = 11U, Width = 20.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 12U, Max = 12U, Width = 35.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 13U, Max = 13U, Width = 25.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 14U, Max = 14U, Width = 25.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 15U, Max = 15U, Width = 25.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 16U, Max = 16U, Width = 25.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 17U, Max = 17U, Width = 25.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 18U, Max = 18U, Width = 25.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 19U, Max = 19U, Width = 15.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 20U, Max = 20U, Width = 35.00d, CustomWidth = true });
-            acasOutputOpenXmlWriter.WriteEndElement();
+            try
+            {
+                acasOutputOpenXmlWriter.WriteStartElement(new Columns());
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 1U, Max = 1U, Width = 10.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 2U, Max = 2U, Width = 20.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 15.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 4U, Max = 4U, Width = 15.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 5U, Max = 5U, Width = 20.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 6U, Max = 6U, Width = 20.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 7U, Max = 7U, Width = 35.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 8U, Max = 8U, Width = 35.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 9U, Max = 9U, Width = 35.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 10U, Max = 10U, Width = 35.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 11U, Max = 11U, Width = 20.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 12U, Max = 12U, Width = 35.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 13U, Max = 13U, Width = 25.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 14U, Max = 14U, Width = 25.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 15U, Max = 15U, Width = 25.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 16U, Max = 16U, Width = 25.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 17U, Max = 17U, Width = 25.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 18U, Max = 18U, Width = 25.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 19U, Max = 19U, Width = 15.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteElement(new Column() { Min = 20U, Max = 20U, Width = 35.00d, CustomWidth = true });
+                acasOutputOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate ACAS Output columns.");
+                throw exception;
+            }
         }
 
         private void WriteAcasOutputHeaderRow()
         {
-            acasOutputOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(acasOutputOpenXmlWriter, "Plugin ID", 4);
-            WriteCellValue(acasOutputOpenXmlWriter, "Plugin Title", 4);
-            WriteCellValue(acasOutputOpenXmlWriter, "Risk Factor", 4);
-            WriteCellValue(acasOutputOpenXmlWriter, "STIG Severity", 4);
-            WriteCellValue(acasOutputOpenXmlWriter, "Asset Name", 4);
-            WriteCellValue(acasOutputOpenXmlWriter, "IP Address", 4);
-            WriteCellValue(acasOutputOpenXmlWriter, "Synopsis", 4);
-            WriteCellValue(acasOutputOpenXmlWriter, "Description", 4);
-            WriteCellValue(acasOutputOpenXmlWriter, "Scan Output", 4);
-            WriteCellValue(acasOutputOpenXmlWriter, "Solution", 4);
-            WriteCellValue(acasOutputOpenXmlWriter, "Cross Reference", 4);
-            WriteCellValue(acasOutputOpenXmlWriter, "CPE", 4);
-            WriteCellValue(acasOutputOpenXmlWriter, "Plugin Publication Date", 4);
-            WriteCellValue(acasOutputOpenXmlWriter, "Plugin Modification Date", 4);
-            WriteCellValue(acasOutputOpenXmlWriter, "Last Observed Date", 4);
-            WriteCellValue(acasOutputOpenXmlWriter, "Patch Publication Date", 4);
-            WriteCellValue(acasOutputOpenXmlWriter, "Scan Filename", 4);
-            WriteCellValue(acasOutputOpenXmlWriter, "Group Name", 4);
-            WriteCellValue(acasOutputOpenXmlWriter, "Review Status", 4);
-            WriteCellValue(acasOutputOpenXmlWriter, "Notes", 4);
-            acasOutputOpenXmlWriter.WriteEndElement();
+            try
+            {
+                acasOutputOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(acasOutputOpenXmlWriter, "Plugin ID", 4);
+                WriteCellValue(acasOutputOpenXmlWriter, "Plugin Title", 4);
+                WriteCellValue(acasOutputOpenXmlWriter, "Risk Factor", 4);
+                WriteCellValue(acasOutputOpenXmlWriter, "STIG Severity", 4);
+                WriteCellValue(acasOutputOpenXmlWriter, "Asset Name", 4);
+                WriteCellValue(acasOutputOpenXmlWriter, "IP Address", 4);
+                WriteCellValue(acasOutputOpenXmlWriter, "Synopsis", 4);
+                WriteCellValue(acasOutputOpenXmlWriter, "Description", 4);
+                WriteCellValue(acasOutputOpenXmlWriter, "Scan Output", 4);
+                WriteCellValue(acasOutputOpenXmlWriter, "Solution", 4);
+                WriteCellValue(acasOutputOpenXmlWriter, "Cross Reference", 4);
+                WriteCellValue(acasOutputOpenXmlWriter, "CPE", 4);
+                WriteCellValue(acasOutputOpenXmlWriter, "Plugin Publication Date", 4);
+                WriteCellValue(acasOutputOpenXmlWriter, "Plugin Modification Date", 4);
+                WriteCellValue(acasOutputOpenXmlWriter, "Last Observed Date", 4);
+                WriteCellValue(acasOutputOpenXmlWriter, "Patch Publication Date", 4);
+                WriteCellValue(acasOutputOpenXmlWriter, "Scan Filename", 4);
+                WriteCellValue(acasOutputOpenXmlWriter, "Group Name", 4);
+                WriteCellValue(acasOutputOpenXmlWriter, "Review Status", 4);
+                WriteCellValue(acasOutputOpenXmlWriter, "Notes", 4);
+                acasOutputOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate ACAS Output header row.");
+                throw exception;
+            }
         }
 
         private void WriteIndividualAcasOutput()
         {
-            using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+            try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "ACAS"));
-                sqliteCommand.CommandText = SetSqliteCommandText("ACAS", false);
-                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
-                    while (sqliteDataReader.Read())
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "ACAS"));
+                    sqliteCommand.CommandText = SetSqliteCommandText("ACAS", false);
+                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
-                        acasOutputOpenXmlWriter.WriteStartElement(new Row());
-                        WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["VulnId"].ToString(), 24);
-                        WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["VulnTitle"].ToString(), 20);
-                        WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["Impact"].ToString(), 24);
-                        WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["RawRisk"].ToString(), 24);
-                        WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["HostName"].ToString(), 24);
-                        WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["IpAddress"].ToString(), 24);
-                        WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["RiskStatement"].ToString(), 20);
-                        WriteCellValue(acasOutputOpenXmlWriter, NormalizeCellValue(sqliteDataReader["Description"].ToString()), 20);
-                        WriteCellValue(acasOutputOpenXmlWriter, LargeCellValueHandler(sqliteDataReader["PluginOutput"].ToString(),
-                            sqliteDataReader["VulnId"].ToString(), sqliteDataReader["AssetIdToReport"].ToString()), 20);
-                        WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["FixText"].ToString(), 20);
-                        WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["CrossReferences"].ToString(), 24);
-                        WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["CPEs"].ToString(), 24);
-                        WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["PluginPublishedDate"].ToString(), 24);
-                        WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["PluginModifiedDate"].ToString(), 24);
-                        WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["LastObserved"].ToString(), 24);
-                        WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["PatchPublishedDate"].ToString(), 24);
-                        WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["FileName"].ToString(), 24);
-                        WriteCellValue(acasOutputOpenXmlWriter, string.Empty, 24);
-                        WriteCellValue(acasOutputOpenXmlWriter, string.Empty, 24);
-                        WriteCellValue(acasOutputOpenXmlWriter, string.Empty, 20);
-                        acasOutputOpenXmlWriter.WriteEndElement();
+                        while (sqliteDataReader.Read())
+                        {
+                            acasOutputOpenXmlWriter.WriteStartElement(new Row());
+                            WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["VulnId"].ToString(), 24);
+                            WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["VulnTitle"].ToString(), 20);
+                            WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["Impact"].ToString(), 24);
+                            WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["RawRisk"].ToString(), 24);
+                            WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["HostName"].ToString(), 24);
+                            WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["IpAddress"].ToString(), 24);
+                            WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["RiskStatement"].ToString(), 20);
+                            WriteCellValue(acasOutputOpenXmlWriter, NormalizeCellValue(sqliteDataReader["Description"].ToString()), 20);
+                            WriteCellValue(acasOutputOpenXmlWriter, LargeCellValueHandler(sqliteDataReader["PluginOutput"].ToString(),
+                                sqliteDataReader["VulnId"].ToString(), sqliteDataReader["AssetIdToReport"].ToString()), 20);
+                            WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["FixText"].ToString(), 20);
+                            WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["CrossReferences"].ToString(), 24);
+                            WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["CPEs"].ToString(), 24);
+                            WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["PluginPublishedDate"].ToString(), 24);
+                            WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["PluginModifiedDate"].ToString(), 24);
+                            WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["LastObserved"].ToString(), 24);
+                            WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["PatchPublishedDate"].ToString(), 24);
+                            WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["FileName"].ToString(), 24);
+                            WriteCellValue(acasOutputOpenXmlWriter, string.Empty, 24);
+                            WriteCellValue(acasOutputOpenXmlWriter, string.Empty, 24);
+                            WriteCellValue(acasOutputOpenXmlWriter, string.Empty, 20);
+                            acasOutputOpenXmlWriter.WriteEndElement();
+                        }
                     }
                 }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to insert ACAS output value.");
+                throw exception;
             }
         }
 
         private void EndAcasOutput()
         {
-            acasOutputOpenXmlWriter.WriteEndElement();
-            acasOutputOpenXmlWriter.WriteEndElement();
-            acasOutputOpenXmlWriter.Dispose();
+            try
+            {
+                acasOutputOpenXmlWriter.WriteEndElement();
+                acasOutputOpenXmlWriter.WriteEndElement();
+                acasOutputOpenXmlWriter.Dispose();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to finalize ACAS Output tab.");
+                throw exception;
+            }
         }
 
         #endregion Create Acas Output
@@ -1012,102 +1336,142 @@ namespace Vulnerator.Model
 
         private void StartStigDetails(WorkbookPart workbookPart, Sheets sheets)
         {
-            WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
-            Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "STIG Details & Review" };
-            sheetIndex++;
-            sheets.Append(sheet);
-            stigDetailsOpenXmlWriter = OpenXmlWriter.Create(worksheetPart);
-            stigDetailsOpenXmlWriter.WriteStartElement(new Worksheet());
-            WriteStigDetailsColumns();
-            stigDetailsOpenXmlWriter.WriteStartElement(new SheetData());
-            WriteStigDetailsHeaderRow();
+            try
+            {
+                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "STIG Details & Review" };
+                sheetIndex++;
+                sheets.Append(sheet);
+                stigDetailsOpenXmlWriter = OpenXmlWriter.Create(worksheetPart);
+                stigDetailsOpenXmlWriter.WriteStartElement(new Worksheet());
+                WriteStigDetailsColumns();
+                stigDetailsOpenXmlWriter.WriteStartElement(new SheetData());
+                WriteStigDetailsHeaderRow();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to initialize STIG Details tab.");
+                throw exception;
+            }
         }
 
         private void WriteStigDetailsColumns()
         {
-            stigDetailsOpenXmlWriter.WriteStartElement(new Columns());
-            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 1U, Max = 1U, Width = 20.00d, CustomWidth = true });
-            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 2U, Max = 2U, Width = 10.00d, CustomWidth = true });
-            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 25.00d, CustomWidth = true });
-            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 4U, Max = 4U, Width = 25.00d, CustomWidth = true });
-            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 5U, Max = 5U, Width = 10.00d, CustomWidth = true });
-            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 6U, Max = 6U, Width = 15.00d, CustomWidth = true });
-            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 7U, Max = 7U, Width = 35.00d, CustomWidth = true });
-            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 8U, Max = 8U, Width = 35.00d, CustomWidth = true });
-            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 9U, Max = 9U, Width = 20.00d, CustomWidth = true });
-            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 10U, Max = 10U, Width = 20.00d, CustomWidth = true });
-            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 11U, Max = 11U, Width = 15.00d, CustomWidth = true });
-            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 12U, Max = 12U, Width = 35.00d, CustomWidth = true });
-            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 13U, Max = 13U, Width = 35.00d, CustomWidth = true });
-            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 14U, Max = 14U, Width = 35.00d, CustomWidth = true });
-            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 15U, Max = 15U, Width = 25.00d, CustomWidth = true });
-            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 16U, Max = 16U, Width = 15.00d, CustomWidth = true });
-            stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 17U, Max = 17U, Width = 35.00d, CustomWidth = true });
-            stigDetailsOpenXmlWriter.WriteEndElement();
+            try
+            {
+                stigDetailsOpenXmlWriter.WriteStartElement(new Columns());
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 1U, Max = 1U, Width = 20.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 2U, Max = 2U, Width = 10.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 25.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 4U, Max = 4U, Width = 25.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 5U, Max = 5U, Width = 10.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 6U, Max = 6U, Width = 15.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 7U, Max = 7U, Width = 35.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 8U, Max = 8U, Width = 35.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 9U, Max = 9U, Width = 20.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 10U, Max = 10U, Width = 20.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 11U, Max = 11U, Width = 15.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 12U, Max = 12U, Width = 35.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 13U, Max = 13U, Width = 35.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 14U, Max = 14U, Width = 35.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 15U, Max = 15U, Width = 25.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 16U, Max = 16U, Width = 15.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 17U, Max = 17U, Width = 35.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate STIG Details columns.");
+                throw exception;
+            }
         }
 
         private void WriteStigDetailsHeaderRow()
         {
-            stigDetailsOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(stigDetailsOpenXmlWriter, "STIG Title", 4);
-            WriteCellValue(stigDetailsOpenXmlWriter, "STIG ID", 4);
-            WriteCellValue(stigDetailsOpenXmlWriter, "Rule ID", 4);
-            WriteCellValue(stigDetailsOpenXmlWriter, "STIG Name", 4);
-            WriteCellValue(stigDetailsOpenXmlWriter, "Risk Factor", 4);
-            WriteCellValue(stigDetailsOpenXmlWriter, "STIG Severity", 4);
-            WriteCellValue(stigDetailsOpenXmlWriter, "Description", 4);
-            WriteCellValue(stigDetailsOpenXmlWriter, "Solution", 4);
-            WriteCellValue(stigDetailsOpenXmlWriter, "Host Name", 4);
-            WriteCellValue(stigDetailsOpenXmlWriter, "IP Address", 4);
-            WriteCellValue(stigDetailsOpenXmlWriter, "Status", 4);
-            WriteCellValue(stigDetailsOpenXmlWriter, "Comments", 4);
-            WriteCellValue(stigDetailsOpenXmlWriter, "Finding Details", 4);
-            WriteCellValue(stigDetailsOpenXmlWriter, "File Name", 4);
-            WriteCellValue(stigDetailsOpenXmlWriter, "Group Name", 4);
-            WriteCellValue(stigDetailsOpenXmlWriter, "Review Status", 4);
-            WriteCellValue(stigDetailsOpenXmlWriter, "Notes", 4);
-            stigDetailsOpenXmlWriter.WriteEndElement();
+            try
+            {
+                stigDetailsOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(stigDetailsOpenXmlWriter, "STIG Title", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "STIG ID", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "Rule ID", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "STIG Name", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "Risk Factor", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "STIG Severity", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "Description", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "Solution", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "Host Name", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "IP Address", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "Status", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "Comments", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "Finding Details", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "File Name", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "Group Name", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "Review Status", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "Notes", 4);
+                stigDetailsOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate STIG Details header row.");
+                throw exception;
+            }
         }
 
         private void WriteStigDetailItems()
         {
-            using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+            try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "CKL"));
-                sqliteCommand.CommandText = SetSqliteCommandText("CKL", false);
-                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
-                    while (sqliteDataReader.Read())
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "CKL"));
+                    sqliteCommand.CommandText = SetSqliteCommandText("CKL", false);
+                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
-                        stigDetailsOpenXmlWriter.WriteStartElement(new Row());
-                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["VulnTitle"].ToString(), 20);
-                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["VulnId"].ToString(), 24);
-                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["RuleId"].ToString(), 24);
-                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["Source"].ToString(), 24);
-                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["Impact"].ToString(), 24);
-                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["RawRisk"].ToString(), 24);
-                        WriteCellValue(stigDetailsOpenXmlWriter, NormalizeCellValue(sqliteDataReader["Description"].ToString()), 20);
-                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["FixText"].ToString(), 20);
-                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["HostName"].ToString(), 24);
-                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["IpAddress"].ToString(), 20);
-                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24);
-                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["Comments"].ToString(), 20);
-                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["FindingDetails"].ToString(), 20);
-                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["FileName"].ToString(), 24);
-                        WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["GroupName"].ToString(), 24);
-                        WriteCellValue(stigDetailsOpenXmlWriter, string.Empty, 24);
-                        WriteCellValue(stigDetailsOpenXmlWriter, string.Empty, 20);
-                        stigDetailsOpenXmlWriter.WriteEndElement();
+                        while (sqliteDataReader.Read())
+                        {
+                            stigDetailsOpenXmlWriter.WriteStartElement(new Row());
+                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["VulnTitle"].ToString(), 20);
+                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["VulnId"].ToString(), 24);
+                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["RuleId"].ToString(), 24);
+                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["Source"].ToString(), 24);
+                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["Impact"].ToString(), 24);
+                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["RawRisk"].ToString(), 24);
+                            WriteCellValue(stigDetailsOpenXmlWriter, NormalizeCellValue(sqliteDataReader["Description"].ToString()), 20);
+                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["FixText"].ToString(), 20);
+                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["HostName"].ToString(), 24);
+                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["IpAddress"].ToString(), 20);
+                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24);
+                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["Comments"].ToString(), 20);
+                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["FindingDetails"].ToString(), 20);
+                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["FileName"].ToString(), 24);
+                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["GroupName"].ToString(), 24);
+                            WriteCellValue(stigDetailsOpenXmlWriter, string.Empty, 24);
+                            WriteCellValue(stigDetailsOpenXmlWriter, string.Empty, 20);
+                            stigDetailsOpenXmlWriter.WriteEndElement();
+                        }
                     }
                 }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to insert STIG Detail item.");
+                throw exception;
             }
         }
 
         private void EndStigDetails()
         {
-            stigDetailsOpenXmlWriter.WriteEndElement();
-            stigDetailsOpenXmlWriter.WriteEndElement();
-            stigDetailsOpenXmlWriter.Dispose();
+            try
+            {
+                stigDetailsOpenXmlWriter.WriteEndElement();
+                stigDetailsOpenXmlWriter.WriteEndElement();
+                stigDetailsOpenXmlWriter.Dispose();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to finalize STIG Details tab.");
+                throw exception;
+            }
         }
 
         #endregion
@@ -1116,98 +1480,138 @@ namespace Vulnerator.Model
 
         private void StartDiscrepancies(WorkbookPart workbookPart, Sheets sheets)
         {
-            WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
-            Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = @"Discrepancies" };
-            sheetIndex++;
-            sheets.Append(sheet);
-            discrepanciesOpenXmlWriter = OpenXmlWriter.Create(worksheetPart);
-            discrepanciesOpenXmlWriter.WriteStartElement(new Worksheet());
-            WriteDiscrepanciesColumns();
-            discrepanciesOpenXmlWriter.WriteStartElement(new SheetData());
-            WriteDiscrepanciesTabHeaderRow();
+            try
+            {
+                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = @"Discrepancies" };
+                sheetIndex++;
+                sheets.Append(sheet);
+                discrepanciesOpenXmlWriter = OpenXmlWriter.Create(worksheetPart);
+                discrepanciesOpenXmlWriter.WriteStartElement(new Worksheet());
+                WriteDiscrepanciesColumns();
+                discrepanciesOpenXmlWriter.WriteStartElement(new SheetData());
+                WriteDiscrepanciesTabHeaderRow();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to initialize Discrepancies tab.");
+                throw exception;
+            }
         }
 
         private void WriteDiscrepanciesColumns()
         {
-            discrepanciesOpenXmlWriter.WriteStartElement(new Columns());
-            discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 1U, Max = 1U, Width = 30d, CustomWidth = true });
-            discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 2U, Max = 2U, Width = 10d, CustomWidth = true });
-            discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 30d, CustomWidth = true });
-            discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 4U, Max = 4U, Width = 15d, CustomWidth = true });
-            discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 5U, Max = 5U, Width = 15d, CustomWidth = true });
-            discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 6U, Max = 6U, Width = 55d, CustomWidth = true });
-            discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 7U, Max = 7U, Width = 55d, CustomWidth = true });
-            discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 8U, Max = 8U, Width = 55d, CustomWidth = true });
-            discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 9U, Max = 9U, Width = 55d, CustomWidth = true });
-            discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 10U, Max = 10U, Width = 20d, CustomWidth = true });
-            discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 11U, Max = 11U, Width = 20d, CustomWidth = true });
-            discrepanciesOpenXmlWriter.WriteEndElement();
+            try
+            {
+                discrepanciesOpenXmlWriter.WriteStartElement(new Columns());
+                discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 1U, Max = 1U, Width = 30d, CustomWidth = true });
+                discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 2U, Max = 2U, Width = 10d, CustomWidth = true });
+                discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 30d, CustomWidth = true });
+                discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 4U, Max = 4U, Width = 15d, CustomWidth = true });
+                discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 5U, Max = 5U, Width = 15d, CustomWidth = true });
+                discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 6U, Max = 6U, Width = 55d, CustomWidth = true });
+                discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 7U, Max = 7U, Width = 55d, CustomWidth = true });
+                discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 8U, Max = 8U, Width = 55d, CustomWidth = true });
+                discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 9U, Max = 9U, Width = 55d, CustomWidth = true });
+                discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 10U, Max = 10U, Width = 20d, CustomWidth = true });
+                discrepanciesOpenXmlWriter.WriteElement(new Column() { Min = 11U, Max = 11U, Width = 20d, CustomWidth = true });
+                discrepanciesOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate Discrepancies columns.");
+                throw exception;
+            }
         }
 
         private void WriteDiscrepanciesTabHeaderRow()
         {
-            discrepanciesOpenXmlWriter.WriteStartElement(new Row());
-            WriteCellValue(discrepanciesOpenXmlWriter, "Source", 4);
-            WriteCellValue(discrepanciesOpenXmlWriter, "Vuln ID", 4);
-            WriteCellValue(discrepanciesOpenXmlWriter, "Vuln Title", 4);
-            WriteCellValue(discrepanciesOpenXmlWriter, "STIG Status", 4);
-            WriteCellValue(discrepanciesOpenXmlWriter, "SCAP Status", 4);
-            WriteCellValue(discrepanciesOpenXmlWriter, "STIG Comments", 4);
-            WriteCellValue(discrepanciesOpenXmlWriter, "STIG Finding Details", 4);
-            WriteCellValue(discrepanciesOpenXmlWriter, "STIG File Name", 4);
-            WriteCellValue(discrepanciesOpenXmlWriter, "SCAP File Name", 4);
-            WriteCellValue(discrepanciesOpenXmlWriter, "STIG Affected Asset", 4);
-            WriteCellValue(discrepanciesOpenXmlWriter, "SCAP Affected Asset", 4);
-            discrepanciesOpenXmlWriter.WriteEndElement();
+            try
+            {
+                discrepanciesOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(discrepanciesOpenXmlWriter, "Source", 4);
+                WriteCellValue(discrepanciesOpenXmlWriter, "Vuln ID", 4);
+                WriteCellValue(discrepanciesOpenXmlWriter, "Vuln Title", 4);
+                WriteCellValue(discrepanciesOpenXmlWriter, "STIG Status", 4);
+                WriteCellValue(discrepanciesOpenXmlWriter, "SCAP Status", 4);
+                WriteCellValue(discrepanciesOpenXmlWriter, "STIG Comments", 4);
+                WriteCellValue(discrepanciesOpenXmlWriter, "STIG Finding Details", 4);
+                WriteCellValue(discrepanciesOpenXmlWriter, "STIG File Name", 4);
+                WriteCellValue(discrepanciesOpenXmlWriter, "SCAP File Name", 4);
+                WriteCellValue(discrepanciesOpenXmlWriter, "STIG Affected Asset", 4);
+                WriteCellValue(discrepanciesOpenXmlWriter, "SCAP Affected Asset", 4);
+                discrepanciesOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate Discrepancies header row.");
+                throw exception;
+            }
         }
 
         private void WriteIndividualDiscrepancies(AsyncObservableCollection<MitigationItem> mitigationList)
         {
-            List<DiscrepancyItem> stigList = ObtainDiscrepancyItemsForComparisson("CKL");
-            List<DiscrepancyItem> scapList = ObtainDiscrepancyItemsForComparisson("XCCDF");
-            if (stigList.Count > 0 && scapList.Count > 0)
+            try
             {
-                foreach (DiscrepancyItem item in stigList)
+                List<DiscrepancyItem> stigList = ObtainDiscrepancyItemsForComparisson("CKL");
+                List<DiscrepancyItem> scapList = ObtainDiscrepancyItemsForComparisson("XCCDF");
+                if (stigList.Count > 0 && scapList.Count > 0)
                 {
-                    MitigationItem mitigationItem = mitigationList.FirstOrDefault(
-                        x => x.MitigationGroupName == item.Group && x.MitigationVulnerabilityId == item.VulnId);
-                    if (mitigationItem != null)
-                    { item.Status = mitigationItem.MitigationStatus; }
-                }
-
-                foreach (DiscrepancyItem item in scapList)
-                {
-                    MitigationItem mitigationItem = mitigationList.FirstOrDefault(
-                        x => x.MitigationGroupName == item.Group && x.MitigationVulnerabilityId == item.VulnId);
-                    if (mitigationItem != null)
-                    { item.Status = mitigationItem.MitigationStatus; }
-                    DiscrepancyItem discrepancy = stigList.FirstOrDefault(
-                        x => x.RuleId == item.RuleId && x.AssetId == item.AssetId && x.Status != item.Status);
-                    if (discrepancy != null)
+                    foreach (DiscrepancyItem item in stigList)
                     {
-                        discrepanciesOpenXmlWriter.WriteStartElement(new Row());
-                        WriteCellValue(discrepanciesOpenXmlWriter, discrepancy.Source, 20);
-                        WriteCellValue(discrepanciesOpenXmlWriter, discrepancy.VulnId, 24);
-                        WriteCellValue(discrepanciesOpenXmlWriter, discrepancy.VulnTitle, 20);
-                        WriteCellValue(discrepanciesOpenXmlWriter, discrepancy.Status, 24);
-                        WriteCellValue(discrepanciesOpenXmlWriter, item.Status, 24);
-                        WriteCellValue(discrepanciesOpenXmlWriter, discrepancy.Comments, 20);
-                        WriteCellValue(discrepanciesOpenXmlWriter, discrepancy.FindingDetails, 20);
-                        WriteCellValue(discrepanciesOpenXmlWriter, discrepancy.FileName, 20);
-                        WriteCellValue(discrepanciesOpenXmlWriter, item.FileName, 20);
-                        WriteCellValue(discrepanciesOpenXmlWriter, discrepancy.AssetId, 24);
-                        WriteCellValue(discrepanciesOpenXmlWriter, item.AssetId, 24);
-                        discrepanciesOpenXmlWriter.WriteEndElement();
+                        MitigationItem mitigationItem = mitigationList.FirstOrDefault(
+                            x => x.MitigationGroupName == item.Group && x.MitigationVulnerabilityId == item.VulnId);
+                        if (mitigationItem != null)
+                        { item.Status = mitigationItem.MitigationStatus; }
+                    }
+
+                    foreach (DiscrepancyItem item in scapList)
+                    {
+                        MitigationItem mitigationItem = mitigationList.FirstOrDefault(
+                            x => x.MitigationGroupName == item.Group && x.MitigationVulnerabilityId == item.VulnId);
+                        if (mitigationItem != null)
+                        { item.Status = mitigationItem.MitigationStatus; }
+                        DiscrepancyItem discrepancy = stigList.FirstOrDefault(
+                            x => x.RuleId == item.RuleId && x.AssetId == item.AssetId && x.Status != item.Status);
+                        if (discrepancy != null)
+                        {
+                            discrepanciesOpenXmlWriter.WriteStartElement(new Row());
+                            WriteCellValue(discrepanciesOpenXmlWriter, discrepancy.Source, 20);
+                            WriteCellValue(discrepanciesOpenXmlWriter, discrepancy.VulnId, 24);
+                            WriteCellValue(discrepanciesOpenXmlWriter, discrepancy.VulnTitle, 20);
+                            WriteCellValue(discrepanciesOpenXmlWriter, discrepancy.Status, 24);
+                            WriteCellValue(discrepanciesOpenXmlWriter, item.Status, 24);
+                            WriteCellValue(discrepanciesOpenXmlWriter, discrepancy.Comments, 20);
+                            WriteCellValue(discrepanciesOpenXmlWriter, discrepancy.FindingDetails, 20);
+                            WriteCellValue(discrepanciesOpenXmlWriter, discrepancy.FileName, 20);
+                            WriteCellValue(discrepanciesOpenXmlWriter, item.FileName, 20);
+                            WriteCellValue(discrepanciesOpenXmlWriter, discrepancy.AssetId, 24);
+                            WriteCellValue(discrepanciesOpenXmlWriter, item.AssetId, 24);
+                            discrepanciesOpenXmlWriter.WriteEndElement();
+                        }
                     }
                 }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to insert discrepancy.");
+                throw exception;
             }
         }
 
         private void EndDiscrepancies()
         {
-            discrepanciesOpenXmlWriter.WriteEndElement();
-            discrepanciesOpenXmlWriter.WriteEndElement();
-            discrepanciesOpenXmlWriter.Dispose();
+            try
+            {
+                discrepanciesOpenXmlWriter.WriteEndElement();
+                discrepanciesOpenXmlWriter.WriteEndElement();
+                discrepanciesOpenXmlWriter.Dispose();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to finalize Discrepancies tab.");
+                throw exception;
+            }
         }
 
 #endregion Create Discrepancies
