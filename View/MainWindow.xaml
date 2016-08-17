@@ -47,7 +47,7 @@
 
         <v:AutoRefreshCollectionViewSource x:Key="SystemGroupListCollectionViewSource" Source="{Binding SystemGroupList}">
             <v:AutoRefreshCollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="GroupNameAndMacLevel" />
+                <scm:SortDescription PropertyName="GroupName" />
             </v:AutoRefreshCollectionViewSource.SortDescriptions>
         </v:AutoRefreshCollectionViewSource>
 
@@ -2300,13 +2300,13 @@
                                                                        Controls:TextBoxHelper.Watermark="Group Name"
                                                                        Command="{Binding DataContext.UpdateAllSystemNamesCommand,
                                                                                          RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                                                                       CommandParameter="{Binding SelectedItem.GroupNameAndMacLevel,
+                                                                       CommandParameter="{Binding SelectedItem.GroupName,
                                                                                                   RelativeSource={RelativeSource Self}}"
-                                                                       DisplayMemberPath="GroupNameAndMacLevel"
+                                                                       DisplayMemberPath="GroupName"
                                                                        IsEditable="True"
                                                                        IsSynchronizedWithCurrentItem="False"
                                                                        ItemsSource="{Binding Source={StaticResource SystemGroupListCollectionViewSource}}"
-                                                                       SelectedValuePath="GroupNameAndMacLevel">
+                                                                       SelectedValuePath="GroupName">
                                                 <vm:CommandEnabledComboBox.Style>
                                                     <Style BasedOn="{StaticResource {x:Type ComboBox}}" TargetType="{x:Type vm:CommandEnabledComboBox}">
                                                         <Setter Property="BorderThickness" Value="0" />
@@ -2326,7 +2326,7 @@
                                             <ComboBox Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                                       Controls:TextBoxHelper.ClearTextButton="True"
                                                       Controls:TextBoxHelper.Watermark="Group Name"
-                                                      DisplayMemberPath="GroupNameAndMacLevel"
+                                                      DisplayMemberPath="GroupName"
                                                       IsEditable="True"
                                                       IsSynchronizedWithCurrentItem="False"
                                                       ItemsSource="{Binding Source={StaticResource SystemGroupListCollectionViewSource}}"
@@ -3724,7 +3724,7 @@
                                                   Controls:TextBoxHelper.ClearTextButton="True"
                                                   Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Group Name"
-                                                  DisplayMemberPath="GroupNameAndMacLevel"
+                                                  DisplayMemberPath="GroupName"
                                                   IsEditable="True"
                                                   IsEnabled="{Binding IsEnabled}"
                                                   IsSynchronizedWithCurrentItem="False"
@@ -4152,12 +4152,12 @@
                                                       Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                                       Controls:TextBoxHelper.ClearTextButton="True"
                                                       Controls:TextBoxHelper.Watermark="Existing Group"
-                                                      DisplayMemberPath="GroupNameAndMacLevel"
+                                                      DisplayMemberPath="GroupName"
                                                       IsEditable="False"
                                                       IsEnabled="{Binding IsEnabled}"
                                                       IsSynchronizedWithCurrentItem="False"
                                                       ItemsSource="{Binding Source={StaticResource SystemGroupListCollectionViewSource}}"
-                                                      SelectedValuePath="GroupNameAndMacLevel"
+                                                      SelectedValuePath="GroupName"
                                                       TabIndex="10"
                                                       Text="{Binding SelectedSystemGroupToUpdate}" />
                                         </Grid>

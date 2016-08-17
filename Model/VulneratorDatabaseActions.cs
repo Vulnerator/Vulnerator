@@ -122,7 +122,7 @@ namespace Vulnerator.Model
         private void PopulateContactList(SQLiteCommand sqliteCommand, MainWindowViewModel mainWindowViewModel)
         {
             sqliteCommand.CommandText = "SELECT PointsOfContact.Name, PointsOfContact.Title, PointsOfContact.Email, PointsOfContact.SystemHostName, " +
-                            "PointsOfContact.SystemIpAddress, SystemGroups.GroupName, FROM PointsOfContact INNER JOIN SystemGroups ON PointsOfContact.GroupName = SystemGroups.GroupName";
+                            "PointsOfContact.SystemIpAddress, SystemGroups.GroupName FROM PointsOfContact INNER JOIN SystemGroups ON PointsOfContact.GroupName = SystemGroups.GroupName";
             using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
             {
                 while (sqliteDataReader.Read())
