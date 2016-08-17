@@ -67,7 +67,7 @@ namespace Vulnerator.Model
         /// Read the value of the provided key from the user's settings dictionary
         /// </summary>
         /// <param name="dicKey">Dictionary value to be read</param>
-        /// <returns>String Value</returns>
+        /// <returns>string Value</returns>
         public static string ReadSettingsFromDictionary(string dicKey)
         {
             try

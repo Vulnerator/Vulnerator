@@ -254,10 +254,8 @@
     <Compile Include="ViewModel\MyXmlDataProvider.cs" />
     <Compile Include="Model\UpdateMitigationParameters.cs" />
     <Compile Include="Model\WasspReader.cs" />
-    <Compile Include="Model\WriteLog.cs" />
     <Compile Include="Model\XccdfReader.cs" />
     <Compile Include="Model\XmlWasspReader.cs" />
-    <Compile Include="ViewModel\CloseReportViewModel.cs" />
     <Compile Include="ViewModel\EventCommand.cs" />
     <Compile Include="ViewModel\ObtainThirdSplitStringValueConverter.cs" />
     <Compile Include="ViewModel\StringJoiningConverter.cs" />

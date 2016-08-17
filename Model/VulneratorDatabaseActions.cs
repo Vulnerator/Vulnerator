@@ -29,6 +29,7 @@ namespace Vulnerator.Model
             {
                 if (!File.Exists(vulneratorDatabaseFilePath))
                 {
+                    log.Info("Creating Vulnerator application database.");
                     SQLiteConnection.CreateFile(vulneratorDatabaseFilePath);
                     using (SQLiteConnection sqliteConnection = new SQLiteConnection(vulneratorDatabaseConnection))
                     {
@@ -54,10 +55,11 @@ namespace Vulnerator.Model
                     }
                 }
             }
-            catch (InvalidOperationException invalidOperationException)
-            { WriteLog.LogWriter(invalidOperationException, string.Empty); }
-            catch (SQLiteException sqliteException)
-            { WriteLog.LogWriter(sqliteException, string.Empty); }
+            catch (Exception exception)
+            {
+                log.Error("Unable to create Vulnerator application database.");
+                log.Debug("Exception details: " + exception);
+            }
         }
 
         /// <summary>
@@ -85,102 +87,151 @@ namespace Vulnerator.Model
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, string.Empty);
+                log.Error("Unable to populate GUI lists.");
+                throw exception;
             }
         }
 
         private void PopulateMitigationList(SQLiteCommand sqliteCommand, MainWindowViewModel mainWindowViewModel)
         {
-            using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+            try
             {
-                while (sqliteDataReader.Read())
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
-                    mainWindowViewModel.MitigationList.Add(
-                        new MitigationItem(
-                            sqliteDataReader.GetString(0),
-                            sqliteDataReader.GetString(3),
-                            sqliteDataReader.GetString(1),
-                            sqliteDataReader.GetString(2),
-                            false));
+                    while (sqliteDataReader.Read())
+                    {
+                        mainWindowViewModel.MitigationList.Add(
+                            new MitigationItem(
+                                sqliteDataReader.GetString(0),
+                                sqliteDataReader.GetString(3),
+                                sqliteDataReader.GetString(1),
+                                sqliteDataReader.GetString(2),
+                                false));
+                    }
                 }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to populate mitigation list.");
+                throw exception;
             }
         }
 
         private void PopulateUpdatableSystemGroupList(SQLiteCommand sqliteCommand, MainWindowViewModel mainWindowViewModel)
         {
-            sqliteCommand.CommandText = "SELECT * FROM SystemGroups";
-            using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+            try
             {
-                while (sqliteDataReader.Read())
+                sqliteCommand.CommandText = "SELECT * FROM SystemGroups";
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
-                    mainWindowViewModel.SystemGroupList.Add(new SystemGroup(sqliteDataReader.GetString(0)));
-                    mainWindowViewModel.SystemGroupListForUpdating.Add(new UpdatableSystemGroup(sqliteDataReader.GetString(0)));
+                    while (sqliteDataReader.Read())
+                    {
+                        mainWindowViewModel.SystemGroupList.Add(new SystemGroup(sqliteDataReader.GetString(0)));
+                        mainWindowViewModel.SystemGroupListForUpdating.Add(new UpdatableSystemGroup(sqliteDataReader.GetString(0)));
+                    }
                 }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to populate updatable system group list.");
+                throw exception;
             }
         }
 
         private void PopulateContactList(SQLiteCommand sqliteCommand, MainWindowViewModel mainWindowViewModel)
         {
-            sqliteCommand.CommandText = "SELECT PointsOfContact.Name, PointsOfContact.Title, PointsOfContact.Email, PointsOfContact.SystemHostName, " +
-                            "PointsOfContact.SystemIpAddress, SystemGroups.GroupName, FROM PointsOfContact INNER JOIN SystemGroups ON PointsOfContact.GroupName = SystemGroups.GroupName";
-            using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+            try
             {
-                while (sqliteDataReader.Read())
+                sqliteCommand.CommandText = "SELECT PointsOfContact.Name, PointsOfContact.Title, PointsOfContact.Email, PointsOfContact.SystemHostName, " +
+                                "PointsOfContact.SystemIpAddress, SystemGroups.GroupName, FROM PointsOfContact INNER JOIN SystemGroups ON PointsOfContact.GroupName = SystemGroups.GroupName";
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
-                    mainWindowViewModel.ContactList.Add(
-                        new Contact(
-                            sqliteDataReader.GetString(0),
-                            sqliteDataReader.GetString(5),
-                            sqliteDataReader.GetString(2),
-                            sqliteDataReader.GetString(1),
-                            sqliteDataReader.GetString(4),
-                            sqliteDataReader.GetString(3),
-                            false));
+                    while (sqliteDataReader.Read())
+                    {
+                        mainWindowViewModel.ContactList.Add(
+                            new Contact(
+                                sqliteDataReader.GetString(0),
+                                sqliteDataReader.GetString(5),
+                                sqliteDataReader.GetString(2),
+                                sqliteDataReader.GetString(1),
+                                sqliteDataReader.GetString(4),
+                                sqliteDataReader.GetString(3),
+                                false));
+                    }
                 }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to populate contact list.");
+                throw exception;
             }
         }
 
         private void PopulateMonitoredSystemList(SQLiteCommand sqliteCommand, MainWindowViewModel mainWindowViewModel)
         {
-            sqliteCommand.CommandText = "SELECT SystemHostName, SystemIpAddress FROM Systems GROUP BY SystemHostName, SystemIpAddress";
-            using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+            try
             {
-                while (sqliteDataReader.Read())
+                sqliteCommand.CommandText = "SELECT SystemHostName, SystemIpAddress FROM Systems GROUP BY SystemHostName, SystemIpAddress";
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
-                    mainWindowViewModel.MonitoredSystemList.Add(
-                        new MonitoredSystem(
-                            sqliteDataReader.GetString(0) + " : " +
-                            sqliteDataReader.GetString(1)));
+                    while (sqliteDataReader.Read())
+                    {
+                        mainWindowViewModel.MonitoredSystemList.Add(
+                            new MonitoredSystem(
+                                sqliteDataReader.GetString(0) + " : " +
+                                sqliteDataReader.GetString(1)));
+                    }
                 }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to populate monitored system list.");
+                throw exception;
             }
         }
 
         private void PopulateUpdatableMonitoredSystemList(SQLiteCommand sqliteCommand, MainWindowViewModel mainWindowViewModel)
         {
-            sqliteCommand.CommandText = "SELECT GroupName, SystemHostName, SystemIpAddress FROM Systems GROUP BY GroupName, SystemHostName, SystemIpAddress";
-            using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+            try
             {
-                while (sqliteDataReader.Read())
+                sqliteCommand.CommandText = "SELECT GroupName, SystemHostName, SystemIpAddress FROM Systems GROUP BY GroupName, SystemHostName, SystemIpAddress";
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
-                    mainWindowViewModel.MonitoredSystemListForUpdating.Add(
-                        new UpdatableMonitoredSystem(
-                            sqliteDataReader.GetString(0) + " : " +
-                            sqliteDataReader.GetString(1) + " : " +
-                            sqliteDataReader.GetString(2)));
+                    while (sqliteDataReader.Read())
+                    {
+                        mainWindowViewModel.MonitoredSystemListForUpdating.Add(
+                            new UpdatableMonitoredSystem(
+                                sqliteDataReader.GetString(0) + " : " +
+                                sqliteDataReader.GetString(1) + " : " +
+                                sqliteDataReader.GetString(2)));
+                    }
                 }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to populate updatable monitored system list.");
+                throw exception;
             }
         }
 
         private void PopulateContactTitleList(SQLiteCommand sqliteCommand, MainWindowViewModel mainWindowViewModel)
         {
-            sqliteCommand.CommandText = "SELECT DISTINCT Title FROM PointsOfContact";
-            using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+            try
             {
-                while (sqliteDataReader.Read())
+                sqliteCommand.CommandText = "SELECT DISTINCT Title FROM PointsOfContact";
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
-                    mainWindowViewModel.ContactTitleList.Add(
-                        new ContactTitle(sqliteDataReader.GetString(0)));
+                    while (sqliteDataReader.Read())
+                    {
+                        mainWindowViewModel.ContactTitleList.Add(
+                            new ContactTitle(sqliteDataReader.GetString(0)));
+                    }
                 }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to populate contact title list.");
+                throw exception;
             }
         }
 
@@ -192,11 +243,12 @@ namespace Vulnerator.Model
         /// <param name="systemGroupMacLevel">The MAC level of the group that the vulnerabilities in the "Mitigations.txt" file belong to</param>
         /// <param name="vulnerabilityStatus">The status of the vulnerabilities being imported</param>
         /// <param name="mainWindowViewModel">MainWindowViewModel class housing all GUI elements to be updated</param>
-        /// <returns>String value</returns>
+        /// <returns>string value</returns>
         public string ImportMitigations(string mitigationsTextFile, string systemGroupName, string vulnerabilityStatus, MainWindowViewModel mainWindowViewModel)
         {
             try
             {
+                log.Info("Importing mitigation statements into database.");
                 using (SQLiteConnection sqliteConnection = new SQLiteConnection(vulneratorDatabaseConnection))
                 {
                     sqliteConnection.Open();
@@ -237,7 +289,8 @@ namespace Vulnerator.Model
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, string.Empty);
+                log.Error("Unable to import mitigation statements into database.");
+                log.Debug("Exception details: " + exception);
                 return "Mitigation addition failed; see log for details";
             }
         }
@@ -251,11 +304,12 @@ namespace Vulnerator.Model
         /// <param name="systemGroupMacLevel">The MAC level of the Group that the system belongs to</param>
         /// <param name="findingText">The mitigation / remediation text</param>
         /// <param name="mainWindowViewModel">MainWindowViewModel class housing all GUI elements to be updated</param>
-        /// <returns>String value</returns>
+        /// <returns>string value</returns>
         public string AddMitigation(string vulnerabilityIdNumbers, string vulnerabilityStatus, string systemGroupName, string findingText, MainWindowViewModel mainWindowViewModel)
         {
             try
             {
+                log.Info("Adding mitigation statements to database.");
                 using (SQLiteConnection SQLiteConnection = new SQLiteConnection(vulneratorDatabaseConnection))
                 {
                     SQLiteConnection.Open();
@@ -301,7 +355,8 @@ namespace Vulnerator.Model
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, string.Empty);
+                log.Error("Unable to add mitigation statements to database.");
+                log.Debug("Exception details: " + exception);
                 return "Mitigation addition failed; see log for details";
             }
         }
@@ -316,7 +371,7 @@ namespace Vulnerator.Model
         /// <param name="updatedSystemGroupMacLevel">MAC level of the vulnerability after its update</param>
         /// <param name="updatedFindingText">Mitigation text of the vulnerability after its update</param>
         /// <param name="mainWindowViewModel">MainWindowViewModel class housing all GUI elements to be updated</param>
-        /// <returns>String value</returns>
+        /// <returns>string value</returns>
         public string UpdateMitigation(string vulnerabilityIdNumber, string updatedVulnerabilityStatus, string currentSystemGroupName, string updatedSystemGroupName,
             string updatedFindingText, MainWindowViewModel mainWindowViewModel)
         {
@@ -324,6 +379,7 @@ namespace Vulnerator.Model
 
             try
             {
+                log.Info("Updating mitigation statements in database.");
                 using (SQLiteConnection SQLiteConnection = new SQLiteConnection(vulneratorDatabaseConnection))
                 {
                     SQLiteConnection.Open();
@@ -380,7 +436,8 @@ namespace Vulnerator.Model
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, string.Empty);
+                log.Error("Unable to update mitigations in database.");
+                log.Debug("Exception details: " + exception);
                 return "Mitigation updated failed; see log for details";
             }
         }
@@ -389,12 +446,13 @@ namespace Vulnerator.Model
         /// Deletes mitigation(s) from the "Mitigation" table
         /// </summary>
         /// <param name="mitigationList">The MitigationsList AsyncObservableCollection list being updated for the GUI to display</param>
-        /// <returns>String value</returns>
+        /// <returns>string value</returns>
         public string DeleteMitigation(AsyncObservableCollection<MitigationItem> mitigationList)
         {
-            ArrayList arrayList = new ArrayList();
             try
             {
+                log.Info("Deleting mitigation statements from database.");
+                ArrayList arrayList = new ArrayList();
                 using (SQLiteConnection SQLiteConnection = new SQLiteConnection(vulneratorDatabaseConnection))
                 {
                     SQLiteConnection.Open();
@@ -422,7 +480,8 @@ namespace Vulnerator.Model
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, string.Empty);
+                log.Error("Unable to delete mitigation statements from database.");
+                log.Debug("Exception details: " + exception);
                 return "Mitigation deletion failed; see log for details";
             }
         }
@@ -438,12 +497,13 @@ namespace Vulnerator.Model
         /// <param name="contactGroupName">System group the system the added contact will be associated with</param>
         /// <param name="contactGroupMacLevel">MAC level of the system group the system the added contact will be associated with</param>
         /// <param name="mainWindowViewModel">MainWindowViewModel class housing all GUI elements to be updated</param>
-        /// <returns>String value</returns>
+        /// <returns>string value</returns>
         public string AddContact(string contactName, string contactTitle, string contactEmail, string contactSystemName, string contactSystemIp, string contactGroupName,
             MainWindowViewModel mainWindowViewModel)
         {
             try
             {
+                log.Info("Adding contact record to database.");
                 vulneratorDatabaseFilePath = ConfigAlter.ReadSettingsFromDictionary("tbMitDbLocation");
                 vulneratorDatabaseConnection = @"Data Source = " + vulneratorDatabaseFilePath;
 
@@ -489,7 +549,8 @@ namespace Vulnerator.Model
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, string.Empty);
+                log.Error("Unable to add contact to database.");
+                log.Debug("Exception details: " + exception);
                 return "Contact addition failed; see log for details";
             }
         }
@@ -500,11 +561,12 @@ namespace Vulnerator.Model
         /// <param name="selectedContactToUpdate">Contact class whose information is to be updated</param>
         /// <param name="updateContactParameters">Class containing the updated information for the Contact</param>
         /// <param name="mainWindowViewModel">MainWindowViewModel class housing all GUI elements to be updated</param>
-        /// <returns>String value</returns>
+        /// <returns>string value</returns>
         public string UpdateContact(Contact selectedContactToUpdate, UpdateContactParameters updateContactParameters, MainWindowViewModel mainWindowViewModel)
         {
             try
             {
+                log.Info("Updating contact record in database.");
                 using (SQLiteConnection sqliteConnection = new SQLiteConnection(vulneratorDatabaseConnection))
                 {
                     sqliteConnection.Open();
@@ -580,7 +642,8 @@ namespace Vulnerator.Model
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, string.Empty);
+                log.Error("Unable to update contact record in database.");
+                log.Debug("Exception details: " + exception);
                 return "Contact update failed; see log for details";
             }
         }
@@ -589,13 +652,13 @@ namespace Vulnerator.Model
         /// Deletes contact(s) from the PointsOfContact table
         /// </summary>
         /// <param name="contactList">The Contact AsyncObservableCollection list being updated for the GUI to display</param>
-        /// <returns>String value</returns>
+        /// <returns>string value</returns>
         public string DeleteContact(AsyncObservableCollection<Contact> contactList)
         {
             try
             {
+                log.Info("Deleting contact records from database.");
                 ArrayList arrayList = new ArrayList();
-
                 using (SQLiteConnection sqliteConnection = new SQLiteConnection(vulneratorDatabaseConnection))
                 {
                     sqliteConnection.Open();
@@ -631,7 +694,8 @@ namespace Vulnerator.Model
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, string.Empty);
+                log.Error("Unable to delete contact records from database.");
+                log.Debug("Exception details: " + exception);
                 return "Contact deletion failed; see log for details";
             }
         }
@@ -643,11 +707,12 @@ namespace Vulnerator.Model
         /// <param name="updatedGroupName">Updated name for the group being modified</param>
         /// <param name="updateGroupMacLevel">Updated Mac Level for the group being modified</param>
         /// <param name="mainWindowViewModel">MainWindowViewModel class housing all GUI elements to be updated</param>
-        /// <returns>String value</returns>
+        /// <returns>string value</returns>
         public string UpdateGroup(string currentGroup, string updatedGroupName, MainWindowViewModel mainWindowViewModel)
         {
             try
             {
+                log.Info("Updating group in database.");
                 vulneratorDatabaseFilePath = ConfigAlter.ReadSettingsFromDictionary("tbMitDbLocation");
                 vulneratorDatabaseConnection = @"Data Source = " + vulneratorDatabaseFilePath;
 
@@ -665,7 +730,7 @@ namespace Vulnerator.Model
 
                         if (!currentGroup.Equals(updatedGroupName))
                         {
-                            if (!String.IsNullOrWhiteSpace(updatedGroupName))
+                            if (!string.IsNullOrWhiteSpace(updatedGroupName))
                             {
                                 string lookupGroupResult = LookupAndInsertGroupInDatabase(sqliteConnection, updatedGroupName);
                                 if (!lookupGroupResult.Equals("Success"))
@@ -709,7 +774,8 @@ namespace Vulnerator.Model
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, string.Empty);
+                log.Error("Unable to update group in database.");
+                log.Debug("Exception details: " + exception);
                 return "Group update failed; see log for details";
             }
         }
@@ -719,11 +785,12 @@ namespace Vulnerator.Model
         /// </summary>
         /// <param name="groupToDelete">Name of the SystemGroup to be deleted</param>
         /// <param name="mainWindowViewModel">MainWindowViewModel class housing all GUI elements to be updated</param>
-        /// <returns>String value</returns>
+        /// <returns>string value</returns>
         public string DeleteGroup(string groupToDelete, MainWindowViewModel mainWindowViewModel)
         {
             try
             {
+                log.Info("Deleting group from database.");
                 string[] delimiterArray = new string[] { ": MAC" };
 
                 using (SQLiteConnection sqliteConnection = new SQLiteConnection(vulneratorDatabaseConnection))
@@ -769,7 +836,8 @@ namespace Vulnerator.Model
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, string.Empty);
+                log.Error("Unable to delete group from database.");
+                log.Debug("Exception details: " + exception);
                 return "Group deletion failed; see log for details";
             }
         }
@@ -780,17 +848,17 @@ namespace Vulnerator.Model
         /// <param name="currentSystem">Host name / IP address of the system to be updated</param>
         /// <param name="updateSystemParameters">UpdateSystemParameters class containing the new group, name, and IP address of the system to be updated</param>
         /// <param name="mainWindowViewModel">MainWindowViewModel class housing all GUI elements to be updated</param>
-        /// <returns>String value</returns>
+        /// <returns>string value</returns>
         public string UpdateSystem(string currentSystem, UpdateSystemParameters updateSystemParameters, MainWindowViewModel mainWindowViewModel)
         {
-            vulneratorDatabaseFilePath = ConfigAlter.ReadSettingsFromDictionary("tbMitDbLocation");
-            vulneratorDatabaseConnection = @"Data Source = " + vulneratorDatabaseFilePath;
-            string trimmedCurrentSystemGroup = currentSystem.Split(':')[0].Trim();
-            string trimmedCurrentSystemName = currentSystem.Split(':')[1].Trim();
-            string trimmedCurrentSystemIp = currentSystem.Split(':')[2].Trim();
-
             try
             {
+                log.Info("Updating system record in database.");
+                vulneratorDatabaseFilePath = ConfigAlter.ReadSettingsFromDictionary("tbMitDbLocation");
+                vulneratorDatabaseConnection = @"Data Source = " + vulneratorDatabaseFilePath;
+                string trimmedCurrentSystemGroup = currentSystem.Split(':')[0].Trim();
+                string trimmedCurrentSystemName = currentSystem.Split(':')[1].Trim();
+                string trimmedCurrentSystemIp = currentSystem.Split(':')[2].Trim();
                 using (SQLiteConnection sqliteConnection = new SQLiteConnection(vulneratorDatabaseConnection))
                 {
                     sqliteConnection.Open();
@@ -855,7 +923,8 @@ namespace Vulnerator.Model
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, string.Empty);
+                log.Info("Unable to updated system record in database.");
+                log.Debug("Exception details: " + exception);
                 return "System update failed; see log for details";
             }
         }
@@ -864,6 +933,7 @@ namespace Vulnerator.Model
         {
             try
             {
+                log.Info("Deleting system record from database.");
                 vulneratorDatabaseFilePath = ConfigAlter.ReadSettingsFromDictionary("tbMitDbLocation");
                 vulneratorDatabaseConnection = @"Data Source = " + vulneratorDatabaseFilePath;
                 string systemName = systemToDelete.Split(':')[1].Trim();
@@ -910,7 +980,8 @@ namespace Vulnerator.Model
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, string.Empty);
+                log.Error("Unable to delete system record from database.");
+                log.Debug("Exception details: " + exception);
                 return "System delection failed; see log for details";
             }
         }
@@ -919,23 +990,26 @@ namespace Vulnerator.Model
         {
             try
             {
+                log.Info("Verifying group exists in database.");
                 using (SQLiteCommand sqliteCommand = new SQLiteCommand(
                     "SELECT COUNT(1) FROM SystemGroups WHERE GroupName = @GroupName", sqliteConnection))
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", groupName));
                     if ((long)sqliteCommand.ExecuteScalar() == 0)
                     {
-                            sqliteCommand.CommandText = "INSERT INTO SystemGroups VALUES (@GroupName, NULL)";
-                            sqliteCommand.ExecuteNonQuery();
-                            return "Success";
+                        log.Info("Group does not exist; adding group to database.");
+                        sqliteCommand.CommandText = "INSERT INTO SystemGroups VALUES (@GroupName, NULL)";
+                        sqliteCommand.ExecuteNonQuery();
+                        return "Success";
                     }
                     else
                     { return "Success"; }
                 }
             }
-            catch (InvalidOperationException invalidOperationException)
+            catch (Exception exception)
             {
-                WriteLog.LogWriter(invalidOperationException, string.Empty);
+                log.Error("Unable to verify group existence / add group to database.");
+                log.Debug("Exception details: " + exception);
                 return "A database error has occurred; see the log for further details";
             }
         }
@@ -944,6 +1018,7 @@ namespace Vulnerator.Model
         {
             try
             {
+                log.Info("Verifying system exists in database.");
                 using (SQLiteCommand sqliteCommand = new SQLiteCommand("", sqliteConnection))
                 {
                     systemIp = systemIp.Trim();
@@ -966,8 +1041,9 @@ namespace Vulnerator.Model
                         "GroupName = @GroupName";
                     if ((long)sqliteCommand.ExecuteScalar() == 0)
                     {
-                        if (!String.IsNullOrWhiteSpace(systemIp))
+                        if (!string.IsNullOrWhiteSpace(systemIp))
                         {
+                            log.Info("System does not exist; adding group to database.");
                             sqliteCommand.CommandText = "INSERT INTO Systems VALUES (@SystemName, @SystemIpAddress, @GroupName)";
                             sqliteCommand.ExecuteNonQuery();
                         }
@@ -979,7 +1055,8 @@ namespace Vulnerator.Model
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, string.Empty);
+                log.Error("Unable to verify system existence / add system to database.");
+                log.Debug("Exception details: " + exception);
                 return "A database error has occurred; see the log for further details";
             }
         }
@@ -988,6 +1065,7 @@ namespace Vulnerator.Model
         {
             try
             {
+                log.Info("Verifying mitigation exists in database.");
                 using (SQLiteCommand sqliteCommand = new SQLiteCommand("", sqliteConnection))
                 {
                     sqliteCommand.CommandText = "SELECT COUNT(1) FROM Mitigations WHERE VulnerabilityId = @vulnerabilityId AND GroupName = @GroupName";
@@ -998,6 +1076,7 @@ namespace Vulnerator.Model
                     { return "\"" + groupName + "\" already contains a mitigation for Vulnerability ID " + "\"" + vulnerabilityId + "\""; }
                     else
                     {
+                        log.Info("Mitigation does not exist; adding group to database.");
                         sqliteCommand.CommandText = "INSERT INTO Mitigations VALUES (@VulnerabilityId, @FindingStatus, @FindingText, @GroupName)";
                         sqliteCommand.Parameters.Add(new SQLiteParameter("FindingStatus", status));
                         sqliteCommand.Parameters.Add(new SQLiteParameter("FindingText", findingText));
@@ -1006,9 +1085,10 @@ namespace Vulnerator.Model
                     }
                 }
             }
-            catch (InvalidOperationException invalidOperationException)
+            catch (Exception exception)
             {
-                WriteLog.LogWriter(invalidOperationException, string.Empty);
+                log.Error("Unable to verify mitigation existence / add mitigation to database.");
+                log.Debug("Exception details: " + exception);
                 return "A database error has occurred; see the log for further details";
             }
         }
@@ -1018,6 +1098,7 @@ namespace Vulnerator.Model
         {
             try
             {
+                log.Info("Verifying contact exists in database.");
                 using (SQLiteCommand sqliteCommand = new SQLiteCommand("", sqliteConnection))
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("ContactName", contactName));
@@ -1030,6 +1111,7 @@ namespace Vulnerator.Model
                             "AND SystemIpAddress = @SystemIpAddress AND GroupName = @GroupName";
                     if ((long)sqliteCommand.ExecuteScalar() == 0)
                     {
+                        log.Info("Contact does not exist; adding group to database.");
                         sqliteCommand.Parameters.Add(filterPreferences[0]);
                         sqliteCommand.Parameters.Add(filterPreferences[1]);
                         sqliteCommand.Parameters.Add(filterPreferences[2]);
@@ -1045,7 +1127,8 @@ namespace Vulnerator.Model
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, string.Empty);
+                log.Error("Unable to verify contact existence / add contact to database.");
+                log.Debug("Exception details: " + exception);
                 return "A database error has occurred; see the log for further details";
             }
         }
@@ -1054,6 +1137,7 @@ namespace Vulnerator.Model
         {
             try
             {
+                log.Info("Verifying no IP/host name collisions exist for " + ipAddress + " & " + hostName + " in " + groupName + ".");
                 using (sqliteConnection)
                 {
                     using (SQLiteCommand sqliteCommand = new SQLiteCommand("SELECT SystemHostName FROM Systems WHERE SystemIpAddress = @IpAddress AND GroupName = @GroupName",
@@ -1066,7 +1150,7 @@ namespace Vulnerator.Model
                             while (sqliteDataReader.Read())
                             {
                                 if (!sqliteDataReader[0].Equals(hostName))
-                                { return "A system with the IP address already exists in \"" + groupName + "\", please provide a new host name"; }
+                                { return "A system with the IP address \"" + ipAddress + "\" already exists in \"" + groupName + "\", please provide a new host name"; }
                             }
                         }
                         return "No collisions";
@@ -1075,7 +1159,8 @@ namespace Vulnerator.Model
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, string.Empty);
+                log.Error("Unable to verify that no collisions exist.");
+                log.Debug("Exception details: " + exception);
                 return "A database error has occurred; see the log for further details";
             }
         }
@@ -1084,6 +1169,7 @@ namespace Vulnerator.Model
         {
             try
             {
+                log.Info("Obtaining user contact filtering preferences.");
                 List<SQLiteParameter> sqliteParameterList = new List<SQLiteParameter>();
                 using (SQLiteCommand sqliteCommand = new SQLiteCommand("", sqliteConnection))
                 {
@@ -1117,7 +1203,8 @@ namespace Vulnerator.Model
             }
             catch (Exception exception)
             {
-                WriteLog.LogWriter(exception, string.Empty);
+                log.Error("Unable to obtain user contact filtering preferences.");
+                log.Debug("Exception details: " + exception);
                 return null;
             }
         }
@@ -1125,86 +1212,144 @@ namespace Vulnerator.Model
 
     public class GuiActions
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
+
         public void InsertGroupInObservableCollections(string groupName, MainWindowViewModel mainWindowViewModel)
         {
-            var existingGroupName = mainWindowViewModel.SystemGroupList.FirstOrDefault(x => x.GroupName.Contains(groupName));
-            if (existingGroupName == null)
-            { mainWindowViewModel.SystemGroupList.Add(new SystemGroup(groupName)); }
+            try
+            {
+                var existingGroupName = mainWindowViewModel.SystemGroupList.FirstOrDefault(x => x.GroupName.Contains(groupName));
+                if (existingGroupName == null)
+                { mainWindowViewModel.SystemGroupList.Add(new SystemGroup(groupName)); }
 
-            var existingUpdatableGroupName = mainWindowViewModel.SystemGroupListForUpdating.FirstOrDefault(x => x.GroupName.Equals(groupName));
-            if (existingUpdatableGroupName == null)
-            { mainWindowViewModel.SystemGroupListForUpdating.Add(new UpdatableSystemGroup(groupName)); }
+                var existingUpdatableGroupName = mainWindowViewModel.SystemGroupListForUpdating.FirstOrDefault(x => x.GroupName.Equals(groupName));
+                if (existingUpdatableGroupName == null)
+                { mainWindowViewModel.SystemGroupListForUpdating.Add(new UpdatableSystemGroup(groupName)); }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to insert group into ObservableCollections.");
+                throw exception;
+            }
         }
 
         public void UpdateGroupObservableCollections(string currentGroupName, string updatedGroupName, MainWindowViewModel mainWindowViewModel)
         {
-            var existingGroup = mainWindowViewModel.SystemGroupList.FirstOrDefault(x => x.GroupName.Contains(currentGroupName));
-            if (existingGroup != null)
-            { existingGroup.GroupName = updatedGroupName; }
+            try
+            {
+                var existingGroup = mainWindowViewModel.SystemGroupList.FirstOrDefault(x => x.GroupName.Contains(currentGroupName));
+                if (existingGroup != null)
+                { existingGroup.GroupName = updatedGroupName; }
 
-            var existingUpdateGroup = mainWindowViewModel.SystemGroupListForUpdating.FirstOrDefault(x => x.GroupName.Contains(currentGroupName));
-            if (existingUpdateGroup != null)
-            { existingUpdateGroup.GroupName = updatedGroupName; }
+                var existingUpdateGroup = mainWindowViewModel.SystemGroupListForUpdating.FirstOrDefault(x => x.GroupName.Contains(currentGroupName));
+                if (existingUpdateGroup != null)
+                { existingUpdateGroup.GroupName = updatedGroupName; }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to update group in ObservableCollections.");
+                throw exception;
+            }
         }
 
         public void UpdateMitigationObservableCollection(string vulnerabityId, string currentSystemGroupName, string updatedFindingText, string updatedVulnerabilityStatus,
             string updatedSystemGroupName, MainWindowViewModel mainWindowViewModel)
         {
-            var mitigationItemToUpdate = mainWindowViewModel.MitigationList.FirstOrDefault(x => (x.MitigationVulnerabilityId.Equals(vulnerabityId)) &&
-                    (x.MitigationGroupName.Equals(currentSystemGroupName)));
-            if (mitigationItemToUpdate != null)
+            try
             {
-                if (!String.IsNullOrWhiteSpace(updatedFindingText))
-                { mitigationItemToUpdate.MitigationText = updatedFindingText; }
-                if (!String.IsNullOrWhiteSpace(updatedVulnerabilityStatus))
-                { mitigationItemToUpdate.MitigationStatus = updatedVulnerabilityStatus; }
-                if (!String.IsNullOrWhiteSpace(updatedSystemGroupName))
-                { mitigationItemToUpdate.MitigationGroupName = updatedSystemGroupName; }
+                var mitigationItemToUpdate = mainWindowViewModel.MitigationList.FirstOrDefault(x => (x.MitigationVulnerabilityId.Equals(vulnerabityId)) &&
+                        (x.MitigationGroupName.Equals(currentSystemGroupName)));
+                if (mitigationItemToUpdate != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(updatedFindingText))
+                    { mitigationItemToUpdate.MitigationText = updatedFindingText; }
+                    if (!string.IsNullOrWhiteSpace(updatedVulnerabilityStatus))
+                    { mitigationItemToUpdate.MitigationStatus = updatedVulnerabilityStatus; }
+                    if (!string.IsNullOrWhiteSpace(updatedSystemGroupName))
+                    { mitigationItemToUpdate.MitigationGroupName = updatedSystemGroupName; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to update mitigation ObservableCollection.");
+                throw exception;
             }
         }
 
         public void InsertSystemInObservableCollections(string systemName, string systemIp, string groupName, MainWindowViewModel mainWindowViewModel)
         {
-            systemIp = systemIp.Trim();
-            groupName = groupName.Trim();
-            systemName = systemName.Trim();
-            var existingSystem = mainWindowViewModel.MonitoredSystemList.FirstOrDefault(x => x.SystemNameAndIp.Contains(systemName) &&
-                                x.SystemNameAndIp.Contains(systemIp));
-            if (existingSystem == null)
-            { mainWindowViewModel.MonitoredSystemList.Add(new MonitoredSystem(systemName + " : " + systemIp)); }
+            try
+            {
+                systemIp = systemIp.Trim();
+                groupName = groupName.Trim();
+                systemName = systemName.Trim();
+                var existingSystem = mainWindowViewModel.MonitoredSystemList.FirstOrDefault(x => x.SystemNameAndIp.Contains(systemName) &&
+                                    x.SystemNameAndIp.Contains(systemIp));
+                if (existingSystem == null)
+                { mainWindowViewModel.MonitoredSystemList.Add(new MonitoredSystem(systemName + " : " + systemIp)); }
 
-            var existingUpdateSystem = mainWindowViewModel.MonitoredSystemListForUpdating.FirstOrDefault(x => x.SystemGroupAndNameAndIp.Contains(groupName) &&
-                x.SystemGroupAndNameAndIp.Contains(systemIp) && x.SystemGroupAndNameAndIp.Contains(systemName));
-            if (existingUpdateSystem == null)
-            { mainWindowViewModel.MonitoredSystemListForUpdating.Add(new UpdatableMonitoredSystem(groupName + " : " + systemName + " : " + systemIp)); }
+                var existingUpdateSystem = mainWindowViewModel.MonitoredSystemListForUpdating.FirstOrDefault(x => x.SystemGroupAndNameAndIp.Contains(groupName) &&
+                    x.SystemGroupAndNameAndIp.Contains(systemIp) && x.SystemGroupAndNameAndIp.Contains(systemName));
+                if (existingUpdateSystem == null)
+                { mainWindowViewModel.MonitoredSystemListForUpdating.Add(new UpdatableMonitoredSystem(groupName + " : " + systemName + " : " + systemIp)); }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to insert system into ObservableCollections.");
+                throw exception;
+            }
         }
 
         public void UpdateGroupInSystemObservableCollection(string currentGroupName, string updatedGroupName, MainWindowViewModel mainWindowViewModel)
         {
-            foreach (UpdatableMonitoredSystem updateContactSystem in mainWindowViewModel.MonitoredSystemListForUpdating)
+            try
             {
-                if (updateContactSystem.SystemGroupAndNameAndIp.Contains(currentGroupName))
+                foreach (UpdatableMonitoredSystem updateContactSystem in mainWindowViewModel.MonitoredSystemListForUpdating)
                 {
-                    updateContactSystem.SystemGroupAndNameAndIp = updatedGroupName.Trim() + " : " + updateContactSystem.SystemGroupAndNameAndIp.Split(':')[1].Trim() +
-                        " : " + updateContactSystem.SystemGroupAndNameAndIp.Split(':')[2].Trim();
+                    if (updateContactSystem.SystemGroupAndNameAndIp.Contains(currentGroupName))
+                    {
+                        updateContactSystem.SystemGroupAndNameAndIp = updatedGroupName.Trim() + " : " + updateContactSystem.SystemGroupAndNameAndIp.Split(':')[1].Trim() +
+                            " : " + updateContactSystem.SystemGroupAndNameAndIp.Split(':')[2].Trim();
+                    }
                 }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to update group in ObservableCollection.");
+                throw exception;
             }
         }
 
         public void InsertContactInObservableCollection(string contactName, string title, string email, string groupName,
             string systemName, string systemIp, MainWindowViewModel mainWindowViewModel)
         {
-            var existingContact = mainWindowViewModel.ContactList.FirstOrDefault(x => x.ContactName.Equals(contactName) && x.ContactTitle.Equals(title) &&
-                            x.ContactGroupName.Equals(groupName) && x.ContactSystemName.Equals(systemName) && x.ContactSystemIp.Equals(systemIp));
-            if (existingContact == null)
-            { mainWindowViewModel.ContactList.Add(new Contact(contactName, groupName, email, title, systemIp, systemName, false)); }
+            try
+            {
+                var existingContact = mainWindowViewModel.ContactList.FirstOrDefault(x => x.ContactName.Equals(contactName) && x.ContactTitle.Equals(title) &&
+                                x.ContactGroupName.Equals(groupName) && x.ContactSystemName.Equals(systemName) && x.ContactSystemIp.Equals(systemIp));
+                if (existingContact == null)
+                { mainWindowViewModel.ContactList.Add(new Contact(contactName, groupName, email, title, systemIp, systemName, false)); }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to insert contact into ObservableCollection.");
+                throw exception;
+            }
         }
 
         public void InsertTitleInObservableCollection(string title, MainWindowViewModel mainWindowViewModel)
         {
-            var existingTitle = mainWindowViewModel.ContactTitleList.FirstOrDefault(x => x.ContactTitleName.Equals(title));
-            if (existingTitle == null)
-            { mainWindowViewModel.ContactTitleList.Add(new ContactTitle(title)); }
+            try
+            {
+                var existingTitle = mainWindowViewModel.ContactTitleList.FirstOrDefault(x => x.ContactTitleName.Equals(title));
+                if (existingTitle == null)
+                { mainWindowViewModel.ContactTitleList.Add(new ContactTitle(title)); }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to insert title into ObservableCollection.");
+                throw exception;
+            }
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Vulnerator
         /// <param name="fileName">Name of *.csv file to be parsed.</param>
         /// <param name="mitigationsList">List of mitigation items for vulnerabilities to be read against.</param>
         /// <param name="systemName">Name of the system that the mitigations check will be run against.</param>
-        /// <returns>String Value</returns>
+        /// <returns>string Value</returns>
         public string ReadAcasCsvFile(string fileName, ObservableCollection<MitigationItem> mitigationsList, string systemName)
         {
             try
@@ -164,7 +164,7 @@ namespace Vulnerator
                 try
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("IpAddress", csvReader.GetField("IP Address")));
-                    if (!String.IsNullOrWhiteSpace(csvReader.GetField("DNS Name")))
+                    if (!string.IsNullOrWhiteSpace(csvReader.GetField("DNS Name")))
                     {
                         sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", csvReader.GetField("DNS Name")));
                         if (UserPrefersHostName)
@@ -226,7 +226,7 @@ namespace Vulnerator
                     { sqliteCommand.Parameters.Add(new SQLiteParameter("Impact", "Informational")); }
                     else
                     { sqliteCommand.Parameters.Add(new SQLiteParameter("Impact", csvReader.GetField("Risk Factor"))); }
-                    if (!String.IsNullOrWhiteSpace(csvReader.GetField("STIG Severity")))
+                    if (!string.IsNullOrWhiteSpace(csvReader.GetField("STIG Severity")))
                     { sqliteCommand.Parameters.Add(new SQLiteParameter("RawRisk", csvReader.GetField("STIG Severity"))); }
                     sqliteCommand.Parameters.Add(new SQLiteParameter(
                         "CrossReferences", csvReader.GetField("Cross References").Replace(",", Environment.NewLine).Replace(" #", ":")));
@@ -280,7 +280,7 @@ namespace Vulnerator
                     sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", groupName));
                     sqliteCommand.Parameters.Add(new SQLiteParameter("FileName", fileName));
                     sqliteCommand.Parameters.Add(new SQLiteParameter("RuleId", csvReader.GetField("Plugin")));
-                    if (!String.IsNullOrWhiteSpace(csvReader.GetField("DNS Name")))
+                    if (!string.IsNullOrWhiteSpace(csvReader.GetField("DNS Name")))
                     { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", csvReader.GetField("DNS Name"))); }
                     else
                     { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", csvReader.GetField("IP Address"))); }
