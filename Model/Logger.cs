@@ -27,7 +27,7 @@ namespace Vulnerator.Model
                     Type = typeof(FileNameNoPathConverter)
                 }
             );
-            patternLayout.ConversionPattern = "%d %-5level %-5fileNameNoPath : %L - %m%n";
+            patternLayout.ConversionPattern = "%-30d %-10level %fileNameNoPath : %L %m%n";
             patternLayout.ActivateOptions();
             RollingFileAppender rollingFileAppender = new RollingFileAppender();
             rollingFileAppender.LockingModel = new FileAppender.MinimalLock();

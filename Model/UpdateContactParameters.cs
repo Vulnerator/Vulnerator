@@ -102,20 +102,6 @@ namespace Vulnerator.Model
             }
         }
 
-        private string _newGroupMacLevel;
-        public string NewGroupMacLevel
-        {
-            get { return _newGroupMacLevel; }
-            set
-            {
-                if (_newGroupMacLevel != value)
-                {
-                    _newGroupMacLevel = value;
-                    OnPropertyChanged("NewGroupMacLevel");
-                }
-            }
-        }
-
         private string _newSystemIp;
         public string NewSystemIp
         {

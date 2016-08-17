@@ -4115,7 +4115,6 @@
                                                         <Binding ElementName="updateContactTitleTextbox" Path="Text" />
                                                         <Binding ElementName="updateContactEmailTextbox" Path="Text" />
                                                         <Binding ElementName="updateContactGroupCombobox" Path="Text" />
-                                                        <Binding ElementName="updateContactMacCombobox" Path="Text" />
                                                         <Binding ElementName="updateContactSystemIpTextbox" Path="Text" />
                                                         <Binding ElementName="updateContactSystemNameTextbox" Path="Text" />
                                                     </MultiBinding>
@@ -4202,7 +4201,6 @@
                                                 <Button.CommandParameter>
                                                     <MultiBinding Converter="{StaticResource UpdateSystemGroupConverter}">
                                                         <Binding ElementName="updateGroupNewNameTextbox" Path="Text" />
-                                                        <Binding ElementName="updateGroupNewMacLevelTextbox" Path="Text" />
                                                     </MultiBinding>
                                                 </Button.CommandParameter>
                                             </Button>

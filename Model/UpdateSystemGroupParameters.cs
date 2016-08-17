@@ -17,19 +17,5 @@ namespace Vulnerator.Model
                 }
             }
         }
-
-        private string _updatedSystemGroupMacLevel;
-        public string UpdatedSystemGroupMacLevel
-        {
-            get { return _updatedSystemGroupMacLevel; }
-            set
-            {
-                if (_updatedSystemGroupMacLevel != value)
-                {
-                    _updatedSystemGroupMacLevel = value;
-                    OnPropertyChanged("UpdatedSystemGroupMacLevel");
-                }
-            }
-        }
     }
 }
