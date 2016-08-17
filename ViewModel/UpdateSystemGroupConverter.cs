@@ -11,7 +11,6 @@ namespace Vulnerator.ViewModel
             if (values != null)
             {
                 parameters.UpdatedSystemGroupName = values[0].ToString();
-                parameters.UpdatedSystemGroupMacLevel = values[1].ToString();
             }
 
             return parameters;

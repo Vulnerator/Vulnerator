@@ -15,9 +15,8 @@ namespace Vulnerator.ViewModel
             parameters.NewTitle = values[4].ToString();
             parameters.NewEmail = values[5].ToString();
             parameters.NewGroupName = values[6].ToString();
-            parameters.NewGroupMacLevel = values[7].ToString();
-            parameters.NewSystemIp = values[8].ToString();
-            parameters.NewSystemName = values[9].ToString();
+            parameters.NewSystemIp = values[7].ToString();
+            parameters.NewSystemName = values[8].ToString();
 
             return parameters;
         }

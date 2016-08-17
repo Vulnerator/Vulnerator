@@ -581,7 +581,6 @@ namespace Vulnerator.Model
                         SQLiteCommand.Parameters.Add(new SQLiteParameter("updatedContactTitle", updateContactParameters.NewTitle));
                         SQLiteCommand.Parameters.Add(new SQLiteParameter("updatedContactEmail", updateContactParameters.NewEmail));
                         SQLiteCommand.Parameters.Add(new SQLiteParameter("updatedContactGroupName", updateContactParameters.NewGroupName));
-                        SQLiteCommand.Parameters.Add(new SQLiteParameter("updatedContactGroupMacLevel", updateContactParameters.NewGroupMacLevel));
                         SQLiteCommand.Parameters.Add(new SQLiteParameter("updatedContactSystemIp", updateContactParameters.NewSystemIp));
                         SQLiteCommand.Parameters.Add(new SQLiteParameter("updatedContactSystemName", updateContactParameters.NewSystemName));
 
