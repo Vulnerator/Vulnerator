@@ -14,18 +14,18 @@ using Vulnerator.Model;
 
 namespace Vulnerator.ViewModel
 {
-    public class MainWindowViewModel : BaseInpc
+	public class MainWindowViewModel : BaseInpc
 	{
 		public static ConfigAlter configAlter;
 		public static CommandParameters commandParameters = new CommandParameters();
-        public Logger logger = new Logger();
-        public static readonly ILog log = LogManager.GetLogger(typeof(Logger));
+		public Logger logger = new Logger();
+		public static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 		public static UpdateMitigationParameters updateMitigationParameters = new UpdateMitigationParameters();
 		public static UpdateContactParameters updateContactParameters = new UpdateContactParameters();
 		public static UpdateSystemGroupParameters updateSystemGroupParameters = new UpdateSystemGroupParameters();
 		public static UpdateSystemParameters updateSystemParameters = new UpdateSystemParameters();
 		public static FindingsDatabaseActions findingsDatabaseActions;
-        public GitHubActions githubActions;
+		public GitHubActions githubActions;
 		public VulneratorDatabaseActions vulneratorDatabaseActions;
 		public static DataSet cciDs = new DataSet();
 		public string cciFileLocation = Directory.GetCurrentDirectory().ToString() + @"\U_CCI_List.xml";
@@ -106,21 +106,21 @@ namespace Vulnerator.ViewModel
 			}
 		}
 
-        private string _newsFlyoutIsOpen = "False";
-        public string NewsFlyoutIsOpen
-        {
-            get { return _newsFlyoutIsOpen; }
-            set
-            {
-                if (_newsFlyoutIsOpen != value)
-                {
-                    _newsFlyoutIsOpen = value;
-                    OnPropertyChanged("NewsFlyoutIsOpen");
-                }
-            }
-        }
+		private string _newsFlyoutIsOpen = "False";
+		public string NewsFlyoutIsOpen
+		{
+			get { return _newsFlyoutIsOpen; }
+			set
+			{
+				if (_newsFlyoutIsOpen != value)
+				{
+					_newsFlyoutIsOpen = value;
+					OnPropertyChanged("NewsFlyoutIsOpen");
+				}
+			}
+		}
 
-        private AsyncObservableCollection<Iavm> _iavms;
+		private AsyncObservableCollection<Iavm> _iavms;
 		public AsyncObservableCollection<Iavm> IavmList
 		{
 			get { return _iavms; }
@@ -260,33 +260,33 @@ namespace Vulnerator.ViewModel
 			}
 		}
 
-        private AsyncObservableCollection<Issue> _issueList;
-        public AsyncObservableCollection<Issue> IssueList
-        {
-            get { return _issueList; }
-            set
-            {
-                if (_issueList != value)
-                {
-                    _issueList = value;
-                    OnPropertyChanged("IssueList");
-                }
-            }
-        }
+		private AsyncObservableCollection<Issue> _issueList;
+		public AsyncObservableCollection<Issue> IssueList
+		{
+			get { return _issueList; }
+			set
+			{
+				if (_issueList != value)
+				{
+					_issueList = value;
+					OnPropertyChanged("IssueList");
+				}
+			}
+		}
 
-        private AsyncObservableCollection<Release> _releaseList;
-        public AsyncObservableCollection<Release> ReleaseList
-        {
-            get { return _releaseList; }
-            set
-            {
-                if (_releaseList != value)
-                {
-                    _releaseList = value;
-                    OnPropertyChanged("ReleaseList");
-                }
-            }
-        }
+		private AsyncObservableCollection<Release> _releaseList;
+		public AsyncObservableCollection<Release> ReleaseList
+		{
+			get { return _releaseList; }
+			set
+			{
+				if (_releaseList != value)
+				{
+					_releaseList = value;
+					OnPropertyChanged("ReleaseList");
+				}
+			}
+		}
 
 		private string _addMitigationId;
 		public string AddMitigationId
@@ -756,10 +756,10 @@ namespace Vulnerator.ViewModel
 
 		public MainWindowViewModel()
 		{
-            logger.Setup();
-            log.Info("Initializing application.");
+			logger.Setup();
+			log.Info("Initializing application.");
 
-            if (File.Exists(Environment.GetFolderPath(
+			if (File.Exists(Environment.GetFolderPath(
 				Environment.SpecialFolder.ApplicationData) + @"\Vulnerator\VulneratorV6Log.txt"))
 			{
 				File.Delete(Environment.GetFolderPath(
@@ -786,8 +786,8 @@ namespace Vulnerator.ViewModel
 			MonitoredSystemList = new AsyncObservableCollection<MonitoredSystem>();
 			MonitoredSystemListForUpdating = new AsyncObservableCollection<UpdatableMonitoredSystem>();
 			SystemGroupListForUpdating = new AsyncObservableCollection<UpdatableSystemGroup>();
-            IssueList = new AsyncObservableCollection<Issue>();
-            ReleaseList = new AsyncObservableCollection<Release>();
+			IssueList = new AsyncObservableCollection<Issue>();
+			ReleaseList = new AsyncObservableCollection<Release>();
 			vulneratorDatabaseActions.CreateVulneratorDatabase();
 			findingsDatabaseActions = new FindingsDatabaseActions();
 			vulneratorDatabaseActions.PopulateGuiLists(this);
@@ -803,9 +803,9 @@ namespace Vulnerator.ViewModel
 			StatusItemList.Add(new StatusItem("Ongoing"));
 			StatusItemList.Add(new StatusItem("Completed"));
 			StatusItemList.Add(new StatusItem("False Positive"));
-            githubActions = new GitHubActions();
-            githubActions.GetGitHubIssues(IssueList);
-            githubActions.GetGitHubReleases(ReleaseList);
+			githubActions = new GitHubActions();
+			githubActions.GetGitHubIssues(IssueList);
+			githubActions.GetGitHubReleases(ReleaseList);
 		}
 
 		#endregion
@@ -822,7 +822,6 @@ namespace Vulnerator.ViewModel
 		private string GetCciFile(string fileName)
 		{
 			string result = string.Empty;
-
 			using (Stream stream = this.GetType().Assembly.
 					   GetManifestResourceStream("Vulnerator.Resources." + fileName))
 			{
@@ -830,63 +829,67 @@ namespace Vulnerator.ViewModel
 				{ result = sr.ReadToEnd(); }
 			}
 			return result;
-
 		}
 
 		#endregion
 
 		#region UpdateDictionaryCommand
 
-		// Command to update confDic as Checkbox controls are toggled true / false
 		public ICommand UpdateDictionaryCommand
-		{
-			get { return new DelegateCommand(UpdateDictionary); }
-		}
+		{ get { return new DelegateCommand(UpdateDictionary); } }
 
 		private void UpdateDictionary()
 		{
-			if (!String.IsNullOrWhiteSpace(commandParameters.controlName))
-			{
-				configAlter.WriteSettingsToDictionary(commandParameters.controlName, commandParameters.controlValue);
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(commandParameters.controlName))
+                {
+                    configAlter.WriteSettingsToDictionary(commandParameters.controlName, commandParameters.controlValue);
 
-				switch (commandParameters.controlName)
-				{
-					case "rbDiacap":
-						{
-							configAlter.WriteSettingsToDictionary("rbRmf", (!bool.Parse(commandParameters.controlValue)).ToString());
-							break;
-						}
-					case "rbRmf":
-						{
-							configAlter.WriteSettingsToDictionary("rbDiacap", (!bool.Parse(commandParameters.controlValue)).ToString());
-							break;
-						}
-					case "rbPki":
-						{
-							configAlter.WriteSettingsToDictionary("rbNone", (!bool.Parse(commandParameters.controlValue)).ToString()); 
-							break;
-						}
-					case "rbNone":
-						{
-							configAlter.WriteSettingsToDictionary("rbPki", (!bool.Parse(commandParameters.controlValue)).ToString()); 
-							break;
-						}
-                    case "rbHostIdentifier":
-                        {
-                            configAlter.WriteSettingsToDictionary("rbIpIdentifier", (!bool.Parse(commandParameters.controlValue)).ToString());
-                            break;
-                        }
-                    case "rbIpIdentifier":
-                        {
-                            configAlter.WriteSettingsToDictionary("rbHostIdentifier", (!bool.Parse(commandParameters.controlValue)).ToString());
-                            break;
-                        }
-                    default:
-						{
-							break;
-						}
-				}
-			}
+                    switch (commandParameters.controlName)
+                    {
+                        case "rbDiacap":
+                            {
+                                configAlter.WriteSettingsToDictionary("rbRmf", (!bool.Parse(commandParameters.controlValue)).ToString());
+                                break;
+                            }
+                        case "rbRmf":
+                            {
+                                configAlter.WriteSettingsToDictionary("rbDiacap", (!bool.Parse(commandParameters.controlValue)).ToString());
+                                break;
+                            }
+                        case "rbPki":
+                            {
+                                configAlter.WriteSettingsToDictionary("rbNone", (!bool.Parse(commandParameters.controlValue)).ToString());
+                                break;
+                            }
+                        case "rbNone":
+                            {
+                                configAlter.WriteSettingsToDictionary("rbPki", (!bool.Parse(commandParameters.controlValue)).ToString());
+                                break;
+                            }
+                        case "rbHostIdentifier":
+                            {
+                                configAlter.WriteSettingsToDictionary("rbIpIdentifier", (!bool.Parse(commandParameters.controlValue)).ToString());
+                                break;
+                            }
+                        case "rbIpIdentifier":
+                            {
+                                configAlter.WriteSettingsToDictionary("rbHostIdentifier", (!bool.Parse(commandParameters.controlValue)).ToString());
+                                break;
+                            }
+                        default:
+                            {
+                                break;
+                            }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to update setting dictionary.");
+                log.Debug("Exception details: " + exception);
+            }
 		}
 
 		#endregion
@@ -894,24 +897,30 @@ namespace Vulnerator.ViewModel
 		#region MitigationsDotTxtBrowseDialogCommand
 
 		public ICommand MitigationsDotTxtBrowseDialogCommand
-		{
-			get { return new DelegateCommand(MitigationsDotTxtBrowseDialog); }
-		}
+		{ get { return new DelegateCommand(MitigationsDotTxtBrowseDialog); } }
 		
 		private void MitigationsDotTxtBrowseDialog()
 		{
-			if (openDialog == null)
-			{
-				openDialog = new OpenFileDialog();
-				openDialog.Multiselect = false;
-				openDialog.CheckFileExists = true;
-				openDialog.Filter = "Text Files (*.txt)|*.txt";
-				openDialog.Title = "Please select Mitigations file";
-				openDialog.DefaultExt = ".txt";
-				openDialog.ShowDialog();
-				ImportMitigationTextFileName = openDialog.FileName;
-			}
-			openDialog = null;
+            try
+            {
+                if (openDialog == null)
+                {
+                    openDialog = new OpenFileDialog();
+                    openDialog.Multiselect = false;
+                    openDialog.CheckFileExists = true;
+                    openDialog.Filter = "Text Files (*.txt)|*.txt";
+                    openDialog.Title = "Please select Mitigations file";
+                    openDialog.DefaultExt = ".txt";
+                    openDialog.ShowDialog();
+                    ImportMitigationTextFileName = openDialog.FileName;
+                }
+                openDialog = null;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to open \"Mitigations.txt\" file browsing dialog.");
+                log.Debug("Exception details: " + exception);
+            }
 		}
 
 		#endregion
@@ -919,354 +928,439 @@ namespace Vulnerator.ViewModel
 		#region DatabaseBrowseDialogCommand
 
 		public ICommand DatabaseBrowseDialogCommand
-		{
-			get { return new DelegateCommand(DatabaseBrowseDialog); }
-		}
+		{ get { return new DelegateCommand(DatabaseBrowseDialog); } }
 
 		private void DatabaseBrowseDialog()
 		{
-			if (openDialog == null)
-			{
-				openDialog = new OpenFileDialog();
-				openDialog.Multiselect = false;
-				openDialog.CheckFileExists = true;
-				openDialog.Filter = "SDF Files (*.sdf)|*.sdf";
-				openDialog.Title = "Please select Mitigations Database file";
-				openDialog.DefaultExt = ".sdf";
+            try
+            {
+                if (openDialog == null)
+                {
+                    openDialog = new OpenFileDialog();
+                    openDialog.Multiselect = false;
+                    openDialog.CheckFileExists = true;
+                    openDialog.Filter = "SDF Files (*.sdf)|*.sdf";
+                    openDialog.Title = "Please select Mitigations Database file";
+                    openDialog.DefaultExt = ".sdf";
 
-				if (openDialog.ShowDialog() == true)
-				{
-					configAlter.WriteSettingsToDictionary("tbMitDbLocation", openDialog.FileName);
-					configAlter.WriteSettingsToDictionary("tbContactDbLocation", openDialog.FileName);
-					MitigationDatabaseLocation = ContactDatabaseLocation = openDialog.FileName;
-					MitigationList.Clear();
-					SystemGroupList.Clear();
-					vulneratorDatabaseActions.PopulateGuiLists(this);
-				}
-			}
+                    if (openDialog.ShowDialog() == true)
+                    {
+                        configAlter.WriteSettingsToDictionary("tbMitDbLocation", openDialog.FileName);
+                        configAlter.WriteSettingsToDictionary("tbContactDbLocation", openDialog.FileName);
+                        MitigationDatabaseLocation = ContactDatabaseLocation = openDialog.FileName;
+                        MitigationList.Clear();
+                        SystemGroupList.Clear();
+                        vulneratorDatabaseActions.PopulateGuiLists(this);
+                    }
+                }
 
-			openDialog = null;
-		}
+                openDialog = null;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to open database file browsing dialog.");
+                log.Debug("Exception details: " + exception);
+            }
+        }
 
 		#endregion
 
 		#region CreateDatabaseDialogCommand
 
 		public ICommand CreateDatabaseDialogCommand
-		{
-			get { return new DelegateCommand(DatabaseCreateDialog); }
-		}
+		{ get { return new DelegateCommand(DatabaseCreateDialog); } }
 
 		private void DatabaseCreateDialog()
 		{
-			if (openDialog == null)
-			{
-				openDialog = new OpenFileDialog();
-				openDialog.Multiselect = false;
-				openDialog.CheckFileExists = true;
-				openDialog.Filter = "SDF Files (*.sdf)|*.sdf";
-				openDialog.Title = "Please select Contact Database file";
-				openDialog.DefaultExt = ".sdf";
+            try
+            {
+                if (openDialog == null)
+                {
+                    openDialog = new OpenFileDialog();
+                    openDialog.Multiselect = false;
+                    openDialog.CheckFileExists = true;
+                    openDialog.Filter = "SDF Files (*.sdf)|*.sdf";
+                    openDialog.Title = "Please select Contact Database file";
+                    openDialog.DefaultExt = ".sdf";
 
-				if (openDialog.ShowDialog() == true)
-				{
-					configAlter.WriteSettingsToDictionary("tbMitDbLocation", openDialog.FileName);
-					configAlter.WriteSettingsToDictionary("tbContactDbLocation", openDialog.FileName);
-					MitigationDatabaseLocation = ContactDatabaseLocation = openDialog.FileName;
-					MitigationList.Clear();
-					SystemGroupList.Clear();
-				}
+                    if (openDialog.ShowDialog() == true)
+                    {
+                        configAlter.WriteSettingsToDictionary("tbMitDbLocation", openDialog.FileName);
+                        configAlter.WriteSettingsToDictionary("tbContactDbLocation", openDialog.FileName);
+                        MitigationDatabaseLocation = ContactDatabaseLocation = openDialog.FileName;
+                        MitigationList.Clear();
+                        SystemGroupList.Clear();
+                    }
 
-				openDialog = null;
-			}
-		}
+                    openDialog = null;
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to open database file creation dialog.");
+                log.Debug("Exception details: " + exception);
+            }
+        }
 
 		#endregion
 
 		#region OpenDialogCommand
 
 		public ICommand OpenDialogCommand
-		{
-			get { return new DelegateCommand(OpenDialog); }
-		}
+		{ get { return new DelegateCommand(OpenDialog); } }
 
 		private OpenFileDialog openDialog;
 		private void OpenDialog(object param)
 		{
-			if (openDialog == null)
-			{
-				openDialog = new OpenFileDialog();
-				openDialog.Multiselect = true;
-				openDialog.CheckFileExists = true;
+            try
+            {
+                if (openDialog == null)
+                {
+                    openDialog = new OpenFileDialog();
+                    openDialog.Multiselect = true;
+                    openDialog.CheckFileExists = true;
 
-				string p = param.ToString();
+                    string p = param.ToString();
 
-				if (p.Contains("ACAS"))
-				{ OpenAcasFiles(); }
+                    if (p.Contains("ACAS"))
+                    { OpenAcasFiles(); }
 
-				else if (p.Contains("CKL"))
-				{ OpenCklFiles(); }
+                    else if (p.Contains("CKL"))
+                    { OpenCklFiles(); }
 
-				else if (p.Contains("WASSP"))
-				{ OpenWasspFiles(); }
+                    else if (p.Contains("WASSP"))
+                    { OpenWasspFiles(); }
 
-				else if (p.Contains("XCCDF"))
-				{ OpenXccdfFiles(); }
-			}
-			openDialog = null;
-		}
+                    else if (p.Contains("XCCDF"))
+                    { OpenXccdfFiles(); }
+                }
+                openDialog = null;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to open file browsing dialog.");
+                log.Debug("Exception details: " + exception);
+            }
+        }
 
 		private void OpenAcasFiles()
 		{
-			openDialog.Filter = "ACAS Files (*.csv;*.nessus)|*.csv;*.nessus";
-			openDialog.Title = "Please select ACAS file(s)";
-			openDialog.ShowDialog();
-			if (openDialog.FileNames.Length > 0)
-			{
-				for (int i = 0; i < openDialog.FileNames.Length; i++)
-				{
-					string filePath = openDialog.FileNames[i];
-					string fileName = Path.GetFileNameWithoutExtension(filePath);
-					if (Path.GetExtension(filePath).ToLower().Equals(".nessus"))
-					{
-						FileList.Add(new Files(fileName, "ACAS - Nessus", "Ready", string.Empty, filePath));
-					}
-					else
-					{
-						FileList.Add(new Files(fileName, "ACAS - CSV", "Ready", string.Empty, filePath));
-					}
-				}
-			}
-		}
+            try
+            {
+                openDialog.Filter = "ACAS Files (*.csv;*.nessus)|*.csv;*.nessus";
+                openDialog.Title = "Please select ACAS file(s)";
+                openDialog.ShowDialog();
+                if (openDialog.FileNames.Length > 0)
+                {
+                    for (int i = 0; i < openDialog.FileNames.Length; i++)
+                    {
+                        string filePath = openDialog.FileNames[i];
+                        string fileName = Path.GetFileNameWithoutExtension(filePath);
+                        if (Path.GetExtension(filePath).ToLower().Equals(".nessus"))
+                        {
+                            FileList.Add(new Files(fileName, "ACAS - Nessus", "Ready", string.Empty, filePath));
+                        }
+                        else
+                        {
+                            FileList.Add(new Files(fileName, "ACAS - CSV", "Ready", string.Empty, filePath));
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to retrieve ACAS file(s).");
+                log.Debug("Exception details: " + exception);
+            }
+        }
 
 		private void OpenCklFiles()
 		{
-			openDialog.Filter = "CKL Files (*.ckl)|*.ckl";
-			openDialog.Title = "Please select CKL file(s)";
-			openDialog.ShowDialog();
-			if (openDialog.FileNames.Length > 0)
-			{
-				for (int i = 0; i < openDialog.FileNames.Length; i++)
-				{
-					string filePath = openDialog.FileNames[i];
-					string fileName = Path.GetFileNameWithoutExtension(filePath);
-					FileList.Add(new Files(fileName, "Checklist", "Ready", string.Empty, filePath));
-				}
-			}
-		}
+            try
+            {
+                openDialog.Filter = "CKL Files (*.ckl)|*.ckl";
+                openDialog.Title = "Please select CKL file(s)";
+                openDialog.ShowDialog();
+                if (openDialog.FileNames.Length > 0)
+                {
+                    for (int i = 0; i < openDialog.FileNames.Length; i++)
+                    {
+                        string filePath = openDialog.FileNames[i];
+                        string fileName = Path.GetFileNameWithoutExtension(filePath);
+                        FileList.Add(new Files(fileName, "Checklist", "Ready", string.Empty, filePath));
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to retrieve CKL file(s).");
+                log.Debug("Exception details: " + exception);
+            }
+        }
 
 		private void OpenWasspFiles()
 		{
-			openDialog.Filter = "WASSP Files (*.html)|*.html;*.xml";
-			openDialog.Title = "Please select WASSP file(s)";
-			openDialog.ShowDialog();
-			if (openDialog.FileNames.Length > 0)
-			{
-				for (int i = 0; i < openDialog.FileNames.Length; i++)
-				{
-					string filePath = openDialog.FileNames[i];
-					string fileName = Path.GetFileNameWithoutExtension(filePath);
-					if (Path.GetExtension(filePath).ToLower().Equals(".html"))
-					{
-						FileList.Add(new Files(fileName, "WASSP - HTML", "Ready", string.Empty, filePath));
-					}
-					else
-					{
-						FileList.Add(new Files(fileName, "WASSP - XML", "Ready", string.Empty, filePath));
-					}
-				}
-			}
-		}
+            try
+            {
+                openDialog.Filter = "WASSP Files (*.html)|*.html;*.xml";
+                openDialog.Title = "Please select WASSP file(s)";
+                openDialog.ShowDialog();
+                if (openDialog.FileNames.Length > 0)
+                {
+                    for (int i = 0; i < openDialog.FileNames.Length; i++)
+                    {
+                        string filePath = openDialog.FileNames[i];
+                        string fileName = Path.GetFileNameWithoutExtension(filePath);
+                        if (Path.GetExtension(filePath).ToLower().Equals(".html"))
+                        {
+                            FileList.Add(new Files(fileName, "WASSP - HTML", "Ready", string.Empty, filePath));
+                        }
+                        else
+                        {
+                            FileList.Add(new Files(fileName, "WASSP - XML", "Ready", string.Empty, filePath));
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to retrieve WASSP file(s).");
+                log.Debug("Exception details: " + exception);
+            }
+        }
 
 		private void OpenXccdfFiles()
 		{
-			openDialog.Filter = "XCCDF Files (*.xml)|*.xml";
-			openDialog.Title = "Please select XCCDF file(s)";
-			openDialog.ShowDialog();
-			if (openDialog.FileNames.Length > 0)
-			{
-				for (int i = 0; i < openDialog.FileNames.Length; i++)
-				{
-					string filePath = openDialog.FileNames[i];
-					string fileName = Path.GetFileNameWithoutExtension(filePath);
-					FileList.Add(new Files(fileName, "SCAP Benchmark", "Ready", string.Empty, filePath));
-				}
-			}
-		}
+            try
+            {
+                openDialog.Filter = "XCCDF Files (*.xml)|*.xml";
+                openDialog.Title = "Please select XCCDF file(s)";
+                openDialog.ShowDialog();
+                if (openDialog.FileNames.Length > 0)
+                {
+                    for (int i = 0; i < openDialog.FileNames.Length; i++)
+                    {
+                        string filePath = openDialog.FileNames[i];
+                        string fileName = Path.GetFileNameWithoutExtension(filePath);
+                        FileList.Add(new Files(fileName, "SCAP Benchmark", "Ready", string.Empty, filePath));
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to retrieve XCCDF file(s).");
+                log.Debug("Exception details: " + exception);
+            }
+        }
 
 		#endregion
 
 		#region ClearCollectionCommand
 
 		public ICommand ClearCollectionCommand
-		{
-			get { return new DelegateCommand(ClearCollection); }
-		}
+		{ get { return new DelegateCommand(ClearCollection); } }
 
 		private void ClearCollection(object param)
 		{
-			string p = param.ToString();
-
-			if (p.Contains("Clear Files"))
-			{
-				if (FileList.Count != 0)
-				{
-					FileList.Clear();
-					IavmList.Clear();
-				}
-			}
-		}
+            try
+            {
+                string p = param.ToString();
+                if (p.Contains("Clear Files"))
+                {
+                    if (FileList.Count != 0)
+                    {
+                        FileList.Clear();
+                        IavmList.Clear();
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to clear collections.");
+                log.Debug("Exception details: " + exception);
+            }
+        }
 
 		#endregion
 
 		#region DeleteButtonsCommand
 
 		public ICommand DeleteButtonsCommand
-		{
-			get { return new DelegateCommand(DeleteButtons); }
-		}
+		{ get { return new DelegateCommand(DeleteButtons); } }
 		
 		private void DeleteButtons(object param)
 		{
-			string p = param.ToString();
-			
-			if (p.Contains("bMitDelete"))
-			{
-				backgroundWorker = new BackgroundWorker();
-				backgroundWorker.DoWork += deleteMitigationsBackgroundWorker_DoWork;
-				backgroundWorker.RunWorkerAsync();
-				backgroundWorker.Dispose();
-			}
-			else if (p.Contains("bIavmDelete"))
-			{
-				backgroundWorker = new BackgroundWorker();
-				backgroundWorker.DoWork += deleteIavmsBackgroundWorker_DoWork;
-				backgroundWorker.RunWorkerAsync();
-				backgroundWorker.Dispose();
-			}
-			else if (p.Contains("deleteContactsButton"))
-			{
-				backgroundWorker = new BackgroundWorker();
-				backgroundWorker.DoWork += deleteContactsBackgroundWorker_DoWork;
-				backgroundWorker.RunWorkerAsync();
-				backgroundWorker.Dispose();
-			}
-		}
+            try
+            {
+                string p = param.ToString();
+                if (p.Contains("bMitDelete"))
+                {
+                    backgroundWorker = new BackgroundWorker();
+                    backgroundWorker.DoWork += deleteMitigationsBackgroundWorker_DoWork;
+                    backgroundWorker.RunWorkerAsync();
+                    backgroundWorker.Dispose();
+                }
+                else if (p.Contains("bIavmDelete"))
+                {
+                    backgroundWorker = new BackgroundWorker();
+                    backgroundWorker.DoWork += deleteIavmsBackgroundWorker_DoWork;
+                    backgroundWorker.RunWorkerAsync();
+                    backgroundWorker.Dispose();
+                }
+                else if (p.Contains("deleteContactsButton"))
+                {
+                    backgroundWorker = new BackgroundWorker();
+                    backgroundWorker.DoWork += deleteContactsBackgroundWorker_DoWork;
+                    backgroundWorker.RunWorkerAsync();
+                    backgroundWorker.Dispose();
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to perform deletion.");
+                log.Debug("Exception details: " + exception);
+            }
+        }
 
 		private void deleteMitigationsBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
 		{
-			vulneratorDatabaseActions = new VulneratorDatabaseActions();
-			ProgressLabelText = vulneratorDatabaseActions.DeleteMitigation(MitigationList);
-			MitigationsAreChecked = false;
-		}
+            try
+            {
+                vulneratorDatabaseActions = new VulneratorDatabaseActions();
+                ProgressLabelText = vulneratorDatabaseActions.DeleteMitigation(MitigationList);
+                MitigationsAreChecked = false;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to delete mitigation(s).");
+                log.Debug("Exception details: " + exception);
+            }
+        }
 
 		private void deleteIavmsBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
 		{
-			ArrayList arrayList = new ArrayList();
-			foreach (Iavm iavm in IavmList)
-			{
-				if (iavm.IsChecked)
-				{ arrayList.Add(iavm); }
-			}
-			foreach (Iavm iavm in arrayList)
-			{ IavmList.Remove(iavm); }
-			arrayList.Clear();
-			IavmsAreChecked = false;
-		}
+            try
+            {
+                ArrayList arrayList = new ArrayList();
+                foreach (Iavm iavm in IavmList)
+                {
+                    if (iavm.IsChecked)
+                    { arrayList.Add(iavm); }
+                }
+                foreach (Iavm iavm in arrayList)
+                { IavmList.Remove(iavm); }
+                arrayList.Clear();
+                IavmsAreChecked = false;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to delete IAVM(s).");
+                log.Debug("Exception details: " + exception);
+            }
+        }
 
 		private void deleteContactsBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
 		{
-			vulneratorDatabaseActions = new VulneratorDatabaseActions();
-			ProgressLabelText = vulneratorDatabaseActions.DeleteContact(ContactList);
-			ContactsAreChecked = false;
-		}
+            try
+            {
+                vulneratorDatabaseActions = new VulneratorDatabaseActions();
+                ProgressLabelText = vulneratorDatabaseActions.DeleteContact(ContactList);
+                ContactsAreChecked = false;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to delete contact(s).");
+                log.Debug("Exception details: " + exception);
+            }
+        }
 
 		#endregion
 
 		#region SelectCheckboxCommand
 
 		public ICommand SelectCheckboxCommand
-		{
-			get { return new DelegateCommand(SelectCheckbox); }
-		}
+		{ get { return new DelegateCommand(SelectCheckbox); } }
 
 		private void SelectCheckbox(object param)
 		{
-			string p = param.ToString();
-			if (p.Contains("allMits"))
-			{
-				foreach (MitigationItem item in MitigationList)
-				{ item.IsChecked = MitigationsAreChecked; }
-			}
-			else if (p.Contains("allIavms"))
-			{
-				foreach (Iavm item in IavmList)
-				{ item.IsChecked = IavmsAreChecked; }
-			}
-			else if (p.Contains("selectAllContactsCheckbox"))
-			{
-				foreach (Contact item in ContactList)
-				{ item.IsChecked = ContactsAreChecked; }
-			}
-
-		}
+            try
+            {
+                string p = param.ToString();
+                if (p.Contains("allMits"))
+                {
+                    foreach (MitigationItem item in MitigationList)
+                    { item.IsChecked = MitigationsAreChecked; }
+                }
+                else if (p.Contains("allIavms"))
+                {
+                    foreach (Iavm item in IavmList)
+                    { item.IsChecked = IavmsAreChecked; }
+                }
+                else if (p.Contains("selectAllContactsCheckbox"))
+                {
+                    foreach (Contact item in ContactList)
+                    { item.IsChecked = ContactsAreChecked; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to perform mass selection.");
+                log.Debug("Exception details: " + exception);
+            }
+        }
 
 		#endregion
 
 		#region UpdateAllSystemNamesCommand
 
 		public ICommand UpdateAllSystemNamesCommand
-		{
-			get { return new DelegateCommand(UpdateAllSystemNames); }
-		}
+		{ get { return new DelegateCommand(UpdateAllSystemNames); } }
 
 		private void UpdateAllSystemNames(object parameter)
 		{
-			foreach (Files file in FileList)
-			{
-				if (parameter != null)
-				{ file.FileSystemName = parameter.ToString(); }
-				else
-				{ file.FileSystemName = string.Empty; }
-			}
-		}
+            try
+            {
+                foreach (Files file in FileList)
+                {
+                    if (parameter != null)
+                    { file.FileSystemName = parameter.ToString(); }
+                    else
+                    { file.FileSystemName = string.Empty; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to update filename(s).");
+                log.Debug("Exception details: " + exception);
+            }
+        }
 
 		#endregion
 
 		#region ClearMitigationSelectionCommand
 
 		public ICommand ClearMitigationSelectionCommand
-		{
-			get { return new DelegateCommand(ClearMitigationSelection); } 
-		}
+		{ get { return new DelegateCommand(ClearMitigationSelection); } }
 		
 		private void ClearMitigationSelection()
-		{
-			SelectedMitigation = string.Empty;
-		}
+		{ SelectedMitigation = string.Empty; }
 
 		#endregion
 
 		#region ClearContactSelectionCommand
 
 		public ICommand ClearContactSelectionCommand
-		{
-			get { return new DelegateCommand(ClearContactSelection); }
-		}
+		{ get { return new DelegateCommand(ClearContactSelection); } }
 
 		private void ClearContactSelection()
-		{
-			SelectedContact = null;
-		}
+		{ SelectedContact = null; }
 
 		#endregion
 
 		#region ExecuteButtonCommand
 
 		public ICommand ExecuteButtonCommand
-		{
-			get { return new DelegateCommand(ExecuteButton); }
-		}
+		{ get { return new DelegateCommand(ExecuteButton); } }
 
 		private void ExecuteButton()
 		{
@@ -1333,13 +1427,13 @@ namespace Vulnerator.ViewModel
 			SetGuiProperties("Processing Files...", "Visible", false, null, null);
 			stopWatch.Start();
 
-            findingsDatabaseActions.RefreshFindingsDatabase();
+			findingsDatabaseActions.RefreshFindingsDatabase();
 			foreach (Files file in FileList)
 			{
 				fileStopWatch.Start();
 				file.Status = "Processing...";
 				ProgressLabelText = "Processing File " + (FileList.IndexOf(file) + 1).ToString() + "...";
-                log.Info("Begin processing of " + file.FileName);
+				log.Info("Begin processing of " + file.FileName);
 				switch (file.FileType)
 				{
 					case "ACAS - CSV":
@@ -1381,15 +1475,15 @@ namespace Vulnerator.ViewModel
 						}
 					default:
 						{
-                            log.Error(file.FileName + " file type is unrecognized.");
+							log.Error(file.FileName + " file type is unrecognized.");
 							break;
 						}
 				}
-                fileStopWatch.Stop();
-                if (file.Status.Equals("Processed"))
-                { log.Info(file.FileName + " successfully processed; Elapsed time: " + fileStopWatch.Elapsed.ToString()); }
+				fileStopWatch.Stop();
+				if (file.Status.Equals("Processed"))
+				{ log.Info(file.FileName + " successfully processed; Elapsed time: " + fileStopWatch.Elapsed.ToString()); }
 				else
-                { log.Error(file.FileName + " processing failed; Elapsed time: " + fileStopWatch.Elapsed.ToString()); }
+				{ log.Error(file.FileName + " processing failed; Elapsed time: " + fileStopWatch.Elapsed.ToString()); }
 				fileStopWatch.Reset();
 			}
 		}
@@ -1409,7 +1503,7 @@ namespace Vulnerator.ViewModel
 			bool SummaryTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbAssetOverview"));
 			bool DiscrepanciesTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbDiscrepancies"));
 			bool AcasOutputTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbAcasOutput"));
-            bool StigDetailsTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbStigDetails"));
+			bool StigDetailsTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbStigDetails"));
 			if (PoamAndRarAreNeeded || SummaryTabIsNeeded || DiscrepanciesTabIsNeeded || AcasOutputTabIsNeeded || StigDetailsTabIsNeeded)
 			{ return true; }
 			else
@@ -1430,19 +1524,19 @@ namespace Vulnerator.ViewModel
 		
 		private string CreateExcelReports()
 		{
-            log.Info("Begin creation of " + saveExcelFile.FileName);
+			log.Info("Begin creation of " + saveExcelFile.FileName);
 			fileStopWatch.Start();
 			OpenXmlReportCreator openXmlReportCreator = new OpenXmlReportCreator();
 			if (!openXmlReportCreator.CreateExcelReport(saveExcelFile.FileName, MitigationList).Contains("successful"))
 			{
-                log.Error("Creation of " + saveExcelFile.FileName + " failed; Elapsed time: " + fileStopWatch.Elapsed.ToString());
+				log.Error("Creation of " + saveExcelFile.FileName + " failed; Elapsed time: " + fileStopWatch.Elapsed.ToString());
 				fileStopWatch.Stop();
 				fileStopWatch.Reset();
 				return "Excel report creation error; see log for details";
 			}
 			else
 			{
-                log.Info(saveExcelFile.FileName + " created successfully; Elapsed time: " + fileStopWatch.Elapsed.ToString());
+				log.Info(saveExcelFile.FileName + " created successfully; Elapsed time: " + fileStopWatch.Elapsed.ToString());
 				fileStopWatch.Stop();
 				fileStopWatch.Reset();
 				return "Excel report created successfully";
@@ -1471,20 +1565,20 @@ namespace Vulnerator.ViewModel
 
 		private string CreatePdfReport()
 		{
-            log.Info("Begin creation of " + savePdfFile.FileName);
-            fileStopWatch.Start();
+			log.Info("Begin creation of " + savePdfFile.FileName);
+			fileStopWatch.Start();
 			PdfReportCreator pdfReportCreator = new PdfReportCreator();
 			if (!pdfReportCreator.PdfWriter(savePdfFile.FileName.ToString(), SystemNameForReporting).Equals("Success"))
 			{
-                log.Error("Creation of " + savePdfFile.FileName + " failed; Elapsed time: " + fileStopWatch.Elapsed.ToString());
-                fileStopWatch.Stop();
+				log.Error("Creation of " + savePdfFile.FileName + " failed; Elapsed time: " + fileStopWatch.Elapsed.ToString());
+				fileStopWatch.Stop();
 				fileStopWatch.Reset();
 				return "PDF report creation error; see log for details";
 			}
 			else
 			{
-                log.Info(savePdfFile.FileName + " created successfully; Elapsed time: " + fileStopWatch.Elapsed.ToString());
-                fileStopWatch.Stop();
+				log.Info(savePdfFile.FileName + " created successfully; Elapsed time: " + fileStopWatch.Elapsed.ToString());
+				fileStopWatch.Stop();
 				fileStopWatch.Reset();
 				return "PDF summary created successfully"; 
 			}
@@ -1513,9 +1607,9 @@ namespace Vulnerator.ViewModel
 				{ ToggleImportMitigationsFlyout(); break; }
 				case "about":
 				{ ToggleAboutFlyout(); break; }
-                case "news":
-                { ToggleNewsFlyout(); break; }
-                default:
+				case "news":
+				{ ToggleNewsFlyout(); break; }
+				default:
 				{ break; }
 			}
 			
@@ -1530,7 +1624,7 @@ namespace Vulnerator.ViewModel
 			AboutFlyoutIsOpen = "False";
 			AdvancedFlyoutIsOpen = "False";
 			ImportFlyoutIsOpen = "False";
-            NewsFlyoutIsOpen = "False";
+			NewsFlyoutIsOpen = "False";
 		}
 
 		private void ToggleEmailOptionsFlyout()
@@ -1542,8 +1636,8 @@ namespace Vulnerator.ViewModel
 			ThemeFlyoutIsOpen = "False";
 			AboutFlyoutIsOpen = "False";
 			ImportFlyoutIsOpen = "False";
-            NewsFlyoutIsOpen = "False";
-        }
+			NewsFlyoutIsOpen = "False";
+		}
 
 		private void ToggleImportMitigationsFlyout()
 		{
@@ -1554,8 +1648,8 @@ namespace Vulnerator.ViewModel
 			ThemeFlyoutIsOpen = "False";
 			AboutFlyoutIsOpen = "False";
 			AdvancedFlyoutIsOpen = "False";
-            NewsFlyoutIsOpen = "False";
-        }
+			NewsFlyoutIsOpen = "False";
+		}
 
 		private void ToggleAboutFlyout()
 		{
@@ -1566,20 +1660,20 @@ namespace Vulnerator.ViewModel
 			ThemeFlyoutIsOpen = "False";
 			ImportFlyoutIsOpen = "False";
 			AdvancedFlyoutIsOpen = "False";
-            NewsFlyoutIsOpen = "False";
-        }
+			NewsFlyoutIsOpen = "False";
+		}
 
-        private void ToggleNewsFlyout()
-        {
-            if (NewsFlyoutIsOpen == "False")
-            { NewsFlyoutIsOpen = "True"; }
-            else
-            { NewsFlyoutIsOpen = "False"; }
-            ThemeFlyoutIsOpen = "False";
-            ImportFlyoutIsOpen = "False";
-            AdvancedFlyoutIsOpen = "False";
-            AboutFlyoutIsOpen= "False";
-        }
+		private void ToggleNewsFlyout()
+		{
+			if (NewsFlyoutIsOpen == "False")
+			{ NewsFlyoutIsOpen = "True"; }
+			else
+			{ NewsFlyoutIsOpen = "False"; }
+			ThemeFlyoutIsOpen = "False";
+			ImportFlyoutIsOpen = "False";
+			AdvancedFlyoutIsOpen = "False";
+			AboutFlyoutIsOpen= "False";
+		}
 
 		#endregion
 
@@ -1618,25 +1712,25 @@ namespace Vulnerator.ViewModel
 					}
 				case "tbProject":
 					{
-                        VisitProjectPage();
+						VisitProjectPage();
 						break;
 					}
-                case "tbWiki":
-                    {
-                        VisitWikiPage();
-                        break;
-                    }
-                case "tbRepo":
-                    {
-                        VisitRepo();
-                        break;
-                    }
-                case "tbKcs":
-                    {
-                        VisitKcs();
-                        break;
-                    }
-                default:
+				case "tbWiki":
+					{
+						VisitWikiPage();
+						break;
+					}
+				case "tbRepo":
+					{
+						VisitRepo();
+						break;
+					}
+				case "tbKcs":
+					{
+						VisitKcs();
+						break;
+					}
+				default:
 					{ break; }
 			}
 		}
@@ -1721,59 +1815,59 @@ namespace Vulnerator.ViewModel
 			}
 		}
 
-        private void VisitWikiPage()
-        {
-            string goTo = "https://github.com/Vulnerator/Vulnerator/wiki";
-            try
-            {
-                System.Diagnostics.Process.Start(goTo);
-            }
-            catch (Exception exception)
-            {
-                WriteLog.LogWriter(exception, string.Empty);
-                View.NoInternetApplication internetWarning = new View.NoInternetApplication();
-                internetWarning.ShowDialog();
-                return;
-            }
-        }
+		private void VisitWikiPage()
+		{
+			string goTo = "https://github.com/Vulnerator/Vulnerator/wiki";
+			try
+			{
+				System.Diagnostics.Process.Start(goTo);
+			}
+			catch (Exception exception)
+			{
+				WriteLog.LogWriter(exception, string.Empty);
+				View.NoInternetApplication internetWarning = new View.NoInternetApplication();
+				internetWarning.ShowDialog();
+				return;
+			}
+		}
 
-        private void VisitRepo()
-        {
-            string goTo = "https://github.com/Vulnerator/Vulnerator";
-            try
-            {
-                System.Diagnostics.Process.Start(goTo);
-            }
-            catch (Exception exception)
-            {
-                WriteLog.LogWriter(exception, string.Empty);
-                View.NoInternetApplication internetWarning = new View.NoInternetApplication();
-                internetWarning.ShowDialog();
-                return;
-            }
-        }
+		private void VisitRepo()
+		{
+			string goTo = "https://github.com/Vulnerator/Vulnerator";
+			try
+			{
+				System.Diagnostics.Process.Start(goTo);
+			}
+			catch (Exception exception)
+			{
+				WriteLog.LogWriter(exception, string.Empty);
+				View.NoInternetApplication internetWarning = new View.NoInternetApplication();
+				internetWarning.ShowDialog();
+				return;
+			}
+		}
 
-        private void VisitKcs()
-        {
-            string goTo = "https://kuchtacreativeservices.com";
-            try
-            {
-                System.Diagnostics.Process.Start(goTo);
-            }
-            catch (Exception exception)
-            {
-                WriteLog.LogWriter(exception, string.Empty);
-                View.NoInternetApplication internetWarning = new View.NoInternetApplication();
-                internetWarning.ShowDialog();
-                return;
-            }
-        }
+		private void VisitKcs()
+		{
+			string goTo = "https://kuchtacreativeservices.com";
+			try
+			{
+				System.Diagnostics.Process.Start(goTo);
+			}
+			catch (Exception exception)
+			{
+				WriteLog.LogWriter(exception, string.Empty);
+				View.NoInternetApplication internetWarning = new View.NoInternetApplication();
+				internetWarning.ShowDialog();
+				return;
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region SaveMitigationsCommand
+		#region SaveMitigationsCommand
 
-        public ICommand SaveMitigationsCommand
+		public ICommand SaveMitigationsCommand
 		{
 			get { return new DelegateCommand(SaveMitigations); }
 		}
@@ -1787,22 +1881,22 @@ namespace Vulnerator.ViewModel
 
 		private void addMitigationBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
 		{
-			if (String.IsNullOrWhiteSpace(AddMitigationId))
+			if (string.IsNullOrWhiteSpace(AddMitigationId))
 			{
 				ProgressLabelText = "Please enter a vulnerability or set of vulnerabilities for the new mitigation entry";
 				return;
 			}
-			if (String.IsNullOrWhiteSpace(AddMitigationStatus))
+			if (string.IsNullOrWhiteSpace(AddMitigationStatus))
 			{
 				ProgressLabelText = "Please enter a status for the new mitigation entry";
 				return;
 			}
-			if (String.IsNullOrWhiteSpace(AddMitigationText))
+			if (string.IsNullOrWhiteSpace(AddMitigationText))
 			{
 				ProgressLabelText = "Please enter finding text for the new mitigation entry";
 				return;
 			}
-			if (!String.IsNullOrWhiteSpace(AddMitigationGroupName))
+			if (!string.IsNullOrWhiteSpace(AddMitigationGroupName))
 			{
 				vulneratorDatabaseActions = new VulneratorDatabaseActions();
 				ProgressLabelText = vulneratorDatabaseActions.AddMitigation(AddMitigationId, AddMitigationStatus, AddMitigationGroupName, AddMitigationText, this);
@@ -1841,7 +1935,7 @@ namespace Vulnerator.ViewModel
 
 		private void updateMitigationBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
 		{
-			if (String.IsNullOrWhiteSpace(updateMitigationParameters.VulnerabilityId) || updateMitigationParameters.VulnerabilityId.Contains("DependencyProperty.UnsetValue"))
+			if (string.IsNullOrWhiteSpace(updateMitigationParameters.VulnerabilityId) || updateMitigationParameters.VulnerabilityId.Contains("DependencyProperty.UnsetValue"))
 			{
 				ProgressLabelText = "Please select a mitigation to update";
 				return;
@@ -1876,17 +1970,17 @@ namespace Vulnerator.ViewModel
 
 		private void importMitigationBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
 		{
-			if (String.IsNullOrWhiteSpace(ImportMitigationTextFileName))
+			if (string.IsNullOrWhiteSpace(ImportMitigationTextFileName))
 			{
 				ProgressLabelText = "Please select a \"Mitigations.txt\" file to import";
 				return;
 			}
-			if (String.IsNullOrWhiteSpace(AddMitigationStatus))
+			if (string.IsNullOrWhiteSpace(AddMitigationStatus))
 			{
 				ProgressLabelText = "Please select a status for the imported mitigations";
 				return;
 			}
-			if (!String.IsNullOrWhiteSpace(AddMitigationGroupName))
+			if (!string.IsNullOrWhiteSpace(AddMitigationGroupName))
 			{
 				vulneratorDatabaseActions = new VulneratorDatabaseActions();
 				ProgressLabelText = vulneratorDatabaseActions.ImportMitigations(ImportMitigationTextFileName, AddMitigationGroupName, AddMitigationStatus, this);
@@ -1922,27 +2016,27 @@ namespace Vulnerator.ViewModel
 
 		private void addContactBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
 		{
-			if (String.IsNullOrWhiteSpace(AddContactName))
+			if (string.IsNullOrWhiteSpace(AddContactName))
 			{
 				ProgressLabelText = "Please provide a contact name";
 				return;
 			}
-			if (String.IsNullOrWhiteSpace(AddContactEmail))
+			if (string.IsNullOrWhiteSpace(AddContactEmail))
 			{
 				ProgressLabelText = "Please provide an email for \"" + AddContactName + "\"";
 				return;
 			}
-			if (String.IsNullOrWhiteSpace(AddContactTitle))
+			if (string.IsNullOrWhiteSpace(AddContactTitle))
 			{
 				ProgressLabelText = "Please provide an title for \"" + AddContactName + "\"";
 				return;
 			}
-			if (String.IsNullOrWhiteSpace(AddContactGroupName))
+			if (string.IsNullOrWhiteSpace(AddContactGroupName))
 			{
 				ProgressLabelText = "Please provide a group for \"" + AddContactName + "\"";
 				return;
 			}
-			if (String.IsNullOrWhiteSpace(AddContactSystemHostName))
+			if (string.IsNullOrWhiteSpace(AddContactSystemHostName))
 			{
 				ProgressLabelText = "Please provide a system host name for \"" + AddContactName + "\" to be associated with";
 				return;
@@ -1984,32 +2078,32 @@ namespace Vulnerator.ViewModel
 				ProgressLabelText = "Please select a contact to update";
 				return;
 			}
-			if (String.IsNullOrWhiteSpace(updateContactParameters.NewName))
+			if (string.IsNullOrWhiteSpace(updateContactParameters.NewName))
 			{
 				ProgressLabelText = "Please provide an updated name";
 				return;
 			}
-			if (String.IsNullOrWhiteSpace(updateContactParameters.NewTitle))
+			if (string.IsNullOrWhiteSpace(updateContactParameters.NewTitle))
 			{
 				ProgressLabelText = "Please provide an updated title";
 				return;
 			}
-			if (String.IsNullOrWhiteSpace(updateContactParameters.NewEmail))
+			if (string.IsNullOrWhiteSpace(updateContactParameters.NewEmail))
 			{
 				ProgressLabelText = "Please provide an updated email";
 				return;
 			}
-			if (String.IsNullOrWhiteSpace(updateContactParameters.NewGroupName))
+			if (string.IsNullOrWhiteSpace(updateContactParameters.NewGroupName))
 			{
 				ProgressLabelText = "Please provide an updated group name";
 				return;
 			}
-			if (String.IsNullOrWhiteSpace(updateContactParameters.NewSystemName))
+			if (string.IsNullOrWhiteSpace(updateContactParameters.NewSystemName))
 			{
 				ProgressLabelText = "Please provide an updated system name";
 				return;
 			}
-			if (String.IsNullOrWhiteSpace(updateContactParameters.NewSystemIp))
+			if (string.IsNullOrWhiteSpace(updateContactParameters.NewSystemIp))
 			{
 				ProgressLabelText = "Please provide an updated system IP";
 				return;
@@ -2037,7 +2131,7 @@ namespace Vulnerator.ViewModel
 
 		private void updateGroupBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
 		{
-			if (String.IsNullOrWhiteSpace(SelectedSystemGroupToUpdate))
+			if (string.IsNullOrWhiteSpace(SelectedSystemGroupToUpdate))
 			{
 				ProgressLabelText = "Please select a group to update";
 				return;
@@ -2095,23 +2189,23 @@ namespace Vulnerator.ViewModel
 
 		private void updateSystemBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
 		{
-			if (String.IsNullOrWhiteSpace(SelectedContactSystemToUpdate))
+			if (string.IsNullOrWhiteSpace(SelectedContactSystemToUpdate))
 			{
 				ProgressLabelText = "Please select the system to be updated";
 				return;
 			}
 
-			if (String.IsNullOrWhiteSpace(updateSystemParameters.UpdatedSystemGroup))
+			if (string.IsNullOrWhiteSpace(updateSystemParameters.UpdatedSystemGroup))
 			{
 				ProgressLabelText = "Please select an updated system group";
 				return;
 			}
-			if (String.IsNullOrWhiteSpace(updateSystemParameters.UpdatedSystemName))
+			if (string.IsNullOrWhiteSpace(updateSystemParameters.UpdatedSystemName))
 			{
 				ProgressLabelText = "Please enter an updated system name";
 				return;
 			}
-			if (String.IsNullOrWhiteSpace(updateSystemParameters.UpdatedSystemIP))
+			if (string.IsNullOrWhiteSpace(updateSystemParameters.UpdatedSystemIP))
 			{
 				ProgressLabelText = "Please enter an updated system IP address";
 				return;
@@ -2191,6 +2285,6 @@ namespace Vulnerator.ViewModel
 			emailMessage.SendAndSaveCopy();
 		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

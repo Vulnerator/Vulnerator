@@ -27,7 +27,7 @@ namespace Vulnerator.Model
         /// <param name="fileName">Name of *.nessus file to be parsed.</param>
         /// <param name="mitigationsList">List of mitigation items for vulnerabilities to be read against.</param>
         /// <param name="systemName">Name of the system that the mitigations check will be run against.</param>
-        /// <returns>String Value</returns>
+        /// <returns>string Value</returns>
         public string ReadAcasNessusFile(string fileName, ObservableCollection<MitigationItem> mitigationsList, string systemName)
         {
             try

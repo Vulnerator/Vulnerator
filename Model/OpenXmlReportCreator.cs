@@ -1689,7 +1689,7 @@ namespace Vulnerator.Model
                 bool riskFactorMatch = true;
                 bool stigSeverityMatch = true;
                 bool riskFactorToStigSeverityCrossRef = true;
-                if (!String.IsNullOrWhiteSpace(impact))
+                if (!string.IsNullOrWhiteSpace(impact))
                 {
                     switch (impact)
                     {

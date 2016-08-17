@@ -25,7 +25,7 @@ namespace Vulnerator.Model
                 { text.Replace("<", "&lt;"); }
                 if (text.Length < 32767)
                 { this.InlineString = new InlineString { Text = new Text { Text = text } }; }
-                else if (text.Length > 32767 && !String.IsNullOrWhiteSpace(assetName))
+                else if (text.Length > 32767 && !string.IsNullOrWhiteSpace(assetName))
                 {
                     string outputPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\AcasScanOutput_TextFiles";
                     string outputTextFile = outputPath + @"\" + pluginId + "_" + assetName + "_ScanOutput.txt";

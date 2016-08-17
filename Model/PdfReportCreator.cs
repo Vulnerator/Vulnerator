@@ -60,7 +60,7 @@ namespace Vulnerator.Model
                 workingCell = workingRow.Cells[0];
                 workingCell.AddParagraph("Report Creator Name:");
                 workingCell = workingRow.Cells[1];
-                if (!String.IsNullOrWhiteSpace(ContactName))
+                if (!string.IsNullOrWhiteSpace(ContactName))
                 {
                     workingCell.AddParagraph(ContactName);
                 }
@@ -73,7 +73,7 @@ namespace Vulnerator.Model
                 workingCell = workingRow.Cells[0];
                 workingCell.AddParagraph("Report Creator Organization:");
                 workingCell = workingRow.Cells[1];
-                if (!String.IsNullOrWhiteSpace(ContactOrganization))
+                if (!string.IsNullOrWhiteSpace(ContactOrganization))
                 {
                     workingCell.AddParagraph(ContactOrganization);
                 }
@@ -86,7 +86,7 @@ namespace Vulnerator.Model
                 workingCell = workingRow.Cells[0];
                 workingCell.AddParagraph("Report Creator Email:");
                 workingCell = workingRow.Cells[1];
-                if (!String.IsNullOrWhiteSpace(ContactEmail))
+                if (!string.IsNullOrWhiteSpace(ContactEmail))
                 {
                     workingCell.AddParagraph(ContactEmail);
                 }
@@ -99,7 +99,7 @@ namespace Vulnerator.Model
                 workingCell = workingRow.Cells[0];
                 workingCell.AddParagraph("Report Creator Number:");
                 workingCell = workingRow.Cells[1];
-                if (!String.IsNullOrWhiteSpace(ContactNumber))
+                if (!string.IsNullOrWhiteSpace(ContactNumber))
                 {
                     workingCell.AddParagraph(ContactNumber);
                 }
