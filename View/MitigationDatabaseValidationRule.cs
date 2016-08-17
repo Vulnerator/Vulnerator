@@ -20,7 +20,7 @@ namespace Vulnerator.View
 
         public bool TableExists(string fieldText)
         {
-            if (File.Exists(fieldText) && !String.IsNullOrWhiteSpace(fieldText))
+            if (File.Exists(fieldText) && !string.IsNullOrWhiteSpace(fieldText))
             {
                 string mitigationDatabaseConnection = @"Data Source = " + fieldText;
 

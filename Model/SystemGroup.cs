@@ -33,8 +33,6 @@ namespace Vulnerator.Model
         /// </summary>
         /// <param name="groupName">Name and MAC level of the SystemGroup to be created</param>
         public SystemGroup(string groupName)
-        {
-            this._groupName = groupName;
-        }
+        { this._groupName = groupName; }
     }
 }

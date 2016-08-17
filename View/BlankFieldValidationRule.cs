@@ -8,7 +8,7 @@ namespace Vulnerator.View
         public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
         {
             string fieldText = value.ToString();
-            if (String.IsNullOrWhiteSpace(fieldText))
+            if (string.IsNullOrWhiteSpace(fieldText))
             {
                 return new ValidationResult(false, null);
             }

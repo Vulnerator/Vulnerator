@@ -7,7 +7,7 @@ namespace Vulnerator.ViewModel
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (value != null && !String.IsNullOrWhiteSpace(value.ToString()))
+            if (value != null && !string.IsNullOrWhiteSpace(value.ToString()))
             {
                 string finalValue = value.ToString().Split(':')[0].TrimEnd();
                 return finalValue;

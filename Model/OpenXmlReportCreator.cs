@@ -1620,45 +1620,61 @@ namespace Vulnerator.Model
 
         private void WriteCellValue(OpenXmlWriter openXmlWriter, string cellValue, int styleIndex)
         {
-            List<OpenXmlAttribute> openXmlAttributes = new List<OpenXmlAttribute>();
-            openXmlAttributes.Add(new OpenXmlAttribute("s", null, styleIndex.ToString()));
-            int parseResult;
-            if (int.TryParse(cellValue, out parseResult))
+            try
             {
-                openXmlWriter.WriteStartElement(new Cell(), openXmlAttributes);
-                openXmlWriter.WriteElement(new CellValue(cellValue));
-                openXmlWriter.WriteEndElement();
-            }
-            else
-            {
-                openXmlAttributes.Add(new OpenXmlAttribute("t", null, "s"));
-                openXmlWriter.WriteStartElement(new Cell(), openXmlAttributes);
-                if (!sharedStringDictionary.ContainsKey(cellValue))
+                List<OpenXmlAttribute> openXmlAttributes = new List<OpenXmlAttribute>();
+                openXmlAttributes.Add(new OpenXmlAttribute("s", null, styleIndex.ToString()));
+                int parseResult;
+                if (int.TryParse(cellValue, out parseResult))
                 {
-                    sharedStringDictionary.Add(cellValue, sharedStringMaxIndex);
-                    sharedStringMaxIndex++;
+                    openXmlWriter.WriteStartElement(new Cell(), openXmlAttributes);
+                    openXmlWriter.WriteElement(new CellValue(cellValue));
+                    openXmlWriter.WriteEndElement();
                 }
-                openXmlWriter.WriteElement(new CellValue(sharedStringDictionary[cellValue].ToString()));
-                openXmlWriter.WriteEndElement();
+                else
+                {
+                    openXmlAttributes.Add(new OpenXmlAttribute("t", null, "s"));
+                    openXmlWriter.WriteStartElement(new Cell(), openXmlAttributes);
+                    if (!sharedStringDictionary.ContainsKey(cellValue))
+                    {
+                        sharedStringDictionary.Add(cellValue, sharedStringMaxIndex);
+                        sharedStringMaxIndex++;
+                    }
+                    openXmlWriter.WriteElement(new CellValue(sharedStringDictionary[cellValue].ToString()));
+                    openXmlWriter.WriteEndElement();
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to write cell value to Excel report.");
+                throw exception;
             }
         }
 
         private void CreateSharedStringPart(WorkbookPart workbookPart)
         {
-            if (sharedStringMaxIndex > 0)
+            try
             {
-                SharedStringTablePart sharedStringTablePart = workbookPart.AddNewPart<SharedStringTablePart>();
-                using (OpenXmlWriter openXmlWriter = OpenXmlWriter.Create(sharedStringTablePart))
+                if (sharedStringMaxIndex > 0)
                 {
-                    openXmlWriter.WriteStartElement(new SharedStringTable());
-                    foreach (var item in sharedStringDictionary)
+                    SharedStringTablePart sharedStringTablePart = workbookPart.AddNewPart<SharedStringTablePart>();
+                    using (OpenXmlWriter openXmlWriter = OpenXmlWriter.Create(sharedStringTablePart))
                     {
-                        openXmlWriter.WriteStartElement(new SharedStringItem());
-                        openXmlWriter.WriteElement(new Text(item.Key));
+                        openXmlWriter.WriteStartElement(new SharedStringTable());
+                        foreach (var item in sharedStringDictionary)
+                        {
+                            openXmlWriter.WriteStartElement(new SharedStringItem());
+                            openXmlWriter.WriteElement(new Text(item.Key));
+                            openXmlWriter.WriteEndElement();
+                        }
                         openXmlWriter.WriteEndElement();
                     }
-                    openXmlWriter.WriteEndElement();
                 }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to create SharedStringPart in Excel report.");
+                throw exception;
             }
         }
 
@@ -1668,201 +1684,256 @@ namespace Vulnerator.Model
 
         private bool FilterBySeverity(string impact, string rawRisk)
         {
-            bool riskFactorMatch = true;
-            bool stigSeverityMatch = true;
-            bool riskFactorToStigSeverityCrossRef = true;
-            if (!String.IsNullOrWhiteSpace(impact))
+            try
             {
-                switch (impact)
+                bool riskFactorMatch = true;
+                bool stigSeverityMatch = true;
+                bool riskFactorToStigSeverityCrossRef = true;
+                if (!string.IsNullOrWhiteSpace(impact))
                 {
-                    case "Critical":
-                        { riskFactorMatch = IncludeCriticalFindings; riskFactorToStigSeverityCrossRef = IncludCatIFindings; break; }
-                    case "High":
-                        { riskFactorMatch = IncludeHighFindings; riskFactorToStigSeverityCrossRef = IncludCatIFindings; break; }
-                    case "Medium":
-                        { riskFactorMatch = IncludeMediumFindings; riskFactorToStigSeverityCrossRef = IncludCatIIFindings; break; }
-                    case "Low":
-                        { riskFactorMatch = IncludeLowFindings; riskFactorToStigSeverityCrossRef = IncludCatIIIFindings; break; }
-                    case "Informational":
-                        { riskFactorMatch = IncludeInformationalFindings; riskFactorToStigSeverityCrossRef = IncludCatIVFindings; break; }
-                    default:
-                        { break; }
+                    switch (impact)
+                    {
+                        case "Critical":
+                            { riskFactorMatch = IncludeCriticalFindings; riskFactorToStigSeverityCrossRef = IncludCatIFindings; break; }
+                        case "High":
+                            { riskFactorMatch = IncludeHighFindings; riskFactorToStigSeverityCrossRef = IncludCatIFindings; break; }
+                        case "Medium":
+                            { riskFactorMatch = IncludeMediumFindings; riskFactorToStigSeverityCrossRef = IncludCatIIFindings; break; }
+                        case "Low":
+                            { riskFactorMatch = IncludeLowFindings; riskFactorToStigSeverityCrossRef = IncludCatIIIFindings; break; }
+                        case "Informational":
+                            { riskFactorMatch = IncludeInformationalFindings; riskFactorToStigSeverityCrossRef = IncludCatIVFindings; break; }
+                        default:
+                            { break; }
+                    }
                 }
+                if (!string.IsNullOrWhiteSpace(rawRisk))
+                {
+                    switch (rawRisk)
+                    {
+                        case "I":
+                            { stigSeverityMatch = IncludCatIFindings; break; }
+                        case "II":
+                            { stigSeverityMatch = IncludCatIIFindings; break; }
+                        case "III":
+                            { stigSeverityMatch = IncludCatIIIFindings; break; }
+                        case "IV":
+                            { stigSeverityMatch = IncludCatIVFindings; break; }
+                        default:
+                            { break; }
+                    }
+                }
+                if (!riskFactorMatch || !stigSeverityMatch || !riskFactorToStigSeverityCrossRef)
+                { return false; }
+                else
+                { return true; }
             }
-            if (!String.IsNullOrWhiteSpace(rawRisk))
+            catch (Exception exception)
             {
-                switch (rawRisk)
-                {
-                    case "I":
-                        { stigSeverityMatch = IncludCatIFindings; break; }
-                    case "II":
-                        { stigSeverityMatch = IncludCatIIFindings; break; }
-                    case "III":
-                        { stigSeverityMatch = IncludCatIIIFindings; break; }
-                    case "IV":
-                        { stigSeverityMatch = IncludCatIVFindings; break; }
-                    default:
-                        { break; }
-                }
+                log.Error("Unable to filter Excel report results by severity value.");
+                throw exception;
             }
-            if (!riskFactorMatch || !stigSeverityMatch || !riskFactorToStigSeverityCrossRef)
-            { return false; }
-            else
-            { return true; }
         }
 
         private bool FilterByStatus(string status)
         {
-            bool severityMatch = true;
-            switch (status)
+            try
             {
-                case "Ongoing":
-                    { severityMatch = IncludeOngoingFindings; break; }
-                case "Completed":
-                    { severityMatch = IncludeCompletedFindings; break; }
-                case "Not Reviewed":
-                    { severityMatch = IncludeNotReviewedFindings; break; }
-                case "Not Applicable":
-                    { severityMatch = IncludeNotApplicableFindings; break; }
-                case "Unknown":
-                    { break; }
-                case "Undetermined":
-                    { break; }
-                default:
-                    { break; }
+                bool severityMatch = true;
+                switch (status)
+                {
+                    case "Ongoing":
+                        { severityMatch = IncludeOngoingFindings; break; }
+                    case "Completed":
+                        { severityMatch = IncludeCompletedFindings; break; }
+                    case "Not Reviewed":
+                        { severityMatch = IncludeNotReviewedFindings; break; }
+                    case "Not Applicable":
+                        { severityMatch = IncludeNotApplicableFindings; break; }
+                    case "Unknown":
+                        { break; }
+                    case "Undetermined":
+                        { break; }
+                    default:
+                        { break; }
+                }
+                if (!severityMatch)
+                { return false; }
+                else
+                { return true; }
             }
-            if (!severityMatch)
-            { return false; }
-            else
-            { return true; }
+            catch (Exception exception)
+            {
+                log.Error("Unable to filter Excel report by status value.");
+                throw exception;
+            }
         }
 
         private string ConvertAcasSeverityToDisaCategory(string acasSeverity)
         {
-            switch (acasSeverity)
+            try
             {
-                case "Critical":
-                    { return "I"; }
-                case "High":
-                    { return "I"; }
-                case "Medium":
-                    { return "II"; }
-                case "Low":
-                    { return "III"; }
-                case "Informational":
-                    { return "IV"; }
-                default:
-                    { return "Unknown"; }
+                switch (acasSeverity)
+                {
+                    case "Critical":
+                        { return "I"; }
+                    case "High":
+                        { return "I"; }
+                    case "Medium":
+                        { return "II"; }
+                    case "Low":
+                        { return "III"; }
+                    case "Informational":
+                        { return "IV"; }
+                    default:
+                        { return "Unknown"; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to convert ACAS severity value to DISA category.");
+                throw exception;
             }
         }
 
         private string CompareIavmAgeToUserSettings(string iavmAge)
         {
-            int iavmAgeAsInt = int.Parse(iavmAge);
+            try
+            {
+                int iavmAgeAsInt = int.Parse(iavmAge);
 
-            if (iavmAgeAsInt > IavmFilterFour)
-            { return "> " + IavmFilterFour.ToString() + " Days"; }
-            else if (iavmAgeAsInt > IavmFilterThree)
-            { return "> " + IavmFilterThree.ToString() + " Days"; }
-            else if (iavmAgeAsInt > IavmFilterTwo)
-            { return "> " + IavmFilterTwo.ToString() + " Days"; }
-            else if (iavmAgeAsInt > IavmFilterOne)
-            { return "> " + IavmFilterOne.ToString() + " Days"; }
-            else
-            { return "< " + IavmFilterOne.ToString() + " Days"; }
+                if (iavmAgeAsInt > IavmFilterFour)
+                { return "> " + IavmFilterFour.ToString() + " Days"; }
+                else if (iavmAgeAsInt > IavmFilterThree)
+                { return "> " + IavmFilterThree.ToString() + " Days"; }
+                else if (iavmAgeAsInt > IavmFilterTwo)
+                { return "> " + IavmFilterTwo.ToString() + " Days"; }
+                else if (iavmAgeAsInt > IavmFilterOne)
+                { return "> " + IavmFilterOne.ToString() + " Days"; }
+                else
+                { return "< " + IavmFilterOne.ToString() + " Days"; }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to compare IAVM age to user settings.");
+                throw exception;
+            }
         }
 
         private string NormalizeCellValue(string cellValue)
         {
-            if (cellValue.Contains("&"))
-            { cellValue.Replace("&", "&amp;"); }
-            if (cellValue.Contains(">"))
-            { cellValue.Replace(">", "&gt;"); }
-            if (cellValue.Contains("<"))
-            { cellValue.Replace("<", "&lt;"); }
-            if (cellValue.Contains("'"))
-            { cellValue.Replace("'", "&apos;"); }
-            if (cellValue.Contains("\""))
-            { cellValue.Replace("\"", "&quot;"); }
-            return cellValue;
+            try
+            {
+                if (cellValue.Contains("&"))
+                { cellValue.Replace("&", "&amp;"); }
+                if (cellValue.Contains(">"))
+                { cellValue.Replace(">", "&gt;"); }
+                if (cellValue.Contains("<"))
+                { cellValue.Replace("<", "&lt;"); }
+                if (cellValue.Contains("'"))
+                { cellValue.Replace("'", "&apos;"); }
+                if (cellValue.Contains("\""))
+                { cellValue.Replace("\"", "&quot;"); }
+                return cellValue;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to normalize cell value.");
+                throw exception;
+            }
         }
 
         private string LargeCellValueHandler(string cellValue, string pluginId, string assetName)
         {
-            if (cellValue.Length < 32767)
+            try
             {
-                cellValue = NormalizeCellValue(cellValue);
-                return cellValue;
-            }
-            string regexPattern = "\\n((?![a-z])|(?=[udp])|(?=[tcp]))";
-            Regex regex = new Regex(regexPattern);
-            cellValue = regex.Replace(cellValue, "\r\n");
-            assetName = assetName.Replace("\r\n", "__");
-            string outputPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\AcasScanOutput_TextFiles";
-            string outputTextFile = string.Empty;
-
-            if (!AcasFindingsShouldBeMerged)
-            {
-                if (cellValue.Contains("Title:"))
-                { outputTextFile = outputPath + @"\" + assetName + "_" + pluginId + "_VulnerabilityDescription.txt"; }
-                else
-                { outputTextFile = outputPath + @"\" + assetName + "_" + pluginId + "_ScanOutput.txt"; }
-            }
-            else
-            {
-                if (cellValue.Contains("Title:"))
-                { outputTextFile = outputPath + @"\" + pluginId + "_VulnerabilityDescription.txt"; }
-                else
-                { outputTextFile = outputPath + @"\" + pluginId + "_ScanOutput.txt"; }
-            }
-            if (!Directory.Exists(outputPath))
-            { Directory.CreateDirectory(outputPath); }
-            if (!File.Exists(outputTextFile))
-            {
-                using (FileStream fs = new FileStream(outputTextFile, FileMode.Append, FileAccess.Write))
-                using (StreamWriter sw = new StreamWriter(fs))
+                if (cellValue.Length < 32767)
                 {
-                    sw.WriteLine(cellValue);
-                    sw.Close();
+                    cellValue = NormalizeCellValue(cellValue);
+                    return cellValue;
                 }
+                string regexPattern = "\\n((?![a-z])|(?=[udp])|(?=[tcp]))";
+                Regex regex = new Regex(regexPattern);
+                cellValue = regex.Replace(cellValue, "\r\n");
+                assetName = assetName.Replace("\r\n", "__");
+                string outputPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\AcasScanOutput_TextFiles";
+                string outputTextFile = string.Empty;
+
+                if (!AcasFindingsShouldBeMerged)
+                {
+                    if (cellValue.Contains("Title:"))
+                    { outputTextFile = outputPath + @"\" + assetName + "_" + pluginId + "_VulnerabilityDescription.txt"; }
+                    else
+                    { outputTextFile = outputPath + @"\" + assetName + "_" + pluginId + "_ScanOutput.txt"; }
+                }
+                else
+                {
+                    if (cellValue.Contains("Title:"))
+                    { outputTextFile = outputPath + @"\" + pluginId + "_VulnerabilityDescription.txt"; }
+                    else
+                    { outputTextFile = outputPath + @"\" + pluginId + "_ScanOutput.txt"; }
+                }
+                if (!Directory.Exists(outputPath))
+                { Directory.CreateDirectory(outputPath); }
+                if (!File.Exists(outputTextFile))
+                {
+                    using (FileStream fs = new FileStream(outputTextFile, FileMode.Append, FileAccess.Write))
+                    using (StreamWriter sw = new StreamWriter(fs))
+                    {
+                        sw.WriteLine(cellValue);
+                        sw.Close();
+                    }
+                }
+                return "Output text exceeds the maximum character allowance for an Excel cell; " +
+                    "please see \"" + outputTextFile + "\" for full output details.";
             }
-            return "Output text exceeds the maximum character allowance for an Excel cell; " +
-                "please see \"" + outputTextFile + "\" for full output details.";
+            catch (Exception exception)
+            {
+                log.Error("Unable to handle large cell value.");
+                throw exception;
+            }
         }
 
         private List<DiscrepancyItem> ObtainDiscrepancyItemsForComparisson(string findingType)
         {
-            List<DiscrepancyItem> itemList = new List<DiscrepancyItem>();
-
-            using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+            try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
-                sqliteCommand.CommandText = "SELECT VulnId, VulnTitle, RuleId, Status, AssetIdToReport, FileName, Source, " + 
-                    "Comments, FindingDetails, GroupName FROM UniqueFinding NATURAL JOIN Vulnerability " +
-                    "NATURAL JOIN FileNames NATURAL JOIN Assets NATURAL JOIN VulnerabilitySources " + 
-                    "NATURAL JOIN FindingTypes NATURAL JOIN FindingStatuses NATURAL JOIN Groups " +
-                    "WHERE FindingType = @FindingType;";
-                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                List<DiscrepancyItem> itemList = new List<DiscrepancyItem>();
+                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
-                    while (sqliteDataReader.Read())
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
+                    sqliteCommand.CommandText = "SELECT VulnId, VulnTitle, RuleId, Status, AssetIdToReport, FileName, Source, " +
+                        "Comments, FindingDetails, GroupName FROM UniqueFinding NATURAL JOIN Vulnerability " +
+                        "NATURAL JOIN FileNames NATURAL JOIN Assets NATURAL JOIN VulnerabilitySources " +
+                        "NATURAL JOIN FindingTypes NATURAL JOIN FindingStatuses NATURAL JOIN Groups " +
+                        "WHERE FindingType = @FindingType;";
+                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
-                        DiscrepancyItem discrepancyItem = new DiscrepancyItem();
-                        discrepancyItem.VulnId = sqliteDataReader["VulnId"].ToString();
-                        discrepancyItem.VulnTitle = sqliteDataReader["VulnTitle"].ToString();
-                        discrepancyItem.RuleId = sqliteDataReader["RuleId"].ToString();
-                        discrepancyItem.Status = sqliteDataReader["Status"].ToString();
-                        discrepancyItem.AssetId = sqliteDataReader["AssetIdToReport"].ToString();
-                        discrepancyItem.FileName = sqliteDataReader["FileName"].ToString();
-                        discrepancyItem.Source = sqliteDataReader["Source"].ToString();
-                        discrepancyItem.Comments = sqliteDataReader["Comments"].ToString();
-                        discrepancyItem.FindingDetails = sqliteDataReader["FindingDetails"].ToString();
-                        discrepancyItem.Group = sqliteDataReader["GroupName"].ToString();
-                        itemList.Add(discrepancyItem);
+                        while (sqliteDataReader.Read())
+                        {
+                            DiscrepancyItem discrepancyItem = new DiscrepancyItem();
+                            discrepancyItem.VulnId = sqliteDataReader["VulnId"].ToString();
+                            discrepancyItem.VulnTitle = sqliteDataReader["VulnTitle"].ToString();
+                            discrepancyItem.RuleId = sqliteDataReader["RuleId"].ToString();
+                            discrepancyItem.Status = sqliteDataReader["Status"].ToString();
+                            discrepancyItem.AssetId = sqliteDataReader["AssetIdToReport"].ToString();
+                            discrepancyItem.FileName = sqliteDataReader["FileName"].ToString();
+                            discrepancyItem.Source = sqliteDataReader["Source"].ToString();
+                            discrepancyItem.Comments = sqliteDataReader["Comments"].ToString();
+                            discrepancyItem.FindingDetails = sqliteDataReader["FindingDetails"].ToString();
+                            discrepancyItem.Group = sqliteDataReader["GroupName"].ToString();
+                            itemList.Add(discrepancyItem);
+                        }
                     }
                 }
-            }
 
-            return itemList;
+                return itemList;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to obtain discrepancies for comparisson.");
+                throw exception;
+            }
         }
 
         #endregion Data Preparation
@@ -1871,184 +1942,248 @@ namespace Vulnerator.Model
 
         private Stylesheet CreateStylesheet()
         {
-            HorizontalAlignmentValues leftHorizontal = HorizontalAlignmentValues.Left;
-            HorizontalAlignmentValues rightHorizontal = HorizontalAlignmentValues.Right;
-            HorizontalAlignmentValues centerHorizontal = HorizontalAlignmentValues.Center;
-            VerticalAlignmentValues topVertical = VerticalAlignmentValues.Top;
-            VerticalAlignmentValues centerVertical = VerticalAlignmentValues.Center;
+            try
+            {
+                HorizontalAlignmentValues leftHorizontal = HorizontalAlignmentValues.Left;
+                HorizontalAlignmentValues rightHorizontal = HorizontalAlignmentValues.Right;
+                HorizontalAlignmentValues centerHorizontal = HorizontalAlignmentValues.Center;
+                VerticalAlignmentValues topVertical = VerticalAlignmentValues.Top;
+                VerticalAlignmentValues centerVertical = VerticalAlignmentValues.Center;
 
-            return new Stylesheet(
-                new Fonts(
-                /*Index 0 - Black*/ CreateFont("000000", false),
-                /*Index 1 - Bold Black*/ CreateFont("000000", true),
-                /*Index 2 - Purple*/ CreateFont("660066", false),
-                /*Index 3 - Bold Purple*/ CreateFont("660066", true),
-                /*Index 4 - Red*/ CreateFont("990000", false),
-                /*Index 5 - Bold Red*/ CreateFont("990000", true),
-                /*Index 6 - Orange*/ CreateFont("FF6600", false),
-                /*Index 7 - Bold Orange*/ CreateFont("FF6600", true),
-                /*Index 8 - Blue*/ CreateFont("0066FF", false),
-                /*Index 9 - Bold Blue*/ CreateFont("0066FF", true),
-                /*Index 10 - Green*/ CreateFont("339900", false),
-                /*Index 11 - Bold Green*/ CreateFont("339900", true),
-                /*Index 12 - Bold Black Large*/ CreateFont("000000", true)
-                    ),
-                new Fills(
-                /*Index 0 - Default Fill (None)*/ CreateFill(string.Empty, PatternValues.None),
-                /*Index 1 - Default Fill (Gray125)*/ CreateFill(string.Empty, PatternValues.Gray125),
-                /*Index 2 - Dark Gray Fill*/ CreateFill("BBBBBB", PatternValues.Solid),
-                /*Index 3 - Light Gray Fill*/ CreateFill("EEEEEE", PatternValues.Solid),
-                /*Index 4 - Yellow Gray Fill*/ CreateFill("FFCC00", PatternValues.Solid)
-                    ),
-                new Borders(
-                /*Index 0 - Default Border (None)*/ CreateBorder(false, false, false, false),
-                /*Index 1 - All Borders*/ CreateBorder(true, true, true, true),
-                /*Index 2 - Top & Bottom Borders*/ CreateBorder(true, false, true, false)
-                    ),
-                new CellFormats(
-                /*Index 0 - Black Font, No Fill, No Borders, Wrap Text*/ CreateCellFormat(0, 0, 0, leftHorizontal, null, true),
-                /*Index 1 - Black Font, No Fill, No Borders, Horizontally Centered*/ CreateCellFormat(0, 0, 0, centerHorizontal, null, false),
-                /*Index 2 - Bold Black Font, Dark Gray Fill, All Borders*/ CreateCellFormat(1, 2, 1, null, null, false),
-                /*Index 3 - Bold Black Font, Dark Gray Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(1, 2, 2, centerHorizontal, centerVertical, false),
-                /*Index 4 - Bold Black Font, Dark Gray Fill, All Borders, Centered*/ CreateCellFormat(1, 2, 1, centerHorizontal, centerVertical, false),
-                /*Index 5 - Bold Purple Font, Light Gray Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(3, 3, 2, centerHorizontal, centerVertical, false),
-                /*Index 6 - Bold Red Font, Light Gray Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(5, 3, 2, centerHorizontal, centerVertical, false),
-                /*Index 7 - Bold Orange Font, Light Gray Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(7, 3, 2, centerHorizontal, centerVertical, false),
-                /*Index 8 - Bold Blue Font, Light Gray Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(9, 3, 2, centerHorizontal, centerVertical, false),
-                /*Index 9 - Bold Green Font, Light Gray Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(11, 3, 2, centerHorizontal, centerVertical, false),
-                /*Index 10 - Purple Font, No Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(2, 0, 2, centerHorizontal, centerVertical, false),
-                /*Index 11 - Red Font, No Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(4, 0, 2, centerHorizontal, centerVertical, false),
-                /*Index 12 - Orange Font, No Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(6, 0, 2, centerHorizontal, centerVertical, false),
-                /*Index 13 - BlueFont , No Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(8, 0, 2, centerHorizontal, centerVertical, false),
-                /*Index 14 - Green Font, No Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(10, 0, 2, centerHorizontal, centerVertical, false),
-                /*Index 15 - Bold Black Font, Yellow Fill, All Borders, Centered, Wrap Text*/ CreateCellFormat(1, 4, 1, centerHorizontal, centerVertical, true),
-                /*Index 16 - Bold Black Font, No Fill, All Borders, Wrap Text*/ CreateCellFormat(1, 0, 1, centerHorizontal, centerVertical, true),
-                /*Index 17 - Bold Black Font, Light Gray Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(1, 3, 2, centerHorizontal, centerVertical, false),
-                /*Index 18 - Bold Black Font, No Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(0, 0, 2, centerHorizontal, centerVertical, false),
-                /*Index 19 - Bold Black Font, Dark Gray Fill, Top & Bottom Borders, Centered Vertically*/ CreateCellFormat(1, 2, 1, null, centerVertical, false),
-                /*Index 20 - Black Font, No Fill, All Borders, Top Aligned, Wrap Text*/ CreateCellFormat(0, 0, 1, null, topVertical, true),
-                /*Index 21 - Black Font, No Fill, All Borders, Centered Vertically, Wrap Text*/ CreateCellFormat(0, 0, 1, null, centerVertical, true),
-                /*Index 22 - Black Font, No Fill, All Borders, Centered, Wrap Text*/ CreateCellFormat(0, 0, 1, centerHorizontal, centerVertical, true),
-                /*Index 23 - Black Font, No Fill, All Borders, Centered Vertically, Right Aligned*/ CreateCellFormat(0, 0, 1, rightHorizontal, centerVertical, false),
-                /*Index 24 - Black Font, No Fill, All Borders, Centered Horizontally, Top Aligned, Wrap Text*/ CreateCellFormat(0, 0, 1, centerHorizontal, topVertical, true)
-                    )
-                );
+                return new Stylesheet(
+                    new Fonts(
+                    /*Index 0 - Black*/ CreateFont("000000", false),
+                    /*Index 1 - Bold Black*/ CreateFont("000000", true),
+                    /*Index 2 - Purple*/ CreateFont("660066", false),
+                    /*Index 3 - Bold Purple*/ CreateFont("660066", true),
+                    /*Index 4 - Red*/ CreateFont("990000", false),
+                    /*Index 5 - Bold Red*/ CreateFont("990000", true),
+                    /*Index 6 - Orange*/ CreateFont("FF6600", false),
+                    /*Index 7 - Bold Orange*/ CreateFont("FF6600", true),
+                    /*Index 8 - Blue*/ CreateFont("0066FF", false),
+                    /*Index 9 - Bold Blue*/ CreateFont("0066FF", true),
+                    /*Index 10 - Green*/ CreateFont("339900", false),
+                    /*Index 11 - Bold Green*/ CreateFont("339900", true),
+                    /*Index 12 - Bold Black Large*/ CreateFont("000000", true)
+                        ),
+                    new Fills(
+                    /*Index 0 - Default Fill (None)*/ CreateFill(string.Empty, PatternValues.None),
+                    /*Index 1 - Default Fill (Gray125)*/ CreateFill(string.Empty, PatternValues.Gray125),
+                    /*Index 2 - Dark Gray Fill*/ CreateFill("BBBBBB", PatternValues.Solid),
+                    /*Index 3 - Light Gray Fill*/ CreateFill("EEEEEE", PatternValues.Solid),
+                    /*Index 4 - Yellow Gray Fill*/ CreateFill("FFCC00", PatternValues.Solid)
+                        ),
+                    new Borders(
+                    /*Index 0 - Default Border (None)*/ CreateBorder(false, false, false, false),
+                    /*Index 1 - All Borders*/ CreateBorder(true, true, true, true),
+                    /*Index 2 - Top & Bottom Borders*/ CreateBorder(true, false, true, false)
+                        ),
+                    new CellFormats(
+                    /*Index 0 - Black Font, No Fill, No Borders, Wrap Text*/ CreateCellFormat(0, 0, 0, leftHorizontal, null, true),
+                    /*Index 1 - Black Font, No Fill, No Borders, Horizontally Centered*/ CreateCellFormat(0, 0, 0, centerHorizontal, null, false),
+                    /*Index 2 - Bold Black Font, Dark Gray Fill, All Borders*/ CreateCellFormat(1, 2, 1, null, null, false),
+                    /*Index 3 - Bold Black Font, Dark Gray Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(1, 2, 2, centerHorizontal, centerVertical, false),
+                    /*Index 4 - Bold Black Font, Dark Gray Fill, All Borders, Centered*/ CreateCellFormat(1, 2, 1, centerHorizontal, centerVertical, false),
+                    /*Index 5 - Bold Purple Font, Light Gray Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(3, 3, 2, centerHorizontal, centerVertical, false),
+                    /*Index 6 - Bold Red Font, Light Gray Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(5, 3, 2, centerHorizontal, centerVertical, false),
+                    /*Index 7 - Bold Orange Font, Light Gray Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(7, 3, 2, centerHorizontal, centerVertical, false),
+                    /*Index 8 - Bold Blue Font, Light Gray Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(9, 3, 2, centerHorizontal, centerVertical, false),
+                    /*Index 9 - Bold Green Font, Light Gray Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(11, 3, 2, centerHorizontal, centerVertical, false),
+                    /*Index 10 - Purple Font, No Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(2, 0, 2, centerHorizontal, centerVertical, false),
+                    /*Index 11 - Red Font, No Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(4, 0, 2, centerHorizontal, centerVertical, false),
+                    /*Index 12 - Orange Font, No Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(6, 0, 2, centerHorizontal, centerVertical, false),
+                    /*Index 13 - BlueFont , No Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(8, 0, 2, centerHorizontal, centerVertical, false),
+                    /*Index 14 - Green Font, No Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(10, 0, 2, centerHorizontal, centerVertical, false),
+                    /*Index 15 - Bold Black Font, Yellow Fill, All Borders, Centered, Wrap Text*/ CreateCellFormat(1, 4, 1, centerHorizontal, centerVertical, true),
+                    /*Index 16 - Bold Black Font, No Fill, All Borders, Wrap Text*/ CreateCellFormat(1, 0, 1, centerHorizontal, centerVertical, true),
+                    /*Index 17 - Bold Black Font, Light Gray Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(1, 3, 2, centerHorizontal, centerVertical, false),
+                    /*Index 18 - Bold Black Font, No Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(0, 0, 2, centerHorizontal, centerVertical, false),
+                    /*Index 19 - Bold Black Font, Dark Gray Fill, Top & Bottom Borders, Centered Vertically*/ CreateCellFormat(1, 2, 1, null, centerVertical, false),
+                    /*Index 20 - Black Font, No Fill, All Borders, Top Aligned, Wrap Text*/ CreateCellFormat(0, 0, 1, null, topVertical, true),
+                    /*Index 21 - Black Font, No Fill, All Borders, Centered Vertically, Wrap Text*/ CreateCellFormat(0, 0, 1, null, centerVertical, true),
+                    /*Index 22 - Black Font, No Fill, All Borders, Centered, Wrap Text*/ CreateCellFormat(0, 0, 1, centerHorizontal, centerVertical, true),
+                    /*Index 23 - Black Font, No Fill, All Borders, Centered Vertically, Right Aligned*/ CreateCellFormat(0, 0, 1, rightHorizontal, centerVertical, false),
+                    /*Index 24 - Black Font, No Fill, All Borders, Centered Horizontally, Top Aligned, Wrap Text*/ CreateCellFormat(0, 0, 1, centerHorizontal, topVertical, true)
+                        )
+                    );
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to create Excel report Stylesheet.");
+                throw exception;
+            }
         }
 
         private Font CreateFont(string fontColor, bool isBold)
         {
-            Font font = new Font();
-            font.FontSize = new FontSize() { Val = 10 };
-            font.Color = new Color { Rgb = new HexBinaryValue() { Value = fontColor } };
-            font.FontName = new FontName() { Val = "Calibri" };
-            if (isBold)
-            { font.Bold = new Bold(); }
-            return font;
+            try
+            {
+                Font font = new Font();
+                font.FontSize = new FontSize() { Val = 10 };
+                font.Color = new Color { Rgb = new HexBinaryValue() { Value = fontColor } };
+                font.FontName = new FontName() { Val = "Calibri" };
+                if (isBold)
+                { font.Bold = new Bold(); }
+                return font;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to create Font.");
+                throw exception;
+            }
         }
 
         private Fill CreateFill(string fillColor, PatternValues patternValue)
         {
-            Fill fill = new Fill();
-            PatternFill patternfill = new PatternFill();
-            patternfill.PatternType = patternValue;
-            if (!String.IsNullOrWhiteSpace(fillColor))
-            { patternfill.ForegroundColor = new ForegroundColor() { Rgb = new HexBinaryValue { Value = fillColor } }; }
-            fill.PatternFill = patternfill;
+            try
+            {
+                Fill fill = new Fill();
+                PatternFill patternfill = new PatternFill();
+                patternfill.PatternType = patternValue;
+                if (!string.IsNullOrWhiteSpace(fillColor))
+                { patternfill.ForegroundColor = new ForegroundColor() { Rgb = new HexBinaryValue { Value = fillColor } }; }
+                fill.PatternFill = patternfill;
 
-            return fill;
+                return fill;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to create Fill.");
+                throw exception;
+            }
         }
 
         private Border CreateBorder(bool topBorderRequired, bool rightBorderRequired, bool bottomBorderRequired, bool leftBorderRequired)
         {
-            Border border = new Border();
-            if (!topBorderRequired && !rightBorderRequired && !bottomBorderRequired && !leftBorderRequired)
+            try
             {
-                border.TopBorder = new TopBorder();
-                border.RightBorder = new RightBorder();
-                border.BottomBorder = new BottomBorder();
-                border.LeftBorder = new LeftBorder();
-                border.DiagonalBorder = new DiagonalBorder();
+                Border border = new Border();
+                if (!topBorderRequired && !rightBorderRequired && !bottomBorderRequired && !leftBorderRequired)
+                {
+                    border.TopBorder = new TopBorder();
+                    border.RightBorder = new RightBorder();
+                    border.BottomBorder = new BottomBorder();
+                    border.LeftBorder = new LeftBorder();
+                    border.DiagonalBorder = new DiagonalBorder();
+                }
+                else
+                {
+                    if (topBorderRequired)
+                    { border.TopBorder = new TopBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin }; }
+                    if (rightBorderRequired)
+                    { border.RightBorder = new RightBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin }; }
+                    if (bottomBorderRequired)
+                    { border.BottomBorder = new BottomBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin }; }
+                    if (leftBorderRequired)
+                    { border.LeftBorder = new LeftBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin }; }
+                    border.DiagonalBorder = new DiagonalBorder();
+                }
+                return border;
             }
-            else
+            catch (Exception exception)
             {
-                if (topBorderRequired)
-                { border.TopBorder = new TopBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin }; }
-                if (rightBorderRequired)
-                { border.RightBorder = new RightBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin }; }
-                if (bottomBorderRequired)
-                { border.BottomBorder = new BottomBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin }; }
-                if (leftBorderRequired)
-                { border.LeftBorder = new LeftBorder(new Color() { Auto = true }) { Style = BorderStyleValues.Thin }; }
-                border.DiagonalBorder = new DiagonalBorder();
+                log.Error("Unable to create Border.");
+                throw exception;
             }
-            return border;
         }
 
         private CellFormat CreateCellFormat(UInt32Value fontId, UInt32Value fillId, UInt32Value borderId,
             HorizontalAlignmentValues? horizontalAlignment, VerticalAlignmentValues? verticalAlignment, bool wrapText)
         {
-            CellFormat cellFormat = new CellFormat();
-            Alignment alignment = new Alignment();
-            if (horizontalAlignment != null)
-            { alignment.Horizontal = horizontalAlignment; }
-            if (verticalAlignment != null)
-            { alignment.Vertical = verticalAlignment; }
-            alignment.WrapText = wrapText;
-            cellFormat.Alignment = alignment;
-            cellFormat.FontId = fontId;
-            cellFormat.FillId = fillId;
-            cellFormat.BorderId = borderId;
-            return cellFormat;
+            try
+            {
+                CellFormat cellFormat = new CellFormat();
+                Alignment alignment = new Alignment();
+                if (horizontalAlignment != null)
+                { alignment.Horizontal = horizontalAlignment; }
+                if (verticalAlignment != null)
+                { alignment.Vertical = verticalAlignment; }
+                alignment.WrapText = wrapText;
+                cellFormat.Alignment = alignment;
+                cellFormat.FontId = fontId;
+                cellFormat.FillId = fillId;
+                cellFormat.BorderId = borderId;
+                return cellFormat;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to create CellFormat.");
+                throw exception;
+            }
         }
 
         #endregion Create Stylesheet
 
         private string SetSqliteCommandText(string findingType, bool isMerged)
         {
-            if (isMerged)
+            try
             {
-                return "SELECT GroupName, VulnId, RuleId, VulnTitle, RawRisk, Impact, Description, IaControl, " +
-                    "NistControl, Status, Source, Comments, FindingDetails, " +
-                    "GROUP_CONCAT(DISTINCT AssetIdToReport) AS AssetIdToReport FROM UniqueFinding " +
-                    "NATURAL JOIN FindingTypes NATURAL JOIN VulnerabilitySources " +
-                    "NATURAL JOIN FindingStatuses NATURAL JOIN Vulnerability NATURAL JOIN Groups " +
-                    "NATURAL JOIN Assets WHERE FindingType = @FindingType GROUP BY RuleId, Status;";
+                if (isMerged)
+                {
+                    return "SELECT GroupName, VulnId, RuleId, VulnTitle, RawRisk, Impact, Description, IaControl, " +
+                        "NistControl, Status, Source, Comments, FindingDetails, " +
+                        "GROUP_CONCAT(DISTINCT AssetIdToReport) AS AssetIdToReport FROM UniqueFinding " +
+                        "NATURAL JOIN FindingTypes NATURAL JOIN VulnerabilitySources " +
+                        "NATURAL JOIN FindingStatuses NATURAL JOIN Vulnerability NATURAL JOIN Groups " +
+                        "NATURAL JOIN Assets WHERE FindingType = @FindingType GROUP BY RuleId, Status;";
+                }
+                else
+                {
+                    return "SELECT * FROM UniqueFinding NATURAL JOIN FindingTypes NATURAL JOIN FileNames " +
+                        "NATURAL JOIN VulnerabilitySources NATURAL JOIN FindingStatuses NATURAL JOIN Assets " +
+                        "NATURAL JOIN Vulnerability NATURAL JOIN Groups WHERE FindingType = @FindingType;";
+                }
             }
-            else
+            catch (Exception exception)
             {
-                return "SELECT * FROM UniqueFinding NATURAL JOIN FindingTypes NATURAL JOIN FileNames " +
-                    "NATURAL JOIN VulnerabilitySources NATURAL JOIN FindingStatuses NATURAL JOIN Assets " +
-                    "NATURAL JOIN Vulnerability NATURAL JOIN Groups WHERE FindingType = @FindingType;";
+                log.Error("Unable to set SQLite command text for Excel report.");
+                throw exception;
             }
         }
 
         private string SetCredentialedString(string ipAddress)
         {
-            string credentialedString = "No";
-            using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+            try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("IpAddress", ipAddress));
-                sqliteCommand.CommandText = "SELECT Found21745, Found26917 FROM Assets WHERE IpAddress = @IpAddress;";
-                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                string credentialedString = "No";
+                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
-                    while (sqliteDataReader.Read())
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("IpAddress", ipAddress));
+                    sqliteCommand.CommandText = "SELECT Found21745, Found26917 FROM Assets WHERE IpAddress = @IpAddress;";
+                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
-                        if (!string.IsNullOrWhiteSpace(sqliteDataReader[0].ToString()))
-                        { credentialedString = credentialedString + "; 21745"; }
-                        if (!string.IsNullOrWhiteSpace(sqliteDataReader[1].ToString()))
-                        { credentialedString = credentialedString + "; 26917"; }
+                        while (sqliteDataReader.Read())
+                        {
+                            if (!string.IsNullOrWhiteSpace(sqliteDataReader[0].ToString()))
+                            { credentialedString = credentialedString + "; 21745"; }
+                            if (!string.IsNullOrWhiteSpace(sqliteDataReader[1].ToString()))
+                            { credentialedString = credentialedString + "; 26917"; }
+                        }
                     }
                 }
+                return credentialedString;
             }
-            return credentialedString;
+            catch (Exception exception)
+            {
+                log.Error("Unable to set credentialed string for Excel report.");
+                throw exception;
+            }
         }
 
         private void AddIavmsToObservableCollection(AsyncObservableCollection<Iavm> iavmList, DataRow acasFindingRow)
         {
-            if (!string.IsNullOrWhiteSpace(acasFindingRow["IavmNumber"].ToString()))
+            try
             {
-                iavmList.Add(new Iavm(false, acasFindingRow["IavmNumber"].ToString(), acasFindingRow["VulnId"].ToString(), acasFindingRow["VulnTitle"].ToString(),
-                    acasFindingRow["HostName"].ToString(), CompareIavmAgeToUserSettings(acasFindingRow["Age"].ToString()), acasFindingRow["SystemName"].ToString()));
+                if (!string.IsNullOrWhiteSpace(acasFindingRow["IavmNumber"].ToString()))
+                {
+                    iavmList.Add(new Iavm(false, acasFindingRow["IavmNumber"].ToString(), acasFindingRow["VulnId"].ToString(), acasFindingRow["VulnTitle"].ToString(),
+                        acasFindingRow["HostName"].ToString(), CompareIavmAgeToUserSettings(acasFindingRow["Age"].ToString()), acasFindingRow["SystemName"].ToString()));
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to add IAVM to ObservableCollection.");
+                throw exception;
             }
         }
     }
