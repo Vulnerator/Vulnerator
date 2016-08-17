@@ -221,6 +221,7 @@
     <Compile Include="Model\Contact.cs" />
     <Compile Include="Model\DiscrepancyItem.cs" />
     <Compile Include="Model\ExtensionMethods.cs" />
+    <Compile Include="Model\FileNameNoPathConverter.cs" />
     <Compile Include="Model\FindingsDatabaseActions.cs" />
     <Compile Include="Model\GitHubActions.cs" />
     <Compile Include="Model\Issue.cs" />

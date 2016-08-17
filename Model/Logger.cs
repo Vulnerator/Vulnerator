@@ -3,6 +3,7 @@ using log4net.Appender;
 using log4net.Core;
 using log4net.Layout;
 using log4net.Repository.Hierarchy;
+using log4net.Util;
 using System;
 using System.Diagnostics;
 
@@ -20,9 +21,14 @@ namespace Vulnerator.Model
             hierarchy.Root.RemoveAllAppenders();
 
             PatternLayout patternLayout = new PatternLayout();
-            patternLayout.ConversionPattern = "%d %-5level %-5F : %L - %m%n";
+            patternLayout.AddConverter(new ConverterInfo
+                {
+                    Name = "fileNameNoPath",
+                    Type = typeof(FileNameNoPathConverter)
+                }
+            );
+            patternLayout.ConversionPattern = "%d %-5level %-5fileNameNoPath : %L - %m%n";
             patternLayout.ActivateOptions();
-
             RollingFileAppender rollingFileAppender = new RollingFileAppender();
             rollingFileAppender.LockingModel = new FileAppender.MinimalLock();
             rollingFileAppender.AppendToFile = true;
