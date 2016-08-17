@@ -1739,12 +1739,10 @@ namespace Vulnerator.ViewModel
 		{
 			string mailTo = "mailto:alex.kuchta.ctr@navy.mil";
 			try
-			{
-				System.Diagnostics.Process.Start(mailTo);
-			}
+			{ Process.Start(mailTo); }
 			catch (Exception exception)
 			{
-				WriteLog.LogWriter(exception, string.Empty);
+                log.Error("Unable to send email; no email application exists.");
 				View.NoEmailApplication emailWarning = new View.NoEmailApplication();
 				emailWarning.ShowDialog();
 				return;
@@ -1755,13 +1753,11 @@ namespace Vulnerator.ViewModel
 		{
 			string mailTo = "mailto:Jeff.Vanerwegen@Vencore.com";
 			try
-			{
-				System.Diagnostics.Process.Start(mailTo);
-			}
+			{ Process.Start(mailTo); }
 			catch (Exception exception)
 			{
-				WriteLog.LogWriter(exception, string.Empty);
-				View.NoEmailApplication emailWarning = new View.NoEmailApplication();
+                log.Error("Unable to send email; no email application exists.");
+                View.NoEmailApplication emailWarning = new View.NoEmailApplication();
 				emailWarning.ShowDialog();
 				return;
 			}
@@ -1771,13 +1767,11 @@ namespace Vulnerator.ViewModel
 		{
 			string mailTo = "mailto:rick.murphy@navy.mil";
 			try
-			{
-				System.Diagnostics.Process.Start(mailTo);
-			}
+			{ Process.Start(mailTo); }
 			catch (Exception exception)
 			{
-				WriteLog.LogWriter(exception, string.Empty);
-				View.NoEmailApplication emailWarning = new View.NoEmailApplication();
+                log.Error("Unable to send email; no email application exists.");
+                View.NoEmailApplication emailWarning = new View.NoEmailApplication();
 				emailWarning.ShowDialog();
 				return;
 			}
@@ -1787,13 +1781,11 @@ namespace Vulnerator.ViewModel
 		{
 			string mailTo = "mailto:jeffrey.a.purcell@navy.mil";
 			try
-			{
-				System.Diagnostics.Process.Start(mailTo);
-			}
+			{ Process.Start(mailTo); }
 			catch (Exception exception)
 			{
-				WriteLog.LogWriter(exception, string.Empty);
-				View.NoEmailApplication emailWarning = new View.NoEmailApplication();
+                log.Error("Unable to send email; no email application exists.");
+                View.NoEmailApplication emailWarning = new View.NoEmailApplication();
 				emailWarning.ShowDialog();
 				return;
 			}
@@ -1803,13 +1795,11 @@ namespace Vulnerator.ViewModel
 		{
 			string goTo = "https://vulnerator.github.io/Vulnerator";
 			try
-			{
-				System.Diagnostics.Process.Start(goTo);
-			}
+			{ Process.Start(goTo); }
 			catch (Exception exception)
 			{
-				WriteLog.LogWriter(exception, string.Empty);
-				View.NoInternetApplication internetWarning = new View.NoInternetApplication();
+                log.Error("Unable to launch link; no internet application exists.");
+                View.NoInternetApplication internetWarning = new View.NoInternetApplication();
 				internetWarning.ShowDialog();
 				return;
 			}
@@ -1819,13 +1809,11 @@ namespace Vulnerator.ViewModel
 		{
 			string goTo = "https://github.com/Vulnerator/Vulnerator/wiki";
 			try
-			{
-				System.Diagnostics.Process.Start(goTo);
-			}
+			{ Process.Start(goTo); }
 			catch (Exception exception)
 			{
-				WriteLog.LogWriter(exception, string.Empty);
-				View.NoInternetApplication internetWarning = new View.NoInternetApplication();
+                log.Error("Unable to launch link; no internet application exists.");
+                View.NoInternetApplication internetWarning = new View.NoInternetApplication();
 				internetWarning.ShowDialog();
 				return;
 			}
@@ -1835,13 +1823,11 @@ namespace Vulnerator.ViewModel
 		{
 			string goTo = "https://github.com/Vulnerator/Vulnerator";
 			try
-			{
-				System.Diagnostics.Process.Start(goTo);
-			}
+			{ Process.Start(goTo); }
 			catch (Exception exception)
 			{
-				WriteLog.LogWriter(exception, string.Empty);
-				View.NoInternetApplication internetWarning = new View.NoInternetApplication();
+                log.Error("Unable to launch link; no internet application exists.");
+                View.NoInternetApplication internetWarning = new View.NoInternetApplication();
 				internetWarning.ShowDialog();
 				return;
 			}
@@ -1851,13 +1837,11 @@ namespace Vulnerator.ViewModel
 		{
 			string goTo = "https://kuchtacreativeservices.com";
 			try
-			{
-				System.Diagnostics.Process.Start(goTo);
-			}
+			{ Process.Start(goTo); }
 			catch (Exception exception)
 			{
-				WriteLog.LogWriter(exception, string.Empty);
-				View.NoInternetApplication internetWarning = new View.NoInternetApplication();
+                log.Error("Unable to launch link; no internet application exists.");
+                View.NoInternetApplication internetWarning = new View.NoInternetApplication();
 				internetWarning.ShowDialog();
 				return;
 			}
