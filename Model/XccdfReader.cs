@@ -132,8 +132,8 @@ namespace Vulnerator.Model
                                     InsertVulnerabilityCommand(sqliteCommand);
                                     if (sqliteCommand.Parameters.Contains("NistControl"))
                                     { sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["NistControl"]); }
-                                    if (sqliteCommand.Parameters.Contains("IaControl"))
-                                    { sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["IaControl"]); }
+                                    if (sqliteCommand.Parameters.Contains("IaControls"))
+                                    { sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["IaControls"]); }
                                     break;
                                 }
                             case "cdf:TestResult":
@@ -798,14 +798,14 @@ namespace Vulnerator.Model
                 {
                     if (parameter.ParameterName.Equals("NistControl"))
                     { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(92, "@NistControl, "); }
-                    if (parameter.ParameterName.Equals("IaControl"))
+                    if (parameter.ParameterName.Equals("IaControls"))
                     { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(92, "@IaControl, "); }
                 }
                 foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                 {
                     if (parameter.ParameterName.Equals("NistControl"))
                     { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, "NistControl, "); }
-                    if (parameter.ParameterName.Equals("IaControl"))
+                    if (parameter.ParameterName.Equals("IaControls"))
                     { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, "IaControl, "); }
                 }
                 sqliteCommand.ExecuteNonQuery();
