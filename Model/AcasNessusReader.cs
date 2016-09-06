@@ -58,7 +58,6 @@ namespace Vulnerator.Model
                 {
                     CreateAddFileNameCommand(fileName);
                     CreateAddGroupNameCommand(systemName);
-                    CreateAddSourceCommand();
                     XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
                     using (XmlReader xmlReader = XmlReader.Create(fileName, xmlReaderSettings))
                     {
@@ -80,6 +79,9 @@ namespace Vulnerator.Model
                                         sqliteCommand.Parameters["VulnId"].Value.Equals("21745") ||
                                         sqliteCommand.Parameters["VulnId"].Value.Equals("26917"))
                                     { SetCredentialedStatusFallback(sqliteCommand); }
+                                    if (sqliteCommand.Parameters["VulnId"].Value.Equals("19506"))
+                                    { SetSourceInformation(sqliteCommand); }
+                                    CreateAddSourceCommand();
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("FileName", Path.GetFileName(fileName)));
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", systemName));
                                     sqliteCommand.CommandText = SetInitialSqliteCommandText("Vulnerability");
@@ -144,7 +146,7 @@ namespace Vulnerator.Model
             {
                 using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
-                    sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources VALUES (NULL, 'Assured Compliance Assessment Solution (ACAS)', NULL, NULL);";
+                    sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources VALUES (NULL, @Source, @Version, @Release);";
                     sqliteCommand.ExecuteNonQuery();
                 }
             }
@@ -563,6 +565,26 @@ namespace Vulnerator.Model
                 log.Error("Unable to set credentialed status.");
                 throw exception;
             }
+        }
+
+        private void SetSourceInformation(SQLiteCommand sqliteCommand)
+        {
+            StringReader stringReader = new StringReader(sqliteCommand.Parameters["PluginOutput"].Value.ToString());
+            string line = string.Empty;
+            string nessusVersion = string.Empty;
+            string pluginFeedVersion = string.Empty;
+            int currentLineNumber = 0;
+            while (line != null)
+            {
+                 line = stringReader.ReadLine();
+                if (line.StartsWith("Nessus version"))
+                { nessusVersion = line.Split(':')[1].Split('(')[0].Trim(); }
+                else if (line.StartsWith("Plugin feed version"))
+                { pluginFeedVersion = line.Split(':')[1].Trim(); }
+            }
+            sqliteCommand.Parameters.Add(new SQLiteParameter("Source", "Assured Compliance Assessment Solution (ACAS) Nessus Scanner"));
+            sqliteCommand.Parameters.Add(new SQLiteParameter("Version", nessusVersion));
+            sqliteCommand.Parameters.Add(new SQLiteParameter("Release", pluginFeedVersion));
         }
     }
 }

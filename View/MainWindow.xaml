@@ -1309,6 +1309,41 @@
                                     </RadioButton>
                                 </Grid>
                                 <Label HorizontalAlignment="Stretch"
+                                       Content="NIST SP 800-53 Revision"
+                                       KeyboardNavigation.IsTabStop="False"
+                                       Style="{StaticResource styleSecondLevelHeader}" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <RadioButton Margin="5,0,0,5"
+                                                 Content="Revision 3"
+                                                 Name="revisionThreeRadioButton">
+                                        <RadioButton.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource CommandConverter}">
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                            </MultiBinding>
+                                        </RadioButton.CommandParameter>
+                                    </RadioButton>
+                                    <RadioButton Grid.Column="1"
+                                                 Margin="5,0,0,5"
+                                                 Content="Revision 4"
+                                                 Name="revisionFourRadioButton">
+                                        <RadioButton.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource CommandConverter}">
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                            </MultiBinding>
+                                        </RadioButton.CommandParameter>
+                                    </RadioButton>
+                                </Grid>
+                                <Label HorizontalAlignment="Stretch"
                                        Content="Severity"
                                        KeyboardNavigation.IsTabStop="False"
                                        Style="{StaticResource styleSecondLevelHeader}" />
@@ -1691,8 +1726,12 @@
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               Command="{Binding UpdateDictionaryCommand}"
                                               Content="PDF Summary"
-                                              IsChecked="False"
-                                              IsEnabled="False"
+                                              IsChecked="{Binding InnerText,
+                                                                  Converter={StaticResource StringToBool},
+                                                                  Mode=OneTime,
+                                                                  Source={StaticResource XmlConfig},
+                                                                  XPath=reportingTab/cbAssetOverview}"
+                                              IsEnabled="{Binding IsEnabled}"
                                               TabIndex="22">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
@@ -1756,8 +1795,12 @@
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               Command="{Binding UpdateDictionaryCommand}"
                                               Content="OS &amp; User Breakdown (*.nessus Only)"
-                                              IsChecked="False"
-                                              IsEnabled="False"
+                                              IsChecked="{Binding InnerText,
+                                                                  Converter={StaticResource StringToBool},
+                                                                  Mode=OneTime,
+                                                                  Source={StaticResource XmlConfig},
+                                                                  XPath=reportingTab/cbAssetOverview}"
+                                              IsEnabled="{Binding IsEnabled}"
                                               TabIndex="20">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
