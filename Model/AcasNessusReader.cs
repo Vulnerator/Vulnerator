@@ -582,22 +582,30 @@ namespace Vulnerator.Model
 
         private void SetSourceInformation(SQLiteCommand sqliteCommand)
         {
-            StringReader stringReader = new StringReader(sqliteCommand.Parameters["PluginOutput"].Value.ToString());
-            string line = string.Empty;
-            string nessusVersion = string.Empty;
-            string pluginFeedVersion = string.Empty;
-            int currentLineNumber = 0;
-            while (line != null)
+            try
             {
-                 line = stringReader.ReadLine();
-                if (line.StartsWith("Nessus version"))
-                { nessusVersion = line.Split(':')[1].Split('(')[0].Trim(); }
-                else if (line.StartsWith("Plugin feed version"))
-                { pluginFeedVersion = line.Split(':')[1].Trim(); }
+                StringReader stringReader = new StringReader(sqliteCommand.Parameters["PluginOutput"].Value.ToString());
+                string line = string.Empty;
+                string nessusVersion = string.Empty;
+                string pluginFeedVersion = string.Empty;
+                int currentLineNumber = 0;
+                while (line != null)
+                {
+                    line = stringReader.ReadLine();
+                    if (line.StartsWith("Nessus version"))
+                    { nessusVersion = line.Split(':')[1].Split('(')[0].Trim(); }
+                    else if (line.StartsWith("Plugin feed version"))
+                    { pluginFeedVersion = line.Split(':')[1].Trim(); }
+                }
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Source", "Assured Compliance Assessment Solution (ACAS) Nessus Scanner"));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Version", nessusVersion));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Release", pluginFeedVersion));
             }
-            sqliteCommand.Parameters.Add(new SQLiteParameter("Source", "Assured Compliance Assessment Solution (ACAS) Nessus Scanner"));
-            sqliteCommand.Parameters.Add(new SQLiteParameter("Version", nessusVersion));
-            sqliteCommand.Parameters.Add(new SQLiteParameter("Release", pluginFeedVersion));
+            catch (Exception exception)
+            {
+                log.Error("Unable to set ACAS Nessus File source information.");
+                throw exception;
+            }
         }
     }
 }

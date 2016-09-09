@@ -40,7 +40,6 @@ namespace Vulnerator.Model
                     CreateFindingStatusTable(sqliteCommand);
                     InsertFindingTypes(sqliteCommand);
                     InsertFindingStatuses(sqliteCommand);
-                    InsertAcasVulnerabilitySource(sqliteCommand);
                 }
                 log.Info("Findings database created successfully.");
             }
@@ -74,7 +73,6 @@ namespace Vulnerator.Model
                         CreateFindingStatusTable(sqliteCommand);
                         InsertFindingTypes(sqliteCommand);
                         InsertFindingStatuses(sqliteCommand);
-                        InsertAcasVulnerabilitySource(sqliteCommand);
                     }
                 }
                 log.Info("Findings database refeshed successfully.");
@@ -268,21 +266,6 @@ namespace Vulnerator.Model
             catch (Exception exception)
             {
                 log.Error("Unable to insert statuses.");
-                throw exception;
-            }
-        }
-
-        private void InsertAcasVulnerabilitySource(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources VALUES (" +
-                    "NULL, 'Assured Compliance Assessment Solution (ACAS)', NULL, NULL)";
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to insert ACAS vulnerability source.");
                 throw exception;
             }
         }
