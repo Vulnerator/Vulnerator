@@ -239,7 +239,11 @@ namespace Vulnerator
             {
                 xmlReader.Read();
                 if (xmlReader.Name.Equals("STIG_TITLE"))
-                { stigInfo = ObtainCurrentNodeValue(xmlReader); }
+                {
+                    stigInfo = ObtainCurrentNodeValue(xmlReader).Replace('_', ' ');
+                    if (!stigInfo.Contains("STIG"))
+                    { stigInfo = stigInfo + " STIG"; }
+                }
                 else
                 {
                     while (xmlReader.Read())
