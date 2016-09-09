@@ -165,7 +165,7 @@ namespace Vulnerator
         {
             try
             {
-                sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources VALUES (NULL, @Source, NULL, NULL);";
+                sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources VALUES (NULL, @Source, @Version, @Release);";
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -412,28 +412,22 @@ namespace Vulnerator
                                         x => x["CciRef"].Equals(cciRefData)))
                                     { cciRef = cciRef + cciControlDataRow["CciControl"] + Environment.NewLine; }
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("NistControl", cciRef));
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("CciNumber", cciRefData));
                                     break;
                                 }
                             case "STIGRef":
                                 {
                                     if (!string.IsNullOrWhiteSpace(stigInfo))
-                                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Source", stigInfo)); }
-                                    else
                                     {
-                                        string stigTitle = ObtainAttributeDataNodeValue(xmlReader);
-                                        if (stigTitle.Contains("Benchmark"))
-                                        { stigTitle = stigTitle.Split(new string[] { "Benchmark" }, StringSplitOptions.None)[0].Trim(); }
-                                        if (stigTitle.Contains("Release"))
-                                        { stigTitle = stigTitle.Replace("Release: ", "R"); }
-                                        else
-                                        { stigTitle = stigTitle + " " + releaseInfo; }
-                                        stigTitle = stigTitle.Insert(stigTitle.Length - 3, " " + versionInfo);
-                                        if (Regex.IsMatch(stigTitle, @"V\dR"))
-                                        { stigTitle = stigTitle.Insert(stigTitle.Length - 3, " "); }
-                                        if (!stigTitle.Contains("::"))
-                                        { stigTitle = stigTitle.Insert(stigTitle.Length - 5, ":: "); }
-                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Source", stigTitle));
+                                        stigInfo = ObtainAttributeDataNodeValue(xmlReader);
+                                        if (stigInfo.Contains("Release") && string.IsNullOrWhiteSpace(releaseInfo))
+                                        { releaseInfo = stigInfo.Split(new string[] { "Release:" }, StringSplitOptions.None)[1].Split(' ')[0].Trim(); }
+                                        if (stigInfo.Contains("Benchmark"))
+                                        { stigInfo = stigInfo.Split(new string[] { "::" }, StringSplitOptions.None)[0].Trim(); }
                                     }
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source", stigInfo));
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Version", versionInfo));
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Release", releaseInfo));
                                     break;
                                 }
                             default:

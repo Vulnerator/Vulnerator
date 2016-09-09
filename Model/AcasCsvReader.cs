@@ -85,7 +85,7 @@ namespace Vulnerator
         {
             try
             {
-                string[] headersToVerify = { "Plugin", "Plugin Name", "IP Address", "DNS Name", "Synopsis", "Description",
+                string[] headersToVerify = { "Plugin", "Plugin Name", "IP Address", "DNS Name", "Synopsis", "Description", "NetBIOS Name",
                                            "Solution", "Risk Factor", "STIG Severity", "Cross References", "Last Observed", "Plugin Modification Date" };
                 log.Info("Verifying CSV headers.");
                 foreach (string headerName in headersToVerify)
@@ -145,7 +145,7 @@ namespace Vulnerator
             {
                 using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source", "Assured Compliance Assessment Solution (ACAS)"));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source", "Assured Compliance Assessment Solution (ACAS) Nessus Scanner"));
                     sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources (Source) VALUES (@Source);";
                     sqliteCommand.ExecuteNonQuery();
                 }
@@ -169,6 +169,14 @@ namespace Vulnerator
                         sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", csvReader.GetField("DNS Name")));
                         if (UserPrefersHostName)
                         { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", csvReader.GetField("DNS Name"))); }
+                        else
+                        { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", csvReader.GetField("IP Address"))); }
+                    }
+                    else if (!string.IsNullOrWhiteSpace(csvReader.GetField("NetBIOS Name")))
+                    {
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", csvReader.GetField("NetBIOS Name")));
+                        if (UserPrefersHostName)
+                        { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", csvReader.GetField("NetBIOS Name"))); }
                         else
                         { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", csvReader.GetField("IP Address"))); }
                     }

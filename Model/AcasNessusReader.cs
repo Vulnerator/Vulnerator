@@ -80,8 +80,10 @@ namespace Vulnerator.Model
                                         sqliteCommand.Parameters["VulnId"].Value.Equals("26917"))
                                     { SetCredentialedStatusFallback(sqliteCommand); }
                                     if (sqliteCommand.Parameters["VulnId"].Value.Equals("19506"))
-                                    { SetSourceInformation(sqliteCommand); }
-                                    CreateAddSourceCommand();
+                                    {
+                                        SetSourceInformation(sqliteCommand);
+                                        CreateAddSourceCommand();
+                                    }
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("FileName", Path.GetFileName(fileName)));
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", systemName));
                                     sqliteCommand.CommandText = SetInitialSqliteCommandText("Vulnerability");
@@ -205,6 +207,12 @@ namespace Vulnerator.Model
                                 {
                                     xmlReader.Read();
                                     workingSystem.SetHostName(xmlReader.Value);
+                                    break;
+                                }
+                            case "netbios-name":
+                                {
+                                    xmlReader.Read();
+                                    workingSystem.SetNetBiosName(xmlReader.Value);
                                     break;
                                 }
                             case "operating-system":
@@ -396,11 +404,16 @@ namespace Vulnerator.Model
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("IpAddress", workingSystem.IpAddress));
                     sqliteCommand.Parameters.Add(new SQLiteParameter("IsCredentialed", workingSystem.CredentialedScan));
-                    if (string.IsNullOrWhiteSpace(workingSystem.HostName))
-                    { workingSystem.HostName = "Host Name Not Provided"; }
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", workingSystem.HostName));
-                    if (UserPrefersHostName && !workingSystem.HostName.Equals("Host Name Not Provided"))
+                    if (!string.IsNullOrWhiteSpace(workingSystem.HostName))
+                    { sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", workingSystem.HostName)); }
+                    else if (!string.IsNullOrWhiteSpace(workingSystem.NetBiosName))
+                    { sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", workingSystem.NetBiosName)); }
+                    else
+                    { sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", "Host Name Not Provided")); }
+                    if (UserPrefersHostName && !string.IsNullOrWhiteSpace(workingSystem.HostName))
                     { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", workingSystem.HostName)); }
+                    else if (UserPrefersHostName && !string.IsNullOrWhiteSpace(workingSystem.NetBiosName))
+                    { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", workingSystem.NetBiosName)); }
                     else
                     { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", workingSystem.IpAddress)); }
                     if (!string.IsNullOrWhiteSpace(workingSystem.OperatingSystem))
