@@ -137,7 +137,7 @@ namespace Vulnerator.Model
             try
             {
                 sqliteCommand.CommandText = "CREATE TABLE VulnerabilitySources (" +
-                    "SourceIndex INTEGER PRIMARY KEY, Source TEXT UNIQUE ON CONFLICT IGNORE, Version TEXT, Release TEXT);";
+                    "SourceIndex INTEGER PRIMARY KEY, Source TEXT, Version TEXT, Release TEXT);";
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)

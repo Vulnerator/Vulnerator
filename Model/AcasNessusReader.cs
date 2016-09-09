@@ -464,7 +464,7 @@ namespace Vulnerator.Model
                             return "INSERT INTO UniqueFinding (FindingTypeIndex, SourceIndex, StatusIndex, " +
                                 "FileNameIndex, VulnerabilityIndex, AssetIndex) VALUES (" +
                                 "(SELECT FindingTypeIndex FROM FindingTypes WHERE FindingType = @FindingType), " +
-                                "(SELECT SourceIndex FROM VulnerabilitySources WHERE Source = @Source), " +
+                                "(SELECT SourceIndex FROM VulnerabilitySources WHERE Source = @Source AND Version = @Version AND Release = @Release), " +
                                 "(SELECT StatusIndex FROM FindingStatuses WHERE Status = @Status), " +
                                 "(SELECT FileNameIndex FROM FileNames WHERE FileName = @FileName), " +
                                 "(SELECT VulnerabilityIndex FROM Vulnerability WHERE RuleId = @RuleId), " +
@@ -588,7 +588,6 @@ namespace Vulnerator.Model
                 string line = string.Empty;
                 string nessusVersion = string.Empty;
                 string pluginFeedVersion = string.Empty;
-                int currentLineNumber = 0;
                 while (line != null)
                 {
                     line = stringReader.ReadLine();
