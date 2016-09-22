@@ -26,6 +26,7 @@ namespace Vulnerator.Model
         private string releaseInfo = string.Empty;
         private string acasXccdfHostName = string.Empty;
         private string acasXccdfHostIp = string.Empty;
+        private bool incorrectFileType = false;
         private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
@@ -40,7 +41,10 @@ namespace Vulnerator.Model
                 }
 
                 ParseXccdfWithXmlReader(fileName, mitigationsList, systemName);
-                return "Processed";
+                if (!incorrectFileType)
+                { return "Processed"; }
+                else
+                { return "Report Type (OVAL) Not Supported"; }
             }
             catch (Exception exception)
             {
@@ -91,6 +95,16 @@ namespace Vulnerator.Model
                                                 ParseXccdfFromAcas(xmlReader, sqliteCommand);
                                                 break;
                                             }
+                                        case "oval-res":
+                                            {
+                                                incorrectFileType = true;
+                                                break;
+                                            }
+                                        case "oval-var":
+                                            {
+                                                incorrectFileType = true;
+                                                break;
+                                            }
                                         case "":
                                             {
                                                 ParseXccdfFromScc(xmlReader, systemName, sqliteCommand);
@@ -137,9 +151,33 @@ namespace Vulnerator.Model
                                 }
                             case "cdf:version":
                                 {
+                                    bool sourceExists = false;
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("Version", GetSccXccdfVersion(xmlReader)));
-                                    sqliteCommand.CommandText = SetSqliteCommandText("VulnerabilitySources");
-                                    sqliteCommand.ExecuteNonQuery();
+                                    sqliteCommand.CommandText = "SELECT * FROM VulnerabilitySources WHERE Source = @Source AND Version = @Version AND Release = @Release;";
+                                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                                    {
+                                        if (sqliteDataReader.HasRows)
+                                        { sourceExists = true; }
+                                    }
+                                    if (!sourceExists)
+                                    {
+                                        sqliteCommand.CommandText = SetSqliteCommandText("VulnerabilitySources");
+                                        sqliteCommand.ExecuteNonQuery();
+                                    }
+                                    break;
+                                }
+                            case "cdf:Profile":
+                                {
+                                    xmlReader.Read();
+                                    while (xmlReader.Name != "cdf:Profile")
+                                    { xmlReader.Read(); }
+                                    break;
+                                }
+                            case "cdf:Value":
+                                {
+                                    xmlReader.Read();
+                                    while (xmlReader.Name != "cdf:Value")
+                                    { xmlReader.Read(); }
                                     break;
                                 }
                             case "cdf:Group":
@@ -192,7 +230,7 @@ namespace Vulnerator.Model
                 if (!string.IsNullOrWhiteSpace(xmlReader.GetAttribute("id")) && xmlReader.GetAttribute("id").Equals("release-info"))
                 {
                     xmlReader.Read();
-                    releaseInfo = xmlReader.Value.Split(' ')[1].Split(' ')[0];
+                    releaseInfo = "R" + xmlReader.Value.Split(' ')[1].Split(' ')[0];
                 }
                 return releaseInfo;
             }
@@ -208,7 +246,7 @@ namespace Vulnerator.Model
             try
             {
                 xmlReader.Read();
-                versionInfo = xmlReader.Value;
+                versionInfo = "V" + xmlReader.Value;
                 return versionInfo;
             }
             catch (Exception exception)
@@ -416,10 +454,15 @@ namespace Vulnerator.Model
         
         private void SetXccdfScoreFromSccFile(XmlReader xmlReader, SQLiteCommand sqliteCommand)
         {
-            if (!string.IsNullOrWhiteSpace(xmlReader.GetAttribute("system")) && xmlReader.GetAttribute("system").Equals("urn:xccdf:scoring:default"))
+            while (!xmlReader.Name.Equals("cdf:TestResult"))
             {
-                xmlReader.Read();
-                sqliteCommand.Parameters.Add(new SQLiteParameter("ScapScore", xmlReader.Value));
+                if (!string.IsNullOrWhiteSpace(xmlReader.GetAttribute("system")) && xmlReader.GetAttribute("system").Equals("urn:xccdf:scoring:default"))
+                {
+                    xmlReader.Read();
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("ScapScore", xmlReader.Value));
+                }
+                else
+                { xmlReader.Read(); }
             }
         }
 
@@ -490,11 +533,27 @@ namespace Vulnerator.Model
                         {
                             case "xccdf:benchmark":
                                 {
+                                    bool sourceExists = false;
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("Source", GetAcasXccdfTitle(xmlReader)));
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Version", versionInfo));
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Release", releaseInfo));
-                                    sqliteCommand.CommandText = SetSqliteCommandText("VulnerabilitySources");
-                                    sqliteCommand.ExecuteNonQuery();
+                                    if (!string.IsNullOrWhiteSpace(versionInfo))
+                                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Version", versionInfo)); }
+                                    else
+                                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Version", "V?")); }
+                                    if (!string.IsNullOrWhiteSpace(releaseInfo))
+                                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Release", releaseInfo)); }
+                                    else
+                                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Release", "R?")); }
+                                    sqliteCommand.CommandText = "SELECT * FROM VulnerabilitySources WHERE Source = @Source AND Version = @Version AND Release = @Release;";
+                                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                                    {
+                                        if (sqliteDataReader.HasRows)
+                                        { sourceExists = true; }
+                                    }
+                                    if (!sourceExists)
+                                    {
+                                        sqliteCommand.CommandText = SetSqliteCommandText("VulnerabilitySources");
+                                        sqliteCommand.ExecuteNonQuery();
+                                    }
                                     break;
                                 }
                             case "xccdf:target-facts":
@@ -555,8 +614,8 @@ namespace Vulnerator.Model
                 Match match = Regex.Match(xccdfTitle, @"V\dR\d{1,10}");
                 if (match.Success)
                 {
-                    versionInfo = match.Value.Split('R')[0].Replace("V", "");
-                    releaseInfo = match.Value.Split('R')[1];
+                    versionInfo = match.Value.Split('R')[0];
+                    releaseInfo = "R" + match.Value.Split('R')[1];
                 }
                 xccdfTitle = xccdfTitle.Replace(match.Value + " ", "") + " Benchmark";
                 return xccdfTitle;

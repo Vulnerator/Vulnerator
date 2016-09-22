@@ -165,8 +165,18 @@ namespace Vulnerator
         {
             try
             {
-                sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources VALUES (NULL, @Source, @Version, @Release);";
-                sqliteCommand.ExecuteNonQuery();
+                bool sourceExists = false;
+                sqliteCommand.CommandText = "SELECT * FROM VulnerabilitySources WHERE Source = @Source AND Version = @Version AND Release = @Release;";
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                {
+                    if (sqliteDataReader.HasRows)
+                    { sourceExists = true; }
+                }
+                if (!sourceExists)
+                {
+                    sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources VALUES (NULL, @Source, @Version, @Release);";
+                    sqliteCommand.ExecuteNonQuery();
+                }
             }
             catch (Exception exception)
             {
@@ -421,7 +431,7 @@ namespace Vulnerator
                                 }
                             case "STIGRef":
                                 {
-                                    if (!string.IsNullOrWhiteSpace(stigInfo))
+                                    if (string.IsNullOrWhiteSpace(stigInfo))
                                     {
                                         stigInfo = ObtainAttributeDataNodeValue(xmlReader);
                                         if (stigInfo.Contains("Release") && string.IsNullOrWhiteSpace(releaseInfo))
@@ -429,6 +439,10 @@ namespace Vulnerator
                                         if (stigInfo.Contains("Benchmark"))
                                         { stigInfo = stigInfo.Split(new string[] { "::" }, StringSplitOptions.None)[0].Trim(); }
                                     }
+                                    if (string.IsNullOrWhiteSpace(versionInfo))
+                                    { versionInfo = "V?"; }
+                                    if (string.IsNullOrWhiteSpace(releaseInfo))
+                                    { releaseInfo = "R?"; }
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("Source", stigInfo));
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("Version", versionInfo));
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("Release", releaseInfo));

@@ -17,6 +17,9 @@ namespace Vulnerator.Model
             "VulnId", "VulnTitle", "Description", "RiskStatement", "IaControl", "NistControl", "CPEs", "CrossReferences", 
             "IavmNumber", "FixText", "PluginPublishedDate", "PluginModifiedDate", "PatchPublishedDate", "Age", "RawRisk", "Impact", "RuleId" };
         private string[] uniqueFindingTableColumns = new string[] { "Comments", "FindingDetails", "PluginOutput", "LastObserved" };
+        private string source = "Placeholder";
+        private string version = "PH";
+        private string release = "PH";
         private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
         int i = 1;
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
@@ -58,6 +61,7 @@ namespace Vulnerator.Model
                 {
                     CreateAddFileNameCommand(fileName);
                     CreateAddGroupNameCommand(systemName);
+                    CreateAddSourceCommand();
                     XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
                     using (XmlReader xmlReader = XmlReader.Create(fileName, xmlReaderSettings))
                     {
@@ -72,6 +76,7 @@ namespace Vulnerator.Model
                             }
                             else if (xmlReader.IsStartElement() && xmlReader.Name == "ReportItem")
                             {
+                                CreateAddSourceCommand();
                                 using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                                 {
                                     ParseVulnerabilityInformation(xmlReader, sqliteCommand, workingSystem);
@@ -82,13 +87,19 @@ namespace Vulnerator.Model
                                     if (sqliteCommand.Parameters["VulnId"].Value.Equals("19506"))
                                     {
                                         SetSourceInformation(sqliteCommand);
-                                        CreateAddSourceCommand();
+                                        CreateUpdateSourceCommand(sqliteCommand);
                                     }
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("FileName", Path.GetFileName(fileName)));
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", systemName));
                                     sqliteCommand.CommandText = SetInitialSqliteCommandText("Vulnerability");
                                     sqliteCommand.CommandText = InsertParametersIntoSqliteCommandText(sqliteCommand, "Vulnerability");
                                     sqliteCommand.ExecuteNonQuery();
+                                    if (!sqliteCommand.Parameters.Contains("Source"))
+                                    {
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Source", source));
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Version", version));
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Release", release));
+                                    }
                                     sqliteCommand.CommandText = SetInitialSqliteCommandText("UniqueFinding");
                                     sqliteCommand.CommandText = InsertParametersIntoSqliteCommandText(sqliteCommand, "UniqueFinding");
                                     sqliteCommand.ExecuteNonQuery();
@@ -148,7 +159,41 @@ namespace Vulnerator.Model
             {
                 using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
-                    sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources VALUES (NULL, @Source, @Version, @Release);";
+                    bool placeholderExists = false;
+                    sqliteCommand.CommandText = "SELECT * FROM VulnerabilitySources WHERE Source = 'Placeholder';";
+                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                    {
+                        if (sqliteDataReader.HasRows)
+                        { placeholderExists = true; }
+                    }
+                    if (!placeholderExists)
+                    {
+                        sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources VALUES (NULL, 'Placeholder', 'PH', 'PH');";
+                        sqliteCommand.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to insert source into VulnerabilitySources.");
+                throw exception;
+            }
+        }
+
+        private void CreateUpdateSourceCommand(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                bool sourceExists = false;
+                sqliteCommand.CommandText = "SELECT * FROM VulnerabilitySources WHERE Source = @Source AND Version = @Version AND Release = @Release;";
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                {
+                    if (sqliteDataReader.HasRows)
+                    { sourceExists = true; }
+                }
+                if (!sourceExists)
+                {
+                    sqliteCommand.CommandText = "UPDATE VulnerabilitySources SET Source = @Source, Version = @Version, Release = @Release WHERE Source = 'Placeholder';";
                     sqliteCommand.ExecuteNonQuery();
                 }
             }
@@ -261,9 +306,10 @@ namespace Vulnerator.Model
                 sqliteCommand.Parameters.Add(new SQLiteParameter("LastObserved", workingSystem.StartTime.ToLongDateString()));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Status", "Ongoing"));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "ACAS"));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Source", "Assured Compliance Assessment Solution (ACAS)"));
-                if (UserPrefersHostName && !workingSystem.HostName.Equals("Host Name Not Provided"))
+                if (UserPrefersHostName && !string.IsNullOrWhiteSpace(workingSystem.HostName))
                 { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", workingSystem.HostName)); }
+                else if (UserPrefersHostName && !string.IsNullOrWhiteSpace(workingSystem.NetBiosName))
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", workingSystem.NetBiosName)); }
                 else
                 { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", workingSystem.IpAddress)); }
 
@@ -586,19 +632,21 @@ namespace Vulnerator.Model
             {
                 StringReader stringReader = new StringReader(sqliteCommand.Parameters["PluginOutput"].Value.ToString());
                 string line = string.Empty;
-                string nessusVersion = string.Empty;
-                string pluginFeedVersion = string.Empty;
                 while (line != null)
                 {
                     line = stringReader.ReadLine();
                     if (line.StartsWith("Nessus version"))
-                    { nessusVersion = line.Split(':')[1].Split('(')[0].Trim(); }
+                    { version = line.Split(':')[1].Split('(')[0].Trim(); }
                     else if (line.StartsWith("Plugin feed version"))
-                    { pluginFeedVersion = line.Split(':')[1].Trim(); }
+                    {
+                        release = line.Split(':')[1].Trim();
+                        line = null;
+                    }
                 }
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Source", "Assured Compliance Assessment Solution (ACAS) Nessus Scanner"));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Version", nessusVersion));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Release", pluginFeedVersion));
+                source = "Assured Compliance Assessment Solution (ACAS) Nessus Scanner";
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Source", source));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Version", version));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Release", release));
             }
             catch (Exception exception)
             {

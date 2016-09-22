@@ -337,19 +337,7 @@ namespace Vulnerator.Model
                 WriteCellValue(assetOverviewOpenXmlWriter, "Host Name", 17);
                 WriteCellValue(assetOverviewOpenXmlWriter, "IP Address", 17);
                 WriteCellValue(assetOverviewOpenXmlWriter, "Group Name", 17);
-                switch (findingType)
-                {
-                    case "ACAS":
-                        {
-                            WriteCellValue(assetOverviewOpenXmlWriter, "Operating System", 17);
-                            break;
-                        }
-                    default:
-                        {
-                            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 17);
-                            break;
-                        }
-                }
+                WriteCellValue(assetOverviewOpenXmlWriter, "Operating System", 17);
                 WriteCellValue(assetOverviewOpenXmlWriter, "File Name", 17);
                 WriteCellValue(assetOverviewOpenXmlWriter, "CAT I", 6);
                 WriteCellValue(assetOverviewOpenXmlWriter, "CAT II", 7);
@@ -824,7 +812,18 @@ namespace Vulnerator.Model
                 WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
                 WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
                 WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Source"].ToString(), 24);
+                if (sqliteDataReader["FindingType"].ToString().Equals("WASSP"))
+                { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Source"].ToString(), 24); }
+                else if (!sqliteDataReader["FindingType"].ToString().Equals("ACAS"))
+                {
+                    WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Source"].ToString() + " :: " +
+                        sqliteDataReader["Version"].ToString() + sqliteDataReader["Release"].ToString(), 24);
+                }
+                else
+                {
+                    WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Source"].ToString() + " :: " +
+                        sqliteDataReader["Version"].ToString() + "." + sqliteDataReader["Release"].ToString(), 24);
+                }
                 if (mitigation != null)
                 { WriteCellValue(poamOpenXmlWriter, mitigation.MitigationStatus, 24); }
                 else
@@ -1073,7 +1072,18 @@ namespace Vulnerator.Model
                 { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["IaControl"].ToString(), 24); }
                 else
                 { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["NistControl"].ToString(), 24); }
-                WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Source"].ToString(), 24);
+                if (sqliteDataReader["FindingType"].ToString().Equals("WASSP"))
+                { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Source"].ToString(), 24); }
+                else if (!sqliteDataReader["FindingType"].ToString().Equals("ACAS"))
+                {
+                    WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Source"].ToString() + " :: " +
+                        sqliteDataReader["Version"].ToString() + sqliteDataReader["Release"].ToString(), 24);
+                }
+                else
+                {
+                    WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Source"].ToString() + " :: " +
+                        sqliteDataReader["Version"].ToString() + "." + sqliteDataReader["Release"].ToString(), 24);
+                }
                 WriteCellValue(rarOpenXmlWriter, sqliteDataReader["VulnId"].ToString(), 24);
                 WriteCellValue(rarOpenXmlWriter, sqliteDataReader["VulnTitle"].ToString(), 20);
                 if (!string.IsNullOrWhiteSpace(sqliteDataReader["RawRisk"].ToString()))
@@ -2120,8 +2130,8 @@ namespace Vulnerator.Model
             {
                 if (isMerged)
                 {
-                    return "SELECT GroupName, VulnId, RuleId, VulnTitle, RawRisk, Impact, Description, IaControl, " +
-                        "NistControl, Status, Source, Comments, FindingDetails, " +
+                    return "SELECT FindingType, GroupName, VulnId, RuleId, VulnTitle, RawRisk, Impact, Description, IaControl, " +
+                        "NistControl, Status, Source, Version, Release, Comments, FindingDetails, " +
                         "GROUP_CONCAT(DISTINCT AssetIdToReport) AS AssetIdToReport FROM UniqueFinding " +
                         "NATURAL JOIN FindingTypes NATURAL JOIN VulnerabilitySources " +
                         "NATURAL JOIN FindingStatuses NATURAL JOIN Vulnerability NATURAL JOIN Groups " +

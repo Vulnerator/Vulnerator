@@ -146,7 +146,7 @@ namespace Vulnerator
                 using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("Source", "Assured Compliance Assessment Solution (ACAS) Nessus Scanner"));
-                    sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources (Source) VALUES (@Source);";
+                    sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources VALUES (NULL, @Source, '', '');";
                     sqliteCommand.ExecuteNonQuery();
                 }
             }
