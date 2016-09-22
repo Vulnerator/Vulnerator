@@ -264,7 +264,7 @@ namespace Vulnerator.Model
                     case "Groups":
                         { return "INSERT INTO Groups VALUES (NULL, @GroupName);"; }
                     case "VulnerabilitySources":
-                        { return "INSERT INTO VulnerabilitySources VALUES (NULL, @Source, NULL, NULL);"; }
+                        { return "INSERT INTO VulnerabilitySources VALUES (NULL, @Source, '', '');"; }
                     case "Assets":
                         {
                             return "INSERT INTO Assets (AssetIdToReport, GroupIndex) VALUES (@AssetIdToReport, " +

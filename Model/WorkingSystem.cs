@@ -12,6 +12,8 @@ namespace Vulnerator.Model
 
         public string HostName = string.Empty;
 
+        public string NetBiosName = string.Empty;
+
         public string OperatingSystem = string.Empty;
 
         public string CredentialedScan = string.Empty;
@@ -20,21 +22,24 @@ namespace Vulnerator.Model
         { }
 
         public void SetStartTime(DateTime startTime)
-        { this.StartTime = startTime; }
+        { StartTime = startTime; }
 
         public void SetEndTime(DateTime endTime)
-        { this.EndTime = endTime; }
+        { EndTime = endTime; }
 
         public void SetIpAddress(string ipAddress)
-        { this.IpAddress = ipAddress; }
+        { IpAddress = ipAddress; }
 
         public void SetHostName(string hostName)
-        { this.HostName = hostName; }
+        { HostName = hostName; }
+
+        public void SetNetBiosName(string netBiosName)
+        { NetBiosName = netBiosName; }
 
         public void SetCredentialedScan(string credentialedValue)
-        { this.CredentialedScan = credentialedValue; }
+        { CredentialedScan = credentialedValue; }
 
         public void SetOperatingSystem(string operatingSystem)
-        { this.OperatingSystem = operatingSystem; }
+        { OperatingSystem = operatingSystem; }
     }
 }
