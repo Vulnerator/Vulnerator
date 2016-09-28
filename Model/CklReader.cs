@@ -25,8 +25,8 @@ namespace Vulnerator
         private string groupName = string.Empty;
         private string fileNameWithoutPath = string.Empty;
         private string[] vulnerabilityTableColumns = new string[] { 
-            "VulnId", "VulnTitle", "Description", "RiskStatement", "IaControl", "NistControl", "CPEs", "CrossReferences", 
-            "IavmNumber", "FixText", "PluginPublishedDate", "PluginModifiedDate", "PatchPublishedDate", "Age", "RawRisk", "Impact", "RuleId" };
+            "StigId", "VulnId", "VulnTitle", "Description", "RiskStatement", "IaControl", "NistControl", "CPEs", "CrossReferences", "CheckContent", 
+            "IavmNumber", "FixText", "PluginPublishedDate", "PluginModifiedDate", "PatchPublishedDate", "Age", "RawRisk", "Impact", "RuleId", "CciNumber" };
         private string[] uniqueFindingTableColumns = new string[] { "Comments", "FindingDetails", "PluginOutput", "LastObserved" };
         private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
@@ -446,6 +446,16 @@ namespace Vulnerator
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("Source", stigInfo));
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("Version", versionInfo));
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("Release", releaseInfo));
+                                    break;
+                                }
+                            case "Rule_Ver":
+                                {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("StigId", ObtainAttributeDataNodeValue(xmlReader)));
+                                    break;
+                                }
+                            case "Check_Content":
+                                {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("CheckContent", ObtainAttributeDataNodeValue(xmlReader)));
                                     break;
                                 }
                             default:

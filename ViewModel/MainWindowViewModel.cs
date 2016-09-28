@@ -814,22 +814,6 @@ namespace Vulnerator.ViewModel
 
 		#endregion
 
-		#region GetCciFile
-
-		private string GetCciFile(string fileName)
-		{
-			string result = string.Empty;
-			using (Stream stream = this.GetType().Assembly.
-					   GetManifestResourceStream("Vulnerator.Resources." + fileName))
-			{
-				using (StreamReader sr = new StreamReader(stream))
-				{ result = sr.ReadToEnd(); }
-			}
-			return result;
-		}
-
-		#endregion
-
 		#region UpdateDictionaryCommand
 
 		public ICommand UpdateDictionaryCommand

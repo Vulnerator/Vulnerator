@@ -126,7 +126,8 @@ namespace Vulnerator.Model
                     if (StigDetailsTabIsNeeded)
                     {
                         log.Info("Creating STIG Details tab.");
-                        WriteStigDetailItems();
+                        WriteStigDetailItems("CKL");
+                        WriteStigDetailItems("XCCDF");
                     }
 
                     log.Info("Finalizing workbook.");
@@ -176,7 +177,7 @@ namespace Vulnerator.Model
                 using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
-                    sqliteCommand.CommandText = SetSqliteCommandText(findingType, findingsAreMerged);
+                    sqliteCommand.CommandText = SetSqliteCommandText(findingsAreMerged);
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
                         while (sqliteDataReader.Read())
@@ -1295,7 +1296,7 @@ namespace Vulnerator.Model
                 using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "ACAS"));
-                    sqliteCommand.CommandText = SetSqliteCommandText("ACAS", false);
+                    sqliteCommand.CommandText = SetSqliteCommandText(false);
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
                         while (sqliteDataReader.Read())
@@ -1379,23 +1380,28 @@ namespace Vulnerator.Model
             try
             {
                 stigDetailsOpenXmlWriter.WriteStartElement(new Columns());
-                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 1U, Max = 1U, Width = 20.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 1U, Max = 1U, Width = 10.00d, CustomWidth = true });
                 stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 2U, Max = 2U, Width = 10.00d, CustomWidth = true });
-                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 25.00d, CustomWidth = true });
-                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 4U, Max = 4U, Width = 25.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 20.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 4U, Max = 4U, Width = 20.00d, CustomWidth = true });
                 stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 5U, Max = 5U, Width = 10.00d, CustomWidth = true });
-                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 6U, Max = 6U, Width = 15.00d, CustomWidth = true });
-                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 7U, Max = 7U, Width = 35.00d, CustomWidth = true });
-                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 8U, Max = 8U, Width = 35.00d, CustomWidth = true });
-                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 9U, Max = 9U, Width = 20.00d, CustomWidth = true });
-                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 10U, Max = 10U, Width = 20.00d, CustomWidth = true });
-                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 11U, Max = 11U, Width = 15.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 6U, Max = 6U, Width = 25.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 7U, Max = 7U, Width = 25.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 8U, Max = 8U, Width = 25.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 9U, Max = 9U, Width = 10.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 10U, Max = 10U, Width = 15.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 11U, Max = 11U, Width = 35.00d, CustomWidth = true });
                 stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 12U, Max = 12U, Width = 35.00d, CustomWidth = true });
                 stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 13U, Max = 13U, Width = 35.00d, CustomWidth = true });
-                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 14U, Max = 14U, Width = 35.00d, CustomWidth = true });
-                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 15U, Max = 15U, Width = 25.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 14U, Max = 14U, Width = 20.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 15U, Max = 15U, Width = 20.00d, CustomWidth = true });
                 stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 16U, Max = 16U, Width = 15.00d, CustomWidth = true });
                 stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 17U, Max = 17U, Width = 35.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 18U, Max = 18U, Width = 35.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 19U, Max = 19U, Width = 35.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 20U, Max = 20U, Width = 25.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 21U, Max = 21U, Width = 15.00d, CustomWidth = true });
+                stigDetailsOpenXmlWriter.WriteElement(new Column() { Min = 22U, Max = 22U, Width = 35.00d, CustomWidth = true });
                 stigDetailsOpenXmlWriter.WriteEndElement();
             }
             catch (Exception exception)
@@ -1410,13 +1416,18 @@ namespace Vulnerator.Model
             try
             {
                 stigDetailsOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(stigDetailsOpenXmlWriter, "IA Control", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "NIST Control", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "CCI Number", 4);
                 WriteCellValue(stigDetailsOpenXmlWriter, "STIG Title", 4);
-                WriteCellValue(stigDetailsOpenXmlWriter, "STIG ID", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "V-ID", 4);
                 WriteCellValue(stigDetailsOpenXmlWriter, "Rule ID", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "STIG ID", 4);
                 WriteCellValue(stigDetailsOpenXmlWriter, "STIG Name", 4);
                 WriteCellValue(stigDetailsOpenXmlWriter, "Risk Factor", 4);
                 WriteCellValue(stigDetailsOpenXmlWriter, "STIG Severity", 4);
                 WriteCellValue(stigDetailsOpenXmlWriter, "Description", 4);
+                WriteCellValue(stigDetailsOpenXmlWriter, "Check Content", 4);
                 WriteCellValue(stigDetailsOpenXmlWriter, "Solution", 4);
                 WriteCellValue(stigDetailsOpenXmlWriter, "Host Name", 4);
                 WriteCellValue(stigDetailsOpenXmlWriter, "IP Address", 4);
@@ -1436,26 +1447,31 @@ namespace Vulnerator.Model
             }
         }
 
-        private void WriteStigDetailItems()
+        private void WriteStigDetailItems(string findingType)
         {
             try
             {
                 using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "CKL"));
-                    sqliteCommand.CommandText = SetSqliteCommandText("CKL", false);
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
+                    sqliteCommand.CommandText = SetSqliteCommandText(false);
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
                         while (sqliteDataReader.Read())
                         {
                             stigDetailsOpenXmlWriter.WriteStartElement(new Row());
+                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["IaControl"].ToString(), 24);
+                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["NistControl"].ToString(), 24);
+                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["CciNumber"].ToString(), 24);
                             WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["VulnTitle"].ToString(), 20);
                             WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["VulnId"].ToString(), 24);
                             WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["RuleId"].ToString(), 24);
+                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["StigId"].ToString(), 24);
                             WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["Source"].ToString(), 24);
                             WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["Impact"].ToString(), 24);
                             WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["RawRisk"].ToString(), 24);
                             WriteCellValue(stigDetailsOpenXmlWriter, NormalizeCellValue(sqliteDataReader["Description"].ToString()), 20);
+                            WriteCellValue(stigDetailsOpenXmlWriter, NormalizeCellValue(sqliteDataReader["CheckContent"].ToString()), 20);
                             WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["FixText"].ToString(), 20);
                             WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["HostName"].ToString(), 24);
                             WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["IpAddress"].ToString(), 20);
@@ -2133,7 +2149,7 @@ namespace Vulnerator.Model
 
         #endregion Create Stylesheet
 
-        private string SetSqliteCommandText(string findingType, bool isMerged)
+        private string SetSqliteCommandText(bool isMerged)
         {
             try
             {
