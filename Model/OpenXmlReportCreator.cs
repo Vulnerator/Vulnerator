@@ -36,6 +36,7 @@ namespace Vulnerator.Model
         private bool IncludCatIIIFindings { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbCatIII")); } }
         private bool IncludCatIVFindings { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbCatIV")); } }
         private bool IsDiacapPackage { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbDiacap")); } }
+        private bool RevisionThreeSelected { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("revisionThreeRadioButton")); } }
         private bool AssetOverviewTabIsNeeded { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbAssetOverview")); } }
         private bool PoamAndRarTabsAreNeeded { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbPoamRar")); } }
         private bool DiscrepanciesTabIsNeeded { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbDiscrepancies")); } }
@@ -380,27 +381,21 @@ namespace Vulnerator.Model
                 using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
-                    sqliteCommand.CommandText = @"SELECT 
-                    AssetIdToReport, HostName, IpAddress, GroupName,
-                    SUM(CASE WHEN (RawRisk = 'I' OR Impact = 'Critical' OR Impact = 'High') AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatI,
-                    SUM(CASE WHEN (RawRisk = 'II' OR Impact = 'Medium') AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatII,
-                    SUM(CASE WHEN (RawRisk = 'III' OR Impact = 'Low') AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatIII,
-                    SUM(CASE WHEN (RawRisk = 'IV' OR Impact = 'Informational') AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatIV,
-                    COUNT(CASE WHEN Status = 'Ongoing' THEN 1 END) AS Total,
-                    OperatingSystem,
-                    IsCredentialed,
-                    Found21745,
-                    Found26917,
-                    FileName
-                    FROM Assets
-                    NATURAL JOIN UniqueFinding
-                    NATURAL JOIN Vulnerability   
-                    NATURAL JOIN Groups   
-                    NATURAL JOIN FileNames
-                    NATURAL JOIN FindingTypes
-                    NATURAL JOIN FindingStatuses
-                    WHERE FindingType = @FindingType  
-                    GROUP BY AssetIdToReport, FileName;";
+                    sqliteCommand.CommandText = "SELECT AssetIdToReport, HostName, IpAddress, GroupName, " + 
+                        "SUM(CASE WHEN (RawRisk = 'I' OR Impact = 'Critical' OR Impact = 'High') AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatI, " + 
+                        "SUM(CASE WHEN (RawRisk = 'II' OR Impact = 'Medium') AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatII, " + 
+                        "SUM(CASE WHEN (RawRisk = 'III' OR Impact = 'Low') AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatIII, " +
+                        "SUM(CASE WHEN (RawRisk = 'IV' OR Impact = 'Informational') AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatIV, " +
+                        "COUNT(CASE WHEN Status = 'Ongoing' THEN 1 END) AS Total, " +
+                        "OperatingSystem, IsCredentialed, Found21745, Found26917, FileName " +
+                        "FROM Assets NATURAL JOIN UniqueFinding NATURAL JOIN Vulnerability NATURAL JOIN Groups NATURAL JOIN FileNames " +
+                        "NATURAL JOIN FindingTypes NATURAL JOIN FindingStatuses WHERE FindingType = @FindingType " +
+                        "GROUP BY AssetIdToReport, FileName;";
+                    if (findingType.Equals("XCCDF"))
+                    {
+                        sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(783, " NATURAL JOIN ScapScores");
+                        sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(619, ", ScapScore");
+                    }
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
                         while (sqliteDataReader.Read())
@@ -470,7 +465,7 @@ namespace Vulnerator.Model
                         }
                     case "XCCDF":
                         {
-                            WriteCellValue(assetOverviewOpenXmlWriter, string.Empty, 18);
+                            WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["ScapScore"].ToString(), 18);
                             break;
                         }
                     default:
@@ -784,7 +779,14 @@ namespace Vulnerator.Model
                 if (IsDiacapPackage)
                 { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["IaControl"].ToString(), 24); }
                 else
-                { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["NistControl"].ToString(), 24); }
+                {
+                    if (!string.IsNullOrWhiteSpace(sqliteDataReader["NistControl"].ToString()))
+                    { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["NistControl"].ToString(), 24); }
+                    else if (!string.IsNullOrWhiteSpace(sqliteDataReader["IaControl"].ToString()))
+                    { WriteCellValue(poamOpenXmlWriter, ConvertDiacapToRmf(sqliteDataReader["IaControl"].ToString()), 24); }
+                    else
+                    { WriteCellValue(poamOpenXmlWriter, string.Empty, 24); }
+                }
                 WriteCellValue(poamOpenXmlWriter, ContactOrganization + ", " + ContactName + ", " + ContactNumber + ", " + ContactEmail, 20);
                 WriteCellValue(poamOpenXmlWriter, sqliteDataReader["VulnId"].ToString(), 24);
                 if (!string.IsNullOrWhiteSpace(sqliteDataReader["RawRisk"].ToString()))
@@ -1071,7 +1073,14 @@ namespace Vulnerator.Model
                 if (IsDiacapPackage)
                 { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["IaControl"].ToString(), 24); }
                 else
-                { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["NistControl"].ToString(), 24); }
+                {
+                    if (!string.IsNullOrWhiteSpace(sqliteDataReader["NistControl"].ToString()))
+                    { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["NistControl"].ToString(), 24); }
+                    else if (!string.IsNullOrWhiteSpace(sqliteDataReader["IaControl"].ToString()))
+                    { WriteCellValue(rarOpenXmlWriter, ConvertDiacapToRmf(sqliteDataReader["IaControl"].ToString()), 24); }
+                    else
+                    { WriteCellValue(rarOpenXmlWriter, string.Empty, 24); }
+                }
                 if (sqliteDataReader["FindingType"].ToString().Equals("WASSP"))
                 { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Source"].ToString(), 24); }
                 else if (!sqliteDataReader["FindingType"].ToString().Equals("ACAS"))
@@ -2164,9 +2173,9 @@ namespace Vulnerator.Model
                     {
                         while (sqliteDataReader.Read())
                         {
-                            if (!string.IsNullOrWhiteSpace(sqliteDataReader[0].ToString()))
+                            if (!string.IsNullOrWhiteSpace(sqliteDataReader[0].ToString()) && !credentialedString.Contains("21745"))
                             { credentialedString = credentialedString + "; 21745"; }
-                            if (!string.IsNullOrWhiteSpace(sqliteDataReader[1].ToString()))
+                            if (!string.IsNullOrWhiteSpace(sqliteDataReader[1].ToString()) && !credentialedString.Contains("26917"))
                             { credentialedString = credentialedString + "; 26917"; }
                         }
                     }
@@ -2176,6 +2185,41 @@ namespace Vulnerator.Model
             catch (Exception exception)
             {
                 log.Error("Unable to set credentialed string for Excel report.");
+                throw exception;
+            }
+        }
+
+        private string ConvertDiacapToRmf(string diacapControls)
+        {
+            try
+            {
+                string nistControls = string.Empty;
+                if (diacapControls.Contains(','))
+                {
+                    string[] diacapControlArray = diacapControls.Split(',').ToArray();
+
+                    foreach (string control in diacapControlArray)
+                    {
+                        string value;
+                        if (RevisionThreeSelected && DiacapToRmf.RevisionThree.TryGetValue(control, out value))
+                        { nistControls = nistControls + value + Environment.NewLine; }
+                        else if (DiacapToRmf.RevisionFour.TryGetValue(control, out value))
+                        { nistControls = nistControls + value + Environment.NewLine; }
+                    }
+                }
+                else
+                {
+                    string value;
+                    if (RevisionThreeSelected && DiacapToRmf.RevisionThree.TryGetValue(diacapControls, out value))
+                    { nistControls = nistControls + value + Environment.NewLine; }
+                    else if (DiacapToRmf.RevisionFour.TryGetValue(diacapControls, out value))
+                    { nistControls = nistControls + value + Environment.NewLine; }
+                }
+                return nistControls;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to convert DIACAP control(s) " + diacapControls + " to NIST control(s).");
                 throw exception;
             }
         }

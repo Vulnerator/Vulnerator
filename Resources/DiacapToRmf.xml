@@ -1,0 +1,967 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DiacapToRmf>
+	<Iac control="COAS-1">
+		<NistControl revision="3">CP-7</NistControl>
+		<NistControl revision="4">CP-2</NistControl>
+		<NistControl revision="4">CP-2(3)</NistControl>
+		<NistControl revision="4">CP-7</NistControl>
+	</Iac>
+	<Iac control="COAS-2">
+		<NistControl revision="3">CP-7</NistControl>
+		<NistControl revision="4">CP-2</NistControl>
+		<NistControl revision="4">CP-2(4)</NistControl>
+		<NistControl revision="4">CP-7</NistControl>
+	</Iac>
+	<Iac control="COBR-1">
+		<NistControl revision="3">CP-9</NistControl>
+		<NistControl revision="4">CP-6</NistControl>
+		<NistControl revision="4">CP-9</NistControl>
+		<NistControl revision="4">CP-9(5)</NistControl>
+	</Iac>
+	<Iac control="CODB-1">
+		<NistControl revision="3">CP-9</NistControl>
+		<NistControl revision="4">CP-9</NistControl>
+		<NistControl revision="4">CP-10</NistControl>
+		<NistControl revision="4">CP-10(6)</NistControl>
+	</Iac>
+	<Iac control="CODB-2">
+		<NistControl revision="3">CP-9</NistControl>
+		<NistControl revision="4">CP-9</NistControl>
+		<NistControl revision="4">CP-10</NistControl>
+		<NistControl revision="4">CP-10(6)</NistControl>
+	</Iac>
+	<Iac control="CODB-3">
+		<NistControl revision="3">CP-9(6)</NistControl>
+		<NistControl revision="4">CP-9</NistControl>
+		<NistControl revision="4">CP-9(6)</NistControl>
+	</Iac>
+	<Iac control="CODP-1">
+		<NistControl revision="3">CP-2(3)</NistControl>
+		<NistControl revision="4">CP-2</NistControl>
+		<NistControl revision="4">CP-2(1)</NistControl>
+		<NistControl revision="4">CP-2(3)</NistControl>
+	</Iac>
+	<Iac control="CODP-2">
+		<NistControl revision="3">CP-2(4)</NistControl>
+		<NistControl revision="4">CP-2</NistControl>
+		<NistControl revision="4">CP-2(1)</NistControl>
+		<NistControl revision="4">CP-2(4)</NistControl>
+	</Iac>
+	<Iac control="CODP-3">
+		<NistControl revision="3">CP-2(5)</NistControl>
+		<NistControl revision="4">CP-2</NistControl>
+		<NistControl revision="4">CP-2(1)</NistControl>
+		<NistControl revision="4">CP-2(5)</NistControl>
+		<NistControl revision="4">CP-2(6)</NistControl>
+	</Iac>
+	<Iac control="COEB-1">
+		<NistControl revision="3">CP-7(5)</NistControl>
+		<NistControl revision="4">CP-6</NistControl>
+		<NistControl revision="4">CP-7</NistControl>
+		<NistControl revision="4">CP-7(5)</NistControl>
+	</Iac>
+	<Iac control="COEB-2">
+		<NistControl revision="3">CP-7(5)</NistControl>
+		<NistControl revision="4">CP-6</NistControl>
+		<NistControl revision="4">CP-7</NistControl>
+		<NistControl revision="4">CP-7(5)</NistControl>
+	</Iac>
+	<Iac control="COED-1">
+		<NistControl revision="3">CP-4</NistControl>
+		<NistControl revision="4">CP-4</NistControl>
+		<NistControl revision="4">CP-4(1)</NistControl>
+	</Iac>
+	<Iac control="COED-2">
+		<NistControl revision="3">CP-4</NistControl>
+		<NistControl revision="4">CP-4</NistControl>
+		<NistControl revision="4">CP-4(1)</NistControl>
+	</Iac>
+	<Iac control="COEF-1">
+		<NistControl revision="3">CP-2</NistControl>
+		<NistControl revision="4">CP-2</NistControl>
+	</Iac>
+	<Iac control="COEF-2">
+		<NistControl revision="3">CP-2</NistControl>
+		<NistControl revision="4">CP-2</NistControl>
+	</Iac>
+	<Iac control="COMS-1">
+		<NistControl revision="3">MA-6</NistControl>
+		<NistControl revision="4">MA-6</NistControl>
+	</Iac>
+	<Iac control="COMS-2">
+		<NistControl revision="3">MA-6</NistControl>
+		<NistControl revision="4">MA-6</NistControl>
+	</Iac>
+	<Iac control="COPS-1">
+		<NistControl revision="3">PE-11(1)</NistControl>
+		<NistControl revision="4">PE-11</NistControl>
+		<NistControl revision="4">PE-11(1)</NistControl>
+		<NistControl revision="4">PE-11(2)</NistControl>
+	</Iac>
+	<Iac control="COPS-2">
+		<NistControl revision="3">PE-11</NistControl>
+		<NistControl revision="4">PE-11</NistControl>
+		<NistControl revision="4">PE-11(1)</NistControl>
+		<NistControl revision="4">PE-11(2)</NistControl>
+	</Iac>
+	<Iac control="COPS-3">
+		<NistControl revision="3">PE-11</NistControl>
+		<NistControl revision="4">PE-11</NistControl>
+		<NistControl revision="4">PE-11(1)</NistControl>
+		<NistControl revision="4">PE-11(2)</NistControl>
+	</Iac>
+	<Iac control="COSP-1">
+		<NistControl revision="3">MA-6</NistControl>
+		<NistControl revision="4">MA-6</NistControl>
+	</Iac>
+	<Iac control="COSP-2">
+		<NistControl revision="3">MA-6</NistControl>
+		<NistControl revision="4">MA-6</NistControl>
+	</Iac>
+	<Iac control="COSW-1">
+		<NistControl revision="3">CP-9(3)</NistControl>
+		<NistControl revision="4">CP-9</NistControl>
+		<NistControl revision="4">CP-9(3)</NistControl>
+	</Iac>
+	<Iac control="COTR-1">
+		<NistControl revision="3">CP-10</NistControl>
+		<NistControl revision="4">CP-10</NistControl>
+		<NistControl revision="4">CP-10(3)</NistControl>
+	</Iac>
+	<Iac control="DCAR-1">
+		<NistControl revision="3">CA-2</NistControl>
+		<NistControl revision="4">CA-1</NistControl>
+		<NistControl revision="4">CA-2</NistControl>
+		<NistControl revision="4">CA-2(2)</NistControl>
+	</Iac>
+	<Iac control="DCAS-1">
+		<NistControl revision="3">CA-2</NistControl>
+		<NistControl revision="4">SA-4</NistControl>
+		<NistControl revision="4">SA-4(6)</NistControl>
+		<NistControl revision="4">SA-4(7)</NistControl>
+	</Iac>
+	<Iac control="DCBP-1">
+		<NistControl revision="3">SA-8</NistControl>
+		<NistControl revision="4">SA-8</NistControl>
+	</Iac>
+	<Iac control="DCCB-1">
+		<NistControl revision="3">CM-3</NistControl>
+		<NistControl revision="4">CM-1</NistControl>
+		<NistControl revision="4">CM-3</NistControl>
+	</Iac>
+	<Iac control="DCCB-2">
+		<NistControl revision="3">CM-3</NistControl>
+		<NistControl revision="4">CM-1</NistControl>
+		<NistControl revision="4">CM-3</NistControl>
+		<NistControl revision="4">CM-3(4)</NistControl>
+	</Iac>
+	<Iac control="DCCS-1">
+		<NistControl revision="3">CM-6</NistControl>
+		<NistControl revision="4">CM-6</NistControl>
+	</Iac>
+	<Iac control="DCCS-2">
+		<NistControl revision="3">CM-6</NistControl>
+		<NistControl revision="4">CM-6</NistControl>
+	</Iac>
+	<Iac control="DCCT-1">
+		<NistControl revision="3">CM-4</NistControl>
+		<NistControl revision="4">CM-4</NistControl>
+		<NistControl revision="4">CM-6</NistControl>
+		<NistControl revision="4">CM-6(4)</NistControl>
+		<NistControl revision="4">SI-2</NistControl>
+	</Iac>
+	<Iac control="DCDS-1">
+		<NistControl revision="3">SA-9(1)</NistControl>
+		<NistControl revision="4">SA-9</NistControl>
+		<NistControl revision="4">SA-9(1)</NistControl>
+	</Iac>
+	<Iac control="DCFA-1">
+		<NistControl revision="3">PL-2(2)</NistControl>
+		<NistControl revision="4">PL-2</NistControl>
+		<NistControl revision="4">PL-2(2)</NistControl>
+	</Iac>
+	<Iac control="DCHW-1">
+		<NistControl revision="3">CM-2</NistControl>
+		<NistControl revision="3">CM-8</NistControl>
+		<NistControl revision="3">CP-9(3)</NistControl>
+		<NistControl revision="4">CM-2</NistControl>
+		<NistControl revision="4">CM-8</NistControl>
+		<NistControl revision="4">CP-9(3)</NistControl>
+	</Iac>
+	<Iac control="DCID-1">
+		<NistControl revision="3">CA-3</NistControl>
+		<NistControl revision="4">CA-3</NistControl>
+	</Iac>
+	<Iac control="DCII-1">
+		<NistControl revision="3">CM-4</NistControl>
+		<NistControl revision="4">CM-4</NistControl>
+		<NistControl revision="4">CM-4(2)</NistControl>
+	</Iac>
+	<Iac control="DCIT-1">
+		<NistControl revision="3">PS-7</NistControl>
+		<NistControl revision="4">PS-7</NistControl>
+		<NistControl revision="4">SA-9</NistControl>
+	</Iac>
+	<Iac control="DCMC-1">
+		<NistControl revision="3">SC-18</NistControl>
+		<NistControl revision="4">SC-18</NistControl>
+		<NistControl revision="4">SC-18(1)</NistControl>
+		<NistControl revision="4">SC-18(2)</NistControl>
+		<NistControl revision="4">SC-18(3)</NistControl>
+		<NistControl revision="4">SC-18(4)</NistControl>
+		<NistControl revision="4">SC-18(5)</NistControl>
+	</Iac>
+	<Iac control="DCNR-1">
+		<NistControl revision="3">AU-10(5)</NistControl>
+		<NistControl revision="4">AU-10</NistControl>
+		<NistControl revision="4">AU-10(5)</NistControl>
+		<NistControl revision="4">SC-13</NistControl>
+		<NistControl revision="4">SC-13(4)</NistControl>
+	</Iac>
+	<Iac control="DCPA-1">
+		<NistControl revision="3">SC-2</NistControl>
+		<NistControl revision="4">SC-2</NistControl>
+	</Iac>
+	<Iac control="DCPB-1">
+		<NistControl revision="3">SA-2</NistControl>
+		<NistControl revision="4">SA-2</NistControl>
+	</Iac>
+	<Iac control="DCPD-1">
+		<NistControl revision="3">SA-6(1)</NistControl>
+		<NistControl revision="4">SA-6</NistControl>
+		<NistControl revision="4">SA-6(1)</NistControl>
+	</Iac>
+	<Iac control="DCPP-1">
+		<NistControl revision="3">CM-7(3)</NistControl>
+		<NistControl revision="4">SA-7</NistControl>
+		<NistControl revision="4">SA-7(3)</NistControl>
+	</Iac>
+	<Iac control="DCPR-1">
+		<NistControl revision="3">CM-1</NistControl>
+		<NistControl revision="4">CM-1</NistControl>
+		<NistControl revision="4">CM-3</NistControl>
+		<NistControl revision="4">CM-9</NistControl>
+	</Iac>
+	<Iac control="DCSD-1">
+		<NistControl revision="3">PL-2</NistControl>
+		<NistControl revision="4">PL-1</NistControl>
+		<NistControl revision="4">PL-2</NistControl>
+		<NistControl revision="4">PM-10</NistControl>
+		<NistControl revision="4">SA-5</NistControl>
+	</Iac>
+	<Iac control="DCSL-1">
+		<NistControl revision="3">CM-5(6)</NistControl>
+		<NistControl revision="4">CM-5</NistControl>
+		<NistControl revision="4">CM-5(6)</NistControl>
+	</Iac>
+	<Iac control="DCSP-1">
+		<NistControl revision="3">SC-3</NistControl>
+		<NistControl revision="4">SC-3</NistControl>
+	</Iac>
+	<Iac control="DCSQ-1">
+		<NistControl revision="3">SA-4(3)</NistControl>
+		<NistControl revision="4">SA-4</NistControl>
+		<NistControl revision="4">SA-4(3)</NistControl>
+		<NistControl revision="4">SA-11</NistControl>
+		<NistControl revision="4">SA-11(1)</NistControl>
+	</Iac>
+	<Iac control="DCSR-1">
+		<NistControl revision="3">SA-4(7)</NistControl>
+		<NistControl revision="4">SA-4</NistControl>
+		<NistControl revision="4">SA-4(7)</NistControl>
+	</Iac>
+	<Iac control="DCSR-2">
+		<NistControl revision="3">SA-4(7)</NistControl>
+		<NistControl revision="4">SA-4</NistControl>
+		<NistControl revision="4">SA-4(6)</NistControl>
+		<NistControl revision="4">SA-4(7)</NistControl>
+		<NistControl revision="4">SC-12</NistControl>
+		<NistControl revision="4">SC-12(2)</NistControl>
+		<NistControl revision="4">SC-12(3)</NistControl>
+	</Iac>
+	<Iac control="DCSR-3">
+		<NistControl revision="3">SA-4(6)</NistControl>
+		<NistControl revision="4">SA-4</NistControl>
+		<NistControl revision="4">SA-4(6)</NistControl>
+		<NistControl revision="4">SA-4(7)</NistControl>
+		<NistControl revision="4">SC-12</NistControl>
+		<NistControl revision="4">SC-12(2)</NistControl>
+		<NistControl revision="4">SC-12(3)</NistControl>
+	</Iac>
+	<Iac control="DCSS-1">
+		<NistControl revision="3">CM-6</NistControl>
+		<NistControl revision="4">CM-6</NistControl>
+		<NistControl revision="4">SC-24</NistControl>
+		<NistControl revision="4">SI-6</NistControl>
+	</Iac>
+	<Iac control="DCSS-2">
+		<NistControl revision="3">CP-4(4)</NistControl>
+		<NistControl revision="4">CP-4</NistControl>
+		<NistControl revision="4">CP-4(4)</NistControl>
+		<NistControl revision="4">SC-7</NistControl>
+		<NistControl revision="4">SC-7(18)</NistControl>
+		<NistControl revision="4">SC-24</NistControl>
+		<NistControl revision="4">SI-6</NistControl>
+	</Iac>
+	<Iac control="DCSW-1">
+		<NistControl revision="3">CM-2</NistControl>
+		<NistControl revision="4">CM-2</NistControl>
+		<NistControl revision="4">CM-8</NistControl>
+		<NistControl revision="4">CP-9</NistControl>
+		<NistControl revision="4">CP-9(3)</NistControl>
+	</Iac>
+	<Iac control="EBBD-1">
+		<NistControl revision="3">AC-4</NistControl>
+		<NistControl revision="4">AC-4</NistControl>
+		<NistControl revision="4">SC-7</NistControl>
+		<NistControl revision="4">SC-7(2)</NistControl>
+	</Iac>
+	<Iac control="EBBD-2">
+		<NistControl revision="3">AC-4</NistControl>
+		<NistControl revision="4">AC-4</NistControl>
+		<NistControl revision="4">SC-7</NistControl>
+		<NistControl revision="4">SC-7(2)</NistControl>
+		<NistControl revision="4">SC-7(8)</NistControl>
+		<NistControl revision="4">SC-7(13)</NistControl>
+	</Iac>
+	<Iac control="EBBD-3">
+		<NistControl revision="3">AC-4</NistControl>
+		<NistControl revision="4">AC-4</NistControl>
+		<NistControl revision="4">CA-3</NistControl>
+		<NistControl revision="4">CA-3(1)</NistControl>
+		<NistControl revision="4">CA-3(2)</NistControl>
+		<NistControl revision="4">CA-3(4)</NistControl>
+		<NistControl revision="4">CA-3(5)</NistControl>
+		<NistControl revision="4">SC-7</NistControl>
+	</Iac>
+	<Iac control="EBCR-1">
+		<NistControl revision="3">CA-3</NistControl>
+		<NistControl revision="4">CA-3</NistControl>
+	</Iac>
+	<Iac control="EBPW-1">
+		<NistControl revision="3">SC-7</NistControl>
+		<NistControl revision="4">SC-7</NistControl>
+	</Iac>
+	<Iac control="EBRP-1">
+		<NistControl revision="3">AC-17</NistControl>
+		<NistControl revision="4">AC-17</NistControl>
+		<NistControl revision="4">AC-17(2)</NistControl>
+		<NistControl revision="4">AC-17(3)</NistControl>
+		<NistControl revision="4">AC-17(4)</NistControl>
+		<NistControl revision="4">AC-17(7)</NistControl>
+		<NistControl revision="4">MA-4</NistControl>
+		<NistControl revision="4">MA-4(1)</NistControl>
+		<NistControl revision="4">MA-4(6)</NistControl>
+	</Iac>
+	<Iac control="EBRU-1">
+		<NistControl revision="3">AC-17</NistControl>
+		<NistControl revision="4">AC-17</NistControl>
+		<NistControl revision="4">AC-17(2)</NistControl>
+		<NistControl revision="4">AC-17(3)</NistControl>
+		<NistControl revision="4">IA-2</NistControl>
+		<NistControl revision="4">IA-2(2)</NistControl>
+	</Iac>
+	<Iac control="EBVC-1">
+		<NistControl revision="3">SI-4(10)</NistControl>
+		<NistControl revision="4">SI-4</NistControl>
+		<NistControl revision="4">SI-4(10)</NistControl>
+	</Iac>
+	<Iac control="ECAD-1">
+		<NistControl revision="3">AC-16</NistControl>
+		<NistControl revision="4">AC-16</NistControl>
+		<NistControl revision="4">IA-4</NistControl>
+		<NistControl revision="4">IA-4(4)</NistControl>
+	</Iac>
+	<Iac control="ECAN-1">
+		<NistControl revision="3">AC-3(3)</NistControl>
+		<NistControl revision="4">AC-2</NistControl>
+		<NistControl revision="4">AC-2(7)</NistControl>
+		<NistControl revision="4">AC-3</NistControl>
+		<NistControl revision="4">AC-3(4)</NistControl>
+		<NistControl revision="4">AC-3(7)</NistControl>
+		<NistControl revision="4">AC-6</NistControl>
+	</Iac>
+	<Iac control="ECAR-1">
+		<NistControl revision="3">AU-2</NistControl>
+		<NistControl revision="4">AU-2</NistControl>
+		<NistControl revision="4">AU-3</NistControl>
+		<NistControl revision="4">AU-8</NistControl>
+	</Iac>
+	<Iac control="ECAR-2">
+		<NistControl revision="3">AU-2</NistControl>
+		<NistControl revision="4">AU-2</NistControl>
+		<NistControl revision="4">AU-3</NistControl>
+		<NistControl revision="4">AU-8</NistControl>
+	</Iac>
+	<Iac control="ECAR-3">
+		<NistControl revision="3">AU-2</NistControl>
+		<NistControl revision="4">AU-2</NistControl>
+		<NistControl revision="4">AU-3</NistControl>
+		<NistControl revision="4">AU-8</NistControl>
+	</Iac>
+	<Iac control="ECAT-1">
+		<NistControl revision="3">AU-6</NistControl>
+		<NistControl revision="4">AU-6</NistControl>
+		<NistControl revision="4">AU-6(1)</NistControl>
+		<NistControl revision="4">AU-6(3)</NistControl>
+		<NistControl revision="4">AU-12</NistControl>
+	</Iac>
+	<Iac control="ECAT-2">
+		<NistControl revision="3">AU-6</NistControl>
+		<NistControl revision="4">AC-17</NistControl>
+		<NistControl revision="4">AC-17(9)</NistControl>
+		<NistControl revision="4">AU-6</NistControl>
+		<NistControl revision="4">AU-6(5)</NistControl>
+		<NistControl revision="4">CM-8</NistControl>
+		<NistControl revision="4">CM-8(3)</NistControl>
+		<NistControl revision="4">IR-4</NistControl>
+		<NistControl revision="4">IR-4(5)</NistControl>
+		<NistControl revision="4">SI-4</NistControl>
+	</Iac>
+	<Iac control="ECCD-1">
+		<NistControl revision="3">AC-3</NistControl>
+		<NistControl revision="4">AC-3</NistControl>
+		<NistControl revision="4">AC-6</NistControl>
+		<NistControl revision="4">SC-28</NistControl>
+	</Iac>
+	<Iac control="ECCD-2">
+		<NistControl revision="3">AC-3</NistControl>
+		<NistControl revision="4">AC-3</NistControl>
+		<NistControl revision="4">AC-3(3)</NistControl>
+		<NistControl revision="4">AC-3(4)</NistControl>
+		<NistControl revision="4">AC-6</NistControl>
+		<NistControl revision="4">CM-3</NistControl>
+		<NistControl revision="4">CM-3(1)</NistControl>
+	</Iac>
+	<Iac control="ECCM-1">
+		<NistControl revision="3">SC-1</NistControl>
+		<NistControl revision="4">MP-4</NistControl>
+		<NistControl revision="4">MP-4(1)</NistControl>
+		<NistControl revision="4">SC-13</NistControl>
+		<NistControl revision="4">SC-13(1)</NistControl>
+		<NistControl revision="4">SC-28</NistControl>
+		<NistControl revision="4">SC-28(1)</NistControl>
+	</Iac>
+	<Iac control="ECCR-1">
+		<NistControl revision="3">SC-13(1)</NistControl>
+		<NistControl revision="4">MP-4</NistControl>
+		<NistControl revision="4">MP-4(1)</NistControl>
+		<NistControl revision="4">SC-13</NistControl>
+		<NistControl revision="4">SC-13(1)</NistControl>
+		<NistControl revision="4">SC-28</NistControl>
+		<NistControl revision="4">SC-28(1)</NistControl>
+	</Iac>
+	<Iac control="ECCR-2">
+		<NistControl revision="3">AC-3(6)</NistControl>
+		<NistControl revision="4">AC-3</NistControl>
+		<NistControl revision="4">AC-3(6)</NistControl>
+		<NistControl revision="4">SC-13</NistControl>
+		<NistControl revision="4">SC-13(3)</NistControl>
+		<NistControl revision="4">SC-28</NistControl>
+		<NistControl revision="4">SC-28(1)</NistControl>
+	</Iac>
+	<Iac control="ECCR-3">
+		<NistControl revision="3">SC-13(2)</NistControl>
+		<NistControl revision="4">SC-13</NistControl>
+		<NistControl revision="4">SC-13(2)</NistControl>
+		<NistControl revision="4">SC-28</NistControl>
+		<NistControl revision="4">SC-28(1)</NistControl>
+	</Iac>
+	<Iac control="ECCT-1">
+		<NistControl revision="3">AC-17(2)</NistControl>
+		<NistControl revision="4">AC-17</NistControl>
+		<NistControl revision="4">AC-17(2)</NistControl>
+		<NistControl revision="4">AC-18</NistControl>
+		<NistControl revision="4">AC-18(1)</NistControl>
+		<NistControl revision="4">SC-8</NistControl>
+		<NistControl revision="4">SC-9(1)</NistControl>
+		<NistControl revision="4">SC-13</NistControl>
+	</Iac>
+	<Iac control="ECCT-2">
+		<NistControl revision="3">SC-9</NistControl>
+		<NistControl revision="4">SC-8</NistControl>
+		<NistControl revision="4">SC-9(1)</NistControl>
+		<NistControl revision="4">SC-13</NistControl>
+		<NistControl revision="4">SC-13(2)</NistControl>
+	</Iac>
+	<Iac control="ECDC-1">
+		<NistControl revision="3">CP-10</NistControl>
+		<NistControl revision="4">CP-10</NistControl>
+		<NistControl revision="4">CP-10(2)</NistControl>
+	</Iac>
+	<Iac control="ECIC-1">
+		<NistControl revision="3">AC-3(4)</NistControl>
+		<NistControl revision="4">AC-3</NistControl>
+		<NistControl revision="4">AC-3(4)</NistControl>
+		<NistControl revision="4">AC-4</NistControl>
+		<NistControl revision="4">AC-4(14)</NistControl>
+		<NistControl revision="4">AC-4(15)</NistControl>
+	</Iac>
+	<Iac control="ECID-1">
+		<NistControl revision="3">SC-7(12)</NistControl>
+		<NistControl revision="4">SC-7</NistControl>
+		<NistControl revision="4">SC-7(12)</NistControl>
+		<NistControl revision="4">SI-4</NistControl>
+		<NistControl revision="4">SI-4(1)</NistControl>
+	</Iac>
+	<Iac control="ECIM-1">
+		<NistControl revision="3">SC-15(2)</NistControl>
+		<NistControl revision="4">SC-7</NistControl>
+		<NistControl revision="4">SC-7(19)</NistControl>
+		<NistControl revision="4">SC-15</NistControl>
+		<NistControl revision="4">SC-15(2)</NistControl>
+	</Iac>
+	<Iac control="ECLC-1">
+		<NistControl revision="3">AU-3</NistControl>
+		<NistControl revision="4">AC-4</NistControl>
+		<NistControl revision="4">AC-16</NistControl>
+		<NistControl revision="4">AU-3</NistControl>
+	</Iac>
+	<Iac control="ECLO-1">
+		<NistControl revision="3">AC-7</NistControl>
+		<NistControl revision="4">AC-7</NistControl>
+		<NistControl revision="4">AC-7(1)</NistControl>
+		<NistControl revision="4">AC-9</NistControl>
+		<NistControl revision="4">AC-9(1)</NistControl>
+		<NistControl revision="4">AC-9(2)</NistControl>
+		<NistControl revision="4">AC-10</NistControl>
+	</Iac>
+	<Iac control="ECLO-2">
+		<NistControl revision="3">AC-7</NistControl>
+		<NistControl revision="4">AC-7</NistControl>
+		<NistControl revision="4">AC-7(1)</NistControl>
+		<NistControl revision="4">AC-9</NistControl>
+		<NistControl revision="4">AC-9(1)</NistControl>
+		<NistControl revision="4">AC-9(2)</NistControl>
+		<NistControl revision="4">AC-10</NistControl>
+	</Iac>
+	<Iac control="ECLP-1">
+		<NistControl revision="3">AC-5</NistControl>
+		<NistControl revision="4">AC-5</NistControl>
+		<NistControl revision="4">AC-6</NistControl>
+		<NistControl revision="4">AC-6(2)</NistControl>
+		<NistControl revision="4">AC-16(5)</NistControl>
+	</Iac>
+	<Iac control="ECML-1">
+		<NistControl revision="3">MP-3</NistControl>
+		<NistControl revision="4">AC-16</NistControl>
+		<NistControl revision="4">AC-16(1)</NistControl>
+		<NistControl revision="4">AC-16(5)</NistControl>
+		<NistControl revision="4">MP-3</NistControl>
+	</Iac>
+	<Iac control="ECMT-1">
+		<NistControl revision="CA-2(2)"></NistControl>
+		<NistControl revision="4">CA-2</NistControl>
+		<NistControl revision="4">CA-2(2)</NistControl>
+		<NistControl revision="4">CA-7(2)</NistControl>
+		<NistControl revision="4">RA-5</NistControl>
+	</Iac>
+	<Iac control="ECMT-2">
+		<NistControl revision="3">CA-2(2)</NistControl>
+		<NistControl revision="4">CA-2</NistControl>
+		<NistControl revision="4">CA-2(2)</NistControl>
+		<NistControl revision="4">CA-7</NistControl>
+		<NistControl revision="4">CA-7(2)</NistControl>
+		<NistControl revision="4">RA-5</NistControl>
+	</Iac>
+	<Iac control="ECND-1">
+		<NistControl revision="3">CP-10</NistControl>
+		<NistControl revision="4">CP-10</NistControl>
+	</Iac>
+	<Iac control="ECND-2">
+		<NistControl revision="3">AU-2(3)</NistControl>
+		<NistControl revision="4">AU-2</NistControl>
+		<NistControl revision="4">AU-2(3)</NistControl>
+		<NistControl revision="4">CP-10</NistControl>
+		<NistControl revision="4">SA-14(1)</NistControl>
+	</Iac>
+	<Iac control="ECNK-1">
+		<NistControl revision="3">SC-9(1)</NistControl>
+		<NistControl revision="4">SC-8</NistControl>
+		<NistControl revision="4">SC-9(1)</NistControl>
+		<NistControl revision="4">SC-13</NistControl>
+		<NistControl revision="4">SC-13(2)</NistControl>
+		<NistControl revision="4">SC-13(3)</NistControl>
+	</Iac>
+	<Iac control="ECPA-1">
+		<NistControl revision="3">AC-2(7)</NistControl>
+		<NistControl revision="4">AC-2</NistControl>
+		<NistControl revision="4">AC-2(7)</NistControl>
+	</Iac>
+	<Iac control="ECPC-1">
+		<NistControl revision="3">CM-5</NistControl>
+		<NistControl revision="4">CM-5</NistControl>
+		<NistControl revision="4">CM-5(5)</NistControl>
+	</Iac>
+	<Iac control="ECPC-2">
+		<NistControl revision="3">CM-5</NistControl>
+		<NistControl revision="4">CM-5</NistControl>
+		<NistControl revision="4">CM-5(5)</NistControl>
+	</Iac>
+	<Iac control="ECRC-1">
+		<NistControl revision="3">SC-4</NistControl>
+		<NistControl revision="4">SC-4</NistControl>
+	</Iac>
+	<Iac control="ECRG-1">
+		<NistControl revision="3">AU-7</NistControl>
+		<NistControl revision="4">AU-7</NistControl>
+	</Iac>
+	<Iac control="ECRR-1">
+		<NistControl revision="3">AU-11</NistControl>
+		<NistControl revision="4">AU-11</NistControl>
+	</Iac>
+	<Iac control="ECSC-1">
+		<NistControl revision="3">CM-6</NistControl>
+		<NistControl revision="4">CM-6</NistControl>
+	</Iac>
+	<Iac control="ECSD-1">
+		<NistControl revision="3">CM-5</NistControl>
+		<NistControl revision="4">CM-5</NistControl>
+		<NistControl revision="4">SA-10</NistControl>
+	</Iac>
+	<Iac control="ECSD-2">
+		<NistControl revision="3">CM-5</NistControl>
+		<NistControl revision="4">CM-5</NistControl>
+		<NistControl revision="4">SA-10</NistControl>
+		<NistControl revision="4">SI-7</NistControl>
+	</Iac>
+	<Iac control="ECTB-1">
+		<NistControl revision="3">AU-9(2)</NistControl>
+		<NistControl revision="4">AU-9</NistControl>
+		<NistControl revision="4">AU-9(2)</NistControl>
+	</Iac>
+	<Iac control="ECTC-1">
+		<NistControl revision="3">AC-18(5)</NistControl>
+		<NistControl revision="4">PE-19</NistControl>
+		<NistControl revision="4">PE-19(1)</NistControl>
+	</Iac>
+	<Iac control="ECTM-1">
+		<NistControl revision="3">SC-8</NistControl>
+		<NistControl revision="4">SC-8</NistControl>
+		<NistControl revision="4">SC-8(2)</NistControl>
+		<NistControl revision="4">SC-16</NistControl>
+		<NistControl revision="4">SC-16(1)</NistControl>
+		<NistControl revision="4">SI-7</NistControl>
+		<NistControl revision="4">SI-7(1)</NistControl>
+		<NistControl revision="4">SI-7(12)</NistControl>
+	</Iac>
+	<Iac control="ECTM-2">
+		<NistControl revision="3">SC-8</NistControl>
+		<NistControl revision="4">SC-8</NistControl>
+		<NistControl revision="4">SC-8(2)</NistControl>
+		<NistControl revision="4">SC-16</NistControl>
+		<NistControl revision="4">SC-16(1)</NistControl>
+		<NistControl revision="4">SC-23</NistControl>
+		<NistControl revision="4">SI-7</NistControl>
+		<NistControl revision="4">SI-7(1)</NistControl>
+		<NistControl revision="4">SI-7(12)</NistControl>
+	</Iac>
+	<Iac control="ECTP-1">
+		<NistControl revision="3">AU-9</NistControl>
+		<NistControl revision="4">AU-9</NistControl>
+	</Iac>
+	<Iac control="ECVI-1">
+		<NistControl revision="3">SC-19</NistControl>
+		<NistControl revision="4">SC-19</NistControl>
+	</Iac>
+	<Iac control="ECVP-1">
+		<NistControl revision="3">SI-3</NistControl>
+		<NistControl revision="4">SI-3</NistControl>
+	</Iac>
+	<Iac control="ECWM-1">
+		<NistControl revision="3">AC-8</NistControl>
+		<NistControl revision="4">AC-8</NistControl>
+	</Iac>
+	<Iac control="ECWN-1">
+		<NistControl revision="3">AC-18</NistControl>
+		<NistControl revision="4">AC-18</NistControl>
+		<NistControl revision="4">AC-18(1)</NistControl>
+		<NistControl revision="4">AC-18(2)</NistControl>
+		<NistControl revision="4">AC-18(3)</NistControl>
+		<NistControl revision="4">AC-18(4)</NistControl>
+		<NistControl revision="4">AC-19</NistControl>
+	</Iac>
+	<Iac control="IAAC-1">
+		<NistControl revision="3">AC-2</NistControl>
+		<NistControl revision="4">AC-2</NistControl>
+		<NistControl revision="4">PS-4</NistControl>
+		<NistControl revision="4">PS-5</NistControl>
+	</Iac>
+	<Iac control="IAGA-1">
+		<NistControl revision="3">IA-2(5)</NistControl>
+		<NistControl revision="4">IA-2</NistControl>
+		<NistControl revision="4">IA-2(5)</NistControl>
+	</Iac>
+	<Iac control="IAIA-1">
+		<NistControl revision="3">IA-2</NistControl>
+		<NistControl revision="4">IA-2</NistControl>
+		<NistControl revision="4">IA-4</NistControl>
+		<NistControl revision="4">IA-4(2)</NistControl>
+		<NistControl revision="4">IA-5</NistControl>
+		<NistControl revision="4">IA-5(1)</NistControl>
+		<NistControl revision="4">IA-5(3)</NistControl>
+		<NistControl revision="4">IA-5(5)</NistControl>
+		<NistControl revision="4">IA-5(6)</NistControl>
+		<NistControl revision="4">IA-5(7)</NistControl>
+	</Iac>
+	<Iac control="IAIA-2">
+		<NistControl revision="3">IA-2</NistControl>
+		<NistControl revision="4">IA-2</NistControl>
+		<NistControl revision="4">IA-4</NistControl>
+		<NistControl revision="4">IA-4(2)</NistControl>
+		<NistControl revision="4">IA-4(3)</NistControl>
+		<NistControl revision="4">IA-5</NistControl>
+		<NistControl revision="4">IA-5(1)</NistControl>
+		<NistControl revision="4">IA-5(3)</NistControl>
+		<NistControl revision="4">IA-5(4)</NistControl>
+		<NistControl revision="4">IA-5(5)</NistControl>
+		<NistControl revision="4">IA-5(6)</NistControl>
+		<NistControl revision="4">IA-5(7)</NistControl>
+	</Iac>
+	<Iac control="IAKM-1">
+		<NistControl revision="3">SC-12(2)</NistControl>
+		<NistControl revision="4">SC-12</NistControl>
+		<NistControl revision="4">SC-12(2)</NistControl>
+		<NistControl revision="4">SC-12(4)</NistControl>
+	</Iac>
+	<Iac control="IAKM-2">
+		<NistControl revision="3">SC-12(2)</NistControl>
+		<NistControl revision="4">SC-12</NistControl>
+		<NistControl revision="4">SC-12(2)</NistControl>
+		<NistControl revision="4">SC-12(5)</NistControl>
+	</Iac>
+	<Iac control="IAKM-3">
+		<NistControl revision="3">SC-12(3)</NistControl>
+		<NistControl revision="4">SC-12</NistControl>
+		<NistControl revision="4">SC-12(3)</NistControl>
+	</Iac>
+	<Iac control="IATS-1">
+		<NistControl revision="3">IA-5(2)</NistControl>
+		<NistControl revision="4">IA-5</NistControl>
+		<NistControl revision="4">IA-5(2)</NistControl>
+		<NistControl revision="4">SC-12</NistControl>
+		<NistControl revision="4">SC-12(4)</NistControl>
+		<NistControl revision="4">SC-12(5)</NistControl>
+	</Iac>
+	<Iac control="IATS-2">
+		<NistControl revision="3">IA-5(2)</NistControl>
+		<NistControl revision="4">IA-5</NistControl>
+		<NistControl revision="4">IA-5(2)</NistControl>
+		<NistControl revision="4">SC-12</NistControl>
+		<NistControl revision="4">SC-12(4)</NistControl>
+		<NistControl revision="4">SC-12(5)</NistControl>
+	</Iac>
+	<Iac control="PECF-1">
+		<NistControl revision="3">PE-2</NistControl>
+		<NistControl revision="4">PE-2</NistControl>
+		<NistControl revision="4">PE-2(1)</NistControl>
+	</Iac>
+	<Iac control="PECF-2">
+		<NistControl revision="3">PE-2</NistControl>
+		<NistControl revision="4">PE-2</NistControl>
+		<NistControl revision="4">PE-2(3)</NistControl>
+		<NistControl revision="4">PE-3</NistControl>
+	</Iac>
+	<Iac control="PECS-1">
+		<NistControl revision="3">MA-2</NistControl>
+		<NistControl revision="4">MP-6</NistControl>
+		<NistControl revision="4">MP-6(1)</NistControl>
+		<NistControl revision="4">MP-6(4)</NistControl>
+	</Iac>
+	<Iac control="PECS-2">
+		<NistControl revision="3">MA-2</NistControl>
+		<NistControl revision="4">MA-2</NistControl>
+		<NistControl revision="4">MP-6</NistControl>
+		<NistControl revision="4">MP-6(1)</NistControl>
+		<NistControl revision="4">MP-6(5)</NistControl>
+	</Iac>
+	<Iac control="PEDD-1">
+		<NistControl revision="3">MP-6(6)</NistControl>
+		<NistControl revision="4">MP-6</NistControl>
+		<NistControl revision="4">MP-6(6)</NistControl>
+	</Iac>
+	<Iac control="PEDI-1">
+		<NistControl revision="3">PE-5</NistControl>
+		<NistControl revision="4">PE-5</NistControl>
+	</Iac>
+	<Iac control="PEEL-1">
+		<NistControl revision="3">PE-12</NistControl>
+		<NistControl revision="4">PE-12</NistControl>
+	</Iac>
+	<Iac control="PEEL-2">
+		<NistControl revision="3">PE-12</NistControl>
+		<NistControl revision="4">PE-12</NistControl>
+		<NistControl revision="4">PE-12(1)</NistControl>
+	</Iac>
+	<Iac control="PEFD-1">
+		<NistControl revision="3">PE-13</NistControl>
+		<NistControl revision="4">PE-13</NistControl>
+	</Iac>
+	<Iac control="PEFD-2">
+		<NistControl revision="3">PE-13(1)</NistControl>
+		<NistControl revision="4">PE-13</NistControl>
+		<NistControl revision="4">PE-13(1)</NistControl>
+		<NistControl revision="4">PE-13(2)</NistControl>
+	</Iac>
+	<Iac control="PEFI-1">
+		<NistControl revision="3">PE-13(4)</NistControl>
+		<NistControl revision="4">PE-13</NistControl>
+		<NistControl revision="4">PE-13(4)</NistControl>
+	</Iac>
+	<Iac control="PEFS-1">
+		<NistControl revision="3">PE-13</NistControl>
+		<NistControl revision="4">PE-13</NistControl>
+	</Iac>
+	<Iac control="PEFS-2">
+		<NistControl revision="3">PE-13</NistControl>
+		<NistControl revision="4">PE-13</NistControl>
+		<NistControl revision="4">PE-13(1)</NistControl>
+		<NistControl revision="4">PE-14(2)</NistControl>
+	</Iac>
+	<Iac control="PEHC-1">
+		<NistControl revision="3">PE-14</NistControl>
+		<NistControl revision="4">PE-14</NistControl>
+		<NistControl revision="4">PE-14(1)</NistControl>
+		<NistControl revision="4">PE-14(2)</NistControl>
+	</Iac>
+	<Iac control="PEHC-2">
+		<NistControl revision="3">PE-14</NistControl>
+		<NistControl revision="4">PE-14</NistControl>
+		<NistControl revision="4">PE-14(1)</NistControl>
+	</Iac>
+	<Iac control="PEMS-1">
+		<NistControl revision="3">PE-10</NistControl>
+		<NistControl revision="4">PE-10</NistControl>
+	</Iac>
+	<Iac control="PEPF-1">
+		<NistControl revision="3">PE-3</NistControl>
+		<NistControl revision="4">PE-3</NistControl>
+		<NistControl revision="4">PE-3(3)</NistControl>
+	</Iac>
+	<Iac control="PEPF-2">
+		<NistControl revision="3">PE-2(2)</NistControl>
+		<NistControl revision="4">PE-2</NistControl>
+		<NistControl revision="4">PE-2(2)</NistControl>
+		<NistControl revision="4">PE-3</NistControl>
+		<NistControl revision="4">PE-3(3)</NistControl>
+		<NistControl revision="4">PE-8</NistControl>
+	</Iac>
+	<Iac control="PEPS-1">
+		<NistControl revision="3">CA-2</NistControl>
+		<NistControl revision="4">CA-2(2)</NistControl>
+		<NistControl revision="4">PE-3</NistControl>
+		<NistControl revision="4">PE-3(6)</NistControl>
+	</Iac>
+	<Iac control="PESL-1">
+		<NistControl revision="3">AC-11</NistControl>
+		<NistControl revision="4">AC-11</NistControl>
+		<NistControl revision="4">AC-11(1)</NistControl>
+	</Iac>
+	<Iac control="PESP-1">
+		<NistControl revision="3">SI-12</NistControl>
+		<NistControl revision="4">MP-1</NistControl>
+		<NistControl revision="4">MP-2</NistControl>
+		<NistControl revision="4">SI-12</NistControl>
+	</Iac>
+	<Iac control="PESS-1">
+		<NistControl revision="3">MP-4</NistControl>
+		<NistControl revision="4">MP-4</NistControl>
+	</Iac>
+	<Iac control="PETC-1">
+		<NistControl revision="3">PE-14</NistControl>
+		<NistControl revision="4">PE-14</NistControl>
+		<NistControl revision="4">PE-14(2)</NistControl>
+	</Iac>
+	<Iac control="PETC-2">
+		<NistControl revision="3">PE-14(1)</NistControl>
+		<NistControl revision="4">PE-14</NistControl>
+		<NistControl revision="4">PE-14(1)</NistControl>
+	</Iac>
+	<Iac control="PETN-1">
+		<NistControl revision="3">AT-3(1)</NistControl>
+		<NistControl revision="4">AT-3</NistControl>
+		<NistControl revision="4">AT-3(1)</NistControl>
+	</Iac>
+	<Iac control="PEVC-1">
+		<NistControl revision="3">PE-7</NistControl>
+		<NistControl revision="4">PE-3</NistControl>
+		<NistControl revision="4">PE-8</NistControl>
+	</Iac>
+	<Iac control="PEVR-1">
+		<NistControl revision="3">PE-9(2)</NistControl>
+		<NistControl revision="4">PE-9</NistControl>
+		<NistControl revision="4">PE-9(2)</NistControl>
+	</Iac>
+	<Iac control="PRAS-1">
+		<NistControl revision="3">PS-3</NistControl>
+		<NistControl revision="4">PS-1</NistControl>
+		<NistControl revision="4">PS-6</NistControl>
+	</Iac>
+	<Iac control="PRAS-2">
+		<NistControl revision="3">PS-3(1)</NistControl>
+		<NistControl revision="4">PS-1</NistControl>
+		<NistControl revision="4">PS-6</NistControl>
+		<NistControl revision="4">PS-6(2)</NistControl>
+	</Iac>
+	<Iac control="PRMP-1">
+		<NistControl revision="3">MA-5</NistControl>
+		<NistControl revision="4">MA-5</NistControl>
+	</Iac>
+	<Iac control="PRMP-2">
+		<NistControl revision="3">MA-5</NistControl>
+		<NistControl revision="4">MA-5</NistControl>
+		<NistControl revision="4">MA-5(1)</NistControl>
+		<NistControl revision="4">MA-5(2)</NistControl>
+		<NistControl revision="4">MA-5(3)</NistControl>
+	</Iac>
+	<Iac control="PRNK-1">
+		<NistControl revision="3">PS-6(1)</NistControl>
+		<NistControl revision="4">PS-6</NistControl>
+		<NistControl revision="4">PS-6(1)</NistControl>
+		<NistControl revision="4">PS-6(2)</NistControl>
+	</Iac>
+	<Iac control="PRRB-1">
+		<NistControl revision="3">PL-4</NistControl>
+		<NistControl revision="4">PL-4</NistControl>
+		<NistControl revision="4">PS-8</NistControl>
+	</Iac>
+	<Iac control="PRTN-1">
+		<NistControl revision="3">AT-2</NistControl>
+		<NistControl revision="4">AT-2</NistControl>
+		<NistControl revision="4">AT-3</NistControl>
+		<NistControl revision="4">CM-9</NistControl>
+		<NistControl revision="4">CM-9(1)</NistControl>
+		<NistControl revision="4">CP-3</NistControl>
+		<NistControl revision="4">IR-2</NistControl>
+	</Iac>
+	<Iac control="VIIR-1">
+		<NistControl revision="3">IR-2</NistControl>
+		<NistControl revision="4">IR-2</NistControl>
+		<NistControl revision="4">IR-3</NistControl>
+		<NistControl revision="4">IR-4</NistControl>
+		<NistControl revision="4">IR-5</NistControl>
+		<NistControl revision="4">IR-6</NistControl>
+		<NistControl revision="4">IR-7</NistControl>
+		<NistControl revision="4">IR-7(2)</NistControl>
+		<NistControl revision="4">IR-8</NistControl>
+	</Iac>
+	<Iac control="VIIR-2">
+		<NistControl revision="3">IR-2</NistControl>
+		<NistControl revision="4">IR-2</NistControl>
+		<NistControl revision="4">IR-3</NistControl>
+		<NistControl revision="4">IR-4</NistControl>
+		<NistControl revision="4">IR-5</NistControl>
+		<NistControl revision="4">IR-6</NistControl>
+		<NistControl revision="4">IR-7</NistControl>
+		<NistControl revision="4">IR-7(2)</NistControl>
+		<NistControl revision="4">IR-8</NistControl>
+	</Iac>
+	<Iac control="VIVM-1">
+		<NistControl revision="3">CA-7(2)</NistControl>
+		<NistControl revision="4">CA-8</NistControl>
+		<NistControl revision="4">RA-5</NistControl>
+		<NistControl revision="4">SI-2</NistControl>
+		<NistControl revision="4">SI-2(1)</NistControl>
+		<NistControl revision="4">SI-2(2)</NistControl>
+	</Iac>
+</DiacapToRmf>

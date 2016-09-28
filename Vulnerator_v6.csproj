@@ -219,6 +219,7 @@
     <Compile Include="Model\AsyncObservableCollection.cs" />
     <Compile Include="Model\CklReader.cs" />
     <Compile Include="Model\Contact.cs" />
+    <Compile Include="Model\DiacapToRmf.cs" />
     <Compile Include="Model\DiscrepancyItem.cs" />
     <Compile Include="Model\ExtensionMethods.cs" />
     <Compile Include="Model\FileNameNoPathConverter.cs" />
@@ -341,6 +342,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Resources\DiacapToRmf.xml" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -358,7 +360,7 @@
     </None>
     <AppDesigner Include="Properties\" />
     <None Include="readme.md" />
-    <Resource Include="Resources\U_CCI_List.xml" />
+    <EmbeddedResource Include="Resources\U_CCI_List.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
