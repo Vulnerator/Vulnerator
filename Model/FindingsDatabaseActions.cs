@@ -152,9 +152,9 @@ namespace Vulnerator.Model
             try
             {
                 sqliteCommand.CommandText = "CREATE TABLE Vulnerability (" +
-                    "VulnerabilityIndex INTEGER PRIMARY KEY, VulnId TEXT, " +
+                    "VulnerabilityIndex INTEGER PRIMARY KEY, VulnId TEXT, StigId TEXT, " +
                     "VulnTitle TEXT, Description TEXT, RiskStatement TEXT, IaControl TEXT, " +
-                    "NistControl TEXT, CPEs TEXT, CrossReferences TEXT, " +
+                    "NistControl TEXT, CPEs TEXT, CrossReferences TEXT, CheckContent TEXT, " +
                     "IavmNumber TEXT, FixText TEXT, PluginPublishedDate TEXT, " +
                     "PluginModifiedDate TEXT, PatchPublishedDate TEXT, Age TEXT, " +
                     "RawRisk TEXT, Impact TEXT, RuleId TEXT UNIQUE ON CONFLICT IGNORE, CciNumber TEXT);";
