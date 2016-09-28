@@ -1,8 +1,10 @@
 ﻿using log4net;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace Vulnerator.Model
@@ -16,6 +18,7 @@ namespace Vulnerator.Model
         private static string xmlFile = xmlPath + @"\Vulnerator_Config.xml";
         public static Dictionary<string, string> configDic = new Dictionary<string, string>();
         public static XDocument xdocumentConfigurationXmlFile;
+        Assembly assembly = Assembly.GetExecutingAssembly();
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
         #region CreateSettingsDictionary
@@ -163,28 +166,22 @@ namespace Vulnerator.Model
                 {
                     log.Info("Verifying XML configuration file is current.");
                     XDocument oldXmlConfigCheck = XDocument.Load(xmlFile);
-                    string xelementOldNode = oldXmlConfigCheck.Descendants().FirstOrDefault(x => x.Name.LocalName.Equals("tbMitDbLocation")).Value;
-                    if (!string.IsNullOrWhiteSpace(xelementOldNode) && xelementOldNode.Contains(".sdf"))
-                    {
-                        log.Info("Deleting deprecated XML configuration file.");
-                        File.Delete(xelementOldNode);
-                    }
-
-                    XElement newestNode = oldXmlConfigCheck.Descendants().FirstOrDefault(x => x.Name.LocalName.Equals("cbFindingDetails"));
-                    if (newestNode == null)
-                    {
-                        log.Info("Deleting deprecated XML configuration file.");
-                        File.Delete(xmlFile);
-                    }
+                    var versionNode = oldXmlConfigCheck.Root.Descendants().FirstOrDefault(x => x.Name.LocalName.Equals("version"));
+                    if (versionNode == null)
+                    { File.Delete(xmlFile); }
+                    else if (versionNode.Value != FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion.ToString())
+                    { File.Delete(xmlFile); }
                 }
                 
                 if (!File.Exists(xmlFile))
                 {
                     log.Info("Creating XML configuration file.");
+                    
                     XDocument configDoc = new XDocument(
                         new XDeclaration("1.0", "utf-8", "True"),
                         new XElement("preferencesRoot",
-                            new XElement("reportingTab",
+                            new XElement("version", FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion.ToString()),
+                                new XElement("reportingTab",
                                 new XElement("rbDiacap", "True"),
                                 new XElement("rbRmf", "False"),
                                 new XElement("cbCritical", "True"),
@@ -221,7 +218,9 @@ namespace Vulnerator.Model
                                 new XElement("rbHostIdentifier", "True"),
                                 new XElement("rbIpIdentifier", "False"),
                                 new XElement("cbComments", "True"),
-                                new XElement("cbFindingDetails", "True")
+                                new XElement("cbFindingDetails", "True"),
+                                new XElement("revisionThreeRadioButton", "True"),
+                                new XElement("revisionFourRadioButton", "False")
                             ),
                             new XElement("mitigationsTab",
                                 new XElement("createSubTab",

@@ -28,7 +28,7 @@ namespace Vulnerator.ViewModel
 		public GitHubActions githubActions;
 		public VulneratorDatabaseActions vulneratorDatabaseActions;
 		public static DataSet cciDs = new DataSet();
-		public string cciFileLocation = Directory.GetCurrentDirectory().ToString() + @"\U_CCI_List.xml";
+		public string cciFileLocation = "Vulnerator.Resources.U_CCI_List.xml";
 		public static bool excelFailed = false;
 		public static bool reportSaveError = false;
 		public static Stopwatch stopWatch = new Stopwatch();
@@ -765,7 +765,8 @@ namespace Vulnerator.ViewModel
 				File.Delete(Environment.GetFolderPath(
 				Environment.SpecialFolder.ApplicationData) + @"\Vulnerator\VulneratorV6Log.txt");
 			}
-			
+
+            DiacapToRmf.InitializeDictionaries();
 			configAlter = new ConfigAlter();
 			configAlter.CreateConfigurationXml();
 			configAlter.CreateSettingsDictionary();
@@ -792,13 +793,9 @@ namespace Vulnerator.ViewModel
 			findingsDatabaseActions = new FindingsDatabaseActions();
 			vulneratorDatabaseActions.PopulateGuiLists(this);
 			cciDs.EnforceConstraints = false;
-			if (!File.Exists(cciFileLocation))
-			{
-				//string cciFileContents = GetCciFile("U_CCI_List.xml");
-				//File.WriteAllText(cciFileLocation, cciFileContents);
-			}
-			cciDs.ReadXml(cciFileLocation);
-
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            using (Stream stream = assembly.GetManifestResourceStream(cciFileLocation))
+            { cciDs.ReadXml(stream); }
 			StatusItemList = new AsyncObservableCollection<StatusItem>();
 			StatusItemList.Add(new StatusItem("Ongoing"));
 			StatusItemList.Add(new StatusItem("Completed"));
@@ -878,10 +875,18 @@ namespace Vulnerator.ViewModel
                                 configAlter.WriteSettingsToDictionary("rbHostIdentifier", (!bool.Parse(commandParameters.controlValue)).ToString());
                                 break;
                             }
-                        default:
+                        case "revisionThreeRadioButton":
                             {
+                                configAlter.WriteSettingsToDictionary("revisionFourRadioButton", (!bool.Parse(commandParameters.controlValue)).ToString());
                                 break;
                             }
+                        case "revisionFourRadioButton":
+                            {
+                                configAlter.WriteSettingsToDictionary("revisionThreeRadioButton", (!bool.Parse(commandParameters.controlValue)).ToString());
+                                break;
+                            }
+                        default:
+                            { break; }
                     }
                 }
             }

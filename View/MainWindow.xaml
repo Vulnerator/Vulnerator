@@ -1317,28 +1317,46 @@
                                         <ColumnDefinition />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <RadioButton Margin="5,0,0,5"
+                                    <RadioButton Name="revisionThreeRadioButton"
+                                                 Margin="5,0,0,5"
+                                                 HorizontalAlignment="Left"
+                                                 VerticalAlignment="Top"
+                                                 Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
+                                                 Command="{Binding UpdateDictionaryCommand}"
                                                  Content="Revision 3"
-                                                 Name="revisionThreeRadioButton">
+                                                 GroupName="NistRevision"
+                                                 IsChecked="{Binding InnerText,
+                                                                     Converter={StaticResource StringToBool},
+                                                                     Mode=OneTime,
+                                                                     Source={StaticResource XmlConfig},
+                                                                     XPath=reportingTab/revisionThreeRadioButton}"
+                                                 IsEnabled="{Binding IsEnabled}">
                                         <RadioButton.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name"
-                                                         RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked"
-                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </RadioButton.CommandParameter>
                                     </RadioButton>
-                                    <RadioButton Grid.Column="1"
+                                    <RadioButton Name="revisionFourRadioButton"
+                                                 Grid.Column="1"
                                                  Margin="5,0,0,5"
+                                                 HorizontalAlignment="Left"
+                                                 VerticalAlignment="Top"
+                                                 Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
+                                                 Command="{Binding UpdateDictionaryCommand}"
                                                  Content="Revision 4"
-                                                 Name="revisionFourRadioButton">
+                                                 GroupName="NistRevision"
+                                                 IsChecked="{Binding InnerText,
+                                                                     Converter={StaticResource StringToBool},
+                                                                     Mode=OneTime,
+                                                                     Source={StaticResource XmlConfig},
+                                                                     XPath=reportingTab/revisionFourRadioButton}"
+                                                 IsEnabled="{Binding IsEnabled}">
                                         <RadioButton.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
-                                                <Binding Path="Name"
-                                                         RelativeSource="{RelativeSource Self}" />
-                                                <Binding Path="IsChecked"
-                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </RadioButton.CommandParameter>
                                     </RadioButton>
