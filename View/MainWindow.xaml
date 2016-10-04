@@ -1317,6 +1317,10 @@
                                         <ColumnDefinition />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
                                     <RadioButton Name="revisionThreeRadioButton"
                                                  Margin="5,0,0,5"
                                                  HorizontalAlignment="Left"
@@ -1360,6 +1364,26 @@
                                             </MultiBinding>
                                         </RadioButton.CommandParameter>
                                     </RadioButton>
+                                    <CheckBox x:Name="cbNistAppendixA"
+                                              Grid.Row="1"
+                                              Margin="5,0,0,5"
+                                              Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
+                                              Command="{Binding UpdateDictionaryCommand}"
+                                              Content="NIST 800-53A"
+                                              IsChecked="{Binding InnerText,
+                                                                  Converter={StaticResource StringToBool},
+                                                                  Mode=OneTime,
+                                                                  Source={StaticResource XmlConfig},
+                                                                  XPath=reportingTab/cbNistAppendixA}"
+                                              IsEnabled="{Binding IsEnabled}"
+                                              TabIndex="3">
+                                        <CheckBox.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource CommandConverter}">
+                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                            </MultiBinding>
+                                        </CheckBox.CommandParameter>
+                                    </CheckBox>
                                 </Grid>
                                 <Label HorizontalAlignment="Stretch"
                                        Content="Severity"

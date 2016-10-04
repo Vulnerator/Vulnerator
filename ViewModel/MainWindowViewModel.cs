@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
@@ -9,12 +10,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Input;
+using System.Xml;
 using System.Xml.Linq;
 using Vulnerator.Model;
 
 namespace Vulnerator.ViewModel
 {
-	public class MainWindowViewModel : BaseInpc
+    public class MainWindowViewModel : BaseInpc
 	{
 		public static ConfigAlter configAlter;
 		public static CommandParameters commandParameters = new CommandParameters();
@@ -25,9 +27,9 @@ namespace Vulnerator.ViewModel
 		public static UpdateSystemGroupParameters updateSystemGroupParameters = new UpdateSystemGroupParameters();
 		public static UpdateSystemParameters updateSystemParameters = new UpdateSystemParameters();
 		public static FindingsDatabaseActions findingsDatabaseActions;
+        public static List<CciToNist> cciToNistList = new List<CciToNist>();
 		public GitHubActions githubActions;
 		public VulneratorDatabaseActions vulneratorDatabaseActions;
-		public static DataSet cciDs = new DataSet();
 		public string cciFileLocation = "Vulnerator.Resources.U_CCI_List.xml";
 		public static bool excelFailed = false;
 		public static bool reportSaveError = false;
@@ -36,11 +38,11 @@ namespace Vulnerator.ViewModel
 		private BackgroundWorker backgroundWorker;
 		private SaveFileDialog saveExcelFile;
 		private SaveFileDialog savePdfFile;
+        private Assembly assembly = Assembly.GetExecutingAssembly();
 
+        #region Properties
 
-		#region Properties
-
-		public string FileVersion
+        public string FileVersion
 		{
 			//get { return Assembly.GetExecutingAssembly().GetName().Version.ToString(); }
 			get 
@@ -792,11 +794,8 @@ namespace Vulnerator.ViewModel
 			vulneratorDatabaseActions.CreateVulneratorDatabase();
 			findingsDatabaseActions = new FindingsDatabaseActions();
 			vulneratorDatabaseActions.PopulateGuiLists(this);
-			cciDs.EnforceConstraints = false;
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            using (Stream stream = assembly.GetManifestResourceStream(cciFileLocation))
-            { cciDs.ReadXml(stream); }
-			StatusItemList = new AsyncObservableCollection<StatusItem>();
+            GenerateCciToNistList();
+            StatusItemList = new AsyncObservableCollection<StatusItem>();
 			StatusItemList.Add(new StatusItem("Ongoing"));
 			StatusItemList.Add(new StatusItem("Completed"));
 			StatusItemList.Add(new StatusItem("False Positive"));
@@ -812,11 +811,93 @@ namespace Vulnerator.ViewModel
 		~MainWindowViewModel()
 		{ configAlter.WriteSettingsToConfigurationXml(); }
 
-		#endregion
+        #endregion
 
-		#region UpdateDictionaryCommand
+        #region GenerateCciToNistList
 
-		public ICommand UpdateDictionaryCommand
+        private void GenerateCciToNistList()
+        {
+            try
+            {
+                string cciControl = string.Empty;
+                string definition = string.Empty;
+                using (Stream stream = assembly.GetManifestResourceStream(cciFileLocation))
+                {
+                    using (XmlReader xmlReader = XmlReader.Create(stream))
+                    {
+                        while (xmlReader.Read())
+                        {
+                            if (xmlReader.IsStartElement())
+                            {
+                                switch (xmlReader.Name)
+                                {
+                                    case "cci_item":
+                                        {
+                                            cciControl = xmlReader.GetAttribute("id");
+                                            break;
+                                        }
+                                    case "definition":
+                                        {
+                                            xmlReader.Read();
+                                            definition = xmlReader.Value;
+                                            break;
+                                        }
+                                    case "reference":
+                                        {
+                                            string control = xmlReader.GetAttribute("index");
+                                            string revision = string.Empty;
+                                            switch (xmlReader.GetAttribute("version"))
+                                            {
+                                                case "1":
+                                                    {
+                                                        revision = "NIST SP 800-53A";
+                                                        break;
+                                                    }
+                                                case "3":
+                                                    {
+                                                        revision = "NIST SP 800-53 Rev. 3";
+                                                        break;
+                                                    }
+                                                case "4":
+                                                    {
+                                                        revision = "NIST SP 800-53 Rev. 4";
+                                                        break;
+                                                    }
+                                                default:
+                                                    { break; }
+                                            }
+                                            if (cciToNistList.FirstOrDefault(x => x.CciNumber.Equals(cciControl) && x.NistControl.Equals(control) && x.Revision.Equals(revision)) == null)
+                                            {
+                                                CciToNist cciToNist = new CciToNist();
+                                                cciToNist.CciNumber = cciControl;
+                                                cciToNist.Definition = definition;
+                                                cciToNist.NistControl = control;
+                                                cciToNist.Revision = revision;
+                                                cciToNistList.Add(cciToNist);
+                                            }
+                                            break;
+                                        }
+                                    default:
+                                        { break; }
+                                }
+                            }
+                        }
+                    }
+                }
+                cciToNistList.Sort();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Uable to initialize CCI to NIST control reference list.");
+                log.Debug("Exception details: " + exception);
+            }
+        }
+
+        #endregion
+
+        #region UpdateDictionaryCommand
+
+        public ICommand UpdateDictionaryCommand
 		{ get { return new DelegateCommand(UpdateDictionary); } }
 
 		private void UpdateDictionary()

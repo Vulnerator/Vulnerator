@@ -19,7 +19,6 @@ namespace Vulnerator.Model
     /// </summary>
     public class XccdfReader
     {
-        private static DataTable joinedCciDatatable = CreateCciDataTable();
         private string fileNameWithoutPath = string.Empty;
         private string xccdfTitle = string.Empty;
         private string versionInfo = string.Empty;
@@ -28,6 +27,9 @@ namespace Vulnerator.Model
         private string acasXccdfHostIp = string.Empty;
         private bool incorrectFileType = false;
         private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
+        private bool RevisionThreeSelected { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("revisionThreeRadioButton")); } }
+        private bool RevisionFourSelected { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("revisionFourRadioButton")); } }
+        private bool AppendixASelected { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbNistAppendixA")); } }
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
         public string ReadXccdfFile(string fileName, ObservableCollection<MitigationItem> mitigationsList, string systemName)
@@ -299,9 +301,17 @@ namespace Vulnerator.Model
                                                 string cciValue = string.Empty;
                                                 if (!string.IsNullOrWhiteSpace(cciRef))
                                                 {
-                                                    foreach (DataRow cciControlDataRow in joinedCciDatatable.AsEnumerable().Where(x => x["CciRef"].Equals(cciRef)))
-                                                    { cciValue = cciValue + cciControlDataRow["CciControl"].ToString() + Environment.NewLine; }
+                                                    foreach (CciToNist cciToNist in MainWindowViewModel.cciToNistList.Where(x => x.CciNumber.Equals(cciRef)))
+                                                    {
+                                                        if (RevisionThreeSelected && cciToNist.Revision.Contains("Rev. 3") && !cciValue.Contains(cciToNist.NistControl))
+                                                        { cciValue = cciValue + cciToNist.NistControl + Environment.NewLine; }
+                                                        if (RevisionFourSelected && cciToNist.Revision.Contains("Rev. 4") && !cciValue.Contains(cciToNist.NistControl))
+                                                        { cciValue = cciValue + cciToNist.NistControl + Environment.NewLine; }
+                                                        if (AppendixASelected && cciToNist.Revision.Contains("53A") && !cciValue.Contains(cciToNist.NistControl))
+                                                        { cciValue = cciValue + cciToNist.NistControl + Environment.NewLine; }
+                                                    }
                                                     sqliteCommand.Parameters.Add(new SQLiteParameter("NistControl", cciValue));
+                                                    sqliteCommand.Parameters.Add(new SQLiteParameter("CciNumber", cciRef));
                                                 }
                                             }
                                             break;
@@ -580,6 +590,7 @@ namespace Vulnerator.Model
                                     InsertVulnerabilityCommand(sqliteCommand);
                                     sqliteCommand.CommandText = SetSqliteCommandText("UniqueFinding");
                                     sqliteCommand.ExecuteNonQuery();
+                                    sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["NistControl"]);
                                     break;
                                 }
                             case "xccdf:score":
@@ -705,20 +716,40 @@ namespace Vulnerator.Model
                                         string cciRef = xmlReader.Value;
                                         if (!string.IsNullOrWhiteSpace(cciRef))
                                         {
-                                            foreach (DataRow cciControlDataRow in joinedCciDatatable.AsEnumerable().Where(x => x["CciRef"].Equals(cciRef)))
+                                            foreach (CciToNist cciToNist in MainWindowViewModel.cciToNistList.Where(x => x.CciNumber.Equals(cciRef)))
                                             {
                                                 if (!sqliteCommand.Parameters.Contains("NistControl"))
                                                 {
-                                                    sqliteCommand.Parameters.Add(new SQLiteParameter(
-                                                      "NistControl", cciControlDataRow["CciControl"].ToString()));
+                                                    if (RevisionThreeSelected && cciToNist.Revision.Contains("Rev. 3"))
+                                                    { sqliteCommand.Parameters.Add(new SQLiteParameter("NistControl", cciToNist.NistControl)); }
+                                                    if (RevisionFourSelected && cciToNist.Revision.Contains("Rev. 4"))
+                                                    { sqliteCommand.Parameters.Add(new SQLiteParameter("NistControl", cciToNist.NistControl)); }
+                                                    if (AppendixASelected && cciToNist.Revision.Contains("53A"))
+                                                    { sqliteCommand.Parameters.Add(new SQLiteParameter("NistControl", cciToNist.NistControl)); }
                                                 }
                                                 else
                                                 {
-                                                    sqliteCommand.Parameters["NistControl"].Value =
-                                                        sqliteCommand.Parameters["NistControl"].Value + Environment.NewLine +
-                                                        cciControlDataRow["CciControl"].ToString();
+                                                    if (RevisionThreeSelected && cciToNist.Revision.Contains("Rev. 3") && 
+                                                        !sqliteCommand.Parameters["NistControl"].Value.ToString().Contains(cciToNist.NistControl))
+                                                    {
+                                                        sqliteCommand.Parameters["NistControl"].Value =
+                                                          sqliteCommand.Parameters["NistControl"].Value + Environment.NewLine + cciToNist.NistControl;
+                                                    }
+                                                    if (RevisionFourSelected && cciToNist.Revision.Contains("Rev. 4") &&
+                                                        !sqliteCommand.Parameters["NistControl"].Value.ToString().Contains(cciToNist.NistControl))
+                                                    {
+                                                        sqliteCommand.Parameters["NistControl"].Value =
+                                                          sqliteCommand.Parameters["NistControl"].Value + Environment.NewLine + cciToNist.NistControl;
+                                                    }
+                                                    if (AppendixASelected && cciToNist.Revision.Contains("53A") &&
+                                                        !sqliteCommand.Parameters["NistControl"].Value.ToString().Contains(cciToNist.NistControl))
+                                                    {
+                                                        sqliteCommand.Parameters["NistControl"].Value =
+                                                          sqliteCommand.Parameters["NistControl"].Value + Environment.NewLine + cciToNist.NistControl;
+                                                    }
                                                 }
                                             }
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("CciNumber", cciRef));
                                         }
                                     }
                                     break;
@@ -834,42 +865,6 @@ namespace Vulnerator.Model
             }
         }
 
-        private static DataTable CreateCciDataTable()
-        {
-            try
-            {
-                DataTable cciItemDataTable = MainWindowViewModel.cciDs.Tables["cci_item"];
-                DataTable referencesDataTable = MainWindowViewModel.cciDs.Tables["references"];
-                DataTable referenceDataTable = MainWindowViewModel.cciDs.Tables["reference"];
-
-                joinedCciDatatable = new DataTable();
-                joinedCciDatatable.Columns.Add("CciRef", typeof(string));
-                joinedCciDatatable.Columns.Add("CciControl", typeof(string));
-
-                var query =
-                    from cciItem in cciItemDataTable.AsEnumerable()
-                    join references in referencesDataTable.AsEnumerable()
-                    on cciItem["cci_item_id"] equals references["cci_item_id"]
-                    join reference in referenceDataTable.AsEnumerable()
-                    on references["references_id"] equals reference["references_id"]
-                    select cciItem.ItemArray.Concat(reference.ItemArray).ToArray();
-
-                foreach (object[] values in query)
-                {
-                    DataRow cciRow = joinedCciDatatable.NewRow();
-                    cciRow["CciRef"] = values[7].ToString();
-                    cciRow["CciControl"] = values[13].ToString();
-                    joinedCciDatatable.Rows.Add(cciRow);
-                }
-                return joinedCciDatatable;
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to generate CCI DataTable.");
-                throw exception;
-            }
-        }
-
         private string SetSqliteCommandText(string tableName)
         {
             try
@@ -930,6 +925,8 @@ namespace Vulnerator.Model
                     { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(92, "@NistControl, "); }
                     if (parameter.ParameterName.Equals("IaControls"))
                     { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(92, "@IaControl, "); }
+                    if (parameter.ParameterName.Equals("CciNumber"))
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(92, "@CciNumber, "); }
                 }
                 foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                 {
@@ -937,6 +934,8 @@ namespace Vulnerator.Model
                     { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, "NistControl, "); }
                     if (parameter.ParameterName.Equals("IaControls"))
                     { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, "IaControl, "); }
+                    if (parameter.ParameterName.Equals("CciNumber"))
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, "CciNumber, "); }
                 }
                 sqliteCommand.ExecuteNonQuery();
             }

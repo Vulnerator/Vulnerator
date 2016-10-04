@@ -220,7 +220,8 @@ namespace Vulnerator.Model
                                 new XElement("cbComments", "True"),
                                 new XElement("cbFindingDetails", "True"),
                                 new XElement("revisionThreeRadioButton", "True"),
-                                new XElement("revisionFourRadioButton", "False")
+                                new XElement("revisionFourRadioButton", "False"),
+                                new XElement("cbNistAppendixA", "True")
                             ),
                             new XElement("mitigationsTab",
                                 new XElement("createSubTab",

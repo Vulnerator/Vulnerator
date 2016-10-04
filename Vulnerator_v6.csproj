@@ -217,6 +217,7 @@
     <Compile Include="Model\AcasCsvReader.cs" />
     <Compile Include="Model\AssetOverviewLineItem.cs" />
     <Compile Include="Model\AsyncObservableCollection.cs" />
+    <Compile Include="Model\CciToNist.cs" />
     <Compile Include="Model\CklReader.cs" />
     <Compile Include="Model\Contact.cs" />
     <Compile Include="Model\DiacapToRmf.cs" />
@@ -360,7 +361,9 @@
     </None>
     <AppDesigner Include="Properties\" />
     <None Include="readme.md" />
-    <EmbeddedResource Include="Resources\U_CCI_List.xml" />
+    <EmbeddedResource Include="Resources\U_CCI_List.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
