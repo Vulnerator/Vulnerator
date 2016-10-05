@@ -17,7 +17,6 @@ namespace Vulnerator
     /// </summary>
     public class CklReader
     {
-        private static DataTable joinedCciDatatable = CreateCciDataTable();
         private WorkingSystem workingSystem = new WorkingSystem();
         private string stigInfo = string.Empty;
         string versionInfo = string.Empty;
@@ -29,6 +28,9 @@ namespace Vulnerator
             "IavmNumber", "FixText", "PluginPublishedDate", "PluginModifiedDate", "PatchPublishedDate", "Age", "RawRisk", "Impact", "RuleId", "CciNumber" };
         private string[] uniqueFindingTableColumns = new string[] { "Comments", "FindingDetails", "PluginOutput", "LastObserved" };
         private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
+        private bool RevisionThreeSelected { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("revisionThreeRadioButton")); } }
+        private bool RevisionFourSelected { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("revisionFourRadioButton")); } }
+        private bool AppendixASelected { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbNistAppendixA")); } }
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
         /// <summary>
@@ -422,9 +424,16 @@ namespace Vulnerator
                                 {
                                     string cciRef = string.Empty;
                                     string cciRefData = ObtainAttributeDataNodeValue(xmlReader);
-                                    foreach (DataRow cciControlDataRow in joinedCciDatatable.AsEnumerable().Where(
-                                        x => x["CciRef"].Equals(cciRefData)))
-                                    { cciRef = cciRef + cciControlDataRow["CciControl"] + Environment.NewLine; }
+                                    foreach (CciToNist cciToNist in MainWindowViewModel.cciToNistList.Where(
+                                        x => x.CciNumber.Equals(cciRefData)))
+                                    {
+                                        if (RevisionThreeSelected && cciToNist.Revision.Contains("Rev. 3") && !cciRef.Contains(cciToNist.NistControl))
+                                        { cciRef = cciRef + cciToNist.NistControl + Environment.NewLine; }
+                                        if (RevisionFourSelected && cciToNist.Revision.Contains("Rev. 4") && !cciRef.Contains(cciToNist.NistControl))
+                                        { cciRef = cciRef + cciToNist.NistControl + Environment.NewLine; }
+                                        if (AppendixASelected && cciToNist.Revision.Contains("53A") && !cciRef.Contains(cciToNist.NistControl))
+                                        { cciRef = cciRef + cciToNist.NistControl + Environment.NewLine; }
+                                    }
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("NistControl", cciRef));
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("CciNumber", cciRefData));
                                     break;
@@ -690,43 +699,6 @@ namespace Vulnerator
             {
                 log.Error("Unable to parse status to a usable state.");
                 throw exception;
-            }
-        }
-
-        private static DataTable CreateCciDataTable()
-        {
-            try
-            {
-                DataTable cciItemDataTable = MainWindowViewModel.cciDs.Tables["cci_item"];
-                DataTable referencesDataTable = MainWindowViewModel.cciDs.Tables["references"];
-                DataTable referenceDataTable = MainWindowViewModel.cciDs.Tables["reference"];
-
-                joinedCciDatatable = new DataTable();
-                joinedCciDatatable.Columns.Add("CciRef", typeof(string));
-                joinedCciDatatable.Columns.Add("CciControl", typeof(string));
-
-                var query =
-                    from cciItem in cciItemDataTable.AsEnumerable()
-                    join references in referencesDataTable.AsEnumerable()
-                    on cciItem["cci_item_id"] equals references["cci_item_id"]
-                    join reference in referenceDataTable.AsEnumerable()
-                    on references["references_id"] equals reference["references_id"]
-                    select cciItem.ItemArray.Concat(reference.ItemArray).ToArray();
-
-                foreach (object[] values in query)
-                {
-                    DataRow cciRow = joinedCciDatatable.NewRow();
-                    cciRow["CciRef"] = values[7].ToString();
-                    cciRow["CciControl"] = values[13].ToString();
-                    joinedCciDatatable.Rows.Add(cciRow);
-                }
-                return joinedCciDatatable;
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to create CCI DataTable.");
-                log.Debug("Exception details:", exception);
-                throw;
             }
         }
     }
