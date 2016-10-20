@@ -1649,7 +1649,33 @@ namespace Vulnerator.Model
             }
         }
 
-#endregion Create Discrepancies
+        #endregion Create Discrepancies
+
+        #region Create Test Plan
+
+        private void StartTestPlan(WorkbookPart workbookPart, Sheets sheets)
+        {
+
+        }
+
+        private void WriteTestPlanColumns()
+        {
+
+        }
+        private void WriteTestPlanHeaderRow()
+        {
+
+        }
+        private void WriteTestPlanItems()
+        {
+
+        }
+        private void EndTestPlan()
+        {
+
+        }
+
+        #endregion
 
         #region Handle Cell Data
 
