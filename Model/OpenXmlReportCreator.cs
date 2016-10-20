@@ -68,6 +68,7 @@ namespace Vulnerator.Model
         private OpenXmlWriter acasOutputOpenXmlWriter;
         private OpenXmlWriter discrepanciesOpenXmlWriter;
         private OpenXmlWriter stigDetailsOpenXmlWriter;
+        private OpenXmlWriter testPlanOpenXmlWriter;
 
         #endregion Member Variables
 
@@ -1655,24 +1656,128 @@ namespace Vulnerator.Model
 
         private void StartTestPlan(WorkbookPart workbookPart, Sheets sheets)
         {
-
+            try
+            {
+                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "Test Plan" };
+                sheetIndex++;
+                sheets.Append(sheet);
+                testPlanOpenXmlWriter = OpenXmlWriter.Create(worksheetPart);
+                testPlanOpenXmlWriter.WriteStartElement(new Worksheet());
+                WriteTestPlanColumns();
+                testPlanOpenXmlWriter.WriteStartElement(new SheetData());
+                WriteTestPlanHeaderRowOne();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to initialize Test Plan tab.");
+                throw exception;
+            }
         }
 
         private void WriteTestPlanColumns()
         {
-
+            try
+            {
+                testPlanOpenXmlWriter.WriteStartElement(new Columns());
+                testPlanOpenXmlWriter.WriteElement(new Column() { Min = 1U, Max = 1U, Width = 62d, CustomWidth = true });
+                testPlanOpenXmlWriter.WriteElement(new Column() { Min = 2U, Max = 2U, Width = 15d, CustomWidth = true });
+                testPlanOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 12d, CustomWidth = true });
+                testPlanOpenXmlWriter.WriteElement(new Column() { Min = 4U, Max = 4U, Width = 16d, CustomWidth = true });
+                testPlanOpenXmlWriter.WriteElement(new Column() { Min = 5U, Max = 5U, Width = 16d, CustomWidth = true });
+                testPlanOpenXmlWriter.WriteElement(new Column() { Min = 6U, Max = 6U, Width = 16d, CustomWidth = true });
+                testPlanOpenXmlWriter.WriteElement(new Column() { Min = 7U, Max = 7U, Width = 45d, CustomWidth = true });
+                testPlanOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate Test Plan columns.");
+                throw exception;
+            }
         }
-        private void WriteTestPlanHeaderRow()
+
+        private void WriteTestPlanHeaderRowOne()
         {
-
+            try
+            {
+                testPlanOpenXmlWriter.WriteStartElement(new Row() { Height = 25, CustomHeight = true });
+                WriteCellValue(testPlanOpenXmlWriter, "Test Plan", 19);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 19);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 19);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 19);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 19);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 19);
+                testPlanOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate first Test Plan header row.");
+                throw exception;
+            }
         }
+
+        private void WriteTestPlanHeaderRowTwo()
+        {
+            try
+            {
+                testPlanOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(testPlanOpenXmlWriter, "System Name:", 2);
+                WriteCellValue(testPlanOpenXmlWriter, "System Acronym:", 2);
+                WriteCellValue(testPlanOpenXmlWriter, "eMASS ID:", 2);
+                WriteCellValue(testPlanOpenXmlWriter, "Confidentiality:", 2);
+                WriteCellValue(testPlanOpenXmlWriter, "Integrity:", 2);
+                WriteCellValue(testPlanOpenXmlWriter, "Availability:", 2);
+                testPlanOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate second Test Plan header row.");
+                throw exception;
+            }
+        }
+
+        private void WriteTestPlanHeaderRowThree()
+        {
+            try
+            {
+                testPlanOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 20);
+                testPlanOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate third Test Plan header row.");
+                throw exception;
+            }
+        }
+
         private void WriteTestPlanItems()
         {
+            try
+            {
 
+            }
+            catch (Exception exception)
+            {
+
+            }
         }
+
         private void EndTestPlan()
         {
+            try
+            {
 
+            }
+            catch (Exception exception)
+            {
+
+            }
         }
 
         #endregion
@@ -2053,7 +2158,7 @@ namespace Vulnerator.Model
                     /*Index 10 - Purple Font, No Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(2, 0, 2, centerHorizontal, centerVertical, false),
                     /*Index 11 - Red Font, No Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(4, 0, 2, centerHorizontal, centerVertical, false),
                     /*Index 12 - Orange Font, No Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(6, 0, 2, centerHorizontal, centerVertical, false),
-                    /*Index 13 - BlueFont , No Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(8, 0, 2, centerHorizontal, centerVertical, false),
+                    /*Index 13 - Blue Font , No Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(8, 0, 2, centerHorizontal, centerVertical, false),
                     /*Index 14 - Green Font, No Fill, Top & Bottom Borders, Centered*/ CreateCellFormat(10, 0, 2, centerHorizontal, centerVertical, false),
                     /*Index 15 - Bold Black Font, Yellow Fill, All Borders, Centered, Wrap Text*/ CreateCellFormat(1, 4, 1, centerHorizontal, centerVertical, true),
                     /*Index 16 - Bold Black Font, No Fill, All Borders, Wrap Text*/ CreateCellFormat(1, 0, 1, centerHorizontal, centerVertical, true),
