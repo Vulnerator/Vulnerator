@@ -2362,7 +2362,7 @@
                                   CanUserSortColumns="True"
                                   GridLinesVisibility="Horizontal"
                                   HorizontalGridLinesBrush="#FFCCCCCC"
-                                  IsEnabled="{Binding IsEnabled}"
+                                  CanUserDeleteRows="{Binding IsEnabled}"
                                   ItemsSource="{Binding FileList}"
                                   KeyboardNavigation.IsTabStop="False"
                                   ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -2401,8 +2401,10 @@
                                 <DataGridTemplateColumn Width="1.25*">
                                     <DataGridTemplateColumn.HeaderStyle>
                                         <Style BasedOn="{StaticResource MetroDataGridColumnHeader}" TargetType="DataGridColumnHeader">
-                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                            <Setter Property="Padding" Value="0,0,0,3" />
+                                            <Setter Property="HorizontalContentAlignment" 
+                                                    Value="Stretch" />
+                                            <Setter Property="Padding"
+                                                    Value="0,0,0,3" />
                                         </Style>
                                     </DataGridTemplateColumn.HeaderStyle>
                                     <DataGridTemplateColumn.HeaderTemplate>
@@ -2418,7 +2420,8 @@
                                                                        IsEditable="True"
                                                                        IsSynchronizedWithCurrentItem="False"
                                                                        ItemsSource="{Binding Source={StaticResource SystemGroupListCollectionViewSource}}"
-                                                                       SelectedValuePath="GroupName">
+                                                                       SelectedValuePath="GroupName"
+                                                                       IsEnabled="{Binding IsEnabled}">
                                                 <vm:CommandEnabledComboBox.Style>
                                                     <Style BasedOn="{StaticResource {x:Type ComboBox}}" TargetType="{x:Type vm:CommandEnabledComboBox}">
                                                         <Setter Property="BorderThickness" Value="0" />
@@ -2430,7 +2433,8 @@
                                     <DataGridTemplateColumn.CellStyle>
                                         <Style BasedOn="{StaticResource MetroDataGridCell}" TargetType="DataGridCell">
                                             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                            <Setter Property="Padding" Value="0,0,6,0" />
+                                            <Setter Property="Padding"
+                                                    Value="0,0,6,0" />
                                         </Style>
                                     </DataGridTemplateColumn.CellStyle>
                                     <DataGridTemplateColumn.CellTemplate>
@@ -2444,10 +2448,12 @@
                                                       ItemsSource="{Binding Source={StaticResource SystemGroupListCollectionViewSource}}"
                                                       Text="{Binding FileSystemName,
                                                                      Mode=TwoWay,
-                                                                     UpdateSourceTrigger=PropertyChanged}">
+                                                                     UpdateSourceTrigger=PropertyChanged}"
+                                                      IsEnabled="{Binding IsEnabled}">
                                                 <ComboBox.Style>
                                                     <Style BasedOn="{StaticResource MetroComboBox}" TargetType="ComboBox">
-                                                        <Setter Property="BorderThickness" Value="0" />
+                                                        <Setter Property="BorderThickness"
+                                                                Value="0" />
                                                     </Style>
                                                 </ComboBox.Style>
                                             </ComboBox>
