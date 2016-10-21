@@ -914,12 +914,7 @@ namespace Vulnerator.Model
                 rarOpenXmlWriter.WriteStartElement(new Worksheet());
                 WriteRarColumns();
                 rarOpenXmlWriter.WriteStartElement(new SheetData());
-                WriteRarHeaderRowOne();
-                WriteRarHeaderRowTwo();
-                WriteRarHeaderRowThree();
-                WriteRarHeaderRowFour();
-                WriteRarHeaderRowFive();
-                WriteRarHeaderRowSix();
+                WriteRarHeaderRows();
             }
             catch (Exception exception)
             {
@@ -933,19 +928,27 @@ namespace Vulnerator.Model
             try
             {
                 rarOpenXmlWriter.WriteStartElement(new Columns());
-                rarOpenXmlWriter.WriteElement(new Column() { Min = 1U, Max = 1U, Width = 16.86d, CustomWidth = true });
-                rarOpenXmlWriter.WriteElement(new Column() { Min = 2U, Max = 2U, Width = 16.86d, CustomWidth = true });
-                rarOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 16.86d, CustomWidth = true });
-                rarOpenXmlWriter.WriteElement(new Column() { Min = 4U, Max = 4U, Width = 31.86d, CustomWidth = true });
-                rarOpenXmlWriter.WriteElement(new Column() { Min = 5U, Max = 5U, Width = 13.71d, CustomWidth = true });
-                rarOpenXmlWriter.WriteElement(new Column() { Min = 6U, Max = 6U, Width = 14.14d, CustomWidth = true });
-                rarOpenXmlWriter.WriteElement(new Column() { Min = 7U, Max = 7U, Width = 13.00d, CustomWidth = true });
-                rarOpenXmlWriter.WriteElement(new Column() { Min = 8U, Max = 8U, Width = 23.14d, CustomWidth = true });
-                rarOpenXmlWriter.WriteElement(new Column() { Min = 9U, Max = 9U, Width = 23.14d, CustomWidth = true });
-                rarOpenXmlWriter.WriteElement(new Column() { Min = 10U, Max = 10U, Width = 13.00d, CustomWidth = true });
-                rarOpenXmlWriter.WriteElement(new Column() { Min = 11U, Max = 11U, Width = 17.29d, CustomWidth = true });
-                rarOpenXmlWriter.WriteElement(new Column() { Min = 12U, Max = 12U, Width = 17.29d, CustomWidth = true });
-                rarOpenXmlWriter.WriteElement(new Column() { Min = 13U, Max = 13U, Width = 31.86d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 1U, Max = 1U, Width = 5d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 2U, Max = 2U, Width = 15d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 15d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 4U, Max = 4U, Width = 44d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 5U, Max = 5U, Width = 17.71d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 6U, Max = 6U, Width = 38.71d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 7U, Max = 7U, Width = 28.00d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 8U, Max = 8U, Width = 24.43d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 9U, Max = 9U, Width = 15.00d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 10U, Max = 10U, Width = 38.71d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 11U, Max = 11U, Width = 38.71d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 12U, Max = 12U, Width = 16.57d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 13U, Max = 13U, Width = 16.57d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 14U, Max = 14U, Width = 31.86d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 15U, Max = 15U, Width = 38.71d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 16U, Max = 16U, Width = 16.57d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 17U, Max = 17U, Width = 16.57d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 18U, Max = 18U, Width = 38.71d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 19U, Max = 19U, Width = 16.57d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 20U, Max = 20U, Width = 38.71d, CustomWidth = true });
+                rarOpenXmlWriter.WriteElement(new Column() { Min = 21U, Max = 21U, Width = 38.71d, CustomWidth = true });
                 rarOpenXmlWriter.WriteEndElement();
             }
             catch (Exception exception)
@@ -955,120 +958,43 @@ namespace Vulnerator.Model
             }
         }
 
-        private void WriteRarHeaderRowOne()
+        private void WriteRarHeaderRows()
         {
             try
             {
                 rarOpenXmlWriter.WriteStartElement(new Row());
-                WriteCellValue(rarOpenXmlWriter, "System Name and Version:", 23);
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 23);
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
                 rarOpenXmlWriter.WriteEndElement();
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to generate first RAR header row.");
-                throw exception;
-            }
-        }
-
-        private void WriteRarHeaderRowTwo()
-        {
-            try
-            {
                 rarOpenXmlWriter.WriteStartElement(new Row());
-                WriteCellValue(rarOpenXmlWriter, "Date(s) of Testing:", 23);
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 23);
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 0);
+                WriteCellValue(rarOpenXmlWriter, "(16) Specific Vulnerabilities", 25);
+                rarOpenXmlWriter.WriteEndElement();
+                rarOpenXmlWriter.WriteStartElement(new Row() { Height = 75.00d, CustomHeight = true });
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 0);
+                WriteCellValue(rarOpenXmlWriter, "Non-Compliant Security Controls" + Environment.NewLine + "(16a)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Affected CCI" + Environment.NewLine + "(16a.1)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Source of Discovery" + Environment.NewLine + "(16a.2)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Vulnerability ID" + Environment.NewLine + "(16a.3)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Vulnerability Description" + Environment.NewLine + "(16b)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Devices Affected" + Environment.NewLine + "(16b.1)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Security Objectives" + Environment.NewLine + "(C-I-A)" + Environment.NewLine + "(16c)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Raw Test Result" + Environment.NewLine + "(16d)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Predisposing Condition(s)" + Environment.NewLine + "(16d.1)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Technical Mitigation(s)" + Environment.NewLine + "(16d.2)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Severity or Pervasiveness" + Environment.NewLine + "(VL-VH)" + Environment.NewLine + "(16d.3)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Relevance of Threat" + Environment.NewLine + "(VL-VH)" + Environment.NewLine + "(16e)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Threat Description" + Environment.NewLine + "(16e.1)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Likelihood" + Environment.NewLine + "(Cells 16d.3 & 16e)" + Environment.NewLine + "(VL-VH)" + Environment.NewLine + "(16f)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Impact" + Environment.NewLine + "(VL-VH)" + Environment.NewLine + "(16g)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Impact Description"+ Environment.NewLine + "(16h)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Risk" + Environment.NewLine + "(Cells 16f & 16g)" + Environment.NewLine + "(VL-VH)" + Environment.NewLine + "(16i)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Proposed Mitigations" + Environment.NewLine + "(From POA&M)" + Environment.NewLine + "(16j)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Residual Risk" + Environment.NewLine + "(After Proposed Mitigations)" + Environment.NewLine + "(16k)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Recommendations" + Environment.NewLine + "(16l)", 26);
                 rarOpenXmlWriter.WriteEndElement();
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate second RAR header row.");
-                throw exception;
-            }
-        }
-
-        private void WriteRarHeaderRowThree()
-        {
-            try
-            {
-                rarOpenXmlWriter.WriteStartElement(new Row());
-                WriteCellValue(rarOpenXmlWriter, "Date of Report:", 23);
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 23);
-                WriteCellValue(rarOpenXmlWriter, DateTime.Now.ToLongDateString(), 20);
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-                rarOpenXmlWriter.WriteEndElement();
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to generate third RAR header row.");
-                throw exception;
-            }
-        }
-
-        private void WriteRarHeaderRowFour()
-        {
-            try
-            {
-                string contactInfo = ContactName + ", " + ContactNumber + ", " + ContactEmail;
-                rarOpenXmlWriter.WriteStartElement(new Row());
-                WriteCellValue(rarOpenXmlWriter, "POC Information:", 23);
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 23);
-                WriteCellValue(rarOpenXmlWriter, contactInfo, 20);
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-                rarOpenXmlWriter.WriteEndElement();
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to generate fourth RAR header row.");
-                throw exception;
-            }
-        }
-
-        private void WriteRarHeaderRowFive()
-        {
-            try
-            {
-                rarOpenXmlWriter.WriteStartElement(new Row());
-                WriteCellValue(rarOpenXmlWriter, "Risk Assessment Method:", 23);
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 23);
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-                rarOpenXmlWriter.WriteEndElement();
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to generate fifth RAR header row.");
-                throw exception;
-            }
-        }
-
-        private void WriteRarHeaderRowSix()
-        {
-            try
-            {
-                rarOpenXmlWriter.WriteStartElement(new Row());
-                WriteCellValue(rarOpenXmlWriter, "Identifier Applicable Security Control (1)", 15);
-                WriteCellValue(rarOpenXmlWriter, "Source of Discovery or Test Tool Name (2)", 15);
-                WriteCellValue(rarOpenXmlWriter, "Test ID or Threat IDs (3)", 15);
-                WriteCellValue(rarOpenXmlWriter, @"Description of Vulnerability / Weakness (4)", 15);
-                WriteCellValue(rarOpenXmlWriter, "Raw Risk (CAT I, II, III) (5)", 15);
-                WriteCellValue(rarOpenXmlWriter, "Impact (6)", 15);
-                WriteCellValue(rarOpenXmlWriter, "Likelihood (7)", 15);
-                WriteCellValue(rarOpenXmlWriter, "Mitigation Description (8)", 15);
-                WriteCellValue(rarOpenXmlWriter, "Remediation Description (9)", 15);
-                WriteCellValue(rarOpenXmlWriter, "Residual Risk (10)", 15);
-                WriteCellValue(rarOpenXmlWriter, "Status (11)", 15);
-                WriteCellValue(rarOpenXmlWriter, "Comment (12)", 15);
-                WriteCellValue(rarOpenXmlWriter, "Devices Affected (13)", 15);
-                rarOpenXmlWriter.WriteEndElement();
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to generate sixth RAR header row.");
+                log.Error("Unable to generate RAR header rows.");
                 throw exception;
             }
         }
@@ -1090,6 +1016,7 @@ namespace Vulnerator.Model
                 { return; }
 
                 rarOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 0);
                 if (IsDiacapPackage)
                 { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["IaControl"].ToString(), 24); }
                 else
@@ -1101,6 +1028,7 @@ namespace Vulnerator.Model
                     else
                     { WriteCellValue(rarOpenXmlWriter, string.Empty, 24); }
                 }
+                WriteCellValue(rarOpenXmlWriter, sqliteDataReader["CciNumber"].ToString(), 24);
                 if (sqliteDataReader["FindingType"].ToString().Equals("WASSP"))
                 { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Source"].ToString(), 24); }
                 else if (!sqliteDataReader["FindingType"].ToString().Equals("ACAS"))
@@ -1115,43 +1043,15 @@ namespace Vulnerator.Model
                 }
                 WriteCellValue(rarOpenXmlWriter, sqliteDataReader["VulnId"].ToString(), 24);
                 WriteCellValue(rarOpenXmlWriter, sqliteDataReader["VulnTitle"].ToString(), 20);
+                WriteCellValue(rarOpenXmlWriter, sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine), 20);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
                 if (!string.IsNullOrWhiteSpace(sqliteDataReader["RawRisk"].ToString()))
                 { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["RawRisk"].ToString(), 24); }
                 else
                 { WriteCellValue(rarOpenXmlWriter, ConvertAcasSeverityToDisaCategory(sqliteDataReader["Impact"].ToString()), 24); }
-                WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Impact"].ToString(), 24);
-                WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
-                if (mitigation != null && mitigation.MitigationStatus.Equals("Completed"))
-                {
-                    WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-                    WriteCellValue(rarOpenXmlWriter, mitigation.MitigationText, 20);
-                    WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
-                    WriteCellValue(rarOpenXmlWriter, mitigation.MitigationStatus, 24);
-                }
-                else if (mitigation != null)
-                {
-                    WriteCellValue(rarOpenXmlWriter, mitigation.MitigationText, 20);
-                    WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-                    WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
-                    WriteCellValue(rarOpenXmlWriter, mitigation.MitigationStatus, 24);
-                }
-                else if (sqliteDataReader["Status"].ToString().Equals("Completed"))
-                {
-                    WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-                    string mitigationText = string.Empty;
-                    if (UserRequiresComments)
-                    { mitigationText = sqliteDataReader["Comments"].ToString(); }
-                    if (UserRequiresFindingDetails)
-                    {
-                        if (string.IsNullOrWhiteSpace(mitigationText))
-                        { mitigationText = sqliteDataReader["FindingDetails"].ToString(); }
-                        else
-                        { mitigationText += doubleCarriageReturn + sqliteDataReader["FindingDetails"].ToString(); }
-                    }
-                    WriteCellValue(rarOpenXmlWriter, mitigationText, 20);
-                    WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
-                    WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24);
-                }
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
+                if (mitigation != null)
+                { WriteCellValue(rarOpenXmlWriter, mitigation.MitigationText, 20); }
                 else
                 {
                     string mitigationText = string.Empty;
@@ -1159,18 +1059,23 @@ namespace Vulnerator.Model
                     { mitigationText = sqliteDataReader["Comments"].ToString(); }
                     if (UserRequiresFindingDetails)
                     {
-                        if (string.IsNullOrWhiteSpace(mitigationText))
-                        { mitigationText = sqliteDataReader["FindingDetails"].ToString(); }
+                        if (!string.IsNullOrWhiteSpace(mitigationText))
+                        { mitigationText = mitigationText + Environment.NewLine + sqliteDataReader["FindingDetails"].ToString(); }
                         else
-                        { mitigationText += doubleCarriageReturn + sqliteDataReader["FindingDetails"].ToString(); }
+                        { mitigationText = sqliteDataReader["FindingDetails"].ToString(); }
                     }
                     WriteCellValue(rarOpenXmlWriter, mitigationText, 20);
-                    WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-                    WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
-                    WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24);
                 }
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
+                WriteCellValue(rarOpenXmlWriter, sqliteDataReader["Description"].ToString(), 20);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
+                WriteCellValue(rarOpenXmlWriter, ConvertAcasSeverityToRmfImpact(sqliteDataReader["Impact"].ToString()), 24);
+                WriteCellValue(rarOpenXmlWriter, sqliteDataReader["RiskStatement"].ToString(), 20);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
                 WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-                WriteCellValue(rarOpenXmlWriter, sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine), 20);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
+                WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
                 rarOpenXmlWriter.WriteEndElement();
             }
             catch (Exception exception)
@@ -1185,32 +1090,12 @@ namespace Vulnerator.Model
             try
             {
                 rarOpenXmlWriter.WriteEndElement();
-                WriteRarMergeCells();
                 rarOpenXmlWriter.WriteEndElement();
                 rarOpenXmlWriter.Dispose();
             }
             catch (Exception exception)
             {
                 log.Error("Unable to finalize RAR tab.");
-                throw exception;
-            }
-        }
-
-        private void WriteRarMergeCells()
-        {
-            try
-            {
-                string[] mergeCellArray = new string[] {
-                "A1:B1", "A2:B2", "A3:B3", "A4:B4", "A5:B5",
-                "C1:D1", "C2:D2", "C3:D3", "C4:D4", "C5:D5", "E1:M5"};
-                rarOpenXmlWriter.WriteStartElement(new MergeCells());
-                foreach (string mergeCell in mergeCellArray)
-                { rarOpenXmlWriter.WriteElement(new MergeCell() { Reference = mergeCell }); }
-                rarOpenXmlWriter.WriteEndElement();
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to generate RAR MergeCells element.");
                 throw exception;
             }
         }
@@ -2142,6 +2027,25 @@ namespace Vulnerator.Model
             }
         }
 
+        private string ConvertAcasSeverityToRmfImpact(string acasSeverity)
+        {
+            switch (acasSeverity)
+            {
+                case "Critical":
+                    { return "VH"; }
+                case "High":
+                    { return "H"; }
+                case "Medium":
+                    { return "M"; }
+                case "Low":
+                    { return "L"; }
+                case "Informational":
+                    { return "VL"; }
+                default:
+                    { return "Unknown"; }
+            }
+        }
+
         private string CompareIavmAgeToUserSettings(string iavmAge)
         {
             try
@@ -2349,7 +2253,9 @@ namespace Vulnerator.Model
                     /*Index 21 - Black Font, No Fill, All Borders, Centered Vertically, Wrap Text*/ CreateCellFormat(0, 0, 1, null, centerVertical, true),
                     /*Index 22 - Black Font, No Fill, All Borders, Centered, Wrap Text*/ CreateCellFormat(0, 0, 1, centerHorizontal, centerVertical, true),
                     /*Index 23 - Black Font, No Fill, All Borders, Centered Vertically, Right Aligned*/ CreateCellFormat(0, 0, 1, rightHorizontal, centerVertical, false),
-                    /*Index 24 - Black Font, No Fill, All Borders, Centered Horizontally, Top Aligned, Wrap Text*/ CreateCellFormat(0, 0, 1, centerHorizontal, topVertical, true)
+                    /*Index 24 - Black Font, No Fill, All Borders, Centered Horizontally, Top Aligned, Wrap Text*/ CreateCellFormat(0, 0, 1, centerHorizontal, topVertical, true),
+                    /*Index 25 - Bold Black Font, No Fill, No Borders, Wrap Text*/ CreateCellFormat(1, 0, 0, leftHorizontal, topVertical, false),
+                    /*Index 4 - Bold Black Font, Dark Gray Fill, All Borders, Centered, Wrap Text*/ CreateCellFormat(1, 2, 1, centerHorizontal, centerVertical, true)
                         )
                     );
             }
@@ -2467,7 +2373,7 @@ namespace Vulnerator.Model
                 if (isMerged)
                 {
                     return "SELECT FindingType, GroupName, VulnId, RuleId, VulnTitle, RawRisk, Impact, Description, IaControl, " +
-                        "NistControl, Status, Source, Version, Release, Comments, FindingDetails, " +
+                        "NistControl, Status, Source, Version, Release, Comments, FindingDetails, RiskStatement, CciNumber, " +
                         "GROUP_CONCAT(DISTINCT AssetIdToReport) AS AssetIdToReport FROM UniqueFinding " +
                         "NATURAL JOIN FindingTypes NATURAL JOIN VulnerabilitySources " +
                         "NATURAL JOIN FindingStatuses NATURAL JOIN Vulnerability NATURAL JOIN Groups " +
