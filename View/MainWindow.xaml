@@ -1700,6 +1700,7 @@
                                         <RowDefinition />
                                         <RowDefinition />
                                         <RowDefinition />
+                                        <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <CheckBox x:Name="cbPoamRar"
                                               Grid.Row="0"
@@ -1849,6 +1850,31 @@
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                            </MultiBinding>
+                                        </CheckBox.CommandParameter>
+                                    </CheckBox>
+                                    <CheckBox x:Name="cbTestPlan"
+                                              Grid.Row="5"
+                                              Grid.ColumnSpan="2"
+                                              Margin="5,0,0,5"
+                                              HorizontalAlignment="Left"
+                                              VerticalAlignment="Top"
+                                              Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
+                                              Command="{Binding UpdateDictionaryCommand}"
+                                              Content="Test Plan Breakout"
+                                              IsChecked="{Binding InnerText,
+                                                                  Converter={StaticResource StringToBool},
+                                                                  Mode=OneTime,
+                                                                  Source={StaticResource XmlConfig},
+                                                                  XPath=reportingTab/cbTestPlan}"
+                                              IsEnabled="{Binding IsEnabled}"
+                                              TabIndex="20">
+                                        <CheckBox.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource CommandConverter}">
+                                                <Binding Path="Name"
+                                                         RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked"
+                                                         RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
                                         </CheckBox.CommandParameter>
                                     </CheckBox>

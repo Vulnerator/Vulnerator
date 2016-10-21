@@ -48,6 +48,7 @@ namespace Vulnerator.Model
         private bool WasspFindingsShouldBeMerged { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbMergeWassp")); } }
         private bool UserRequiresComments { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbComments")); } }
         private bool UserRequiresFindingDetails { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbFindingDetails")); } }
+        private bool TestPlanIsRequired { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbTestPlan")); } }
         private Dictionary<string, int> sharedStringDictionary = new Dictionary<string, int>();
         private int sharedStringMaxIndex = 0;
         private string ContactOrganization = ConfigAlter.ReadSettingsFromDictionary("tbEmassOrg");
@@ -56,7 +57,9 @@ namespace Vulnerator.Model
         private string ContactEmail = ConfigAlter.ReadSettingsFromDictionary("tbEmassEmail");
         private int poamRowCounterIndex = 1;
         private int assetOverviewRowCounterIndex = 1;
+        private int testPlanRowCounterIndex = 1;
         private List<string> assetOverviewMergeCellReferences = new List<string>();
+        private List<string> testPlanMergeCellReferences = new List<string>();
         private UInt32Value sheetIndex = 1;
         private string[] delimiter = new string[] { ",\r\n" };
         string doubleCarriageReturn = Environment.NewLine + Environment.NewLine;
@@ -101,6 +104,17 @@ namespace Vulnerator.Model
                         WriteFindingTypeHeaderRowOne("WASSP");
                         WriteFindingTypeHeaderRowTwo("WASSP");
                         WriteAssetOverviewItems("WASSP");
+                    }
+
+                    if (TestPlanIsRequired)
+                    {
+                        log.Info("Creating Test Plan tab.");
+                        WriteTestPlanHeaderRowOne();
+                        WriteTestPlanHeaderRowTwo();
+                        WriteTestPlanHeaderRowThree();
+                        ObtainTestPlanItems("ACAS");
+                        ObtainTestPlanItems("XCCDF");
+                        ObtainTestPlanItems("CKL");
                     }
 
                     if (PoamAndRarTabsAreNeeded)
@@ -152,6 +166,8 @@ namespace Vulnerator.Model
             {
                 if (AssetOverviewTabIsNeeded)
                 { StartAssetOverview(workbookPart, sheets); }
+                if (TestPlanIsRequired)
+                { StartTestPlan(workbookPart, sheets); }
                 if (PoamAndRarTabsAreNeeded)
                 {
                     StartPoam(workbookPart, sheets);
@@ -209,6 +225,8 @@ namespace Vulnerator.Model
             {
                 if (AssetOverviewTabIsNeeded)
                 { EndAssetOverview(); }
+                if (TestPlanIsRequired)
+                { EndTestPlan(); }
                 if (PoamAndRarTabsAreNeeded)
                 {
                     EndPoam();
@@ -1666,7 +1684,6 @@ namespace Vulnerator.Model
                 testPlanOpenXmlWriter.WriteStartElement(new Worksheet());
                 WriteTestPlanColumns();
                 testPlanOpenXmlWriter.WriteStartElement(new SheetData());
-                WriteTestPlanHeaderRowOne();
             }
             catch (Exception exception)
             {
@@ -1682,7 +1699,8 @@ namespace Vulnerator.Model
                 testPlanOpenXmlWriter.WriteStartElement(new Columns());
                 testPlanOpenXmlWriter.WriteElement(new Column() { Min = 1U, Max = 1U, Width = 62d, CustomWidth = true });
                 testPlanOpenXmlWriter.WriteElement(new Column() { Min = 2U, Max = 2U, Width = 15d, CustomWidth = true });
-                testPlanOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 12d, CustomWidth = true });
+                testPlanOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 16d, CustomWidth = true });
+                testPlanOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 16d, CustomWidth = true });
                 testPlanOpenXmlWriter.WriteElement(new Column() { Min = 4U, Max = 4U, Width = 16d, CustomWidth = true });
                 testPlanOpenXmlWriter.WriteElement(new Column() { Min = 5U, Max = 5U, Width = 16d, CustomWidth = true });
                 testPlanOpenXmlWriter.WriteElement(new Column() { Min = 6U, Max = 6U, Width = 16d, CustomWidth = true });
@@ -1701,13 +1719,15 @@ namespace Vulnerator.Model
             try
             {
                 testPlanOpenXmlWriter.WriteStartElement(new Row() { Height = 25, CustomHeight = true });
-                WriteCellValue(testPlanOpenXmlWriter, "Test Plan", 19);
-                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 19);
-                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 19);
-                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 19);
-                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 19);
-                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 19);
+                WriteCellValue(testPlanOpenXmlWriter, "Test Plan", 3);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 3);
                 testPlanOpenXmlWriter.WriteEndElement();
+                testPlanMergeCellReferences.Add("A" + testPlanRowCounterIndex.ToString() + ":F" + testPlanRowCounterIndex.ToString());
+                testPlanRowCounterIndex++;
             }
             catch (Exception exception)
             {
@@ -1728,6 +1748,7 @@ namespace Vulnerator.Model
                 WriteCellValue(testPlanOpenXmlWriter, "Integrity:", 2);
                 WriteCellValue(testPlanOpenXmlWriter, "Availability:", 2);
                 testPlanOpenXmlWriter.WriteEndElement();
+                testPlanRowCounterIndex++;
             }
             catch (Exception exception)
             {
@@ -1748,6 +1769,7 @@ namespace Vulnerator.Model
                 WriteCellValue(testPlanOpenXmlWriter, string.Empty, 20);
                 WriteCellValue(testPlanOpenXmlWriter, string.Empty, 20);
                 testPlanOpenXmlWriter.WriteEndElement();
+                testPlanRowCounterIndex++;
             }
             catch (Exception exception)
             {
@@ -1756,15 +1778,153 @@ namespace Vulnerator.Model
             }
         }
 
-        private void WriteTestPlanItems()
+        private void ObtainTestPlanItems(string findingType)
         {
             try
             {
-
+                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.CommandText = "SELECT Source, Version, Release, HostName, IpAddress, FileName " +
+                        "FROM UniqueFinding NATURAL JOIN FileNames NATURAL JOIN Assets " +
+                        "NATURAL JOIN VulnerabilitySources NATURAL JOIN FindingTypes " +
+                        "WHERE FindingType = @FindingType GROUP BY AssetIdtoReport, FileName " +
+                        "ORDER BY Source, Version, Release;";
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
+                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                    {
+                        if (sqliteDataReader.HasRows)
+                        {
+                            WriteTestTypeHeaderRowOne(findingType);
+                            WriteTestTypeHeaderRowTwo(findingType);
+                            WriteTestPlanItems(sqliteDataReader);
+                        }
+                    }
+                }
             }
             catch (Exception exception)
             {
+                log.Error("Unable to obtain test plan items.");
+                throw exception;
+            }
+        }
 
+        private void WriteTestTypeHeaderRowOne(string findingType)
+        {
+            try
+            {
+                testPlanOpenXmlWriter.WriteStartElement(new Row());
+                testPlanOpenXmlWriter.WriteEndElement();
+                testPlanRowCounterIndex++;
+                testPlanOpenXmlWriter.WriteStartElement(new Row());
+                switch (findingType)
+                {
+                    case "ACAS":
+                        {
+                            WriteCellValue(testPlanOpenXmlWriter, "Remediation Scan", 3);
+                            break;
+                        }
+                    case "XCCDF":
+                        {
+                            WriteCellValue(testPlanOpenXmlWriter, "STIG Benchmark(s)", 3);
+                            break;
+                        }
+                    case "CKL":
+                        {
+                            WriteCellValue(testPlanOpenXmlWriter, "STIG Checklist(s)", 3);
+                            break;
+                        }
+                    default:
+                        {
+                            WriteCellValue(testPlanOpenXmlWriter, string.Empty, 3);
+                            break;
+                        }
+                }
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 3);
+                WriteCellValue(testPlanOpenXmlWriter, string.Empty, 3);
+                testPlanOpenXmlWriter.WriteEndElement();
+                testPlanMergeCellReferences.Add("A" + testPlanRowCounterIndex.ToString() + ":H" + testPlanRowCounterIndex.ToString());
+                testPlanRowCounterIndex++;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to create Test Plan finding type header row.");
+                throw exception;
+            }
+        }
+
+        private void WriteTestTypeHeaderRowTwo(string findingType)
+        {
+            testPlanOpenXmlWriter.WriteStartElement(new Row());
+            switch (findingType)
+            {
+                case "ACAS":
+                    {
+                        WriteCellValue(testPlanOpenXmlWriter, "Scan Tool", 17);
+                        WriteCellValue(testPlanOpenXmlWriter, "Scanner Version", 17);
+                        WriteCellValue(testPlanOpenXmlWriter, "Plugin Engine", 17);
+                        break;
+                    }
+                case "XCCDF":
+                    {
+                        WriteCellValue(testPlanOpenXmlWriter, "Benchmark Title", 17);
+                        WriteCellValue(testPlanOpenXmlWriter, "Version", 17);
+                        WriteCellValue(testPlanOpenXmlWriter, "Release", 17);
+                        break;
+                    }
+                case "CKL":
+                    {
+                        WriteCellValue(testPlanOpenXmlWriter, "Checklist Title", 17);
+                        WriteCellValue(testPlanOpenXmlWriter, "Version", 17);
+                        WriteCellValue(testPlanOpenXmlWriter, "Release", 17);
+                        break;
+                    }
+                default:
+                    {
+                        WriteCellValue(testPlanOpenXmlWriter, "Tool", 17);
+                        WriteCellValue(testPlanOpenXmlWriter, "Version", 17);
+                        WriteCellValue(testPlanOpenXmlWriter, "Release", 17);
+                        break;
+                    }
+            }
+            WriteCellValue(testPlanOpenXmlWriter, "Host Name", 17);
+            WriteCellValue(testPlanOpenXmlWriter, "IP Address", 17);
+            WriteCellValue(testPlanOpenXmlWriter, "Test Date", 17);
+            WriteCellValue(testPlanOpenXmlWriter, "File Name", 17);
+            WriteCellValue(testPlanOpenXmlWriter, string.Empty, 17);
+            testPlanOpenXmlWriter.WriteEndElement();
+            testPlanMergeCellReferences.Add("G" + testPlanRowCounterIndex.ToString() + ":H" + testPlanRowCounterIndex.ToString());
+            testPlanRowCounterIndex++;
+        }
+
+        private void WriteTestPlanItems(SQLiteDataReader sqliteDataReader)
+        {
+            try
+            {
+                while (sqliteDataReader.Read())
+                {
+                    testPlanOpenXmlWriter.WriteStartElement(new Row());
+                    WriteCellValue(testPlanOpenXmlWriter, sqliteDataReader["Source"].ToString(), 18);
+                    WriteCellValue(testPlanOpenXmlWriter, sqliteDataReader["Version"].ToString(), 18);
+                    WriteCellValue(testPlanOpenXmlWriter, sqliteDataReader["Release"].ToString(), 18);
+                    WriteCellValue(testPlanOpenXmlWriter, sqliteDataReader["HostName"].ToString(), 18);
+                    WriteCellValue(testPlanOpenXmlWriter, sqliteDataReader["IpAddress"].ToString(), 18);
+                    WriteCellValue(testPlanOpenXmlWriter, string.Empty, 18);
+                    WriteCellValue(testPlanOpenXmlWriter, sqliteDataReader["FileName"].ToString(), 18);
+                    WriteCellValue(testPlanOpenXmlWriter, string.Empty, 18);
+                    testPlanOpenXmlWriter.WriteEndElement();
+                    testPlanMergeCellReferences.Add("G" + testPlanRowCounterIndex.ToString() + ":H" + testPlanRowCounterIndex.ToString());
+                    testPlanRowCounterIndex++;
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to write test plan items.");
+                throw exception;
             }
         }
 
@@ -1772,11 +1932,31 @@ namespace Vulnerator.Model
         {
             try
             {
-
+                testPlanOpenXmlWriter.WriteEndElement();
+                WriteTestPlanMergeCells();
+                testPlanOpenXmlWriter.WriteEndElement();
+                testPlanOpenXmlWriter.Dispose();
             }
             catch (Exception exception)
             {
+                log.Error("Unable to finalize Test Plan report.");
+                throw exception;
+            }
+        }
 
+        private void WriteTestPlanMergeCells()
+        {
+            try
+            {
+                testPlanOpenXmlWriter.WriteStartElement(new MergeCells());
+                foreach (string reference in testPlanMergeCellReferences)
+                { testPlanOpenXmlWriter.WriteElement(new MergeCell() { Reference = reference }); }
+                testPlanOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate Test Plan MergeCells element.");
+                throw exception;
             }
         }
 

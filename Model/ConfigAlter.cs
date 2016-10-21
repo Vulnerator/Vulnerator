@@ -181,7 +181,7 @@ namespace Vulnerator.Model
                         new XDeclaration("1.0", "utf-8", "True"),
                         new XElement("preferencesRoot",
                             new XElement("version", FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion.ToString()),
-                                new XElement("reportingTab",
+                            new XElement("reportingTab",
                                 new XElement("rbDiacap", "True"),
                                 new XElement("rbRmf", "False"),
                                 new XElement("cbCritical", "True"),
@@ -221,7 +221,8 @@ namespace Vulnerator.Model
                                 new XElement("cbFindingDetails", "True"),
                                 new XElement("revisionThreeRadioButton", "True"),
                                 new XElement("revisionFourRadioButton", "False"),
-                                new XElement("cbNistAppendixA", "True")
+                                new XElement("cbNistAppendixA", "True"),
+                                new XElement("cbTestPlan", "True")
                             ),
                             new XElement("mitigationsTab",
                                 new XElement("createSubTab",

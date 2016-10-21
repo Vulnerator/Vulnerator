@@ -100,12 +100,12 @@ namespace Vulnerator.Model
                                         case "oval-res":
                                             {
                                                 incorrectFileType = true;
-                                                break;
+                                                return;
                                             }
                                         case "oval-var":
                                             {
                                                 incorrectFileType = true;
-                                                break;
+                                                return;
                                             }
                                         case "":
                                             {
