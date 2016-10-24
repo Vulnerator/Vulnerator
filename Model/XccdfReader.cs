@@ -1,5 +1,7 @@
 ﻿using log4net;
+using System.Net.NetworkInformation;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SQLite;
@@ -8,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Schema;
 using Vulnerator.ViewModel;
 
 namespace Vulnerator.Model
@@ -60,12 +63,7 @@ namespace Vulnerator.Model
         {
             try
             {
-                XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
-                xmlReaderSettings.IgnoreWhitespace = true;
-                xmlReaderSettings.IgnoreComments = true;
-                xmlReaderSettings.ValidationType = ValidationType.Schema;
-                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessInlineSchema;
-                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessSchemaLocation;
+                XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
                 fileNameWithoutPath = Path.GetFileName(fileName);
 
                 using (SQLiteTransaction sqliteTransaction = FindingsDatabaseActions.sqliteConnection.BeginTransaction())
@@ -861,6 +859,28 @@ namespace Vulnerator.Model
             catch (Exception exception)
             {
                 log.Error("Unable to generate a Stream from the provided string.");
+                throw exception;
+            }
+        }
+
+        private XmlReaderSettings GenerateXmlReaderSettings()
+        {
+            try
+            {
+                XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
+                xmlReaderSettings.IgnoreWhitespace = true;
+                xmlReaderSettings.IgnoreComments = true;
+                xmlReaderSettings.ValidationType = ValidationType.Schema;
+                if (NetworkInterface.GetIsNetworkAvailable())
+                {
+                    xmlReaderSettings.ValidationFlags = XmlSchemaValidationFlags.ProcessInlineSchema;
+                    xmlReaderSettings.ValidationFlags = XmlSchemaValidationFlags.ProcessSchemaLocation;
+                }
+                return xmlReaderSettings;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate XmlReaderSettings.");
                 throw exception;
             }
         }
