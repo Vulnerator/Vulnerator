@@ -51,10 +51,10 @@ namespace Vulnerator
                     {
                         var csvReader = new CsvReader(textReader);
                         csvReader.Configuration.HasHeaderRecord = true;
-                    
+
                         while (csvReader.Read())
                         {
-                            if (csvReader.Row == 2)
+                            if (csvReader.Row == 1)
                             {
                                 string missingHeader = CheckForCsvHeaders(csvReader);
                                 if (!string.IsNullOrWhiteSpace(missingHeader))
@@ -63,6 +63,7 @@ namespace Vulnerator
                                         "new CSV file utilizing the ACAS report template that was packaged with the application.");
                                     return "Failed; See Log";
                                 }
+                                csvReader.Read();
                             }
                             CreateAddAssetCommand(csvReader, systemName);
                             CreateAddVulnerabilityCommand(csvReader);
@@ -88,6 +89,7 @@ namespace Vulnerator
                 string[] headersToVerify = { "Plugin", "Plugin Name", "IP Address", "DNS Name", "Synopsis", "Description", "NetBIOS Name",
                                            "Solution", "Risk Factor", "STIG Severity", "Cross References", "Last Observed", "Plugin Modification Date" };
                 log.Info("Verifying CSV headers.");
+                csvReader.ReadHeader();
                 foreach (string headerName in headersToVerify)
                 {
                     if (!csvReader.FieldHeaders.Contains(headerName))
@@ -146,7 +148,7 @@ namespace Vulnerator
                 using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("Source", "Assured Compliance Assessment Solution (ACAS) Nessus Scanner"));
-                    sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources VALUES (NULL, @Source, '', '');";
+                    sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources VALUES (NULL, @Source, '?', '?');";
                     sqliteCommand.ExecuteNonQuery();
                 }
             }
@@ -276,7 +278,7 @@ namespace Vulnerator
                     sqliteCommand.CommandText = "INSERT INTO UniqueFinding (FindingTypeIndex, SourceIndex, StatusIndex, " +
                         "FileNameIndex, VulnerabilityIndex, AssetIndex) VALUES (" +
                         "(SELECT FindingTypeIndex FROM FindingTypes WHERE FindingType = 'ACAS'), " +
-                        "(SELECT SourceIndex FROM VulnerabilitySources WHERE Source = 'Assured Compliance Assessment Solution (ACAS)'), " +
+                        "(SELECT SourceIndex FROM VulnerabilitySources WHERE Source = 'Assured Compliance Assessment Solution (ACAS) Nessus Scanner' AND Version = '?' AND Release = '?'), " +
                         "(SELECT StatusIndex FROM FindingStatuses WHERE Status = 'Ongoing'), " +
                         "(SELECT FileNameIndex FROM FileNames WHERE FileName = @FileName), " +
                         "(SELECT VulnerabilityIndex FROM Vulnerability WHERE RuleId = @RuleId), " +
@@ -288,8 +290,15 @@ namespace Vulnerator
                     sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", groupName));
                     sqliteCommand.Parameters.Add(new SQLiteParameter("FileName", fileName));
                     sqliteCommand.Parameters.Add(new SQLiteParameter("RuleId", csvReader.GetField("Plugin")));
-                    if (!string.IsNullOrWhiteSpace(csvReader.GetField("DNS Name")))
-                    { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", csvReader.GetField("DNS Name"))); }
+                    if (UserPrefersHostName)
+                    {
+                        if (!string.IsNullOrWhiteSpace(csvReader.GetField("DNS Name")))
+                        { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", csvReader.GetField("DNS Name"))); }
+                        else if (!string.IsNullOrWhiteSpace(csvReader.GetField("NetBIOS Name")))
+                        { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", csvReader.GetField("NetBIOS Name"))); }
+                        else
+                        { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", csvReader.GetField("IP Address"))); }
+                    }
                     else
                     { sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", csvReader.GetField("IP Address"))); }
                     sqliteCommand.ExecuteNonQuery();

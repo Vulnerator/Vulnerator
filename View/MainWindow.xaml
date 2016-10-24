@@ -1775,7 +1775,7 @@
                                                                   Mode=OneTime,
                                                                   Source={StaticResource XmlConfig},
                                                                   XPath=reportingTab/cbAssetOverview}"
-                                              IsEnabled="{Binding IsEnabled}"
+                                              IsEnabled="False"
                                               TabIndex="22">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
@@ -1844,7 +1844,7 @@
                                                                   Mode=OneTime,
                                                                   Source={StaticResource XmlConfig},
                                                                   XPath=reportingTab/cbAssetOverview}"
-                                              IsEnabled="{Binding IsEnabled}"
+                                              IsEnabled="False"
                                               TabIndex="20">
                                         <CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
