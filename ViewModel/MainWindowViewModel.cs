@@ -884,7 +884,6 @@ namespace Vulnerator.ViewModel
                         }
                     }
                 }
-                cciToNistList.Sort();
             }
             catch (Exception exception)
             {
