@@ -1,10 +1,10 @@
 ﻿using log4net;
+using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -51,6 +51,34 @@ namespace Vulnerator.ViewModel
 				return FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion.ToString();
 			}
 		}
+
+        private string _newVersionVisibility = "Collapsed";
+        public string NewVersionVisibility
+        {
+            get { return _newVersionVisibility; }
+            set
+            {
+                if (_newVersionVisibility != value)
+                {
+                    _newVersionVisibility = value;
+                    OnPropertyChanged("NewVersionVisibility");
+                }
+            }
+        }
+
+        private string _newVersionText = "Update Info Unavailable";
+        public string NewVersionText
+        {
+            get { return _newVersionText; }
+            set
+            {
+                if (_newVersionText != value)
+                {
+                    _newVersionText = value;
+                    OnPropertyChanged("NewVersionText");
+                }
+            }
+        }
 		
 		private string _themeFlyoutIsOpen = "False";
 		public string ThemeFlyoutIsOpen
@@ -802,6 +830,7 @@ namespace Vulnerator.ViewModel
 			githubActions = new GitHubActions();
 			githubActions.GetGitHubIssues(IssueList);
 			githubActions.GetGitHubReleases(ReleaseList);
+            VersionTest();
 		}
 
 		#endregion
@@ -1864,7 +1893,7 @@ namespace Vulnerator.ViewModel
 		{
 			string goTo = "https://vulnerator.github.io/Vulnerator";
 			try
-			{ Process.Start(goTo); }
+			{ Process.Start(GetDefaultBrowserPath(), goTo); }
 			catch (Exception exception)
 			{
                 log.Error("Unable to launch link; no internet application exists.");
@@ -1878,7 +1907,7 @@ namespace Vulnerator.ViewModel
 		{
 			string goTo = "https://github.com/Vulnerator/Vulnerator/wiki";
 			try
-			{ Process.Start(goTo); }
+			{ Process.Start(GetDefaultBrowserPath(), goTo); }
 			catch (Exception exception)
 			{
                 log.Error("Unable to launch link; no internet application exists.");
@@ -1892,7 +1921,7 @@ namespace Vulnerator.ViewModel
 		{
 			string goTo = "https://github.com/Vulnerator/Vulnerator";
 			try
-			{ Process.Start(goTo); }
+			{ Process.Start(GetDefaultBrowserPath(), goTo); }
 			catch (Exception exception)
 			{
                 log.Error("Unable to launch link; no internet application exists.");
@@ -1906,7 +1935,7 @@ namespace Vulnerator.ViewModel
 		{
 			string goTo = "https://kuchtacreativeservices.com";
 			try
-			{ Process.Start(goTo); }
+			{ Process.Start(GetDefaultBrowserPath(), goTo); }
 			catch (Exception exception)
 			{
                 log.Error("Unable to launch link; no internet application exists.");
@@ -2338,6 +2367,118 @@ namespace Vulnerator.ViewModel
 			emailMessage.SendAndSaveCopy();
 		}
 
-		#endregion
-	}
+        #endregion
+
+        #region VersionTest
+
+        private void VersionTest()
+        {
+            backgroundWorker = new BackgroundWorker();
+            backgroundWorker.DoWork += versionTestBackgroundWorker_DoWork;
+            backgroundWorker.RunWorkerAsync();
+            backgroundWorker.Dispose();
+        }
+
+        private void versionTestBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+                {
+                    int attemptCounter = 0;
+                    while (ReleaseList.Count == 0 && attemptCounter < 20)
+                    {
+                        System.Threading.Thread.Sleep(1000);
+                        attemptCounter++;
+                    }
+                    if (ReleaseList.Count > 0)
+                    {
+                        int releaseVersion= int.Parse(ReleaseList[0].TagName.Replace("v", "").Replace(".", ""));
+                        int currentVersion = int.Parse(FileVersion.Replace(".", ""));
+                        if (releaseVersion > currentVersion)
+                        {
+                            NewVersionText = "New Version Available: " + ReleaseList[0].TagName;
+                            NewVersionVisibility = "Visible";
+                        }
+                        else
+                        { NewVersionText = "Running Latest Version"; }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to obtain version update information.");
+                throw exception;
+            }
+        }
+
+        #endregion
+
+        public ICommand GetLatestVersionCommand
+        { get { return new DelegateCommand(GetLatestVersion); } }
+
+        private void GetLatestVersion(object param)
+        {
+            try
+            { Process.Start(GetDefaultBrowserPath(), param.ToString()); }
+            catch (Exception exception)
+            {
+                log.Error("Unable to obtain launch GitHub link; no internet application exists.");
+                log.Debug("Exception details: " + exception);
+                View.NoInternetApplication internetWarning = new View.NoInternetApplication();
+                internetWarning.ShowDialog();
+                return;
+            }
+        }
+
+        public static string GetDefaultBrowserPath()
+        {
+            string urlAssociation = @"Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http";
+            string browserPathKey = @"$BROWSER$\shell\open\command";
+
+            RegistryKey userChoiceKey = null;
+            string browserPath = "";
+
+            try
+            {
+                userChoiceKey = Registry.CurrentUser.OpenSubKey(urlAssociation + @"\UserChoice", false);
+
+                if (userChoiceKey == null)
+                {
+                    var browserKey = Registry.ClassesRoot.OpenSubKey(@"HTTP\shell\open\command", false);
+                    if (browserKey == null)
+                    {
+                        browserKey =
+                        Registry.CurrentUser.OpenSubKey(
+                        urlAssociation, false);
+                    }
+                    var path = CleanifyBrowserPath(browserKey.GetValue(null) as string);
+                    browserKey.Close();
+                    return path;
+                }
+                else
+                {
+                    string progId = (userChoiceKey.GetValue("ProgId").ToString());
+                    userChoiceKey.Close();
+                    string concreteBrowserKey = browserPathKey.Replace("$BROWSER$", progId);
+                    var kp = Registry.ClassesRoot.OpenSubKey(concreteBrowserKey, false);
+                    browserPath = CleanifyBrowserPath(kp.GetValue(null) as string);
+                    kp.Close();
+                    return browserPath;
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to obtain default browser data.");
+                throw exception;
+            }
+        }
+
+        private static string CleanifyBrowserPath(string p)
+        {
+            string[] url = p.Split('"');
+            string clean = url[1];
+            return clean;
+        }
+    }
 }

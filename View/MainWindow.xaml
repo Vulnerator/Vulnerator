@@ -96,7 +96,16 @@
         <Controls:WindowButtonCommands Template="{DynamicResource MahApps.Metro.Templates.WindowButtonCommands.Win10}" />
     </Controls:MetroWindow.WindowButtonCommands>
 
-    <!--  Buttons at the top of the window for Theme and About  -->
+    <Controls:MetroWindow.LeftWindowCommands>
+        <Controls:WindowCommands>
+            <Button x:Name="projectButton"
+                    Command="{Binding AboutLinksCommand}"
+                    CommandParameter="{Binding ElementName=projectButton, Path=Name}"
+                    Content="{IconPacks:PackIconOcticons Bookmark}" />
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.LeftWindowCommands>
+
+    <!--  Buttons at the top of the window for Theme, About, and News  -->
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
             <Button x:Name="bNews"
@@ -4603,7 +4612,20 @@
                        Background="{DynamicResource ControlBackgroundBrush}"
                        BorderBrush="#FFCCCCCC"
                        BorderThickness="0,1,0,0">
-                <StatusBarItem>
+                <StatusBar.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                    </ItemsPanelTemplate>
+                </StatusBar.ItemsPanel>
+                <StatusBarItem Grid.Column="0">
                     <Controls:ProgressRing Width="30"
                                            Height="30"
                                            Margin="0"
@@ -4614,7 +4636,44 @@
                                Margin="0"
                                VerticalAlignment="Top"
                                Content="{Binding ProgressLabelText}"
-                               Foreground="{DynamicResource TextBrush}" />
+                               Foreground="{DynamicResource TextBrush}"
+                               Grid.Column="1"/>
+                <StatusBarItem Width="Auto"
+                               HorizontalAlignment="Stretch" />
+                <StatusBarItem Height="35"
+                               Margin="0,0,5,0"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Right"
+                               Content="{Binding NewVersionText}"
+                               Foreground="{DynamicResource TextBrush}"
+                               Visibility="Visible"
+                               Grid.Column="3"
+                               />
+                <StatusBarItem Grid.Column="4">
+                    <Button Content="{IconPacks:PackIconOcticons DesktopDownload}"
+                            Command="{Binding GetLatestVersionCommand}"
+                            CommandParameter="{Binding ReleaseList[0].HtmlUrl}"
+                            Visibility="{Binding NewVersionVisibility}"
+                            ToolTip="Download Now"
+                            Margin="0,0,3,0"/>
+                </StatusBarItem>
+                
+                <!--<StatusBarItem Height="35"
+                               Margin="0,0,5,0"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Right"
+                               Style="{StaticResource styleHyperlinkStatusBarItem}"
+                               Content="{IconPacks:PackIconOcticons Kind=DesktopDownload}"
+                               ToolTip="Download Now"
+                               Foreground="{DynamicResource TextBrush}"
+                               Visibility="{Binding NewVersionVisibility}"
+                               Grid.Column="4">
+                    <StatusBarItem.InputBindings>
+                        <MouseBinding Command="{Binding GetLatestVersionCommand}"
+                                      CommandParameter="{Binding ReleaseList[0].HtmlUrl}"
+                                      MouseAction="LeftClick" />
+                    </StatusBarItem.InputBindings>
+                </StatusBarItem>-->
             </StatusBar>
         </Grid>
     </Controls:MetroContentControl>

@@ -4,19 +4,14 @@
                       xmlns:vm="clr-namespace:Vulnerator.ViewModel"
                       xmlns:v="clr-namespace:Vulnerator.View"
                       xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-                      DataContext="{DynamicResource MainWindowViewModel}"
-                      Height="209" 
-                      Width="385" 
-                      ShowInTaskbar="False" 
-                      Topmost="True" 
+                      Height="209"
+                      Width="385"
+                      ShowInTaskbar="False"
+                      Topmost="True"
                       WindowStartupLocation="CenterOwner"
                       ShowTitleBar="False"
                       ResizeMode="NoResize"
                       GlowBrush="{DynamicResource AccentColorBrush}">
-
-    <Controls:MetroWindow.Resources>
-        <vm:MainWindowViewModel x:Key="MainWindowViewModel" />
-    </Controls:MetroWindow.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
