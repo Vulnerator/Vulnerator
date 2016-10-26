@@ -1,5 +1,9 @@
 ﻿using MahApps.Metro;
+using MahApps.Metro.Controls.Dialogs;
 using System;
+using System.Diagnostics;
+using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 using Vulnerator.Model;
@@ -49,11 +53,10 @@ namespace Vulnerator
             
             // Set accent at startup
             // TODO: Make more "MVVM-friendly"
-            ChangeAccent(accentName);
         }
 
         #region AccentManager
-        
+
         // TODO: Make more "MVVM-friendly"
         private void ChangeAccent(string accentName)
         {
