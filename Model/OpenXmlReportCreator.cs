@@ -1009,10 +1009,10 @@ namespace Vulnerator.Model
 
                 if (mitigation != null)
                 {
-                    if (!FilterByStatus(mitigation.MitigationStatus))
+                    if (!mitigation.MitigationStatus.Equals("Ongoing"))
                     { return; }
                 }
-                else if (!FilterByStatus(sqliteDataReader["Status"].ToString()))
+                else if (!sqliteDataReader["Status"].ToString().Equals("Ongoing"))
                 { return; }
 
                 rarOpenXmlWriter.WriteStartElement(new Row());
@@ -1669,11 +1669,10 @@ namespace Vulnerator.Model
             {
                 using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
-                    sqliteCommand.CommandText = "SELECT Source, Version, Release, HostName, IpAddress, FileName " +
+                    sqliteCommand.CommandText = "SELECT DISTINCT Source, Version, Release, HostName, IpAddress, FileName " +
                         "FROM UniqueFinding NATURAL JOIN FileNames NATURAL JOIN Assets " +
                         "NATURAL JOIN VulnerabilitySources NATURAL JOIN FindingTypes " +
-                        "WHERE FindingType = @FindingType GROUP BY AssetIdtoReport, FileName " +
-                        "ORDER BY Source, Version, Release;";
+                        "WHERE FindingType = @FindingType ORDER BY Source, Version, Release;";
                     sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {

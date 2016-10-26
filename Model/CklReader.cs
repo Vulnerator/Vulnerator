@@ -265,6 +265,13 @@ namespace Vulnerator
                             xmlReader.Read();
                             switch (xmlReader.Value)
                             {
+                                case "title":
+                                    {
+                                        stigInfo = ObtainStigInfoSubNodeValue(xmlReader);
+                                        if (!stigInfo.Contains ("STIG") || !stigInfo.Contains("Security Technical Implementation Benchmark"))
+                                        { stigInfo = stigInfo + " STIG"; }
+                                        break;
+                                    }
                                 case "version":
                                     {
                                         versionInfo = ObtainStigInfoSubNodeValue(xmlReader);
