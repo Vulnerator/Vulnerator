@@ -1808,22 +1808,27 @@ namespace Vulnerator.ViewModel
 						EmailJeffP();
 						break;
 					}
-				case "tbProject":
+				case "projectButton":
 					{
 						VisitProjectPage();
 						break;
 					}
-				case "tbWiki":
+				case "wikiButton":
 					{
 						VisitWikiPage();
 						break;
 					}
-				case "tbRepo":
+				case "githubButton":
 					{
 						VisitRepo();
 						break;
 					}
-				case "tbKcs":
+                case "issueButton":
+                    {
+                        VisitIssues();
+                        break;
+                    }
+                case "tbKcs":
 					{
 						VisitKcs();
 						break;
@@ -1835,7 +1840,7 @@ namespace Vulnerator.ViewModel
 
 		private void EmailAlex()
 		{
-			string mailTo = "mailto:alex.kuchta.ctr@navy.mil";
+			string mailTo = "mailto:alex.kuchta@navy.mil";
 			try
 			{ Process.Start(mailTo); }
 			catch (Exception exception)
@@ -1931,7 +1936,21 @@ namespace Vulnerator.ViewModel
 			}
 		}
 
-		private void VisitKcs()
+        private void VisitIssues()
+        {
+            string goTo = "https://github.com/Vulnerator/Vulnerator/issues";
+            try
+            { Process.Start(GetDefaultBrowserPath(), goTo); }
+            catch (Exception exception)
+            {
+                log.Error("Unable to launch link; no internet application exists.");
+                View.NoInternetApplication internetWarning = new View.NoInternetApplication();
+                internetWarning.ShowDialog();
+                return;
+            }
+        }
+
+        private void VisitKcs()
 		{
 			string goTo = "https://kuchtacreativeservices.com";
 			try
