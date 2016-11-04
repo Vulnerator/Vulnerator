@@ -2286,7 +2286,6 @@
                                         Content="Import ACAS"
                                         FontSize="12"
                                         IsEnabled="{Binding IsEnabled}"
-                                        Style="{StaticResource MetroFlatButton}"
                                         TabIndex="38" />
                                 <Button x:Name="bCkl"
                                         Margin="5,0,5,5"
@@ -2297,7 +2296,6 @@
                                         Content="Import CKL"
                                         FontSize="12"
                                         IsEnabled="{Binding IsEnabled}"
-                                        Style="{StaticResource MetroFlatButton}"
                                         TabIndex="39" />
                                 <Button x:Name="bXccdf"
                                         Margin="5,0,5,5"
@@ -2308,7 +2306,6 @@
                                         Content="Import XCCDF"
                                         FontSize="12"
                                         IsEnabled="{Binding IsEnabled}"
-                                        Style="{StaticResource MetroFlatButton}"
                                         TabIndex="40" />
                                 <Button x:Name="bWassp"
                                         Margin="5,0,5,5"
@@ -2319,7 +2316,6 @@
                                         Content="Import WASSP"
                                         FontSize="12"
                                         IsEnabled="{Binding IsEnabled}"
-                                        Style="{StaticResource MetroFlatButton}"
                                         TabIndex="41" />
                                 <Button x:Name="bExecute"
                                         Margin="5,0,5,5"
@@ -2329,7 +2325,6 @@
                                         Content="Execute"
                                         FontSize="12"
                                         IsEnabled="{Binding IsEnabled}"
-                                        Style="{StaticResource MetroFlatButton}"
                                         TabIndex="42" />
                                 <Button x:Name="bClearFiles"
                                         Margin="5,0,5,5"
@@ -2340,7 +2335,6 @@
                                         Content="Clear Files"
                                         FontSize="12"
                                         IsEnabled="{Binding IsEnabled}"
-                                        Style="{StaticResource MetroFlatButton}"
                                         TabIndex="43" />
                             </StackPanel>
                         </ScrollViewer>
@@ -2482,7 +2476,7 @@
                                  Header="Add">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="270" />
+                                    <ColumnDefinition Width="325" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
@@ -2555,7 +2549,6 @@
                                                     Content="Create New"
                                                     FontSize="12"
                                                     IsEnabled="{Binding IsEnabled}"
-                                                    Style="{StaticResource MetroFlatButton}"
                                                     TabIndex="2" />
                                             <Button x:Name="bMitLocationBrowse"
                                                     Grid.Column="1"
@@ -2568,7 +2561,6 @@
                                                     Content="Browse"
                                                     FontSize="12"
                                                     IsEnabled="{Binding IsEnabled}"
-                                                    Style="{StaticResource MetroFlatButton}"
                                                     TabIndex="3" />
                                         </Grid>
                                         <Label HorizontalAlignment="Left"
@@ -2662,7 +2654,6 @@
                                                     Content="Import Mitigation(s)"
                                                     FontSize="12"
                                                     IsEnabled="{Binding IsEnabled}"
-                                                    Style="{StaticResource MetroFlatButton}"
                                                     TabIndex="9" />
                                             <Button x:Name="bMitTextSave"
                                                     Grid.Column="1"
@@ -2675,7 +2666,6 @@
                                                     Content="Save Mitigations"
                                                     FontSize="12"
                                                     IsEnabled="{Binding IsEnabled}"
-                                                    Style="{StaticResource MetroFlatButton}"
                                                     TabIndex="10" />
                                         </Grid>
                                     </StackPanel>
@@ -2787,7 +2777,6 @@
                                                 Content="Delete Mitigations"
                                                 FontSize="12"
                                                 IsEnabled="{Binding IsEnabled}"
-                                                Style="{StaticResource MetroFlatButton}"
                                                 TabIndex="12" />
                                         <Button x:Name="bMitTextClear"
                                                 Width="{Binding ElementName=bMitDelete,
@@ -2799,7 +2788,6 @@
                                                 Content="Clear Selection"
                                                 FontSize="12"
                                                 IsEnabled="{Binding IsEnabled}"
-                                                Style="{StaticResource MetroFlatButton}"
                                                 TabIndex="11" />
                                     </StackPanel>
                                 </Grid>
@@ -2950,15 +2938,14 @@
                                                  TextWrapping="Wrap"
                                                  VerticalScrollBarVisibility="Auto" />
                                         <Button x:Name="bUpdateMitigation"
-                                                Width="{Binding ElementName=bMitDelete_Copy,
-                                                                Path=ActualWidth}"
+                                                Width="{Binding ElementName=bMitImport,
+                                                                    Path=ActualWidth}"
                                                 Margin="5,0,5,5"
                                                 HorizontalAlignment="Left"
                                                 Command="{Binding UpdateMitigationCommand}"
                                                 Content="Update Mitigation"
                                                 FontSize="12"
                                                 IsEnabled="{Binding IsEnabled}"
-                                                Style="{StaticResource MetroFlatButton}"
                                                 TabIndex="8">
                                             <Button.CommandParameter>
                                                 <MultiBinding Converter="{StaticResource StringSeparator}">
@@ -3073,7 +3060,6 @@
                                                 Content="Clear Selection"
                                                 FontSize="12"
                                                 IsEnabled="{Binding IsEnabled}"
-                                                Style="{StaticResource MetroFlatButton}"
                                                 TabIndex="10" />
                                         <Button x:Name="bMitDelete_Copy"
                                                 Margin="5,0,5,5"
@@ -3083,7 +3069,6 @@
                                                 Content="Delete Mitigations"
                                                 FontSize="12"
                                                 IsEnabled="{Binding IsEnabled}"
-                                                Style="{StaticResource MetroFlatButton}"
                                                 TabIndex="9" />
                                     </StackPanel>
                                 </Grid>
