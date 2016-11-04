@@ -402,10 +402,10 @@ namespace Vulnerator.Model
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
                     sqliteCommand.CommandText = "SELECT AssetIdToReport, HostName, IpAddress, GroupName, " + 
-                        "SUM(CASE WHEN (RawRisk = 'I' OR Impact = 'Critical' OR Impact = 'High') AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatI, " + 
-                        "SUM(CASE WHEN (RawRisk = 'II' OR Impact = 'Medium') AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatII, " + 
-                        "SUM(CASE WHEN (RawRisk = 'III' OR Impact = 'Low') AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatIII, " +
-                        "SUM(CASE WHEN (RawRisk = 'IV' OR Impact = 'Informational') AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatIV, " +
+                        "SUM(CASE WHEN (RawRisk = 'I' OR (Impact = 'Critical' AND RawRisk IS NULL) OR (Impact = 'High' AND RawRisk IS NULL)) AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatI, " + 
+                        "SUM(CASE WHEN (RawRisk = 'II' OR (Impact = 'Medium' AND RawRisk IS NULL)) AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatII, " + 
+                        "SUM(CASE WHEN (RawRisk = 'III' OR (Impact = 'Low' AND RawRisk IS NULL)) AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatIII, " +
+                        "SUM(CASE WHEN (RawRisk = 'IV' OR (Impact = 'Informational' AND RawRisk IS NULL)) AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatIV, " +
                         "COUNT(CASE WHEN Status = 'Ongoing' THEN 1 END) AS Total, " +
                         "OperatingSystem, IsCredentialed, Found21745, Found26917, FileName " +
                         "FROM Assets NATURAL JOIN UniqueFinding NATURAL JOIN Vulnerability NATURAL JOIN Groups NATURAL JOIN FileNames " +
@@ -413,13 +413,20 @@ namespace Vulnerator.Model
                         "GROUP BY AssetIdToReport, FileName;";
                     if (findingType.Equals("XCCDF"))
                     {
-                        sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(783, " NATURAL JOIN ScapScores");
-                        sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(619, ", ScapScore");
+                        sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(893, " NATURAL JOIN ScapScores");
+                        sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(729, ", ScapScore");
                     }
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
+                        int i = 1;
                         while (sqliteDataReader.Read())
-                        { WriteAssetOverviewRow(sqliteDataReader, findingType); }
+                        {
+                            Console.WriteLine("Now Serving #{0}",i);
+                            if (i == 503)
+                            { Console.WriteLine("This one breaks shit..."); }
+                            WriteAssetOverviewRow(sqliteDataReader, findingType);
+                            i++;
+                        }
                     }
                 }
             }
