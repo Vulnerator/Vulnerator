@@ -2317,6 +2317,16 @@
                                         FontSize="12"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="41" />
+                                <Button x:Name="importFprButton"
+                                        Margin="5,0,5,5"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Top"
+                                        Command="{Binding OpenDialogCommand}"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                        Content="Import Fortify"
+                                        FontSize="12"
+                                        IsEnabled="{Binding IsEnabled}"
+                                        TabIndex="41" />
                                 <Button x:Name="bExecute"
                                         Margin="5,0,5,5"
                                         HorizontalAlignment="Stretch"
@@ -2939,7 +2949,7 @@
                                                  VerticalScrollBarVisibility="Auto" />
                                         <Button x:Name="bUpdateMitigation"
                                                 Width="{Binding ElementName=bMitImport,
-                                                                    Path=ActualWidth}"
+                                                                Path=ActualWidth}"
                                                 Margin="5,0,5,5"
                                                 HorizontalAlignment="Left"
                                                 Command="{Binding UpdateMitigationCommand}"

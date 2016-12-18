@@ -1122,15 +1122,14 @@ namespace Vulnerator.ViewModel
 
                     if (p.Contains("ACAS"))
                     { OpenAcasFiles(); }
-
                     else if (p.Contains("CKL"))
                     { OpenCklFiles(); }
-
                     else if (p.Contains("WASSP"))
                     { OpenWasspFiles(); }
-
                     else if (p.Contains("XCCDF"))
                     { OpenXccdfFiles(); }
+                    else if (p.Contains("Fortify"))
+                    { OpenFprFiles(); }
                 }
                 openDialog = null;
             }
@@ -1247,6 +1246,30 @@ namespace Vulnerator.ViewModel
             catch (Exception exception)
             {
                 log.Error("Unable to retrieve XCCDF file(s).");
+                log.Debug("Exception details: " + exception);
+            }
+        }
+
+        private void OpenFprFiles()
+        {
+            try
+            {
+                openDialog.Filter = "Fortify FPR Files (*.fpr)|*.fpr";
+                openDialog.Title = "Please select Fortify file(s)";
+                openDialog.ShowDialog();
+                if (openDialog.FileNames.Length > 0)
+                {
+                    for (int i = 0; i < openDialog.FileNames.Length; i++)
+                    {
+                        string filePath = openDialog.FileNames[i];
+                        string fileName = Path.GetFileNameWithoutExtension(filePath);
+                        FileList.Add(new Files(fileName, "Fortify FPR", "Ready", string.Empty, filePath));
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to retrieve FPR file(s).");
                 log.Debug("Exception details: " + exception);
             }
         }
@@ -1571,7 +1594,13 @@ namespace Vulnerator.ViewModel
 							file.Status = xccdfReader.ReadXccdfFile(file.FilePath, MitigationList, file.FileSystemName.Split(':')[0].TrimEnd());
 							break;
 						}
-					default:
+                    case "Fortify FPR":
+                        {
+                            FprReader fprReader = new FprReader();
+                            file.Status = fprReader.ReadFpr(file.FilePath, MitigationList, file.FileSystemName.Split(':')[0].TrimEnd());
+                            break;
+                        }
+                    default:
 						{
 							log.Error(file.FileName + " file type is unrecognized.");
 							break;

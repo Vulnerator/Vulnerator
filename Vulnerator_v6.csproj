@@ -171,6 +171,8 @@
     <Reference Include="System.Drawing">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Net">
       <Private>False</Private>
     </Reference>
@@ -229,6 +231,8 @@
     <Compile Include="Model\ExtensionMethods.cs" />
     <Compile Include="Model\FileNameNoPathConverter.cs" />
     <Compile Include="Model\FindingsDatabaseActions.cs" />
+    <Compile Include="Model\FprDescription.cs" />
+    <Compile Include="Model\FprReader.cs" />
     <Compile Include="Model\GitHubActions.cs" />
     <Compile Include="Model\Issue.cs" />
     <Compile Include="Model\Logger.cs" />
