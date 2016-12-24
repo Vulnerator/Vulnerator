@@ -42,10 +42,12 @@ namespace Vulnerator.Model
         private bool DiscrepanciesTabIsNeeded { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbDiscrepancies")); } }
         private bool AcasOutputTabIsNeeded { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbAcasOutput")); } }
         private bool StigDetailsTabIsNeeded { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbStigDetails")); } }
+        private bool FprDetailsTabIsNeeded { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbFprDetails")); } }
         private bool AcasFindingsShouldBeMerged { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbMergeAcas")); } }
         private bool CklFindingsShouldBeMerged { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbMergeCkl")); } }
         private bool XccdfFindingsShouldBeMerged { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbMergeXccdf")); } }
         private bool WasspFindingsShouldBeMerged { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbMergeWassp")); } }
+        private bool FprFindingsShouldBeMerged { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbMergeFpr")); } }
         private bool UserRequiresComments { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbComments")); } }
         private bool UserRequiresFindingDetails { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbFindingDetails")); } }
         private bool TestPlanIsRequired { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbTestPlan")); } }
@@ -71,6 +73,7 @@ namespace Vulnerator.Model
         private OpenXmlWriter acasOutputOpenXmlWriter;
         private OpenXmlWriter discrepanciesOpenXmlWriter;
         private OpenXmlWriter stigDetailsOpenXmlWriter;
+        private OpenXmlWriter fprDetailsOpenXmlWriter;
         private OpenXmlWriter testPlanOpenXmlWriter;
 
         #endregion Member Variables
@@ -92,18 +95,36 @@ namespace Vulnerator.Model
                     if (AssetOverviewTabIsNeeded)
                     {
                         log.Info("Creating Asset Overview tab.");
-                        WriteFindingTypeHeaderRowOne("ACAS");
-                        WriteFindingTypeHeaderRowTwo("ACAS");
-                        WriteAssetOverviewItems("ACAS");
-                        WriteFindingTypeHeaderRowOne("CKL");
-                        WriteFindingTypeHeaderRowTwo("CKL");
-                        WriteAssetOverviewItems("CKL");
-                        WriteFindingTypeHeaderRowOne("XCCDF");
-                        WriteFindingTypeHeaderRowTwo("XCCDF");
-                        WriteAssetOverviewItems("XCCDF");
-                        WriteFindingTypeHeaderRowOne("WASSP");
-                        WriteFindingTypeHeaderRowTwo("WASSP");
-                        WriteAssetOverviewItems("WASSP");
+                        if (CountVulnerabilitiesByFindingType("ACAS") > 0)
+                        {
+                            WriteFindingTypeHeaderRowOne("ACAS");
+                            WriteFindingTypeHeaderRowTwo("ACAS");
+                            WriteAssetOverviewItems("ACAS");
+                        }
+                        if (CountVulnerabilitiesByFindingType("CKL") > 0)
+                        {
+                            WriteFindingTypeHeaderRowOne("CKL");
+                            WriteFindingTypeHeaderRowTwo("CKL");
+                            WriteAssetOverviewItems("CKL");
+                        }
+                        if (CountVulnerabilitiesByFindingType("XCCDF") > 0)
+                        {
+                            WriteFindingTypeHeaderRowOne("XCCDF");
+                            WriteFindingTypeHeaderRowTwo("XCCDF");
+                            WriteAssetOverviewItems("XCCDF");
+                        }
+                        if (CountVulnerabilitiesByFindingType("WASSP") > 0)
+                        {
+                            WriteFindingTypeHeaderRowOne("WASSP");
+                            WriteFindingTypeHeaderRowTwo("WASSP");
+                            WriteAssetOverviewItems("WASSP");
+                        }
+                        if (CountVulnerabilitiesByFindingType("FPR") > 0)
+                        {
+                            WriteFindingTypeHeaderRowOne("FPR");
+                            WriteFindingTypeHeaderRowTwo("FPR");
+                            WriteAssetOverviewItems("FPR");
+                        }
                     }
 
                     if (TestPlanIsRequired)
@@ -115,6 +136,7 @@ namespace Vulnerator.Model
                         ObtainTestPlanItems("ACAS");
                         ObtainTestPlanItems("XCCDF");
                         ObtainTestPlanItems("CKL");
+                        ObtainTestPlanItems("FPR");
                     }
 
                     if (PoamAndRarTabsAreNeeded)
@@ -124,6 +146,7 @@ namespace Vulnerator.Model
                         WriteFindingsToPoamAndRar("CKL", CklFindingsShouldBeMerged, mitigationList);
                         WriteFindingsToPoamAndRar("XCCDF", XccdfFindingsShouldBeMerged, mitigationList);
                         WriteFindingsToPoamAndRar("WASSP", WasspFindingsShouldBeMerged, mitigationList);
+                        WriteFindingsToPoamAndRar("FPR", FprFindingsShouldBeMerged, mitigationList);
                     }
 
                     if (AcasOutputTabIsNeeded)
@@ -143,6 +166,12 @@ namespace Vulnerator.Model
                         log.Info("Creating STIG Details tab.");
                         WriteStigDetailItems("CKL");
                         WriteStigDetailItems("XCCDF");
+                    }
+
+                    if (FprDetailsTabIsNeeded)
+                    {
+                        log.Info("Creating Fortify Details tab.");
+                        WriteFprDetailsItems("FPR");
                     }
 
                     log.Info("Finalizing workbook.");
@@ -179,6 +208,8 @@ namespace Vulnerator.Model
                 { StartDiscrepancies(workbookPart, sheets); }
                 if (StigDetailsTabIsNeeded)
                 { StartStigDetails(workbookPart, sheets); }
+                if (FprDetailsTabIsNeeded)
+                { StartFprDetails(workbookPart, sheets); }
             }
             catch (Exception exception)
             {
@@ -194,7 +225,7 @@ namespace Vulnerator.Model
                 using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
-                    sqliteCommand.CommandText = SetSqliteCommandText(findingsAreMerged);
+                    sqliteCommand.CommandText = SetSqliteCommandText(findingsAreMerged, findingType);
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
                         while (sqliteDataReader.Read())
@@ -236,9 +267,10 @@ namespace Vulnerator.Model
                 { EndAcasOutput(); }
                 if (DiscrepanciesTabIsNeeded)
                 { EndDiscrepancies(); }
-
                 if (StigDetailsTabIsNeeded)
                 { EndStigDetails(); }
+                if (FprDetailsTabIsNeeded)
+                { EndFprDetails(); }
             }
             catch (Exception exception)
             {
@@ -355,7 +387,10 @@ namespace Vulnerator.Model
             try
             {
                 assetOverviewOpenXmlWriter.WriteStartElement(new Row());
-                WriteCellValue(assetOverviewOpenXmlWriter, "Host Name", 17);
+                if (!findingType.Equals("FPR"))
+                { WriteCellValue(assetOverviewOpenXmlWriter, "Host Name", 17); }
+                else
+                { WriteCellValue(assetOverviewOpenXmlWriter, "Software Name", 17); }
                 WriteCellValue(assetOverviewOpenXmlWriter, "IP Address", 17);
                 WriteCellValue(assetOverviewOpenXmlWriter, "Group Name", 17);
                 WriteCellValue(assetOverviewOpenXmlWriter, "Operating System", 17);
@@ -363,7 +398,10 @@ namespace Vulnerator.Model
                 WriteCellValue(assetOverviewOpenXmlWriter, "CAT I", 6);
                 WriteCellValue(assetOverviewOpenXmlWriter, "CAT II", 7);
                 WriteCellValue(assetOverviewOpenXmlWriter, "CAT III", 8);
-                WriteCellValue(assetOverviewOpenXmlWriter, "CAT IV", 9);
+                if (findingType.Equals("FPR"))
+                { WriteCellValue(assetOverviewOpenXmlWriter, "Unknown", 9); }
+                else
+                { WriteCellValue(assetOverviewOpenXmlWriter, "CAT IV", 9); }
                 WriteCellValue(assetOverviewOpenXmlWriter, "Total", 17);
                 switch (findingType)
                 {
@@ -393,6 +431,30 @@ namespace Vulnerator.Model
             }
         }
 
+        private int CountVulnerabilitiesByFindingType(string findingType)
+        {
+            try
+            {
+                int count = 0;
+                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
+                    sqliteCommand.CommandText = "SELECT COUNT(VulnId) AS Count FROM UniqueFinding NATURAL JOIN FindingTypes NATURAL JOIN Vulnerability WHERE FindingType = @FindingType;";
+                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                    {
+                        while (sqliteDataReader.Read())
+                        { count = int.Parse(sqliteDataReader["Count"].ToString()); }
+                    }
+                }
+                return count;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to count vulnerabilities of finding type " + findingType);
+                throw exception;
+            }
+        }
+
         private void WriteAssetOverviewItems(string findingType)
         {
             try
@@ -416,14 +478,13 @@ namespace Vulnerator.Model
                         sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(893, " NATURAL JOIN ScapScores");
                         sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(729, ", ScapScore");
                     }
+                    if (findingType.Equals("FPR"))
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(729, ", SUM(CASE WHEN RawRisk IS NULL AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS Unknown"); }
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
                         int i = 1;
                         while (sqliteDataReader.Read())
                         {
-                            Console.WriteLine("Now Serving #{0}",i);
-                            if (i == 503)
-                            { Console.WriteLine("This one breaks shit..."); }
                             WriteAssetOverviewRow(sqliteDataReader, findingType);
                             i++;
                         }
@@ -450,7 +511,10 @@ namespace Vulnerator.Model
                 WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["CatI"].ToString(), 11);
                 WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["CatII"].ToString(), 12);
                 WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["CatIII"].ToString(), 13);
-                WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["CatIV"].ToString(), 14);
+                if (findingType.Equals("FPR"))
+                { WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["Unknown"].ToString(), 14); }
+                else
+                { WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["CatIV"].ToString(), 14); }
                 WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["Total"].ToString(), 18);
                 switch (findingType)
                 {
@@ -1067,7 +1131,7 @@ namespace Vulnerator.Model
                     if (UserRequiresFindingDetails)
                     {
                         if (!string.IsNullOrWhiteSpace(mitigationText))
-                        { mitigationText = mitigationText + Environment.NewLine + sqliteDataReader["FindingDetails"].ToString(); }
+                        { mitigationText = mitigationText + doubleCarriageReturn + sqliteDataReader["FindingDetails"].ToString(); }
                         else
                         { mitigationText = sqliteDataReader["FindingDetails"].ToString(); }
                     }
@@ -1207,7 +1271,7 @@ namespace Vulnerator.Model
                 using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "ACAS"));
-                    sqliteCommand.CommandText = SetSqliteCommandText(false);
+                    sqliteCommand.CommandText = SetSqliteCommandText(false, "ACAS");
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
                         while (sqliteDataReader.Read())
@@ -1270,7 +1334,7 @@ namespace Vulnerator.Model
             try
             {
                 WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
-                Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "STIG Details & Review" };
+                Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "STIG Details" };
                 sheetIndex++;
                 sheets.Append(sheet);
                 stigDetailsOpenXmlWriter = OpenXmlWriter.Create(worksheetPart);
@@ -1365,7 +1429,7 @@ namespace Vulnerator.Model
                 using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
-                    sqliteCommand.CommandText = SetSqliteCommandText(false);
+                    sqliteCommand.CommandText = SetSqliteCommandText(false, findingType);
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
                         while (sqliteDataReader.Read())
@@ -1419,6 +1483,156 @@ namespace Vulnerator.Model
                 throw exception;
             }
         }
+
+        #endregion
+
+        #region Create FPR Details
+
+        private void StartFprDetails(WorkbookPart workbookPart, Sheets sheets)
+        {
+            try
+            {
+                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "Fortify Details" };
+                sheetIndex++;
+                sheets.Append(sheet);
+                fprDetailsOpenXmlWriter = OpenXmlWriter.Create(worksheetPart);
+                fprDetailsOpenXmlWriter.WriteStartElement(new Worksheet());
+                WriteFprDetailsColumns();
+                fprDetailsOpenXmlWriter.WriteStartElement(new SheetData());
+                WriteFprDetailsHeaderRow();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to initialize Fortify Details tab.");
+                throw exception;
+            }
+        }
+
+        private void WriteFprDetailsColumns()
+        {
+            try
+            {
+                fprDetailsOpenXmlWriter.WriteStartElement(new Columns());
+                fprDetailsOpenXmlWriter.WriteElement(new Column() { Min = 1U, Max = 1U, Width = 20.00d, CustomWidth = true });
+                fprDetailsOpenXmlWriter.WriteElement(new Column() { Min = 2U, Max = 2U, Width = 20.00d, CustomWidth = true });
+                fprDetailsOpenXmlWriter.WriteElement(new Column() { Min = 3U, Max = 3U, Width = 10.00d, CustomWidth = true });
+                fprDetailsOpenXmlWriter.WriteElement(new Column() { Min = 4U, Max = 4U, Width = 25.00d, CustomWidth = true });
+                fprDetailsOpenXmlWriter.WriteElement(new Column() { Min = 5U, Max = 5U, Width = 25.00d, CustomWidth = true });
+                fprDetailsOpenXmlWriter.WriteElement(new Column() { Min = 6U, Max = 6U, Width = 10.00d, CustomWidth = true });
+                fprDetailsOpenXmlWriter.WriteElement(new Column() { Min = 7U, Max = 7U, Width = 10.00d, CustomWidth = true });
+                fprDetailsOpenXmlWriter.WriteElement(new Column() { Min = 8U, Max = 8U, Width = 15.00d, CustomWidth = true });
+                fprDetailsOpenXmlWriter.WriteElement(new Column() { Min = 9U, Max = 9U, Width = 35.00d, CustomWidth = true });
+                fprDetailsOpenXmlWriter.WriteElement(new Column() { Min = 10U, Max = 10U, Width = 35.00d, CustomWidth = true });
+                fprDetailsOpenXmlWriter.WriteElement(new Column() { Min = 11U, Max = 11U, Width = 35.00d, CustomWidth = true });
+                fprDetailsOpenXmlWriter.WriteElement(new Column() { Min = 12U, Max = 12U, Width = 35.00d, CustomWidth = true });
+                fprDetailsOpenXmlWriter.WriteElement(new Column() { Min = 13U, Max = 13U, Width = 10.00d, CustomWidth = true });
+                fprDetailsOpenXmlWriter.WriteElement(new Column() { Min = 14U, Max = 14U, Width = 20.00d, CustomWidth = true });
+                fprDetailsOpenXmlWriter.WriteElement(new Column() { Min = 15U, Max = 15U, Width = 15.00d, CustomWidth = true });
+                fprDetailsOpenXmlWriter.WriteElement(new Column() { Min = 16U, Max = 16U, Width = 25.00d, CustomWidth = true });
+                fprDetailsOpenXmlWriter.WriteElement(new Column() { Min = 17U, Max = 17U, Width = 15.00d, CustomWidth = true });
+                fprDetailsOpenXmlWriter.WriteElement(new Column() { Min = 18U, Max = 18U, Width = 35.00d, CustomWidth = true });
+                fprDetailsOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate Fortify Details columns.");
+                throw exception;
+            }
+        }
+
+        private void WriteFprDetailsHeaderRow()
+        {
+            try
+            {
+                fprDetailsOpenXmlWriter.WriteStartElement(new Row());
+                WriteCellValue(fprDetailsOpenXmlWriter, "Class ID", 4);
+                WriteCellValue(fprDetailsOpenXmlWriter, "Instance ID", 4);
+                WriteCellValue(fprDetailsOpenXmlWriter, "STIG ID", 4);
+                WriteCellValue(fprDetailsOpenXmlWriter, "Categorization", 4);
+                WriteCellValue(fprDetailsOpenXmlWriter, "Vulnerability Title", 4);
+                WriteCellValue(fprDetailsOpenXmlWriter, "Raw Risk", 4);
+                WriteCellValue(fprDetailsOpenXmlWriter, "Risk Factor", 4);
+                WriteCellValue(fprDetailsOpenXmlWriter, "Status", 4);
+                WriteCellValue(fprDetailsOpenXmlWriter, "Description", 4);
+                WriteCellValue(fprDetailsOpenXmlWriter, "Risk Statement", 4);
+                WriteCellValue(fprDetailsOpenXmlWriter, "Fix Text", 4);
+                WriteCellValue(fprDetailsOpenXmlWriter, "Comments", 4);
+                WriteCellValue(fprDetailsOpenXmlWriter, "NIST Control", 4);
+                WriteCellValue(fprDetailsOpenXmlWriter, "Software Name", 4);
+                WriteCellValue(fprDetailsOpenXmlWriter, "Fortify Source", 4);
+                WriteCellValue(fprDetailsOpenXmlWriter, "Filename", 4);
+                WriteCellValue(fprDetailsOpenXmlWriter, "Review Status", 4);
+                WriteCellValue(fprDetailsOpenXmlWriter, "Notes", 4);
+                fprDetailsOpenXmlWriter.WriteEndElement();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate Fortify Details header row.");
+                throw exception;
+            }
+        }
+
+        private void WriteFprDetailsItems(string findingType)
+        {
+            try
+            {
+                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
+                    sqliteCommand.CommandText = SetSqliteCommandText(false, findingType);
+                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                    {
+                        while (sqliteDataReader.Read())
+                        {
+                            fprDetailsOpenXmlWriter.WriteStartElement(new Row());
+                            WriteCellValue(fprDetailsOpenXmlWriter, sqliteDataReader["VulnId"].ToString(), 24);
+                            WriteCellValue(fprDetailsOpenXmlWriter, sqliteDataReader["CrossReferences"].ToString(), 24);
+                            WriteCellValue(fprDetailsOpenXmlWriter, sqliteDataReader["StigId"].ToString(), 24);
+                            WriteCellValue(fprDetailsOpenXmlWriter, sqliteDataReader["CheckContent"].ToString(), 20);
+                            WriteCellValue(fprDetailsOpenXmlWriter, sqliteDataReader["VulnTitle"].ToString(), 20);
+                            WriteCellValue(fprDetailsOpenXmlWriter, sqliteDataReader["RawRisk"].ToString(), 24);
+                            WriteCellValue(fprDetailsOpenXmlWriter, sqliteDataReader["Impact"].ToString(), 24);
+                            WriteCellValue(fprDetailsOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24);
+                            WriteCellValue(fprDetailsOpenXmlWriter, sqliteDataReader["Description"].ToString(), 20);
+                            WriteCellValue(fprDetailsOpenXmlWriter, sqliteDataReader["RiskStatement"].ToString(), 20);
+                            WriteCellValue(fprDetailsOpenXmlWriter, NormalizeCellValue(sqliteDataReader["FixText"].ToString()), 20);
+                            WriteCellValue(fprDetailsOpenXmlWriter, NormalizeCellValue(sqliteDataReader["Comments"].ToString()), 20);
+                            WriteCellValue(fprDetailsOpenXmlWriter, sqliteDataReader["NistControl"].ToString(), 24);
+                            WriteCellValue(fprDetailsOpenXmlWriter, sqliteDataReader["AssetIdToReport"].ToString(), 24);
+                            WriteCellValue(fprDetailsOpenXmlWriter, sqliteDataReader["Source"].ToString() + " :: " +
+                                sqliteDataReader["Version"].ToString(), 24);
+                            WriteCellValue(fprDetailsOpenXmlWriter, sqliteDataReader["FileName"].ToString(), 24);
+                            WriteCellValue(fprDetailsOpenXmlWriter, string.Empty, 24);
+                            WriteCellValue(fprDetailsOpenXmlWriter, string.Empty, 20);
+                            fprDetailsOpenXmlWriter.WriteEndElement();
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to insert Fortify Detail item.");
+                throw exception;
+            }
+        }
+
+        private void EndFprDetails()
+        {
+            try
+            {
+                fprDetailsOpenXmlWriter.WriteEndElement();
+                fprDetailsOpenXmlWriter.WriteEndElement();
+                fprDetailsOpenXmlWriter.Dispose();
+
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to finalize Fortify Details tab.");
+                throw exception;
+            }
+        }
+
 
         #endregion
 
@@ -1782,7 +1996,10 @@ namespace Vulnerator.Model
                         break;
                     }
             }
-            WriteCellValue(testPlanOpenXmlWriter, "Host Name", 17);
+            if (!findingType.Equals("FPR"))
+            { WriteCellValue(testPlanOpenXmlWriter, "Host Name", 17); }
+            else
+            { WriteCellValue(testPlanOpenXmlWriter, "Software Name", 17); }
             WriteCellValue(testPlanOpenXmlWriter, "IP Address", 17);
             WriteCellValue(testPlanOpenXmlWriter, "Test Date", 17);
             WriteCellValue(testPlanOpenXmlWriter, "File Name", 17);
@@ -2372,18 +2589,30 @@ namespace Vulnerator.Model
 
         #endregion Create Stylesheet
 
-        private string SetSqliteCommandText(bool isMerged)
+        private string SetSqliteCommandText(bool isMerged, string findingType)
         {
             try
             {
                 if (isMerged)
                 {
-                    return "SELECT FindingType, GroupName, VulnId, RuleId, VulnTitle, RawRisk, Impact, Description, IaControl, " +
-                        "NistControl, Status, Source, Version, Release, Comments, FindingDetails, RiskStatement, CciNumber, " +
-                        "GROUP_CONCAT(DISTINCT AssetIdToReport) AS AssetIdToReport FROM UniqueFinding " +
-                        "NATURAL JOIN FindingTypes NATURAL JOIN VulnerabilitySources " +
-                        "NATURAL JOIN FindingStatuses NATURAL JOIN Vulnerability NATURAL JOIN Groups " +
-                        "NATURAL JOIN Assets WHERE FindingType = @FindingType GROUP BY RuleId, Status;";
+                    if (findingType != "FPR")
+                    {
+                        return "SELECT FindingType, GroupName, VulnId, RuleId, VulnTitle, RawRisk, Impact, Description, IaControl, " +
+                            "NistControl, Status, Source, Version, Release, Comments, FindingDetails, RiskStatement, CciNumber, " +
+                            "GROUP_CONCAT(DISTINCT AssetIdToReport) AS AssetIdToReport FROM UniqueFinding " +
+                            "NATURAL JOIN FindingTypes NATURAL JOIN VulnerabilitySources " +
+                            "NATURAL JOIN FindingStatuses NATURAL JOIN Vulnerability NATURAL JOIN Groups " +
+                            "NATURAL JOIN Assets WHERE FindingType = @FindingType GROUP BY RuleId, Status;";
+                    }
+                    else
+                    {
+                        return "SELECT FindingType, GroupName, VulnId, RuleId, VulnTitle, RawRisk, Impact, Description, IaControl, " +
+                            "NistControl, Status, Source, Version, Release, Comments, FindingDetails, RiskStatement, CciNumber, " +
+                            "GROUP_CONCAT(DISTINCT AssetIdToReport) AS AssetIdToReport FROM UniqueFinding " +
+                            "NATURAL JOIN FindingTypes NATURAL JOIN VulnerabilitySources " +
+                            "NATURAL JOIN FindingStatuses NATURAL JOIN Vulnerability NATURAL JOIN Groups " +
+                            "NATURAL JOIN Assets WHERE FindingType = @FindingType GROUP BY VulnId, Status;";
+                    }
                 }
                 else
                 {

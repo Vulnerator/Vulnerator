@@ -243,7 +243,8 @@ namespace Vulnerator.Model
                 sqliteCommand.CommandText = "INSERT INTO FindingTypes VALUES (NULL, 'ACAS'); " +
                     "INSERT INTO FindingTypes VALUES (NULL, 'CKL');" +
                     "INSERT INTO FindingTypes VALUES (NULL, 'XCCDF');" +
-                    "INSERT INTO FindingTypes VALUES (NULL, 'WASSP');";
+                    "INSERT INTO FindingTypes VALUES (NULL, 'WASSP');" +
+                    "INSERT INTO FindingTypes VALUES (NULL, 'FPR');";
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)

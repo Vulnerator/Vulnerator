@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 
 namespace Vulnerator.Model
 {
@@ -38,5 +39,8 @@ namespace Vulnerator.Model
             else
             { return false; }
         }
+
+        public static string RemoveAlphaCharacters(this string _input)
+        { return new string(_input.Where(x => !char.IsLetter(x) && !char.IsWhiteSpace(x)).ToArray()); }
     }
 }
