@@ -1773,7 +1773,7 @@
                                                                   Converter={StaticResource StringToBool},
                                                                   Mode=OneTime,
                                                                   Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbAssetOverview}"
+                                                                  XPath=reportingTab/cbPdfSum}"
                                               IsEnabled="False"
                                               TabIndex="22">
                                         <CheckBox.CommandParameter>
@@ -1785,18 +1785,40 @@
                                     </CheckBox>
                                     <CheckBox x:Name="cbStigDetails"
                                               Grid.Row="2"
-                                              Grid.ColumnSpan="2"
                                               Margin="5,0,0,5"
                                               HorizontalAlignment="Left"
                                               VerticalAlignment="Top"
                                               Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                               Command="{Binding UpdateDictionaryCommand}"
-                                              Content="STIG Details &amp; Review"
+                                              Content="STIG Details"
                                               IsChecked="{Binding InnerText,
                                                                   Converter={StaticResource StringToBool},
                                                                   Mode=OneTime,
                                                                   Source={StaticResource XmlConfig},
                                                                   XPath=reportingTab/cbStigDetails}"
+                                              IsEnabled="{Binding IsEnabled}"
+                                              TabIndex="18">
+                                        <CheckBox.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource CommandConverter}">
+                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                            </MultiBinding>
+                                        </CheckBox.CommandParameter>
+                                    </CheckBox>
+                                    <CheckBox x:Name="cbFprDetails"
+                                              Grid.Row="2"
+                                              Grid.Column="1"
+                                              Margin="5,0,0,5"
+                                              HorizontalAlignment="Left"
+                                              VerticalAlignment="Top"
+                                              Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
+                                              Command="{Binding UpdateDictionaryCommand}"
+                                              Content="Fortify Details"
+                                              IsChecked="{Binding InnerText,
+                                                                  Converter={StaticResource StringToBool},
+                                                                  Mode=OneTime,
+                                                                  Source={StaticResource XmlConfig},
+                                                                  XPath=reportingTab/cbFprDetails}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="18">
                                         <CheckBox.CommandParameter>
@@ -1842,7 +1864,7 @@
                                                                   Converter={StaticResource StringToBool},
                                                                   Mode=OneTime,
                                                                   Source={StaticResource XmlConfig},
-                                                                  XPath=reportingTab/cbAssetOverview}"
+                                                                  XPath=reportingTab/cbOsUser}"
                                               IsEnabled="False"
                                               TabIndex="20">
                                         <CheckBox.CommandParameter>
@@ -2067,6 +2089,7 @@
                                     <Grid.RowDefinitions>
                                         <RowDefinition />
                                         <RowDefinition />
+                                        <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <CheckBox x:Name="cbMergeAcas"
                                               Grid.Row="0"
@@ -2141,6 +2164,27 @@
                                                                   Mode=OneTime,
                                                                   Source={StaticResource XmlConfig},
                                                                   XPath=reportingTab/cbMergeWassp}"
+                                              IsEnabled="{Binding IsEnabled}"
+                                              TabIndex="33">
+                                        <CheckBox.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource CommandConverter}">
+                                                <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
+                                            </MultiBinding>
+                                        </CheckBox.CommandParameter>
+                                    </CheckBox>
+                                    <CheckBox x:Name="cbMergeFpr"
+                                              Grid.Row="2"
+                                              Grid.Column="0"
+                                              Margin="5,0,0,5"
+                                              Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
+                                              Command="{Binding UpdateDictionaryCommand}"
+                                              Content="Group Fortify"
+                                              IsChecked="{Binding InnerText,
+                                                                  Converter={StaticResource StringToBool},
+                                                                  Mode=OneTime,
+                                                                  Source={StaticResource XmlConfig},
+                                                                  XPath=reportingTab/cbMergeFpr}"
                                               IsEnabled="{Binding IsEnabled}"
                                               TabIndex="33">
                                         <CheckBox.CommandParameter>
@@ -2314,6 +2358,16 @@
                                         Command="{Binding OpenDialogCommand}"
                                         CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                                         Content="Import WASSP"
+                                        FontSize="12"
+                                        IsEnabled="{Binding IsEnabled}"
+                                        TabIndex="41" />
+                                <Button x:Name="importFprButton"
+                                        Margin="5,0,5,5"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Top"
+                                        Command="{Binding OpenDialogCommand}"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                        Content="Import Fortify"
                                         FontSize="12"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="41" />
@@ -2939,7 +2993,7 @@
                                                  VerticalScrollBarVisibility="Auto" />
                                         <Button x:Name="bUpdateMitigation"
                                                 Width="{Binding ElementName=bMitImport,
-                                                                    Path=ActualWidth}"
+                                                                Path=ActualWidth}"
                                                 Margin="5,0,5,5"
                                                 HorizontalAlignment="Left"
                                                 Command="{Binding UpdateMitigationCommand}"
