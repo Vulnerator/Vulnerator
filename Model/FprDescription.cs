@@ -8,11 +8,12 @@ namespace Vulnerator.Model
 {
     public class FprDescription
     {
-        public string VulnId = string.Empty;
+        public string ClassId = string.Empty;
         public string VulnTitle = string.Empty;
         public string RiskStatement = string.Empty;
         public string Description = string.Empty;
         public string FixText = string.Empty;
         public Dictionary<string, string> References = new Dictionary<string, string>();
+        public string InstanceId = string.Empty;
     }
 }

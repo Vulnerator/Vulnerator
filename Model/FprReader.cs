@@ -17,7 +17,10 @@ namespace Vulnerator.Model
         private string lastObserved = string.Empty;
         private string file = string.Empty;
         private string sourcePlaceholder = "HPE Fortify SCA";
+        private string version = string.Empty;
         private List<FprDescription> fprDescriptionList = new List<FprDescription>();
+        private List<FprVulnerability> fprVulnerabilityList = new List<FprVulnerability>();
+        int index = 1;
 
         public string ReadFpr(string fileName, ObservableCollection<MitigationItem> mitigationsList, string systemName)
         {
@@ -53,13 +56,10 @@ namespace Vulnerator.Model
                     {
                         using (ZipArchive zipArchive = new ZipArchive(stream, ZipArchiveMode.Read))
                         {
-                            foreach (ZipArchiveEntry zipArchiveEntry in zipArchive.Entries)
-                            {
-                                if (zipArchiveEntry.Name.Equals("audit.fvdl"))
-                                { ParseAuditFvdlWithXmlReader(zipArchiveEntry, systemName); }
-                                if (zipArchiveEntry.Name.Equals("audit.xml"))
-                                { ParseAuditXmlWithXmlReader(zipArchiveEntry); }
-                            }
+                            ZipArchiveEntry auditFvdl = zipArchive.Entries.FirstOrDefault(x => x.Name.Equals("audit.fvdl"));
+                            ParseAuditFvdlWithXmlReader(auditFvdl, systemName);
+                            ZipArchiveEntry auditXml = zipArchive.Entries.FirstOrDefault(x => x.Name.Equals("audit.xml"));
+                            ParseAuditXmlWithXmlReader(auditXml);
                         }
                     }
                     sqliteTransaction.Commit();
@@ -116,8 +116,11 @@ namespace Vulnerator.Model
                         }
                     }
                 }
-                foreach (FprDescription fprDescription in fprDescriptionList)
-                { CreateUpdateVulnerabilityCommand(fprDescription); }
+                foreach (FprVulnerability fprVulnerability in fprVulnerabilityList)
+                {
+                    using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+                    { AddVulnerabilityAndUniqueFinding(fprVulnerability); }
+                }
             }
             catch (Exception exception)
             {
@@ -130,35 +133,69 @@ namespace Vulnerator.Model
         {
             try
             {
-                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+                FprVulnerability fprVulnerability = new FprVulnerability();
+                string kingdom = string.Empty;
+                string type = string.Empty;
+                string subType = string.Empty;
+                while (xmlReader.Read())
                 {
-
-                    while (xmlReader.Read())
+                    if (xmlReader.IsStartElement())
                     {
-                        if (xmlReader.IsStartElement())
+                        switch (xmlReader.Name)
                         {
-                            switch (xmlReader.Name)
-                            {
-                                case "ClassID":
-                                    {
-                                        sqliteCommand.Parameters.Add(new SQLiteParameter("VulnId", ObtainCurrentNodeValue(xmlReader)));
-                                        break;
-                                    }
-                                case "InstanceID":
-                                    {
-                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Comments", "Instance ID:" + Environment.NewLine + ObtainCurrentNodeValue(xmlReader)));
-                                        break;
-                                    }
-                                default:
-                                    { break; }
-                            }
+                            case "ClassID":
+                                {
+                                    fprVulnerability.ClassId = ObtainCurrentNodeValue(xmlReader);
+                                    break;
+                                }
+                            case "Kingdom":
+                                {
+                                    kingdom = ObtainCurrentNodeValue(xmlReader);
+                                    break;
+                                }
+                            case "Type":
+                                {
+                                    type = ObtainCurrentNodeValue(xmlReader);
+                                    break;
+                                }
+                            case "Subtype":
+                                {
+                                    subType = ObtainCurrentNodeValue(xmlReader);
+                                    break;
+                                }
+                            case "InstanceID":
+                                {
+                                    fprVulnerability.InstanceId = ObtainCurrentNodeValue(xmlReader);
+                                    break;
+                                }
+                            case "Def":
+                                {
+                                    fprVulnerability.ReplacementDefinitions.Add(xmlReader.GetAttribute("key"), xmlReader.GetAttribute("value"));
+                                    break;
+                                }
+                            case "LocationDef":
+                                {
+                                    FprVulnerability.LocationDef locationDef = new FprVulnerability.LocationDef();
+                                    locationDef.Path = xmlReader.GetAttribute("path");
+                                    locationDef.Line = xmlReader.GetAttribute("line");
+                                    locationDef.LineEnd = xmlReader.GetAttribute("lineEnd");
+                                    locationDef.ColumnStart = xmlReader.GetAttribute("colStart");
+                                    locationDef.ColumnEnd = xmlReader.GetAttribute("colEnd");
+                                    fprVulnerability.LocationDefinitions.Add(locationDef);
+                                    break;
+                                }
+                            default:
+                                { break; }
                         }
-                        else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Vulnerability"))
-                        {
-                            CreateAddVulnerabilityCommand(sqliteCommand);
-                            CreateAddUniqueFindingCommand(sqliteCommand);
-                            return;
-                        }
+                    }
+                    else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Vulnerability"))
+                    {
+                        if (!string.IsNullOrWhiteSpace(subType))
+                        { fprVulnerability.Category = kingdom + " : " + type + " : " + subType; }
+                        else
+                        { fprVulnerability.Category = kingdom + " : " + type; }
+                        fprVulnerabilityList.Add(fprVulnerability);
+                        return;
                     }
                 }
             }
@@ -174,7 +211,7 @@ namespace Vulnerator.Model
             try
             {
                 FprDescription fprDescription = new FprDescription();
-                fprDescription.VulnId = xmlReader.GetAttribute("classID");
+                fprDescription.ClassId = xmlReader.GetAttribute("classID");
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -226,38 +263,6 @@ namespace Vulnerator.Model
             }
         }
 
-        private void ParseAuditXmlWithXmlReader(ZipArchiveEntry zipArchiveEntry)
-        {
-            try
-            {
-                XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to read \"audit.xml\".");
-                throw exception;
-            }
-        }
-
-        private XmlReaderSettings GenerateXmlReaderSettings()
-        {
-            try
-            {
-                XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
-                xmlReaderSettings.IgnoreWhitespace = true;
-                xmlReaderSettings.IgnoreComments = true;
-                xmlReaderSettings.ValidationType = ValidationType.Schema;
-                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessInlineSchema;
-                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessSchemaLocation;
-                return xmlReaderSettings;
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to generate XmlReaderSettings.");
-                throw exception;
-            }
-        }
-
         private void CreateAddFileNameCommand(string fileName)
         {
             try
@@ -303,7 +308,8 @@ namespace Vulnerator.Model
                     softwareName = ObtainCurrentNodeValue(xmlReader);
                     sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", softwareName));
                     sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", systemName));
-                    sqliteCommand.CommandText = "INSERT INTO Assets (AssetIndex, AssetIdToReport, GroupIndex) VALUES(NULL, @AssetIdToReport, (SELECT GroupIndex FROM Groups WHERE GroupName = @GroupName));";
+                    sqliteCommand.CommandText = "INSERT INTO Assets (AssetIndex, AssetIdToReport, HostName, GroupIndex) " +
+                        "VALUES(NULL, @AssetIdToReport, @AssetIdToReport, (SELECT GroupIndex FROM Groups WHERE GroupName = @GroupName));";
                     sqliteCommand.ExecuteNonQuery();
                 }
             }
@@ -332,11 +338,95 @@ namespace Vulnerator.Model
             }
         }
 
+        private void AddVulnerabilityAndUniqueFinding(FprVulnerability fprVulnerability)
+        {
+            try
+            {
+                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+                {
+                    FprDescription fprDescription = fprDescriptionList.FirstOrDefault(x => x.ClassId == fprVulnerability.ClassId);
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("VulnId", fprVulnerability.ClassId));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Description", InjectDefinitionValues(fprDescription.Description, fprVulnerability)));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("RiskStatement", InjectDefinitionValues(fprDescription.RiskStatement, fprVulnerability)));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("VulnTitle", InjectDefinitionValues(fprDescription.VulnTitle, fprVulnerability)));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("CrossReferences", fprVulnerability.InstanceId));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("CheckContent", fprVulnerability.Category));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("FileName", file));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("LastObserved", lastObserved));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", softwareName));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Version", version));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("FindingDetails", "Instance ID:" + Environment.NewLine + fprVulnerability.InstanceId));
+                    List<KeyValuePair<string, string>> nistControls = fprDescription.References.Where(
+                        x => x.Key.Contains("800-53")).OrderByDescending(x => x.Key).ToList();
+                    if (nistControls != null && nistControls.Count > 0)
+                    { sqliteCommand.Parameters.Add(new SQLiteParameter("NistControl", nistControls[0].Value.Split(' ')[0])); }
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("FixText", fprDescription.FixText));
+                    List<KeyValuePair<string, string>> asdStigs = fprDescription.References.Where(
+                        x => x.Key.Contains("AS&D")).ToList();
+                    string[] delimiter = new string[] { "CAT" };
+                    if (asdStigs != null && asdStigs.Count > 0)
+                    {
+                        asdStigs = asdStigs.OrderByDescending(x => x.Key.Substring(5).Length).ThenByDescending(x => Convert.ToDecimal(x.Key.Substring(5))).ToList();
+                        if (asdStigs[0].Value.Contains(", "))
+                        {
+                            string[] asdStigValues = asdStigs[0].Value.Split(',').ToArray();
+                            foreach (string stigValue in asdStigValues)
+                            {
+                                sqliteCommand.Parameters.Add(new SQLiteParameter("StigId", stigValue.Trim().Split(' ')[0]));
+                                sqliteCommand.Parameters.Add(new SQLiteParameter("RawRisk", stigValue.Split(delimiter, StringSplitOptions.None)[1].Trim()));
+                                sqliteCommand.Parameters.Add(new SQLiteParameter("Impact", RawRiskToImpactConverter(stigValue.Split(delimiter, StringSplitOptions.None)[1].Trim())));
+                                CreateAddVulnerabilityCommand(sqliteCommand);
+                                CreateAddUniqueFindingCommand(sqliteCommand);
+                            }
+                        }
+                        else
+                        {
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("StigId", asdStigs[0].Value.Trim().Split(' ')[0]));
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("RawRisk", asdStigs[0].Value.Split(delimiter, StringSplitOptions.None)[1].Trim()));
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("Impact", RawRiskToImpactConverter(asdStigs[1].Value.Split(delimiter, StringSplitOptions.None)[1].Trim())));
+                            CreateAddVulnerabilityCommand(sqliteCommand);
+                            CreateAddUniqueFindingCommand(sqliteCommand);
+                        }
+
+                    }
+                    else
+                    {
+                        CreateAddVulnerabilityCommand(sqliteCommand);
+                        CreateAddUniqueFindingCommand(sqliteCommand);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate SQLiteParameter List.");
+                throw exception;
+            }
+        }
+
         private void CreateAddVulnerabilityCommand(SQLiteCommand sqliteCommand)
         {
             try
             {
-                sqliteCommand.CommandText = "INSERT INTO Vulnerability (VulnerabilityIndex, VulnId) VALUES (NULL, @VulnId);";
+                string[] ignorableParametersArray = new string[] { "FileName", "LastObserved", "AssetIdToReport", "FindingDetails", "Version" };
+                sqliteCommand.CommandText = "INSERT INTO Vulnerability () VALUES ();";
+                for (int i = 0; i < sqliteCommand.Parameters.Count; i++)
+                {
+                    if (ignorableParametersArray.Contains(sqliteCommand.Parameters[i].ParameterName))
+                    { continue; }
+                    if (i == 0)
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(37, "@" + sqliteCommand.Parameters[i].ParameterName); }
+                    else
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(37, "@" + sqliteCommand.Parameters[i].ParameterName + ", "); }
+                }
+                for (int i = 0; i < sqliteCommand.Parameters.Count; i++)
+                {
+                    if (ignorableParametersArray.Contains(sqliteCommand.Parameters[i].ParameterName))
+                    { continue; }
+                    if (i == 0)
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, sqliteCommand.Parameters[i].ParameterName); }
+                    else
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, sqliteCommand.Parameters[i].ParameterName + ", "); }
+                }
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -350,16 +440,13 @@ namespace Vulnerator.Model
         {
             try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("FileName", file));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("LastObserved", lastObserved));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", softwareName));
-                sqliteCommand.CommandText = "INSERT INTO UniqueFinding (Comments, LastObserved, " +
+                sqliteCommand.CommandText = "INSERT INTO UniqueFinding (FindingDetails, LastObserved, " +
                     "FindingTypeIndex, SourceIndex, FileNameIndex, VulnerabilityIndex, StatusIndex, AssetIndex) " +
-                    "VALUES (@Comments, @LastObserved, " +
+                    "VALUES (@FindingDetails, @LastObserved, " +
                     "(SELECT FindingTypeIndex FROM FindingTypes WHERE FindingType = 'FPR'), " +
-                    "(SELECT SourceIndex FROM VulnerabilitySources WHERE Source = 'HPE Fortify SCA' AND Version = 'V?'), " +
+                    "(SELECT SourceIndex FROM VulnerabilitySources WHERE Source = 'HPE Fortify SCA' AND Version = @Version), " +
                     "(SELECT FileNameIndex FROM FileNames WHERE FileName = @FileName), " +
-                    "(SELECT VulnerabilityIndex FROM Vulnerability WHERE VulnId = @VulnId), " +
+                    "(SELECT VulnerabilityIndex FROM Vulnerability WHERE CrossReferences = @CrossReferences), " +
                     "(SELECT StatusIndex FROM FindingStatuses WHERE Status = 'Ongoing'), " +
                     "(SELECT AssetIndex FROM Assets WHERE AssetIdToReport = @AssetIdToReport));";
                 sqliteCommand.ExecuteNonQuery();
@@ -378,7 +465,8 @@ namespace Vulnerator.Model
                 xmlReader.Read();
                 using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Version", xmlReader.Value));
+                    version = xmlReader.Value;
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Version", version));
                     sqliteCommand.CommandText = "UPDATE VulnerabilitySources SET Version = @Version WHERE Source = 'HPE Fortify SCA' AND Version = 'V?';";
                     sqliteCommand.ExecuteNonQuery();
                 }
@@ -386,66 +474,6 @@ namespace Vulnerator.Model
             catch (Exception exception)
             {
                 log.Error("Unable to update Source.");
-                throw exception;
-            }
-        }
-
-        private void CreateUpdateVulnerabilityCommand(FprDescription fprDescription)
-        {
-            try
-            {
-                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
-                {
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Description", fprDescription.Description));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("RiskStatement", fprDescription.RiskStatement));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("VulnTitle", fprDescription.VulnTitle));
-                    List<KeyValuePair<string, string>> asdStigs = fprDescription.References.Where(
-                        x => x.Key.Contains("AS&D")).ToList();
-                    if (asdStigs != null && asdStigs.Count > 0)
-                    {
-                        asdStigs = asdStigs.OrderByDescending(x => x.Key.Substring(5).Length).ThenByDescending(x => Convert.ToDecimal(x.Key.Substring(5))).ToList();
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("StigId", asdStigs[0].Value));
-                    }
-                    List<KeyValuePair<string, string>> nistControls = fprDescription.References.Where(
-                        x => x.Key.Contains("800-53")).OrderByDescending(x => x.Key).ToList();
-                    if (nistControls != null && nistControls.Count > 0)
-                    { sqliteCommand.Parameters.Add(new SQLiteParameter("NistControl", nistControls[0].Value)); }
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("FixText", fprDescription.FixText));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("VulnId", fprDescription.VulnId));
-                    sqliteCommand.CommandText = "UPDATE Vulnerability SET  WHERE VulnId = @VulnId;";
-                    for (int i = 0; i < sqliteCommand.Parameters.Count; i++)
-                    {
-                        if (i == 0)
-                        {
-                            sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(
-                                25, sqliteCommand.Parameters[i].ParameterName + " = @" + sqliteCommand.Parameters[i].ParameterName);
-                        }
-                        else
-                        {
-                            sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(
-                                25, sqliteCommand.Parameters[i].ParameterName + " = @" + sqliteCommand.Parameters[i].ParameterName + ", ");
-                        }
-                    }
-                    sqliteCommand.ExecuteNonQuery();
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to update Vulnerability.");
-                throw exception;
-            }
-        }
-
-        private string ObtainCurrentNodeValue(XmlReader xmlReader)
-        {
-            try
-            {
-                xmlReader.Read();
-                return xmlReader.Value;
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to obtain currently accessed node value.");
                 throw exception;
             }
         }
@@ -474,6 +502,11 @@ namespace Vulnerator.Model
                 string sanitizedVulnTitle = unsanitizedVulnTitle.Split(new string[] { delimiter }, StringSplitOptions.None)[0];
                 sanitizedVulnTitle = sanitizedVulnTitle.Replace("<Content>", "");
                 sanitizedVulnTitle = sanitizedVulnTitle.Replace("<Paragraph>", "");
+                string[] stringsToRemove = new string[] {
+                    "<Content>", "<Paragraph>", "</Paragraph>", "</Content>", "<b>", "</b>", "<pre>", "</pre>", "<code>", "</code>", "&lt;", "&gt;"
+                };
+                foreach (string trash in stringsToRemove)
+                { sanitizedVulnTitle = sanitizedVulnTitle.Replace(trash, ""); }
                 return sanitizedVulnTitle;
             }
             catch (Exception exception)
@@ -491,6 +524,11 @@ namespace Vulnerator.Model
                 string sanitizedRiskStatement = unsanitizedRiskStatement.Split(new string[] { delimiter }, StringSplitOptions.None)[1];
                 delimiter = "</AltParagraph>";
                 sanitizedRiskStatement = sanitizedRiskStatement.Split(new string[] { delimiter }, StringSplitOptions.None)[0];
+                string[] stringsToRemove = new string[] {
+                    "<Content>", "<Paragraph>", "</Paragraph>", "</Content>", "<b>", "</b>", "<pre>", "</pre>", "<code>", "</code>", "&lt;", "&gt;"
+                };
+                foreach (string trash in stringsToRemove)
+                { sanitizedRiskStatement = sanitizedRiskStatement.Replace(trash, ""); }
                 return sanitizedRiskStatement;
             }
             catch (Exception exception)
@@ -507,8 +545,8 @@ namespace Vulnerator.Model
                 string sanitizedDescription = unsanitizedDescription;
                 string doubleCarriageReturn = Environment.NewLine + Environment.NewLine;
                 string[] stringsToRemove = new string[] {
-                "<Content>", "<Paragraph>", "</Paragraph>", "</Content>", "<b>", "</b>", "<pre>", "</pre>"
-            };
+                    "<Content>", "<Paragraph>", "</Paragraph>", "</Content>", "<b>", "</b>", "<pre>", "</pre>", "<code>", "</code>", "&lt;", "&gt;"
+                };
                 foreach (string trash in stringsToRemove)
                 {
                     switch (trash)
@@ -557,7 +595,7 @@ namespace Vulnerator.Model
                 string sanitizedRecommendations = unsanitizedRecommendations;
                 string doubleCarriageReturn = Environment.NewLine + Environment.NewLine;
                 string[] stringsToRemove = new string[] {
-                "<Content>", "<Paragraph>", "</Paragraph>", "</Content>", "<b>", "</b>", "<pre>", "</pre>"
+                "<Content>", "<Paragraph>", "</Paragraph>", "</Content>", "<b>", "</b>", "<pre>", "</pre>", "<code>", "</code>", "&lt;", "&gt;"
             };
                 foreach (string trash in stringsToRemove)
                 {
@@ -599,6 +637,52 @@ namespace Vulnerator.Model
             }
         }
 
+        private string InjectDefinitionValues(string input, FprVulnerability fprVulnerability)
+        {
+            string output = input;
+            string placeholder = string.Empty;
+            foreach (string key in fprVulnerability.ReplacementDefinitions.Keys)
+            {
+                string[] locationDefArray = new string[] { "SourceFunction", "SinkFunction", "PrimaryCall.name" };
+                placeholder = "<Replace key=\"" + key + "\"/>";
+                if (output.Contains(placeholder))
+                { output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]); }
+                if (locationDefArray.Contains(key))
+                {
+                    switch (key)
+                    {
+                        case "SourceFunction":
+                            {
+                                placeholder = "<Replace key=\"" + key + "\" link=\"SourceLocation\"/>";
+                                if (output.Contains(placeholder))
+                                { output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]); }
+                                break;
+                            }
+                        case "SinkFunction":
+                            {
+                                placeholder = "<Replace key=\"" + key + "\" link=\"SinkLocation\"/>";
+                                if (output.Contains(placeholder))
+                                { output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]); }
+                                break;
+                            }
+                        case "PrimaryCall.name":
+                            {
+                                placeholder = "<Replace key=\"" + key + "\" link=\"PrimaryLocation\"/>";
+                                if (output.Contains(placeholder))
+                                { output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]); }
+                                break;
+                            }
+                        default:
+                            { break; }
+                    }
+                }
+            }
+
+            output = output.Replace("<", "");
+            output = output.Replace(">", "");
+            return output;
+        }
+
         private string ObtainReferencesValue(XmlReader xmlReader)
         {
             try
@@ -634,6 +718,220 @@ namespace Vulnerator.Model
             catch (Exception exception)
             {
                 log.Error("Unable to obtain References value.");
+                throw exception;
+            }
+        }
+
+        private string RawRiskToImpactConverter(string rawRisk)
+        {
+            switch (rawRisk)
+            {
+                case "I":
+                    { return "High"; }
+                case "II":
+                    { return "Medium"; }
+                case "III":
+                    { return "Low"; }
+                case "IV":
+                    { return "Informational"; }
+                default:
+                    { return "Unknown"; }
+            }
+        }
+
+        private void ParseAuditXmlWithXmlReader(ZipArchiveEntry zipArchiveEntry)
+        {
+            try
+            {
+                XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
+                using (XmlReader xmlReader = XmlReader.Create(zipArchiveEntry.Open(), xmlReaderSettings))
+                {
+                    string instanceId = string.Empty;
+                    string analysisValue = string.Empty;
+                    Dictionary<DateTime, string> commentsDictionary = new Dictionary<DateTime, string>();
+                    while (xmlReader.Read())
+                    {
+                        if (xmlReader.IsStartElement())
+                        {
+                            switch (xmlReader.Name)
+                            {
+                                case "ns2:Issue":
+                                    {
+                                        instanceId = xmlReader.GetAttribute("instanceId");
+                                        analysisValue = ObtainAnalysisValue(xmlReader);
+                                        break;
+                                    }
+                                case "ns2:ThreadedComments":
+                                    {
+                                        PopulateCommentsDictionary(xmlReader, commentsDictionary);
+                                        break;
+                                    }
+                                default:
+                                    { break; }
+                            }
+                        }
+                        else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ns2:Issue"))
+                        {
+                            FinalizeUniqueFinding(instanceId, analysisValue, commentsDictionary);
+                            commentsDictionary.Clear();
+                            instanceId = string.Empty;
+                            analysisValue = string.Empty;
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to read \"audit.xml\".");
+                throw exception;
+            }
+        }
+
+        private string ObtainAnalysisValue(XmlReader xmlReader)
+        {
+            try
+            {
+                xmlReader.Read();
+                if (xmlReader.Name.Equals("ns2:Tag"))
+                {
+                    while (!xmlReader.Name.Equals("ns2:Value"))
+                    { xmlReader.Read(); }
+                    xmlReader.Read();
+                    return xmlReader.Value;
+                }
+                else
+                { return "Analysis Not Set"; }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to obtain analysis value.");
+                throw exception;
+            }
+        }
+
+        private void PopulateCommentsDictionary(XmlReader xmlReader, Dictionary<DateTime, string> commentsDictionary)
+        {
+            try
+            {
+                string comment = string.Empty;
+                DateTime timestamp = new DateTime();
+                while (xmlReader.Read())
+                {
+                    if (xmlReader.IsStartElement())
+                    {
+                        switch (xmlReader.Name)
+                        {
+                            case "ns2:Content":
+                                {
+                                    comment = ObtainCurrentNodeValue(xmlReader);
+                                    break;
+                                }
+                            case "ns2:Timestamp":
+                                {
+                                    timestamp = DateTime.Parse(ObtainCurrentNodeValue(xmlReader));
+                                    break;
+                                }
+                            default:
+                                { break; }
+                        }
+                    }
+                    else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ns2:Comment"))
+                    {
+                        commentsDictionary.Add(timestamp, comment);
+                        comment = string.Empty;
+                        timestamp = new DateTime();
+                    }
+                    else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ns2:ThreadedComments"))
+                    { return; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to obtain FPR comment values.");
+                throw exception;
+            }
+        }
+
+        private void FinalizeUniqueFinding(string instanceId, string analysisValue, Dictionary<DateTime, string> commentsDictionary)
+        {
+            try
+            {
+                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+                {
+                    string comment = string.Empty;
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("FindingDetails", "%" + instanceId + "%"));
+                    string status = ConvertAnalysisValue(analysisValue);
+                    if (status.Equals("Completed"))
+                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Status", status)); }
+                    else
+                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Status", "Ongoing")); }
+                    if (commentsDictionary.Count > 0)
+                    {
+                        List<KeyValuePair<DateTime, string>> orderedComments = commentsDictionary.OrderByDescending(x => x.Key).ToList();
+                        comment = "Analysis Value:" + Environment.NewLine + analysisValue;
+                        comment = comment + Environment.NewLine + Environment.NewLine + "User Comments:" + Environment.NewLine + orderedComments[0].Value;
+                    }
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Comments", comment));
+                    sqliteCommand.CommandText = "UPDATE UniqueFinding SET Comments = @Comments, " +
+                        "StatusIndex = (SELECT StatusIndex FROM FindingStatuses WHERE Status = @Status) " +
+                        "WHERE FindingDetails LIKE @FindingDetails;";
+                    sqliteCommand.ExecuteNonQuery();
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to finalize UniqueFinding.");
+                throw exception;
+            }
+        }
+
+        private XmlReaderSettings GenerateXmlReaderSettings()
+        {
+            try
+            {
+                XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
+                xmlReaderSettings.IgnoreWhitespace = true;
+                xmlReaderSettings.IgnoreComments = true;
+                xmlReaderSettings.ValidationType = ValidationType.Schema;
+                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessInlineSchema;
+                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessSchemaLocation;
+                return xmlReaderSettings;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate XmlReaderSettings.");
+                throw exception;
+            }
+        }
+
+        private string ObtainCurrentNodeValue(XmlReader xmlReader)
+        {
+            try
+            {
+                xmlReader.Read();
+                return xmlReader.Value;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to obtain currently accessed node value.");
+                throw exception;
+            }
+        }
+
+        private string ConvertAnalysisValue(string analysisValue)
+        {
+            try
+            {
+                if (analysisValue.Equals("Not an Issue"))
+                { return "Completed"; }
+                else if (analysisValue.Equals("true"))
+                { return "Analysis Not Set"; }
+                else
+                { return analysisValue; }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to convert analysis value.");
                 throw exception;
             }
         }

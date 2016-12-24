@@ -233,6 +233,7 @@
     <Compile Include="Model\FindingsDatabaseActions.cs" />
     <Compile Include="Model\FprDescription.cs" />
     <Compile Include="Model\FprReader.cs" />
+    <Compile Include="Model\FprVulnerability.cs" />
     <Compile Include="Model\GitHubActions.cs" />
     <Compile Include="Model\Issue.cs" />
     <Compile Include="Model\Logger.cs" />
