@@ -499,7 +499,9 @@ namespace Vulnerator.Model
             try
             {
                 string delimiter = "<AltParagraph>";
-                string sanitizedVulnTitle = unsanitizedVulnTitle.Split(new string[] { delimiter }, StringSplitOptions.None)[0];
+                string sanitizedVulnTitle = unsanitizedVulnTitle;
+                if (sanitizedVulnTitle.Contains(delimiter))
+                { sanitizedVulnTitle = unsanitizedVulnTitle.Split(new string[] { delimiter }, StringSplitOptions.None)[0]; }
                 sanitizedVulnTitle = sanitizedVulnTitle.Replace("<Content>", "");
                 sanitizedVulnTitle = sanitizedVulnTitle.Replace("<Paragraph>", "");
                 string[] stringsToRemove = new string[] {
@@ -521,9 +523,12 @@ namespace Vulnerator.Model
             try
             {
                 string delimiter = "<AltParagraph>";
-                string sanitizedRiskStatement = unsanitizedRiskStatement.Split(new string[] { delimiter }, StringSplitOptions.None)[1];
+                string sanitizedRiskStatement = unsanitizedRiskStatement;
+                if (sanitizedRiskStatement.Contains(delimiter))
+                { sanitizedRiskStatement = unsanitizedRiskStatement.Split(new string[] { delimiter }, StringSplitOptions.None)[1]; }
                 delimiter = "</AltParagraph>";
-                sanitizedRiskStatement = sanitizedRiskStatement.Split(new string[] { delimiter }, StringSplitOptions.None)[0];
+                if (sanitizedRiskStatement.Contains(delimiter))
+                { sanitizedRiskStatement = sanitizedRiskStatement.Split(new string[] { delimiter }, StringSplitOptions.None)[0]; }
                 string[] stringsToRemove = new string[] {
                     "<Content>", "<Paragraph>", "</Paragraph>", "</Content>", "<b>", "</b>", "<pre>", "</pre>", "<code>", "</code>", "&lt;", "&gt;"
                 };
