@@ -21,6 +21,7 @@ namespace Vulnerator.Model
         private List<FprDescription> fprDescriptionList = new List<FprDescription>();
         private List<FprVulnerability> fprVulnerabilityList = new List<FprVulnerability>();
         int index = 1;
+        int fprCounter = 1;
 
         public string ReadFpr(string fileName, ObservableCollection<MitigationItem> mitigationsList, string systemName)
         {
@@ -116,6 +117,7 @@ namespace Vulnerator.Model
                         }
                     }
                 }
+                index = 0;
                 foreach (FprVulnerability fprVulnerability in fprVulnerabilityList)
                 {
                     using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
@@ -211,6 +213,8 @@ namespace Vulnerator.Model
             try
             {
                 FprDescription fprDescription = new FprDescription();
+                if (fprCounter > 68)
+                { Console.WriteLine(xmlReader.GetAttribute("classID")); }
                 fprDescription.ClassId = xmlReader.GetAttribute("classID");
                 while (xmlReader.Read())
                 {
@@ -241,7 +245,9 @@ namespace Vulnerator.Model
                                 {
                                     string value = ObtainReferencesValue(xmlReader);
                                     string key = ObtainReferencesKey(xmlReader);
-                                    fprDescription.References.Add(key, value);
+                                    string keyCheck;
+                                    if (!fprDescription.References.TryGetValue(key, out keyCheck))
+                                    { fprDescription.References.Add(key, value); }
                                     break;
                                 }
                             default:
@@ -251,6 +257,7 @@ namespace Vulnerator.Model
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name == "Description")
                     {
                         fprDescriptionList.Add(fprDescription);
+                        fprCounter++;
                         return;
                     }
                 }
@@ -259,6 +266,7 @@ namespace Vulnerator.Model
             catch (Exception exception)
             {
                 log.Error("Unable to parse FVDL Description node.");
+                Console.WriteLine(fprCounter + " not added to Description List");
                 throw exception;
             }
         }
@@ -499,7 +507,9 @@ namespace Vulnerator.Model
             try
             {
                 string delimiter = "<AltParagraph>";
-                string sanitizedVulnTitle = unsanitizedVulnTitle.Split(new string[] { delimiter }, StringSplitOptions.None)[0];
+                string sanitizedVulnTitle = unsanitizedVulnTitle;
+                if (sanitizedVulnTitle.Contains(delimiter))
+                { sanitizedVulnTitle = unsanitizedVulnTitle.Split(new string[] { delimiter }, StringSplitOptions.None)[0]; }
                 sanitizedVulnTitle = sanitizedVulnTitle.Replace("<Content>", "");
                 sanitizedVulnTitle = sanitizedVulnTitle.Replace("<Paragraph>", "");
                 string[] stringsToRemove = new string[] {
@@ -521,9 +531,12 @@ namespace Vulnerator.Model
             try
             {
                 string delimiter = "<AltParagraph>";
-                string sanitizedRiskStatement = unsanitizedRiskStatement.Split(new string[] { delimiter }, StringSplitOptions.None)[1];
+                string sanitizedRiskStatement = unsanitizedRiskStatement;
+                if (sanitizedRiskStatement.Contains(delimiter))
+                { sanitizedRiskStatement = unsanitizedRiskStatement.Split(new string[] { delimiter }, StringSplitOptions.None)[1]; }
                 delimiter = "</AltParagraph>";
-                sanitizedRiskStatement = sanitizedRiskStatement.Split(new string[] { delimiter }, StringSplitOptions.None)[0];
+                if (sanitizedRiskStatement.Contains(delimiter))
+                { sanitizedRiskStatement = sanitizedRiskStatement.Split(new string[] { delimiter }, StringSplitOptions.None)[0]; }
                 string[] stringsToRemove = new string[] {
                     "<Content>", "<Paragraph>", "</Paragraph>", "</Content>", "<b>", "</b>", "<pre>", "</pre>", "<code>", "</code>", "&lt;", "&gt;"
                 };
@@ -706,8 +719,11 @@ namespace Vulnerator.Model
             try
             {
                 string key = string.Empty;
-                while (!xmlReader.Name.Equals("Author"))
-                { xmlReader.Read(); }
+                while (xmlReader.Read())
+                {
+                    if (xmlReader.Name.Equals("Author") || xmlReader.Name.Equals("Publisher"))
+                    { break; }
+                }
                 xmlReader.Read();
                 if (xmlReader.Value.Contains("Security Technical Implementation"))
                 { key = "AS&D" + xmlReader.Value.RemoveAlphaCharacters(); }
@@ -837,7 +853,9 @@ namespace Vulnerator.Model
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ns2:Comment"))
                     {
-                        commentsDictionary.Add(timestamp, comment);
+                        string keyCheck;
+                        if (!commentsDictionary.TryGetValue(timestamp, out keyCheck))
+                        { commentsDictionary.Add(timestamp, comment); }
                         comment = string.Empty;
                         timestamp = new DateTime();
                     }
