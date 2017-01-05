@@ -20,8 +20,6 @@ namespace Vulnerator.Model
         private string version = string.Empty;
         private List<FprDescription> fprDescriptionList = new List<FprDescription>();
         private List<FprVulnerability> fprVulnerabilityList = new List<FprVulnerability>();
-        int index = 1;
-        int fprCounter = 1;
 
         public string ReadFpr(string fileName, ObservableCollection<MitigationItem> mitigationsList, string systemName)
         {
@@ -117,7 +115,6 @@ namespace Vulnerator.Model
                         }
                     }
                 }
-                index = 0;
                 foreach (FprVulnerability fprVulnerability in fprVulnerabilityList)
                 {
                     using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
@@ -213,8 +210,6 @@ namespace Vulnerator.Model
             try
             {
                 FprDescription fprDescription = new FprDescription();
-                if (fprCounter > 68)
-                { Console.WriteLine(xmlReader.GetAttribute("classID")); }
                 fprDescription.ClassId = xmlReader.GetAttribute("classID");
                 while (xmlReader.Read())
                 {
@@ -257,7 +252,6 @@ namespace Vulnerator.Model
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name == "Description")
                     {
                         fprDescriptionList.Add(fprDescription);
-                        fprCounter++;
                         return;
                     }
                 }
@@ -266,7 +260,6 @@ namespace Vulnerator.Model
             catch (Exception exception)
             {
                 log.Error("Unable to parse FVDL Description node.");
-                Console.WriteLine(fprCounter + " not added to Description List");
                 throw exception;
             }
         }
@@ -374,7 +367,9 @@ namespace Vulnerator.Model
                     string[] delimiter = new string[] { "CAT" };
                     if (asdStigs != null && asdStigs.Count > 0)
                     {
-                        asdStigs = asdStigs.OrderByDescending(x => x.Key.Substring(5).Length).ThenByDescending(x => Convert.ToDecimal(x.Key.Substring(5))).ToList();
+                        asdStigs = asdStigs.OrderByDescending(x => Convert.ToDecimal(x.Key.Substring(5,1))).
+                            ThenByDescending(x => x.Key.Split(',')[0].Substring(7).Length).
+                            ThenByDescending(x => x.Key.Substring(7)).ToList();
                         if (asdStigs[0].Value.Contains(", "))
                         {
                             string[] asdStigValues = asdStigs[0].Value.Split(',').ToArray();
@@ -389,13 +384,12 @@ namespace Vulnerator.Model
                         }
                         else
                         {
-                            sqliteCommand.Parameters.Add(new SQLiteParameter("StigId", asdStigs[0].Value.Trim().Split(' ')[0]));
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("StigId", asdStigs[0].Value.Replace(", ", Environment.NewLine).Trim().Split(' ')[0]));
                             sqliteCommand.Parameters.Add(new SQLiteParameter("RawRisk", asdStigs[0].Value.Split(delimiter, StringSplitOptions.None)[1].Trim()));
-                            sqliteCommand.Parameters.Add(new SQLiteParameter("Impact", RawRiskToImpactConverter(asdStigs[1].Value.Split(delimiter, StringSplitOptions.None)[1].Trim())));
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("Impact", RawRiskToImpactConverter(asdStigs[0].Value.Split(delimiter, StringSplitOptions.None)[1].Trim())));
                             CreateAddVulnerabilityCommand(sqliteCommand);
                             CreateAddUniqueFindingCommand(sqliteCommand);
                         }
-
                     }
                     else
                     {
@@ -457,6 +451,8 @@ namespace Vulnerator.Model
                     "(SELECT VulnerabilityIndex FROM Vulnerability WHERE CrossReferences = @CrossReferences), " +
                     "(SELECT StatusIndex FROM FindingStatuses WHERE Status = 'Ongoing'), " +
                     "(SELECT AssetIndex FROM Assets WHERE AssetIdToReport = @AssetIdToReport));";
+                if (sqliteCommand.Parameters.Contains("StigId"))
+                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(515, " AND StigId = @StigId"); }
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
