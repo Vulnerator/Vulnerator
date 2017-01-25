@@ -47,4 +47,4 @@ _Please provide any relevant attachments, as you see fit (e.g. screenshots); if 
 
 - [ ] Vulnerator Log (Required) - this can be found at ```C:\Users\%UserName%\AppData\Roaming\Vulnerator\V6Log.txt```, where ```%UserName%``` is the user profile used to run the application
 - [ ] Screenshots (Optional)
-- [ ] Vulnerability Files (**SANITIZED AND EMAILED***)
+- [ ] Vulnerability Files (_**SANITIZED AND EMAILED**_)
