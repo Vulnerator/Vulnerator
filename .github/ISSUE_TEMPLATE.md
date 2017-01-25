@@ -43,8 +43,8 @@ How did you get Vulnerator to do that? (Replace this line)
 ```
 
 # Attachments
-_Please provide any relevant attachments, as you see fit (e.g. screenshots); if supplying vulnerability data (e.g. *.ckl, *.nessus files), please ensure that they are sanitized of IP addresses and host names and **email** them to alex.kuchta@navy.mil - **DO NOT POST VULNERABILITY FILES HERE**_
+_Please provide any relevant attachments, as you see fit (e.g. screenshots); if supplying vulnerability data (e.g. CKL/Nessus files or reports), please ensure that they are sanitized of IP addresses and host names and **email** them to alex.kuchta@navy.mil - **DO NOT POST VULNERABILITY FILES HERE**_
 
-- [ ] Vulnerator Log (Required) - this can be found at ```C:\Users\%UserName%\AppData\Roaming\Vulnerator\V6Log.txt```, where ```%UserName%``` is the user profile used to run the application
+- [ ] Vulnerator Log (Required for bugs) - this can be found at ```C:\Users\%UserName%\AppData\Roaming\Vulnerator\V6Log.txt```, where ```%UserName%``` is the user profile used to run the application
 - [ ] Screenshots (Optional)
 - [ ] Vulnerability Files (_**SANITIZED AND EMAILED**_)
