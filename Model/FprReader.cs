@@ -938,6 +938,8 @@ namespace Vulnerator.Model
             {
                 if (analysisValue.Equals("Not an Issue"))
                 { return "Completed"; }
+                if (analysisValue.Equals("Not a Finding"))
+                { return "Completed"; }
                 else if (analysisValue.Equals("true"))
                 { return "Analysis Not Set"; }
                 else
