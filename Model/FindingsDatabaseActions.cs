@@ -181,7 +181,7 @@ namespace Vulnerator.Model
                     "FOREIGN KEY(FileNameIndex) REFERENCES FileNames(FileNameIndex) ON UPDATE CASCADE, " +
                     "FOREIGN KEY(VulnerabilityIndex) REFERENCES Vulnerability(VulnerabilityIndex) ON UPDATE CASCADE, " +
                     "FOREIGN KEY(StatusIndex) REFERENCES FindingStatuses(StatusIndex) ON UPDATE CASCADE, " +
-                    "FOREIGN KEY(AssetIndex) REFERENCES FindingStatuses(AssetIndex) ON UPDATE CASCADE);";
+                    "FOREIGN KEY(AssetIndex) REFERENCES Assets(AssetIndex) ON UPDATE CASCADE);";
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
