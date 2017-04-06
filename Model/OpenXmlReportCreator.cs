@@ -2329,6 +2329,7 @@ namespace Vulnerator.Model
                 Regex regex = new Regex(regexPattern);
                 cellValue = regex.Replace(cellValue, "\r\n");
                 assetName = assetName.Replace("\r\n", "__");
+                assetName = assetName.Replace("\\", "-");
                 string outputPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\AcasScanOutput_TextFiles";
                 string outputTextFile = string.Empty;
 
