@@ -321,26 +321,6 @@ namespace Vulnerator.Model
             }
         }
 
-        private void CreateAddAssetCommand(string systemName)
-        {
-            try
-            {
-                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
-                {
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", file));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", systemName));
-                    sqliteCommand.CommandText = "INSERT INTO Assets (AssetIndex, AssetIdToReport, HostName, GroupIndex) " +
-                        "VALUES(NULL, @AssetIdToReport, @AssetIdToReport, (SELECT GroupIndex FROM Groups WHERE GroupName = @GroupName));";
-                    sqliteCommand.ExecuteNonQuery();
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to insert Asset into Assets.");
-                throw exception;
-            }
-        }
-
         private void CreateAddSourceCommand()
         {
             try
