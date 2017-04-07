@@ -2468,6 +2468,8 @@ namespace Vulnerator.Model
                 cellValue = regex.Replace(cellValue, "\r\n");
                 if (assetName.Contains("\r\n"))
                 { assetName = "MergedResults"; }
+                assetName = assetName.Replace("\\", "-");
+                assetName = assetName.Replace("/", "-");
                 string outputPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\Vulnerator - " + DateTime.Now.ToShortDateString().Replace('/', '-');
                 string outputTextFile = string.Empty;
                 outputTextFile = outputPath + @"\" + assetName + "_" + pluginId + "_" + "_" + columnName + ".txt";
