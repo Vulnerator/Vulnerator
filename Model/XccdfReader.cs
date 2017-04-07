@@ -831,10 +831,29 @@ namespace Vulnerator.Model
         {
             try
             {
-                if (xccdfResult.Equals("pass"))
-                { return "Completed"; }
-                else
-                { return "Ongoing"; }
+                switch (xccdfResult)
+                {
+                    case "pass":
+                        return "Completed";
+                    case "fail":
+                        return "Ongoing";
+                    case "error":
+                        return "Error";
+                    case "unknown":
+                        return "Not Reviewed";
+                    case "notapplicable":
+                        return "Not Applicable";
+                    case "notchecked":
+                        return "Not Reviewed";
+                    case "notselected":
+                        return "Not Reviewed";
+                    case "informational":
+                        return "Informational";
+                    case "fixed":
+                        return "Completed";
+                    default:
+                        return "Not Reviewed";
+                }
             }
             catch (Exception exception)
             {

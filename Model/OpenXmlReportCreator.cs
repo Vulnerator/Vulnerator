@@ -2470,7 +2470,6 @@ namespace Vulnerator.Model
                 { assetName = "MergedResults"; }
                 string outputPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\Vulnerator - " + DateTime.Now.ToShortDateString().Replace('/', '-');
                 string outputTextFile = string.Empty;
-
                 outputTextFile = outputPath + @"\" + assetName + "_" + pluginId + "_" + "_" + columnName + ".txt";
                 if (!Directory.Exists(outputPath))
                 { Directory.CreateDirectory(outputPath); }
