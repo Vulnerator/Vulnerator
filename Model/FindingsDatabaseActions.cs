@@ -261,6 +261,8 @@ namespace Vulnerator.Model
                 sqliteCommand.CommandText = "INSERT INTO FindingStatuses VALUES (NULL, 'Ongoing');" +
                     "INSERT INTO FindingStatuses VALUES (NULL, 'Not Reviewed');" +
                     "INSERT INTO FindingStatuses VALUES (NULL, 'Not Applicable');" +
+                    "INSERT INTO FindingStatuses VALUES (NULL, 'Error');" +
+                    "INSERT INTO FindingStatuses VALUES (NULL, 'Informational');" +
                     "INSERT INTO FindingStatuses VALUES (NULL, 'Completed');";
                 sqliteCommand.ExecuteNonQuery();
             }

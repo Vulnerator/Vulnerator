@@ -838,7 +838,7 @@ namespace Vulnerator.Model
                     case "fail":
                         return "Ongoing";
                     case "error":
-                        return "Not Reviewed";
+                        return "Error";
                     case "unknown":
                         return "Not Reviewed";
                     case "notapplicable":
@@ -848,7 +848,7 @@ namespace Vulnerator.Model
                     case "notselected":
                         return "Not Reviewed";
                     case "informational":
-                        return "Not Applicable";
+                        return "Informational";
                     case "fixed":
                         return "Completed";
                     default:
