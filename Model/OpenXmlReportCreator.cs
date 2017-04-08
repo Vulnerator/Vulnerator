@@ -2240,7 +2240,6 @@ namespace Vulnerator.Model
             try
             {
                 List<OpenXmlAttribute> openXmlAttributes = new List<OpenXmlAttribute>();
-                cellValue = SecurityElement.Escape(cellValue);
                 openXmlAttributes.Add(new OpenXmlAttribute("s", null, styleIndex.ToString()));
                 int parseResult;
                 if (int.TryParse(cellValue, out parseResult))
