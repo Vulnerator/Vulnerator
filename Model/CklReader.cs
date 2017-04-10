@@ -5,7 +5,7 @@ using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using log4net;
-using System.Text.RegularExpressions;
+using System.Security;
 using System.Xml;
 using Vulnerator.Model;
 using Vulnerator.ViewModel;
@@ -611,7 +611,10 @@ namespace Vulnerator
                 while (!xmlReader.Name.Equals("ATTRIBUTE_DATA"))
                 { xmlReader.Read(); }
                 xmlReader.Read();
-                return xmlReader.Value;
+                string value = xmlReader.Value;
+                value = value.Replace("&gt", ">");
+                value = value.Replace("&lt", "<");
+                return value;
             }
             catch (Exception exception)
             {
@@ -625,7 +628,10 @@ namespace Vulnerator
             try
             {
                 xmlReader.Read();
-                return xmlReader.Value;
+                string value = xmlReader.Value;
+                value = value.Replace("&gt", ">");
+                value = value.Replace("&lt", "<");
+                return value;
             }
             catch (Exception exception)
             {

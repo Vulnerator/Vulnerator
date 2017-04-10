@@ -307,6 +307,8 @@ namespace Vulnerator.Model
                 using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                 {
                     softwareName = ObtainCurrentNodeValue(xmlReader);
+                    if (string.IsNullOrWhiteSpace(softwareName))
+                    { softwareName = file; }
                     sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", softwareName));
                     sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", systemName));
                     sqliteCommand.CommandText = "INSERT INTO Assets (AssetIndex, AssetIdToReport, HostName, GroupIndex) " +
