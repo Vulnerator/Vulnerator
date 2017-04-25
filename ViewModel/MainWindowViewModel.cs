@@ -13,6 +13,10 @@ using System.Windows.Input;
 using System.Xml;
 using System.Xml.Linq;
 using Vulnerator.Model;
+using Vulnerator.Model.BusinessLogic;
+using Vulnerator.Model.DataAccess;
+using Vulnerator.Model.ModelHelper;
+using Vulnerator.Model.Object;
 
 namespace Vulnerator.ViewModel
 {
@@ -178,8 +182,8 @@ namespace Vulnerator.ViewModel
 			}
 		}
 
-		private AsyncObservableCollection<Files> _fileList;
-		public AsyncObservableCollection<Files> FileList
+		private AsyncObservableCollection<Model.Object.File> _fileList;
+		public AsyncObservableCollection<Model.Object.File> FileList
 		{
 			get { return _fileList; }
 			set

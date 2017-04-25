@@ -1,0 +1,301 @@
+﻿<Controls:MetroWindow x:Class="Vulnerator.View.UI.DevWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
+                      xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+                      xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                      xmlns:Validation="clr-namespace:Vulnerator.View.Validation"
+                      xmlns:ViewHelpers="clr-namespace:Vulnerator.View.ViewHelper"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:dat="clr-namespace:System.Windows.Data;assembly=PresentationFramework"
+                      xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+                      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                      xmlns:local="clr-namespace:Vulnerator.View.UI"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+                      xmlns:v="clr-namespace:Vulnerator.View"
+                      xmlns:vm="clr-namespace:Vulnerator.ViewModel"
+                      Title="Vulnerator"
+                      MinWidth="750"
+                      MinHeight="300"
+                      HorizontalContentAlignment="Stretch"
+                      VerticalContentAlignment="Stretch"
+                      d:DesignHeight="800"
+                      d:DesignWidth="800"
+                      BorderBrush="{DynamicResource AccentColorBrush}"
+                      BorderThickness="1"
+                      DataContext="{Binding Main, Source={StaticResource Locator}}"
+                      GlowBrush="{DynamicResource AccentColorBrush}"
+                      Icon="/Vulnerator;component/Resources/chart.ico"
+                      KeyboardNavigation.TabNavigation="Continue"
+                      ResizeMode="CanResize"
+                      mc:Ignorable="d">
+
+    <!--  Window Icon Template  -->
+    <Controls:MetroWindow.IconTemplate>
+        <DataTemplate>
+            <IconPacks:PackIconModern Width="{TemplateBinding Width}"
+                                      Height="{TemplateBinding Height}"
+                                      Margin="4"
+                                      Foreground="{DynamicResource IdealForegroundColorBrush}"
+                                      Kind="GraphBar" />
+        </DataTemplate>
+    </Controls:MetroWindow.IconTemplate>
+
+    <!--  Window Titlebar Controls  -->
+    <Controls:MetroWindow.TitleTemplate>
+        <DataTemplate>
+            <StackPanel HorizontalAlignment="Left"
+                        Orientation="Horizontal">
+                <TextBlock Margin="5,0"
+                           VerticalAlignment="Center"
+                           FontFamily="{DynamicResource HeaderFontFamily}"
+                           FontSize="{DynamicResource WindowTitleFontSize}"
+                           Text="{TemplateBinding Content}"
+                           TextTrimming="CharacterEllipsis" />
+                <Controls:WindowCommands ShowLastSeparator="False">
+                    <Button x:Name="projectButton"
+                            Command="{Binding AboutLinksCommand}"
+                            CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
+                            Content="{IconPacks:PackIconOcticons Bookmark}"
+                            DataContext="{StaticResource MainWindowViewModel}"
+                            ToolTip="GitHub Project Page" />
+                    <Button x:Name="githubButton"
+                            Command="{Binding AboutLinksCommand}"
+                            CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
+                            Content="{IconPacks:PackIconOcticons Octoface}"
+                            DataContext="{StaticResource MainWindowViewModel}"
+                            ToolTip="GitHub Repository" />
+                    <Button x:Name="wikiButton"
+                            Command="{Binding AboutLinksCommand}"
+                            CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
+                            Content="{IconPacks:PackIconOcticons Book}"
+                            DataContext="{StaticResource MainWindowViewModel}"
+                            ToolTip="Wiki" />
+                    <Button x:Name="issueButton"
+                            Command="{Binding AboutLinksCommand}"
+                            CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
+                            Content="{IconPacks:PackIconOcticons IssueOpened}"
+                            DataContext="{StaticResource MainWindowViewModel}"
+                            ToolTip="Issues" />
+                </Controls:WindowCommands>
+            </StackPanel>
+        </DataTemplate>
+    </Controls:MetroWindow.TitleTemplate>
+
+    <!--  Window Command Button Styling  -->
+    <Controls:MetroWindow.WindowButtonCommands>
+        <Controls:WindowButtonCommands Template="{DynamicResource MahApps.Metro.Templates.WindowButtonCommands.Win10}" />
+    </Controls:MetroWindow.WindowButtonCommands>
+
+    <!--  Window-Level Resource Dictionary  -->
+    <Controls:MetroWindow.Resources>
+        <ViewHelpers:MyXmlDataProvider x:Key="XmlConfig"
+                                       IsAsynchronous="False"
+                                       IsInitialLoadEnabled="True" />
+        <Converters:SelectedItemToContentConverter x:Key="SelectedItemToContentConverter" />
+        <local:VulnerabilityManagementView x:Key="vulnerabilityManagementView" />
+        <local:MitigationsNistMappingView x:Key="mitigationsNistMappingView" />
+        <local:AboutView x:Key="aboutView" />
+        <local:ConfigurationManagementView x:Key="configurationManagementView" />
+        <local:NewsView x:Key="newsView" />
+        <local:ReportingView x:Key="reportingView" />
+        <local:RmfView x:Key="rmfView" />
+        <local:SettingsView x:Key="settingsView" />
+        <local:ThemeView x:Key="themeView" />
+        <local:UserGuideView x:Key="userGuideView" />
+    </Controls:MetroWindow.Resources>
+
+    <!--  Begin Main Window Layout  -->
+    <Controls:MetroContentControl Grid.Row="0"
+                                  Margin="0"
+                                  HorizontalContentAlignment="Stretch"
+                                  VerticalContentAlignment="Stretch"
+                                  KeyboardNavigation.TabNavigation="Continue">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="38" />
+            </Grid.RowDefinitions>
+
+            <Controls:HamburgerMenu x:Name="hamburgerMenu"
+                                    DisplayMode="CompactInline"
+                                    Foreground="{DynamicResource LabelTextBrush}"
+                                    ItemTemplate="{StaticResource HamburgerMenuItem}"
+                                    OptionsItemTemplate="{StaticResource HamburgerMenuItem}"
+                                    VerticalScrollBarOnLeftSide="True"
+                                    SelectedIndex="0">
+                <Controls:HamburgerMenu.ItemsSource>
+                    <Controls:HamburgerMenuItemCollection>
+                        <ViewHelpers:HamburgerMenuIconItem Label="Vulnerability Management"
+                                                           Tag="{StaticResource vulnerabilityManagementView}">
+                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                                <IconPacks:PackIconMaterial HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            Kind="ChartLine"
+                                                            ToolTip="Vulnerability Management" />
+                            </ViewHelpers:HamburgerMenuIconItem.Icon>
+                        </ViewHelpers:HamburgerMenuIconItem>
+                        <ViewHelpers:HamburgerMenuIconItem Label="Mitigations &amp; NIST Mapping"
+                                                           Tag="{StaticResource mitigationsNistMappingView}">
+                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                                <IconPacks:PackIconModern HorizontalAlignment="Center"
+                                                          VerticalAlignment="Center"
+                                                          Kind="ListCheck"
+                                                          ToolTip="Mitigations &amp; NIST Mapping" />
+                            </ViewHelpers:HamburgerMenuIconItem.Icon>
+                        </ViewHelpers:HamburgerMenuIconItem>
+                        <ViewHelpers:HamburgerMenuIconItem Label="RMF"
+                                                           Tag="{StaticResource rmfView}">
+                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                                <IconPacks:PackIconMaterial HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            Kind="Certificate"
+                                                            ToolTip="RMF" />
+                            </ViewHelpers:HamburgerMenuIconItem.Icon>
+                        </ViewHelpers:HamburgerMenuIconItem>
+                        <ViewHelpers:HamburgerMenuIconItem Label="Reporting"
+                                                           Tag="{StaticResource reportingView}">
+                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                                <IconPacks:PackIconFontAwesome HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"
+                                                               Kind="FilesOutline"
+                                                               ToolTip="Reporting" />
+                            </ViewHelpers:HamburgerMenuIconItem.Icon>
+                        </ViewHelpers:HamburgerMenuIconItem>
+                        <ViewHelpers:HamburgerMenuIconItem Label="Configuration Management"
+                                                           Tag="{StaticResource configurationManagementView}">
+                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                                <IconPacks:PackIconMaterial HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            Kind="MonitorMultiple"
+                                                            ToolTip="Configuration Management" />
+                            </ViewHelpers:HamburgerMenuIconItem.Icon>
+                        </ViewHelpers:HamburgerMenuIconItem>
+                        <ViewHelpers:HamburgerMenuIconItem Label="News"
+                                                           Tag="{StaticResource newsView}">
+                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                                <IconPacks:PackIconFontAwesome HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"
+                                                               Kind="NewspaperOutline"
+                                                               ToolTip="News" />
+                            </ViewHelpers:HamburgerMenuIconItem.Icon>
+                        </ViewHelpers:HamburgerMenuIconItem>
+                    </Controls:HamburgerMenuItemCollection>
+                </Controls:HamburgerMenu.ItemsSource>
+                <Controls:HamburgerMenu.OptionsItemsSource>
+                    <Controls:HamburgerMenuItemCollection>
+                        <ViewHelpers:HamburgerMenuIconItem Label="User Guide"
+                                                           Tag="{StaticResource userGuideView}">
+                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                                <IconPacks:PackIconOcticons HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            Kind="Book"
+                                                            ToolTip="User Guide" />
+                            </ViewHelpers:HamburgerMenuIconItem.Icon>
+                        </ViewHelpers:HamburgerMenuIconItem>
+                        <ViewHelpers:HamburgerMenuIconItem Label="Settings"
+                                                           Tag="{StaticResource settingsView}">
+                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                                <IconPacks:PackIconMaterial HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            Kind="Settings"
+                                                            ToolTip="Settings" />
+                            </ViewHelpers:HamburgerMenuIconItem.Icon>
+                        </ViewHelpers:HamburgerMenuIconItem>
+                        <ViewHelpers:HamburgerMenuIconItem Label="Theme"
+                                                           Tag="{StaticResource themeView}">
+                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                                <IconPacks:PackIconFontAwesome HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"
+                                                               Kind="PaintBrush"
+                                                               ToolTip="Theme" />
+                            </ViewHelpers:HamburgerMenuIconItem.Icon>
+                        </ViewHelpers:HamburgerMenuIconItem>
+                        <ViewHelpers:HamburgerMenuIconItem Label="About"
+                                                           Tag="{StaticResource aboutView}">
+                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                                <IconPacks:PackIconMaterial HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            Kind="Help"
+                                                            ToolTip="About" />
+                            </ViewHelpers:HamburgerMenuIconItem.Icon>
+                        </ViewHelpers:HamburgerMenuIconItem>
+                    </Controls:HamburgerMenuItemCollection>
+                </Controls:HamburgerMenu.OptionsItemsSource>
+                <Controls:HamburgerMenu.Content>
+                    <MultiBinding Converter="{StaticResource SelectedItemToContentConverter}">
+                        <Binding Mode="OneWay"
+                                 Path="SelectedItem"
+                                 RelativeSource="{RelativeSource Self}" />
+                        <Binding Mode="OneWay"
+                                 Path="SelectedOptionsItem"
+                                 RelativeSource="{RelativeSource Self}" />
+                    </MultiBinding>
+                </Controls:HamburgerMenu.Content>
+                <Controls:HamburgerMenu.ContentTemplate>
+                    <DataTemplate DataType="{x:Type Controls:HamburgerMenuItem}">
+                        <ContentControl x:Name="Content"
+                                        Content="{Binding Tag}"
+                                        Focusable="False"
+                                        Foreground="{DynamicResource LabelTextBrush}" />
+                    </DataTemplate>
+                </Controls:HamburgerMenu.ContentTemplate>
+            </Controls:HamburgerMenu>
+
+            <StatusBar Grid.Row="1"
+                       Height="35"
+                       VerticalAlignment="Top"
+                       Background="{DynamicResource ControlBackgroundBrush}"
+                       BorderBrush="{DynamicResource AccentColorBrush}"
+                       BorderThickness="0,1,0,0">
+                <StatusBar.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                    </ItemsPanelTemplate>
+                </StatusBar.ItemsPanel>
+                <StatusBarItem Grid.Column="0">
+                    <Controls:ProgressRing Width="30"
+                                           Height="30"
+                                           Margin="0"
+                                           Foreground="{DynamicResource AccentColorBrush}"
+                                           Visibility="{Binding ProgressRingVisibility}" />
+                </StatusBarItem>
+                <StatusBarItem Grid.Column="1"
+                               Height="35"
+                               Margin="0"
+                               VerticalAlignment="Top"
+                               Content="{Binding ProgressLabelText}"
+                               Foreground="{DynamicResource TextBrush}" />
+                <StatusBarItem Width="Auto"
+                               HorizontalAlignment="Stretch" />
+                <StatusBarItem Grid.Column="3"
+                               Height="35"
+                               Margin="0,0,5,0"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Top"
+                               Content="{Binding NewVersionText}"
+                               Foreground="{DynamicResource TextBrush}"
+                               Visibility="Visible" />
+                <StatusBarItem Grid.Column="4">
+                    <Button Margin="0,0,3,0"
+                            Command="{Binding GetLatestVersionCommand}"
+                            CommandParameter="{Binding Release.HtmlUrl}"
+                            Content="{IconPacks:PackIconOcticons DesktopDownload}"
+                            ToolTip="Download Now"
+                            Visibility="{Binding NewVersionVisibility}" />
+                </StatusBarItem>
+            </StatusBar>
+
+        </Grid>
+    </Controls:MetroContentControl>
+</Controls:MetroWindow>

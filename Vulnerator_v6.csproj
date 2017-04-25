@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\SQLite.3.13.0\build\net45\SQLite.props" Condition="Exists('packages\SQLite.3.13.0\build\net45\SQLite.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -72,19 +73,14 @@
   <PropertyGroup>
     <StartupObject>Vulnerator.App</StartupObject>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '7.2.6 Internal|AnyCPU'">
-    <OutputPath>bin\7.2.6 Internal\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>false</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ColorCode, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\ColorCode.Portable.1.0.3\lib\portable45-net45+win8+wp8+wpa81\ColorCode.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="CsvHelper, Version=3.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>packages\CsvHelper.3.0.0-beta7\lib\net451\CsvHelper.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
@@ -98,14 +94,68 @@
       <HintPath>packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="GalaSoft.MvvmLight, Version=5.4.0.0, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
+      <HintPath>packages\MvvmLightLibs.5.4.0-alpha\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras, Version=5.4.0.0, Culture=neutral, PublicKeyToken=669f0b5e8f868abf, processorArchitecture=MSIL">
+      <HintPath>packages\MvvmLightLibs.5.4.0-alpha\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.4.0.0, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
+      <HintPath>packages\MvvmLightLibs.5.4.0-alpha\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HtmlToXamlConverter, Version=1.0.5727.24510, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\HtmlToXamlConverter.1.0.5727.24510\lib\net45\HtmlToXamlConverter.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LiveCharts, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>packages\LiveCharts.0.9.6\lib\net45\LiveCharts.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LiveCharts.Wpf, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>packages\LiveCharts.Wpf.0.9.6\lib\net45\LiveCharts.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="MahApps.Metro, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\MahApps.Metro.1.5.0-alpha021\lib\net45\MahApps.Metro.dll</HintPath>
+    <Reference Include="MahApps.Metro, Version=1.5.0.23, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <HintPath>packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="MahApps.Metro.IconPacks, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\MahApps.Metro.IconPacks.1.8.0\lib\net45\MahApps.Metro.IconPacks.dll</HintPath>
+    <Reference Include="MahApps.Metro.IconPacks, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\MahApps.Metro.IconPacks.1.9.0\lib\net45\MahApps.Metro.IconPacks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Markdig, Version=0.10.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Markdig.0.10.7\lib\net40\Markdig.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Markdig.SemanticUi, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Markdig.SemanticUi.0.1.0\lib\net45\Markdig.SemanticUi.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Markdig.SyntaxHighlighting, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Markdig.SyntaxHighlighting.1.0.0\lib\portable45-net45+win8+wp8+wpa81\Markdig.SyntaxHighlighting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.Sqlite, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Data.Sqlite.1.1.0\lib\net451\Microsoft.Data.Sqlite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.EntityFrameworkCore, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.EntityFrameworkCore.1.1.1\lib\net451\Microsoft.EntityFrameworkCore.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.EntityFrameworkCore.Relational, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.EntityFrameworkCore.Relational.1.1.1\lib\net451\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.EntityFrameworkCore.Sqlite, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.EntityFrameworkCore.Sqlite.1.1.1\lib\net451\Microsoft.EntityFrameworkCore.Sqlite.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Exchange.WebServices, Version=15.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Exchange.WebServices.2.2\lib\40\Microsoft.Exchange.WebServices.dll</HintPath>
@@ -113,6 +163,42 @@
     </Reference>
     <Reference Include="Microsoft.Exchange.WebServices.Auth, Version=15.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Exchange.WebServices.2.2\lib\40\Microsoft.Exchange.WebServices.Auth.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Caching.Abstractions, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Caching.Abstractions.1.1.1\lib\netstandard1.0\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Caching.Memory, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Caching.Memory.1.1.1\lib\net451\Microsoft.Extensions.Caching.Memory.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.DependencyInjection.1.1.0\lib\netstandard1.1\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.0\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Logging.1.1.1\lib\netstandard1.1\Microsoft.Extensions.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Logging.Abstractions.1.1.1\lib\netstandard1.1\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Options.1.1.1\lib\netstandard1.0\Microsoft.Extensions.Options.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Primitives.1.1.0\lib\netstandard1.0\Microsoft.Extensions.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MigraDoc.DocumentObjectModel-wpf, Version=1.50.4000.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
@@ -144,24 +230,44 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\PDFsharp-MigraDoc-wpf.1.50.4000-beta3b\lib\net30\PdfSharp.Charting-wpf.dll</HintPath>
     </Reference>
+    <Reference Include="Remotion.Linq, Version=2.2.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <HintPath>packages\Remotion.Linq.2.2.0-alpha-002\lib\net45\Remotion.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Collections.Immutable.1.3.1\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data.SQLite, Version=1.0.104.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>packages\System.Data.SQLite.Core.1.0.104.0\lib\net451\System.Data.SQLite.dll</HintPath>
+    <Reference Include="System.Data.SQLite, Version=1.0.105.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>packages\System.Data.SQLite.Core.1.0.105.0\lib\net451\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="System.Data.SQLite.EF6, Version=1.0.104.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>packages\System.Data.SQLite.EF6.1.0.104.0\lib\net451\System.Data.SQLite.EF6.dll</HintPath>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.105.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>packages\System.Data.SQLite.EF6.1.0.105.0\lib\net451\System.Data.SQLite.EF6.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="System.Data.SQLite.Linq, Version=1.0.104.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>packages\System.Data.SQLite.Linq.1.0.104.0\lib\net451\System.Data.SQLite.Linq.dll</HintPath>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.105.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>packages\System.Data.SQLite.Linq.1.0.105.0\lib\net451\System.Data.SQLite.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Diagnostics.DiagnosticSource.4.4.0-preview1-25214-03\lib\net45\System.Diagnostics.DiagnosticSource.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Drawing">
       <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Interactive.Async, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>packages\System.Interactive.Async.3.1.1\lib\net45\System.Interactive.Async.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -169,12 +275,22 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.3.0\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.ServiceModel">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\MahApps.Metro.1.5.0-alpha021\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>packages\MvvmLightLibs.5.4.0-alpha\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml">
@@ -211,38 +327,53 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Model\AcasNessusReader.cs" />
-    <Compile Include="Model\AcasCsvReader.cs" />
-    <Compile Include="Model\AssetOverviewLineItem.cs" />
-    <Compile Include="Model\AsyncObservableCollection.cs" />
-    <Compile Include="Model\CciToNist.cs" />
-    <Compile Include="Model\CklReader.cs" />
+    <Compile Include="Model\BusinessLogic\AcasNessusReader.cs" />
+    <Compile Include="Model\BusinessLogic\AcasCsvReader.cs" />
+    <Compile Include="Model\DataAccess\DatabaseBuilder.cs" />
+    <Compile Include="Model\DataAccess\DatabaseContext.cs" />
+    <Compile Include="Model\DataAccess\DatabaseHandler.cs" />
+    <Compile Include="Model\Object\Asset.cs" />
+    <Compile Include="Model\Object\AssetOverviewLineItem.cs" />
+    <Compile Include="Model\Object\File.cs" />
+    <Compile Include="Model\Object\FindingStatus.cs" />
+    <Compile Include="Model\Object\Group.cs" />
+    <Compile Include="Model\Object\Mitigation.cs" />
+    <Compile Include="Model\Object\MitigationCommandParameter.cs" />
+    <Compile Include="Model\Object\UniqueFinding.cs" />
+    <Compile Include="Model\Object\UpdateDictionaryParameter.cs" />
+    <Compile Include="Model\Object\UserGuidePage.cs" />
+    <Compile Include="Model\Object\Vulnerability.cs" />
+    <Compile Include="Model\StigSystem.cs" />
+    <Compile Include="Model\VulnerabilityItem.cs" />
+    <Compile Include="ViewModel\AboutViewModel.cs" />
+    <Compile Include="ViewModel\AsyncObservableCollection.cs" />
+    <Compile Include="Model\Object\CciToNist.cs" />
+    <Compile Include="Model\BusinessLogic\CklReader.cs" />
     <Compile Include="Model\Contact.cs" />
-    <Compile Include="Model\DiacapToRmf.cs" />
-    <Compile Include="Model\DiscrepancyItem.cs" />
-    <Compile Include="Model\ExtensionMethods.cs" />
-    <Compile Include="Model\FileNameNoPathConverter.cs" />
-    <Compile Include="Model\FindingsDatabaseActions.cs" />
-    <Compile Include="Model\FprDescription.cs" />
-    <Compile Include="Model\FprReader.cs" />
-    <Compile Include="Model\FprVulnerability.cs" />
-    <Compile Include="Model\GitHubActions.cs" />
-    <Compile Include="Model\Issue.cs" />
-    <Compile Include="Model\Logger.cs" />
+    <Compile Include="Model\BusinessLogic\DiacapToRmf.cs" />
+    <Compile Include="Model\Object\DiscrepancyItem.cs" />
+    <Compile Include="Model\ModelHelper\ExtensionMethods.cs" />
+    <Compile Include="Model\ModelHelper\FileNameNoPathConverter.cs" />
+    <Compile Include="Model\DataAccess\FindingsDatabaseActions.cs" />
+    <Compile Include="Model\Object\FprDescription.cs" />
+    <Compile Include="Model\BusinessLogic\FprReader.cs" />
+    <Compile Include="Model\Object\FprVulnerability.cs" />
+    <Compile Include="Model\Object\GitHubActions.cs" />
+    <Compile Include="Model\Object\Issue.cs" />
+    <Compile Include="Model\Object\Logger.cs" />
     <Compile Include="Model\MonitoredSystem.cs" />
     <Compile Include="Model\ContactTitle.cs" />
-    <Compile Include="Model\Release.cs" />
-    <Compile Include="Model\VulneratorDatabaseActions.cs" />
-    <Compile Include="Model\Files.cs" />
-    <Compile Include="Model\FormattedCell.cs" />
-    <Compile Include="Model\HTMLtoXML.cs" />
+    <Compile Include="Model\Object\Release.cs" />
+    <Compile Include="Model\DataAccess\VulneratorDatabaseActions.cs" />
+    <Compile Include="Model\Object\FormattedCell.cs" />
+    <Compile Include="Model\BusinessLogic\HTMLtoXML.cs" />
     <Compile Include="Model\Iavm.cs" />
-    <Compile Include="Model\WorkingSystem.cs" />
+    <Compile Include="Model\Object\WorkingSystem.cs" />
     <Compile Include="Model\SystemGroup.cs" />
     <Compile Include="Model\MitigationItem.cs" />
-    <Compile Include="Model\MitigationsTextParser.cs" />
-    <Compile Include="Model\OpenXmlReportCreator.cs" />
-    <Compile Include="Model\PdfReportCreator.cs" />
+    <Compile Include="Model\BusinessLogic\MitigationsTextParser.cs" />
+    <Compile Include="Model\BusinessLogic\OpenXmlReportCreator.cs" />
+    <Compile Include="Model\BusinessLogic\PdfReportCreator.cs" />
     <Compile Include="Model\PersonnelList.cs" />
     <Compile Include="Model\SqlCommandParameters.cs" />
     <Compile Include="Model\StatusItem.cs" />
@@ -251,41 +382,88 @@
     <Compile Include="Model\UpdatableSystemGroup.cs" />
     <Compile Include="Model\UpdateSystemGroupParameters.cs" />
     <Compile Include="Model\UpdateSystemParameters.cs" />
-    <Compile Include="ViewModel\CommandEnabledComboBox.cs" />
-    <Compile Include="ViewModel\ContactInfoSeparatorConverter.cs" />
-    <Compile Include="ViewModel\EmailPersonnelLabelJoiner.cs" />
-    <Compile Include="ViewModel\EmailTextLabelStringJoiner.cs" />
-    <Compile Include="ViewModel\MyXmlDataProvider.cs" />
+    <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\MessengerToken.cs" />
+    <Compile Include="ViewModel\NewsViewModel.cs" />
+    <Compile Include="ViewModel\ReportingViewModel.cs" />
+    <Compile Include="ViewModel\RmfViewModel.cs" />
+    <Compile Include="ViewModel\ThemeViewModel.cs" />
+    <Compile Include="ViewModel\UserGuideViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="ViewModel\VulnerabilityViewModel.cs" />
+    <Compile Include="View\Converter\BooleanToCollapsedConverter.cs" />
+    <Compile Include="View\Converter\BooleanToHiddenConverter.cs" />
+    <Compile Include="View\Converter\BooleanToVisibilityConverter.cs" />
+    <Compile Include="View\Converter\HtmlToFlowDocumentConverter.cs" />
+    <Compile Include="View\Converter\InverseBooleanConverter.cs" />
+    <Compile Include="View\Converter\MitigationCommandConverter.cs" />
+    <Compile Include="View\Converter\SelectedItemToContentConverter.cs" />
+    <Compile Include="View\Converter\UpdateDictionaryConverter.cs" />
+    <Compile Include="View\UI\AboutView.xaml.cs">
+      <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\ConfigurationManagementView.xaml.cs">
+      <DependentUpon>ConfigurationManagementView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\DevWindow.xaml.cs">
+      <DependentUpon>DevWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\MitigationsNistMappingView.xaml.cs">
+      <DependentUpon>MitigationsNistMappingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\NewsView.xaml.cs">
+      <DependentUpon>NewsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\ReportingView.xaml.cs">
+      <DependentUpon>ReportingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\RmfView.xaml.cs">
+      <DependentUpon>RmfView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\ThemeView.xaml.cs">
+      <DependentUpon>ThemeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\UserGuideView.xaml.cs">
+      <DependentUpon>UserGuideView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\VulnerabilityManagementView.xaml.cs">
+      <DependentUpon>VulnerabilityManagementView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ViewHelper\CommandEnabledComboBox.cs" />
+    <Compile Include="View\Converter\ContactInfoSeparatorConverter.cs" />
+    <Compile Include="View\Converter\EmailPersonnelLabelJoiner.cs" />
+    <Compile Include="View\Converter\EmailTextLabelStringJoiner.cs" />
+    <Compile Include="View\ViewHelper\MyXmlDataProvider.cs" />
     <Compile Include="Model\UpdateMitigationParameters.cs" />
-    <Compile Include="Model\WasspReader.cs" />
-    <Compile Include="Model\XccdfReader.cs" />
-    <Compile Include="Model\XmlWasspReader.cs" />
+    <Compile Include="Model\BusinessLogic\WasspReader.cs" />
+    <Compile Include="Model\BusinessLogic\XccdfReader.cs" />
+    <Compile Include="Model\BusinessLogic\XmlWasspReader.cs" />
     <Compile Include="ViewModel\EventCommand.cs" />
-    <Compile Include="ViewModel\ObtainThirdSplitStringValueConverter.cs" />
-    <Compile Include="ViewModel\StringJoiningConverter.cs" />
-    <Compile Include="ViewModel\StringSeparatorConverter.cs" />
-    <Compile Include="ViewModel\ObtainSecondSplitStringValueConverter.cs" />
-    <Compile Include="ViewModel\ObtainFirstSplitStringValueConverter.cs" />
-    <Compile Include="ViewModel\UpdateSystemConverter.cs" />
-    <Compile Include="ViewModel\UpdateSystemGroupConverter.cs" />
-    <Compile Include="View\AutoRefreshCollectionViewSource.cs" />
-    <Compile Include="View\BlankFieldValidationRule.cs" />
-    <Compile Include="View\CloseReportWorkbook.xaml.cs">
+    <Compile Include="View\Converter\ObtainThirdSplitStringValueConverter.cs" />
+    <Compile Include="View\Converter\StringJoiningConverter.cs" />
+    <Compile Include="View\Converter\StringSeparatorConverter.cs" />
+    <Compile Include="View\Converter\ObtainSecondSplitStringValueConverter.cs" />
+    <Compile Include="View\Converter\ObtainFirstSplitStringValueConverter.cs" />
+    <Compile Include="View\Converter\UpdateSystemConverter.cs" />
+    <Compile Include="View\Converter\UpdateSystemGroupConverter.cs" />
+    <Compile Include="View\ViewHelper\AutoRefreshCollectionViewSource.cs" />
+    <Compile Include="View\Validation\BlankFieldValidationRule.cs" />
+    <Compile Include="View\UI\CloseReportWorkbook.xaml.cs">
       <DependentUpon>CloseReportWorkbook.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\DesignPage.xaml.cs">
-      <DependentUpon>DesignPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\EmailValidationRule.cs" />
-    <Compile Include="View\MitigationDatabaseValidationRule.cs" />
-    <Compile Include="View\NoEmailApplication.xaml.cs">
+    <Compile Include="View\Validation\EmailValidationRule.cs" />
+    <Compile Include="View\Validation\MitigationDatabaseValidationRule.cs" />
+    <Compile Include="View\UI\NoEmailApplication.xaml.cs">
       <DependentUpon>NoEmailApplication.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\NoInternetApplication.xaml.cs">
+    <Compile Include="View\UI\NoInternetApplication.xaml.cs">
       <DependentUpon>NoInternetApplication.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\NumberValidationRule.cs" />
-    <Compile Include="View\TextBlockExtensions.cs" />
+    <Compile Include="View\Validation\NumberValidationRule.cs" />
+    <Compile Include="View\ViewHelper\TextBlockExtensions.cs" />
     <Page Include="Resources\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -294,15 +472,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\CloseReportWorkbook.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\DesignPage.xaml">
+    <Page Include="View\AboutFlyout.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\MainWindow.xaml">
+    <Page Include="View\UI\AboutView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\UI\CloseReportWorkbook.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UI\ConfigurationManagementView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\UI\DevWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\UI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -310,24 +500,56 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\ConfigAlter.cs" />
+    <Compile Include="Model\BusinessLogic\ConfigAlter.cs" />
     <Compile Include="ViewModel\BaseInpc.cs" />
     <Compile Include="Model\CommandParameters.cs" />
-    <Compile Include="ViewModel\CustomMultiValueConverter.cs" />
+    <Compile Include="View\Converter\CustomMultiValueConverter.cs" />
     <Compile Include="ViewModel\DelegateCommand.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
-    <Compile Include="ViewModel\StringToBoolConverter.cs" />
-    <Compile Include="View\MainWindow.xaml.cs">
+    <Compile Include="View\Converter\StringToBoolConverter.cs" />
+    <Compile Include="View\UI\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\NoEmailApplication.xaml">
+    <Page Include="View\UI\MitigationsNistMappingView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\UI\NewsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\UI\NoEmailApplication.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\NoInternetApplication.xaml">
+    <Page Include="View\UI\NoInternetApplication.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UI\ReportingView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\UI\RmfView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\UI\SettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\UI\ThemeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\UI\UserGuideView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\UI\VulnerabilityManagementView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -355,6 +577,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="LICENSE" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -365,6 +588,12 @@
     <EmbeddedResource Include="Resources\U_CCI_List.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Resources\UserGuide\Change-Log.md" />
+    <None Include="Resources\UserGuide\Error-Reporting.md" />
+    <None Include="Resources\UserGuide\Getting-Started.md" />
+    <None Include="Resources\UserGuide\Home.md" />
+    <None Include="Resources\UserGuide\Looking-Ahead.md" />
+    <None Include="Resources\UserGuide\Using-the-Software.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -403,7 +632,10 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\UserGuide\Images\ThemeFlyout.jpg" />
+    <Resource Include="Resources\UserGuide\Images\VulneratorMain.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
@@ -413,12 +645,13 @@
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
-  <Import Project="packages\System.Data.SQLite.Core.1.0.104.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('packages\System.Data.SQLite.Core.1.0.104.0\build\net451\System.Data.SQLite.Core.targets')" />
+  <Import Project="packages\System.Data.SQLite.Core.1.0.105.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('packages\System.Data.SQLite.Core.1.0.105.0\build\net451\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('packages\System.Data.SQLite.Core.1.0.104.0\build\net451\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\System.Data.SQLite.Core.1.0.104.0\build\net451\System.Data.SQLite.Core.targets'))" />
+    <Error Condition="!Exists('packages\System.Data.SQLite.Core.1.0.105.0\build\net451\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\System.Data.SQLite.Core.1.0.105.0\build\net451\System.Data.SQLite.Core.targets'))" />
+    <Error Condition="!Exists('packages\SQLite.3.13.0\build\net45\SQLite.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SQLite.3.13.0\build\net45\SQLite.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

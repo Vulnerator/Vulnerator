@@ -1,0 +1,605 @@
+﻿<UserControl x:Class="Vulnerator.View.UI.ReportingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
+             xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:LiveCharts="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dat="clr-namespace:System.Windows.Data;assembly=PresentationFramework"
+             xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:local="clr-namespace:Vulnerator.View.UI"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:v="clr-namespace:Vulnerator.View"
+             xmlns:vm="clr-namespace:Vulnerator.ViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             d:DesignHeight="800"
+             d:DesignWidth="800"
+             DataContext="{Binding Reporting,
+                                   Source={StaticResource Locator}}"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Converters:BooleanToHiddenConverter x:Key="HiddenConverter" />
+        <Converters:BooleanToCollapsedConverter x:Key="CollapsedConverter" />
+    </UserControl.Resources>
+
+    <Grid Background="{DynamicResource WindowBackgroundBrush}">
+        <ScrollViewer Margin="5"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+            <WrapPanel>
+                <Expander Margin="5"
+                          Background="{DynamicResource WindowBackgroundBrush}"
+                          BorderThickness="0"
+                          IsExpanded="True">
+                    <Expander.Header>
+                        <Label Style="{StaticResource TopLevelHeaderStyle}">
+                            <TextBlock Text="Continuous Monitoring" TextTrimming="CharacterEllipsis" />
+                        </Label>
+                    </Expander.Header>
+                    <StackPanel>
+                        <Label Style="{StaticResource SecondLevelHeaderStyle}">
+                            <TextBlock Text="Report Selection" TextTrimming="CharacterEllipsis" />
+                        </Label>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <CheckBox x:Name="reportAssetOverviewCheckbox"
+                                      Grid.Row="0"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="Asset Overview" />
+                            <CheckBox x:Name="reportPoamRarCheckbox"
+                                      Grid.Row="0"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="POA&amp;M / RAR" />
+                            <CheckBox x:Name="reportPdfSummaryCheckbox"
+                                      Grid.Row="1"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="PDF Summary" />
+                            <CheckBox x:Name="reportExcelSummaryCheckbox"
+                                      Grid.Row="1"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="Excel Summary" />
+                            <CheckBox x:Name="reportOsBreakdownCheckbox"
+                                      Grid.Row="2"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="OS Breakdown" />
+                            <CheckBox x:Name="reportUserBreakdownCheckbox"
+                                      Grid.Row="2"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="User Breakdown" />
+                            <CheckBox x:Name="reportTestPlanCheckbox"
+                                      Grid.Row="3"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="Test Plan" />
+                            <CheckBox x:Name="reportFindingTypeOverviewCheckbox"
+                                      Grid.Row="3"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="Finding Type Overview" />
+                        </Grid>
+                        <DataGrid MinHeight="100"
+                                  Margin="5,0,5,5"
+                                  BorderThickness="1"
+                                  CanUserAddRows="True"
+                                  HeadersVisibility="None"
+                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                            <DataGrid.Columns>
+                                <DataGridCheckBoxColumn />
+                                <DataGridTextColumn />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Label Style="{StaticResource SecondLevelHeaderStyle}">
+                            <TextBlock Text="Raw Risk Filtering" TextTrimming="CharacterEllipsis" />
+                        </Label>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <CheckBox Grid.Row="0"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="CAT I" />
+                            <CheckBox Grid.Row="0"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="CAT II" />
+                            <CheckBox Grid.Row="1"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="CAT III" />
+                            <CheckBox Grid.Row="1"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="CAT IV" />
+                        </Grid>
+                        <Label Style="{StaticResource SecondLevelHeaderStyle}">
+                            <TextBlock Text="Status Filtering" TextTrimming="CharacterEllipsis" />
+                        </Label>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <CheckBox Grid.Row="0"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="Ongoing" />
+                            <CheckBox Grid.Row="0"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="Not Applicable" />
+                            <CheckBox Grid.Row="1"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="Not Reviewed" />
+                            <CheckBox Grid.Row="1"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="Completed" />
+                        </Grid>
+                        <Label Style="{StaticResource SecondLevelHeaderStyle}">
+                            <TextBlock Text="Filering Applicability" TextTrimming="CharacterEllipsis" />
+                        </Label>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <CheckBox x:Name="filterAllCheckbox"
+                                      Grid.Row="0"
+                                      Grid.Column="0"
+                                      Grid.ColumnSpan="2"
+                                      Margin="5,0,5,5"
+                                      Content="Apply to all selected reports" />
+                            <CheckBox x:Name="filterAssetOverviewCheckbox"
+                                      Grid.Row="1"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="Asset Overview"
+                                      IsEnabled="{Binding ElementName=reportAssetOverviewCheckbox,
+                                                          Path=IsChecked}"
+                                      Visibility="{Binding ElementName=filterAllCheckbox,
+                                                           Path=IsChecked,
+                                                           Converter={StaticResource CollapsedConverter}}" />
+                            <CheckBox x:Name="filterPoamRarCheckbox"
+                                      Grid.Row="1"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="POA&amp;M / RAR"
+                                      IsEnabled="{Binding ElementName=reportPoamRarCheckbox,
+                                                          Path=IsChecked}"
+                                      Visibility="{Binding ElementName=filterAllCheckbox,
+                                                           Path=IsChecked,
+                                                           Converter={StaticResource CollapsedConverter}}" />
+                            <CheckBox x:Name="filterPdfSummaryCheckbox"
+                                      Grid.Row="2"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="PDF Summary"
+                                      IsEnabled="{Binding ElementName=reportPdfSummaryCheckbox,
+                                                          Path=IsChecked}"
+                                      Visibility="{Binding ElementName=filterAllCheckbox,
+                                                           Path=IsChecked,
+                                                           Converter={StaticResource CollapsedConverter}}" />
+                            <CheckBox x:Name="filterExcelSummaryCheckbox"
+                                      Grid.Row="2"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="Excel Summary"
+                                      IsEnabled="{Binding ElementName=reportExcelSummaryCheckbox,
+                                                          Path=IsChecked}"
+                                      Visibility="{Binding ElementName=filterAllCheckbox,
+                                                           Path=IsChecked,
+                                                           Converter={StaticResource CollapsedConverter}}" />
+                            <CheckBox x:Name="filterOsBreakdownCheckbox"
+                                      Grid.Row="3"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="OS Breakdown"
+                                      IsEnabled="{Binding ElementName=reportOsBreakdownCheckbox,
+                                                          Path=IsChecked}"
+                                      Visibility="{Binding ElementName=filterAllCheckbox,
+                                                           Path=IsChecked,
+                                                           Converter={StaticResource CollapsedConverter}}" />
+                            <CheckBox x:Name="filterUserBreakdownCheckbox"
+                                      Grid.Row="3"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="User Breakdown"
+                                      IsEnabled="{Binding ElementName=reportUserBreakdownCheckbox,
+                                                          Path=IsChecked}"
+                                      Visibility="{Binding ElementName=filterAllCheckbox,
+                                                           Path=IsChecked,
+                                                           Converter={StaticResource CollapsedConverter}}" />
+                            <CheckBox x:Name="filterFindingTypeOverviewCheckbox"
+                                      Grid.Row="4"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="Finding Type Overview"
+                                      IsEnabled="{Binding ElementName=reportFindingTypeOverviewCheckbox,
+                                                          Path=IsChecked}"
+                                      Visibility="{Binding ElementName=filterAllCheckbox,
+                                                           Path=IsChecked,
+                                                           Converter={StaticResource CollapsedConverter}}" />
+                        </Grid>
+                        <Label Style="{StaticResource SecondLevelHeaderStyle}">
+                            <TextBlock Text="Group Findings by Vulnerability" TextTrimming="CharacterEllipsis" />
+                        </Label>
+                        <DataGrid MinHeight="100"
+                                  Margin="5,0,5,5"
+                                  BorderThickness="1"
+                                  CanUserAddRows="True"
+                                  HeadersVisibility="None"
+                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                            <DataGrid.Columns>
+                                <DataGridCheckBoxColumn />
+                                <DataGridTextColumn />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </Expander>
+                <Expander Margin="5"
+                          Background="{DynamicResource WindowBackgroundBrush}"
+                          BorderThickness="0"
+                          IsExpanded="True">
+                    <Expander.Header>
+                        <Label Style="{StaticResource TopLevelHeaderStyle}">
+                            <TextBlock Text="Configuration Management" TextTrimming="CharacterEllipsis" />
+                        </Label>
+                    </Expander.Header>
+                    <StackPanel>
+                        <Label Style="{StaticResource SecondLevelHeaderStyle}">
+                            <TextBlock Text="Report Selection" TextTrimming="CharacterEllipsis" />
+                        </Label>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <CheckBox Grid.Row="0"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="Hardware Overview" />
+                            <CheckBox Grid.Row="0"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="Software Overview" />
+                            <CheckBox Grid.Row="1"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="Contact Overview" />
+                            <CheckBox Grid.Row="1"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="Accreditation Overview" />
+                            <CheckBox Grid.Row="2"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="Project Overview" />
+                        </Grid>
+                        <Label Style="{StaticResource SecondLevelHeaderStyle}">
+                            <TextBlock Text="Hardware Grouping Options" TextTrimming="CharacterEllipsis" />
+                        </Label>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <RadioButton Grid.Row="0"
+                                         Grid.Column="0"
+                                         Margin="5,0,5,5"
+                                         Content="No Grouping"
+                                         GroupName="hardwareGrouping" />
+                            <RadioButton Grid.Row="0"
+                                         Grid.Column="1"
+                                         Margin="5,0,5,5"
+                                         Content="By Project"
+                                         GroupName="hardwareGrouping" />
+                            <RadioButton Grid.Row="1"
+                                         Grid.Column="0"
+                                         Margin="5,0,5,5"
+                                         Content="By Accreditation"
+                                         GroupName="hardwareGrouping" />
+                            <RadioButton Grid.Row="1"
+                                         Grid.Column="1"
+                                         Margin="5,0,5,5"
+                                         Content="By Contact"
+                                         GroupName="hardwareGrouping" />
+                        </Grid>
+                        <Label Style="{StaticResource SecondLevelHeaderStyle}">
+                            <TextBlock Text="Software Grouping Options" TextTrimming="CharacterEllipsis" />
+                        </Label>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <RadioButton Grid.Row="0"
+                                         Grid.Column="0"
+                                         Margin="5,0,5,5"
+                                         Content="No Grouping"
+                                         GroupName="softwareGrouping" />
+                            <RadioButton Grid.Row="0"
+                                         Grid.Column="1"
+                                         Margin="5,0,5,5"
+                                         Content="By Hardware"
+                                         GroupName="softwareGrouping" />
+                            <RadioButton Grid.Row="1"
+                                         Grid.Column="0"
+                                         Margin="5,0,5,5"
+                                         Content="By Project"
+                                         GroupName="softwareGrouping" />
+                            <RadioButton Grid.Row="1"
+                                         Grid.Column="1"
+                                         Margin="5,0,5,5"
+                                         Content="By Accreditation"
+                                         GroupName="softwareGrouping" />
+                        </Grid>
+                        <Label Style="{StaticResource SecondLevelHeaderStyle}">
+                            <TextBlock Text="Contact Grouping Options" TextTrimming="CharacterEllipsis" />
+                        </Label>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <RadioButton Grid.Row="0"
+                                         Grid.Column="0"
+                                         Margin="5,0,5,5"
+                                         Content="No Grouping"
+                                         GroupName="contactGrouping" />
+                            <RadioButton Grid.Row="0"
+                                         Grid.Column="1"
+                                         Margin="5,0,5,5"
+                                         Content="By Contact"
+                                         GroupName="contactGrouping" />
+                            <RadioButton Grid.Row="1"
+                                         Grid.Column="0"
+                                         Margin="5,0,5,5"
+                                         Content="By Title"
+                                         GroupName="contactGrouping" />
+                            <RadioButton Grid.Row="1"
+                                         Grid.Column="1"
+                                         Margin="5,0,5,5"
+                                         Content="By Hardware"
+                                         GroupName="contactGrouping" />
+                            <RadioButton Grid.Row="2"
+                                         Grid.Column="0"
+                                         Margin="5,0,5,5"
+                                         Content="By Software"
+                                         GroupName="contactGrouping" />
+                            <RadioButton Grid.Row="2"
+                                         Grid.Column="1"
+                                         Margin="5,0,5,5"
+                                         Content="By Project"
+                                         GroupName="contactGrouping" />
+                            <RadioButton Grid.Row="3"
+                                         Grid.Column="0"
+                                         Margin="5,0,5,5"
+                                         Content="By Accreditation"
+                                         GroupName="contactGrouping" />
+                        </Grid>
+                        <Label Style="{StaticResource SecondLevelHeaderStyle}">
+                            <TextBlock Text="Project Grouping Options" TextTrimming="CharacterEllipsis" />
+                        </Label>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <RadioButton Grid.Row="0"
+                                         Grid.Column="0"
+                                         Margin="5,0,5,5"
+                                         Content="No Grouping"
+                                         GroupName="projectGrouping" />
+                            <RadioButton Grid.Row="0"
+                                         Grid.Column="1"
+                                         Margin="5,0,5,5"
+                                         Content="By Hardware"
+                                         GroupName="projectGrouping" />
+                            <RadioButton Grid.Row="1"
+                                         Grid.Column="0"
+                                         Margin="5,0,5,5"
+                                         Content="By Project"
+                                         GroupName="projectGrouping" />
+                            <RadioButton Grid.Row="1"
+                                         Grid.Column="1"
+                                         Margin="5,0,5,5"
+                                         Content="By Contact"
+                                         GroupName="projectGrouping" />
+                        </Grid>
+                    </StackPanel>
+                </Expander>
+                <Expander Margin="5"
+                          Background="{DynamicResource WindowBackgroundBrush}"
+                          BorderThickness="0"
+                          IsExpanded="False"
+                          Visibility="Hidden">
+                    <Expander.Header>
+                        <Label Style="{StaticResource TopLevelHeaderStyle}">
+                            <TextBlock Text="RMF Package" TextTrimming="CharacterEllipsis" />
+                        </Label>
+                    </Expander.Header>
+                    <StackPanel>
+                        <Label Style="{StaticResource SecondLevelHeaderStyle}">
+                            <TextBlock Text="Report Output Format(s)" TextTrimming="CharacterEllipsis" />
+                        </Label>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <CheckBox Grid.Row="0"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="Asset Overview" />
+                            <CheckBox Grid.Row="0"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="POA&amp;M / RAR" />
+                            <CheckBox Grid.Row="1"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="PDF Summary" />
+                            <CheckBox Grid.Row="1"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="Excel Summary" />
+                            <CheckBox Grid.Row="2"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="OS Breakdown" />
+                            <CheckBox Grid.Row="2"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="User Breakdown" />
+                            <CheckBox Grid.Row="3"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="Test Plan" />
+                            <CheckBox Grid.Row="3"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="Finding Type Overview" />
+                        </Grid>
+                        <DataGrid MinHeight="100"
+                                  Margin="5,0,5,5"
+                                  BorderThickness="1"
+                                  CanUserAddRows="True"
+                                  HeadersVisibility="None"
+                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                            <DataGrid.Columns>
+                                <DataGridCheckBoxColumn />
+                                <DataGridTextColumn />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Label Style="{StaticResource SecondLevelHeaderStyle}">
+                            <TextBlock Text="Raw Risk Filtering" TextTrimming="CharacterEllipsis" />
+                        </Label>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <CheckBox Grid.Row="0"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="CAT I" />
+                            <CheckBox Grid.Row="0"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="CAT II" />
+                            <CheckBox Grid.Row="1"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="CAT III" />
+                            <CheckBox Grid.Row="1"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="CAT IV" />
+                        </Grid>
+                        <Label Style="{StaticResource SecondLevelHeaderStyle}">
+                            <TextBlock Text="Status Filtering" TextTrimming="CharacterEllipsis" />
+                        </Label>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <CheckBox Grid.Row="0"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="Ongoing" />
+                            <CheckBox Grid.Row="0"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="Not Applicable" />
+                            <CheckBox Grid.Row="1"
+                                      Grid.Column="0"
+                                      Margin="5,0,5,5"
+                                      Content="Not Reviewed" />
+                            <CheckBox Grid.Row="1"
+                                      Grid.Column="1"
+                                      Margin="5,0,5,5"
+                                      Content="Completed" />
+                        </Grid>
+                    </StackPanel>
+                </Expander>
+            </WrapPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

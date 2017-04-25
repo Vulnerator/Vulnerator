@@ -1,0 +1,7 @@
+# Dealing with Errors
+1. **Create an Issue in GitHub:** Speaking as a developer, this is definitely the preferred option.  Check out the [Issues]() page and see if somebody else is having the same problem.  If yes, leave a comment to help move us along.  If not, create a new issue so we know what is happening - be as detailed as possible!
+  * _Note:_ It is very important to provide as much detail as possible when reporting a bug - please follow the issue tracker template carefully and make sure you answer all of the required fields!
+2. **Check Out Gitter:** GitHub's official IM solution, Gitter provides you with instant access to a real life person (probably [Alex](https://github.com/amkuchta)).  This is a great way to get in touch with the developer as well as other users in the community - go straight to the [Vulnerator Gitter Room](https://gitter.im/Vulnerator/Vulnerator) to get started
+3. **Email the Developers:** Please, please, _please_ use this as a last resort or if you feel your issue is too sensitive to air in the open.  To find our email addresses, click the "About" link in the title bar of the application, then select the appropriate link from the newly opened flyout
+
+If you come across something, please let us know - we can't catch everything in testing (thought we certainly try!), and your input is the most valuable asset we have.  Above all else, thank you for being patient and working with us!
