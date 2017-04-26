@@ -4,6 +4,7 @@ using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
 using PdfSharp.Pdf;
 using System;
+using Vulnerator.Model.Object;
 
 namespace Vulnerator.Model.BusinessLogic
 {

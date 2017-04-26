@@ -1,16 +1,18 @@
 ﻿using log4net;
-using System.Net.NetworkInformation;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Schema;
+using Vulnerator.Model.DataAccess;
+using Vulnerator.Model.ModelHelper;
+using Vulnerator.Model.Object;
 using Vulnerator.ViewModel;
 
 namespace Vulnerator.Model.BusinessLogic

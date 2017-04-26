@@ -4,6 +4,7 @@ using Vulnerator.Model.Object;
 using System;
 using log4net;
 using Microsoft.Win32;
+using Vulnerator.View.UI;
 
 namespace Vulnerator.ViewModel
 {
@@ -57,7 +58,7 @@ namespace Vulnerator.ViewModel
             {
                 log.Error("Unable to obtain launch GitHub link; no internet application exists.");
                 log.Debug("Exception details: " + exception);
-                View.NoInternetApplication internetWarning = new View.NoInternetApplication();
+                NoInternetApplication internetWarning = new NoInternetApplication();
                 internetWarning.ShowDialog();
                 return;
             }

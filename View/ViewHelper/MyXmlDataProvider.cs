@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows.Data;
 
-namespace Vulnerator.ViewModel.ViewHelper
+namespace Vulnerator.View.ViewHelper
 {
     class MyXmlDataProvider : XmlDataProvider
     {

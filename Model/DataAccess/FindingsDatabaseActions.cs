@@ -2,6 +2,8 @@
 using System;
 using System.Data.SQLite;
 using System.IO;
+using Vulnerator.Model.ModelHelper;
+using Vulnerator.Model.Object;
 
 namespace Vulnerator.Model.DataAccess
 {
@@ -22,8 +24,8 @@ namespace Vulnerator.Model.DataAccess
             try
             {
                 log.Info("Creating findings database.");
-                if (File.Exists(findingsDatabaseFile) && !findingsDatabaseFile.IsFileInUse())
-                { File.Delete(findingsDatabaseFile); }
+                if (System.IO.File.Exists(findingsDatabaseFile) && !findingsDatabaseFile.IsFileInUse())
+                { System.IO.File.Delete(findingsDatabaseFile); }
                 SQLiteConnection.CreateFile(findingsDatabaseFile);
                 sqliteConnection.Open();
                 using (SQLiteCommand sqliteCommand = new SQLiteCommand("", sqliteConnection))
@@ -315,7 +317,7 @@ namespace Vulnerator.Model.DataAccess
         {
             if (sqliteConnection.State.ToString().Equals("Open"))
             { sqliteConnection.Close(); }
-            File.Delete(findingsDatabaseFile);
+            System.IO.File.Delete(findingsDatabaseFile);
         }
 
         public void IndexDatabase()

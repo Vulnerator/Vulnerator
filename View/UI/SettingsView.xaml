@@ -54,7 +54,31 @@
                     </StackPanel>
                 </Grid>
                 <TextBox Margin="5,0,5,5"
-                         HorizontalAlignment="Stretch" />
+                         HorizontalAlignment="Stretch"
+                         Controls:TextBoxHelper.Watermark="Database File"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SecondLevelHeaderStyle}">
+                        <TextBlock Text="STIG Library Location"
+                                   TextTrimming="CharacterEllipsis" />
+                    </Label>
+                    <StackPanel Grid.Column="2"
+                                FlowDirection="RightToLeft"
+                                Orientation="Horizontal">
+                        <Button Width="{Binding ElementName=deleteOrganizationsButton,
+                                                Path=ActualWidth}"
+                                Margin="5,0,5,5"
+                                Content="Browse" />
+                    </StackPanel>
+                </Grid>
+                <TextBox Margin="5,0,5,5"
+                         HorizontalAlignment="Stretch"
+                         Controls:TextBoxHelper.Watermark="STIG Library" />
                 <Label Style="{StaticResource SecondLevelHeaderStyle}">
                     <TextBlock Text="Organization Management"
                                TextTrimming="CharacterEllipsis" />

@@ -11,7 +11,10 @@
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+    xmlns:Converter="clr-namespace:Vulnerator.View.Converter"
     xmlns:v="clr-namespace:Vulnerator.View"
+    xmlns:Validation="clr-namespace:Vulnerator.View.Validation"
+    xmlns:ViewHelper="clr-namespace:Vulnerator.View.ViewHelper"
     xmlns:vm="clr-namespace:Vulnerator.ViewModel"
     x:Name="winMain"
     Title="Vulnerator"
@@ -30,54 +33,54 @@
     ResizeMode="CanResize"
     mc:Ignorable="d">
 
-    <Controls:MetroWindow.Resources>
-        <vm:MyXmlDataProvider
+    <!--<Controls:MetroWindow.Resources>
+        <ViewHelper:MyXmlDataProvider
             x:Key="XmlConfig"
             IsAsynchronous="False"
             IsInitialLoadEnabled="True" />
-        <vm:StringToBoolConverter x:Key="StringToBool" />
-        <vm:CustomMultiValueConverter x:Key="CommandConverter" />
-        <vm:StringSeparatorConverter x:Key="StringSeparator" />
-        <vm:StringJoiningConverter x:Key="StringJoiner" />
-        <vm:EmailTextLabelStringJoiner x:Key="EmailTextLabelJoiner" />
-        <vm:EmailPersonnelLabelJoiner x:Key="EmailPersonnelLabelJoiner" />
-        <vm:ContactInfoSeparatorConverter x:Key="ContactInfoStringSeparator" />
-        <vm:ObtainFirstSplitStringValueConverter x:Key="ObtainFirstStringValue" />
-        <vm:ObtainSecondSplitStringValueConverter x:Key="ObtainSecondStringValue" />
-        <vm:ObtainThirdSplitStringValueConverter x:Key="ObtainThirdStringValue" />
-        <vm:UpdateSystemGroupConverter x:Key="UpdateSystemGroupConverter" />
-        <vm:UpdateSystemConverter x:Key="UpdateSystemConverter" />
+        <Converter:StringToBoolConverter x:Key="StringToBool" />
+        <Converter:CustomMultiValueConverter x:Key="CommandConverter" />
+        <Converter:StringSeparatorConverter x:Key="StringSeparator" />
+        <Converter:StringJoiningConverter x:Key="StringJoiner" />
+        <Converter:EmailTextLabelStringJoiner x:Key="EmailTextLabelJoiner" />
+        <Converter:EmailPersonnelLabelJoiner x:Key="EmailPersonnelLabelJoiner" />
+        <Converter:ContactInfoSeparatorConverter x:Key="ContactInfoStringSeparator" />
+        <Converter:ObtainFirstSplitStringValueConverter x:Key="ObtainFirstStringValue" />
+        <Converter:ObtainSecondSplitStringValueConverter x:Key="ObtainSecondStringValue" />
+        <Converter:ObtainThirdSplitStringValueConverter x:Key="ObtainThirdStringValue" />
+        <Converter:UpdateSystemGroupConverter x:Key="UpdateSystemGroupConverter" />
+        <Converter:UpdateSystemConverter x:Key="UpdateSystemConverter" />
 
-        <v:AutoRefreshCollectionViewSource x:Key="SystemGroupListCollectionViewSource" Source="{Binding SystemGroupList}">
-            <v:AutoRefreshCollectionViewSource.SortDescriptions>
+        <ViewHelper:AutoRefreshCollectionViewSource x:Key="SystemGroupListCollectionViewSource" Source="{Binding SystemGroupList}">
+            <ViewHelper:AutoRefreshCollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="GroupName" />
-            </v:AutoRefreshCollectionViewSource.SortDescriptions>
-        </v:AutoRefreshCollectionViewSource>
+            </ViewHelper:AutoRefreshCollectionViewSource.SortDescriptions>
+        </ViewHelper:AutoRefreshCollectionViewSource>
 
-        <v:AutoRefreshCollectionViewSource x:Key="MonitoredSystemListCollectionViewSource" Source="{Binding MonitoredSystemList}">
-            <v:AutoRefreshCollectionViewSource.SortDescriptions>
+        <ViewHelper:AutoRefreshCollectionViewSource x:Key="MonitoredSystemListCollectionViewSource" Source="{Binding MonitoredSystemList}">
+            <ViewHelper:AutoRefreshCollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="SystemNameAndIp" />
-            </v:AutoRefreshCollectionViewSource.SortDescriptions>
-        </v:AutoRefreshCollectionViewSource>
+            </ViewHelper:AutoRefreshCollectionViewSource.SortDescriptions>
+        </ViewHelper:AutoRefreshCollectionViewSource>
 
-        <v:AutoRefreshCollectionViewSource x:Key="MonitoredSystemListForUpdatingCollectionViewSource" Source="{Binding MonitoredSystemListForUpdating}">
-            <v:AutoRefreshCollectionViewSource.SortDescriptions>
+        <ViewHelper:AutoRefreshCollectionViewSource x:Key="MonitoredSystemListForUpdatingCollectionViewSource" Source="{Binding MonitoredSystemListForUpdating}">
+            <ViewHelper:AutoRefreshCollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="SystemGroupAndNameAndIp" />
-            </v:AutoRefreshCollectionViewSource.SortDescriptions>
-        </v:AutoRefreshCollectionViewSource>
+            </ViewHelper:AutoRefreshCollectionViewSource.SortDescriptions>
+        </ViewHelper:AutoRefreshCollectionViewSource>
 
-        <v:AutoRefreshCollectionViewSource x:Key="ContactTitleListCollectionViewSource" Source="{Binding ContactTitleList}">
-            <v:AutoRefreshCollectionViewSource.SortDescriptions>
+        <ViewHelper:AutoRefreshCollectionViewSource x:Key="ContactTitleListCollectionViewSource" Source="{Binding ContactTitleList}">
+            <ViewHelper:AutoRefreshCollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="ContactTitleName" />
-            </v:AutoRefreshCollectionViewSource.SortDescriptions>
-        </v:AutoRefreshCollectionViewSource>
+            </ViewHelper:AutoRefreshCollectionViewSource.SortDescriptions>
+        </ViewHelper:AutoRefreshCollectionViewSource>
 
-        <v:AutoRefreshCollectionViewSource x:Key="SystemGroupListForUpdatingCollectionViewSource" Source="{Binding SystemGroupListForUpdating}">
-            <v:AutoRefreshCollectionViewSource.SortDescriptions>
+        <ViewHelper:AutoRefreshCollectionViewSource x:Key="SystemGroupListForUpdatingCollectionViewSource" Source="{Binding SystemGroupListForUpdating}">
+            <ViewHelper:AutoRefreshCollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="GroupName" />
-            </v:AutoRefreshCollectionViewSource.SortDescriptions>
-        </v:AutoRefreshCollectionViewSource>
-    </Controls:MetroWindow.Resources>
+            </ViewHelper:AutoRefreshCollectionViewSource.SortDescriptions>
+        </ViewHelper:AutoRefreshCollectionViewSource>
+    </Controls:MetroWindow.Resources>-->
 
     <Controls:MetroWindow.IconTemplate>
         <DataTemplate>
@@ -160,10 +163,10 @@
         </Controls:WindowCommands>
     </Controls:MetroWindow.RightWindowCommands>
 
-    <!--  Flyout Control  -->
+    <!--  Flyout Control  --><!--
     <Controls:MetroWindow.Flyouts>
         <Controls:FlyoutsControl>
-            <!--  News Flyout  -->
+            --><!--  News Flyout  --><!--
             <Controls:Flyout
                 x:Name="flyNews"
                 Height="Auto"
@@ -337,7 +340,7 @@
                     </ListBox>
                 </Grid>
             </Controls:Flyout>
-            <!--  About Flyout  -->
+            --><!--  About Flyout  --><!--
             <Controls:Flyout
                 x:Name="flyAbout"
                 Height="Auto"
@@ -488,7 +491,7 @@
                         TextWrapping="Wrap" />
                 </StackPanel>
             </Controls:Flyout>
-            <!--  Theme Manager Flyout  -->
+            --><!--  Theme Manager Flyout  --><!--
             <Controls:Flyout
                 x:Name="flyThemeManager"
                 Height="147"
@@ -732,7 +735,7 @@
                     </StackPanel>
                 </Grid>
             </Controls:Flyout>
-            <!--  Mitigations.txt Import Flyout  -->
+            --><!--  Mitigations.txt Import Flyout  --><!--
             <Controls:Flyout
                 x:Name="flyMitigations"
                 Width="400"
@@ -804,7 +807,7 @@
                     </StackPanel>
                 </Grid>
             </Controls:Flyout>
-            <!--  IAVM Compliance Advanced Settings Flyout  -->
+            --><!--  IAVM Compliance Advanced Settings Flyout  --><!--
             <Controls:Flyout
                 x:Name="flyIavmSettings"
                 Width="1125.5"
@@ -868,7 +871,7 @@
                         Minimum="0"
                         TickFrequency="1"
                         Value="{Binding InnerText, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=iavmEmailOptionsFlyout/iavmFilterOne}">
-                        <i:Interaction.Triggers>
+                        --><!--<i:Interaction.Triggers>
                             <i:EventTrigger EventName="PreviewMouseUp">
                                 <i:InvokeCommandAction Command="{Binding UpdateDictionaryCommand}">
                                     <i:InvokeCommandAction.CommandParameter>
@@ -879,7 +882,7 @@
                                     </i:InvokeCommandAction.CommandParameter>
                                 </i:InvokeCommandAction>
                             </i:EventTrigger>
-                        </i:Interaction.Triggers>
+                        </i:Interaction.Triggers>--><!--
                     </Slider>
                     <Slider
                         x:Name="iavmFilterTwo"
@@ -893,7 +896,7 @@
                         Minimum="0"
                         TickFrequency="1"
                         Value="{Binding InnerText, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=iavmEmailOptionsFlyout/iavmFilterTwo}">
-                        <i:Interaction.Triggers>
+                        --><!--<i:Interaction.Triggers>
                             <i:EventTrigger EventName="PreviewMouseUp">
                                 <i:InvokeCommandAction Command="{Binding UpdateDictionaryCommand}">
                                     <i:InvokeCommandAction.CommandParameter>
@@ -904,7 +907,7 @@
                                     </i:InvokeCommandAction.CommandParameter>
                                 </i:InvokeCommandAction>
                             </i:EventTrigger>
-                        </i:Interaction.Triggers>
+                        </i:Interaction.Triggers>--><!--
                     </Slider>
                     <Slider
                         x:Name="iavmFilterThree"
@@ -918,7 +921,7 @@
                         Minimum="0"
                         TickFrequency="1"
                         Value="{Binding InnerText, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=iavmEmailOptionsFlyout/iavmFilterThree}">
-                        <i:Interaction.Triggers>
+                        --><!--<i:Interaction.Triggers>
                             <i:EventTrigger EventName="PreviewMouseUp">
                                 <i:InvokeCommandAction Command="{Binding UpdateDictionaryCommand}">
                                     <i:InvokeCommandAction.CommandParameter>
@@ -929,7 +932,7 @@
                                     </i:InvokeCommandAction.CommandParameter>
                                 </i:InvokeCommandAction>
                             </i:EventTrigger>
-                        </i:Interaction.Triggers>
+                        </i:Interaction.Triggers>--><!--
                     </Slider>
                     <Slider
                         x:Name="iavmFilterFour"
@@ -943,7 +946,7 @@
                         Minimum="0"
                         TickFrequency="1"
                         Value="{Binding InnerText, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=iavmEmailOptionsFlyout/iavmFilterFour}">
-                        <i:Interaction.Triggers>
+                        --><!--<i:Interaction.Triggers>
                             <i:EventTrigger EventName="PreviewMouseUp">
                                 <i:InvokeCommandAction Command="{Binding UpdateDictionaryCommand}">
                                     <i:InvokeCommandAction.CommandParameter>
@@ -954,7 +957,7 @@
                                     </i:InvokeCommandAction.CommandParameter>
                                 </i:InvokeCommandAction>
                             </i:EventTrigger>
-                        </i:Interaction.Triggers>
+                        </i:Interaction.Triggers>--><!--
                     </Slider>
                     <Label
                         Width="73"
@@ -1273,7 +1276,7 @@
         </Controls:FlyoutsControl>
     </Controls:MetroWindow.Flyouts>
 
-    <!--  Begin Main Window Layout  -->
+    --><!--  Begin Main Window Layout  --><!--
     <Controls:MetroContentControl
         Grid.Row="0"
         Margin="0"
@@ -1370,12 +1373,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/rbDiacap}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="1">
-                                        <RadioButton.CommandParameter>
+                                        --><!--<RadioButton.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </RadioButton.CommandParameter>
+                                        </RadioButton.CommandParameter>--><!--
                                     </RadioButton>
                                     <RadioButton
                                         x:Name="rbRmf"
@@ -1391,12 +1394,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/rbRmf}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="2">
-                                        <RadioButton.CommandParameter>
+                                        --><!--<RadioButton.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </RadioButton.CommandParameter>
+                                        </RadioButton.CommandParameter>--><!--
                                     </RadioButton>
                                 </Grid>
                                 <Label
@@ -1424,12 +1427,12 @@
                                         GroupName="NistRevision"
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/revisionThreeRadioButton}"
                                         IsEnabled="{Binding IsEnabled}">
-                                        <RadioButton.CommandParameter>
+                                        --><!--<RadioButton.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </RadioButton.CommandParameter>
+                                        </RadioButton.CommandParameter>--><!--
                                     </RadioButton>
                                     <RadioButton
                                         Name="revisionFourRadioButton"
@@ -1443,12 +1446,12 @@
                                         GroupName="NistRevision"
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/revisionFourRadioButton}"
                                         IsEnabled="{Binding IsEnabled}">
-                                        <RadioButton.CommandParameter>
+                                        --><!--<RadioButton.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </RadioButton.CommandParameter>
+                                        </RadioButton.CommandParameter>--><!--
                                     </RadioButton>
                                     <CheckBox
                                         x:Name="cbNistAppendixA"
@@ -1460,12 +1463,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbNistAppendixA}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="3">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                 </Grid>
                                 <Label
@@ -1495,12 +1498,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbCritical}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="3">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                     <CheckBox
                                         x:Name="cbCatI"
@@ -1513,12 +1516,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbCatI}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="8">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                     <CheckBox
                                         x:Name="cbHigh"
@@ -1530,12 +1533,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbHigh}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="4">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                     <CheckBox
                                         x:Name="cbCatII"
@@ -1548,12 +1551,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbCatII}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="9">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                     <CheckBox
                                         x:Name="cbMedium"
@@ -1565,12 +1568,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbMedium}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="5">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                     <CheckBox
                                         x:Name="cbCatIII"
@@ -1583,12 +1586,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbCatIII}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="10">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                     <CheckBox
                                         x:Name="cbLow"
@@ -1600,12 +1603,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbLow}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="6">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                     <CheckBox
                                         x:Name="cbCatIV"
@@ -1618,12 +1621,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbCatIV}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="11">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                     <CheckBox
                                         x:Name="cbInfo"
@@ -1635,12 +1638,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbInfo}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="7">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                 </Grid>
                                 <Label
@@ -1669,12 +1672,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbOpen}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="12">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                     <CheckBox
                                         x:Name="cbNotApplicable"
@@ -1687,12 +1690,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbNotApplicable}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="14">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                     <CheckBox
                                         x:Name="cbNotReviewed"
@@ -1704,12 +1707,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbNotReviewed}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="13">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                     <CheckBox
                                         x:Name="cbCompleted"
@@ -1722,12 +1725,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbCompleted}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="15">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                 </Grid>
                                 <Label
@@ -1758,12 +1761,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbPoamRar}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="16">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                     <CheckBox
                                         x:Name="cbDiscrepancies"
@@ -1776,12 +1779,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbDiscrepancies}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="21">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                     <CheckBox
                                         x:Name="cbAssetOverview"
@@ -1793,12 +1796,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbAssetOverview}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="17">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                     <CheckBox
                                         x:Name="cbPdfSum"
@@ -1811,12 +1814,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbPdfSum}"
                                         IsEnabled="False"
                                         TabIndex="22">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                     <CheckBox
                                         x:Name="cbStigDetails"
@@ -1830,12 +1833,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbStigDetails}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="18">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                     <CheckBox
                                         x:Name="cbFprDetails"
@@ -1850,12 +1853,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbFprDetails}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="18">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                     <CheckBox
                                         x:Name="cbAcasOutput"
@@ -1870,12 +1873,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbAcasOutput}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="19">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                     <CheckBox
                                         x:Name="cbOsUser"
@@ -1890,12 +1893,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbOsUser}"
                                         IsEnabled="False"
                                         TabIndex="20">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                     <CheckBox
                                         x:Name="cbTestPlan"
@@ -1910,12 +1913,12 @@
                                         IsChecked="{Binding InnerText, Converter={StaticResource StringToBool}, Mode=OneTime, Source={StaticResource XmlConfig}, XPath=reportingTab/cbTestPlan}"
                                         IsEnabled="{Binding IsEnabled}"
                                         TabIndex="20">
-                                        <CheckBox.CommandParameter>
+                                        --><!--<CheckBox.CommandParameter>
                                             <MultiBinding Converter="{StaticResource CommandConverter}">
                                                 <Binding Path="Name" RelativeSource="{RelativeSource Self}" />
                                                 <Binding Path="IsChecked" RelativeSource="{RelativeSource Self}" />
                                             </MultiBinding>
-                                        </CheckBox.CommandParameter>
+                                        </CheckBox.CommandParameter>--><!--
                                     </CheckBox>
                                 </Grid>
                                 <Label
@@ -2268,7 +2271,7 @@
                                         UpdateSourceTrigger="PropertyChanged"
                                         XPath="reportingTab/tbEmassNumber">
                                         <Binding.ValidationRules>
-                                            <v:NumberValidationRule />
+                                            --><!--<Validation:NumberValidationRule />--><!--
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox>
@@ -2302,7 +2305,7 @@
                                         UpdateSourceTrigger="PropertyChanged"
                                         XPath="reportingTab/tbEmassEmail">
                                         <Binding.ValidationRules>
-                                            <v:EmailValidationRule />
+                                            --><!--<Validation:EmailValidationRule />--><!--
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox>
@@ -2410,12 +2413,12 @@
                             KeyboardNavigation.IsTabStop="False"
                             ScrollViewer.VerticalScrollBarVisibility="Auto"
                             SelectionUnit="FullRow">
-                            <!--<i:Interaction.Triggers>
+                            --><!--<i:Interaction.Triggers>
 									<i:EventTrigger EventName="Drop">
 										<vm:EventCommand Command="{Binding DropCommand}"
 													 CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=InvokeParameter}" />
 									</i:EventTrigger>
-								</i:Interaction.Triggers>-->
+								</i:Interaction.Triggers>--><!--
                             <DataGrid.Columns>
                                 <DataGridTemplateColumn
                                     Width="1.25*"
@@ -2454,7 +2457,7 @@
                                     </DataGridTemplateColumn.HeaderStyle>
                                     <DataGridTemplateColumn.HeaderTemplate>
                                         <DataTemplate>
-                                            <vm:CommandEnabledComboBox
+                                            --><!--<ViewHelper:CommandEnabledComboBox
                                                 Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource AccentColorBrush}"
                                                 Controls:TextBoxHelper.ClearTextButton="True"
                                                 Controls:TextBoxHelper.Watermark="Group Name"
@@ -2466,12 +2469,12 @@
                                                 IsSynchronizedWithCurrentItem="False"
                                                 ItemsSource="{Binding Source={StaticResource SystemGroupListCollectionViewSource}}"
                                                 SelectedValuePath="GroupName">
-                                                <vm:CommandEnabledComboBox.Style>
+                                                <ViewHelper:CommandEnabledComboBox.Style>
                                                     <Style BasedOn="{StaticResource {x:Type ComboBox}}" TargetType="{x:Type vm:CommandEnabledComboBox}">
                                                         <Setter Property="BorderThickness" Value="0" />
                                                     </Style>
-                                                </vm:CommandEnabledComboBox.Style>
-                                            </vm:CommandEnabledComboBox>
+                                                </ViewHelper:CommandEnabledComboBox.Style>
+                                            </ViewHelper:CommandEnabledComboBox>--><!--
                                         </DataTemplate>
                                     </DataGridTemplateColumn.HeaderTemplate>
                                     <DataGridTemplateColumn.CellStyle>
@@ -3322,7 +3325,7 @@
                                         UpdateSourceTrigger="PropertyChanged"
                                         XPath="iavmComplianceTab/reportingSubTab/tbNotifyingEmail">
                                         <Binding.ValidationRules>
-                                            <v:EmailValidationRule />
+                                            --><!--<Validation:EmailValidationRule />--><!--
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox>
@@ -3878,7 +3881,7 @@
                                             TextWrapping="NoWrap">
                                             <Binding Path="AddContactEmail" UpdateSourceTrigger="PropertyChanged">
                                                 <Binding.ValidationRules>
-                                                    <v:EmailValidationRule />
+                                                    --><!--<Validation:EmailValidationRule />--><!--
                                                 </Binding.ValidationRules>
                                             </Binding>
                                         </TextBox>
@@ -4201,7 +4204,7 @@
                                                 TextWrapping="NoWrap">
                                                 <Binding Path="ContactEmail" UpdateSourceTrigger="PropertyChanged">
                                                     <Binding.ValidationRules>
-                                                        <v:EmailValidationRule />
+                                                        --><!--<Validation:EmailValidationRule />--><!--
                                                     </Binding.ValidationRules>
                                                 </Binding>
                                             </TextBox>
@@ -4726,7 +4729,7 @@
                         Visibility="{Binding NewVersionVisibility}" />
                 </StatusBarItem>
 
-                <!--<StatusBarItem Height="35"
+                --><!--<StatusBarItem Height="35"
                                Margin="0,0,5,0"
                                VerticalAlignment="Top"
                                HorizontalAlignment="Right"
@@ -4741,8 +4744,8 @@
                                       CommandParameter="{Binding ReleaseList[0].HtmlUrl}"
                                       MouseAction="LeftClick" />
                     </StatusBarItem.InputBindings>
-                </StatusBarItem>-->
+                </StatusBarItem>--><!--
             </StatusBar>
         </Grid>
-    </Controls:MetroContentControl>
+    </Controls:MetroContentControl>-->
 </Controls:MetroWindow>

@@ -395,6 +395,7 @@
     <Compile Include="View\Converter\BooleanToHiddenConverter.cs" />
     <Compile Include="View\Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="View\Converter\HtmlToFlowDocumentConverter.cs" />
+    <Compile Include="View\Converter\ImportButtonTextAppendingConverter.cs" />
     <Compile Include="View\Converter\InverseBooleanConverter.cs" />
     <Compile Include="View\Converter\MitigationCommandConverter.cs" />
     <Compile Include="View\Converter\SelectedItemToContentConverter.cs" />
@@ -577,7 +578,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="LICENSE" />
+    <EmbeddedResource Include="LICENSE">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -588,6 +591,7 @@
     <EmbeddedResource Include="Resources\U_CCI_List.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Resources\Database.ddl" />
     <None Include="Resources\UserGuide\Change-Log.md" />
     <None Include="Resources\UserGuide\Error-Reporting.md" />
     <None Include="Resources\UserGuide\Getting-Started.md" />

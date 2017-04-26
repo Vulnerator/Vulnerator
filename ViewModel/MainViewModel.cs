@@ -39,6 +39,7 @@ namespace Vulnerator.ViewModel
         private BackgroundWorker backgroundWorker;
         private Assembly assembly = Assembly.GetExecutingAssembly();
         private AsyncObservableCollection<Release> ReleaseList;
+        private DatabaseBuilder databaseBuilder;
         public static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
         public string ApplicationVersion
@@ -132,6 +133,7 @@ namespace Vulnerator.ViewModel
             configAlter.CreateConfigurationXml();
             configAlter.CreateSettingsDictionary();
             githubActions = new GitHubActions();
+            databaseBuilder = new DatabaseBuilder();
             VersionTest();
         }
 

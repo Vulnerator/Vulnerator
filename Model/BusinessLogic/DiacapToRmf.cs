@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml;
+using Vulnerator.Model.Object;
 
 namespace Vulnerator.Model.BusinessLogic
 {

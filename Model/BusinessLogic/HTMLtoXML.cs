@@ -4,6 +4,7 @@ using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using Vulnerator.Model.Object;
 
 namespace Vulnerator.Model.BusinessLogic
 {
@@ -14,7 +15,7 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                string htmlText = File.ReadAllText(fileName);
+                string htmlText = System.IO.File.ReadAllText(fileName);
 
                 // Replace ampersand, line breaks, nulls
                 htmlText = htmlText.Replace("&", "-and");
@@ -142,10 +143,10 @@ namespace Vulnerator.Model.BusinessLogic
                 string newXml = workingPath + "\\" + wasspXml + ".xml";
                 string newTxt = workingPath + "\\WorkingHtml.txt";
 
-                File.WriteAllText(newTxt, htmlText);
-                var workingLines = File.ReadAllLines(newTxt).Where(arg => !string.IsNullOrWhiteSpace(arg));
-                File.WriteAllLines(newTxt, workingLines);
-                string[] workingText = File.ReadAllLines(newTxt);
+                System.IO.File.WriteAllText(newTxt, htmlText);
+                var workingLines = System.IO.File.ReadAllLines(newTxt).Where(arg => !string.IsNullOrWhiteSpace(arg));
+                System.IO.File.WriteAllLines(newTxt, workingLines);
+                string[] workingText = System.IO.File.ReadAllLines(newTxt);
 
                 workingText[406] = string.Empty;
                 workingText[407] = string.Empty;
@@ -171,16 +172,16 @@ namespace Vulnerator.Model.BusinessLogic
                 }
 
                 // Get rid of white space
-                File.Delete(newTxt);
-                File.WriteAllLines(newTxt, workingText);
-                var writingLines = File.ReadAllLines(newTxt).Where(arg => !string.IsNullOrWhiteSpace(arg));
-                File.Delete(newTxt);
-                File.WriteAllLines(newTxt, writingLines);
-                string writingText = File.ReadAllText(newTxt);
+                System.IO.File.Delete(newTxt);
+                System.IO.File.WriteAllLines(newTxt, workingText);
+                var writingLines = System.IO.File.ReadAllLines(newTxt).Where(arg => !string.IsNullOrWhiteSpace(arg));
+                System.IO.File.Delete(newTxt);
+                System.IO.File.WriteAllLines(newTxt, writingLines);
+                string writingText = System.IO.File.ReadAllText(newTxt);
 
                 // Delete CML if it exists
-                if (File.Exists(newXml))
-                { File.Delete(newXml); }
+                if (System.IO.File.Exists(newXml))
+                { System.IO.File.Delete(newXml); }
 
                 // Write text to XML
                 XDocument xWassp = XDocument.Parse(writingText);
@@ -330,7 +331,7 @@ namespace Vulnerator.Model.BusinessLogic
 
                 // Save XML file, delete text file that was created, add XML file to list for parsing into DataSet
                 xWassp.Save(newXml);
-                File.Delete(newTxt);
+                System.IO.File.Delete(newTxt);
                 return newXml;
             }
             catch (Exception exception)

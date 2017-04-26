@@ -6,6 +6,9 @@ using System.IO;
 using System.Linq;
 using log4net;
 using System.Xml;
+using Vulnerator.Model.DataAccess;
+using Vulnerator.Model.ModelHelper;
+using Vulnerator.Model.Object;
 using Vulnerator.ViewModel;
 
 namespace Vulnerator.Model.BusinessLogic

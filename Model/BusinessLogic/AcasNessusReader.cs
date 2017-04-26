@@ -4,6 +4,9 @@ using System.Data.SQLite;
 using System.IO;
 using log4net;
 using System.Xml;
+using Vulnerator.Model.DataAccess;
+using Vulnerator.Model.ModelHelper;
+using Vulnerator.Model.Object;
 
 namespace Vulnerator.Model.BusinessLogic
 {

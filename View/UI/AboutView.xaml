@@ -126,5 +126,13 @@
                 </TextBlock>
             </StackPanel>
         </ScrollViewer>
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto" Grid.Column="1">
+            <StackPanel>
+                <Label Content="License"
+                       Style="{StaticResource TopLevelHeaderStyle}" />
+                <TextBlock Text="{Binding License}" Margin="5,0" TextWrapping="Wrap" />
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

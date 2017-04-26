@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using Vulnerator.Model.DataAccess;
+using Vulnerator.Model.ModelHelper;
 using Vulnerator.Model.Object;
 
 namespace Vulnerator.Model.BusinessLogic
@@ -46,7 +48,7 @@ namespace Vulnerator.Model.BusinessLogic
                     CreateAddGroupCommand(systemName);
                     string fileNameWithoutExtension = Path.GetFileName(fileName);
                     CreateAddFileNameCommand(fileNameWithoutExtension);
-                    using (TextReader textReader = File.OpenText(fileName))
+                    using (TextReader textReader = System.IO.File.OpenText(fileName))
                     {
                         var csvReader = new CsvReader(textReader);
                         csvReader.Configuration.HasHeaderRecord = true;

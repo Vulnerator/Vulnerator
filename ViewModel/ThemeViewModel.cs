@@ -18,6 +18,7 @@ namespace Vulnerator.ViewModel
         private void SetTheme(string theme)
         {
             Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
+            var oldTheme = ThemeManager.DetectAppStyle(Application.Current);
             ThemeManager.ChangeAppStyle(Application.Current, appStyle.Item2, ThemeManager.GetAppTheme(theme));
         }
 

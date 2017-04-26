@@ -28,7 +28,7 @@
         <Controls:MetroAnimatedSingleRowTabControl Margin="5"
                                                    Controls:TabControlHelper.Underlined="SelectedTabItem"
                                                    TabStripPlacement="Left">
-            <TabItem>
+            <TabItem Style="{StaticResource CustomMetroTabItem}">
                 <TabItem.Header>
                     <ComboBox Controls:TextBoxHelper.Watermark="Select an Accreditation"
                               IsEnabled="True" />
@@ -724,7 +724,7 @@
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Categorize">
+            <TabItem Header="Categorize" Style="{StaticResource CustomMetroTabItem}">
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                               VerticalScrollBarVisibility="Auto">
                     <StackPanel>
@@ -1142,7 +1142,8 @@
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Select">
+            <TabItem Header="Select"
+                     Style="{StaticResource CustomMetroTabItem}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -1299,7 +1300,8 @@
                     </Expander>
                 </Grid>
             </TabItem>
-            <TabItem Header="Implement">
+            <TabItem Header="Implement"
+                     Style="{StaticResource CustomMetroTabItem}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -1387,7 +1389,8 @@
                     </Expander>
                 </Grid>
             </TabItem>
-            <TabItem Header="Assess">
+            <TabItem Header="Assess"
+                     Style="{StaticResource CustomMetroTabItem}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <Expander Margin="5,0,5,5"
@@ -1495,8 +1498,10 @@
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Authorize" />
-            <TabItem Header="Monitor" />
+            <TabItem Header="Authorize"
+                     Style="{StaticResource CustomMetroTabItem}" />
+            <TabItem Header="Monitor"
+                     Style="{StaticResource CustomMetroTabItem}" />
         </Controls:MetroAnimatedSingleRowTabControl>
     </Grid>
 </UserControl>

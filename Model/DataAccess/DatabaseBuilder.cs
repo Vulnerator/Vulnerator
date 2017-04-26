@@ -1,6 +1,7 @@
 ﻿using log4net;
 using System;
 using System.Data.SQLite;
+using Vulnerator.Model.Object;
 
 namespace Vulnerator.Model.DataAccess
 {
@@ -27,17 +28,18 @@ namespace Vulnerator.Model.DataAccess
                 sqliteConnection.Open();
                 using (SQLiteCommand sqliteCommand = new SQLiteCommand("", sqliteConnection))
                 {
-                    CreateScapScoresTable(sqliteCommand);
-                    CreateAssetsTable(sqliteCommand);
-                    CreateFileNamesTable(sqliteCommand);
-                    CreateVulnerabilityTable(sqliteCommand);
-                    CreateUniqueFindingTable(sqliteCommand);
-                    CreateGroupsTable(sqliteCommand);
-                    CreateFindingTypesTable(sqliteCommand);
-                    CreateVulnerabilitySourcesTable(sqliteCommand);
-                    CreateFindingStatusTable(sqliteCommand);
-                    InsertFindingTypes(sqliteCommand);
-                    InsertFindingStatuses(sqliteCommand);
+                    DdlTest(sqliteCommand);
+                    //CreateScapScoresTable(sqliteCommand);
+                    //CreateAssetsTable(sqliteCommand);
+                    //CreateFileNamesTable(sqliteCommand);
+                    //CreateVulnerabilityTable(sqliteCommand);
+                    //CreateUniqueFindingTable(sqliteCommand);
+                    //CreateGroupsTable(sqliteCommand);
+                    //CreateFindingTypesTable(sqliteCommand);
+                    //CreateVulnerabilitySourcesTable(sqliteCommand);
+                    //CreateFindingStatusTable(sqliteCommand);
+                    //InsertFindingTypes(sqliteCommand);
+                    //InsertFindingStatuses(sqliteCommand);
                 }
                 log.Info("Findings database created successfully.");
             }
@@ -46,6 +48,12 @@ namespace Vulnerator.Model.DataAccess
                 log.Error("Findings database creation failed.");
                 log.Debug("Exception details:", exception);
             }
+        }
+
+        private void DdlTest(SQLiteCommand sqliteCommand)
+        {
+            sqliteCommand.CommandText = "CREATE TABLE Accessibility (Accessibility_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION,LogicalAccess NVARCHAR(25) NOT NULL, PhysicalAccess NVARCHAR(25) NOT NULL, AvScan NVARCHAR(25) NOT NULL, DodinConnectionPeriodicity NVARCHAR(25) NOT NULL) ON \"default\" GO";
+            sqliteCommand.ExecuteNonQuery();
         }
 
         private void CreateScapScoresTable(SQLiteCommand sqliteCommand)

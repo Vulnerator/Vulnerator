@@ -274,7 +274,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 new XElement("cbIavmExcel", "True")
                             ),
                             new XElement("themeFlyout",
-                                new XElement("currentTheme", "Light"),
+                                new XElement("currentTheme", "BaseLight"),
                                 new XElement("currentAccent", "Cobalt")
                             ),
                             new XElement("iavmEmailOptionsFlyout",

@@ -126,102 +126,112 @@
                                     OptionsItemTemplate="{StaticResource HamburgerMenuItem}"
                                     VerticalScrollBarOnLeftSide="True"
                                     SelectedIndex="0">
+                <Controls:HamburgerMenu.HamburgerMenuHeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Grid.Column="1"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"
+                                   FontSize="16"
+                                   Foreground="White"
+                                   Text="Navigation" />
+                    </DataTemplate>
+                </Controls:HamburgerMenu.HamburgerMenuHeaderTemplate>
                 <Controls:HamburgerMenu.ItemsSource>
                     <Controls:HamburgerMenuItemCollection>
-                        <ViewHelpers:HamburgerMenuIconItem Label="Vulnerability Management"
+                        <Controls:HamburgerMenuIconItem Label="Vulnerability Management"
                                                            Tag="{StaticResource vulnerabilityManagementView}">
-                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                            <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconMaterial HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
                                                             Kind="ChartLine"
                                                             ToolTip="Vulnerability Management" />
-                            </ViewHelpers:HamburgerMenuIconItem.Icon>
-                        </ViewHelpers:HamburgerMenuIconItem>
-                        <ViewHelpers:HamburgerMenuIconItem Label="Mitigations &amp; NIST Mapping"
+                            </Controls:HamburgerMenuIconItem.Icon>
+                        </Controls:HamburgerMenuIconItem>
+                        <Controls:HamburgerMenuIconItem Label="Mitigations &amp; NIST Mapping"
                                                            Tag="{StaticResource mitigationsNistMappingView}">
-                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                            <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconModern HorizontalAlignment="Center"
                                                           VerticalAlignment="Center"
                                                           Kind="ListCheck"
                                                           ToolTip="Mitigations &amp; NIST Mapping" />
-                            </ViewHelpers:HamburgerMenuIconItem.Icon>
-                        </ViewHelpers:HamburgerMenuIconItem>
-                        <ViewHelpers:HamburgerMenuIconItem Label="RMF"
+                            </Controls:HamburgerMenuIconItem.Icon>
+                        </Controls:HamburgerMenuIconItem>
+                        <Controls:HamburgerMenuIconItem Label="RMF"
                                                            Tag="{StaticResource rmfView}">
-                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                            <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconMaterial HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
                                                             Kind="Certificate"
                                                             ToolTip="RMF" />
-                            </ViewHelpers:HamburgerMenuIconItem.Icon>
-                        </ViewHelpers:HamburgerMenuIconItem>
-                        <ViewHelpers:HamburgerMenuIconItem Label="Reporting"
+                            </Controls:HamburgerMenuIconItem.Icon>
+                        </Controls:HamburgerMenuIconItem>
+                        <Controls:HamburgerMenuIconItem Label="Reporting"
                                                            Tag="{StaticResource reportingView}">
-                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                            <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconFontAwesome HorizontalAlignment="Center"
                                                                VerticalAlignment="Center"
                                                                Kind="FilesOutline"
                                                                ToolTip="Reporting" />
-                            </ViewHelpers:HamburgerMenuIconItem.Icon>
-                        </ViewHelpers:HamburgerMenuIconItem>
-                        <ViewHelpers:HamburgerMenuIconItem Label="Configuration Management"
+                            </Controls:HamburgerMenuIconItem.Icon>
+                        </Controls:HamburgerMenuIconItem>
+                        <Controls:HamburgerMenuIconItem Label="Configuration Management"
                                                            Tag="{StaticResource configurationManagementView}">
-                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                            <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconMaterial HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
                                                             Kind="MonitorMultiple"
                                                             ToolTip="Configuration Management" />
-                            </ViewHelpers:HamburgerMenuIconItem.Icon>
-                        </ViewHelpers:HamburgerMenuIconItem>
-                        <ViewHelpers:HamburgerMenuIconItem Label="News"
+                            </Controls:HamburgerMenuIconItem.Icon>
+                        </Controls:HamburgerMenuIconItem>
+                        <Controls:HamburgerMenuIconItem Label="News"
                                                            Tag="{StaticResource newsView}">
-                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                            <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconFontAwesome HorizontalAlignment="Center"
                                                                VerticalAlignment="Center"
                                                                Kind="NewspaperOutline"
                                                                ToolTip="News" />
-                            </ViewHelpers:HamburgerMenuIconItem.Icon>
-                        </ViewHelpers:HamburgerMenuIconItem>
+                            </Controls:HamburgerMenuIconItem.Icon>
+                        </Controls:HamburgerMenuIconItem>
                     </Controls:HamburgerMenuItemCollection>
                 </Controls:HamburgerMenu.ItemsSource>
                 <Controls:HamburgerMenu.OptionsItemsSource>
                     <Controls:HamburgerMenuItemCollection>
-                        <ViewHelpers:HamburgerMenuIconItem Label="User Guide"
+                        <Controls:HamburgerMenuIconItem Label="User Guide"
                                                            Tag="{StaticResource userGuideView}">
-                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                            <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconOcticons HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
                                                             Kind="Book"
                                                             ToolTip="User Guide" />
-                            </ViewHelpers:HamburgerMenuIconItem.Icon>
-                        </ViewHelpers:HamburgerMenuIconItem>
-                        <ViewHelpers:HamburgerMenuIconItem Label="Settings"
+                            </Controls:HamburgerMenuIconItem.Icon>
+                        </Controls:HamburgerMenuIconItem>
+                        <Controls:HamburgerMenuIconItem Label="Settings"
                                                            Tag="{StaticResource settingsView}">
-                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                            <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconMaterial HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
                                                             Kind="Settings"
                                                             ToolTip="Settings" />
-                            </ViewHelpers:HamburgerMenuIconItem.Icon>
-                        </ViewHelpers:HamburgerMenuIconItem>
-                        <ViewHelpers:HamburgerMenuIconItem Label="Theme"
+                            </Controls:HamburgerMenuIconItem.Icon>
+                        </Controls:HamburgerMenuIconItem>
+                        <Controls:HamburgerMenuIconItem Label="Theme"
                                                            Tag="{StaticResource themeView}">
-                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                            <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconFontAwesome HorizontalAlignment="Center"
                                                                VerticalAlignment="Center"
                                                                Kind="PaintBrush"
                                                                ToolTip="Theme" />
-                            </ViewHelpers:HamburgerMenuIconItem.Icon>
-                        </ViewHelpers:HamburgerMenuIconItem>
-                        <ViewHelpers:HamburgerMenuIconItem Label="About"
+                            </Controls:HamburgerMenuIconItem.Icon>
+                        </Controls:HamburgerMenuIconItem>
+                        <Controls:HamburgerMenuIconItem Label="About"
                                                            Tag="{StaticResource aboutView}">
-                            <ViewHelpers:HamburgerMenuIconItem.Icon>
+                            <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconMaterial HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
                                                             Kind="Help"
                                                             ToolTip="About" />
-                            </ViewHelpers:HamburgerMenuIconItem.Icon>
-                        </ViewHelpers:HamburgerMenuIconItem>
+                            </Controls:HamburgerMenuIconItem.Icon>
+                        </Controls:HamburgerMenuIconItem>
                     </Controls:HamburgerMenuItemCollection>
                 </Controls:HamburgerMenu.OptionsItemsSource>
                 <Controls:HamburgerMenu.Content>

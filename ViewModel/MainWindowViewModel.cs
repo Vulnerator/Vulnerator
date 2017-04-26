@@ -1,5 +1,4 @@
 ﻿using log4net;
-using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using System;
 using System.Collections;
@@ -15,8 +14,8 @@ using System.Xml.Linq;
 using Vulnerator.Model;
 using Vulnerator.Model.BusinessLogic;
 using Vulnerator.Model.DataAccess;
-using Vulnerator.Model.ModelHelper;
 using Vulnerator.Model.Object;
+using Vulnerator.View.UI;
 
 namespace Vulnerator.ViewModel
 {
@@ -793,10 +792,10 @@ namespace Vulnerator.ViewModel
 			logger.Setup();
 			log.Info("Initializing application.");
 
-			if (File.Exists(Environment.GetFolderPath(
+			if (System.IO.File.Exists(Environment.GetFolderPath(
 				Environment.SpecialFolder.ApplicationData) + @"\Vulnerator\VulneratorV6Log.txt"))
 			{
-				File.Delete(Environment.GetFolderPath(
+                System.IO.File.Delete(Environment.GetFolderPath(
 				Environment.SpecialFolder.ApplicationData) + @"\Vulnerator\VulneratorV6Log.txt");
 			}
 
@@ -804,7 +803,7 @@ namespace Vulnerator.ViewModel
 			configAlter = new ConfigAlter();
 			configAlter.CreateConfigurationXml();
 			configAlter.CreateSettingsDictionary();
-			vulneratorDatabaseActions = new VulneratorDatabaseActions();
+			//vulneratorDatabaseActions = new VulneratorDatabaseActions();
 			
 			MitigationDatabaseLocation = ConfigAlter.ReadSettingsFromDictionary("tbMitDbLocation");
 			ContactDatabaseLocation = ConfigAlter.ReadSettingsFromDictionary("tbContactDbLocation");
@@ -812,7 +811,7 @@ namespace Vulnerator.ViewModel
 			IavmFilterTwo = int.Parse(ConfigAlter.ReadSettingsFromDictionary("iavmFilterTwo"));
 			IavmFilterThree = int.Parse(ConfigAlter.ReadSettingsFromDictionary("iavmFilterThree"));
 			IavmFilterFour = int.Parse(ConfigAlter.ReadSettingsFromDictionary("iavmFilterFour"));
-			FileList = new AsyncObservableCollection<Files>();
+			FileList = new AsyncObservableCollection<Model.Object.File>();
 			MitigationList = new AsyncObservableCollection<MitigationItem>();
 			SystemGroupList = new AsyncObservableCollection<SystemGroup>();
 			IavmList = new AsyncObservableCollection<Iavm>();
@@ -823,9 +822,9 @@ namespace Vulnerator.ViewModel
 			SystemGroupListForUpdating = new AsyncObservableCollection<UpdatableSystemGroup>();
 			IssueList = new AsyncObservableCollection<Issue>();
 			ReleaseList = new AsyncObservableCollection<Release>();
-			vulneratorDatabaseActions.CreateVulneratorDatabase();
+			//vulneratorDatabaseActions.CreateVulneratorDatabase();
 			findingsDatabaseActions = new FindingsDatabaseActions();
-			vulneratorDatabaseActions.PopulateGuiLists(this);
+			//vulneratorDatabaseActions.PopulateGuiLists(this);
             GenerateCciToNistList();
             StatusItemList = new AsyncObservableCollection<StatusItem>();
 			StatusItemList.Add(new StatusItem("Ongoing"));
@@ -938,48 +937,48 @@ namespace Vulnerator.ViewModel
             {
                 if (!string.IsNullOrWhiteSpace(commandParameters.controlName))
                 {
-                    configAlter.WriteSettingsToDictionary(commandParameters.controlName, commandParameters.controlValue);
+                    ConfigAlter.WriteSettingsToDictionary(commandParameters.controlName, commandParameters.controlValue);
 
                     switch (commandParameters.controlName)
                     {
                         case "rbDiacap":
                             {
-                                configAlter.WriteSettingsToDictionary("rbRmf", (!bool.Parse(commandParameters.controlValue)).ToString());
+                                ConfigAlter.WriteSettingsToDictionary("rbRmf", (!bool.Parse(commandParameters.controlValue)).ToString());
                                 break;
                             }
                         case "rbRmf":
                             {
-                                configAlter.WriteSettingsToDictionary("rbDiacap", (!bool.Parse(commandParameters.controlValue)).ToString());
+                                ConfigAlter.WriteSettingsToDictionary("rbDiacap", (!bool.Parse(commandParameters.controlValue)).ToString());
                                 break;
                             }
                         case "rbPki":
                             {
-                                configAlter.WriteSettingsToDictionary("rbNone", (!bool.Parse(commandParameters.controlValue)).ToString());
+                                ConfigAlter.WriteSettingsToDictionary("rbNone", (!bool.Parse(commandParameters.controlValue)).ToString());
                                 break;
                             }
                         case "rbNone":
                             {
-                                configAlter.WriteSettingsToDictionary("rbPki", (!bool.Parse(commandParameters.controlValue)).ToString());
+                                ConfigAlter.WriteSettingsToDictionary("rbPki", (!bool.Parse(commandParameters.controlValue)).ToString());
                                 break;
                             }
                         case "rbHostIdentifier":
                             {
-                                configAlter.WriteSettingsToDictionary("rbIpIdentifier", (!bool.Parse(commandParameters.controlValue)).ToString());
+                                ConfigAlter.WriteSettingsToDictionary("rbIpIdentifier", (!bool.Parse(commandParameters.controlValue)).ToString());
                                 break;
                             }
                         case "rbIpIdentifier":
                             {
-                                configAlter.WriteSettingsToDictionary("rbHostIdentifier", (!bool.Parse(commandParameters.controlValue)).ToString());
+                                ConfigAlter.WriteSettingsToDictionary("rbHostIdentifier", (!bool.Parse(commandParameters.controlValue)).ToString());
                                 break;
                             }
                         case "revisionThreeRadioButton":
                             {
-                                configAlter.WriteSettingsToDictionary("revisionFourRadioButton", (!bool.Parse(commandParameters.controlValue)).ToString());
+                                ConfigAlter.WriteSettingsToDictionary("revisionFourRadioButton", (!bool.Parse(commandParameters.controlValue)).ToString());
                                 break;
                             }
                         case "revisionFourRadioButton":
                             {
-                                configAlter.WriteSettingsToDictionary("revisionThreeRadioButton", (!bool.Parse(commandParameters.controlValue)).ToString());
+                                ConfigAlter.WriteSettingsToDictionary("revisionThreeRadioButton", (!bool.Parse(commandParameters.controlValue)).ToString());
                                 break;
                             }
                         default:
@@ -1047,8 +1046,8 @@ namespace Vulnerator.ViewModel
 
                     if (openDialog.ShowDialog() == true)
                     {
-                        configAlter.WriteSettingsToDictionary("tbMitDbLocation", openDialog.FileName);
-                        configAlter.WriteSettingsToDictionary("tbContactDbLocation", openDialog.FileName);
+                        ConfigAlter.WriteSettingsToDictionary("tbMitDbLocation", openDialog.FileName);
+                        ConfigAlter.WriteSettingsToDictionary("tbContactDbLocation", openDialog.FileName);
                         MitigationDatabaseLocation = ContactDatabaseLocation = openDialog.FileName;
                         MitigationList.Clear();
                         SystemGroupList.Clear();
@@ -1087,8 +1086,8 @@ namespace Vulnerator.ViewModel
 
                     if (openDialog.ShowDialog() == true)
                     {
-                        configAlter.WriteSettingsToDictionary("tbMitDbLocation", openDialog.FileName);
-                        configAlter.WriteSettingsToDictionary("tbContactDbLocation", openDialog.FileName);
+                        ConfigAlter.WriteSettingsToDictionary("tbMitDbLocation", openDialog.FileName);
+                        ConfigAlter.WriteSettingsToDictionary("tbContactDbLocation", openDialog.FileName);
                         MitigationDatabaseLocation = ContactDatabaseLocation = openDialog.FileName;
                         MitigationList.Clear();
                         SystemGroupList.Clear();
@@ -1159,11 +1158,11 @@ namespace Vulnerator.ViewModel
                         string fileName = Path.GetFileNameWithoutExtension(filePath);
                         if (Path.GetExtension(filePath).ToLower().Equals(".nessus"))
                         {
-                            FileList.Add(new Files(fileName, "ACAS - Nessus", "Ready", string.Empty, filePath));
+                            FileList.Add(new Model.Object.File(fileName, "ACAS - Nessus", "Ready", string.Empty, filePath));
                         }
                         else
                         {
-                            FileList.Add(new Files(fileName, "ACAS - CSV", "Ready", string.Empty, filePath));
+                            FileList.Add(new Model.Object.File(fileName, "ACAS - CSV", "Ready", string.Empty, filePath));
                         }
                     }
                 }
@@ -1188,7 +1187,7 @@ namespace Vulnerator.ViewModel
                     {
                         string filePath = openDialog.FileNames[i];
                         string fileName = Path.GetFileNameWithoutExtension(filePath);
-                        FileList.Add(new Files(fileName, "Checklist", "Ready", string.Empty, filePath));
+                        FileList.Add(new Model.Object.File(fileName, "Checklist", "Ready", string.Empty, filePath));
                     }
                 }
             }
@@ -1214,11 +1213,11 @@ namespace Vulnerator.ViewModel
                         string fileName = Path.GetFileNameWithoutExtension(filePath);
                         if (Path.GetExtension(filePath).ToLower().Equals(".html"))
                         {
-                            FileList.Add(new Files(fileName, "WASSP - HTML", "Ready", string.Empty, filePath));
+                            FileList.Add(new Model.Object.File(fileName, "WASSP - HTML", "Ready", string.Empty, filePath));
                         }
                         else
                         {
-                            FileList.Add(new Files(fileName, "WASSP - XML", "Ready", string.Empty, filePath));
+                            FileList.Add(new Model.Object.File(fileName, "WASSP - XML", "Ready", string.Empty, filePath));
                         }
                     }
                 }
@@ -1243,7 +1242,7 @@ namespace Vulnerator.ViewModel
                     {
                         string filePath = openDialog.FileNames[i];
                         string fileName = Path.GetFileNameWithoutExtension(filePath);
-                        FileList.Add(new Files(fileName, "SCAP Benchmark", "Ready", string.Empty, filePath));
+                        FileList.Add(new Model.Object.File(fileName, "SCAP Benchmark", "Ready", string.Empty, filePath));
                     }
                 }
             }
@@ -1267,7 +1266,7 @@ namespace Vulnerator.ViewModel
                     {
                         string filePath = openDialog.FileNames[i];
                         string fileName = Path.GetFileNameWithoutExtension(filePath);
-                        FileList.Add(new Files(fileName, "Fortify FPR", "Ready", string.Empty, filePath));
+                        FileList.Add(new Model.Object.File(fileName, "Fortify FPR", "Ready", string.Empty, filePath));
                     }
                 }
             }
@@ -1445,7 +1444,7 @@ namespace Vulnerator.ViewModel
 		{
             try
             {
-                foreach (Files file in FileList)
+                foreach (Model.Object.File file in FileList)
                 {
                     if (parameter != null)
                     { file.FileSystemName = parameter.ToString(); }
@@ -1553,7 +1552,7 @@ namespace Vulnerator.ViewModel
 			stopWatch.Start();
 
 			findingsDatabaseActions.RefreshFindingsDatabase();
-			foreach (Files file in FileList)
+			foreach (Model.Object.File file in FileList)
 			{
 				fileStopWatch.Start();
 				file.Status = "Processing...";
@@ -1879,7 +1878,7 @@ namespace Vulnerator.ViewModel
 			catch (Exception exception)
 			{
                 log.Error("Unable to send email; no email application exists.");
-				View.NoEmailApplication emailWarning = new View.NoEmailApplication();
+				NoEmailApplication emailWarning = new NoEmailApplication();
 				emailWarning.ShowDialog();
 				return;
 			}
@@ -1893,7 +1892,7 @@ namespace Vulnerator.ViewModel
 			catch (Exception exception)
 			{
                 log.Error("Unable to send email; no email application exists.");
-                View.NoEmailApplication emailWarning = new View.NoEmailApplication();
+                NoEmailApplication emailWarning = new NoEmailApplication();
 				emailWarning.ShowDialog();
 				return;
 			}
@@ -1907,7 +1906,7 @@ namespace Vulnerator.ViewModel
 			catch (Exception exception)
 			{
                 log.Error("Unable to send email; no email application exists.");
-                View.NoEmailApplication emailWarning = new View.NoEmailApplication();
+                NoEmailApplication emailWarning = new NoEmailApplication();
 				emailWarning.ShowDialog();
 				return;
 			}
@@ -1921,7 +1920,7 @@ namespace Vulnerator.ViewModel
 			catch (Exception exception)
 			{
                 log.Error("Unable to send email; no email application exists.");
-                View.NoEmailApplication emailWarning = new View.NoEmailApplication();
+                NoEmailApplication emailWarning = new NoEmailApplication();
 				emailWarning.ShowDialog();
 				return;
 			}
@@ -1935,7 +1934,7 @@ namespace Vulnerator.ViewModel
 			catch (Exception exception)
 			{
                 log.Error("Unable to launch link; no internet application exists.");
-                View.NoInternetApplication internetWarning = new View.NoInternetApplication();
+                NoInternetApplication internetWarning = new NoInternetApplication();
 				internetWarning.ShowDialog();
 				return;
 			}
@@ -1949,7 +1948,7 @@ namespace Vulnerator.ViewModel
 			catch (Exception exception)
 			{
                 log.Error("Unable to launch link; no internet application exists.");
-                View.NoInternetApplication internetWarning = new View.NoInternetApplication();
+                NoInternetApplication internetWarning = new NoInternetApplication();
 				internetWarning.ShowDialog();
 				return;
 			}
@@ -1963,7 +1962,7 @@ namespace Vulnerator.ViewModel
 			catch (Exception exception)
 			{
                 log.Error("Unable to launch link; no internet application exists.");
-                View.NoInternetApplication internetWarning = new View.NoInternetApplication();
+                NoInternetApplication internetWarning = new NoInternetApplication();
 				internetWarning.ShowDialog();
 				return;
 			}
@@ -1977,7 +1976,7 @@ namespace Vulnerator.ViewModel
             catch (Exception exception)
             {
                 log.Error("Unable to launch link; no internet application exists.");
-                View.NoInternetApplication internetWarning = new View.NoInternetApplication();
+                NoInternetApplication internetWarning = new NoInternetApplication();
                 internetWarning.ShowDialog();
                 return;
             }
@@ -1991,7 +1990,7 @@ namespace Vulnerator.ViewModel
 			catch (Exception exception)
 			{
                 log.Error("Unable to launch link; no internet application exists.");
-                View.NoInternetApplication internetWarning = new View.NoInternetApplication();
+                NoInternetApplication internetWarning = new NoInternetApplication();
 				internetWarning.ShowDialog();
 				return;
 			}
@@ -2477,7 +2476,7 @@ namespace Vulnerator.ViewModel
             {
                 log.Error("Unable to obtain launch GitHub link; no internet application exists.");
                 log.Debug("Exception details: " + exception);
-                View.NoInternetApplication internetWarning = new View.NoInternetApplication();
+                NoInternetApplication internetWarning = new NoInternetApplication();
                 internetWarning.ShowDialog();
                 return;
             }

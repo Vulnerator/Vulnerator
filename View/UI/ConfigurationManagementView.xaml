@@ -20,7 +20,7 @@
              d:DesignWidth="800"
              mc:Ignorable="d">
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
-        <Controls:MetroAnimatedSingleRowTabControl Margin="10,0,-5,0"
+        <Controls:MetroAnimatedSingleRowTabControl Margin="10,0,5,0"
                                                    Controls:TabControlHelper.Underlined="SelectedTabItem">
             <TabItem Header="Hardware">
                 <Grid>
@@ -181,7 +181,7 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <Label Grid.Column="0">
-                                        <TextBlock Text="Software Name"
+                                        <TextBlock Text="Discovered Software Name"
                                                    TextTrimming="CharacterEllipsis" />
                                     </Label>
                                     <CheckBox Grid.Column="1"
@@ -191,6 +191,12 @@
                                               Margin="5,0,5,5"
                                               Content="IA or IA Enabled" />
                                 </Grid>
+                                <TextBox Margin="5,0,5,5"
+                                         Controls:TextBoxHelper.Watermark="Select an item" />
+                                <Label Grid.Column="0">
+                                    <TextBlock Text="Software Display Name"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
                                 <TextBox Margin="5,0,5,5"
                                          Controls:TextBoxHelper.Watermark="Select an item" />
                                 <Label>

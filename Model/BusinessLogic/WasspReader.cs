@@ -5,6 +5,9 @@ using System.Data.SQLite;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Vulnerator.Model.DataAccess;
+using Vulnerator.Model.ModelHelper;
+using Vulnerator.Model.Object;
 
 namespace Vulnerator.Model.BusinessLogic
 {
@@ -34,7 +37,7 @@ namespace Vulnerator.Model.BusinessLogic
                 else
                 {
                     ParseWasspWithXmlReader(wasspFile, mitigationsList, systemName);
-                    File.Delete(wasspFile);
+                    System.IO.File.Delete(wasspFile);
                     return "Processed"; 
                 }
             }

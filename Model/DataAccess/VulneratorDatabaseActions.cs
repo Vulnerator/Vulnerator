@@ -6,6 +6,7 @@ using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using Vulnerator.Model.BusinessLogic;
+using Vulnerator.Model.Object;
 using Vulnerator.ViewModel;
 
 namespace Vulnerator.Model.DataAccess
@@ -28,7 +29,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                if (!File.Exists(vulneratorDatabaseFilePath))
+                if (!System.IO.File.Exists(vulneratorDatabaseFilePath))
                 {
                     log.Info("Creating Vulnerator application database.");
                     SQLiteConnection.CreateFile(vulneratorDatabaseFilePath);
@@ -259,7 +260,7 @@ namespace Vulnerator.Model.DataAccess
                     { return lookupAndInsertGroupInDatabaseResult; }
                     guiActions.InsertGroupInObservableCollections(systemGroupName, mainWindowViewModel);
 
-                    foreach (string line in File.ReadLines(mitigationsTextFile))
+                    foreach (string line in System.IO.File.ReadLines(mitigationsTextFile))
                     {
                         if (line.StartsWith("#"))
                         {

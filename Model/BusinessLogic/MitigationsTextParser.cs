@@ -3,6 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using System.IO;
+using Vulnerator.Model.Object;
 
 namespace Vulnerator.Model.BusinessLogic
 {
@@ -22,7 +23,7 @@ namespace Vulnerator.Model.BusinessLogic
                 {
                     connection.Open();
 
-                    foreach (string line in File.ReadLines(fileName))
+                    foreach (string line in System.IO.File.ReadLines(fileName))
                     {
                         if (line.StartsWith("#"))
                         {
