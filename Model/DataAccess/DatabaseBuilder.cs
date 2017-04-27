@@ -1,12 +1,15 @@
 ﻿using log4net;
 using System;
 using System.Data.SQLite;
+using System.IO;
+using System.Reflection;
 using Vulnerator.Model.Object;
 
 namespace Vulnerator.Model.DataAccess
 {
     public class DatabaseBuilder
     {
+        private Assembly assembly = Assembly.GetExecutingAssembly();
         private static string databasePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         private static string databaseFile = databasePath + @"\Vulnerator\Vulnerator.sqlite";
         public static string databaseConnection = @"Data Source = " + databaseFile + @"; Version=3;";
@@ -26,21 +29,8 @@ namespace Vulnerator.Model.DataAccess
             {
                 SQLiteConnection.CreateFile(databaseFile);
                 sqliteConnection.Open();
-                using (SQLiteCommand sqliteCommand = new SQLiteCommand("", sqliteConnection))
-                {
-                    DdlTest(sqliteCommand);
-                    //CreateScapScoresTable(sqliteCommand);
-                    //CreateAssetsTable(sqliteCommand);
-                    //CreateFileNamesTable(sqliteCommand);
-                    //CreateVulnerabilityTable(sqliteCommand);
-                    //CreateUniqueFindingTable(sqliteCommand);
-                    //CreateGroupsTable(sqliteCommand);
-                    //CreateFindingTypesTable(sqliteCommand);
-                    //CreateVulnerabilitySourcesTable(sqliteCommand);
-                    //CreateFindingStatusTable(sqliteCommand);
-                    //InsertFindingTypes(sqliteCommand);
-                    //InsertFindingStatuses(sqliteCommand);
-                }
+                using (SQLiteCommand sqliteCommand = new SQLiteCommand(DdlTextReader(), sqliteConnection))
+                { sqliteCommand.ExecuteNonQuery(); }
                 log.Info("Findings database created successfully.");
             }
             catch (Exception exception)
@@ -50,10 +40,15 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        private void DdlTest(SQLiteCommand sqliteCommand)
+        private string DdlTextReader()
         {
-            sqliteCommand.CommandText = "CREATE TABLE Accessibility (Accessibility_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION,LogicalAccess NVARCHAR(25) NOT NULL, PhysicalAccess NVARCHAR(25) NOT NULL, AvScan NVARCHAR(25) NOT NULL, DodinConnectionPeriodicity NVARCHAR(25) NOT NULL) ON \"default\" GO";
-            sqliteCommand.ExecuteNonQuery();
+            string ddlText = string.Empty;
+            using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.Database.ddl"))
+            {
+                using (StreamReader streamReader = new StreamReader(stream))
+                { ddlText = streamReader.ReadToEnd(); }
+            }
+            return ddlText;
         }
 
         private void CreateScapScoresTable(SQLiteCommand sqliteCommand)

@@ -7,25 +7,17 @@
 
 CREATE TABLE Accessibility 
     (
-     Accessibility_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     Accessibility_ID INTEGER NOT NULL PRIMARY KEY , 
      LogicalAccess NVARCHAR (25) NOT NULL , 
      PhysicalAccess NVARCHAR (25) NOT NULL , 
      AvScan NVARCHAR (25) NOT NULL , 
-     DodinConnectionPeriodicity NVARCHAR (25) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Accessibility ADD CONSTRAINT Accessibility_PK PRIMARY KEY CLUSTERED (Accessibility_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
+     DodinConnectionPeriodicity NVARCHAR (25) NOT NULL
+    );
+    
 
 CREATE TABLE Accreditations 
     (
-     Accreditation_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     Accreditation_ID INTEGER NOT NULL PRIMARY KEY , 
      Accreditation_Name NVARCHAR (100) NOT NULL , 
      Accreditation_Acronym NVARCHAR (25) NOT NULL , 
      Accreditation_eMASS_ID NVARCHAR (25) NOT NULL , 
@@ -34,8 +26,7 @@ CREATE TABLE Accreditations
      Integrity_ID INTEGER NOT NULL , 
      Availability_ID INTEGER NOT NULL , 
      SystemCategorization_ID INTEGER NOT NULL , 
-     AccreditationVersion NVARCHAR (25) , 
-     Accessibility_ID INTEGER , 
+     AccreditationVersion NVARCHAR (25) ,  
      CybersafeGrade CHAR (1) , 
      FISCAM_Applies BIT , 
      ControlSelection_ID INTEGER , 
@@ -44,166 +35,110 @@ CREATE TABLE Accreditations
      RDTE_Zone CHAR (1) , 
      StepOneQuestionnaire_ID INTEGER NOT NULL , 
      SAP_ID INTEGER , 
-     PIT_Determination_ID INTEGER 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Accreditations ADD CONSTRAINT Accreditations_PK PRIMARY KEY CLUSTERED (Accreditation_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
+     PIT_Determination_ID INTEGER,
+	 FOREIGN KEY (Confidentiality_ID) REFERENCES ConfidentialityLevels(Confidentiality_ID),
+	 FOREIGN KEY (Integrity_ID) REFERENCES IntegrityLevels(Integrity_ID),
+	 FOREIGN KEY (Availability_ID) REFERENCES AvailabilityLevels(Availability_ID),
+	 FOREIGN KEY (SystemCategorization_ID) REFERENCES SystemCategorization(SystemCategorization_ID),
+	 FOREIGN KEY (ControlSelection_ID) REFERENCES ControlSelection(ControlSelection_ID) ,
+	 FOREIGN KEY (StepOneQuestionnaire_ID) REFERENCES StepOneQuestionnaire(StepOneQuestionnaire_ID),
+	 FOREIGN KEY (SAP_ID) REFERENCES SAPs(SAP_ID),
+	 FOREIGN KEY (PIT_Determination_ID) REFERENCES PIT_Determination(PIT_Determination_ID)
+    );
 
 CREATE TABLE Accreditations_IATA_Standards 
     (
      Accreditation_ID INTEGER NOT NULL , 
-     IATA_Standard_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
+     IATA_Standard_ID INTEGER NOT NULL,
+	 FOREIGN KEY (Accreditation_ID) REFERENCES Accreditations(Accreditation_ID),
+	 FOREIGN KEY (IATA_Standard_ID) REFERENCES IATA_Standards(IATA_Standard_ID) 
+    );
 CREATE TABLE AccreditationsConnectedSystems 
     (
      Accreditation_ID INTEGER NOT NULL , 
-     ConnectedSystem_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
+     ConnectedSystem_ID INTEGER NOT NULL,
+	 FOREIGN KEY (Accreditation_ID) REFERENCES Accreditations(Accreditation_ID),
+	 FOREIGN KEY (ConnectedSystem_ID) REFERENCES ConnectedSystems(ConnectedSystem_ID) 
+    );
 CREATE TABLE AccreditationsConnections 
     (
      Accreditation_ID INTEGER NOT NULL , 
-     Connection_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
+     Connection_ID INTEGER NOT NULL,
+	 FOREIGN KEY (Accreditation_ID) REFERENCES Accreditations(Accreditation_ID),
+	 FOREIGN KEY (Connection_ID) REFERENCES Connections(Connection_ID)
+    );
 CREATE TABLE AccreditationsContacts 
     (
      Accreditation_ID INTEGER NOT NULL , 
-     Contact_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
+     Contact_ID INTEGER NOT NULL,
+	 FOREIGN KEY (Accreditation_ID) REFERENCES Accreditations(Accreditation_ID),
+	 FOREIGN KEY (Contact_ID) REFERENCES Contacts(Contact_ID) 
+    );
 CREATE TABLE AccreditationsNistControls 
     (
-     AccreditationsNistControls_ID INTEGER NOT NULL , 
+     AccreditationsNistControls_ID INTEGER NOT NULL PRIMARY KEY, 
      Accreditation_ID INTEGER NOT NULL , 
      NIST_Control_ID INTEGER NOT NULL , 
      IsInherited BIT , 
      InheritedFrom NVARCHAR (50) , 
      Inheritable BIT , 
      ImplementationStatus NVARCHAR (25) , 
-     ImplementationNotes NVARCHAR (500) 
-    )
-    ON "default"
-GO
-
-ALTER TABLE AccreditationsNistControls ADD CONSTRAINT AccreditationsNistControls_PK PRIMARY KEY CLUSTERED (AccreditationsNistControls_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+     ImplementationNotes NVARCHAR (500) ,
+	 FOREIGN KEY (Accreditation_ID) REFERENCES Accreditations(Accreditation_ID),
+	 FOREIGN KEY (NIST_Control_ID) REFERENCES NistControls(NIST_Control_ID)
+    );
 CREATE TABLE AccreditationsOverlays 
     (
      Accreditation_ID INTEGER NOT NULL , 
-     Overlay_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
+     Overlay_ID INTEGER NOT NULL ,
+	 FOREIGN KEY (Accreditation_ID) REFERENCES Accreditations(Accreditation_ID),
+	 FOREIGN KEY (Overlay_ID) REFERENCES Overlays(Overlay_ID)
+    );
 CREATE TABLE AccreditationsWaivers 
     (
      Accreditation_ID INTEGER NOT NULL , 
      Waiver_ID INTEGER NOT NULL , 
      WaiverGrantedDate DATE NOT NULL , 
-     WaiverExpirationDate DATE NOT NULL 
-    )
-    ON "default"
-GO
-
+     WaiverExpirationDate DATE NOT NULL ,
+	 FOREIGN KEY (Accreditation_ID) REFERENCES Accreditations(Accreditation_ID),
+	 FOREIGN KEY (Waiver_ID) REFERENCES Waivers(Waiver_ID)
+    );
 CREATE TABLE AdditionalTestConsiderations 
     (
-     Consideration_ID INTEGER NOT NULL , 
+     Consideration_ID INTEGER NOT NULL PRIMARY KEY, 
      ConsiderationTitle NVARCHAR (25) , 
      ConsiderationDetails NVARCHAR (1000) 
-    )
-    ON "default"
-GO
-
-ALTER TABLE AdditionalTestConsiderations ADD CONSTRAINT AdditionalTestConsiderations_PK PRIMARY KEY CLUSTERED (Consideration_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE ATC_IATC 
     (
-     ATC_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     ATC_ID INTEGER NOT NULL PRIMARY KEY , 
      ATC_GrantedDate DATE NOT NULL , 
      ATC_ExpirationDate DATE NOT NULL , 
      CND_ServiceProvider NVARCHAR (25) 
-    )
-    ON "default"
-GO
-
-ALTER TABLE ATC_IATC ADD CONSTRAINT ATC_IATC_PK PRIMARY KEY CLUSTERED (ATC_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE ATC_IATC_ATC_IATC_PendingItems 
     (
      ATC_ID INTEGER NOT NULL , 
-     ATC_IATC_PendingItem_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
+     ATC_IATC_PendingItem_ID INTEGER NOT NULL ,
+	 FOREIGN KEY (ATC_ID) REFERENCES ATC_IATC(ATC_ID),
+	 FOREIGN KEY (ATC_IATC_PendingItem_ID) REFERENCES ATC_IATC_PendingItems(ATC_IATC_PendingItem_ID)
+    );
 CREATE TABLE ATC_IATC_PendingItems 
     (
-     ATC_IATC_PendingItem_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     ATC_IATC_PendingItem_ID INTEGER NOT NULL PRIMARY KEY , 
      PendingItem NVARCHAR (50) NOT NULL , 
      PendingItemDueDate DATE NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE ATC_IATC_PendingItems ADD CONSTRAINT ATC_IATC_PendingItems_PK PRIMARY KEY CLUSTERED (ATC_IATC_PendingItem_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE AuthorizationConditions 
     (
-     AuthorizationCondition_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     AuthorizationCondition_ID INTEGER NOT NULL PRIMARY KEY , 
      Condition NVARCHAR (500) NOT NULL , 
      CompletionDate DATE NOT NULL , 
      IsCompleted BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE AuthorizationConditions ADD CONSTRAINT AuthorizationTermsConditions_PK PRIMARY KEY CLUSTERED (AuthorizationCondition_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE AuthorizationInformation 
     (
-     AuthorizationInformation_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     AuthorizationInformation_ID INTEGER NOT NULL PRIMARY KEY , 
      SecurityPlanApprovalStatus NVARCHAR (25) NOT NULL , 
      SecurityPlanApprovalDate DATE , 
      AuthorizationStatus NVARCHAR (25) NOT NULL , 
@@ -211,60 +146,29 @@ CREATE TABLE AuthorizationInformation
      AssessmentCompletionDate DATE , 
      AuthorizationDate DATE , 
      AuthorizationTerminationDate DATE 
-    )
-    ON "default"
-GO
-
-ALTER TABLE AuthorizationInformation ADD CONSTRAINT AuthorizationInformation_PK PRIMARY KEY CLUSTERED (AuthorizationInformation_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE AuthorizationInformation_AuthorizationConditions 
     (
      AuthorizationInformation_ID INTEGER NOT NULL , 
-     AuthorizationConditon_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
+     AuthorizationCondition_ID INTEGER NOT NULL ,
+	 FOREIGN KEY (AuthorizationInformation_ID) REFERENCES AuthorizationInformation(AuthorizationInformation_ID),
+	 FOREIGN KEY (AuthorizationCondition_ID) REFERENCES AuthorizationConditions(AuthorizationCondition_ID)
+    );
 CREATE TABLE AvailabilityLevels 
     (
-     Availability_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     Availability_ID INTEGER NOT NULL PRIMARY KEY , 
      Availability_Level NVARCHAR (25) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE AvailabilityLevels ADD CONSTRAINT AvailabilityLevels_PK PRIMARY KEY CLUSTERED (Availability_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE Buildings 
     (
-     Building_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     Building_ID INTEGER NOT NULL PRIMARY KEY , 
      RealTimeAccessControl BIT NOT NULL , 
      HVAC BIT NOT NULL , 
      RealTimeSecurityMonitoring BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Buildings ADD CONSTRAINT Buildings_PK PRIMARY KEY CLUSTERED (Building_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE Business 
     (
-     Business_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     Business_ID INTEGER NOT NULL PRIMARY KEY , 
      MissionCriticality NVARCHAR (25) NOT NULL , 
      GoverningMissionArea NVARCHAR (25) NOT NULL , 
      DOD_Component NVARCHAR (25) NOT NULL , 
@@ -273,219 +177,100 @@ CREATE TABLE Business
      SoftwareCategory NVARCHAR (25) NOT NULL , 
      SystemOwnershipAndControl NVARCHAR (50) NOT NULL , 
      OtherInformation NVARCHAR (2000) 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Business ADD CONSTRAINT Business_PK PRIMARY KEY CLUSTERED (Business_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE CalibrationSystems 
     (
-     Calibration_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     Calibration_ID INTEGER NOT NULL PRIMARY KEY , 
      BuiltInCalibration BIT NOT NULL , 
      PortableCalibration BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE CalibrationSystems ADD CONSTRAINT CalibrationSystems_PK PRIMARY KEY CLUSTERED (Calibration_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE Categories 
     (
-     Category_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     Category_ID INTEGER NOT NULL PRIMARY KEY , 
      Category NVARCHAR (25) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Categories ADD CONSTRAINT Categories_PK PRIMARY KEY CLUSTERED (Category_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE CCIs 
     (
-     CCI_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     CCI_ID INTEGER NOT NULL PRIMARY KEY , 
      CCI NVARCHAR (25) NOT NULL , 
      Definition NVARCHAR (500) NOT NULL , 
      CCI_Status NVARCHAR (25) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE CCIs ADD CONSTRAINT CCIs_PK PRIMARY KEY CLUSTERED (CCI_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE Certifications 
     (
-     Certification_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     Certification_ID INTEGER NOT NULL PRIMARY KEY , 
      Certification NVARCHAR (50) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Certifications ADD CONSTRAINT Certifications_PK PRIMARY KEY CLUSTERED (Certification_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE CombatSystems 
     (
-     CombatSystem_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     CombatSystem_ID INTEGER NOT NULL PRIMARY KEY , 
      CommandAndControl BIT NOT NULL , 
      CombatIdentification BIT NOT NULL , 
      RealTimeTrackManagement BIT NOT NULL , 
      ForceOrders BIT NOT NULL , 
      TroopMovement BIT NOT NULL , 
      EngagementCoordination BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE CombatSystems ADD CONSTRAINT CombatSystems_PK PRIMARY KEY CLUSTERED (CombatSystem_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE CommunicationSystems 
     (
-     CommunicationSystem_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     CommunicationSystem_ID INTEGER NOT NULL PRIMARY KEY , 
      VoiceCommunication BIT NOT NULL , 
      SatelliteCommunication BIT NOT NULL , 
      TacticalCommunication BIT NOT NULL , 
      ISDN_VTC_Systems BIT NOT NULL , 
      InterrogatorsTransponders BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE CommunicationSystems ADD CONSTRAINT CommunicationSystems_PK PRIMARY KEY CLUSTERED (CommunicationSystem_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE ConfidentialityLevels 
     (
-     Confidentiality_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     Confidentiality_ID INTEGER NOT NULL PRIMARY KEY , 
      Confidentiality_Level NVARCHAR (25) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE ConfidentialityLevels ADD CONSTRAINT Confidentialities_PK PRIMARY KEY CLUSTERED (Confidentiality_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE ConnectedSystems 
     (
-     ConnectedSystem_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     ConnectedSystem_ID INTEGER NOT NULL PRIMARY KEY , 
      ConnectedSystemName NVARCHAR (100) NOT NULL , 
      IsAuthorized BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE ConnectedSystems ADD CONSTRAINT ConnectedSystems_PK PRIMARY KEY CLUSTERED (ConnectedSystem_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE Connections 
     (
-     Connection_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     Connection_ID INTEGER NOT NULL PRIMARY KEY , 
      Internet BIT , 
      DODIN BIT , 
      DMZ BIT , 
      VPN BIT , 
      CNSDP BIT , 
      EnterpriseServicesProvider BIT 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Connections ADD CONSTRAINT Connections_PK PRIMARY KEY CLUSTERED (Connection_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE Connectivity 
     (
-     Connectivity_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     Connectivity_ID INTEGER NOT NULL PRIMARY KEY , 
      Connectivity NVARCHAR (25) NOT NULL , 
      OwnCircuit BIT NOT NULL , 
      CCSD_Number NVARCHAR (25) NOT NULL , 
      CCSD_Location NVARCHAR (50) NOT NULL , 
      CCSD_Support NVARCHAR (100) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Connectivity ADD CONSTRAINT Connectivity_PK PRIMARY KEY CLUSTERED (Connectivity_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE Contacts 
     (
-     Contact_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     Contact_ID INTEGER NOT NULL PRIMARY KEY , 
      First_Name NVARCHAR (25) NOT NULL , 
      Last_Name NVARCHAR (50) NOT NULL , 
      Email NVARCHAR (50) NOT NULL , 
      Title_ID INTEGER NOT NULL , 
-     Organization_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Contacts ADD CONSTRAINT Contacts_PK PRIMARY KEY CLUSTERED (Contact_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+     Organization_ID INTEGER NOT NULL ,
+	 FOREIGN KEY (Title_ID) REFERENCES Titles(Title_ID),
+	 FOREIGN KEY (Organization_ID) REFERENCES Organizations(Organization_ID)
+    );
 CREATE TABLE ContactsCertifications 
     (
      Contact_ID INTEGER NOT NULL , 
-     Certification_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
+     Certification_ID INTEGER NOT NULL ,
+	 FOREIGN KEY (Contact_ID) REFERENCES Contacts(Contact_ID),
+	 FOREIGN KEY (Certification_ID) REFERENCES Certifications(Certification_ID)
+    );
 CREATE TABLE ControlSelection 
     (
-     ControlSelection_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     ControlSelection_ID INTEGER NOT NULL PRIMARY KEY , 
      TierOneApplied BIT NOT NULL , 
      TierOneJustification NVARCHAR (50) NOT NULL , 
      TierTwoApplied BIT NOT NULL , 
@@ -516,3664 +301,1528 @@ CREATE TABLE ControlSelection
      BaselineScopeJustification NVARCHAR (100) NOT NULL , 
      InheritableControlsDefined BIT NOT NULL , 
      InheritableControlsJustification NVARCHAR (100) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE ControlSelection ADD CONSTRAINT ControlSelection_PK PRIMARY KEY CLUSTERED (ControlSelection_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE ControlSets 
     (
-     ControlSet_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     ControlSet_ID INTEGER NOT NULL PRIMARY KEY , 
      ControlSet NVARCHAR (50) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE ControlSets ADD CONSTRAINT ControlSets_PK PRIMARY KEY CLUSTERED (ControlSet_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE CustomTestCases 
     (
-     CustomTestCase_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     CustomTestCase_ID INTEGER NOT NULL PRIMARY KEY , 
      TestCaseName NVARCHAR (25) NOT NULL , 
      TestCaseDescription NVARCHAR (500) NOT NULL , 
      TestCaseBackground NVARCHAR (500) NOT NULL , 
      TestCaseClassification NVARCHAR (25) NOT NULL , 
      TestCaseSeverity NVARCHAR (25) NOT NULL , 
      TestCaseAssessmentProcedure NVARCHAR (500) NOT NULL , 
-     "TestCase-CCI" NVARCHAR (25) NOT NULL , 
+     TestCase_CCI NVARCHAR (25) NOT NULL , 
      TestCase_NIST_Control NVARCHAR (25) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE CustomTestCases ADD CONSTRAINT CustomTestCases_PK PRIMARY KEY CLUSTERED (CustomTestCase_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE DADMS_Networks 
     (
-     DADMS_Network_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     DADMS_Network_ID INTEGER NOT NULL PRIMARY KEY , 
      DADMS_Network_Name NVARCHAR (50) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE DADMS_Networks ADD CONSTRAINT DADMS_Networks_PK PRIMARY KEY CLUSTERED (DADMS_Network_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE DiagnosticTestingSystems 
     (
-     DiagnosticTesting_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     DiagnosticTesting_ID INTEGER NOT NULL PRIMARY KEY , 
      BuiltInTestingEquipment BIT NOT NULL , 
      PortableTestingEquipment BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE DiagnosticTestingSystems ADD CONSTRAINT DiagnosticTestingSystems_PK PRIMARY KEY CLUSTERED (DiagnosticTesting_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE DitprDonNumbers 
     (
-     "DITPR-DON_Number_ID" INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     "DITPR-DON_Number" INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE DitprDonNumbers ADD CONSTRAINT DitprDonNumbers_PK PRIMARY KEY CLUSTERED ("DITPR-DON_Number_ID")
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+     DITPR-DON_Number_ID INTEGER NOT NULL PRIMARY KEY , 
+     DITPR-DON_Number INTEGER NOT NULL 
+    );
 CREATE TABLE EncyptionTechniques 
     (
-     EncyptionTechnique_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     EncyptionTechnique_ID INTEGER NOT NULL PRIMARY KEY , 
      EncryptionTechnique NVARCHAR (100) NOT NULL , 
      KeyManagement NVARCHAR (500) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE EncyptionTechniques ADD CONSTRAINT EncyptionTechniques_PK PRIMARY KEY CLUSTERED (EncyptionTechnique_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE EntranceCriteria 
     (
-     EntranceCriteria_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
+     EntranceCriteria_ID INTEGER NOT NULL PRIMARY KEY , 
      EntranceCriteria NVARCHAR (100) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE EntranceCriteria ADD CONSTRAINT EntranceCriteria_PK PRIMARY KEY CLUSTERED (EntranceCriteria_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
+    );
 CREATE TABLE EnumeratedDomainUsersSettings 
     (
      User_ID INTEGER NOT NULL , 
-     Domain_Settings_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE EnumeratedLocalWindowsUsersSettings 
-    (
-     User_ID INTEGER NOT NULL , 
-     Local_Settings_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE EnumeratedWindowsGroups 
-    (
-     Group_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Group_Name NVARCHAR (50) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE EnumeratedWindowsGroups ADD CONSTRAINT EnumeratedWindowsGroups_PK PRIMARY KEY CLUSTERED (Group_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE EnumeratedWindowsGroupsUsers 
-    (
-     Group_ID INTEGER NOT NULL , 
-     User_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE EnumeratedWindowsUsers 
-    (
-     User_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     User_Name NVARCHAR (25) NOT NULL , 
-     Is_Guest_Account BIT NOT NULL , 
-     Is_Domain_Account BIT NOT NULL , 
-     Is_Local_Acount BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE EnumeratedWindowsUsers ADD CONSTRAINT EnumeratedWindowsUsers_PK PRIMARY KEY CLUSTERED (User_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE ExitCriteria 
-    (
-     ExitCriteria_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     ExitCriteria NVARCHAR (100) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE ExitCriteria ADD CONSTRAINT ExitCriteria_PK PRIMARY KEY CLUSTERED (ExitCriteria_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE ExternalSecurityServices 
-    (
-     ExternalSecurityServices_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     ExternalSecurityService NVARCHAR (50) NOT NULL , 
-     ServiceDescription NVARCHAR (500) NOT NULL , 
-     SecurityRequirementsDescription NVARCHAR (500) NOT NULL , 
-     RiskDetermination NVARCHAR (100) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE ExternalSecurityServices ADD CONSTRAINT ExternalSecurityServices_PK PRIMARY KEY CLUSTERED (ExternalSecurityServices_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE FindingStatuses 
-    (
-     Status_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Status NVARCHAR (25) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE FindingStatuses ADD CONSTRAINT FindingStatuses_PK PRIMARY KEY CLUSTERED (Status_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE FindingTypes 
-    (
-     Finding_Type_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Finding_Type NVARCHAR (25) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE FindingTypes ADD CONSTRAINT FindingTypes_PK PRIMARY KEY CLUSTERED (Finding_Type_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE FISMA 
-    (
-     FISMA_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     SecurityReviewCompleted BIT NOT NULL , 
-     SecurityReviewDate DATE , 
-     ContingencyPlanRequired BIT NOT NULL , 
-     ContingencyPlanTested BIT , 
-     ContingencyPlanTestDate DATE , 
-     PIA_Required BIT NOT NULL , 
-     PIA_Date DATE , 
-     PrivacyActNoticeRequired BIT NOT NULL , 
-     eAuthenticationRiskAssessmentRequired BIT NOT NULL , 
-     eAuthenticationRiskAssessmentDate DATE , 
-     ReportableTo_FISMA BIT NOT NULL , 
-     ReportableTo_ERS BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE FISMA ADD CONSTRAINT FISMA_PK PRIMARY KEY CLUSTERED (FISMA_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE GoverningPolicies 
-    (
-     GoverningPolicy_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     GoverningPolicy_Name NVARCHAR (50) 
-    )
-    ON "default"
-GO
-
-ALTER TABLE GoverningPolicies ADD CONSTRAINT GoverningPolicies_PK PRIMARY KEY CLUSTERED (GoverningPolicy_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE Groups 
-    (
-     Group_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Group_Name NVARCHAR (50) NOT NULL , 
-     Is_Accreditation BIT NOT NULL , 
-     Accreditation_ID INTEGER NOT NULL , 
-     Organization_ID INTEGER 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Groups ADD CONSTRAINT Groups_PK PRIMARY KEY CLUSTERED (Group_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE Groups_MitigationsOrConditions 
-    (
-     MitigationOrCondition_ID INTEGER NOT NULL , 
-     Group_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE GroupsContacts 
-    (
-     Group_ID INTEGER NOT NULL , 
-     Contact_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE Hardware 
-    (
-     Hardware_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Host_Name NVARCHAR (50) , 
-     Is_Virtual_Server BIT , 
-     NIAP_Level NVARCHAR (25) , 
-     Manufacturer NVARCHAR (25) , 
-     ModelNumber NVARCHAR (50) , 
-     Is_IA_Enabled BIT , 
-     Purpose NVARCHAR (50) , 
-     SerialNumber NVARCHAR (50) 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Hardware ADD CONSTRAINT Hardware_PK PRIMARY KEY CLUSTERED (Hardware_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE Hardware_MitigationsOrConditions 
-    (
-     Hardware_ID INTEGER NOT NULL , 
-     MitigationOrCondition_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE Hardware_PPS 
-    (
-     Hardware_ID INTEGER NOT NULL , 
-     PPS_ID INTEGER NOT NULL , 
-     ReportInAccreditation BIT , 
-     AssociatedService NVARCHAR (25) , 
-     Direction NVARCHAR (25) , 
-     BoundaryCrossed NVARCHAR (25) , 
-     DoD_Compliant BIT , 
-     Classification NVARCHAR (25) 
-    )
-    ON "default"
-GO
-
-CREATE TABLE HardwareContacts 
-    (
-     Hardware_ID INTEGER NOT NULL , 
-     Contact_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE HardwareEnumeratedWindowsGroups 
-    (
-     Hardware_ID INTEGER NOT NULL , 
-     Group_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE HardwareGroups 
-    (
-     Hardware_ID INTEGER NOT NULL , 
-     Group_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE HardwareIpAddresses 
-    (
-     Hardware_ID INTEGER NOT NULL , 
-     IP_Address_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE HardwareLocation 
-    (
-     Hardware_ID INTEGER NOT NULL , 
-     Location_ID INTEGER NOT NULL , 
-     IsBaselineLocation BIT NOT NULL , 
-     IsDeploymentLocation BIT NOT NULL , 
-     IsTestLocation BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE IATA_Standards 
-    (
-     IATA_Standard_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Standard_Title NVARCHAR (50) NOT NULL , 
-     Standard_Description NVARCHAR (1000) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE IATA_Standards ADD CONSTRAINT IATA_Standards_PK PRIMARY KEY CLUSTERED (IATA_Standard_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE ImpactAdjustments 
-    (
-     ImpactAdjustment_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     AdjustedConfidentiality NVARCHAR (25) NOT NULL , 
-     AdjustedIntegrity NVARCHAR (25) NOT NULL , 
-     AdjustedAvailability NVARCHAR (25) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE ImpactAdjustments ADD CONSTRAINT ImpactAdjustments_PK PRIMARY KEY CLUSTERED (ImpactAdjustment_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE InformationSystemOwners 
-    (
-     InformationSystemOwner_ID INTEGER NOT NULL , 
-     Contact_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE InformationSystemOwners ADD CONSTRAINT InformationSystemOwners_PK PRIMARY KEY CLUSTERED (InformationSystemOwner_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE InformationTypes 
-    (
-     InformationType_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     InfoTypeId NVARCHAR (25) NOT NULL , 
-     InfoTypeName NVARCHAR (50) NOT NULL , 
-     BaselineConfidentiality NVARCHAR , 
-     BaselineIntegrity NVARCHAR , 
-     BaselineAvailability NVARCHAR , 
-     EnhancedConfidentiality NVARCHAR , 
-     EnhancedIntegrity NVARCHAR , 
-     EnhancedAvailability NVARCHAR 
-    )
-    ON "default"
-GO
-
-ALTER TABLE InformationTypes ADD CONSTRAINT InformationTypes_PK PRIMARY KEY CLUSTERED (InformationType_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE InformationTypesMissionAreas 
-    (
-     InformationType_ID INTEGER NOT NULL , 
-     MissionArea_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE IntegrityLevels 
-    (
-     Integrity_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Integrity_Level NVARCHAR (25) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE IntegrityLevels ADD CONSTRAINT IntegrityLevels_PK PRIMARY KEY CLUSTERED (Integrity_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE InterconnectedSystems 
-    (
-     InterconnectedSystem_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     InterconnectedSystem_Name NVARCHAR (50) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE InterconnectedSystems ADD CONSTRAINT InterconnectedSystems_PK PRIMARY KEY CLUSTERED (InterconnectedSystem_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE IpAddresses 
-    (
-     IP_Address_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Ip_Address NVARCHAR (25) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE IpAddresses ADD CONSTRAINT IpAddresses_PK PRIMARY KEY CLUSTERED (IP_Address_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE JointAuthorizationOrganizations 
-    (
-     JointOrganization_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     JointOrganization_Name NVARCHAR (50) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE JointAuthorizationOrganizations ADD CONSTRAINT JointAuthorizationOrganizations_PK PRIMARY KEY CLUSTERED (JointOrganization_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE LifecycleStatuses 
-    (
-     LifecycleStatus_ID INTEGER NOT NULL , 
-     LifecycleStatus NVARCHAR (25) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE LifecycleStatuses ADD CONSTRAINT LifecycleStatuses_PK PRIMARY KEY CLUSTERED (LifecycleStatus_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE Limitations 
-    (
-     Limitation_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     LimitationSummary NVARCHAR (100) NOT NULL , 
-     LimitationBackground NVARCHAR (500) NOT NULL , 
-     LimitationDetails NVARCHAR (500) NOT NULL , 
-     IsTestException BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Limitations ADD CONSTRAINT Limitations_PK PRIMARY KEY CLUSTERED (Limitation_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE Locations 
-    (
-     Location_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Location_Name NVARCHAR (50) NOT NULL , 
-     StreetAddressOne NVARCHAR (50) NOT NULL , 
-     StreeAddressTwo NVARCHAR (50) NOT NULL , 
-     BuildingNumber NVARCHAR (25) , 
-     FloorNumber INTEGER , 
-     RoomNumber INTEGER , 
-     City NVARCHAR (25) , 
-     State NVARCHAR (25) , 
-     Country NVARCHAR (25) NOT NULL , 
-     ZipCode INTEGER , 
-     APO_FPO NVARCHAR (50) , 
-     OSS_AccreditationDate DATE , 
-     IsBaselineLocation_Global BIT , 
-     IsDeploymentLocation_Global BIT , 
-     IsTestLocation_Global BIT 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Locations ADD CONSTRAINT Locations_PK PRIMARY KEY CLUSTERED (Location_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE MedicalTechnologies 
-    (
-     MedicalTechnology_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     MedicalImaging BIT NOT NULL , 
-     MedicalMonitoring BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE MedicalTechnologies ADD CONSTRAINT MedicalTechnologies_PK PRIMARY KEY CLUSTERED (MedicalTechnology_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE MissionAreas 
-    (
-     MissionArea_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     MissionArea NVARCHAR (25) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE MissionAreas ADD CONSTRAINT MissionAreas_PK PRIMARY KEY CLUSTERED (MissionArea_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE MitigationsOrConditions 
-    (
-     MitigationOrCondition_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     MitigationText NVARCHAR (2000) NOT NULL , 
-     MitigationType NVARCHAR (25) NOT NULL , 
-     IsGlobal BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE MitigationsOrConditions ADD CONSTRAINT Mitigations_PK PRIMARY KEY CLUSTERED (MitigationOrCondition_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE NavigationTransportationSystems 
-    (
-     NavigationSystem_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     ShipAircraftControl BIT NOT NULL , 
-     IntegratedBridge BIT NOT NULL , 
-     ElectronicCharts BIT NOT NULL , 
-     GPS BIT NOT NULL , 
-     WSN BIT NOT NULL , 
-     InertialNavigation BIT NOT NULL , 
-     DeadReckoningDevice BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE NavigationTransportationSystems ADD CONSTRAINT NavigationTrnasportationSystems_PK PRIMARY KEY CLUSTERED (NavigationSystem_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE NetworkConnectionRules 
-    (
-     NetworkConnectionRule_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     NewtorkConnectionName NVARCHAR (25) NOT NULL , 
-     ConnectionRule NVARCHAR (100) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE NetworkConnectionRules ADD CONSTRAINT NetworkConnectionRules_PK PRIMARY KEY CLUSTERED (NetworkConnectionRule_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE NistControls 
-    (
-     NIST_Control_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Control_Family NVARCHAR (25) NOT NULL , 
-     Control_Number INTEGER NOT NULL , 
-     Enhancement NVARCHAR (25) NOT NULL , 
-     Control_Title NVARCHAR (50) NOT NULL , 
-     Control_Text NVARCHAR (500) NOT NULL , 
-     Supplemental_Guidance NVARCHAR (500) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE NistControls ADD CONSTRAINT Nist_Controls_PK PRIMARY KEY CLUSTERED (NIST_Control_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE NistControls_IATA_Standards 
-    (
-     NIST_Control_ID INTEGER NOT NULL , 
-     IATA_Standard_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE NistControlsAvailabilityLevels 
-    (
-     Nist_Control_ID INTEGER NOT NULL , 
-     Availability_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE NistControlsCCIs 
-    (
-     Nist_Control_ID INTEGER NOT NULL , 
-     CCI_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE NistControlsConfidentialityLevels 
-    (
-     Nist_Control_ID INTEGER NOT NULL , 
-     Confidentiality_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE NistControlsControlSets 
-    (
-     NIST_Control_ID INTEGER NOT NULL , 
-     ControlSet_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE NistControlsIntegrityLevels 
-    (
-     Nist_Control_ID INTEGER NOT NULL , 
-     Integrity_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE NistControlsOverlays 
-    (
-     Nist_Control_ID INTEGER NOT NULL , 
-     Overlay_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE NssQuestionnaire 
-    (
-     NssQuestionnaire_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     InvolvesIntelligenceActivities BIT NOT NULL , 
-     InvolvesCryptoActivities BIT NOT NULL , 
-     InvolvesCommandAndControl BIT NOT NULL , 
-     IsMilitaryCritical BIT NOT NULL , 
-     IsBusinessInfo BIT NOT NULL , 
-     HasExecutiveOrderProtections BIT NOT NULL , 
-     IsNss BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE NssQuestionnaire ADD CONSTRAINT NssQuestionnaire_PK PRIMARY KEY CLUSTERED (NssQuestionnaire_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE Organizations 
-    (
-     Organization_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Organization NVARCHAR (50) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Organizations ADD CONSTRAINT Organizations_PK PRIMARY KEY CLUSTERED (Organization_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE Overlays 
-    (
-     Overlay_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Overlay NVARCHAR (25) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Overlays ADD CONSTRAINT Overlays_PK PRIMARY KEY CLUSTERED (Overlay_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE Overview 
-    (
-     Overview_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     RegistrationType NVARCHAR (25) NOT NULL , 
-     InformationSystemOwner_ID INTEGER NOT NULL , 
-     SystemType_ID INTEGER NOT NULL , 
-     DVS_Site NVARCHAR (100) 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Overview ADD CONSTRAINT Overview_PK PRIMARY KEY CLUSTERED (Overview_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE PIT_Determination 
-    (
-     PIT_Determination_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     RecievesInfo BIT NOT NULL , 
-     TransmitsInfo BIT NOT NULL , 
-     ProcessesInfo BIT NOT NULL , 
-     StoresInfo BIT NOT NULL , 
-     DisplaysInfo BIT NOT NULL , 
-     EmbeddedInSpecialPurpose BIT NOT NULL , 
-     IsDedicatedSpecialPurposeSystem BIT NOT NULL , 
-     IsEssentialSpecialPurposeSystem BIT NOT NULL , 
-     PerformsGeneralServices BIT NOT NULL , 
-     WeaponsSystem_ID INTEGER , 
-     TrainingSimulation_ID INTEGER , 
-     DiagnosticTesting_ID INTEGER , 
-     Calibration_ID INTEGER , 
-     ResearchWeaponsSystem_ID INTEGER , 
-     MedicalTechnology_ID INTEGER , 
-     NavigationSystem_ID INTEGER , 
-     Building_ID INTEGER , 
-     UtilityDistribution_ID INTEGER , 
-     CommunicationsSystem_ID INTEGER , 
-     CombatSystem_ID INTEGER , 
-     SpecialPurposeConsole_ID INTEGER , 
-     Sensor_ID INTEGER , 
-     TacticalSupportDatabase_ID INTEGER , 
-     IsTacticalDecisionAid BIT , 
-     OtherSystemTypeDescription NVARCHAR (100) 
-    )
-    ON "default"
-GO
-
-ALTER TABLE PIT_Determination ADD CONSTRAINT PIT_Determination_PK PRIMARY KEY CLUSTERED (PIT_Determination_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE PPS 
-    (
-     PPS_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Port INTEGER NOT NULL , 
-     Protocol NVARCHAR (25) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE PPS ADD CONSTRAINT PPS_PK PRIMARY KEY CLUSTERED (PPS_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE RelatedDocuments 
-    (
-     RelatedDocument_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     RelatedDocumentName NVARCHAR (50) NOT NULL , 
-     RelationshipDescription NVARCHAR (100) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE RelatedDocuments ADD CONSTRAINT RelatedDocuments_PK PRIMARY KEY CLUSTERED (RelatedDocument_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE RelatedTesting 
-    (
-     RelatedTesting_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     TestTitle NVARCHAR (50) NOT NULL , 
-     DateConducted DATE NOT NULL , 
-     RelatedSystemTested NVARCHAR (50) NOT NULL , 
-     ResponsibleOrganization NVARCHAR (100) NOT NULL , 
-     TestingImpact NVARCHAR (500) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE RelatedTesting ADD CONSTRAINT RelatedTesting_PK PRIMARY KEY CLUSTERED (RelatedTesting_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE ResearchWeaponsSystems 
-    (
-     ResearchWeaponseSystem_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     RDTE_Network BIT NOT NULL , 
-     RDTE_ConnectedSystem BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE ResearchWeaponsSystems ADD CONSTRAINT ResearchWeaponsSystems_PK PRIMARY KEY CLUSTERED (ResearchWeaponseSystem_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE SAP_AdditionalTestConsiderations 
-    (
-     SAP_ID INTEGER NOT NULL , 
-     Consideration_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE SAP_CustomTestCases 
-    (
-     SAP_ID INTEGER NOT NULL , 
-     CustomTestCase_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE SAP_EntranceCriteria 
-    (
-     SAP_ID INTEGER NOT NULL , 
-     EntranceCriteria_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE SAP_ExitCriteria 
-    (
-     SAP_ID INTEGER NOT NULL , 
-     ExitCriteria_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE SAP_Limitiations 
-    (
-     SAP_ID INTEGER NOT NULL , 
-     Limitation_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE SAP_RelatedDocuments 
-    (
-     SAP_ID INTEGER NOT NULL , 
-     RelatedDocument_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE SAP_RelatedTesting 
-    (
-     SAP_ID INTEGER NOT NULL , 
-     RelatedTesting_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE SAP_TestReferences 
-    (
-     SAP_ID INTEGER NOT NULL , 
-     TestReference_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE SAP_TestScheduleItems 
-    (
-     SAP_ID INTEGER NOT NULL , 
-     TestScheduleItem_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE SAPs 
-    (
-     SAP_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Scope NVARCHAR (50) NOT NULL , 
-     Limitations NVARCHAR (500) NOT NULL , 
-     TestConfiguration NVARCHAR (2000) NOT NULL , 
-     LogisiticsSupport NVARCHAR (1000) NOT NULL , 
-     Security NVARCHAR (1000) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE SAPs ADD CONSTRAINT SAPs_PK PRIMARY KEY CLUSTERED (SAP_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE ScapScores 
-    (
-     SCAP_Score_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Score INTEGER NOT NULL , 
-     Hardware_ID INTEGER NOT NULL , 
-     Source_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE ScapScores ADD CONSTRAINT ScapScores_PK PRIMARY KEY CLUSTERED (SCAP_Score_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE Sensors 
-    (
-     Sensor_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     RADAR BIT NOT NULL , 
-     Acoustic BIT NOT NULL , 
-     VisualAndImaging BIT NOT NULL , 
-     RemoteVehicle BIT NOT NULL , 
-     PassiveElectronicWarfare BIT NOT NULL , 
-     ISR BIT NOT NULL , 
-     "National" BIT NOT NULL , 
-     NavigationAndControl BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Sensors ADD CONSTRAINT Sensors_PK PRIMARY KEY CLUSTERED (Sensor_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE Software 
-    (
-     Software_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Software_Name NVARCHAR (50) NOT NULL , 
-     Software_Acronym NVARCHAR (25) , 
-     Software_Version NVARCHAR (25) , 
-     "Function" NVARCHAR (500) NOT NULL , 
-     Install_Date DATE , 
-     DADMS_ID INTEGER , 
-     DADMS_Disposition NVARCHAR (25) , 
-     DADMS_LDA DATE , 
-     Has_Custom_Code BIT , 
-     IaOrIa_Enabled BIT , 
-     Is_OS_Or_Firmware BIT , 
-     FAM_Accepted BIT , 
-     Externally_Authorized BIT , 
-     ReportInAccreditation_Global BIT , 
-     ApprovedForBaseline_Global BIT , 
-     BaselineApprover_Global NVARCHAR (50) , 
-     LifecycleStatus_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Software ADD CONSTRAINT Software_PK PRIMARY KEY CLUSTERED (Software_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE Software_DADMS_Networks 
-    (
-     Software_ID INTEGER NOT NULL , 
-     DADMS_Network_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE SoftwareContacts 
-    (
-     Software_ID INTEGER NOT NULL , 
-     Contact_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE SoftwareHardware 
-    (
-     Software_ID INTEGER NOT NULL , 
-     Hardware_ID INTEGER NOT NULL , 
-     ReportInAccreditation BIT , 
-     ApprovedForBaseline BIT , 
-     BaselineApprover NVARCHAR (50) 
-    )
-    ON "default"
-GO
-
-CREATE TABLE SourceFiles 
-    (
-     Source_File_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Source_File_Name NVARCHAR (500) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE SourceFiles ADD CONSTRAINT SourceFiles_PK PRIMARY KEY CLUSTERED (Source_File_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE SpecialPurposeConsoles 
-    (
-     SpecialPurposeConsole_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     WarFighting BIT NOT NULL , 
-     InputOutputConsole BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE SpecialPurposeConsoles ADD CONSTRAINT SpecialPurposeConsoles_PK PRIMARY KEY CLUSTERED (SpecialPurposeConsole_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE StepOneQuestionnaire 
-    (
-     StepOneQuestionnaire_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     SystemDescription NVARCHAR (2000) NOT NULL , 
-     MissionDescription NVARCHAR (2000) NOT NULL , 
-     CONOPS_Statement NVARCHAR (2000) NOT NULL , 
-     IsTypeAuthorization BIT NOT NULL , 
-     RMF_Activity NVARCHAR (25) NOT NULL , 
-     Accessibility_ID INTEGER NOT NULL , 
-     Overview_ID INTEGER NOT NULL , 
-     PPSM_RegistrationNumber NVARCHAR (25) NOT NULL , 
-     AuthorizationInformation_ID INTEGER NOT NULL , 
-     FISMA_ID INTEGER NOT NULL , 
-     Business_ID INTEGER NOT NULL , 
-     SystemEnterpriseArchitecture NVARCHAR (2000) NOT NULL , 
-     ATC_ID INTEGER , 
-     NistControlSet NVARCHAR (50) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE StepOneQuestionnaire ADD CONSTRAINT StepOneQuestionnaire_PK PRIMARY KEY CLUSTERED (StepOneQuestionnaire_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE StepOneQuestionnaire_Connectivity 
-    (
-     StepOneQuestionnaire_ID INTEGER NOT NULL , 
-     Connectivity_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE StepOneQuestionnaire_DitprDonNumbers 
-    (
-     StepOneQuestionnaire_ID INTEGER NOT NULL , 
-     "DITPR-DON_Number_ID" INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE StepOneQuestionnaire_ExternalSecurityServices 
-    (
-     StepOneQuestionnaire_ID INTEGER NOT NULL , 
-     ExternalSecurityServices_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE StepOneQuestionnaireEncryptionTechniques 
-    (
-     StepOneQuestionnaire_ID INTEGER NOT NULL , 
-     EncryptionTechnique_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE StepOneQuestionnaireNetworkConnectionRules 
-    (
-     StepOneQuestionnaire_ID INTEGER NOT NULL , 
-     NetworkConnectionRule_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE StepOneQuestionnaireUserCategories 
-    (
-     StepOneQuestionnaire_ID INTEGER NOT NULL , 
-     UserCategory_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE SystemCategorization 
-    (
-     SystemCategorization_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     SystemClassification NVARCHAR (25) NOT NULL , 
-     InformationClassification NVARCHAR (25) NOT NULL , 
-     InformationReleasability NVARCHAR (25) NOT NULL , 
-     HasGoverningPolicy BIT NOT NULL , 
-     VaryingClearanceRequirements BIT NOT NULL , 
-     ClearanceRequirementDescription NVARCHAR (500) , 
-     HasAggergationImpact BIT NOT NULL , 
-     IsJointAuthorization BIT NOT NULL , 
-     NssQuestionnaire_ID INTEGER NOT NULL , 
-     CategorizationIsApproved BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE SystemCategorization ADD CONSTRAINT SystemCategorization_PK PRIMARY KEY CLUSTERED (SystemCategorization_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE SystemCategorizationGoverningPolicies 
-    (
-     SystemCategorization_ID INTEGER NOT NULL , 
-     GoverningPolicy_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE SystemCategorizationInformationTypes 
-    (
-     SystemCategorizationInformationTypes_ID INTEGER NOT NULL , 
-     SystemCategorization_ID INTEGER NOT NULL , 
-     Description NVARCHAR (500) NOT NULL , 
-     InformationType_ID INTEGER NOT NULL , 
-     ImpactAdjustment_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE SystemCategorizationInformationTypes ADD CONSTRAINT SystemCategorizationInformationTypes_PK PRIMARY KEY CLUSTERED (SystemCategorizationInformationTypes_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE SystemCategorizationInterconnectedSystems 
-    (
-     SystemCategorization_ID INTEGER NOT NULL , 
-     InterconnectedSystem_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE SystemCategorizationJointOrganizations 
-    (
-     SystemCategorization_ID INTEGER NOT NULL , 
-     JointOrganization_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE SystemTypes 
-    (
-     SystemType_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     SystemType NVARCHAR (100) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE SystemTypes ADD CONSTRAINT SystemTypes_PK PRIMARY KEY CLUSTERED (SystemType_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE TacticalSupportDatabases 
-    (
-     TacticalSupportDatabase_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     ElectronicWarfare BIT NOT NULL , 
-     Intelligence BIT NOT NULL , 
-     Environmental BIT NOT NULL , 
-     Acoustic BIT NOT NULL , 
-     Geographic BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE TacticalSupportDatabases ADD CONSTRAINT TacticalSupportDatabases_PK PRIMARY KEY CLUSTERED (TacticalSupportDatabase_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE TestReferences 
-    (
-     TestReference_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     TestReferenceName NVARCHAR (100) 
-    )
-    ON "default"
-GO
-
-ALTER TABLE TestReferences ADD CONSTRAINT TestReferences_PK PRIMARY KEY CLUSTERED (TestReference_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE TestScheduleItems 
-    (
-     TestScheduleItem_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     TestEvent NVARCHAR (100) , 
-     Category_ID INTEGER NOT NULL , 
-     DurationInDays INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE TestScheduleItems ADD CONSTRAINT TestSchedule_PK PRIMARY KEY CLUSTERED (TestScheduleItem_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE Titles 
-    (
-     Title_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Title NVARCHAR (25) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Titles ADD CONSTRAINT Titles_PK PRIMARY KEY CLUSTERED (Title_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE TrainingSimulationSystems 
-    (
-     TrainingSimulation_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     FlightSimulator BIT NOT NULL , 
-     BridgeSimulator BIT NOT NULL , 
-     ClassroomNetworkOther BIT NOT NULL , 
-     EmbeddedTactical BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE TrainingSimulationSystems ADD CONSTRAINT TrainingSimulationSystems_PK PRIMARY KEY CLUSTERED (TrainingSimulation_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE UniqueFindings 
-    (
-     Unique_Finding_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     AutomatedFindingOutput NVARCHAR , 
-     Comments NVARCHAR (2000) , 
-     Finding_Details NVARCHAR (2000) , 
-     Technical_Mitigation NVARCHAR (2000) , 
-     Proposed_Mitigation NVARCHAR (2000) , 
-     Predisposing_Conditions NVARCHAR (2000) , 
-     Impact NVARCHAR (25) , 
-     Likelihood NVARCHAR (25) , 
-     Severity NVARCHAR (25) , 
-     Risk NVARCHAR (25) , 
-     Residual_Risk NVARCHAR (25) , 
-     First_Discovered DATE NOT NULL , 
-     Last_Observed DATE NOT NULL , 
-     Approval_Status NVARCHAR NOT NULL , 
-     Data_Entry_Date DATE , 
-     Data_Expiration_Date DATE , 
-     Delta_Analysis_Required BIT NOT NULL , 
-     Finding_Type_ID INTEGER NOT NULL , 
-     Source_ID INTEGER NOT NULL , 
-     Source_File_ID INTEGER NOT NULL , 
-     Status_ID INTEGER NOT NULL , 
-     Vulnerability_ID INTEGER NOT NULL , 
-     Hardware_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE UniqueFindings ADD CONSTRAINT UniqueFindings_PK PRIMARY KEY CLUSTERED (Unique_Finding_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE UserCategories 
-    (
-     UserCategory_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     UserCategory NVARCHAR (25) 
-    )
-    ON "default"
-GO
-
-ALTER TABLE UserCategories ADD CONSTRAINT UserCategories_PK PRIMARY KEY CLUSTERED (UserCategory_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE UtilityDistribution 
-    (
-     UtilityDistribution_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     SCADA BIT NOT NULL , 
-     UtilitiesEngineering BIT NOT NULL , 
-     MeteringAndControl BIT NOT NULL , 
-     MechanicalMonitoring BIT NOT NULL , 
-     DamageControlMonitoring BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE UtilityDistribution ADD CONSTRAINT UtilityDistribution_PK PRIMARY KEY CLUSTERED (UtilityDistribution_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE VulnerabilitesCCIs 
-    (
-     Vulnerability_ID INTEGER NOT NULL , 
-     CCI_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE Vulnerabilities 
-    (
-     Vulnerability_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     UniqueVulnerabilityIdentifier NVARCHAR (50) , 
-     VulnerabilityFamilyOrClass NVARCHAR (100) , 
-     Version NVARCHAR (25) , 
-     Release NVARCHAR (25) , 
-     Title NVARCHAR (100) NOT NULL , 
-     Description NVARCHAR NOT NULL , 
-     Risk_Statement NVARCHAR , 
-     Fix_Text NVARCHAR , 
-     Published_Date DATE NOT NULL , 
-     Modified_Date DATE NOT NULL , 
-     Fix_Published_Date DATE NOT NULL , 
-     Raw_Risk NVARCHAR (25) NOT NULL , 
-     V_ID NVARCHAR (25) , 
-     STIG_ID NVARCHAR (25) , 
-     Check_Content NVARCHAR 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Vulnerabilities ADD CONSTRAINT Vulnerabilities_PK PRIMARY KEY CLUSTERED (Vulnerability_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE VulnerabilitySources 
-    (
-     Source_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Source_Name NVARCHAR (100) NOT NULL , 
-     Source_Version NVARCHAR (25) NOT NULL , 
-     Source_Release NVARCHAR (25) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE VulnerabilitySources ADD CONSTRAINT VulnerabilitySources_PK PRIMARY KEY CLUSTERED (Source_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE VulnerabilitySourcesSoftware 
-    (
-     Source_ID INTEGER NOT NULL , 
-     Software_ID INTEGER NOT NULL 
-    )
-    ON "default"
-GO
-
-CREATE TABLE Waivers 
-    (
-     Waiver_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Waiver_Name NVARCHAR (100) NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE Waivers ADD CONSTRAINT Waivers_PK PRIMARY KEY CLUSTERED (Waiver_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE WeaponsSystems 
-    (
-     WeaponsSystem_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     FireControlAndTargeting BIT NOT NULL , 
-     Missile BIT NOT NULL , 
-     Gun BIT NOT NULL , 
-     Torpedoes BIT NOT NULL , 
-     ActiveElectronicWarfare BIT NOT NULL , 
-     Launchers BIT NOT NULL , 
-     Decoy BIT NOT NULL , 
-     Vehicles BIT NOT NULL , 
-     Tanks BIT NOT NULL , 
-     Artillery BIT NOT NULL , 
-     ManDeployableWeapons BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE WeaponsSystems ADD CONSTRAINT WeaponsSystems_PK PRIMARY KEY CLUSTERED (WeaponsSystem_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE WindowsDomainUserSettings 
-    (
-     Domain_Settings_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Domain_Is_Disabled BIT NOT NULL , 
-     Domain_Is_Disabled_Automatically BIT NOT NULL , 
-     Domain_Cant_Change_PW BIT NOT NULL , 
-     Domain_Never_Changed_PW BIT NOT NULL , 
-     Domain_Never_Logged_On BIT NOT NULL , 
-     Domain_PW_Never_Expires BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE WindowsDomainUserSettings ADD CONSTRAINT WindowsDomainUserSettings_PK PRIMARY KEY CLUSTERED (Domain_Settings_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-CREATE TABLE WindowsLocalUserSettings 
-    (
-     Local_Settings_ID INTEGER NOT NULL IDENTITY NOT FOR REPLICATION , 
-     Local_Is_Disabled BIT NOT NULL , 
-     Local_Is_Disabled_Automatically BIT NOT NULL , 
-     Local_Cant_Change_PW BIT NOT NULL , 
-     Local_Never_Changed_PW BIT NOT NULL , 
-     Local_Never_Logged_On BIT NOT NULL , 
-     Local_PW_Never_Expires BIT NOT NULL 
-    )
-    ON "default"
-GO
-
-ALTER TABLE WindowsLocalUserSettings ADD CONSTRAINT WindowsLocalUserSettings_PK PRIMARY KEY CLUSTERED (Local_Settings_ID)
-     WITH (
-     ALLOW_PAGE_LOCKS = ON , 
-     ALLOW_ROW_LOCKS = ON )
-     ON "default" 
-    GO
-
-ALTER TABLE Accessibility 
-    ADD CONSTRAINT Accessibility_StepOneQuestionnaire_FK FOREIGN KEY 
-    ( 
-     Accessibility_ID
-    ) 
-    REFERENCES StepOneQuestionnaire 
-    ( 
-     StepOneQuestionnaire_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Accreditations 
-    ADD CONSTRAINT Accreditations_AvailabilityLevels_FK FOREIGN KEY 
-    ( 
-     Availability_ID
-    ) 
-    REFERENCES AvailabilityLevels 
-    ( 
-     Availability_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Accreditations 
-    ADD CONSTRAINT Accreditations_ConfidentialityLevels_FK FOREIGN KEY 
-    ( 
-     Confidentiality_ID
-    ) 
-    REFERENCES ConfidentialityLevels 
-    ( 
-     Confidentiality_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Accreditations_IATA_Standards 
-    ADD CONSTRAINT Accreditations_IATA_Standards_Accreditations_FK FOREIGN KEY 
-    ( 
-     Accreditation_ID
-    ) 
-    REFERENCES Accreditations 
-    ( 
-     Accreditation_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Accreditations_IATA_Standards 
-    ADD CONSTRAINT Accreditations_IATA_Standards_IATA_Standards_FK FOREIGN KEY 
-    ( 
-     IATA_Standard_ID
-    ) 
-    REFERENCES IATA_Standards 
-    ( 
-     IATA_Standard_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Accreditations 
-    ADD CONSTRAINT Accreditations_IntegrityLevels_FK FOREIGN KEY 
-    ( 
-     Integrity_ID
-    ) 
-    REFERENCES IntegrityLevels 
-    ( 
-     Integrity_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE AccreditationsConnectedSystems 
-    ADD CONSTRAINT AccreditationsConnectedSystems_Accreditations_FK FOREIGN KEY 
-    ( 
-     Accreditation_ID
-    ) 
-    REFERENCES Accreditations 
-    ( 
-     Accreditation_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE AccreditationsConnectedSystems 
-    ADD CONSTRAINT AccreditationsConnectedSystems_ConnectedSystems_FK FOREIGN KEY 
-    ( 
-     ConnectedSystem_ID
-    ) 
-    REFERENCES ConnectedSystems 
-    ( 
-     ConnectedSystem_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE AccreditationsConnections 
-    ADD CONSTRAINT AccreditationsConnections_Accreditations_FK FOREIGN KEY 
-    ( 
-     Accreditation_ID
-    ) 
-    REFERENCES Accreditations 
-    ( 
-     Accreditation_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE AccreditationsConnections 
-    ADD CONSTRAINT AccreditationsConnections_Connections_FK FOREIGN KEY 
-    ( 
-     Connection_ID
-    ) 
-    REFERENCES Connections 
-    ( 
-     Connection_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE AccreditationsContacts 
-    ADD CONSTRAINT AccreditationsContacts_Accreditations_FK FOREIGN KEY 
-    ( 
-     Accreditation_ID
-    ) 
-    REFERENCES Accreditations 
-    ( 
-     Accreditation_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE AccreditationsContacts 
-    ADD CONSTRAINT AccreditationsContacts_Contacts_FK FOREIGN KEY 
-    ( 
-     Contact_ID
-    ) 
-    REFERENCES Contacts 
-    ( 
-     Contact_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE AccreditationsNistControls 
-    ADD CONSTRAINT AccreditationsNistControls_Accreditations_FK FOREIGN KEY 
-    ( 
-     Accreditation_ID
-    ) 
-    REFERENCES Accreditations 
-    ( 
-     Accreditation_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE AccreditationsNistControls 
-    ADD CONSTRAINT AccreditationsNistControls_NistControls_FK FOREIGN KEY 
-    ( 
-     NIST_Control_ID
-    ) 
-    REFERENCES NistControls 
-    ( 
-     NIST_Control_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE AccreditationsOverlays 
-    ADD CONSTRAINT AccreditationsOverlays_Accreditations_FK FOREIGN KEY 
-    ( 
-     Accreditation_ID
-    ) 
-    REFERENCES Accreditations 
-    ( 
-     Accreditation_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE AccreditationsOverlays 
-    ADD CONSTRAINT AccreditationsOverlays_Overlays_FK FOREIGN KEY 
-    ( 
-     Overlay_ID
-    ) 
-    REFERENCES Overlays 
-    ( 
-     Overlay_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE AccreditationsWaivers 
-    ADD CONSTRAINT AccreditationsWaivers_Accreditations_FK FOREIGN KEY 
-    ( 
-     Accreditation_ID
-    ) 
-    REFERENCES Accreditations 
-    ( 
-     Accreditation_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE AccreditationsWaivers 
-    ADD CONSTRAINT AccreditationsWaivers_Waivers_FK FOREIGN KEY 
-    ( 
-     Waiver_ID
-    ) 
-    REFERENCES Waivers 
-    ( 
-     Waiver_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE ATC_IATC_ATC_IATC_PendingItems 
-    ADD CONSTRAINT ATC_IATC_ATC_IATC_PendingItems_ATC_IATC_FK FOREIGN KEY 
-    ( 
-     ATC_ID
-    ) 
-    REFERENCES ATC_IATC 
-    ( 
-     ATC_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE ATC_IATC_ATC_IATC_PendingItems 
-    ADD CONSTRAINT ATC_IATC_ATC_IATC_PendingItems_ATC_IATC_PendingItems_FK FOREIGN KEY 
-    ( 
-     ATC_IATC_PendingItem_ID
-    ) 
-    REFERENCES ATC_IATC_PendingItems 
-    ( 
-     ATC_IATC_PendingItem_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE ATC_IATC 
-    ADD CONSTRAINT ATC_IATC_StepOneQuestionnaire_FK FOREIGN KEY 
-    ( 
-     ATC_ID
-    ) 
-    REFERENCES StepOneQuestionnaire 
-    ( 
-     StepOneQuestionnaire_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE AuthorizationInformation_AuthorizationConditions 
-    ADD CONSTRAINT AuthorizationInformation_AuthorizationConditions_AuthorizationConditions_FK FOREIGN KEY 
-    ( 
-     AuthorizationConditon_ID
-    ) 
-    REFERENCES AuthorizationConditions 
-    ( 
-     AuthorizationCondition_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE AuthorizationInformation_AuthorizationConditions 
-    ADD CONSTRAINT AuthorizationInformation_AuthorizationConditions_AuthorizationInformation_FK FOREIGN KEY 
-    ( 
-     AuthorizationInformation_ID
-    ) 
-    REFERENCES AuthorizationInformation 
-    ( 
-     AuthorizationInformation_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE AuthorizationInformation 
-    ADD CONSTRAINT AuthorizationInformation_StepOneQuestionnaire_FK FOREIGN KEY 
-    ( 
-     AuthorizationInformation_ID
-    ) 
-    REFERENCES StepOneQuestionnaire 
-    ( 
-     StepOneQuestionnaire_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Buildings 
-    ADD CONSTRAINT Buildings_PIT_Determination_FK FOREIGN KEY 
-    ( 
-     Building_ID
-    ) 
-    REFERENCES PIT_Determination 
-    ( 
-     PIT_Determination_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Business 
-    ADD CONSTRAINT Business_StepOneQuestionnaire_FK FOREIGN KEY 
-    ( 
-     Business_ID
-    ) 
-    REFERENCES StepOneQuestionnaire 
-    ( 
-     StepOneQuestionnaire_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE CalibrationSystems 
-    ADD CONSTRAINT CalibrationSystems_PIT_Determination_FK FOREIGN KEY 
-    ( 
-     Calibration_ID
-    ) 
-    REFERENCES PIT_Determination 
-    ( 
-     PIT_Determination_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE CombatSystems 
-    ADD CONSTRAINT CombatSystems_PIT_Determination_FK FOREIGN KEY 
-    ( 
-     CombatSystem_ID
-    ) 
-    REFERENCES PIT_Determination 
-    ( 
-     PIT_Determination_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE CommunicationSystems 
-    ADD CONSTRAINT CommunicationSystems_PIT_Determination_FK FOREIGN KEY 
-    ( 
-     CommunicationSystem_ID
-    ) 
-    REFERENCES PIT_Determination 
-    ( 
-     PIT_Determination_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Contacts 
-    ADD CONSTRAINT Contacts_Organizations_FK FOREIGN KEY 
-    ( 
-     Organization_ID
-    ) 
-    REFERENCES Organizations 
-    ( 
-     Organization_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Contacts 
-    ADD CONSTRAINT Contacts_Titles_FK FOREIGN KEY 
-    ( 
-     Title_ID
-    ) 
-    REFERENCES Titles 
-    ( 
-     Title_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE ContactsCertifications 
-    ADD CONSTRAINT ContactsCertifications_Certifications_FK FOREIGN KEY 
-    ( 
-     Certification_ID
-    ) 
-    REFERENCES Certifications 
-    ( 
-     Certification_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE ContactsCertifications 
-    ADD CONSTRAINT ContactsCertifications_Contacts_FK FOREIGN KEY 
-    ( 
-     Contact_ID
-    ) 
-    REFERENCES Contacts 
-    ( 
-     Contact_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE ControlSelection 
-    ADD CONSTRAINT ControlSelection_Accreditations_FK FOREIGN KEY 
-    ( 
-     ControlSelection_ID
-    ) 
-    REFERENCES Accreditations 
-    ( 
-     Accreditation_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE DiagnosticTestingSystems 
-    ADD CONSTRAINT DiagnosticTestingSystems_PIT_Determination_FK FOREIGN KEY 
-    ( 
-     DiagnosticTesting_ID
-    ) 
-    REFERENCES PIT_Determination 
-    ( 
-     PIT_Determination_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE EnumeratedDomainUsersSettings 
-    ADD CONSTRAINT EnumeratedDomainUsersSettings_EnumeratedWindowsUsers_FK FOREIGN KEY 
-    ( 
-     User_ID
-    ) 
-    REFERENCES EnumeratedWindowsUsers 
-    ( 
-     User_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE EnumeratedDomainUsersSettings 
-    ADD CONSTRAINT EnumeratedDomainUsersSettings_WindowsDomainlUserSettings_FK FOREIGN KEY 
-    ( 
-     Domain_Settings_ID
-    ) 
-    REFERENCES WindowsDomainUserSettings 
-    ( 
-     Domain_Settings_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE EnumeratedLocalWindowsUsersSettings 
-    ADD CONSTRAINT EnumeratedLocalWindowsUsersSettings_EnumeratedWindowsUsers_FK FOREIGN KEY 
-    ( 
-     User_ID
-    ) 
-    REFERENCES EnumeratedWindowsUsers 
-    ( 
-     User_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE EnumeratedLocalWindowsUsersSettings 
-    ADD CONSTRAINT EnumeratedLocalWindowsUsersSettings_WindowsLocalUserSettings_FK FOREIGN KEY 
-    ( 
-     Local_Settings_ID
-    ) 
-    REFERENCES WindowsLocalUserSettings 
-    ( 
-     Local_Settings_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE EnumeratedWindowsGroupsUsers 
-    ADD CONSTRAINT EnumeratedWindowsGroupsUsers_EnumeratedWindowsGroups_FK FOREIGN KEY 
-    ( 
-     Group_ID
-    ) 
-    REFERENCES EnumeratedWindowsGroups 
-    ( 
-     Group_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE EnumeratedWindowsGroupsUsers 
-    ADD CONSTRAINT EnumeratedWindowsGroupsUsers_EnumeratedWindowsUsers_FK FOREIGN KEY 
-    ( 
-     User_ID
-    ) 
-    REFERENCES EnumeratedWindowsUsers 
-    ( 
-     User_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE FISMA 
-    ADD CONSTRAINT FISMA_StepOneQuestionnaire_FK FOREIGN KEY 
-    ( 
-     FISMA_ID
-    ) 
-    REFERENCES StepOneQuestionnaire 
-    ( 
-     StepOneQuestionnaire_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Groups 
-    ADD CONSTRAINT Groups_Accreditations_FK FOREIGN KEY 
-    ( 
-     Accreditation_ID
-    ) 
-    REFERENCES Accreditations 
-    ( 
-     Accreditation_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Groups_MitigationsOrConditions 
-    ADD CONSTRAINT Groups_MitigationsOrConditions_Groups_FK FOREIGN KEY 
-    ( 
-     Group_ID
-    ) 
-    REFERENCES Groups 
-    ( 
-     Group_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Groups_MitigationsOrConditions 
-    ADD CONSTRAINT Groups_MitigationsOrConditions_MitigationsOrConditions_FK FOREIGN KEY 
-    ( 
-     MitigationOrCondition_ID
-    ) 
-    REFERENCES MitigationsOrConditions 
-    ( 
-     MitigationOrCondition_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE GroupsContacts 
-    ADD CONSTRAINT GroupsContacts_Contacts_FK FOREIGN KEY 
-    ( 
-     Contact_ID
-    ) 
-    REFERENCES Contacts 
-    ( 
-     Contact_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE GroupsContacts 
-    ADD CONSTRAINT GroupsContacts_Groups_FK FOREIGN KEY 
-    ( 
-     Group_ID
-    ) 
-    REFERENCES Groups 
-    ( 
-     Group_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Hardware_MitigationsOrConditions 
-    ADD CONSTRAINT Hardware_MitigationsOrConditions_Hardware_FK FOREIGN KEY 
-    ( 
-     Hardware_ID
-    ) 
-    REFERENCES Hardware 
-    ( 
-     Hardware_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Hardware_MitigationsOrConditions 
-    ADD CONSTRAINT Hardware_MitigationsOrConditions_MitigationsOrConditions_FK FOREIGN KEY 
-    ( 
-     MitigationOrCondition_ID
-    ) 
-    REFERENCES MitigationsOrConditions 
-    ( 
-     MitigationOrCondition_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Hardware_PPS 
-    ADD CONSTRAINT Hardware_PPS_Hardware_FK FOREIGN KEY 
-    ( 
-     Hardware_ID
-    ) 
-    REFERENCES Hardware 
-    ( 
-     Hardware_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Hardware_PPS 
-    ADD CONSTRAINT Hardware_PPS_PPS_FK FOREIGN KEY 
-    ( 
-     PPS_ID
-    ) 
-    REFERENCES PPS 
-    ( 
-     PPS_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE HardwareContacts 
-    ADD CONSTRAINT HardwareContacts_Contacts_FK FOREIGN KEY 
-    ( 
-     Contact_ID
-    ) 
-    REFERENCES Contacts 
-    ( 
-     Contact_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE HardwareContacts 
-    ADD CONSTRAINT HardwareContacts_Hardware_FK FOREIGN KEY 
-    ( 
-     Hardware_ID
-    ) 
-    REFERENCES Hardware 
-    ( 
-     Hardware_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE HardwareEnumeratedWindowsGroups 
-    ADD CONSTRAINT HardwareEnumeratedWindowsGroups_EnumeratedWindowsGroups_FK FOREIGN KEY 
-    ( 
-     Group_ID
-    ) 
-    REFERENCES EnumeratedWindowsGroups 
-    ( 
-     Group_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE HardwareEnumeratedWindowsGroups 
-    ADD CONSTRAINT HardwareEnumeratedWindowsGroups_Hardware_FK FOREIGN KEY 
-    ( 
-     Hardware_ID
-    ) 
-    REFERENCES Hardware 
-    ( 
-     Hardware_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE HardwareGroups 
-    ADD CONSTRAINT HardwareGroups_Groups_FK FOREIGN KEY 
-    ( 
-     Group_ID
-    ) 
-    REFERENCES Groups 
-    ( 
-     Group_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE HardwareGroups 
-    ADD CONSTRAINT HardwareGroups_Hardware_FK FOREIGN KEY 
-    ( 
-     Hardware_ID
-    ) 
-    REFERENCES Hardware 
-    ( 
-     Hardware_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE HardwareIpAddresses 
-    ADD CONSTRAINT HardwareIpAddresses_Hardware_FK FOREIGN KEY 
-    ( 
-     Hardware_ID
-    ) 
-    REFERENCES Hardware 
-    ( 
-     Hardware_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE HardwareIpAddresses 
-    ADD CONSTRAINT HardwareIpAddresses_IpAddresses_FK FOREIGN KEY 
-    ( 
-     IP_Address_ID
-    ) 
-    REFERENCES IpAddresses 
-    ( 
-     IP_Address_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE HardwareLocation 
-    ADD CONSTRAINT HardwareLocation_Hardware_FK FOREIGN KEY 
-    ( 
-     Hardware_ID
-    ) 
-    REFERENCES Hardware 
-    ( 
-     Hardware_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE HardwareLocation 
-    ADD CONSTRAINT HardwareLocation_Locations_FK FOREIGN KEY 
-    ( 
-     Location_ID
-    ) 
-    REFERENCES Locations 
-    ( 
-     Location_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE ImpactAdjustments 
-    ADD CONSTRAINT ImpactAdjustments_SystemCategorizationInformationTypes_FK FOREIGN KEY 
-    ( 
-     ImpactAdjustment_ID
-    ) 
-    REFERENCES SystemCategorizationInformationTypes 
-    ( 
-     SystemCategorizationInformationTypes_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE InformationSystemOwners 
-    ADD CONSTRAINT InformationSystemOwners_Contacts_FK FOREIGN KEY 
-    ( 
-     Contact_ID
-    ) 
-    REFERENCES Contacts 
-    ( 
-     Contact_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE InformationSystemOwners 
-    ADD CONSTRAINT InformationSystemOwners_Overview_FK FOREIGN KEY 
-    ( 
-     InformationSystemOwner_ID
-    ) 
-    REFERENCES Overview 
-    ( 
-     Overview_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE InformationTypesMissionAreas 
-    ADD CONSTRAINT InformationTypesMissionAreas_InformationTypes_FK FOREIGN KEY 
-    ( 
-     InformationType_ID
-    ) 
-    REFERENCES InformationTypes 
-    ( 
-     InformationType_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE InformationTypesMissionAreas 
-    ADD CONSTRAINT InformationTypesMissionAreas_MissionAreas_FK FOREIGN KEY 
-    ( 
-     MissionArea_ID
-    ) 
-    REFERENCES MissionAreas 
-    ( 
-     MissionArea_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE MedicalTechnologies 
-    ADD CONSTRAINT MedicalTechnologies_PIT_Determination_FK FOREIGN KEY 
-    ( 
-     MedicalTechnology_ID
-    ) 
-    REFERENCES PIT_Determination 
-    ( 
-     PIT_Determination_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE NavigationTransportationSystems 
-    ADD CONSTRAINT NavigationTransportationSystems_PIT_Determination_FK FOREIGN KEY 
-    ( 
-     NavigationSystem_ID
-    ) 
-    REFERENCES PIT_Determination 
-    ( 
-     PIT_Determination_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE NistControls_IATA_Standards 
-    ADD CONSTRAINT NistControls_IATA_Standards_IATA_Standards_FK FOREIGN KEY 
-    ( 
-     IATA_Standard_ID
-    ) 
-    REFERENCES IATA_Standards 
-    ( 
-     IATA_Standard_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE NistControls_IATA_Standards 
-    ADD CONSTRAINT NistControls_IATA_Standards_NistControls_FK FOREIGN KEY 
-    ( 
-     NIST_Control_ID
-    ) 
-    REFERENCES NistControls 
-    ( 
-     NIST_Control_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE NistControlsAvailabilityLevels 
-    ADD CONSTRAINT NistControlsAvailabilityLevels_AvailabilityLevels_FK FOREIGN KEY 
-    ( 
-     Availability_ID
-    ) 
-    REFERENCES AvailabilityLevels 
-    ( 
-     Availability_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE NistControlsAvailabilityLevels 
-    ADD CONSTRAINT NistControlsAvailabilityLevels_NistControls_FK FOREIGN KEY 
-    ( 
-     Nist_Control_ID
-    ) 
-    REFERENCES NistControls 
-    ( 
-     NIST_Control_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE NistControlsCCIs 
-    ADD CONSTRAINT NistControlsCCIs_CCIs_FK FOREIGN KEY 
-    ( 
-     CCI_ID
-    ) 
-    REFERENCES CCIs 
-    ( 
-     CCI_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE NistControlsCCIs 
-    ADD CONSTRAINT NistControlsCCIs_NistControls_FK FOREIGN KEY 
-    ( 
-     Nist_Control_ID
-    ) 
-    REFERENCES NistControls 
-    ( 
-     NIST_Control_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE NistControlsControlSets 
-    ADD CONSTRAINT NistControlsControlSets_ControlSets_FK FOREIGN KEY 
-    ( 
-     ControlSet_ID
-    ) 
-    REFERENCES ControlSets 
-    ( 
-     ControlSet_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE NistControlsControlSets 
-    ADD CONSTRAINT NistControlsControlSets_NistControls_FK FOREIGN KEY 
-    ( 
-     NIST_Control_ID
-    ) 
-    REFERENCES NistControls 
-    ( 
-     NIST_Control_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE NistControlsIntegrityLevels 
-    ADD CONSTRAINT NistControlsIntegrityLevels_IntegrityLevels_FK FOREIGN KEY 
-    ( 
-     Integrity_ID
-    ) 
-    REFERENCES IntegrityLevels 
-    ( 
-     Integrity_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE NistControlsIntegrityLevels 
-    ADD CONSTRAINT NistControlsIntegrityLevels_NistControls_FK FOREIGN KEY 
-    ( 
-     Nist_Control_ID
-    ) 
-    REFERENCES NistControls 
-    ( 
-     NIST_Control_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE NistControlsOverlays 
-    ADD CONSTRAINT NistControlsOverlays_NistControls_FK FOREIGN KEY 
-    ( 
-     Nist_Control_ID
-    ) 
-    REFERENCES NistControls 
-    ( 
-     NIST_Control_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE NistControlsOverlays 
-    ADD CONSTRAINT NistControlsOverlays_Overlays_FK FOREIGN KEY 
-    ( 
-     Overlay_ID
-    ) 
-    REFERENCES Overlays 
-    ( 
-     Overlay_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE NssQuestionnaire 
-    ADD CONSTRAINT NssQuestionnaire_SystemCategorization_FK FOREIGN KEY 
-    ( 
-     NssQuestionnaire_ID
-    ) 
-    REFERENCES SystemCategorization 
-    ( 
-     SystemCategorization_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Organizations 
-    ADD CONSTRAINT Organizations_Groups_FK FOREIGN KEY 
-    ( 
-     Organization_ID
-    ) 
-    REFERENCES Groups 
-    ( 
-     Group_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Overview 
-    ADD CONSTRAINT Overview_StepOneQuestionnaire_FK FOREIGN KEY 
-    ( 
-     Overview_ID
-    ) 
-    REFERENCES StepOneQuestionnaire 
-    ( 
-     StepOneQuestionnaire_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE PIT_Determination 
-    ADD CONSTRAINT PIT_Determination_Accreditations_FK FOREIGN KEY 
-    ( 
-     PIT_Determination_ID
-    ) 
-    REFERENCES Accreditations 
-    ( 
-     Accreditation_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE ResearchWeaponsSystems 
-    ADD CONSTRAINT ResearchWeaponsSystems_PIT_Determination_FK FOREIGN KEY 
-    ( 
-     ResearchWeaponseSystem_ID
-    ) 
-    REFERENCES PIT_Determination 
-    ( 
-     PIT_Determination_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SAP_AdditionalTestConsiderations 
-    ADD CONSTRAINT SAP_AdditionalTestConsiderations_AdditionalTestConsiderations_FK FOREIGN KEY 
-    ( 
-     Consideration_ID
-    ) 
-    REFERENCES AdditionalTestConsiderations 
-    ( 
-     Consideration_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SAP_AdditionalTestConsiderations 
-    ADD CONSTRAINT SAP_AdditionalTestConsiderations_SAPs_FK FOREIGN KEY 
-    ( 
-     SAP_ID
-    ) 
-    REFERENCES SAPs 
-    ( 
-     SAP_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SAP_CustomTestCases 
-    ADD CONSTRAINT SAP_CustomTestCases_CustomTestCases_FK FOREIGN KEY 
-    ( 
-     CustomTestCase_ID
-    ) 
-    REFERENCES CustomTestCases 
-    ( 
-     CustomTestCase_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SAP_CustomTestCases 
-    ADD CONSTRAINT SAP_CustomTestCases_SAPs_FK FOREIGN KEY 
-    ( 
-     SAP_ID
-    ) 
-    REFERENCES SAPs 
-    ( 
-     SAP_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SAP_EntranceCriteria 
-    ADD CONSTRAINT SAP_EntranceCriteria_EntranceCriteria_FK FOREIGN KEY 
-    ( 
-     EntranceCriteria_ID
-    ) 
-    REFERENCES EntranceCriteria 
-    ( 
-     EntranceCriteria_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SAP_EntranceCriteria 
-    ADD CONSTRAINT SAP_EntranceCriteria_SAPs_FK FOREIGN KEY 
-    ( 
-     SAP_ID
-    ) 
-    REFERENCES SAPs 
-    ( 
-     SAP_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SAP_ExitCriteria 
-    ADD CONSTRAINT SAP_ExitCriteria_ExitCriteria_FK FOREIGN KEY 
-    ( 
-     ExitCriteria_ID
-    ) 
-    REFERENCES ExitCriteria 
-    ( 
-     ExitCriteria_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SAP_ExitCriteria 
-    ADD CONSTRAINT SAP_ExitCriteria_SAPs_FK FOREIGN KEY 
-    ( 
-     SAP_ID
-    ) 
-    REFERENCES SAPs 
-    ( 
-     SAP_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SAP_Limitiations 
-    ADD CONSTRAINT SAP_Limitiations_Limitations_FK FOREIGN KEY 
-    ( 
-     Limitation_ID
-    ) 
-    REFERENCES Limitations 
-    ( 
-     Limitation_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SAP_Limitiations 
-    ADD CONSTRAINT SAP_Limitiations_SAPs_FK FOREIGN KEY 
-    ( 
-     SAP_ID
-    ) 
-    REFERENCES SAPs 
-    ( 
-     SAP_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SAP_RelatedDocuments 
-    ADD CONSTRAINT SAP_RelatedDocuments_RelatedDocuments_FK FOREIGN KEY 
-    ( 
-     RelatedDocument_ID
-    ) 
-    REFERENCES RelatedDocuments 
-    ( 
-     RelatedDocument_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SAP_RelatedDocuments 
-    ADD CONSTRAINT SAP_RelatedDocuments_SAPs_FK FOREIGN KEY 
-    ( 
-     SAP_ID
-    ) 
-    REFERENCES SAPs 
-    ( 
-     SAP_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SAP_RelatedTesting 
-    ADD CONSTRAINT SAP_RelatedTesting_RelatedTesting_FK FOREIGN KEY 
-    ( 
-     RelatedTesting_ID
-    ) 
-    REFERENCES RelatedTesting 
-    ( 
-     RelatedTesting_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SAP_RelatedTesting 
-    ADD CONSTRAINT SAP_RelatedTesting_SAPs_FK FOREIGN KEY 
-    ( 
-     SAP_ID
-    ) 
-    REFERENCES SAPs 
-    ( 
-     SAP_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SAP_TestReferences 
-    ADD CONSTRAINT SAP_TestReferences_SAPs_FK FOREIGN KEY 
-    ( 
-     SAP_ID
-    ) 
-    REFERENCES SAPs 
-    ( 
-     SAP_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SAP_TestReferences 
-    ADD CONSTRAINT SAP_TestReferences_TestReferences_FK FOREIGN KEY 
-    ( 
-     TestReference_ID
-    ) 
-    REFERENCES TestReferences 
-    ( 
-     TestReference_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SAP_TestScheduleItems 
-    ADD CONSTRAINT SAP_TestScheduleItems_SAPs_FK FOREIGN KEY 
-    ( 
-     SAP_ID
-    ) 
-    REFERENCES SAPs 
-    ( 
-     SAP_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SAP_TestScheduleItems 
-    ADD CONSTRAINT SAP_TestScheduleItems_TestScheduleItems_FK FOREIGN KEY 
-    ( 
-     TestScheduleItem_ID
-    ) 
-    REFERENCES TestScheduleItems 
-    ( 
-     TestScheduleItem_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SAPs 
-    ADD CONSTRAINT SAPs_Accreditations_FK FOREIGN KEY 
-    ( 
-     SAP_ID
-    ) 
-    REFERENCES Accreditations 
-    ( 
-     Accreditation_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE ScapScores 
-    ADD CONSTRAINT ScapScores_Hardware_FK FOREIGN KEY 
-    ( 
-     Hardware_ID
-    ) 
-    REFERENCES Hardware 
-    ( 
-     Hardware_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE ScapScores 
-    ADD CONSTRAINT ScapScores_VulnerabilitySources_FK FOREIGN KEY 
-    ( 
-     Source_ID
-    ) 
-    REFERENCES VulnerabilitySources 
-    ( 
-     Source_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Sensors 
-    ADD CONSTRAINT Sensors_PIT_Determination_FK FOREIGN KEY 
-    ( 
-     Sensor_ID
-    ) 
-    REFERENCES PIT_Determination 
-    ( 
-     PIT_Determination_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Software_DADMS_Networks 
-    ADD CONSTRAINT Software_DADMS_Networks_DADMS_Networks_FK FOREIGN KEY 
-    ( 
-     DADMS_Network_ID
-    ) 
-    REFERENCES DADMS_Networks 
-    ( 
-     DADMS_Network_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Software_DADMS_Networks 
-    ADD CONSTRAINT Software_DADMS_Networks_Software_FK FOREIGN KEY 
-    ( 
-     Software_ID
-    ) 
-    REFERENCES Software 
-    ( 
-     Software_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE Software 
-    ADD CONSTRAINT Software_LifecycleStatuses_FK FOREIGN KEY 
-    ( 
-     LifecycleStatus_ID
-    ) 
-    REFERENCES LifecycleStatuses 
-    ( 
-     LifecycleStatus_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SoftwareContacts 
-    ADD CONSTRAINT SoftwareContacts_Contacts_FK FOREIGN KEY 
-    ( 
-     Contact_ID
-    ) 
-    REFERENCES Contacts 
-    ( 
-     Contact_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SoftwareContacts 
-    ADD CONSTRAINT SoftwareContacts_Software_FK FOREIGN KEY 
-    ( 
-     Software_ID
-    ) 
-    REFERENCES Software 
-    ( 
-     Software_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SoftwareHardware 
-    ADD CONSTRAINT SoftwareHardware_Hardware_FK FOREIGN KEY 
-    ( 
-     Hardware_ID
-    ) 
-    REFERENCES Hardware 
-    ( 
-     Hardware_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SoftwareHardware 
-    ADD CONSTRAINT SoftwareHardware_Software_FK FOREIGN KEY 
-    ( 
-     Software_ID
-    ) 
-    REFERENCES Software 
-    ( 
-     Software_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SpecialPurposeConsoles 
-    ADD CONSTRAINT SpecialPurposeConsoles_PIT_Determination_FK FOREIGN KEY 
-    ( 
-     SpecialPurposeConsole_ID
-    ) 
-    REFERENCES PIT_Determination 
-    ( 
-     PIT_Determination_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE StepOneQuestionnaire 
-    ADD CONSTRAINT StepOneQuestionnaire_Accessibility_FK FOREIGN KEY 
-    ( 
-     StepOneQuestionnaire_ID
-    ) 
-    REFERENCES Accreditations 
-    ( 
-     Accreditation_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE StepOneQuestionnaire_Connectivity 
-    ADD CONSTRAINT StepOneQuestionnaire_Connectivity_Connectivity_FK FOREIGN KEY 
-    ( 
-     Connectivity_ID
-    ) 
-    REFERENCES Connectivity 
-    ( 
-     Connectivity_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE StepOneQuestionnaire_Connectivity 
-    ADD CONSTRAINT StepOneQuestionnaire_Connectivity_StepOneQuestionnaire_FK FOREIGN KEY 
-    ( 
-     StepOneQuestionnaire_ID
-    ) 
-    REFERENCES StepOneQuestionnaire 
-    ( 
-     StepOneQuestionnaire_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE StepOneQuestionnaire_DitprDonNumbers 
-    ADD CONSTRAINT StepOneQuestionnaire_DitprDonNumbers_DitprDonNumbers_FK FOREIGN KEY 
-    ( 
-     "DITPR-DON_Number_ID"
-    ) 
-    REFERENCES DitprDonNumbers 
-    ( 
-     "DITPR-DON_Number_ID" 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE StepOneQuestionnaire_DitprDonNumbers 
-    ADD CONSTRAINT StepOneQuestionnaire_DitprDonNumbers_StepOneQuestionnaire_FK FOREIGN KEY 
-    ( 
-     StepOneQuestionnaire_ID
-    ) 
-    REFERENCES StepOneQuestionnaire 
-    ( 
-     StepOneQuestionnaire_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE StepOneQuestionnaire_ExternalSecurityServices 
-    ADD CONSTRAINT StepOneQuestionnaire_ExternalSecurityServices_ExternalSecurityServices_FK FOREIGN KEY 
-    ( 
-     ExternalSecurityServices_ID
-    ) 
-    REFERENCES ExternalSecurityServices 
-    ( 
-     ExternalSecurityServices_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE StepOneQuestionnaire_ExternalSecurityServices 
-    ADD CONSTRAINT StepOneQuestionnaire_ExternalSecurityServices_StepOneQuestionnaire_FK FOREIGN KEY 
-    ( 
-     StepOneQuestionnaire_ID
-    ) 
-    REFERENCES StepOneQuestionnaire 
-    ( 
-     StepOneQuestionnaire_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE StepOneQuestionnaireEncryptionTechniques 
-    ADD CONSTRAINT StepOneQuestionnaireEncryptionTechniques_EncyptionTechniques_FK FOREIGN KEY 
-    ( 
-     EncryptionTechnique_ID
-    ) 
-    REFERENCES EncyptionTechniques 
-    ( 
-     EncyptionTechnique_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE StepOneQuestionnaireEncryptionTechniques 
-    ADD CONSTRAINT StepOneQuestionnaireEncryptionTechniques_StepOneQuestionnaire_FK FOREIGN KEY 
-    ( 
-     StepOneQuestionnaire_ID
-    ) 
-    REFERENCES StepOneQuestionnaire 
-    ( 
-     StepOneQuestionnaire_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE StepOneQuestionnaireNetworkConnectionRules 
-    ADD CONSTRAINT StepOneQuestionnaireNetworkConnectionRules_NetworkConnectionRules_FK FOREIGN KEY 
-    ( 
-     NetworkConnectionRule_ID
-    ) 
-    REFERENCES NetworkConnectionRules 
-    ( 
-     NetworkConnectionRule_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE StepOneQuestionnaireNetworkConnectionRules 
-    ADD CONSTRAINT StepOneQuestionnaireNetworkConnectionRules_StepOneQuestionnaire_FK FOREIGN KEY 
-    ( 
-     StepOneQuestionnaire_ID
-    ) 
-    REFERENCES StepOneQuestionnaire 
-    ( 
-     StepOneQuestionnaire_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE StepOneQuestionnaireUserCategories 
-    ADD CONSTRAINT StepOneQuestionnaireUserCategories_StepOneQuestionnaire_FK FOREIGN KEY 
-    ( 
-     StepOneQuestionnaire_ID
-    ) 
-    REFERENCES StepOneQuestionnaire 
-    ( 
-     StepOneQuestionnaire_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE StepOneQuestionnaireUserCategories 
-    ADD CONSTRAINT StepOneQuestionnaireUserCategories_UserCategories_FK FOREIGN KEY 
-    ( 
-     UserCategory_ID
-    ) 
-    REFERENCES UserCategories 
-    ( 
-     UserCategory_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SystemCategorization 
-    ADD CONSTRAINT SystemCategorization_Accreditations_FK FOREIGN KEY 
-    ( 
-     SystemCategorization_ID
-    ) 
-    REFERENCES Accreditations 
-    ( 
-     Accreditation_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SystemCategorizationGoverningPolicies 
-    ADD CONSTRAINT SystemCategorizationGoverningPolicies_GoverningPolicies_FK FOREIGN KEY 
-    ( 
-     GoverningPolicy_ID
-    ) 
-    REFERENCES GoverningPolicies 
-    ( 
-     GoverningPolicy_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SystemCategorizationGoverningPolicies 
-    ADD CONSTRAINT SystemCategorizationGoverningPolicies_SystemCategorization_FK FOREIGN KEY 
-    ( 
-     SystemCategorization_ID
-    ) 
-    REFERENCES SystemCategorization 
-    ( 
-     SystemCategorization_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SystemCategorizationInformationTypes 
-    ADD CONSTRAINT SystemCategorizationInformationTypes_InformationTypes_FK FOREIGN KEY 
-    ( 
-     InformationType_ID
-    ) 
-    REFERENCES InformationTypes 
-    ( 
-     InformationType_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SystemCategorizationInformationTypes 
-    ADD CONSTRAINT SystemCategorizationInformationTypes_SystemCategorization_FK FOREIGN KEY 
-    ( 
-     SystemCategorization_ID
-    ) 
-    REFERENCES SystemCategorization 
-    ( 
-     SystemCategorization_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SystemCategorizationInterconnectedSystems 
-    ADD CONSTRAINT SystemCategorizationInterconnectedSystems_InterconnectedSystems_FK FOREIGN KEY 
-    ( 
-     InterconnectedSystem_ID
-    ) 
-    REFERENCES InterconnectedSystems 
-    ( 
-     InterconnectedSystem_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SystemCategorizationInterconnectedSystems 
-    ADD CONSTRAINT SystemCategorizationInterconnectedSystems_SystemCategorization_FK FOREIGN KEY 
-    ( 
-     SystemCategorization_ID
-    ) 
-    REFERENCES SystemCategorization 
-    ( 
-     SystemCategorization_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SystemCategorizationJointOrganizations 
-    ADD CONSTRAINT SystemCategorizationJointOrganizations_JointAuthorizationOrganizations_FK FOREIGN KEY 
-    ( 
-     JointOrganization_ID
-    ) 
-    REFERENCES JointAuthorizationOrganizations 
-    ( 
-     JointOrganization_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SystemCategorizationJointOrganizations 
-    ADD CONSTRAINT SystemCategorizationJointOrganizations_SystemCategorization_FK FOREIGN KEY 
-    ( 
-     SystemCategorization_ID
-    ) 
-    REFERENCES SystemCategorization 
-    ( 
-     SystemCategorization_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE SystemTypes 
-    ADD CONSTRAINT SystemTypes_Overview_FK FOREIGN KEY 
-    ( 
-     SystemType_ID
-    ) 
-    REFERENCES Overview 
-    ( 
-     Overview_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE NistControlsConfidentialityLevels 
-    ADD CONSTRAINT TABLE_28_ConfidentialityLevels_FK FOREIGN KEY 
-    ( 
-     Confidentiality_ID
-    ) 
-    REFERENCES ConfidentialityLevels 
-    ( 
-     Confidentiality_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE NistControlsConfidentialityLevels 
-    ADD CONSTRAINT TABLE_28_NistControls_FK FOREIGN KEY 
-    ( 
-     Nist_Control_ID
-    ) 
-    REFERENCES NistControls 
-    ( 
-     NIST_Control_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE TacticalSupportDatabases 
-    ADD CONSTRAINT TacticalSupportDatabases_PIT_Determination_FK FOREIGN KEY 
-    ( 
-     TacticalSupportDatabase_ID
-    ) 
-    REFERENCES PIT_Determination 
-    ( 
-     PIT_Determination_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE TestScheduleItems 
-    ADD CONSTRAINT TestScheduleItems_Categories_FK FOREIGN KEY 
-    ( 
-     Category_ID
-    ) 
-    REFERENCES Categories 
-    ( 
-     Category_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE TrainingSimulationSystems 
-    ADD CONSTRAINT TrainingSimulationSystems_PIT_Determination_FK FOREIGN KEY 
-    ( 
-     TrainingSimulation_ID
-    ) 
-    REFERENCES PIT_Determination 
-    ( 
-     PIT_Determination_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE UniqueFindings 
-    ADD CONSTRAINT UniqueFindings_FindingStatuses_FK FOREIGN KEY 
-    ( 
-     Status_ID
-    ) 
-    REFERENCES FindingStatuses 
-    ( 
-     Status_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE UniqueFindings 
-    ADD CONSTRAINT UniqueFindings_FindingTypes_FK FOREIGN KEY 
-    ( 
-     Finding_Type_ID
-    ) 
-    REFERENCES FindingTypes 
-    ( 
-     Finding_Type_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE UniqueFindings 
-    ADD CONSTRAINT UniqueFindings_Hardware_FK FOREIGN KEY 
-    ( 
-     Hardware_ID
-    ) 
-    REFERENCES Hardware 
-    ( 
-     Hardware_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE UniqueFindings 
-    ADD CONSTRAINT UniqueFindings_SourceFiles_FK FOREIGN KEY 
-    ( 
-     Source_File_ID
-    ) 
-    REFERENCES SourceFiles 
-    ( 
-     Source_File_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE UniqueFindings 
-    ADD CONSTRAINT UniqueFindings_Vulnerabilities_FK FOREIGN KEY 
-    ( 
-     Vulnerability_ID
-    ) 
-    REFERENCES Vulnerabilities 
-    ( 
-     Vulnerability_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE UniqueFindings 
-    ADD CONSTRAINT UniqueFindings_VulnerabilitySources_FK FOREIGN KEY 
-    ( 
-     Source_ID
-    ) 
-    REFERENCES VulnerabilitySources 
-    ( 
-     Source_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE UtilityDistribution 
-    ADD CONSTRAINT UtilityDistribution_PIT_Determination_FK FOREIGN KEY 
-    ( 
-     UtilityDistribution_ID
-    ) 
-    REFERENCES PIT_Determination 
-    ( 
-     PIT_Determination_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE VulnerabilitesCCIs 
-    ADD CONSTRAINT VulnerabilityCCI_CCIs_FK FOREIGN KEY 
-    ( 
-     CCI_ID
-    ) 
-    REFERENCES CCIs 
-    ( 
-     CCI_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE VulnerabilitesCCIs 
-    ADD CONSTRAINT VulnerabilityCCI_Vulnerabilities_FK FOREIGN KEY 
-    ( 
-     Vulnerability_ID
-    ) 
-    REFERENCES Vulnerabilities 
-    ( 
-     Vulnerability_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE VulnerabilitySourcesSoftware 
-    ADD CONSTRAINT VulnerabilitySourcesSoftware_Software_FK FOREIGN KEY 
-    ( 
-     Software_ID
-    ) 
-    REFERENCES Software 
-    ( 
-     Software_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE VulnerabilitySourcesSoftware 
-    ADD CONSTRAINT VulnerabilitySourcesSoftware_VulnerabilitySources_FK FOREIGN KEY 
-    ( 
-     Source_ID
-    ) 
-    REFERENCES VulnerabilitySources 
-    ( 
-     Source_ID 
-    ) 
-    ON DELETE NO ACTION 
-    ON UPDATE NO ACTION 
-GO
-
-ALTER TABLE WeaponsSystems 
-    ADD CONSTRAINT WeaponsSystems_PIT_Determination_FK FOREIGN KEY 
-    ( 
-     WeaponsSystem_ID
-    ) 
-    REFERENCES PIT_Determination 
-    ( 
-     PIT_Determination_ID 
-    ) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION 
-GO
-
-
-
--- Oracle SQL Developer Data Modeler Summary Report: 
--- 
--- CREATE TABLE                           142
--- CREATE INDEX                             0
--- ALTER TABLE                            245
--- CREATE VIEW                              0
--- ALTER VIEW                               0
--- CREATE PACKAGE                           0
--- CREATE PACKAGE BODY                      0
--- CREATE PROCEDURE                         0
--- CREATE FUNCTION                          0
--- CREATE TRIGGER                           0
--- ALTER TRIGGER                            0
--- CREATE DATABASE                          0
--- CREATE DEFAULT                           0
--- CREATE INDEX ON VIEW                     0
--- CREATE ROLLBACK SEGMENT                  0
--- CREATE ROLE                              0
--- CREATE RULE                              0
--- CREATE SCHEMA                            0
--- CREATE SEQUENCE                          0
--- CREATE PARTITION FUNCTION                0
--- CREATE PARTITION SCHEME                  0
--- 
--- DROP DATABASE                            0
--- 
--- ERRORS                                   0
--- WARNINGS                                 0
+     Domain_Settings_ID INTEGER NOT NULL ,
+	 FOREIGN KEY (User_ID) REFERENCES EnumeratedWindowsUsers(User_ID),
+	 FOREIGN KEY (Domain_Settings_ID) REFERENCES WindowsDomainUserSettings(Domain_Settings_ID)
+    );
+--CREATE TABLE EnumeratedLocalWindowsUsersSettings 
+--    (
+--     User_ID INTEGER NOT NULL , 
+--     Local_Settings_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE EnumeratedWindowsGroups 
+--    (
+--     Group_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Group_Name NVARCHAR (50) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE EnumeratedWindowsGroups ADD CONSTRAINT EnumeratedWindowsGroups_PK PRIMARY KEY CLUSTERED (Group_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE EnumeratedWindowsGroupsUsers 
+--    (
+--     Group_ID INTEGER NOT NULL , 
+--     User_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE EnumeratedWindowsUsers 
+--    (
+--     User_ID INTEGER NOT NULL PRIMARY KEY , 
+--     User_Name NVARCHAR (25) NOT NULL , 
+--     Is_Guest_Account BIT NOT NULL , 
+--     Is_Domain_Account BIT NOT NULL , 
+--     Is_Local_Acount BIT NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE EnumeratedWindowsUsers ADD CONSTRAINT EnumeratedWindowsUsers_PK PRIMARY KEY CLUSTERED (User_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE ExitCriteria 
+--    (
+--     ExitCriteria_ID INTEGER NOT NULL PRIMARY KEY , 
+--     ExitCriteria NVARCHAR (100) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE ExitCriteria ADD CONSTRAINT ExitCriteria_PK PRIMARY KEY CLUSTERED (ExitCriteria_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE ExternalSecurityServices 
+--    (
+--     ExternalSecurityServices_ID INTEGER NOT NULL PRIMARY KEY , 
+--     ExternalSecurityService NVARCHAR (50) NOT NULL , 
+--     ServiceDescription NVARCHAR (500) NOT NULL , 
+--     SecurityRequirementsDescription NVARCHAR (500) NOT NULL , 
+--     RiskDetermination NVARCHAR (100) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE ExternalSecurityServices ADD CONSTRAINT ExternalSecurityServices_PK PRIMARY KEY CLUSTERED (ExternalSecurityServices_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE FindingStatuses 
+--    (
+--     Status_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Status NVARCHAR (25) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE FindingStatuses ADD CONSTRAINT FindingStatuses_PK PRIMARY KEY CLUSTERED (Status_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE FindingTypes 
+--    (
+--     Finding_Type_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Finding_Type NVARCHAR (25) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE FindingTypes ADD CONSTRAINT FindingTypes_PK PRIMARY KEY CLUSTERED (Finding_Type_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE FISMA 
+--    (
+--     FISMA_ID INTEGER NOT NULL PRIMARY KEY , 
+--     SecurityReviewCompleted BIT NOT NULL , 
+--     SecurityReviewDate DATE , 
+--     ContingencyPlanRequired BIT NOT NULL , 
+--     ContingencyPlanTested BIT , 
+--     ContingencyPlanTestDate DATE , 
+--     PIA_Required BIT NOT NULL , 
+--     PIA_Date DATE , 
+--     PrivacyActNoticeRequired BIT NOT NULL , 
+--     eAuthenticationRiskAssessmentRequired BIT NOT NULL , 
+--     eAuthenticationRiskAssessmentDate DATE , 
+--     ReportableTo_FISMA BIT NOT NULL , 
+--     ReportableTo_ERS BIT NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE FISMA ADD CONSTRAINT FISMA_PK PRIMARY KEY CLUSTERED (FISMA_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE GoverningPolicies 
+--    (
+--     GoverningPolicy_ID INTEGER NOT NULL PRIMARY KEY , 
+--     GoverningPolicy_Name NVARCHAR (50) 
+--    )
+--    
+--
+--
+--ALTER TABLE GoverningPolicies ADD CONSTRAINT GoverningPolicies_PK PRIMARY KEY CLUSTERED (GoverningPolicy_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE Groups 
+--    (
+--     Group_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Group_Name NVARCHAR (50) NOT NULL , 
+--     Is_Accreditation BIT NOT NULL , 
+--     Accreditation_ID INTEGER NOT NULL , 
+--     Organization_ID INTEGER 
+--    )
+--    
+--
+--
+--ALTER TABLE Groups ADD CONSTRAINT Groups_PK PRIMARY KEY CLUSTERED (Group_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE Groups_MitigationsOrConditions 
+--    (
+--     MitigationOrCondition_ID INTEGER NOT NULL , 
+--     Group_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE GroupsContacts 
+--    (
+--     Group_ID INTEGER NOT NULL , 
+--     Contact_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE Hardware 
+--    (
+--     Hardware_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Host_Name NVARCHAR (50) , 
+--     Is_Virtual_Server BIT , 
+--     NIAP_Level NVARCHAR (25) , 
+--     Manufacturer NVARCHAR (25) , 
+--     ModelNumber NVARCHAR (50) , 
+--     Is_IA_Enabled BIT , 
+--     Purpose NVARCHAR (50) , 
+--     SerialNumber NVARCHAR (50) 
+--    )
+--    
+--
+--
+--ALTER TABLE Hardware ADD CONSTRAINT Hardware_PK PRIMARY KEY CLUSTERED (Hardware_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE Hardware_MitigationsOrConditions 
+--    (
+--     Hardware_ID INTEGER NOT NULL , 
+--     MitigationOrCondition_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE Hardware_PPS 
+--    (
+--     Hardware_ID INTEGER NOT NULL , 
+--     PPS_ID INTEGER NOT NULL , 
+--     ReportInAccreditation BIT , 
+--     AssociatedService NVARCHAR (25) , 
+--     Direction NVARCHAR (25) , 
+--     BoundaryCrossed NVARCHAR (25) , 
+--     DoD_Compliant BIT , 
+--     Classification NVARCHAR (25) 
+--    )
+--    
+--
+--
+--CREATE TABLE HardwareContacts 
+--    (
+--     Hardware_ID INTEGER NOT NULL , 
+--     Contact_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE HardwareEnumeratedWindowsGroups 
+--    (
+--     Hardware_ID INTEGER NOT NULL , 
+--     Group_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE HardwareGroups 
+--    (
+--     Hardware_ID INTEGER NOT NULL , 
+--     Group_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE HardwareIpAddresses 
+--    (
+--     Hardware_ID INTEGER NOT NULL , 
+--     IP_Address_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE HardwareLocation 
+--    (
+--     Hardware_ID INTEGER NOT NULL , 
+--     Location_ID INTEGER NOT NULL , 
+--     IsBaselineLocation BIT NOT NULL , 
+--     IsDeploymentLocation BIT NOT NULL , 
+--     IsTestLocation BIT NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE IATA_Standards 
+--    (
+--     IATA_Standard_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Standard_Title NVARCHAR (50) NOT NULL , 
+--     Standard_Description NVARCHAR (1000) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE IATA_Standards ADD CONSTRAINT IATA_Standards_PK PRIMARY KEY CLUSTERED (IATA_Standard_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE ImpactAdjustments 
+--    (
+--     ImpactAdjustment_ID INTEGER NOT NULL PRIMARY KEY , 
+--     AdjustedConfidentiality NVARCHAR (25) NOT NULL , 
+--     AdjustedIntegrity NVARCHAR (25) NOT NULL , 
+--     AdjustedAvailability NVARCHAR (25) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE ImpactAdjustments ADD CONSTRAINT ImpactAdjustments_PK PRIMARY KEY CLUSTERED (ImpactAdjustment_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE InformationSystemOwners 
+--    (
+--     InformationSystemOwner_ID INTEGER NOT NULL , 
+--     Contact_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE InformationSystemOwners ADD CONSTRAINT InformationSystemOwners_PK PRIMARY KEY CLUSTERED (InformationSystemOwner_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE InformationTypes 
+--    (
+--     InformationType_ID INTEGER NOT NULL PRIMARY KEY , 
+--     InfoTypeId NVARCHAR (25) NOT NULL , 
+--     InfoTypeName NVARCHAR (50) NOT NULL , 
+--     BaselineConfidentiality NVARCHAR , 
+--     BaselineIntegrity NVARCHAR , 
+--     BaselineAvailability NVARCHAR , 
+--     EnhancedConfidentiality NVARCHAR , 
+--     EnhancedIntegrity NVARCHAR , 
+--     EnhancedAvailability NVARCHAR 
+--    )
+--    
+--
+--
+--ALTER TABLE InformationTypes ADD CONSTRAINT InformationTypes_PK PRIMARY KEY CLUSTERED (InformationType_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE InformationTypesMissionAreas 
+--    (
+--     InformationType_ID INTEGER NOT NULL , 
+--     MissionArea_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE IntegrityLevels 
+--    (
+--     Integrity_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Integrity_Level NVARCHAR (25) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE IntegrityLevels ADD CONSTRAINT IntegrityLevels_PK PRIMARY KEY CLUSTERED (Integrity_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE InterconnectedSystems 
+--    (
+--     InterconnectedSystem_ID INTEGER NOT NULL PRIMARY KEY , 
+--     InterconnectedSystem_Name NVARCHAR (50) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE InterconnectedSystems ADD CONSTRAINT InterconnectedSystems_PK PRIMARY KEY CLUSTERED (InterconnectedSystem_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE IpAddresses 
+--    (
+--     IP_Address_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Ip_Address NVARCHAR (25) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE IpAddresses ADD CONSTRAINT IpAddresses_PK PRIMARY KEY CLUSTERED (IP_Address_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE JointAuthorizationOrganizations 
+--    (
+--     JointOrganization_ID INTEGER NOT NULL PRIMARY KEY , 
+--     JointOrganization_Name NVARCHAR (50) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE JointAuthorizationOrganizations ADD CONSTRAINT JointAuthorizationOrganizations_PK PRIMARY KEY CLUSTERED (JointOrganization_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE LifecycleStatuses 
+--    (
+--     LifecycleStatus_ID INTEGER NOT NULL , 
+--     LifecycleStatus NVARCHAR (25) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE LifecycleStatuses ADD CONSTRAINT LifecycleStatuses_PK PRIMARY KEY CLUSTERED (LifecycleStatus_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE Limitations 
+--    (
+--     Limitation_ID INTEGER NOT NULL PRIMARY KEY , 
+--     LimitationSummary NVARCHAR (100) NOT NULL , 
+--     LimitationBackground NVARCHAR (500) NOT NULL , 
+--     LimitationDetails NVARCHAR (500) NOT NULL , 
+--     IsTestException BIT NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE Limitations ADD CONSTRAINT Limitations_PK PRIMARY KEY CLUSTERED (Limitation_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE Locations 
+--    (
+--     Location_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Location_Name NVARCHAR (50) NOT NULL , 
+--     StreetAddressOne NVARCHAR (50) NOT NULL , 
+--     StreeAddressTwo NVARCHAR (50) NOT NULL , 
+--     BuildingNumber NVARCHAR (25) , 
+--     FloorNumber INTEGER , 
+--     RoomNumber INTEGER , 
+--     City NVARCHAR (25) , 
+--     State NVARCHAR (25) , 
+--     Country NVARCHAR (25) NOT NULL , 
+--     ZipCode INTEGER , 
+--     APO_FPO NVARCHAR (50) , 
+--     OSS_AccreditationDate DATE , 
+--     IsBaselineLocation_Global BIT , 
+--     IsDeploymentLocation_Global BIT , 
+--     IsTestLocation_Global BIT 
+--    )
+--    
+--
+--
+--ALTER TABLE Locations ADD CONSTRAINT Locations_PK PRIMARY KEY CLUSTERED (Location_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE MedicalTechnologies 
+--    (
+--     MedicalTechnology_ID INTEGER NOT NULL PRIMARY KEY , 
+--     MedicalImaging BIT NOT NULL , 
+--     MedicalMonitoring BIT NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE MedicalTechnologies ADD CONSTRAINT MedicalTechnologies_PK PRIMARY KEY CLUSTERED (MedicalTechnology_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE MissionAreas 
+--    (
+--     MissionArea_ID INTEGER NOT NULL PRIMARY KEY , 
+--     MissionArea NVARCHAR (25) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE MissionAreas ADD CONSTRAINT MissionAreas_PK PRIMARY KEY CLUSTERED (MissionArea_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE MitigationsOrConditions 
+--    (
+--     MitigationOrCondition_ID INTEGER NOT NULL PRIMARY KEY , 
+--     MitigationText NVARCHAR (2000) NOT NULL , 
+--     MitigationType NVARCHAR (25) NOT NULL , 
+--     IsGlobal BIT NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE MitigationsOrConditions ADD CONSTRAINT Mitigations_PK PRIMARY KEY CLUSTERED (MitigationOrCondition_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE NavigationTransportationSystems 
+--    (
+--     NavigationSystem_ID INTEGER NOT NULL PRIMARY KEY , 
+--     ShipAircraftControl BIT NOT NULL , 
+--     IntegratedBridge BIT NOT NULL , 
+--     ElectronicCharts BIT NOT NULL , 
+--     GPS BIT NOT NULL , 
+--     WSN BIT NOT NULL , 
+--     InertialNavigation BIT NOT NULL , 
+--     DeadReckoningDevice BIT NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE NavigationTransportationSystems ADD CONSTRAINT NavigationTrnasportationSystems_PK PRIMARY KEY CLUSTERED (NavigationSystem_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE NetworkConnectionRules 
+--    (
+--     NetworkConnectionRule_ID INTEGER NOT NULL PRIMARY KEY , 
+--     NewtorkConnectionName NVARCHAR (25) NOT NULL , 
+--     ConnectionRule NVARCHAR (100) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE NetworkConnectionRules ADD CONSTRAINT NetworkConnectionRules_PK PRIMARY KEY CLUSTERED (NetworkConnectionRule_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE NistControls 
+--    (
+--     NIST_Control_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Control_Family NVARCHAR (25) NOT NULL , 
+--     Control_Number INTEGER NOT NULL , 
+--     Enhancement NVARCHAR (25) NOT NULL , 
+--     Control_Title NVARCHAR (50) NOT NULL , 
+--     Control_Text NVARCHAR (500) NOT NULL , 
+--     Supplemental_Guidance NVARCHAR (500) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE NistControls ADD CONSTRAINT Nist_Controls_PK PRIMARY KEY CLUSTERED (NIST_Control_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE NistControls_IATA_Standards 
+--    (
+--     NIST_Control_ID INTEGER NOT NULL , 
+--     IATA_Standard_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE NistControlsAvailabilityLevels 
+--    (
+--     Nist_Control_ID INTEGER NOT NULL , 
+--     Availability_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE NistControlsCCIs 
+--    (
+--     Nist_Control_ID INTEGER NOT NULL , 
+--     CCI_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE NistControlsConfidentialityLevels 
+--    (
+--     Nist_Control_ID INTEGER NOT NULL , 
+--     Confidentiality_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE NistControlsControlSets 
+--    (
+--     NIST_Control_ID INTEGER NOT NULL , 
+--     ControlSet_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE NistControlsIntegrityLevels 
+--    (
+--     Nist_Control_ID INTEGER NOT NULL , 
+--     Integrity_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE NistControlsOverlays 
+--    (
+--     Nist_Control_ID INTEGER NOT NULL , 
+--     Overlay_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE NssQuestionnaire 
+--    (
+--     NssQuestionnaire_ID INTEGER NOT NULL PRIMARY KEY , 
+--     InvolvesIntelligenceActivities BIT NOT NULL , 
+--     InvolvesCryptoActivities BIT NOT NULL , 
+--     InvolvesCommandAndControl BIT NOT NULL , 
+--     IsMilitaryCritical BIT NOT NULL , 
+--     IsBusinessInfo BIT NOT NULL , 
+--     HasExecutiveOrderProtections BIT NOT NULL , 
+--     IsNss BIT NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE NssQuestionnaire ADD CONSTRAINT NssQuestionnaire_PK PRIMARY KEY CLUSTERED (NssQuestionnaire_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE Organizations 
+--    (
+--     Organization_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Organization NVARCHAR (50) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE Organizations ADD CONSTRAINT Organizations_PK PRIMARY KEY CLUSTERED (Organization_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE Overlays 
+--    (
+--     Overlay_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Overlay NVARCHAR (25) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE Overlays ADD CONSTRAINT Overlays_PK PRIMARY KEY CLUSTERED (Overlay_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE Overview 
+--    (
+--     Overview_ID INTEGER NOT NULL PRIMARY KEY , 
+--     RegistrationType NVARCHAR (25) NOT NULL , 
+--     InformationSystemOwner_ID INTEGER NOT NULL , 
+--     SystemType_ID INTEGER NOT NULL , 
+--     DVS_Site NVARCHAR (100) 
+--    )
+--    
+--
+--
+--ALTER TABLE Overview ADD CONSTRAINT Overview_PK PRIMARY KEY CLUSTERED (Overview_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE PIT_Determination 
+--    (
+--     PIT_Determination_ID INTEGER NOT NULL PRIMARY KEY , 
+--     RecievesInfo BIT NOT NULL , 
+--     TransmitsInfo BIT NOT NULL , 
+--     ProcessesInfo BIT NOT NULL , 
+--     StoresInfo BIT NOT NULL , 
+--     DisplaysInfo BIT NOT NULL , 
+--     EmbeddedInSpecialPurpose BIT NOT NULL , 
+--     IsDedicatedSpecialPurposeSystem BIT NOT NULL , 
+--     IsEssentialSpecialPurposeSystem BIT NOT NULL , 
+--     PerformsGeneralServices BIT NOT NULL , 
+--     WeaponsSystem_ID INTEGER , 
+--     TrainingSimulation_ID INTEGER , 
+--     DiagnosticTesting_ID INTEGER , 
+--     Calibration_ID INTEGER , 
+--     ResearchWeaponsSystem_ID INTEGER , 
+--     MedicalTechnology_ID INTEGER , 
+--     NavigationSystem_ID INTEGER , 
+--     Building_ID INTEGER , 
+--     UtilityDistribution_ID INTEGER , 
+--     CommunicationsSystem_ID INTEGER , 
+--     CombatSystem_ID INTEGER , 
+--     SpecialPurposeConsole_ID INTEGER , 
+--     Sensor_ID INTEGER , 
+--     TacticalSupportDatabase_ID INTEGER , 
+--     IsTacticalDecisionAid BIT , 
+--     OtherSystemTypeDescription NVARCHAR (100) 
+--    )
+--    
+--
+--
+--ALTER TABLE PIT_Determination ADD CONSTRAINT PIT_Determination_PK PRIMARY KEY CLUSTERED (PIT_Determination_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE PPS 
+--    (
+--     PPS_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Port INTEGER NOT NULL , 
+--     Protocol NVARCHAR (25) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE PPS ADD CONSTRAINT PPS_PK PRIMARY KEY CLUSTERED (PPS_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE RelatedDocuments 
+--    (
+--     RelatedDocument_ID INTEGER NOT NULL PRIMARY KEY , 
+--     RelatedDocumentName NVARCHAR (50) NOT NULL , 
+--     RelationshipDescription NVARCHAR (100) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE RelatedDocuments ADD CONSTRAINT RelatedDocuments_PK PRIMARY KEY CLUSTERED (RelatedDocument_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE RelatedTesting 
+--    (
+--     RelatedTesting_ID INTEGER NOT NULL PRIMARY KEY , 
+--     TestTitle NVARCHAR (50) NOT NULL , 
+--     DateConducted DATE NOT NULL , 
+--     RelatedSystemTested NVARCHAR (50) NOT NULL , 
+--     ResponsibleOrganization NVARCHAR (100) NOT NULL , 
+--     TestingImpact NVARCHAR (500) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE RelatedTesting ADD CONSTRAINT RelatedTesting_PK PRIMARY KEY CLUSTERED (RelatedTesting_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE ResearchWeaponsSystems 
+--    (
+--     ResearchWeaponseSystem_ID INTEGER NOT NULL PRIMARY KEY , 
+--     RDTE_Network BIT NOT NULL , 
+--     RDTE_ConnectedSystem BIT NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE ResearchWeaponsSystems ADD CONSTRAINT ResearchWeaponsSystems_PK PRIMARY KEY CLUSTERED (ResearchWeaponseSystem_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE SAP_AdditionalTestConsiderations 
+--    (
+--     SAP_ID INTEGER NOT NULL , 
+--     Consideration_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE SAP_CustomTestCases 
+--    (
+--     SAP_ID INTEGER NOT NULL , 
+--     CustomTestCase_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE SAP_EntranceCriteria 
+--    (
+--     SAP_ID INTEGER NOT NULL , 
+--     EntranceCriteria_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE SAP_ExitCriteria 
+--    (
+--     SAP_ID INTEGER NOT NULL , 
+--     ExitCriteria_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE SAP_Limitiations 
+--    (
+--     SAP_ID INTEGER NOT NULL , 
+--     Limitation_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE SAP_RelatedDocuments 
+--    (
+--     SAP_ID INTEGER NOT NULL , 
+--     RelatedDocument_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE SAP_RelatedTesting 
+--    (
+--     SAP_ID INTEGER NOT NULL , 
+--     RelatedTesting_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE SAP_TestReferences 
+--    (
+--     SAP_ID INTEGER NOT NULL , 
+--     TestReference_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE SAP_TestScheduleItems 
+--    (
+--     SAP_ID INTEGER NOT NULL , 
+--     TestScheduleItem_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE SAPs 
+--    (
+--     SAP_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Scope NVARCHAR (50) NOT NULL , 
+--     Limitations NVARCHAR (500) NOT NULL , 
+--     TestConfiguration NVARCHAR (2000) NOT NULL , 
+--     LogisiticsSupport NVARCHAR (1000) NOT NULL , 
+--     Security NVARCHAR (1000) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE SAPs ADD CONSTRAINT SAPs_PK PRIMARY KEY CLUSTERED (SAP_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE ScapScores 
+--    (
+--     SCAP_Score_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Score INTEGER NOT NULL , 
+--     Hardware_ID INTEGER NOT NULL , 
+--     Source_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE ScapScores ADD CONSTRAINT ScapScores_PK PRIMARY KEY CLUSTERED (SCAP_Score_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE Sensors 
+--    (
+--     Sensor_ID INTEGER NOT NULL PRIMARY KEY , 
+--     RADAR BIT NOT NULL , 
+--     Acoustic BIT NOT NULL , 
+--     VisualAndImaging BIT NOT NULL , 
+--     RemoteVehicle BIT NOT NULL , 
+--     PassiveElectronicWarfare BIT NOT NULL , 
+--     ISR BIT NOT NULL , 
+--     "National" BIT NOT NULL , 
+--     NavigationAndControl BIT NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE Sensors ADD CONSTRAINT Sensors_PK PRIMARY KEY CLUSTERED (Sensor_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE Software 
+--    (
+--     Software_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Software_Name NVARCHAR (50) NOT NULL , 
+--     Software_Acronym NVARCHAR (25) , 
+--     Software_Version NVARCHAR (25) , 
+--     "Function" NVARCHAR (500) NOT NULL , 
+--     Install_Date DATE , 
+--     DADMS_ID INTEGER , 
+--     DADMS_Disposition NVARCHAR (25) , 
+--     DADMS_LDA DATE , 
+--     Has_Custom_Code BIT , 
+--     IaOrIa_Enabled BIT , 
+--     Is_OS_Or_Firmware BIT , 
+--     FAM_Accepted BIT , 
+--     Externally_Authorized BIT , 
+--     ReportInAccreditation_Global BIT , 
+--     ApprovedForBaseline_Global BIT , 
+--     BaselineApprover_Global NVARCHAR (50) , 
+--     LifecycleStatus_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE Software ADD CONSTRAINT Software_PK PRIMARY KEY CLUSTERED (Software_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE Software_DADMS_Networks 
+--    (
+--     Software_ID INTEGER NOT NULL , 
+--     DADMS_Network_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE SoftwareContacts 
+--    (
+--     Software_ID INTEGER NOT NULL , 
+--     Contact_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE SoftwareHardware 
+--    (
+--     Software_ID INTEGER NOT NULL , 
+--     Hardware_ID INTEGER NOT NULL , 
+--     ReportInAccreditation BIT , 
+--     ApprovedForBaseline BIT , 
+--     BaselineApprover NVARCHAR (50) 
+--    )
+--    
+--
+--
+--CREATE TABLE SourceFiles 
+--    (
+--     Source_File_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Source_File_Name NVARCHAR (500) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE SourceFiles ADD CONSTRAINT SourceFiles_PK PRIMARY KEY CLUSTERED (Source_File_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE SpecialPurposeConsoles 
+--    (
+--     SpecialPurposeConsole_ID INTEGER NOT NULL PRIMARY KEY , 
+--     WarFighting BIT NOT NULL , 
+--     InputOutputConsole BIT NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE SpecialPurposeConsoles ADD CONSTRAINT SpecialPurposeConsoles_PK PRIMARY KEY CLUSTERED (SpecialPurposeConsole_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE StepOneQuestionnaire 
+--    (
+--     StepOneQuestionnaire_ID INTEGER NOT NULL PRIMARY KEY , 
+--     SystemDescription NVARCHAR (2000) NOT NULL , 
+--     MissionDescription NVARCHAR (2000) NOT NULL , 
+--     CONOPS_Statement NVARCHAR (2000) NOT NULL , 
+--     IsTypeAuthorization BIT NOT NULL , 
+--     RMF_Activity NVARCHAR (25) NOT NULL , 
+--     Accessibility_ID INTEGER NOT NULL , 
+--     Overview_ID INTEGER NOT NULL , 
+--     PPSM_RegistrationNumber NVARCHAR (25) NOT NULL , 
+--     AuthorizationInformation_ID INTEGER NOT NULL , 
+--     FISMA_ID INTEGER NOT NULL , 
+--     Business_ID INTEGER NOT NULL , 
+--     SystemEnterpriseArchitecture NVARCHAR (2000) NOT NULL , 
+--     ATC_ID INTEGER , 
+--     NistControlSet NVARCHAR (50) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE StepOneQuestionnaire ADD CONSTRAINT StepOneQuestionnaire_PK PRIMARY KEY CLUSTERED (StepOneQuestionnaire_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE StepOneQuestionnaire_Connectivity 
+--    (
+--     StepOneQuestionnaire_ID INTEGER NOT NULL , 
+--     Connectivity_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE StepOneQuestionnaire_DitprDonNumbers 
+--    (
+--     StepOneQuestionnaire_ID INTEGER NOT NULL , 
+--     "DITPR-DON_Number_ID" INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE StepOneQuestionnaire_ExternalSecurityServices 
+--    (
+--     StepOneQuestionnaire_ID INTEGER NOT NULL , 
+--     ExternalSecurityServices_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE StepOneQuestionnaireEncryptionTechniques 
+--    (
+--     StepOneQuestionnaire_ID INTEGER NOT NULL , 
+--     EncryptionTechnique_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE StepOneQuestionnaireNetworkConnectionRules 
+--    (
+--     StepOneQuestionnaire_ID INTEGER NOT NULL , 
+--     NetworkConnectionRule_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE StepOneQuestionnaireUserCategories 
+--    (
+--     StepOneQuestionnaire_ID INTEGER NOT NULL , 
+--     UserCategory_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE SystemCategorization 
+--    (
+--     SystemCategorization_ID INTEGER NOT NULL PRIMARY KEY , 
+--     SystemClassification NVARCHAR (25) NOT NULL , 
+--     InformationClassification NVARCHAR (25) NOT NULL , 
+--     InformationReleasability NVARCHAR (25) NOT NULL , 
+--     HasGoverningPolicy BIT NOT NULL , 
+--     VaryingClearanceRequirements BIT NOT NULL , 
+--     ClearanceRequirementDescription NVARCHAR (500) , 
+--     HasAggergationImpact BIT NOT NULL , 
+--     IsJointAuthorization BIT NOT NULL , 
+--     NssQuestionnaire_ID INTEGER NOT NULL , 
+--     CategorizationIsApproved BIT NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE SystemCategorization ADD CONSTRAINT SystemCategorization_PK PRIMARY KEY CLUSTERED (SystemCategorization_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE SystemCategorizationGoverningPolicies 
+--    (
+--     SystemCategorization_ID INTEGER NOT NULL , 
+--     GoverningPolicy_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE SystemCategorizationInformationTypes 
+--    (
+--     SystemCategorizationInformationTypes_ID INTEGER NOT NULL , 
+--     SystemCategorization_ID INTEGER NOT NULL , 
+--     Description NVARCHAR (500) NOT NULL , 
+--     InformationType_ID INTEGER NOT NULL , 
+--     ImpactAdjustment_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE SystemCategorizationInformationTypes ADD CONSTRAINT SystemCategorizationInformationTypes_PK PRIMARY KEY CLUSTERED (SystemCategorizationInformationTypes_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE SystemCategorizationInterconnectedSystems 
+--    (
+--     SystemCategorization_ID INTEGER NOT NULL , 
+--     InterconnectedSystem_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE SystemCategorizationJointOrganizations 
+--    (
+--     SystemCategorization_ID INTEGER NOT NULL , 
+--     JointOrganization_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE SystemTypes 
+--    (
+--     SystemType_ID INTEGER NOT NULL PRIMARY KEY , 
+--     SystemType NVARCHAR (100) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE SystemTypes ADD CONSTRAINT SystemTypes_PK PRIMARY KEY CLUSTERED (SystemType_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE TacticalSupportDatabases 
+--    (
+--     TacticalSupportDatabase_ID INTEGER NOT NULL PRIMARY KEY , 
+--     ElectronicWarfare BIT NOT NULL , 
+--     Intelligence BIT NOT NULL , 
+--     Environmental BIT NOT NULL , 
+--     Acoustic BIT NOT NULL , 
+--     Geographic BIT NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE TacticalSupportDatabases ADD CONSTRAINT TacticalSupportDatabases_PK PRIMARY KEY CLUSTERED (TacticalSupportDatabase_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE TestReferences 
+--    (
+--     TestReference_ID INTEGER NOT NULL PRIMARY KEY , 
+--     TestReferenceName NVARCHAR (100) 
+--    )
+--    
+--
+--
+--ALTER TABLE TestReferences ADD CONSTRAINT TestReferences_PK PRIMARY KEY CLUSTERED (TestReference_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE TestScheduleItems 
+--    (
+--     TestScheduleItem_ID INTEGER NOT NULL PRIMARY KEY , 
+--     TestEvent NVARCHAR (100) , 
+--     Category_ID INTEGER NOT NULL , 
+--     DurationInDays INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE TestScheduleItems ADD CONSTRAINT TestSchedule_PK PRIMARY KEY CLUSTERED (TestScheduleItem_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE Titles 
+--    (
+--     Title_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Title NVARCHAR (25) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE Titles ADD CONSTRAINT Titles_PK PRIMARY KEY CLUSTERED (Title_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE TrainingSimulationSystems 
+--    (
+--     TrainingSimulation_ID INTEGER NOT NULL PRIMARY KEY , 
+--     FlightSimulator BIT NOT NULL , 
+--     BridgeSimulator BIT NOT NULL , 
+--     ClassroomNetworkOther BIT NOT NULL , 
+--     EmbeddedTactical BIT NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE TrainingSimulationSystems ADD CONSTRAINT TrainingSimulationSystems_PK PRIMARY KEY CLUSTERED (TrainingSimulation_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE UniqueFindings 
+--    (
+--     Unique_Finding_ID INTEGER NOT NULL PRIMARY KEY , 
+--     AutomatedFindingOutput NVARCHAR , 
+--     Comments NVARCHAR (2000) , 
+--     Finding_Details NVARCHAR (2000) , 
+--     Technical_Mitigation NVARCHAR (2000) , 
+--     Proposed_Mitigation NVARCHAR (2000) , 
+--     Predisposing_Conditions NVARCHAR (2000) , 
+--     Impact NVARCHAR (25) , 
+--     Likelihood NVARCHAR (25) , 
+--     Severity NVARCHAR (25) , 
+--     Risk NVARCHAR (25) , 
+--     Residual_Risk NVARCHAR (25) , 
+--     First_Discovered DATE NOT NULL , 
+--     Last_Observed DATE NOT NULL , 
+--     Approval_Status NVARCHAR NOT NULL , 
+--     Data_Entry_Date DATE , 
+--     Data_Expiration_Date DATE , 
+--     Delta_Analysis_Required BIT NOT NULL , 
+--     Finding_Type_ID INTEGER NOT NULL , 
+--     Source_ID INTEGER NOT NULL , 
+--     Source_File_ID INTEGER NOT NULL , 
+--     Status_ID INTEGER NOT NULL , 
+--     Vulnerability_ID INTEGER NOT NULL , 
+--     Hardware_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE UniqueFindings ADD CONSTRAINT UniqueFindings_PK PRIMARY KEY CLUSTERED (Unique_Finding_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE UserCategories 
+--    (
+--     UserCategory_ID INTEGER NOT NULL PRIMARY KEY , 
+--     UserCategory NVARCHAR (25) 
+--    )
+--    
+--
+--
+--ALTER TABLE UserCategories ADD CONSTRAINT UserCategories_PK PRIMARY KEY CLUSTERED (UserCategory_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE UtilityDistribution 
+--    (
+--     UtilityDistribution_ID INTEGER NOT NULL PRIMARY KEY , 
+--     SCADA BIT NOT NULL , 
+--     UtilitiesEngineering BIT NOT NULL , 
+--     MeteringAndControl BIT NOT NULL , 
+--     MechanicalMonitoring BIT NOT NULL , 
+--     DamageControlMonitoring BIT NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE UtilityDistribution ADD CONSTRAINT UtilityDistribution_PK PRIMARY KEY CLUSTERED (UtilityDistribution_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE VulnerabilitesCCIs 
+--    (
+--     Vulnerability_ID INTEGER NOT NULL , 
+--     CCI_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE Vulnerabilities 
+--    (
+--     Vulnerability_ID INTEGER NOT NULL PRIMARY KEY , 
+--     UniqueVulnerabilityIdentifier NVARCHAR (50) , 
+--     VulnerabilityFamilyOrClass NVARCHAR (100) , 
+--     Version NVARCHAR (25) , 
+--     Release NVARCHAR (25) , 
+--     Title NVARCHAR (100) NOT NULL , 
+--     Description NVARCHAR NOT NULL , 
+--     Risk_Statement NVARCHAR , 
+--     Fix_Text NVARCHAR , 
+--     Published_Date DATE NOT NULL , 
+--     Modified_Date DATE NOT NULL , 
+--     Fix_Published_Date DATE NOT NULL , 
+--     Raw_Risk NVARCHAR (25) NOT NULL , 
+--     V_ID NVARCHAR (25) , 
+--     STIG_ID NVARCHAR (25) , 
+--     Check_Content NVARCHAR 
+--    )
+--    
+--
+--
+--ALTER TABLE Vulnerabilities ADD CONSTRAINT Vulnerabilities_PK PRIMARY KEY CLUSTERED (Vulnerability_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE VulnerabilitySources 
+--    (
+--     Source_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Source_Name NVARCHAR (100) NOT NULL , 
+--     Source_Version NVARCHAR (25) NOT NULL , 
+--     Source_Release NVARCHAR (25) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE VulnerabilitySources ADD CONSTRAINT VulnerabilitySources_PK PRIMARY KEY CLUSTERED (Source_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE VulnerabilitySourcesSoftware 
+--    (
+--     Source_ID INTEGER NOT NULL , 
+--     Software_ID INTEGER NOT NULL 
+--    )
+--    
+--
+--
+--CREATE TABLE Waivers 
+--    (
+--     Waiver_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Waiver_Name NVARCHAR (100) NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE Waivers ADD CONSTRAINT Waivers_PK PRIMARY KEY CLUSTERED (Waiver_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE WeaponsSystems 
+--    (
+--     WeaponsSystem_ID INTEGER NOT NULL PRIMARY KEY , 
+--     FireControlAndTargeting BIT NOT NULL , 
+--     Missile BIT NOT NULL , 
+--     Gun BIT NOT NULL , 
+--     Torpedoes BIT NOT NULL , 
+--     ActiveElectronicWarfare BIT NOT NULL , 
+--     Launchers BIT NOT NULL , 
+--     Decoy BIT NOT NULL , 
+--     Vehicles BIT NOT NULL , 
+--     Tanks BIT NOT NULL , 
+--     Artillery BIT NOT NULL , 
+--     ManDeployableWeapons BIT NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE WeaponsSystems ADD CONSTRAINT WeaponsSystems_PK PRIMARY KEY CLUSTERED (WeaponsSystem_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE WindowsDomainUserSettings 
+--    (
+--     Domain_Settings_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Domain_Is_Disabled BIT NOT NULL , 
+--     Domain_Is_Disabled_Automatically BIT NOT NULL , 
+--     Domain_Cant_Change_PW BIT NOT NULL , 
+--     Domain_Never_Changed_PW BIT NOT NULL , 
+--     Domain_Never_Logged_On BIT NOT NULL , 
+--     Domain_PW_Never_Expires BIT NOT NULL 
+--    )
+--    
+--
+--
+--ALTER TABLE WindowsDomainUserSettings ADD CONSTRAINT WindowsDomainUserSettings_PK PRIMARY KEY CLUSTERED (Domain_Settings_ID)
+--     WITH (
+--     ALLOW_PAGE_LOCKS = ON , 
+--     ALLOW_ROW_LOCKS = ON )
+--      
+--    
+--
+--CREATE TABLE WindowsLocalUserSettings 
+--    (
+--     Local_Settings_ID INTEGER NOT NULL PRIMARY KEY , 
+--     Local_Is_Disabled BIT NOT NULL , 
+--     Local_Is_Disabled_Automatically BIT NOT NULL , 
+--     Local_Cant_Change_PW BIT NOT NULL , 
+--     Local_Never_Changed_PW BIT NOT NULL , 
+--     Local_Never_Logged_On BIT NOT NULL , 
+--     Local_PW_Never_Expires BIT NOT NULL 
+--    )

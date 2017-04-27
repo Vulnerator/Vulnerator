@@ -591,7 +591,7 @@
     <EmbeddedResource Include="Resources\U_CCI_List.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="Resources\Database.ddl" />
+    <EmbeddedResource Include="Resources\Database.ddl" />
     <None Include="Resources\UserGuide\Change-Log.md" />
     <None Include="Resources\UserGuide\Error-Reporting.md" />
     <None Include="Resources\UserGuide\Getting-Started.md" />
