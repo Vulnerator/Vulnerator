@@ -9,6 +9,20 @@ namespace Vulnerator.ViewModel
 {
     public class ThemeViewModel : ViewModelBase
     {
+        private bool _themeChecked;
+        public bool ThemeChecked
+        {
+            get { return _themeChecked; }
+            set
+            {
+                if (_themeChecked != value)
+                {
+                    _themeChecked = value;
+                    RaisePropertyChanged("ThemeChecked");
+                }
+            }
+        }
+
         public ThemeViewModel()
         {
             SetTheme(ConfigAlter.ReadSettingsFromDictionary("currentTheme"));
@@ -18,8 +32,8 @@ namespace Vulnerator.ViewModel
         private void SetTheme(string theme)
         {
             Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
-            var oldTheme = ThemeManager.DetectAppStyle(Application.Current);
             ThemeManager.ChangeAppStyle(Application.Current, appStyle.Item2, ThemeManager.GetAppTheme(theme));
+            ThemeChecked = theme.Equals("BaseLight") ? false : true;
         }
 
         private void SetAccent(string accent)

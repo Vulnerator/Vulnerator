@@ -16,7 +16,6 @@
              xmlns:vm="clr-namespace:Vulnerator.ViewModel"
              HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch"
-             d:DesignHeight="800"
              d:DesignWidth="800"
              DataContext="{Binding Theme,
                                    Source={StaticResource Locator}}"
@@ -29,6 +28,7 @@
                 <Label Content="Base Theme" Style="{StaticResource TopLevelHeaderStyle}" />
                 <Controls:ToggleSwitch Margin="5,0"
                                        HorizontalAlignment="Left"
+                                       IsChecked="{Binding ThemeChecked}"
                                        VerticalAlignment="Top"
                                        CheckChangedCommand="{Binding ChangeThemeCommand}"
                                        CheckChangedCommandParameter="{Binding RelativeSource={RelativeSource Self},
