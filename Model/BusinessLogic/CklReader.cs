@@ -41,7 +41,7 @@ namespace Vulnerator.Model.BusinessLogic
         /// <param name="mitigationsList">List of mitigation items for vulnerabilities to be read against.</param>
         /// <param name="systemName">Name of the system that the mitigations check will be run against.</param>
         /// <returns>string Value</returns>
-        public string ReadCklFile(string fileName, ObservableCollection<MitigationItem> mitigationsList, string systemName)
+        public string ReadCklFile(string fileName, string systemName)
         {
             try
             {

@@ -24,7 +24,7 @@ namespace Vulnerator.Model.BusinessLogic
         private List<FprDescription> fprDescriptionList = new List<FprDescription>();
         private List<FprVulnerability> fprVulnerabilityList = new List<FprVulnerability>();
 
-        public string ReadFpr(string fileName, ObservableCollection<MitigationItem> mitigationsList, string systemName)
+        public string ReadFpr(string fileName, string systemName)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace Vulnerator.Model.BusinessLogic
                     return "Failed; File In Use";
                 }
                 file = Path.GetFileName(fileName);
-                ReadFprArchive(fileName, mitigationsList, systemName);
+                ReadFprArchive(fileName, systemName);
                 return "Processed";
             }
             catch (Exception exception)
@@ -45,7 +45,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private void ReadFprArchive(string fileName, ObservableCollection<MitigationItem> mitigationsList, string systemName)
+        private void ReadFprArchive(string fileName, string systemName)
         {
             try
             {

@@ -37,7 +37,7 @@ namespace Vulnerator.Model.BusinessLogic
         private bool AppendixASelected { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbNistAppendixA")); } }
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
-        public string ReadXccdfFile(string fileName, ObservableCollection<MitigationItem> mitigationsList, string systemName)
+        public string ReadXccdfFile(string fileName, string systemName)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace Vulnerator.Model.BusinessLogic
                     return "Failed; File In Use";
                 }
 
-                ParseXccdfWithXmlReader(fileName, mitigationsList, systemName);
+                ParseXccdfWithXmlReader(fileName, systemName);
                 if (!incorrectFileType)
                 { return "Processed"; }
                 else
@@ -61,7 +61,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private void ParseXccdfWithXmlReader(string fileName, ObservableCollection<MitigationItem> mitigationsList, string systemName)
+        private void ParseXccdfWithXmlReader(string fileName, string systemName)
         {
             try
             {

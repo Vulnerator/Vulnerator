@@ -389,6 +389,7 @@
     <Compile Include="ViewModel\RmfViewModel.cs" />
     <Compile Include="ViewModel\ThemeViewModel.cs" />
     <Compile Include="ViewModel\UserGuideViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelHelper\GuiFeedback.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="ViewModel\VulnerabilityViewModel.cs" />
     <Compile Include="View\Converter\BooleanToCollapsedConverter.cs" />

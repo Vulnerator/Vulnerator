@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace Vulnerator.ViewModel.ViewHelper
+namespace Vulnerator.View.ViewHelper
 {
     public class CommandEnabledComboBox : ComboBox, ICommandSource
     {

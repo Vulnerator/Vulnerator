@@ -82,7 +82,7 @@ namespace Vulnerator.Model.BusinessLogic
 
         #endregion Member Variables
 
-        public string CreateExcelReport(string fileName, AsyncObservableCollection<MitigationItem> mitigationList)
+        public string CreateExcelReport(string fileName)
         {
             try
             {
@@ -146,11 +146,11 @@ namespace Vulnerator.Model.BusinessLogic
                     if (PoamAndRarTabsAreNeeded)
                     {
                         log.Info("Creating POA&M and RAR tabs.");
-                        WriteFindingsToPoamAndRar("ACAS", AcasFindingsShouldBeMerged, mitigationList);
-                        WriteFindingsToPoamAndRar("CKL", CklFindingsShouldBeMerged, mitigationList);
-                        WriteFindingsToPoamAndRar("XCCDF", XccdfFindingsShouldBeMerged, mitigationList);
-                        WriteFindingsToPoamAndRar("WASSP", WasspFindingsShouldBeMerged, mitigationList);
-                        WriteFindingsToPoamAndRar("FPR", FprFindingsShouldBeMerged, mitigationList);
+                        WriteFindingsToPoamAndRar("ACAS", AcasFindingsShouldBeMerged);
+                        WriteFindingsToPoamAndRar("CKL", CklFindingsShouldBeMerged);
+                        WriteFindingsToPoamAndRar("XCCDF", XccdfFindingsShouldBeMerged);
+                        WriteFindingsToPoamAndRar("WASSP", WasspFindingsShouldBeMerged);
+                        WriteFindingsToPoamAndRar("FPR", FprFindingsShouldBeMerged);
                     }
 
                     if (AcasOutputTabIsNeeded)
@@ -162,7 +162,7 @@ namespace Vulnerator.Model.BusinessLogic
                     if (DiscrepanciesTabIsNeeded)
                     {
                         log.Info("Creating Discrepancies tab.");
-                        WriteIndividualDiscrepancies(mitigationList);
+                        WriteIndividualDiscrepancies();
                     }
 
                     if (StigDetailsTabIsNeeded)
@@ -222,7 +222,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private void WriteFindingsToPoamAndRar(string findingType, bool findingsAreMerged, AsyncObservableCollection<MitigationItem> mitigationList)
+        private void WriteFindingsToPoamAndRar(string findingType, bool findingsAreMerged)
         {
             try
             {
@@ -241,8 +241,8 @@ namespace Vulnerator.Model.BusinessLogic
                             if (!FilterByStatus(sqliteDataReader["Status"].ToString()))
                             { continue; }
 
-                            WriteFindingToPoam(sqliteDataReader, mitigationList);
-                            WriteFindingToRar(sqliteDataReader, mitigationList);
+                            WriteFindingToPoam(sqliteDataReader);
+                            WriteFindingToRar(sqliteDataReader);
                         }
                     }
                 }
@@ -846,20 +846,20 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private void WriteFindingToPoam(SQLiteDataReader sqliteDataReader, AsyncObservableCollection<MitigationItem> mitigationList)
+        private void WriteFindingToPoam(SQLiteDataReader sqliteDataReader)
         {
             try
             {
-                MitigationItem mitigation = mitigationList.FirstOrDefault(
-                    x => x.MitigationGroupName.Equals(sqliteDataReader["GroupName"].ToString()) &&
-                        x.MitigationVulnerabilityId.Equals(sqliteDataReader["VulnId"].ToString()));
+                //MitigationItem mitigation = mitigationList.FirstOrDefault(
+                //    x => x.MitigationGroupName.Equals(sqliteDataReader["GroupName"].ToString()) &&
+                //        x.MitigationVulnerabilityId.Equals(sqliteDataReader["VulnId"].ToString()));
 
-                if (mitigation != null)
-                {
-                    if (!FilterByStatus(mitigation.MitigationStatus))
-                    { return; }
-                }
-                else if (!FilterByStatus(sqliteDataReader["Status"].ToString()))
+                //if (mitigation != null)
+                //{
+                //    if (!FilterByStatus(mitigation.MitigationStatus))
+                //    { return; }
+                //}
+                if (!FilterByStatus(sqliteDataReader["Status"].ToString()))
                 { return; }
 
                 poamOpenXmlWriter.WriteStartElement(new Row());
@@ -895,8 +895,8 @@ namespace Vulnerator.Model.BusinessLogic
                 { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["RawRisk"].ToString(), 24); }
                 else
                 { WriteCellValue(poamOpenXmlWriter, ConvertAcasSeverityToDisaCategory(sqliteDataReader["Impact"].ToString()), 24); }
-                if (mitigation != null)
-                { WriteCellValue(poamOpenXmlWriter, mitigation.MitigationText, 20); }
+                if (/*mitigation != null*/ false)
+                { /*WriteCellValue(poamOpenXmlWriter, mitigation.MitigationText, 20);*/ }
                 else
                 {
                     string mitigationText = string.Empty;
@@ -936,8 +936,8 @@ namespace Vulnerator.Model.BusinessLogic
                     WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Source"].ToString() + " :: " +
                         sqliteDataReader["Version"].ToString() + "." + sqliteDataReader["Release"].ToString(), 24);
                 }
-                if (mitigation != null)
-                { WriteCellValue(poamOpenXmlWriter, mitigation.MitigationStatus, 24); }
+                if (/*mitigation != null*/ false)
+                { /*WriteCellValue(poamOpenXmlWriter, mitigation.MitigationStatus, 24);*/ }
                 else
                 { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24); }
                 WriteCellValue(poamOpenXmlWriter, sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine), 20);
@@ -1088,20 +1088,20 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private void WriteFindingToRar(SQLiteDataReader sqliteDataReader, AsyncObservableCollection<MitigationItem> mitigationList)
+        private void WriteFindingToRar(SQLiteDataReader sqliteDataReader)
         {
             try
             {
-                MitigationItem mitigation = mitigationList.FirstOrDefault(
-                    x => x.MitigationGroupName.Equals(sqliteDataReader["GroupName"].ToString()) &&
-                        x.MitigationVulnerabilityId.Equals(sqliteDataReader["VulnId"].ToString()));
+                //MitigationItem mitigation = mitigationList.FirstOrDefault(
+                //    x => x.MitigationGroupName.Equals(sqliteDataReader["GroupName"].ToString()) &&
+                //        x.MitigationVulnerabilityId.Equals(sqliteDataReader["VulnId"].ToString()));
 
-                if (mitigation != null)
-                {
-                    if (!mitigation.MitigationStatus.Equals("Ongoing"))
-                    { return; }
-                }
-                else if (!sqliteDataReader["Status"].ToString().Equals("Ongoing"))
+                //if (mitigation != null)
+                //{
+                //    if (!mitigation.MitigationStatus.Equals("Ongoing"))
+                //    { return; }
+                //}
+                if (!sqliteDataReader["Status"].ToString().Equals("Ongoing"))
                 { return; }
 
                 rarOpenXmlWriter.WriteStartElement(new Row());
@@ -1139,8 +1139,8 @@ namespace Vulnerator.Model.BusinessLogic
                 else
                 { WriteCellValue(rarOpenXmlWriter, ConvertAcasSeverityToDisaCategory(sqliteDataReader["Impact"].ToString()), 24); }
                 WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
-                if (mitigation != null)
-                { WriteCellValue(rarOpenXmlWriter, mitigation.MitigationText, 20); }
+                if (/*mitigation != null*/ false)
+                { /*WriteCellValue(rarOpenXmlWriter, mitigation.MitigationText, 20);*/ }
                 else
                 {
                     string mitigationText = string.Empty;
@@ -1858,7 +1858,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private void WriteIndividualDiscrepancies(AsyncObservableCollection<MitigationItem> mitigationList)
+        private void WriteIndividualDiscrepancies()
         {
             try
             {
@@ -1868,18 +1868,18 @@ namespace Vulnerator.Model.BusinessLogic
                 {
                     foreach (DiscrepancyItem item in stigList)
                     {
-                        MitigationItem mitigationItem = mitigationList.FirstOrDefault(
-                            x => x.MitigationGroupName == item.Group && x.MitigationVulnerabilityId == item.VulnId);
-                        if (mitigationItem != null)
-                        { item.Status = mitigationItem.MitigationStatus; }
+                        //MitigationItem mitigationItem = mitigationList.FirstOrDefault(
+                        //    x => x.MitigationGroupName == item.Group && x.MitigationVulnerabilityId == item.VulnId);
+                        //if (mitigationItem != null)
+                        //{ item.Status = mitigationItem.MitigationStatus; }
                     }
 
                     foreach (DiscrepancyItem item in scapList)
                     {
-                        MitigationItem mitigationItem = mitigationList.FirstOrDefault(
-                            x => x.MitigationGroupName == item.Group && x.MitigationVulnerabilityId == item.VulnId);
-                        if (mitigationItem != null)
-                        { item.Status = mitigationItem.MitigationStatus; }
+                        //MitigationItem mitigationItem = mitigationList.FirstOrDefault(
+                        //    x => x.MitigationGroupName == item.Group && x.MitigationVulnerabilityId == item.VulnId);
+                        //if (mitigationItem != null)
+                        //{ item.Status = mitigationItem.MitigationStatus; }
                         DiscrepancyItem discrepancy = stigList.FirstOrDefault(
                             x => x.RuleId == item.RuleId && x.AssetId == item.AssetId && x.Status != item.Status);
                         if (discrepancy != null)

@@ -17,7 +17,7 @@ namespace Vulnerator.Model.BusinessLogic
         private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
-        public string ReadWassp(string fileName, ObservableCollection<MitigationItem> mitigationsList, string systemName)
+        public string ReadWassp(string fileName, string systemName)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace Vulnerator.Model.BusinessLogic
                 { return wasspFile; }
                 else
                 {
-                    ParseWasspWithXmlReader(wasspFile, mitigationsList, systemName);
+                    ParseWasspWithXmlReader(wasspFile, systemName);
                     System.IO.File.Delete(wasspFile);
                     return "Processed"; 
                 }
@@ -49,7 +49,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private void ParseWasspWithXmlReader(string fileName, ObservableCollection<MitigationItem> mitigationsList, string systemName)
+        private void ParseWasspWithXmlReader(string fileName, string systemName)
         {
             try
             {

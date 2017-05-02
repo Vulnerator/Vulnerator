@@ -1563,44 +1563,44 @@ namespace Vulnerator.ViewModel
 					case "ACAS - CSV":
 						{
 							AcasCsvReader acasCsvReader = new AcasCsvReader();
-							file.Status = acasCsvReader.ReadAcasCsvFile(file.FilePath, MitigationList, file.FileSystemName.Split(':')[0].TrimEnd());
+							file.Status = acasCsvReader.ReadAcasCsvFile(file.FilePath, file.FileSystemName.Split(':')[0].TrimEnd());
 							break;
 						}
 					case "ACAS - Nessus":
 						{
 							AcasNessusReader acasNessusReader = new AcasNessusReader();
-							file.Status = acasNessusReader.ReadAcasNessusFile(file.FilePath, MitigationList, file.FileSystemName.Split(':')[0].Trim());
+							file.Status = acasNessusReader.ReadAcasNessusFile(file.FilePath, file.FileSystemName.Split(':')[0].Trim());
 							acasNessusReader = null;
 							break;
 						}
 					case "Checklist":
 						{
 							CklReader cklReader = new CklReader();
-							file.Status = cklReader.ReadCklFile(file.FilePath, MitigationList, file.FileSystemName.Split(':')[0].TrimEnd());
+							file.Status = cklReader.ReadCklFile(file.FilePath, file.FileSystemName.Split(':')[0].TrimEnd());
 							break;
 						}
 					case "WASSP - HTML":
 						{
 							WasspReader wasspReader = new WasspReader();
-							file.Status = wasspReader.ReadWassp(file.FilePath, MitigationList, file.FileSystemName.Split(':')[0].TrimEnd());
+							file.Status = wasspReader.ReadWassp(file.FilePath, file.FileSystemName.Split(':')[0].TrimEnd());
 							break;
 						}
 					case "WASSP - XML":
 						{
 							XmlWasspReader xmlWasspReader = new XmlWasspReader();
-							file.Status = xmlWasspReader.ReadXmlWassp(file.FilePath, MitigationList, file.FileSystemName.Split(':')[0].TrimEnd());
+							file.Status = xmlWasspReader.ReadXmlWassp(file.FilePath, file.FileSystemName.Split(':')[0].TrimEnd());
 							break;
 						}
 					case "SCAP Benchmark":
 						{
 							XccdfReader xccdfReader = new XccdfReader();
-							file.Status = xccdfReader.ReadXccdfFile(file.FilePath, MitigationList, file.FileSystemName.Split(':')[0].TrimEnd());
+							file.Status = xccdfReader.ReadXccdfFile(file.FilePath, file.FileSystemName.Split(':')[0].TrimEnd());
 							break;
 						}
                     case "Fortify FPR":
                         {
                             FprReader fprReader = new FprReader();
-                            file.Status = fprReader.ReadFpr(file.FilePath, MitigationList, file.FileSystemName.Split(':')[0].TrimEnd());
+                            file.Status = fprReader.ReadFpr(file.FilePath, file.FileSystemName.Split(':')[0].TrimEnd());
                             break;
                         }
                     default:
@@ -1657,7 +1657,7 @@ namespace Vulnerator.ViewModel
 			log.Info("Begin creation of " + saveExcelFile.FileName);
 			fileStopWatch.Start();
 			OpenXmlReportCreator openXmlReportCreator = new OpenXmlReportCreator();
-			if (!openXmlReportCreator.CreateExcelReport(saveExcelFile.FileName, MitigationList).Contains("successful"))
+			if (!openXmlReportCreator.CreateExcelReport(saveExcelFile.FileName).Contains("successful"))
 			{
 				log.Error("Creation of " + saveExcelFile.FileName + " failed; Elapsed time: " + fileStopWatch.Elapsed.ToString());
 				fileStopWatch.Stop();

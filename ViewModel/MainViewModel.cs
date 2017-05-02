@@ -1,22 +1,14 @@
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Messaging;
 using log4net;
-using Microsoft.Win32;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Windows.Input;
-using System.Xml;
-using System.Xml.Linq;
 using Vulnerator.Model.BusinessLogic;
 using Vulnerator.Model.DataAccess;
-using Vulnerator.Model.ModelHelper;
 using Vulnerator.Model.Object;
-using Microsoft.EntityFrameworkCore;
+using Vulnerator.ViewModel.ViewModelHelper;
 
 namespace Vulnerator.ViewModel
 {
@@ -110,6 +102,20 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private bool _isEnabled = true;
+        public bool IsEnabled
+        {
+            get { return _isEnabled; }
+            set
+            {
+                if (_isEnabled != value)
+                {
+                    _isEnabled = value;
+                    RaisePropertyChanged("IsEnabled");
+                }
+            }
+        }
+
         private Release _release = new Release();
         public Release Release
         {
@@ -135,10 +141,18 @@ namespace Vulnerator.ViewModel
             githubActions = new GitHubActions();
             databaseBuilder = new DatabaseBuilder();
             VersionTest();
+            Messenger.Default.Register<GuiFeedback>(this, (guiFeedback) => UpdateGui(guiFeedback));
         }
 
         ~MainViewModel()
         { configAlter.WriteSettingsToConfigurationXml(); }
+
+        private void UpdateGui(GuiFeedback guiFeedback)
+        {
+            ProgressLabelText = guiFeedback.ProgressLabelText;
+            ProgressRingVisibility = guiFeedback.ProgressRingVisibility;
+            IsEnabled = guiFeedback.IsEnabled;
+        }
 
         private void VersionTest()
         {

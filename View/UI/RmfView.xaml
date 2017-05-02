@@ -1346,7 +1346,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
                     <Expander Grid.Column="1"
-                              Background="{StaticResource WindowBackgroundBrush}"
+                              Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
                               ExpandDirection="Right">
                         <Expander.Header>
