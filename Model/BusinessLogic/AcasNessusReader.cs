@@ -242,37 +242,37 @@ namespace Vulnerator.Model.BusinessLogic
                                     DateTime scanEndTime;
                                     if (DateTime.TryParseExact(xmlReader.Value.Replace("  ", " "), dateTimeFormat, System.Globalization.CultureInfo.InvariantCulture,
                                         System.Globalization.DateTimeStyles.None, out scanEndTime))
-                                    { workingSystem.SetEndTime(scanEndTime); }
+                                    { workingSystem.EndTime = scanEndTime; }
                                     break;
                                 }
                             case "Credentialed_Scan":
                                 {
                                     xmlReader.Read();
-                                    workingSystem.SetCredentialedScan(xmlReader.Value);
+                                    workingSystem.CredentialedScan = xmlReader.Value;
                                     break;
                                 }
                             case "host-fqdn":
                                 {
                                     xmlReader.Read();
-                                    workingSystem.SetHostName(xmlReader.Value);
+                                    workingSystem.HostName = xmlReader.Value;
                                     break;
                                 }
                             case "netbios-name":
                                 {
                                     xmlReader.Read();
-                                    workingSystem.SetNetBiosName(xmlReader.Value);
+                                    workingSystem.NetBiosName = xmlReader.Value;
                                     break;
                                 }
                             case "operating-system":
                                 {
                                     xmlReader.Read();
-                                    workingSystem.SetOperatingSystem(xmlReader.Value);
+                                    workingSystem.OperatingSystem = xmlReader.Value;
                                     break;
                                 }
                             case "host-ip":
                                 {
                                     xmlReader.Read();
-                                    workingSystem.SetIpAddress(xmlReader.Value);
+                                    workingSystem.IpAddress = xmlReader.Value;
                                     break;
                                 }
                             case "HOST_START":
@@ -280,7 +280,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     xmlReader.Read();
                                     DateTime scanStartTime;
                                     if (DateTime.TryParseExact(xmlReader.Value.Replace("  ", " "), dateTimeFormat, null, System.Globalization.DateTimeStyles.None, out scanStartTime))
-                                    { workingSystem.SetStartTime(scanStartTime); }
+                                    { workingSystem.StartTime = scanStartTime; }
                                     break;
                                 }
                             default:

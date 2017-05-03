@@ -27,38 +27,52 @@ namespace Vulnerator.Model.DataAccess
 
         private void CheckDatabase()
         {
-            int currentVersion = 0;
-            int latestVersion = 1;
-            sqliteConnection.Open();
-            using (SQLiteCommand sqliteCommand = new SQLiteCommand("PRAGMA user_version", sqliteConnection))
-            { currentVersion = int.Parse(sqliteCommand.ExecuteScalar().ToString()); }
-            sqliteConnection.Close();
-            if (currentVersion == latestVersion)
-            { return; }
-            else
+            try
             {
+                int currentVersion = 0;
+                int latestVersion = 1;
                 sqliteConnection.Open();
-                using (SQLiteCommand sqliteCommand = new SQLiteCommand("", sqliteConnection))
-                {
-                    for (int i = currentVersion; i <= latestVersion; i++)
-                    { UpdateDatabase(i); }
-                }
+                using (SQLiteCommand sqliteCommand = new SQLiteCommand("PRAGMA user_version", sqliteConnection))
+                { currentVersion = int.Parse(sqliteCommand.ExecuteScalar().ToString()); }
                 sqliteConnection.Close();
+                if (currentVersion == latestVersion)
+                { return; }
+                else
+                {
+                    using (SQLiteCommand sqliteCommand = new SQLiteCommand("", sqliteConnection))
+                    {
+                        for (int i = currentVersion; i <= latestVersion; i++)
+                        { UpdateDatabase(i); }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to verify the version of the Vulnerator Database.");
+                log.Debug("Exception details:", exception);
             }
         }
 
         private void UpdateDatabase(int version)
         {
-            switch (version)
+            try
             {
-                case 0:
-                    {
-                        System.IO.File.Delete(databaseFile);
-                        CreateDatabase();
-                        break;
-                    }
-                default:
-                    { break; }
+                switch (version)
+                {
+                    case 0:
+                        {
+                            System.IO.File.Delete(databaseFile);
+                            CreateDatabase();
+                            break;
+                        }
+                    default:
+                        { break; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to update the Vulnerator Database.");
+                log.Debug("Exception details:", exception);
             }
         }
 
@@ -68,7 +82,7 @@ namespace Vulnerator.Model.DataAccess
             {
                 SQLiteConnection.CreateFile(databaseFile);
                 sqliteConnection.Open();
-                using (SQLiteCommand sqliteCommand = new SQLiteCommand(DdlTextReader(), sqliteConnection))
+                using (SQLiteCommand sqliteCommand = new SQLiteCommand(DdlTextReader("Vulnerator.Resources.DdlFiles.CreateDatabase.ddl"), sqliteConnection))
                 { sqliteCommand.ExecuteNonQuery(); }
                 log.Info("Findings database created successfully.");
             }
@@ -79,10 +93,10 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        private string DdlTextReader()
+        public string DdlTextReader(string ddlResourceFile)
         {
             string ddlText = string.Empty;
-            using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.DdlFiles.Database.ddl"))
+            using (Stream stream = assembly.GetManifestResourceStream(ddlResourceFile))
             {
                 using (StreamReader streamReader = new StreamReader(stream))
                 { ddlText = streamReader.ReadToEnd(); }

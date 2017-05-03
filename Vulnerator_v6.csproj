@@ -592,13 +592,14 @@
     <EmbeddedResource Include="Resources\U_CCI_List.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\DdlFiles\Database.ddl" />
-    <None Include="Resources\UserGuide\Change-Log.md" />
-    <None Include="Resources\UserGuide\Error-Reporting.md" />
-    <None Include="Resources\UserGuide\Getting-Started.md" />
-    <None Include="Resources\UserGuide\Home.md" />
-    <None Include="Resources\UserGuide\Looking-Ahead.md" />
-    <None Include="Resources\UserGuide\Using-the-Software.md" />
+    <EmbeddedResource Include="Resources\DdlFiles\CreateDatabase.ddl" />
+    <EmbeddedResource Include="Resources\UserGuide\Change-Log.md" />
+    <EmbeddedResource Include="Resources\UserGuide\Error-Reporting.md" />
+    <EmbeddedResource Include="Resources\UserGuide\Getting-Started.md" />
+    <EmbeddedResource Include="Resources\UserGuide\Home.md" />
+    <EmbeddedResource Include="Resources\UserGuide\Looking-Ahead.md" />
+    <EmbeddedResource Include="Resources\UserGuide\Using-the-Software.md" />
+    <EmbeddedResource Include="Resources\DdlFiles\InsertHardware.ddl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -641,6 +642,7 @@
     <Resource Include="Resources\UserGuide\Images\ThemeFlyout.jpg" />
     <Resource Include="Resources\UserGuide\Images\VulneratorMain.jpg" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
