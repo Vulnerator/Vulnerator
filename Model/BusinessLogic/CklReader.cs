@@ -27,7 +27,7 @@ namespace Vulnerator.Model.BusinessLogic
         private string groupName = string.Empty;
         private string fileNameWithoutPath = string.Empty;
         private int referencePrimaryKey = 0;
-        private int hardwarePrimaryKey = 0;
+        private int hardwarePrimaryKey;
         private int vulnerabilityPrimaryKey;
         private string[] vulnerabilityTableColumns = new string[] { 
             "StigId", "VulnId", "VulnTitle", "Description", "RiskStatement", "IaControl", "NistControl", "CPEs", "CrossReferences", "CheckContent", 
@@ -57,6 +57,8 @@ namespace Vulnerator.Model.BusinessLogic
                 }
                 fileNameWithoutPath = Path.GetFileName(fileName);
                 groupName = systemName;
+                if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
+                { DatabaseBuilder.sqliteConnection.Open(); }
                 using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
                 {
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
@@ -98,6 +100,7 @@ namespace Vulnerator.Model.BusinessLogic
                     }
                     sqliteTransaction.Commit();
                 }
+                DatabaseBuilder.sqliteConnection.Close();
                 return "Processed";
             }
             catch (Exception exception)
@@ -736,12 +739,12 @@ namespace Vulnerator.Model.BusinessLogic
                             foreach (SQLiteParameter sqliteParameter in sqliteCommand.Parameters)
                             {
                                 if (Array.IndexOf(vulnerabilityTableColumns, sqliteParameter.ParameterName) >= 0)
-                                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(37, "@" + sqliteParameter.ParameterName + ", "); }
+                                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(39, "@" + sqliteParameter.ParameterName + ", "); }
                             }
                             foreach (SQLiteParameter sqliteParameter in sqliteCommand.Parameters)
                             {
                                 if (Array.IndexOf(vulnerabilityTableColumns, sqliteParameter.ParameterName) >= 0)
-                                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, sqliteParameter.ParameterName + ", "); }
+                                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(29, sqliteParameter.ParameterName + ", "); }
                             }
                             break;
                         }
@@ -750,12 +753,12 @@ namespace Vulnerator.Model.BusinessLogic
                             foreach (SQLiteParameter sqliteParameter in sqliteCommand.Parameters)
                             {
                                 if (Array.IndexOf(uniqueFindingTableColumns, sqliteParameter.ParameterName) >= 0)
-                                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(126, "@" + sqliteParameter.ParameterName + ", "); }
+                                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(127, "@" + sqliteParameter.ParameterName + ", "); }
                             }
                             foreach (SQLiteParameter sqliteParameter in sqliteCommand.Parameters)
                             {
                                 if (Array.IndexOf(uniqueFindingTableColumns, sqliteParameter.ParameterName) >= 0)
-                                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, sqliteParameter.ParameterName + ", "); }
+                                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(28, sqliteParameter.ParameterName + ", "); }
                             }
                             break;
                         }

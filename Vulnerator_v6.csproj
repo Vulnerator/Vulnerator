@@ -334,6 +334,7 @@
     <Compile Include="Model\DataAccess\DatabaseHandler.cs" />
     <Compile Include="Model\Object\Asset.cs" />
     <Compile Include="Model\Object\AssetOverviewLineItem.cs" />
+    <Compile Include="Model\Object\Cci.cs" />
     <Compile Include="Model\Object\File.cs" />
     <Compile Include="Model\Object\FindingStatus.cs" />
     <Compile Include="Model\Object\Group.cs" />
