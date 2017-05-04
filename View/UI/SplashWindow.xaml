@@ -1,0 +1,75 @@
+﻿<Controls:MetroWindow x:Class="Vulnerator.View.UI.SplashWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:local="clr-namespace:Vulnerator.View.UI"
+                      xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      Title="Vulnerator"
+                      Width="Auto"
+                      Height="Auto"
+                      BorderBrush="{DynamicResource AccentColorBrush}"
+                      GlowBrush="{DynamicResource AccentColorBrush}"
+                      mc:Ignorable="d">
+
+    <!--  Window Icon Template  -->
+    <Controls:MetroWindow.IconTemplate>
+        <DataTemplate>
+            <IconPacks:PackIconModern Width="{TemplateBinding Width}"
+                                      Height="{TemplateBinding Height}"
+                                      Margin="4"
+                                      Foreground="{DynamicResource IdealForegroundColorBrush}"
+                                      Kind="GraphBar" />
+        </DataTemplate>
+    </Controls:MetroWindow.IconTemplate>
+
+    <!--  Window Titlebar Controls  -->
+    <Controls:MetroWindow.TitleTemplate>
+        <DataTemplate>
+            <StackPanel HorizontalAlignment="Left"
+                        Orientation="Horizontal">
+                <TextBlock Margin="5,0"
+                           VerticalAlignment="Center"
+                           FontFamily="{DynamicResource HeaderFontFamily}"
+                           FontSize="{DynamicResource WindowTitleFontSize}"
+                           Text="{TemplateBinding Content}"
+                           TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+        </DataTemplate>
+    </Controls:MetroWindow.TitleTemplate>
+
+    <!--  Window Command Button Styling  -->
+    <Controls:MetroWindow.WindowButtonCommands>
+        <Controls:WindowButtonCommands Template="{DynamicResource MahApps.Metro.Templates.WindowButtonCommands.Win10}" />
+    </Controls:MetroWindow.WindowButtonCommands>
+
+    <StackPanel>
+        <Label Style="{StaticResource TopLevelHeaderStyle}">
+            <TextBlock Text="Welcome!"
+                       TextTrimming="CharacterEllipsis" />
+        </Label>
+        <Label Style="{StaticResource SecondLevelHeaderStyle}">
+            <TextBlock Text="Application Environment"
+                       TextTrimming="CharacterEllipsis" />
+        </Label>
+        <RadioButton GroupName="environment" Margin="5,0,5,5">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Portable" />
+                <IconPacks:PackIconMaterial Kind="InformationOutline" Height="10" Width="10" VerticalAlignment="Center" Margin="5,0,0,0" Foreground="{DynamicResource AccentColorBrush}" />
+            </StackPanel>
+        </RadioButton>
+        <RadioButton GroupName="environment"
+                     Margin="5,0,5,5">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Persistant" />
+                <IconPacks:PackIconMaterial Kind="InformationOutline"
+                                            Height="10"
+                                            Width="10"
+                                            VerticalAlignment="Center"
+                                            Margin="5,0,0,0"
+                                            Foreground="{DynamicResource AccentColorBrush}" />
+            </StackPanel>
+        </RadioButton>
+    </StackPanel>
+</Controls:MetroWindow>

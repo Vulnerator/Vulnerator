@@ -100,11 +100,11 @@ namespace Vulnerator.Model.DataAccess
                     sqliteTransaction.Commit();
                 }
                 sqliteConnection.Close();
-                log.Info("Findings database created successfully.");
+                log.Info("Database created successfully.");
             }
             catch (Exception exception)
             {
-                log.Error("Findings database creation failed.");
+                log.Error("Database creation failed.");
                 throw exception;
             }
         }

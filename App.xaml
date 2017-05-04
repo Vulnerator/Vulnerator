@@ -9,7 +9,7 @@
              xmlns:viewHelper="clr-namespace:Vulnerator.View.ViewHelper"
              xmlns:vm="clr-namespace:Vulnerator.ViewModel"
              d1p1:Ignorable="d"
-             StartupUri="View/UI/DevWindow.xaml">
+             StartupUri="View/UI/SplashWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

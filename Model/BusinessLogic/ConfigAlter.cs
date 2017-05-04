@@ -6,8 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
-using Vulnerator.Model.DataAccess;
-using Vulnerator.Model.ModelHelper;
 using Vulnerator.Model.Object;
 
 namespace Vulnerator.Model.BusinessLogic
@@ -125,7 +123,7 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                log.Info("Writing settings values fro dictionary to configuration XML.");
+                log.Info("Writing settings values from dictionary to configuration XML.");
                 foreach (string key in configDic.Keys)
                 {
                     string value;

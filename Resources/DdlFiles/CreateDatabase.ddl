@@ -1099,9 +1099,9 @@ CREATE TABLE TrainingSimulationSystems
 CREATE TABLE UniqueFindings 
 	(
 	 Unique_Finding_ID INTEGER PRIMARY KEY , 
-	 AutomatedFindingOutput NVARCHAR , 
-	 Comments NVARCHAR (2000) , 
-	 Finding_Details NVARCHAR (2000) , 
+	 Tool_Generated_Output NVARCHAR , 
+	 Comments NVARCHAR , 
+	 Finding_Details NVARCHAR , 
 	 Technical_Mitigation NVARCHAR (2000) , 
 	 Proposed_Mitigation NVARCHAR (2000) , 
 	 Predisposing_Conditions NVARCHAR (2000) , 
@@ -1110,9 +1110,9 @@ CREATE TABLE UniqueFindings
 	 Severity NVARCHAR (25) , 
 	 Risk NVARCHAR (25) , 
 	 Residual_Risk NVARCHAR (25) , 
-	 First_Discovered DATE NOT NULL , 
-	 Last_Observed DATE NOT NULL , 
-	 Approval_Status NVARCHAR NOT NULL , 
+	 First_Discovered DATE NOT NULL, 
+	 Last_Observed DATE NOT NULL, 
+	 Approval_Status NVARCHAR (5) NOT NULL, 
 	 Data_Entry_Date DATE , 
 	 Data_Expiration_Date DATE , 
 	 Delta_Analysis_Required NVARCHAR (5) NOT NULL , 
@@ -1127,6 +1127,7 @@ CREATE TABLE UniqueFindings
 	 Technology_Area NVARCHAR (100),
 	 Web_DB_Site NVARCHAR(500),
 	 Web_DB_Instance NVARCHAR(100),
+	 Classification NVARCHAR (25),
 	 FOREIGN KEY (Finding_Type_ID) REFERENCES FindingTypes(Finding_Type_ID),
 	 FOREIGN KEY (Source_ID) REFERENCES VulnerabilitySources(Source_ID),
 	 FOREIGN KEY (Source_File_ID) REFERENCES SourceFiles(Source_File_ID),
@@ -1166,12 +1167,12 @@ CREATE TABLE Vulnerabilities
 	 Version NVARCHAR (25) , 
 	 Release NVARCHAR (25) , 
 	 Title NVARCHAR (100) NOT NULL , 
-	 Description NVARCHAR NOT NULL , 
+	 Description NVARCHAR , 
 	 Risk_Statement NVARCHAR , 
 	 Fix_Text NVARCHAR , 
-	 Published_Date DATE NOT NULL , 
-	 Modified_Date DATE NOT NULL , 
-	 Fix_Published_Date DATE NOT NULL , 
+	 Published_Date DATE , 
+	 Modified_Date DATE , 
+	 Fix_Published_Date DATE , 
 	 Raw_Risk NVARCHAR (25) NOT NULL , 
 	 Check_Content NVARCHAR (2000),
 	 False_Positives NVARCHAR (2000),
@@ -1181,8 +1182,7 @@ CREATE TABLE Vulnerabilities
 	 Potential_Impacts NVARCHAR (2000),
 	 Third_Party_Tools NVARCHAR (500),
 	 Responsibility NVARCHAR (500),
-	 Severity_Override_Guidance NVARCHAR (2000),
-	 Classification NVARCHAR (25)
+	 Severity_Override_Guidance NVARCHAR (2000)
 	);
 CREATE TABLE Vulnerabilities_VulnerabilityReferences
 	(
@@ -1255,6 +1255,11 @@ CREATE TABLE WindowsLocalUserSettings
 INSERT INTO Groups VALUES (NULL, '', 0, NULL, NULL);
 INSERT INTO FindingTypes VALUES (NULL, 'ACAS');
 INSERT INTO FindingTypes VALUES (NULL, 'CKL');
-INSERT INTO FindingTypes VALUES (NULL, 'WASSP');
-INSERT INTO FindingTypes VALUES (NULL, 'XCCDF');
 INSERT INTO FindingTypes VALUES (NULL, 'Fortify');
+INSERT INTO FindingTypes VALUES (NULL, 'XCCDF');
+INSERT INTO FindingTypes VALUES (NULL, 'WASSP');
+INSERT INTO FindingStatuses VALUES (NULL, 'Completed');
+INSERT INTO FindingStatuses VALUES (NULL, 'Error');
+INSERT INTO FindingStatuses VALUES (NULL, 'Informational');
+INSERT INTO FindingStatuses VALUES (NULL, 'Not Applicable');
+INSERT INTO FindingStatuses VALUES (NULL, 'Not Reviewed');

@@ -30,10 +30,14 @@ namespace Vulnerator.Model.BusinessLogic
         private int hardwarePrimaryKey;
         private int vulnerabilityPrimaryKey;
         private string[] vulnerabilityTableColumns = new string[] { 
-            "StigId", "VulnId", "VulnTitle", "Description", "RiskStatement", "IaControl", "NistControl", "CPEs", "CrossReferences", "CheckContent", 
-            "IavmNumber", "FixText", "PluginPublishedDate", "PluginModifiedDate", "PatchPublishedDate", "Age", "RawRisk", "Impact", "RuleId", "CciNumber" };
-        private string[] uniqueFindingTableColumns = new string[] { "Comments", "FindingDetails", "PluginOutput", "LastObserved" };
-        private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
+            "Unique_Vulnerability_Identifier", "STIG_V_ID", "Rule_Ver", "VulnerabilityFamilyOrClass", "Version", "Release", "Title", "Description", "Risk_Statement",
+            "Fix_Text", "Published_Date", "Modified_Date", "Fix_Published_Date", "Raw_Risk", "Check_Content", "False_Positives", "False_Negatives", "Documentable",
+            "Mitigations", "Potential_Impacts", "Third_Party_Tools", "Responsibility", "Severity_Override_Guidance" };
+        private string[] uniqueFindingTableColumns = new string[] { "Tool_Generated_Output", "Comments", "Finding_Details", "Technical_Mitigation", "Proposed_Mitigation",
+            "Predisposing_Conditions", "Impact", "Likelihood", "Severity", "Risk", "Residual_Risk", "First_Discovered", "Last_Observed", "Approval_Status",
+            "Data_Entry_Date", "Data_Expiration_Date", "Delta_Analysis_Required", "Severity_Override", "Severity_Override_Justification", "Technology_Area", "Web_DB_Site",
+            "Web_DB_Instance", "Classification" };
+        private bool UserPrefersHost_Name { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
         private bool RevisionThreeSelected { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("revisionThreeRadioButton")); } }
         private bool RevisionFourSelected { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("revisionFourRadioButton")); } }
         private bool AppendixASelected { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("nistAppendixA_CheckBox")); } }
@@ -63,7 +67,7 @@ namespace Vulnerator.Model.BusinessLogic
                 {
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "CKL"));
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Type", "CKL"));
                         CreateAddGroupNameCommand(systemName, sqliteCommand);
                         CreateAddFileNameCommand(fileNameWithoutPath, sqliteCommand);
                         XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
@@ -451,6 +455,7 @@ namespace Vulnerator.Model.BusinessLogic
                     sqliteCommand.CommandText = SetInitialSqliteCommandText("Vulnerability");
                     sqliteCommand.CommandText = InsertParametersIntoSqliteCommandText(sqliteCommand, "Vulnerability");
                     sqliteCommand.ExecuteNonQuery();
+                    SetStandardParameters(sqliteCommand);
                     sqliteCommand.CommandText = SetInitialSqliteCommandText("UniqueFinding");
                     sqliteCommand.CommandText = InsertParametersIntoSqliteCommandText(sqliteCommand, "UniqueFinding");
                     sqliteCommand.ExecuteNonQuery();
@@ -483,7 +488,7 @@ namespace Vulnerator.Model.BusinessLogic
                             case "Severity":
                                 {
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("Impact", ConvertSeverityToImpact(ObtainAttributeDataNodeValue(xmlReader))));
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("RawRisk",
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Raw_Risk",
                                         ConvertImpactToRawRisk(sqliteCommand.Parameters["Impact"].Value.ToString())));
                                     break;
                                 }
@@ -499,7 +504,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "Rule_Title":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("VulnTitle", ObtainAttributeDataNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Title", ObtainAttributeDataNodeValue(xmlReader)));
                                     break;
                                 }
                             case "Vuln_Discuss":
@@ -514,7 +519,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "Fix_Text":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("FixText", ObtainAttributeDataNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Fix_Text", ObtainAttributeDataNodeValue(xmlReader)));
                                     break;
                                 }
                             case "CCI_REF":
@@ -556,7 +561,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "Check_Content":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("CheckContent", ObtainAttributeDataNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Check_Content", ObtainAttributeDataNodeValue(xmlReader)));
                                     break;
                                 }
                             case "False_Positives":
@@ -663,7 +668,7 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "FINDING_DETAILS":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("FindingDetails", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Details", ObtainCurrentNodeValue(xmlReader)));
                                     break;
                                 }
                             case "COMMENTS":
@@ -696,6 +701,14 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
+        private void SetStandardParameters(SQLiteCommand sqliteCommand)
+        {
+            sqliteCommand.Parameters.Add(new SQLiteParameter("Approval_Status", "False"));
+            sqliteCommand.Parameters.Add(new SQLiteParameter("Delta_Analysis_Required", "False"));
+            sqliteCommand.Parameters.Add(new SQLiteParameter("First_Discovered", DateTime.Now.ToString()));
+            sqliteCommand.Parameters.Add(new SQLiteParameter("Last_Observed", DateTime.Now.ToString()));
+        }
+
         private string SetInitialSqliteCommandText(string tableName)
         {
             try
@@ -708,14 +721,14 @@ namespace Vulnerator.Model.BusinessLogic
                         }
                     case "UniqueFinding":
                         {
-                            return "INSERT INTO UniqueFindings (FindingTypeIndex, SourceIndex, StatusIndex, " +
-                                "FileNameIndex, VulnerabilityIndex, AssetIndex) VALUES (" +
-                                "(SELECT FindingTypeIndex FROM FindingTypes WHERE FindingType = @FindingType), " +
-                                "(SELECT SourceIndex FROM VulnerabilitySources WHERE Source = @Source), " +
-                                "(SELECT StatusIndex FROM FindingStatuses WHERE Status = @Status), " +
-                                "(SELECT FileNameIndex FROM FileNames WHERE FileName = @FileName), " +
-                                "(SELECT VulnerabilityIndex FROM Vulnerability WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier), " +
-                                "(SELECT AssetIndex FROM Assets WHERE AssetIdToReport = @AssetIdToReport));";
+                            return "INSERT INTO UniqueFindings (Finding_Type_ID, Source_ID, Status_ID, " +
+                                "Source_File_ID, Vulnerability_ID, Hardware_ID) VALUES (" +
+                                "(SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = @Finding_Type), " +
+                                "(SELECT Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source AND Source_Version = @Version AND Source_Release = @Release), " +
+                                "(SELECT Status_ID FROM FindingStatuses WHERE Status = @Status), " +
+                                "(SELECT Source_File_ID FROM SourceFiles WHERE Source_File_Name = @FileName), " +
+                                "(SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier), " +
+                                "(SELECT Hardware_ID FROM Hardware WHERE Host_Name = @Host_Name));";
                         }
                     default:
                         { return string.Empty; }
@@ -753,7 +766,7 @@ namespace Vulnerator.Model.BusinessLogic
                             foreach (SQLiteParameter sqliteParameter in sqliteCommand.Parameters)
                             {
                                 if (Array.IndexOf(uniqueFindingTableColumns, sqliteParameter.ParameterName) >= 0)
-                                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(127, "@" + sqliteParameter.ParameterName + ", "); }
+                                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(122, "@" + sqliteParameter.ParameterName + ", "); }
                             }
                             foreach (SQLiteParameter sqliteParameter in sqliteCommand.Parameters)
                             {

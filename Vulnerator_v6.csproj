@@ -388,6 +388,7 @@
     <Compile Include="ViewModel\NewsViewModel.cs" />
     <Compile Include="ViewModel\ReportingViewModel.cs" />
     <Compile Include="ViewModel\RmfViewModel.cs" />
+    <Compile Include="ViewModel\SplashViewModel.cs" />
     <Compile Include="ViewModel\ThemeViewModel.cs" />
     <Compile Include="ViewModel\UserGuideViewModel.cs" />
     <Compile Include="ViewModel\ViewModelHelper\GuiFeedback.cs" />
@@ -425,6 +426,9 @@
     </Compile>
     <Compile Include="View\UI\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\SplashWindow.xaml.cs">
+      <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UI\ThemeView.xaml.cs">
       <DependentUpon>ThemeView.xaml</DependentUpon>
@@ -541,6 +545,10 @@
     <Page Include="View\UI\SettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\UI\SplashWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\UI\ThemeView.xaml">
       <Generator>MSBuild:Compile</Generator>
