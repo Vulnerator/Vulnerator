@@ -22,5 +22,17 @@ namespace Vulnerator.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Test")]
+        public string Test {
+            get {
+                return ((string)(this["Test"]));
+            }
+            set {
+                this["Test"] = value;
+            }
+        }
     }
 }

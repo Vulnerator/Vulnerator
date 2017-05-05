@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using Vulnerator.View.ViewHelper;
 
 namespace Vulnerator.View.UI
@@ -19,6 +20,11 @@ namespace Vulnerator.View.UI
                 myXmlDataProvider.Source = xmlPath;
                 myXmlDataProvider.XPath = "preferencesRoot";
             }
+        }
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            Properties.Settings.Default.Save();
+            base.OnClosing(e);
         }
     }
 }

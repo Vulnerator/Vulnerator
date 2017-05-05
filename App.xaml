@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:Vulnerator.View.UI"
+    xmlns:Properties="clr-namespace:Vulnerator.Properties"
     xmlns:viewHelper="clr-namespace:Vulnerator.View.ViewHelper"
     xmlns:vm="clr-namespace:Vulnerator.ViewModel"
     d1p1:Ignorable="d"
@@ -25,6 +26,7 @@
                     <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
+            <Properties:Settings x:Key="Settings" />
             <vm:MainWindowViewModel x:Key="MainWindowViewModel" />
             <Style x:Key="SecondLevelHeaderStyle" TargetType="Label">
                 <Setter Property="FontSize" Value="16" />
