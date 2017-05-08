@@ -21,10 +21,5 @@ namespace Vulnerator.View.UI
                 myXmlDataProvider.XPath = "preferencesRoot";
             }
         }
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            Properties.Settings.Default.Save();
-            base.OnClosing(e);
-        }
     }
 }

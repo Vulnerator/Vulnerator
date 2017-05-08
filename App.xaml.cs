@@ -22,7 +22,15 @@ namespace Vulnerator
         {
             // hook on error before app really starts
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+            Vulnerator.Properties.Settings.Default.Upgrade();
+            Vulnerator.Properties.Settings.Default.Save();
             base.OnStartup(e);
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            Vulnerator.Properties.Settings.Default.Save();
+            base.OnExit(e);
         }
 
         void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

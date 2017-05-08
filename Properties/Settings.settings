@@ -2,8 +2,35 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Vulnerator.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="Test" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Test</Value>
+    <Setting Name="Version" Type="System.String" Scope="User">
+      <Value Profile="(Default)">6.2.0</Value>
+    </Setting>
+    <Setting Name="Theme" Type="System.String" Scope="User">
+      <Value Profile="(Default)">BaseLight</Value>
+    </Setting>
+    <Setting Name="Accent" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Cobalt</Value>
+    </Setting>
+    <Setting Name="Environment" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Undefined</Value>
+    </Setting>
+    <Setting Name="DatabasePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Undefined</Value>
+    </Setting>
+    <Setting Name="LogPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Undefined</Value>
+    </Setting>
+    <Setting Name="Name" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Phone" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Email" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Organization" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

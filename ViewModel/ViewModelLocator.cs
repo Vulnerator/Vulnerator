@@ -49,7 +49,11 @@ namespace Vulnerator.ViewModel
             SimpleIoc.Default.Register<NewsViewModel>();
             SimpleIoc.Default.Register<ThemeViewModel>();
             SimpleIoc.Default.Register<RmfViewModel>();
+            SimpleIoc.Default.Register<SplashViewModel>();
         }
+
+        public SplashViewModel Splash
+        { get { return ServiceLocator.Current.GetInstance<SplashViewModel>(); } }
 
         public MainViewModel Main
         { get { return ServiceLocator.Current.GetInstance<MainViewModel>(); } }

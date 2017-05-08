@@ -8,7 +8,7 @@ using System.Windows;
 [assembly: AssemblyTitle("Vulnerator")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Thinking Compliance; NAVAIR")]
+[assembly: AssemblyCompany("Vulnerator")]
 [assembly: AssemblyProduct("Vulnerator")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]

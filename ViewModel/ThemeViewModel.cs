@@ -3,7 +3,6 @@ using GalaSoft.MvvmLight.Command;
 using MahApps.Metro;
 using System;
 using System.Windows;
-using Vulnerator.Model.BusinessLogic;
 
 namespace Vulnerator.ViewModel
 {
@@ -25,8 +24,9 @@ namespace Vulnerator.ViewModel
 
         public ThemeViewModel()
         {
-            SetTheme(ConfigAlter.ReadSettingsFromDictionary("currentTheme"));
-            SetAccent(ConfigAlter.ReadSettingsFromDictionary("currentAccent"));
+            //Properties.Settings.Default.Upgrade();
+            SetTheme(Properties.Settings.Default["Theme"].ToString());
+            SetAccent(Properties.Settings.Default["Accent"].ToString());
         }
 
         private void SetTheme(string theme)
@@ -49,7 +49,7 @@ namespace Vulnerator.ViewModel
             string theme = (bool)parameter == true ? "BaseLight" : "BaseDark";
             Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
             ThemeManager.ChangeAppStyle(Application.Current, appStyle.Item2, ThemeManager.GetAppTheme(theme));
-            ConfigAlter.WriteSettingsToDictionary("currentTheme", theme);
+            Properties.Settings.Default["Theme"] = theme;
         }
 
         public RelayCommand<object> ChangeAccentCommand
@@ -58,7 +58,8 @@ namespace Vulnerator.ViewModel
         {
             Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
             ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent(parameter.ToString()), appStyle.Item1);
-            ConfigAlter.WriteSettingsToDictionary("currentAccent", parameter.ToString());
+            //ConfigAlter.WriteSettingsToDictionary("currentAccent", parameter.ToString());
+            Properties.Settings.Default["Accent"] = parameter.ToString();
         }
     }
 }

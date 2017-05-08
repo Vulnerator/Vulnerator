@@ -4,14 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:Properties="clr-namespace:Vulnerator.Properties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:Vulnerator.View.UI"
-    xmlns:Properties="clr-namespace:Vulnerator.Properties"
     xmlns:viewHelper="clr-namespace:Vulnerator.View.ViewHelper"
     xmlns:vm="clr-namespace:Vulnerator.ViewModel"
     d1p1:Ignorable="d"
-    StartupUri="View/UI/DevWindow.xaml">
+    StartupUri="View/UI/SplashWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -327,6 +327,240 @@
                         Text="{Binding Label}" />
                 </Grid>
             </DataTemplate>
+
+            <Style
+                x:Key="ErrorTextBox"
+                BasedOn="{StaticResource MetroTextBox}"
+                TargetType="{x:Type TextBox}">
+                <Setter Property="Background" Value="LightPink" />
+                <Setter Property="Foreground" Value="DarkRed" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Padding" Value="10" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type TextBox}">
+                            <ControlTemplate.Resources>
+                                <Storyboard x:Key="enterGotFocus">
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="PART_Message"
+                                        Storyboard.TargetProperty="Opacity"
+                                        To=".2"
+                                        Duration="0:0:0.2" />
+                                </Storyboard>
+                                <Storyboard x:Key="exitGotFocus">
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="PART_Message"
+                                        Storyboard.TargetProperty="Opacity"
+                                        Duration="0:0:0.2" />
+                                </Storyboard>
+
+                                <Storyboard x:Key="enterHasText">
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="PART_Message"
+                                        Storyboard.TargetProperty="Opacity"
+                                        From=".2"
+                                        To="0"
+                                        Duration="0:0:0.2" />
+                                </Storyboard>
+                                <Storyboard x:Key="exitHasText">
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="PART_Message"
+                                        Storyboard.TargetProperty="Opacity"
+                                        Duration="0:0:0.2" />
+                                </Storyboard>
+                            </ControlTemplate.Resources>
+                            <Grid>
+                                <AdornerDecorator x:Name="PART_WaitingForDataEffectAdornerDecorator" Visibility="Collapsed">
+                                    <AdornerDecorator.CacheMode>
+                                        <BitmapCache EnableClearType="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                    </AdornerDecorator.CacheMode>
+                                    <Border
+                                        x:Name="PART_WaitingForDataEffectGrid"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="Transparent"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                </AdornerDecorator>
+                                <Border
+                                    x:Name="Base"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="3"
+                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                <Grid x:Name="PART_InnerGrid" Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition x:Name="TextColumn" Width="*" />
+                                        <ColumnDefinition x:Name="ButtonColumn" Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition x:Name="ButtonRow" Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <ScrollViewer
+                                        x:Name="PART_ContentHost"
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        Margin="2"
+                                        VerticalAlignment="Stretch"
+                                        Background="{x:Null}"
+                                        BorderThickness="0"
+                                        IsTabStop="False" />
+                                    <TextBlock
+                                        x:Name="PART_Message"
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        Margin="6,2,6,2"
+                                        Padding="{TemplateBinding Padding}"
+                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                        Foreground="{TemplateBinding Foreground}"
+                                        IsHitTestVisible="False"
+                                        Opacity="0.6"
+                                        Text="{TemplateBinding Controls:TextBoxHelper.Watermark}"
+                                        Visibility="Collapsed" />
+                                    <ContentControl
+                                        x:Name="PART_FloatingMessageContainer"
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        Style="{DynamicResource FloatingMessageContainerStyle}">
+                                        <TextBlock
+                                            x:Name="PART_FloatingMessage"
+                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                            Foreground="{TemplateBinding Foreground}"
+                                            Style="{DynamicResource MetroAutoCollapsingTextBlock}"
+                                            Text="{TemplateBinding Controls:TextBoxHelper.Watermark}" />
+                                    </ContentControl>
+                                    <Button
+                                        x:Name="PART_ClearText"
+                                        Grid.Row="0"
+                                        Grid.RowSpan="2"
+                                        Grid.Column="1"
+                                        Width="{TemplateBinding Controls:TextBoxHelper.ButtonWidth}"
+                                        Controls:TextBoxHelper.IsClearTextButtonBehaviorEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:TextBoxHelper.ClearTextButton), Mode=OneWay}"
+                                        Content="{TemplateBinding Controls:TextBoxHelper.ButtonContent}"
+                                        ContentTemplate="{TemplateBinding Controls:TextBoxHelper.ButtonContentTemplate}"
+                                        Focusable="False"
+                                        FontFamily="{TemplateBinding Controls:TextBoxHelper.ButtonFontFamily}"
+                                        FontSize="{TemplateBinding Controls:TextBoxHelper.ButtonFontSize}"
+                                        Foreground="{TemplateBinding Foreground}"
+                                        IsTabStop="False"
+                                        Style="{DynamicResource ChromelessButtonStyle}"
+                                        Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:TextBoxHelper.ClearTextButton), Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                </Grid>
+                                <Border
+                                    x:Name="DisabledVisualElement"
+                                    Background="{DynamicResource ControlsDisabledBrush}"
+                                    BorderBrush="{DynamicResource ControlsDisabledBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    IsHitTestVisible="False"
+                                    Opacity="0"
+                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                    Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.DisabledVisualElementVisibility), Mode=OneWay}" />
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:TextBoxHelper.ButtonsAlignment)}" Value="Left">
+                                    <Setter TargetName="ButtonColumn" Property="Width" Value="*" />
+                                    <Setter TargetName="PART_ClearText" Property="Grid.Column" Value="0" />
+                                    <Setter TargetName="PART_ContentHost" Property="Grid.Column" Value="1" />
+                                    <Setter TargetName="PART_Message" Property="Grid.Column" Value="1" />
+                                    <Setter TargetName="TextColumn" Property="Width" Value="Auto" />
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=Text}" Value="">
+                                    <Setter TargetName="PART_Message" Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Path=IsVisible, RelativeSource={RelativeSource Self}}" Value="True" />
+                                        <Condition Binding="{Binding Path=(Controls:TextBoxHelper.UseFloatingWatermark), RelativeSource={RelativeSource Self}}" Value="True" />
+                                        <Condition Binding="{Binding Path=(Controls:TextBoxHelper.HasText), RelativeSource={RelativeSource Self}}" Value="True" />
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.EnterActions>
+                                        <BeginStoryboard Storyboard="{StaticResource ShowFloatingMessageStoryboard}" />
+                                    </MultiDataTrigger.EnterActions>
+                                    <MultiDataTrigger.ExitActions>
+                                        <BeginStoryboard Storyboard="{StaticResource HideFloatingMessageStoryboard}" />
+                                    </MultiDataTrigger.ExitActions>
+                                </MultiDataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:TextBoxHelper.ButtonsAlignment)}" Value="Right" />
+                                        <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:TextBoxHelper.ClearTextButton)}" Value="False" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="PART_ContentHost" Property="Grid.ColumnSpan" Value="2" />
+                                    <Setter TargetName="PART_Message" Property="Grid.ColumnSpan" Value="2" />
+                                </MultiDataTrigger>
+
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Base" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.MouseOverBorderBrush)}" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="DisabledVisualElement" Property="Opacity" Value="0.6" />
+                                </Trigger>
+                                <Trigger Property="IsReadOnly" Value="True">
+                                    <Setter TargetName="PART_ClearText" Property="IsEnabled" Value="False" />
+                                </Trigger>
+                                <Trigger Property="IsFocused" Value="True">
+                                    <Setter TargetName="Base" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.FocusBorderBrush)}" />
+                                    <Setter TargetName="PART_FloatingMessage" Property="Foreground" Value="{DynamicResource AccentColorBrush}" />
+                                    <Setter TargetName="PART_FloatingMessage" Property="Opacity" Value="1" />
+                                </Trigger>
+                                <Trigger SourceName="PART_ClearText" Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="PART_ClearText" Property="Background" Value="{DynamicResource GrayBrush8}" />
+                                    <Setter TargetName="PART_ClearText" Property="Foreground" Value="{DynamicResource AccentColorBrush}" />
+                                </Trigger>
+                                <Trigger SourceName="PART_ClearText" Property="IsPressed" Value="True">
+                                    <Setter TargetName="PART_ClearText" Property="Background" Value="{DynamicResource BlackBrush}" />
+                                    <Setter TargetName="PART_ClearText" Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+                                </Trigger>
+
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="Controls:TextBoxHelper.HasText" Value="False" />
+                                        <Condition Property="IsFocused" Value="True" />
+                                    </MultiTrigger.Conditions>
+                                    <MultiTrigger.EnterActions>
+                                        <BeginStoryboard Storyboard="{StaticResource enterGotFocus}" />
+                                    </MultiTrigger.EnterActions>
+                                    <MultiTrigger.ExitActions>
+                                        <BeginStoryboard Storyboard="{StaticResource exitGotFocus}" />
+                                    </MultiTrigger.ExitActions>
+                                </MultiTrigger>
+
+                                <Trigger Property="Controls:TextBoxHelper.HasText" Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard Storyboard="{StaticResource enterHasText}" />
+                                    </Trigger.EnterActions>
+                                    <Trigger.ExitActions>
+                                        <BeginStoryboard Storyboard="{StaticResource exitHasText}" />
+                                    </Trigger.ExitActions>
+                                </Trigger>
+
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsVisible" Value="True" />
+                                        <Condition Property="Controls:TextBoxHelper.IsWaitingForData" Value="True" />
+                                    </MultiTrigger.Conditions>
+                                    <Setter TargetName="PART_WaitingForDataEffectGrid" Property="Effect" Value="{DynamicResource WaitingForDataEffect}" />
+                                    <Setter TargetName="PART_WaitingForDataEffectAdornerDecorator" Property="Visibility" Value="Visible" />
+                                    <MultiTrigger.EnterActions>
+                                        <BeginStoryboard Storyboard="{StaticResource WaitingForDataStoryboard}" />
+                                    </MultiTrigger.EnterActions>
+                                </MultiTrigger>
+                                <Trigger Property="Controls:TextBoxHelper.IsWaitingForData" Value="False">
+                                    <Setter TargetName="PART_WaitingForDataEffectGrid" Property="Effect" Value="{x:Null}" />
+                                    <Setter TargetName="PART_WaitingForDataEffectAdornerDecorator" Property="Visibility" Value="Collapsed" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

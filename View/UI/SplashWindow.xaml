@@ -10,6 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Vulnerator"
     BorderBrush="{DynamicResource AccentColorBrush}"
+    DataContext="{Binding Splash, Source={StaticResource Locator}}"
     GlowBrush="{DynamicResource AccentColorBrush}"
     SizeToContent="WidthAndHeight"
     mc:Ignorable="d">
@@ -63,6 +64,7 @@
             <TextBlock Text="Application Environment" TextTrimming="CharacterEllipsis" />
         </Label>
         <RadioButton
+            x:Name="portable"
             Margin="5,0,5,5"
             HorizontalAlignment="Left"
             GroupName="environment">
@@ -85,7 +87,8 @@
             x:Name="persistant"
             Margin="5,0,5,5"
             HorizontalAlignment="Left"
-            GroupName="environment">
+            GroupName="environment"
+            IsChecked="{Binding IsPersistent}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Persistant" />
                 <Rectangle
@@ -108,10 +111,31 @@
             <TextBlock Text="Application Database Location" TextTrimming="CharacterEllipsis" />
         </Label>
         <TextBox
+            x:Name="database"
             Margin="5,0,5,5"
+            Controls:TextBoxHelper.ButtonCommand="{Binding BrowseForDatabaseCommand}"
             Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=Magnify}"
             Controls:TextBoxHelper.ClearTextButton="True"
             Controls:TextBoxHelper.Watermark="Select a location"
             Visibility="{Binding IsChecked, ElementName=persistant, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        <Button Margin="5,0,5,5" HorizontalAlignment="Center">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Launch" />
+                <IconPacks:PackIconMaterial
+                    Height="12"
+                    Margin="2,0,0,0"
+                    VerticalAlignment="Center"
+                    Kind="LoginVariant" />
+            </StackPanel>
+        </Button>
+        <TextBox
+            MaxWidth="300"
+            Margin="5,0,5,5"
+            Background="LightPink"
+            Style="{StaticResource ErrorTextBox}"
+            Text="A database location is required for persistent usage; please select or create a database above."
+            TextAlignment="Center"
+            TextWrapping="Wrap"
+            Visibility="{Binding ErrorVisibility}" />
     </StackPanel>
 </Controls:MetroWindow>
