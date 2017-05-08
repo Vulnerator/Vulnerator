@@ -1,43 +1,42 @@
-﻿<Controls:MetroWindow
-    x:Class="Vulnerator.View.UI.SplashWindow"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-    xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
-    xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:Vulnerator.View.UI"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Vulnerator"
-    BorderBrush="{DynamicResource AccentColorBrush}"
-    DataContext="{Binding Splash, Source={StaticResource Locator}}"
-    GlowBrush="{DynamicResource AccentColorBrush}"
-    SizeToContent="WidthAndHeight"
-    mc:Ignorable="d">
+﻿<Controls:MetroWindow x:Class="Vulnerator.View.UI.SplashWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
+                      xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:local="clr-namespace:Vulnerator.View.UI"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      Title="Vulnerator"
+                      BorderBrush="{DynamicResource AccentColorBrush}"
+                      DataContext="{Binding Splash, Source={StaticResource Locator}}"
+                      GlowBrush="{DynamicResource AccentColorBrush}"
+                      Icon="/Vulnerator;component/Resources/chart.ico"
+                      SizeToContent="WidthAndHeight"
+                      mc:Ignorable="d">
 
     <!--  Window Icon Template  -->
     <Controls:MetroWindow.IconTemplate>
         <DataTemplate>
-            <IconPacks:PackIconModern
-                Width="{TemplateBinding Width}"
-                Height="{TemplateBinding Height}"
-                Margin="4"
-                Foreground="{DynamicResource IdealForegroundColorBrush}"
-                Kind="GraphBar" />
+            <IconPacks:PackIconModern Width="{TemplateBinding Width}"
+                                      Height="{TemplateBinding Height}"
+                                      Margin="4"
+                                      Foreground="{DynamicResource IdealForegroundColorBrush}"
+                                      Kind="GraphBar" />
         </DataTemplate>
     </Controls:MetroWindow.IconTemplate>
 
     <!--  Window Titlebar Controls  -->
     <Controls:MetroWindow.TitleTemplate>
         <DataTemplate>
-            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                <TextBlock
-                    Margin="5,0"
-                    VerticalAlignment="Center"
-                    FontFamily="{DynamicResource HeaderFontFamily}"
-                    FontSize="{DynamicResource WindowTitleFontSize}"
-                    Text="{TemplateBinding Content}"
-                    TextTrimming="CharacterEllipsis" />
+            <StackPanel HorizontalAlignment="Left"
+                        Orientation="Horizontal">
+                <TextBlock Margin="5,0"
+                           VerticalAlignment="Center"
+                           FontFamily="{DynamicResource HeaderFontFamily}"
+                           FontSize="{DynamicResource WindowTitleFontSize}"
+                           Text="{TemplateBinding Content}"
+                           TextTrimming="CharacterEllipsis" />
             </StackPanel>
         </DataTemplate>
     </Controls:MetroWindow.TitleTemplate>
@@ -51,91 +50,90 @@
         <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Controls:MetroWindow.Resources>
 
-    <StackPanel Margin="5,0" HorizontalAlignment="Center">
-        <Label HorizontalAlignment="Center" Style="{StaticResource TopLevelHeaderStyle}">
-            <TextBlock Text="Welcome!" TextTrimming="CharacterEllipsis" />
+    <StackPanel Margin="5,0"
+                HorizontalAlignment="Center">
+        <Label HorizontalAlignment="Center"
+               Style="{StaticResource TopLevelHeaderStyle}">
+            <TextBlock Text="Welcome!"
+                       TextTrimming="CharacterEllipsis" />
         </Label>
-        <TextBlock
-            MaxWidth="300"
-            Margin="5,0"
-            Text="Thank you for using Vulnerator - before the application can be utilized, there is some basic information required"
-            TextWrapping="Wrap" />
-        <Label HorizontalAlignment="Left" Style="{StaticResource SecondLevelHeaderStyle}">
-            <TextBlock Text="Application Environment" TextTrimming="CharacterEllipsis" />
+        <TextBlock MaxWidth="300"
+                   Margin="5,0"
+                   Text="Thank you for using Vulnerator - before the application can be utilized, there is some basic information required"
+                   TextWrapping="Wrap" />
+        <Label HorizontalAlignment="Left"
+               Style="{StaticResource SecondLevelHeaderStyle}">
+            <TextBlock Text="Application Environment"
+                       TextTrimming="CharacterEllipsis" />
         </Label>
-        <RadioButton
-            x:Name="portable"
-            Margin="5,0,5,5"
-            HorizontalAlignment="Left"
-            GroupName="environment">
+        <RadioButton x:Name="portable"
+                     Margin="5,0,5,5"
+                     HorizontalAlignment="Left"
+                     GroupName="environment">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Portable" />
-                <Rectangle
-                    Width="10"
-                    Height="10"
-                    Margin="5,0"
-                    VerticalAlignment="Center"
-                    Fill="{DynamicResource AccentColorBrush}"
-                    ToolTip="All support files will be installed into the Vulnerator folder (minimal footprint)">
+                <Rectangle Width="10"
+                           Height="10"
+                           Margin="5,0"
+                           VerticalAlignment="Center"
+                           Fill="{DynamicResource AccentColorBrush}"
+                           ToolTip="All support files will be installed into the Vulnerator folder (minimal footprint)">
                     <Rectangle.OpacityMask>
                         <VisualBrush Visual="{IconPacks:PackIconOcticons Kind=Info}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </StackPanel>
         </RadioButton>
-        <RadioButton
-            x:Name="persistant"
-            Margin="5,0,5,5"
-            HorizontalAlignment="Left"
-            GroupName="environment"
-            IsChecked="{Binding IsPersistent}">
+        <RadioButton x:Name="persistant"
+                     Margin="5,0,5,5"
+                     HorizontalAlignment="Left"
+                     GroupName="environment"
+                     IsChecked="{Binding IsPersistent}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Persistant" />
-                <Rectangle
-                    Width="10"
-                    Height="10"
-                    Margin="5,0"
-                    VerticalAlignment="Center"
-                    Fill="{DynamicResource AccentColorBrush}"
-                    ToolTip="Support files will be installed into the LocalData folder, and the user (you) gets to decide where the application database goes (perfect for sharing)">
+                <Rectangle Width="10"
+                           Height="10"
+                           Margin="5,0"
+                           VerticalAlignment="Center"
+                           Fill="{DynamicResource AccentColorBrush}"
+                           ToolTip="Support files will be installed into the LocalData folder, and the user (you) gets to decide where the application database goes (perfect for sharing)">
                     <Rectangle.OpacityMask>
                         <VisualBrush Visual="{IconPacks:PackIconOcticons Kind=Info}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </StackPanel>
         </RadioButton>
-        <Label
-            HorizontalAlignment="Left"
-            Style="{StaticResource SecondLevelHeaderStyle}"
-            Visibility="{Binding IsChecked, ElementName=persistant, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <TextBlock Text="Application Database Location" TextTrimming="CharacterEllipsis" />
+        <Label HorizontalAlignment="Left"
+               Style="{StaticResource SecondLevelHeaderStyle}"
+               Visibility="{Binding IsChecked, ElementName=persistant, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TextBlock Text="Application Database Location"
+                       TextTrimming="CharacterEllipsis" />
         </Label>
-        <TextBox
-            x:Name="database"
-            Margin="5,0,5,5"
-            Controls:TextBoxHelper.ButtonCommand="{Binding BrowseForDatabaseCommand}"
-            Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=Magnify}"
-            Controls:TextBoxHelper.ClearTextButton="True"
-            Controls:TextBoxHelper.Watermark="Select a location"
-            Visibility="{Binding IsChecked, ElementName=persistant, Converter={StaticResource BooleanToVisibilityConverter}}" />
-        <Button Margin="5,0,5,5" HorizontalAlignment="Center">
+        <TextBox Margin="5,0,5,5"
+                 Controls:TextBoxHelper.ButtonCommand="{Binding BrowseForDatabaseCommand}"
+                 Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconModern Kind=PageSearch}"
+                 Controls:TextBoxHelper.ClearTextButton="True"
+                 Controls:TextBoxHelper.Watermark="Select a location"
+                 Text="{Binding Database}"
+                 Visibility="{Binding IsChecked, ElementName=persistant, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        <Button Margin="5,0,5,5"
+                HorizontalAlignment="Center"
+                Command="{Binding LaunchCommand}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Launch" />
-                <IconPacks:PackIconMaterial
-                    Height="12"
-                    Margin="2,0,0,0"
-                    VerticalAlignment="Center"
-                    Kind="LoginVariant" />
+                <IconPacks:PackIconMaterial Height="12"
+                                            Margin="2,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Kind="LoginVariant" />
             </StackPanel>
         </Button>
-        <TextBox
-            MaxWidth="300"
-            Margin="5,0,5,5"
-            Background="LightPink"
-            Style="{StaticResource ErrorTextBox}"
-            Text="A database location is required for persistent usage; please select or create a database above."
-            TextAlignment="Center"
-            TextWrapping="Wrap"
-            Visibility="{Binding ErrorVisibility}" />
+        <TextBox MaxWidth="300"
+                 Margin="5,0,5,5"
+                 Style="{StaticResource ErrorTextBox}"
+                 Background="LightPink"
+                 Text="A database location is required for persistent usage; please select or create a database above."
+                 TextAlignment="Center"
+                 TextWrapping="Wrap"
+                 Visibility="{Binding ErrorVisibility}" />
     </StackPanel>
 </Controls:MetroWindow>

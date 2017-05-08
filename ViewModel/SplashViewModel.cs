@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace Vulnerator.ViewModel
 {
     public class SplashViewModel : ViewModelBase
     {
+        private string fileName = string.Empty;
         private bool isPersistent;
         public bool IsPersistent
         {
@@ -65,7 +67,35 @@ namespace Vulnerator.ViewModel
             saveFileDialog.Title = "Please select or create a SQLite file";
             saveFileDialog.CheckPathExists = true;
             if ((bool)saveFileDialog.ShowDialog())
-            { Database = saveFileDialog.FileName; }
+            {
+                fileName = saveFileDialog.FileName;
+                Database = fileName;
+            }
+        }
+
+        public RelayCommand LaunchCommand
+        { get { return new RelayCommand(Launch); } }
+
+        private void Launch()
+        {
+            if (IsPersistent && string.IsNullOrWhiteSpace(Database))
+            {
+                ErrorVisibility = "Visible";
+                return;
+            }
+            else
+            {
+                if (IsPersistent)
+                {
+                    Properties.Settings.Default["Database"] = Database;
+                    Properties.Settings.Default["LogPath"] = Path.Combine(Environment.SpecialFolder.LocalApplicationData.ToString(), "Vulnerator");
+                }
+                else
+                {
+                    Properties.Settings.Default["Database"] = Path.Combine(Environment.CurrentDirectory, "Vulnerator.sqlite");
+                    Properties.Settings.Default["LogPath"] = Path.Combine(Environment.CurrentDirectory, "Logs");
+                }
+            }
         }
     }
 }

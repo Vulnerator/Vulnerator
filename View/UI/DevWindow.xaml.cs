@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using Vulnerator.View.ViewHelper;
 
 namespace Vulnerator.View.UI

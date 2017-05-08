@@ -14,7 +14,7 @@
     <Setting Name="Environment" Type="System.String" Scope="User">
       <Value Profile="(Default)">Undefined</Value>
     </Setting>
-    <Setting Name="DatabasePath" Type="System.String" Scope="User">
+    <Setting Name="Database" Type="System.String" Scope="User">
       <Value Profile="(Default)">Undefined</Value>
     </Setting>
     <Setting Name="LogPath" Type="System.String" Scope="User">
