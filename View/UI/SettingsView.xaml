@@ -29,56 +29,77 @@
             <StackPanel Margin="5"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch">
+                <Label Grid.Column="0"
+                       Style="{StaticResource SecondLevelHeaderStyle}">
+                    <TextBlock Text="User Information"
+                               TextTrimming="CharacterEllipsis" />
+                </Label>
+                <TextBox Controls:TextBoxHelper.Watermark="Name (First Last)"
+                         Controls:TextBoxHelper.UseFloatingWatermark="True"
+                         Controls:TextBoxHelper.ClearTextButton="True"
+                         Margin="5,0,5,5"
+                         Text="{Binding Source={StaticResource Settings}, Path=Default.Name}"/>
+                <TextBox Controls:TextBoxHelper.Watermark="Phone (Digits Only)"
+                         Controls:TextBoxHelper.UseFloatingWatermark="True"
+                         Controls:TextBoxHelper.ClearTextButton="True"
+                         Margin="5,0,5,5"
+                         Text="{Binding Source={StaticResource Settings}, Path=Default.Phone}" />
+                <TextBox Controls:TextBoxHelper.Watermark="Email (you@example.com)"
+                         Controls:TextBoxHelper.UseFloatingWatermark="True"
+                         Controls:TextBoxHelper.ClearTextButton="True"
+                         Margin="5,0,5,5"
+                         Text="{Binding Source={StaticResource Settings}, Path=Default.Email}" />
+                <TextBox Controls:TextBoxHelper.Watermark="Organization (i.e. NAVAIR)"
+                         Controls:TextBoxHelper.UseFloatingWatermark="True"
+                         Controls:TextBoxHelper.ClearTextButton="True"
+                         Margin="5,0,5,5"
+                         Text="{Binding Source={StaticResource Settings}, Path=Default.Organization}" />
+                <Label Grid.Column="0"
+                       Style="{StaticResource SecondLevelHeaderStyle}">
+                    <TextBlock Text="Database File"
+                               TextTrimming="CharacterEllipsis" />
+                </Label>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0"
-                           Style="{StaticResource SecondLevelHeaderStyle}">
-                        <TextBlock Text="Database File"
-                                   TextTrimming="CharacterEllipsis" />
-                    </Label>
-                    <StackPanel Grid.Column="2"
-                                FlowDirection="RightToLeft"
-                                Orientation="Horizontal">
-                        <Button Width="{Binding ElementName=deleteOrganizationsButton,
-                                                Path=ActualWidth}"
-                                Margin="5,0,5,5"
-                                Content="Create" />
-                        <Button Width="{Binding ElementName=deleteOrganizationsButton,
-                                                Path=ActualWidth}"
-                                Margin="5,0,5,5"
-                                Content="Browse" />
-                    </StackPanel>
+                    <TextBox Margin="5,0,5,5"
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Stretch"
+                             Text="{Binding Source={StaticResource Settings}, Path=Default.Database}"
+                             Controls:TextBoxHelper.Watermark="Database File" />
+                    <Button Margin="5,0,5,5"
+                            Grid.Column="1"
+                            Content="{IconPacks:PackIconModern Kind=PageSearch}" />
+                    <Button Margin="5,0,5,5"
+                            Grid.Column="2"
+                            Content="{IconPacks:PackIconModern Kind=PageAdd}" />
                 </Grid>
-                <TextBox Margin="5,0,5,5"
-                         HorizontalAlignment="Stretch"
-                         Controls:TextBoxHelper.Watermark="Database File"/>
+
+                <Label Grid.Column="0"
+                       Style="{StaticResource SecondLevelHeaderStyle}">
+                    <TextBlock Text="Update STIG Library"
+                               TextTrimming="CharacterEllipsis" />
+                </Label>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0"
-                           Style="{StaticResource SecondLevelHeaderStyle}">
-                        <TextBlock Text="STIG Library Location"
-                                   TextTrimming="CharacterEllipsis" />
-                    </Label>
-                    <StackPanel Grid.Column="2"
-                                FlowDirection="RightToLeft"
-                                Orientation="Horizontal">
-                        <Button Width="{Binding ElementName=deleteOrganizationsButton,
-                                                Path=ActualWidth}"
-                                Margin="5,0,5,5"
-                                Content="Browse" />
-                    </StackPanel>
+                    <TextBox Margin="5,0,5,5"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Controls:TextBoxHelper.Watermark="STIG Library" />
+                    <Button Margin="5,0,5,5"
+                            Grid.Column="1"
+                            Content="{IconPacks:PackIconModern Kind=PageSearch}" />
+                    <Button Margin="5,0,5,5"
+                            Grid.Column="2"
+                            Content="{IconPacks:PackIconFontAwesome Kind=FloppyOutline}" />
                 </Grid>
-                <TextBox Margin="5,0,5,5"
-                         HorizontalAlignment="Stretch"
-                         Controls:TextBoxHelper.Watermark="STIG Library" />
                 <Label Style="{StaticResource SecondLevelHeaderStyle}">
                     <TextBlock Text="Organization Management"
                                TextTrimming="CharacterEllipsis" />
@@ -87,13 +108,18 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBox Grid.Column="0"
                              Margin="5,0,5,5"
+                             VerticalAlignment="Center"
                              Controls:TextBoxHelper.Watermark="Enter a new organization name" />
                     <Button Grid.Column="1"
                             Margin="5,0,5,5"
-                            Content="Add" />
+                            Content="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}" />
+                    <Button Margin="5,0,5,5"
+                            Grid.Column="2"
+                            Content="{IconPacks:PackIconMaterial Kind=MinusBoxOutline}" />
                 </Grid>
                 <DataGrid MinHeight="100"
                           Margin="5,0,5,5"
@@ -106,10 +132,6 @@
                         <DataGridTextColumn />
                     </DataGrid.Columns>
                 </DataGrid>
-                <Button x:Name="deleteOrganizationsButton"
-                        Margin="5,0,5,5"
-                        HorizontalAlignment="Right"
-                        Content="Delete Selected" />
                 <Expander Margin="5,0"
                           Background="Red"
                           BorderBrush="Red">

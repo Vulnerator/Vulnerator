@@ -1,5 +1,5 @@
 ﻿using System;
-using Vulnerator.View.ViewHelper;
+using System.Windows;
 
 namespace Vulnerator.View.UI
 {
@@ -11,14 +11,21 @@ namespace Vulnerator.View.UI
         public DevWindow()
         {
             InitializeComponent();
-            Uri xmlPath = new Uri(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Vulnerator\Vulnerator_Config.xml");
+            //Uri xmlPath = new Uri(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Vulnerator\Vulnerator_Config.xml");
 
-            MyXmlDataProvider myXmlDataProvider = Resources["XmlConfig"] as MyXmlDataProvider;
-            if (myXmlDataProvider != null)
-            {
-                myXmlDataProvider.Source = xmlPath;
-                myXmlDataProvider.XPath = "preferencesRoot";
-            }
+            //MyXmlDataProvider myXmlDataProvider = Resources["XmlConfig"] as MyXmlDataProvider;
+            //if (myXmlDataProvider != null)
+            //{
+            //    myXmlDataProvider.Source = xmlPath;
+            //    myXmlDataProvider.XPath = "preferencesRoot";
+            //}
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+
+            Application.Current.Shutdown();
         }
     }
 }

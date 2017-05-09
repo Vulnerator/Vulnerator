@@ -1,13 +1,19 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using log4net;
 using System.Diagnostics;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Vulnerator.Model.Object;
+using Vulnerator.View.UI;
 
 namespace Vulnerator.ViewModel
 {
     public class AboutViewModel : ViewModelBase
     {
+        public static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private Assembly assembly = Assembly.GetExecutingAssembly();
         public string ApplicationVersion
         {
@@ -41,6 +47,98 @@ namespace Vulnerator.ViewModel
                 }
             }
             return licenseText;
+        }
+
+        public RelayCommand<object> AboutLinksCommand
+        {
+            get { return new RelayCommand<object>(AboutLinks); }
+        }
+
+        private void AboutLinks(object param)
+        {
+            string p = param.ToString();
+
+            switch (p)
+            {
+                case "tbAlex":
+                    {
+                        EmailAlex();
+                        break;
+                    }
+                case "tbJeffV":
+                    {
+                        EmailJeffV();
+                        break;
+                    }
+                case "tbRick":
+                    {
+                        EmailRick();
+                        break;
+                    }
+                case "tbJeffP":
+                    {
+                        EmailJeffP();
+                        break;
+                    }
+                default:
+                    { break; }
+            }
+        }
+
+        private void EmailAlex()
+        {
+            string mailTo = "mailto:alex.kuchta@navy.mil";
+            try
+            { Process.Start(mailTo); }
+            catch (Exception exception)
+            {
+                log.Error("Unable to send email; no email application exists.");
+                NoEmailApplication emailWarning = new NoEmailApplication();
+                emailWarning.ShowDialog();
+                return;
+            }
+        }
+
+        private void EmailJeffV()
+        {
+            string mailTo = "mailto:Jeff.Vanerwegen@Vencore.com";
+            try
+            { Process.Start(mailTo); }
+            catch (Exception exception)
+            {
+                log.Error("Unable to send email; no email application exists.");
+                NoEmailApplication emailWarning = new NoEmailApplication();
+                emailWarning.ShowDialog();
+                return;
+            }
+        }
+
+        private void EmailRick()
+        {
+            string mailTo = "mailto:rick.murphy@navy.mil";
+            try
+            { Process.Start(mailTo); }
+            catch (Exception exception)
+            {
+                log.Error("Unable to send email; no email application exists.");
+                NoEmailApplication emailWarning = new NoEmailApplication();
+                emailWarning.ShowDialog();
+                return;
+            }
+        }
+
+        private void EmailJeffP()
+        {
+            string mailTo = "mailto:jeffrey.a.purcell@navy.mil";
+            try
+            { Process.Start(mailTo); }
+            catch (Exception exception)
+            {
+                log.Error("Unable to send email; no email application exists.");
+                NoEmailApplication emailWarning = new NoEmailApplication();
+                emailWarning.ShowDialog();
+                return;
+            }
         }
     }
 }

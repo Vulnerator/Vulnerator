@@ -210,6 +210,11 @@ CREATE TABLE CombatSystems
 	 EngagementCoordination NVARCHAR (5) NOT NULL ,
 	 FOREIGN KEY (CombatSystem_ID) REFERENCES PIT_Determination(CombatSystem_ID)
 	);
+CREATE TABLE CommonControlPackages
+	(
+	 CCP_ID INTEGER PRIMARY KEY ,
+	 CCAP_Name NVARCHAR (100) NOT NULL
+	);
 CREATE TABLE CommunicationSystems 
 	(
 	 CommunicationSystem_ID INTEGER PRIMARY KEY , 
@@ -263,10 +268,15 @@ CREATE TABLE Contacts
 	);
 CREATE TABLE ContactsCertifications 
 	(
-	 Contact_ID INTEGER NOT NULL , 
+	 Contact_ID INTEGER PRIMARY KEY , 
 	 Certification_ID INTEGER NOT NULL ,
 	 FOREIGN KEY (Contact_ID) REFERENCES Contacts(Contact_ID),
 	 FOREIGN KEY (Certification_ID) REFERENCES Certifications(Certification_ID)
+	);
+CREATE TABLE ControlApplicabilityAssessment
+	(
+	 CAA_ID INTEGER PRIMARY KEY ,
+	 CAA_Name NVARCHAR (50) NOT NULL
 	);
 CREATE TABLE ControlSelection 
 	(
@@ -679,6 +689,15 @@ CREATE TABLE NistControlsCCIs
 	 FOREIGN KEY (NIST_Control_ID) REFERENCES NistControls(NIST_Control_ID),
 	 FOREIGN KEY (CCI_ID) REFERENCES CCIs(CCI_ID)
 	);
+CREATE TABLE NistControlsCAAs
+	(
+	 NIST_Control_ID INTEGER NOT NULL ,
+	 CAA_ID INTEGER NOT NULL ,
+	 LegacyDifficulty NVARCHAR (10) NOT NULL,
+	 Applicability NVARCHAR (25) NOT NULL,
+	 FOREIGN KEY (NIST_Control_ID) REFERENCES NistControls(NIST_Control_ID) ,
+	 FOREIGN KEY (CAA_ID) REFERENCES ControlApplicabilityAssessment(CAA_ID)
+	);
 CREATE TABLE NistControlsConfidentialityLevels 
 	(
 	 NIST_Control_ID INTEGER NOT NULL , 
@@ -692,6 +711,13 @@ CREATE TABLE NistControlsControlSets
 	 ControlSet_ID INTEGER NOT NULL ,
 	 FOREIGN KEY (NIST_Control_ID) REFERENCES NistControls(NIST_Control_ID),
 	 FOREIGN KEY (ControlSet_ID) REFERENCES ControlSets(ControlSet_ID)
+	);
+CREATE TABLE NistControlsCCPs
+	(
+	 NIST_Control_ID INTEGER NOT NULL ,
+	 CCP_ID INTEGER NOT NULL ,
+	 FOREIGN KEY (NIST_Control_ID) REFERENCES NistControls(NIST_Control_ID),
+	 FOREIGN KEY (CCP_ID) REFERENCES CommonControlPackages(CCP_ID)
 	);
 CREATE TABLE NistControlsIntegrityLevels 
 	(

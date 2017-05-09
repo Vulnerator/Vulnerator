@@ -1,19 +1,16 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MahApps.Metro.Controls;
 using Microsoft.Win32;
+using System;
+using System.IO;
 
 namespace Vulnerator.ViewModel
 {
     public class SplashViewModel : ViewModelBase
     {
         private string fileName = string.Empty;
-        private bool isPersistent;
+        private bool isPersistent = false;
         public bool IsPersistent
         {
             get { return isPersistent; }
@@ -27,16 +24,16 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private string database;
-        public string Database
+        private string databasePath;
+        public string DatabasePath
         {
-            get { return database; }
+            get { return databasePath; }
             set
             {
-                if (database != value)
+                if (databasePath != value)
                 {
-                    database = value;
-                    RaisePropertyChanged("Database");
+                    databasePath = value;
+                    RaisePropertyChanged("DatabasePath");
                 }
             }
         }
@@ -67,18 +64,16 @@ namespace Vulnerator.ViewModel
             saveFileDialog.Title = "Please select or create a SQLite file";
             saveFileDialog.CheckPathExists = true;
             if ((bool)saveFileDialog.ShowDialog())
-            {
-                fileName = saveFileDialog.FileName;
-                Database = fileName;
-            }
+            { fileName = saveFileDialog.FileName; }
+            DatabasePath = fileName;
         }
 
-        public RelayCommand LaunchCommand
-        { get { return new RelayCommand(Launch); } }
+        public RelayCommand<MetroWindow> LaunchCommand
+        { get { return new RelayCommand<MetroWindow>(Launch); } }
 
-        private void Launch()
+        private void Launch(MetroWindow metroWindow)
         {
-            if (IsPersistent && string.IsNullOrWhiteSpace(Database))
+            if (IsPersistent && string.IsNullOrWhiteSpace(DatabasePath))
             {
                 ErrorVisibility = "Visible";
                 return;
@@ -87,14 +82,22 @@ namespace Vulnerator.ViewModel
             {
                 if (IsPersistent)
                 {
-                    Properties.Settings.Default["Database"] = Database;
+                    Properties.Settings.Default["Environment"] = "Persistent";
+                    Properties.Settings.Default["Database"] = DatabasePath;
                     Properties.Settings.Default["LogPath"] = Path.Combine(Environment.SpecialFolder.LocalApplicationData.ToString(), "Vulnerator");
                 }
                 else
                 {
+                    Properties.Settings.Default["Environment"] = "Portable";
                     Properties.Settings.Default["Database"] = Path.Combine(Environment.CurrentDirectory, "Vulnerator.sqlite");
                     Properties.Settings.Default["LogPath"] = Path.Combine(Environment.CurrentDirectory, "Logs");
                 }
+            }
+            if (metroWindow != null)
+            {
+                metroWindow.Close();
+                View.UI.DevWindow devWindow = new View.UI.DevWindow();
+                devWindow.Show();
             }
         }
     }

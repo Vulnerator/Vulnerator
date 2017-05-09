@@ -12,8 +12,8 @@ namespace Vulnerator.Model.DataAccess
     public class DatabaseBuilder
     {
         private Assembly assembly = Assembly.GetExecutingAssembly();
-        private static string databasePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        private static string databaseFile = databasePath + @"\Vulnerator\Vulnerator.sqlite";
+        //private static string databasePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        private static string databaseFile = Properties.Settings.Default.Database;
         public static string databaseConnection = @"Data Source = " + databaseFile + @"; Version=3;";
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         public static SQLiteConnection sqliteConnection = new SQLiteConnection(databaseConnection);

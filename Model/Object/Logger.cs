@@ -33,7 +33,7 @@ namespace Vulnerator.Model.Object
             RollingFileAppender rollingFileAppender = new RollingFileAppender();
             rollingFileAppender.LockingModel = new FileAppender.MinimalLock();
             rollingFileAppender.AppendToFile = true;
-            rollingFileAppender.File = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Vulnerator\V6Log.txt";
+            rollingFileAppender.File = Properties.Settings.Default.LogPath;
             rollingFileAppender.Layout = patternLayout;
             rollingFileAppender.MaxSizeRollBackups = 5;
             rollingFileAppender.RollingStyle = RollingFileAppender.RollingMode.Once;

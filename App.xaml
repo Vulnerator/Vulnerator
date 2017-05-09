@@ -11,7 +11,8 @@
     xmlns:viewHelper="clr-namespace:Vulnerator.View.ViewHelper"
     xmlns:vm="clr-namespace:Vulnerator.ViewModel"
     d1p1:Ignorable="d"
-    StartupUri="View/UI/SplashWindow.xaml">
+             Startup="Application_Startup"
+    ShutdownMode="OnExplicitShutdown">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
