@@ -84,13 +84,13 @@ namespace Vulnerator.ViewModel
                 {
                     Properties.Settings.Default["Environment"] = "Persistent";
                     Properties.Settings.Default["Database"] = DatabasePath;
-                    Properties.Settings.Default["LogPath"] = Path.Combine(Environment.SpecialFolder.LocalApplicationData.ToString(), "Vulnerator");
+                    Properties.Settings.Default["LogPath"] = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Vulnerator", "V6Log.txt");
                 }
                 else
                 {
                     Properties.Settings.Default["Environment"] = "Portable";
                     Properties.Settings.Default["Database"] = Path.Combine(Environment.CurrentDirectory, "Vulnerator.sqlite");
-                    Properties.Settings.Default["LogPath"] = Path.Combine(Environment.CurrentDirectory, "Logs");
+                    Properties.Settings.Default["LogPath"] = Path.Combine(Environment.CurrentDirectory, "Logs", "V6Log.txt");
                 }
             }
             if (metroWindow != null)
