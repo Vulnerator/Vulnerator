@@ -17,6 +17,7 @@
                       ShowCloseButton="False"
                       ShowMinButton="False"
                       ShowMaxRestoreButton="False"
+                      WindowStartupLocation="CenterScreen"
                       Icon="/Vulnerator;component/Resources/chart.ico"
                       SizeToContent="WidthAndHeight"
                       mc:Ignorable="d">
@@ -115,7 +116,7 @@
             <TextBlock Text="Application Database Location"
                        TextTrimming="CharacterEllipsis" />
         </Label>
-        <Grid Visibility="{Binding IsChecked, ElementName=persistant, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Grid Visibility="{Binding IsChecked, ElementName=persistant, Converter={StaticResource BooleanToVisibilityConverter}}" MaxWidth="300">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />

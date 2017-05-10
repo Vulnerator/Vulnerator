@@ -438,7 +438,7 @@ CREATE TABLE GoverningPolicies
 CREATE TABLE Groups 
 	(
 	 Group_ID INTEGER PRIMARY KEY , 
-	 Group_Name NVARCHAR (50) NOT NULL , 
+	 Group_Name NVARCHAR (50) NOT NULL UNIQUE ON CONFLICT IGNORE, 
 	 Is_Accreditation NVARCHAR (5) NOT NULL , 
 	 Accreditation_ID INTEGER , 
 	 Organization_ID INTEGER 
@@ -663,7 +663,7 @@ CREATE TABLE NistControls
 	 NIST_Control_ID INTEGER PRIMARY KEY , 
 	 Control_Family NVARCHAR (25) NOT NULL , 
 	 Control_Number INTEGER NOT NULL , 
-	 Enhancement NVARCHAR (25) NOT NULL , 
+	 Enhancement NVARCHAR (25) , 
 	 Control_Title NVARCHAR (50) NOT NULL , 
 	 Control_Text NVARCHAR (500) NOT NULL , 
 	 Supplemental_Guidance NVARCHAR (500) NOT NULL 
@@ -686,6 +686,9 @@ CREATE TABLE NistControlsCCIs
 	(
 	 NIST_Control_ID INTEGER NOT NULL , 
 	 CCI_ID INTEGER NOT NULL ,
+	 ControlTextIndicator NVARCHAR (25) NOT NULL,
+	 ImplementationGuidance NVARCHAR(1000) NOT NULL,
+	 AssessmentProcedures NVARCHAR(1000) NOT NULL,
 	 FOREIGN KEY (NIST_Control_ID) REFERENCES NistControls(NIST_Control_ID),
 	 FOREIGN KEY (CCI_ID) REFERENCES CCIs(CCI_ID)
 	);
@@ -1289,3 +1292,12 @@ INSERT INTO FindingStatuses VALUES (NULL, 'Error');
 INSERT INTO FindingStatuses VALUES (NULL, 'Informational');
 INSERT INTO FindingStatuses VALUES (NULL, 'Not Applicable');
 INSERT INTO FindingStatuses VALUES (NULL, 'Not Reviewed');
+INSERT INTO AvailabilityLevels VALUES (NULL, 'High');
+INSERT INTO AvailabilityLevels VALUES (NULL, 'Moderate');
+INSERT INTO AvailabilityLevels VALUES (NULL, 'Low');
+INSERT INTO ConfidentialityLevels VALUES (NULL, 'High');
+INSERT INTO ConfidentialityLevels VALUES (NULL, 'Moderate');
+INSERT INTO ConfidentialityLevels VALUES (NULL, 'Low');
+INSERT INTO IntegrityLevels VALUES (NULL, 'High');
+INSERT INTO IntegrityLevels VALUES (NULL, 'Moderate');
+INSERT INTO IntegrityLevels VALUES (NULL, 'Low');

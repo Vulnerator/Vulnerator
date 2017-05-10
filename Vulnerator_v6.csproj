@@ -482,10 +482,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\AboutFlyout.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="View\UI\AboutView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -605,9 +601,6 @@
     </None>
     <AppDesigner Include="Properties\" />
     <None Include="readme.md" />
-    <EmbeddedResource Include="Resources\U_CCI_List.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\DdlFiles\CreateDatabase.ddl" />
     <EmbeddedResource Include="Resources\UserGuide\Change-Log.md" />
     <EmbeddedResource Include="Resources\UserGuide\Error-Reporting.md" />
@@ -658,7 +651,9 @@
     <Resource Include="Resources\UserGuide\Images\ThemeFlyout.jpg" />
     <Resource Include="Resources\UserGuide\Images\VulneratorMain.jpg" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\U_CCI_List.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

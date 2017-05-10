@@ -84,7 +84,7 @@ namespace Vulnerator.ViewModel
                 {
                     Properties.Settings.Default["Environment"] = "Persistent";
                     Properties.Settings.Default["Database"] = DatabasePath;
-                    Properties.Settings.Default["LogPath"] = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Vulnerator", "V6Log.txt");
+                    Properties.Settings.Default["LogPath"] = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Vulnerator", "Logs", "V6Log.txt");
                 }
                 else
                 {

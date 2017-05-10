@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading;
 using System.Windows;
 
 namespace Vulnerator.View.UI
@@ -13,18 +14,13 @@ namespace Vulnerator.View.UI
         LoadingWindow loadingWindow;
         public DevWindow()
         {
+            InitializeComponent();
             backgroundWorker = new BackgroundWorker();
+            loadingWindow = new LoadingWindow();
+            loadingWindow.Show();
+            backgroundWorker.RunWorkerAsync();
             backgroundWorker.DoWork += new DoWorkEventHandler(backgroundWorker_DoWork);
             backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_RunWorkerCompleted);
-            InitializeComponent();
-            //Uri xmlPath = new Uri(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Vulnerator\Vulnerator_Config.xml");
-
-            //MyXmlDataProvider myXmlDataProvider = Resources["XmlConfig"] as MyXmlDataProvider;
-            //if (myXmlDataProvider != null)
-            //{
-            //    myXmlDataProvider.Source = xmlPath;
-            //    myXmlDataProvider.XPath = "preferencesRoot";
-            //}
         }
 
         protected override void OnClosed(EventArgs e)
@@ -35,16 +31,9 @@ namespace Vulnerator.View.UI
         }
 
         void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        { System.Threading.Thread.Sleep(10000); }
+        { System.Threading.Thread.Sleep(5000); }
 
         void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        { loadingWindow.Hide(); }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            loadingWindow = new LoadingWindow();
-            loadingWindow.Show();
-            backgroundWorker.RunWorkerAsync();
-        }
+        { loadingWindow.Close(); }
     }
 }
