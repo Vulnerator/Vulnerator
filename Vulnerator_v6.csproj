@@ -652,7 +652,12 @@
     <Resource Include="Resources\UserGuide\Images\VulneratorMain.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\U_CCI_List.xml" />
+    <EmbeddedResource Include="Resources\RawData\NIST_800-53_CCI_Mapping.xml" />
+    <EmbeddedResource Include="Resources\RawData\NIST_800-53_CNSS-Overlay_Mapping.xml" />
+    <EmbeddedResource Include="Resources\RawData\NIST_800-53_CNSS_Mapping.xml" />
+    <EmbeddedResource Include="Resources\RawData\NIST_800-53_Finance-Overlay_Mapping.xml" />
+    <EmbeddedResource Include="Resources\RawData\NIST_800-53_MonitoringFrequency_Mapping.xml" />
+    <EmbeddedResource Include="Resources\RawData\U_CCI_List.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -679,6 +679,7 @@ CREATE TABLE NistControlsAvailabilityLevels
 	(
 	 NIST_Control_ID INTEGER NOT NULL , 
 	 Availability_ID INTEGER NOT NULL ,
+	 NSS_Systems_Only NVARCHAR (10) NOT NULL,
 	 FOREIGN KEY (NIST_Control_ID) REFERENCES NistControls(NIST_Control_ID),
 	 FOREIGN KEY (Availability_ID) REFERENCES AvailabilityLevels(Availability_ID)
 	);
@@ -705,6 +706,7 @@ CREATE TABLE NistControlsConfidentialityLevels
 	(
 	 NIST_Control_ID INTEGER NOT NULL , 
 	 Confidentiality_ID INTEGER NOT NULL ,
+	 NSS_Systems_Only NVARCHAR (10) NOT NULL,
 	 FOREIGN KEY (NIST_Control_ID) REFERENCES NistControls(NIST_Control_ID),
 	 FOREIGN KEY (Confidentiality_ID) REFERENCES ConfidentialityLevels(Confidentiality_ID)
 	);
@@ -726,6 +728,7 @@ CREATE TABLE NistControlsIntegrityLevels
 	(
 	 NIST_Control_ID INTEGER NOT NULL , 
 	 Integrity_ID INTEGER NOT NULL ,
+	 NSS_Systems_Only NVARCHAR (10) NOT NULL,
 	 FOREIGN KEY (NIST_Control_ID) REFERENCES NistControls(NIST_Control_ID),
 	 FOREIGN KEY (Integrity_ID) REFERENCES IntegrityLevels(Integrity_ID)
 	);
