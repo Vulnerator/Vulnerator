@@ -808,6 +808,10 @@
                                     <ColumnDefinition />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
                                 <StackPanel Grid.Column="0">
                                     <ComboBox Margin="0,0,5,5"
                                               Controls:TextBoxHelper.UseFloatingWatermark="True"
@@ -886,10 +890,6 @@
                                             </DataGridTextColumn>
                                         </DataGrid.Columns>
                                     </DataGrid>
-                                    <CheckBox Margin="0,0,5,5">
-                                        <TextBlock Text="Data loss / breach from multiple sources creates an aggregation condition that heightens risk"
-                                                   TextWrapping="Wrap" />
-                                    </CheckBox>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1">
                                     <ComboBox Margin="0,0,0,5"
@@ -975,6 +975,10 @@
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </StackPanel>
+                                <CheckBox Margin="0,0,5,5" Grid.Row="1" Grid.ColumnSpan="2">
+                                    <TextBlock Text="Data loss / breach from multiple sources creates an aggregation condition that heightens risk"
+                                               TextWrapping="Wrap" />
+                                </CheckBox>
                             </Grid>
                         </Expander>
                         <Expander Margin="5,0,5,5"
@@ -1066,7 +1070,13 @@
                                     <DataTemplate>
                                         <DataGrid>
                                             <DataGrid.Columns>
-                                                <DataGridTextColumn />
+                                                <DataGridTextColumn>
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock Grid.Column="0"
+                                                                   Text="Key"
+                                                                   TextTrimming="CharacterEllipsis" />
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
                                                 <DataGridTextColumn>
                                                     <DataGridTextColumn.Header>
                                                         <TextBlock Grid.Column="0"
@@ -1149,96 +1159,100 @@
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <DataGrid Margin="5,0"
-                              Style="{StaticResource GreyBorderedDataGridStyle}">
-                        <DataGrid.Columns>
-                            <DataGridCheckBoxColumn />
-                            <DataGridTextColumn Width="*">
-                                <DataGridTextColumn.Header>
-                                    <TextBlock Text="Control Family"
-                                               TextTrimming="CharacterEllipsis" />
-                                </DataGridTextColumn.Header>
-                            </DataGridTextColumn>
-                            <DataGridTextColumn Width="*">
-                                <DataGridTextColumn.Header>
-                                    <TextBlock Text="Control Number"
-                                               TextTrimming="CharacterEllipsis" />
-                                </DataGridTextColumn.Header>
-                            </DataGridTextColumn>
-                            <DataGridTextColumn Width="*">
-                                <DataGridTextColumn.Header>
-                                    <TextBlock Text="Enhancement"
-                                               TextTrimming="CharacterEllipsis" />
-                                </DataGridTextColumn.Header>
-                            </DataGridTextColumn>
-                            <DataGridTextColumn Width="*">
-                                <DataGridTextColumn.Header>
-                                    <TextBlock Text="Title"
-                                               TextTrimming="CharacterEllipsis" />
-                                </DataGridTextColumn.Header>
-                            </DataGridTextColumn>
-                        </DataGrid.Columns>
-                        <DataGrid.RowDetailsTemplate>
-                            <DataTemplate>
-                                <StackPanel>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition />
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                        </Grid.RowDefinitions>
-                                        <Label HorizontalAlignment="Stretch"
-                                               HorizontalContentAlignment="Right">
-                                            <TextBlock HorizontalAlignment="Stretch"
-                                                       FontWeight="DemiBold"
-                                                       Text="Control Text:"
-                                                       TextAlignment="Right"
-                                                       TextTrimming="CharacterEllipsis" />
-                                        </Label>
-                                        <Label Grid.Row="1"
-                                               HorizontalAlignment="Stretch"
-                                               HorizontalContentAlignment="Right">
-                                            <TextBlock HorizontalAlignment="Stretch"
-                                                       FontWeight="DemiBold"
-                                                       Text="Supplemental Guidance:"
-                                                       TextAlignment="Right"
-                                                       TextTrimming="CharacterEllipsis" />
-                                        </Label>
-                                    </Grid>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition />
-                                            <ColumnDefinition />
-                                            <ColumnDefinition />
-                                        </Grid.ColumnDefinitions>
-                                        <CheckBox Margin="5,5,5,10">
-                                            <TextBlock Text="Inheritable"
-                                                       TextTrimming="CharacterEllipsis" />
-                                        </CheckBox>
-                                        <CheckBox x:Name="inheritedCheckBox"
-                                                  Grid.Column="1"
-                                                  Margin="0,5,5,10">
-                                            <TextBlock Text="Inherited"
-                                                       TextTrimming="CharacterEllipsis" />
-                                        </CheckBox>
-                                        <ComboBox Grid.Column="2"
-                                                  Margin="0,0,0,5"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                  Controls:TextBoxHelper.Watermark="Inherited From" />
-                                    </Grid>
-                                    <TextBox Grid.Row="2"
-                                             Grid.ColumnSpan="2"
-                                             Margin="5,0,0,5"
-                                             Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                             Controls:TextBoxHelper.Watermark="Implementation Notes"
-                                             AcceptsReturn="True" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGrid.RowDetailsTemplate>
-                    </DataGrid>
+                    <StackPanel>
+                        
+                        <DataGrid Margin="5,0"
+                                  Style="{StaticResource GreyBorderedDataGridStyle}"
+                                  MinHeight="500">
+                            <DataGrid.Columns>
+                                <DataGridCheckBoxColumn />
+                                <DataGridTextColumn Width="*">
+                                    <DataGridTextColumn.Header>
+                                        <TextBlock Text="Control Family"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*">
+                                    <DataGridTextColumn.Header>
+                                        <TextBlock Text="Control Number"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*">
+                                    <DataGridTextColumn.Header>
+                                        <TextBlock Text="Enhancement"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*">
+                                    <DataGridTextColumn.Header>
+                                        <TextBlock Text="Title"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <Label HorizontalAlignment="Stretch"
+                                                   HorizontalContentAlignment="Right">
+                                                <TextBlock HorizontalAlignment="Stretch"
+                                                           FontWeight="DemiBold"
+                                                           Text="Control Text:"
+                                                           TextAlignment="Right"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </Label>
+                                            <Label Grid.Row="1"
+                                                   HorizontalAlignment="Stretch"
+                                                   HorizontalContentAlignment="Right">
+                                                <TextBlock HorizontalAlignment="Stretch"
+                                                           FontWeight="DemiBold"
+                                                           Text="Supplemental Guidance:"
+                                                           TextAlignment="Right"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </Label>
+                                        </Grid>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <CheckBox Margin="5,5,5,10">
+                                                <TextBlock Text="Inheritable"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </CheckBox>
+                                            <CheckBox x:Name="inheritedCheckBox"
+                                                      Grid.Column="1"
+                                                      Margin="0,5,5,10">
+                                                <TextBlock Text="Inherited"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </CheckBox>
+                                            <ComboBox Grid.Column="2"
+                                                      Margin="0,0,0,5"
+                                                      Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                      Controls:TextBoxHelper.Watermark="Inherited From" />
+                                        </Grid>
+                                        <TextBox Grid.Row="2"
+                                                 Grid.ColumnSpan="2"
+                                                 Margin="5,0,0,5"
+                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                 Controls:TextBoxHelper.Watermark="Implementation Notes"
+                                                 AcceptsReturn="True" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
+                        </DataGrid>
+                    </StackPanel>
                     <Expander Grid.Column="1"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"

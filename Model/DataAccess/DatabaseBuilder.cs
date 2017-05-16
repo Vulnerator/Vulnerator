@@ -98,6 +98,7 @@ namespace Vulnerator.Model.DataAccess
                     { sqliteCommand.ExecuteNonQuery(); }
                     PopulateCciData();
                     PopulateNistControls();
+                    MapControlsToCci();
                     sqliteTransaction.Commit();
                 }
                 sqliteConnection.Close();
@@ -265,23 +266,23 @@ namespace Vulnerator.Model.DataAccess
                                             }
                                         case "Confidentiality":
                                             {
-                                                ciaTriadFlags.Add("highConfidentiality", xmlReader.GetAttribute("high"));
-                                                ciaTriadFlags.Add("moderateConfidentiality", xmlReader.GetAttribute("moderate"));
-                                                ciaTriadFlags.Add("lowConfidentiality", xmlReader.GetAttribute("low"));
+                                                ciaTriadFlags.Add("HighConfidentiality", xmlReader.GetAttribute("high"));
+                                                ciaTriadFlags.Add("ModerateConfidentiality", xmlReader.GetAttribute("moderate"));
+                                                ciaTriadFlags.Add("LowConfidentiality", xmlReader.GetAttribute("low"));
                                                 break;
                                             }
                                         case "Integrity":
                                             {
-                                                ciaTriadFlags.Add("highIntegrity", xmlReader.GetAttribute("high"));
-                                                ciaTriadFlags.Add("moderateIntegrity", xmlReader.GetAttribute("moderate"));
-                                                ciaTriadFlags.Add("lowIntegrity", xmlReader.GetAttribute("low"));
+                                                ciaTriadFlags.Add("HighIntegrity", xmlReader.GetAttribute("high"));
+                                                ciaTriadFlags.Add("ModerateIntegrity", xmlReader.GetAttribute("moderate"));
+                                                ciaTriadFlags.Add("LowIntegrity", xmlReader.GetAttribute("low"));
                                                 break;
                                             }
                                         case "Availability":
                                             {
-                                                ciaTriadFlags.Add("highAvailability", xmlReader.GetAttribute("high"));
-                                                ciaTriadFlags.Add("moderateAvailability", xmlReader.GetAttribute("moderate"));
-                                                ciaTriadFlags.Add("lowAvailability", xmlReader.GetAttribute("low"));
+                                                ciaTriadFlags.Add("HighAvailability", xmlReader.GetAttribute("high"));
+                                                ciaTriadFlags.Add("ModerateAvailability", xmlReader.GetAttribute("moderate"));
+                                                ciaTriadFlags.Add("LowAvailability", xmlReader.GetAttribute("low"));
                                                 break;
                                             }
                                         default:
@@ -291,26 +292,7 @@ namespace Vulnerator.Model.DataAccess
                                 else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Control"))
                                 {
                                     InsertNistControls(sqliteCommand);
-                                    sqliteCommand.CommandText = "SELECT last_insert_rowid();";
-                                    string lastInsertId = sqliteCommand.ExecuteScalar().ToString();
-                                    if (!string.IsNullOrWhiteSpace(highConfidentiality))
-                                    { SetCiaValues(lastInsertId, "Confidentiality", "High", highConfidentiality, sqliteCommand); }
-                                    if (!string.IsNullOrWhiteSpace(moderateConfidentiality))
-                                    { SetCiaValues(lastInsertId, "Confidentiality", "Moderate", moderateConfidentiality, sqliteCommand); }
-                                    if (!string.IsNullOrWhiteSpace(lowConfidentiality))
-                                    { SetCiaValues(lastInsertId, "Confidentiality", "Low", lowConfidentiality, sqliteCommand); }
-                                    if (!string.IsNullOrWhiteSpace(highIntegrity))
-                                    { SetCiaValues(lastInsertId, "Integrity", "High", highIntegrity, sqliteCommand); }
-                                    if (!string.IsNullOrWhiteSpace(moderateIntegrity))
-                                    { SetCiaValues(lastInsertId, "Integrity", "Moderate", moderateIntegrity, sqliteCommand); }
-                                    if (!string.IsNullOrWhiteSpace(lowIntegrity))
-                                    { SetCiaValues(lastInsertId, "Integrity", "Low", lowIntegrity, sqliteCommand); }
-                                    if (!string.IsNullOrWhiteSpace(highAvailability))
-                                    { SetCiaValues(lastInsertId, "Availability", "High", highAvailability, sqliteCommand); }
-                                    if (!string.IsNullOrWhiteSpace(moderateAvailability))
-                                    { SetCiaValues(lastInsertId, "Availability", "Moderate", moderateAvailability, sqliteCommand); }
-                                    if (!string.IsNullOrWhiteSpace(lowAvailability))
-                                    { SetCiaValues(lastInsertId, "Availability", "Low", lowAvailability, sqliteCommand); }
+                                    MapControlsToCia(sqliteCommand, ciaTriadFlags);
                                     sqliteCommand.CommandText = string.Empty;
                                     sqliteCommand.Parameters.Clear();
                                     highConfidentiality = moderateConfidentiality = lowConfidentiality = string.Empty;
@@ -348,36 +330,125 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        private void SetCiaValues(string nistControlId, string triadItem, string level, string parsedValue, SQLiteCommand sqliteCommand)
+        private void MapControlsToCia(SQLiteCommand sqliteCommand, Dictionary<string, string> ciaTriadFlags)
         {
             try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("NIST_Control_ID", nistControlId));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Level", level));
-                if (parsedValue.Equals("NSS"))
-                { sqliteCommand.Parameters.Add(new SQLiteParameter("IsNss", "True")); }
-                else
-                { sqliteCommand.Parameters.Add(new SQLiteParameter("IsNss", "False")); }
-                if (triadItem.Equals("Confidentiality"))
+                sqliteCommand.CommandText = "SELECT last_insert_rowid();";
+                sqliteCommand.Parameters.Add(new SQLiteParameter("NIST_Control_ID", sqliteCommand.ExecuteScalar().ToString()));
+                foreach (string key in ciaTriadFlags.Keys)
                 {
-                    sqliteCommand.CommandText = "INSERT INTO NistControlsConfidentialityLevels VALUES " +
-                        "(@NIST_Control_ID, (SELECT Confidentiality_ID FROM ConfidentialityLevels WHERE Confidentiality_Level = @Level), @IsNss);";
+                    // Skip item or set IsNss Flag, as applicable
+                    if (ciaTriadFlags[key].Equals("false"))
+                    { continue; }
+                    else if (ciaTriadFlags[key].Equals("NSS"))
+                    { sqliteCommand.Parameters.Add(new SQLiteParameter("IsNss", "True")); }
+                    else
+                    { sqliteCommand.Parameters.Add(new SQLiteParameter("IsNss", "False")); }
+
+                    // Set appropriate applicability level for C-I-A triad item
+                    if (key.Contains("High"))
+                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Level", "High")); }
+                    else if (key.Contains("Moderate"))
+                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Level", "Moderate")); }
+                    else
+                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Level", "Low")); }
+
+                    // Insert data into appropriate table
+                    if (key.Contains("Confidentiality"))
+                    {
+                        sqliteCommand.CommandText = "INSERT INTO NistControlsConfidentialityLevels VALUES " +
+                            "(@NIST_Control_ID, (SELECT Confidentiality_ID FROM ConfidentialityLevels WHERE Confidentiality_Level = @Level), @IsNss);";
+                    }
+                    else if (key.Contains("Integrity"))
+                    {
+                        sqliteCommand.CommandText = "INSERT INTO NistControlsIntegrityLevels VALUES " +
+                            "(@NIST_Control_ID, (SELECT Integrity_ID FROM IntegrityLevels WHERE Integrity_Level = @Level), @IsNss);";
+                    }
+                    else
+                    {
+                        sqliteCommand.CommandText = "INSERT INTO NistControlsAvailabilityLevels VALUES " +
+                            "(@NIST_Control_ID, (SELECT Availability_ID FROM AvailabilityLevels WHERE Availability_Level = @Level), @IsNss);";
+                    }
+                    sqliteCommand.ExecuteNonQuery();
+                    sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["IsNss"]);
+                    sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["Level"]);
+
                 }
-                else if (triadItem.Equals("Integrity"))
-                {
-                    sqliteCommand.CommandText = "INSERT INTO NistControlsIntegrityLevels VALUES " +
-                        "(@NIST_Control_ID, (SELECT Integrity_ID FROM IntegrityLevels WHERE Integrity_Level = @Level), @IsNss);";
-                }
-                else
-                {
-                    sqliteCommand.CommandText = "INSERT INTO NistControlsAvailabilityLevels VALUES " +
-                        "(@NIST_Control_ID, (SELECT Availability_ID FROM AvailabilityLevels WHERE Availability_Level = @Level), @IsNss);";
-                }
-                sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
             {
-                log.Error("Unable to insert NIST Control CIA Value.");
+                log.Error("Unable to map NIST Controls to CIA Triad.");
+                throw exception;
+            }
+        }
+
+        private void MapControlsToCci()
+        {
+            try
+            {
+                using (SQLiteCommand sqliteCommand = sqliteConnection.CreateCommand())
+                {
+                    using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.NIST_800-53_CCI_Mapping.xml"))
+                    {
+                        using (XmlReader xmlReader = XmlReader.Create(stream))
+                        {
+                            while (xmlReader.Read())
+                            {
+                                if (xmlReader.IsStartElement())
+                                {
+                                    switch (xmlReader.Name)
+                                    {
+                                        case "Pair":
+                                            {
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Family", xmlReader.GetAttribute("family")));
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Number", xmlReader.GetAttribute("number")));
+                                                if (!xmlReader.GetAttribute("enhancement").Equals("0"))
+                                                { sqliteCommand.Parameters.Add(new SQLiteParameter("Enhancement", xmlReader.GetAttribute("enhancement"))); }
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("DoD_AP", xmlReader.GetAttribute("dod-ap")));
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("ControlIndicator", xmlReader.GetAttribute("indicator")));
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("CCI", xmlReader.GetAttribute("cci")));
+                                                break;
+                                            }
+                                        case "ImplementationGuidance":
+                                            {
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("ImplementationGuidance", ObtainCurrentNodeValue(xmlReader)));
+                                                break;
+                                            }
+                                        case "AssessmentProcedures":
+                                            {
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("AP_Text", ObtainCurrentNodeValue(xmlReader)));
+                                                break;
+                                            }
+                                        default:
+                                            { break; }
+                                    }
+                                }
+                                else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Pair"))
+                                {
+                                    if (sqliteCommand.Parameters.Contains("Enhancement"))
+                                    {
+                                        sqliteCommand.CommandText = "INSERT INTO NistcontrolsCCIs VALUES " +
+                                            "((SELECT NIST_Control_ID FROM NistControls WHERE Control_Family = @Family AND Control_Number = @Number AND Enhancement = @Enhancement), " +
+                                            "(SELECT CCI_ID FROM CCIs WHERE CCI = @CCI), @DoD_AP, @ControlIndicator, @ImplementationGuidance, @AP_Text);";
+                                    }
+                                    else
+                                    {
+                                        sqliteCommand.CommandText = "INSERT INTO NistcontrolsCCIs VALUES " +
+                                            "((SELECT NIST_Control_ID FROM NistControls WHERE Control_Family = @Family AND Control_Number = @Number AND Enhancement IS NULL), " +
+                                            "(SELECT CCI_ID FROM CCIs WHERE CCI = @CCI), @DoD_AP, @ControlIndicator, @ImplementationGuidance, @AP_Text);";
+                                    }
+                                    sqliteCommand.ExecuteNonQuery();
+                                    sqliteCommand.Parameters.Clear();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to map NIST Controls to CCI values.");
                 throw exception;
             }
         }

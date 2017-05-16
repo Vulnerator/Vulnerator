@@ -687,9 +687,10 @@ CREATE TABLE NistControlsCCIs
 	(
 	 NIST_Control_ID INTEGER NOT NULL , 
 	 CCI_ID INTEGER NOT NULL ,
-	 ControlTextIndicator NVARCHAR (25) NOT NULL,
+	 DOD_AssessmentProcedureMapping NVARCHAR (10) NOT NULL,
+	 ControlIndicator NVARCHAR (25) NOT NULL,
 	 ImplementationGuidance NVARCHAR(1000) NOT NULL,
-	 AssessmentProcedures NVARCHAR(1000) NOT NULL,
+	 AssessmentProcedureText NVARCHAR(1000) NOT NULL,
 	 FOREIGN KEY (NIST_Control_ID) REFERENCES NistControls(NIST_Control_ID),
 	 FOREIGN KEY (CCI_ID) REFERENCES CCIs(CCI_ID)
 	);
