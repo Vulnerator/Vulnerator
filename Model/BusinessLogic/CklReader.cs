@@ -210,7 +210,7 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters.Add(new SQLiteParameter("SerialNumber", string.Empty));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Role", workingSystem.Role));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("LifecycleStatus", string.Empty));
-                sqliteCommand.CommandText = DdlTextReader("Vulnerator.Resources.DdlFiles.InsertHardware.ddl");
+                sqliteCommand.CommandText = Properties.Resources.InsertHardware;
                 sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.CommandText = "SELECT last_insert_rowid();";
                 hardwarePrimaryKey = int.Parse(sqliteCommand.ExecuteScalar().ToString());
@@ -524,20 +524,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "CCI_REF":
                                 {
-                                    string cciRef = string.Empty;
-                                    string cciRefData = ObtainAttributeDataNodeValue(xmlReader);
-                                    foreach (CciToNist cciToNist in MainWindowViewModel.cciToNistList.Where(
-                                        x => x.CciNumber.Equals(cciRefData)))
-                                    {
-                                        if (RevisionThreeSelected && cciToNist.Revision.Contains("Rev. 3") && !cciRef.Contains(cciToNist.NistControl))
-                                        { cciRef = cciRef + cciToNist.NistControl + Environment.NewLine; }
-                                        if (RevisionFourSelected && cciToNist.Revision.Contains("Rev. 4") && !cciRef.Contains(cciToNist.NistControl))
-                                        { cciRef = cciRef + cciToNist.NistControl + Environment.NewLine; }
-                                        if (AppendixASelected && cciToNist.Revision.Contains("53A") && !cciRef.Contains(cciToNist.NistControl))
-                                        { cciRef = cciRef + cciToNist.NistControl + Environment.NewLine; }
-                                    }
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("NistControl", cciRef));
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("CciNumber", cciRefData));
+                                    
                                     break;
                                 }
                             case "STIGRef":

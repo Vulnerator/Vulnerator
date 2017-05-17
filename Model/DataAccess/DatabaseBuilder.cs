@@ -99,6 +99,7 @@ namespace Vulnerator.Model.DataAccess
                     PopulateCciData();
                     PopulateNistControls();
                     MapControlsToCci();
+                    MapControlsToMonitoringFrequency();
                     sqliteTransaction.Commit();
                 }
                 sqliteConnection.Close();
@@ -148,7 +149,7 @@ namespace Vulnerator.Model.DataAccess
                                     case "cci_item":
                                         {
                                             cci = new Cci();
-                                            cci.CciItem = xmlReader.GetAttribute("id");
+                                            cci.CciItem = xmlReader.GetAttribute("id").Replace("CCI-", string.Empty);
                                             break;
                                         }
                                     case "status":
@@ -318,9 +319,9 @@ namespace Vulnerator.Model.DataAccess
                 if (!sqliteCommand.Parameters.Contains("SupplementalGuidance"))
                 { sqliteCommand.Parameters.Add(new SQLiteParameter("SupplementalGuidance", string.Empty)); }
                 if (sqliteCommand.Parameters.Contains("Enhancement"))
-                { sqliteCommand.CommandText = "INSERT INTO NistControls VALUES (NULL, @Family, @Number, @Enhancement, @Title, @Text, @SupplementalGuidance);"; }
+                { sqliteCommand.CommandText = "INSERT INTO NistControls VALUES (NULL, @Family, @Number, @Enhancement, @Title, @Text, @SupplementalGuidance, NULL);"; }
                 else
-                { sqliteCommand.CommandText = "INSERT INTO NistControls VALUES (NULL, @Family, @Number, NULL, @Title, @Text, @SupplementalGuidance);"; }
+                { sqliteCommand.CommandText = "INSERT INTO NistControls VALUES (NULL, @Family, @Number, NULL, @Title, @Text, @SupplementalGuidance, NULL);"; }
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -426,15 +427,17 @@ namespace Vulnerator.Model.DataAccess
                                 }
                                 else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Pair"))
                                 {
+                                    if (!sqliteCommand.Parameters.Contains("DoD_AP"))
+                                    { sqliteCommand.Parameters.Add(new SQLiteParameter("DoD_AP", DBNull.Value)); }
                                     if (sqliteCommand.Parameters.Contains("Enhancement"))
                                     {
-                                        sqliteCommand.CommandText = "INSERT INTO NistcontrolsCCIs VALUES " +
+                                        sqliteCommand.CommandText = "INSERT INTO NistControlsCCIs VALUES " +
                                             "((SELECT NIST_Control_ID FROM NistControls WHERE Control_Family = @Family AND Control_Number = @Number AND Enhancement = @Enhancement), " +
                                             "(SELECT CCI_ID FROM CCIs WHERE CCI = @CCI), @DoD_AP, @ControlIndicator, @ImplementationGuidance, @AP_Text);";
                                     }
                                     else
                                     {
-                                        sqliteCommand.CommandText = "INSERT INTO NistcontrolsCCIs VALUES " +
+                                        sqliteCommand.CommandText = "INSERT INTO NistControlsCCIs VALUES " +
                                             "((SELECT NIST_Control_ID FROM NistControls WHERE Control_Family = @Family AND Control_Number = @Number AND Enhancement IS NULL), " +
                                             "(SELECT CCI_ID FROM CCIs WHERE CCI = @CCI), @DoD_AP, @ControlIndicator, @ImplementationGuidance, @AP_Text);";
                                     }
@@ -449,6 +452,121 @@ namespace Vulnerator.Model.DataAccess
             catch (Exception exception)
             {
                 log.Error("Unable to map NIST Controls to CCI values.");
+                throw exception;
+            }
+        }
+
+        private void MapControlsToCnssOverlays()
+        {
+            try
+            {
+                Dictionary<string, string> overlayApplicability = new Dictionary<string, string>();
+                using (SQLiteCommand sqliteCommand = sqliteConnection.CreateCommand())
+                {
+                    using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.NIST_800-53_CNSS-Overlay_Mapping.xml"))
+                    {
+                        using (XmlReader xmlReader = XmlReader.Create(stream))
+                        {
+                            while (xmlReader.Read())
+                            {
+                                if (xmlReader.IsStartElement())
+                                {
+                                    switch (xmlReader.Name)
+                                    {
+                                        case "Control":
+                                            {
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Family", xmlReader.GetAttribute("family")));
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Number", xmlReader.GetAttribute("number")));
+                                                if (!xmlReader.GetAttribute("enhancement").Equals("0"))
+                                                { sqliteCommand.Parameters.Add(new SQLiteParameter("Enhancement", xmlReader.GetAttribute("enhancement"))); }
+                                                break;
+                                            }
+                                        default:
+                                            {
+                                                overlayApplicability.Add(xmlReader.Name.Replace("-", " "), ObtainCurrentNodeValue(xmlReader));
+                                                break;
+                                            }
+                                    }
+                                }
+                                else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Control"))
+                                {
+                                    if (sqliteCommand.Parameters.Contains("enhancement"))
+                                    {
+
+                                    }
+                                    else
+                                    {
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to map NIST controls to CNSS 1523 Overlays.");
+                throw exception;
+            }
+        }
+
+        private void MapControlsToMonitoringFrequency()
+        {
+            try
+            {
+                using (SQLiteCommand sqliteCommand = sqliteConnection.CreateCommand())
+                {
+                    using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.NIST_800-53_MonitoringFrequency_Mapping.xml"))
+                    {
+                        using (XmlReader xmlReader = XmlReader.Create(stream))
+                        {
+                            while (xmlReader.Read())
+                            {
+                                if (xmlReader.IsStartElement())
+                                {
+                                    switch (xmlReader.Name)
+                                    {
+                                        case "Control":
+                                            {
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Family", xmlReader.GetAttribute("family")));
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Number", xmlReader.GetAttribute("number")));
+                                                if (!xmlReader.GetAttribute("enhancement").Equals("0"))
+                                                { sqliteCommand.Parameters.Add(new SQLiteParameter("Enhancement", xmlReader.GetAttribute("enhancement"))); }
+                                                break;
+                                            }
+                                        case "Frequency":
+                                            {
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Frequency", ObtainCurrentNodeValue(xmlReader)));
+                                                break;
+                                            }
+                                        default:
+                                            { break; }
+                                    }
+                                }
+                                else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Control"))
+                                {
+                                    if (sqliteCommand.Parameters.Contains("Enhancement"))
+                                    {
+                                        sqliteCommand.CommandText = "UPDATE NistControls SET Monitoring_Frequency = @Frequency WHERE Control_Family = @Family AND " +
+                                            "Control_Number = @Number AND Enhancement = @Enhancement;";
+                                    }
+                                    else
+                                    {
+                                        sqliteCommand.CommandText = "UPDATE NistControls SET Monitoring_Frequency = @Frequency WHERE Control_Family = @Family AND " +
+                                            "Control_Number = @Number AND Enhancement IS NULL;";
+                                    }
+                                    sqliteCommand.ExecuteNonQuery();
+                                    sqliteCommand.Parameters.Clear();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to map NIST controls to monitoring frequencies.");
                 throw exception;
             }
         }

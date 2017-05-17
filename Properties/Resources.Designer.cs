@@ -59,5 +59,14 @@ namespace Vulnerator.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,@LifecycleStatus);.
+        /// </summary>
+        internal static string InsertHardware {
+            get {
+                return ResourceManager.GetString("InsertHardware", resourceCulture);
+            }
+        }
     }
 }

@@ -608,7 +608,6 @@
     <EmbeddedResource Include="Resources\UserGuide\Home.md" />
     <EmbeddedResource Include="Resources\UserGuide\Looking-Ahead.md" />
     <EmbeddedResource Include="Resources\UserGuide\Using-the-Software.md" />
-    <EmbeddedResource Include="Resources\DdlFiles\InsertHardware.ddl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

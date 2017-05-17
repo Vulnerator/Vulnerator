@@ -9442,7 +9442,7 @@
 
 			For information system components that have applicable STIGs or SRGs, the organization conducting the inspection/assessment evaluates the components to ensure that the organization being inspected/assessed has configured the information system in compliance with the applicable STIGs and SRGs pertaining to CCI 1632.</AssessmentProcedures>
 	</Pair>
-	<Pair family="MA" number="4" enhancement="5" dod-ap="MA-4(5).2" indicator="MA-4 (5) (a)" cci="0028888">
+	<Pair family="MA" number="4" enhancement="5" dod-ap="MA-4(5).2" indicator="MA-4 (5) (a)" cci="002888">
 		<ImplementationGuidance>DoD has defined the personnel or roles as the ISSO.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
