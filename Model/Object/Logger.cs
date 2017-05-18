@@ -4,7 +4,6 @@ using log4net.Core;
 using log4net.Layout;
 using log4net.Repository.Hierarchy;
 using log4net.Util;
-using System;
 using System.Diagnostics;
 using Vulnerator.Model.ModelHelper;
 

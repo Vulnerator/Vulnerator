@@ -50,34 +50,38 @@ namespace Vulnerator.ViewModel
             SimpleIoc.Default.Register<ThemeViewModel>();
             SimpleIoc.Default.Register<RmfViewModel>();
             SimpleIoc.Default.Register<SplashViewModel>();
+            SimpleIoc.Default.Register<SettingsViewModel>();
         }
-
-        public SplashViewModel Splash
-        { get { return ServiceLocator.Current.GetInstance<SplashViewModel>(); } }
-
-        public MainViewModel Main
-        { get { return ServiceLocator.Current.GetInstance<MainViewModel>(); } }
-
-        public VulnerabilityViewModel Vulnerability
-        { get { return ServiceLocator.Current.GetInstance<VulnerabilityViewModel>(); } }
-
-        public UserGuideViewModel UserGuide
-        { get { return ServiceLocator.Current.GetInstance<UserGuideViewModel>(); } }
 
         public AboutViewModel About
         { get { return ServiceLocator.Current.GetInstance<AboutViewModel>(); } }
 
+        public MainViewModel Main
+        { get { return ServiceLocator.Current.GetInstance<MainViewModel>(); } }
+
         public NewsViewModel News
         { get { return ServiceLocator.Current.GetInstance<NewsViewModel>(); } }
-
-        public ThemeViewModel Theme
-        { get { return ServiceLocator.Current.GetInstance<ThemeViewModel>(); } }
 
         public ReportingViewModel Reporting
         { get { return ServiceLocator.Current.GetInstance<ReportingViewModel>(); } }
 
         public RmfViewModel Rmf
         { get { return ServiceLocator.Current.GetInstance<RmfViewModel>(); } }
+
+        public SettingsViewModel Settings
+        { get { return ServiceLocator.Current.GetInstance<SettingsViewModel>(); } }
+
+        public SplashViewModel Splash
+        { get { return ServiceLocator.Current.GetInstance<SplashViewModel>(); } }
+
+        public ThemeViewModel Theme
+        { get { return ServiceLocator.Current.GetInstance<ThemeViewModel>(); } }
+
+        public UserGuideViewModel UserGuide
+        { get { return ServiceLocator.Current.GetInstance<UserGuideViewModel>(); } }
+
+        public VulnerabilityViewModel Vulnerability
+        { get { return ServiceLocator.Current.GetInstance<VulnerabilityViewModel>(); } }
 
         public static void Cleanup()
         { }

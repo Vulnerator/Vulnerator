@@ -16,7 +16,7 @@
              xmlns:vm="clr-namespace:Vulnerator.ViewModel"
              HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch"
-             d:DesignHeight="800"
+             DataContext="{Binding Settings, Source={StaticResource Locator}}"
              d:DesignWidth="800"
              mc:Ignorable="d">
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
@@ -68,14 +68,15 @@
                     <TextBox Margin="5,0,5,5"
                              VerticalAlignment="Center"
                              HorizontalAlignment="Stretch"
+                             IsReadOnly="True"
                              Text="{Binding Source={StaticResource Settings}, Path=Default.Database}"
                              Controls:TextBoxHelper.Watermark="Database File" />
                     <Button Margin="5,0,5,5"
                             Grid.Column="1"
-                            Content="{IconPacks:PackIconModern Kind=PageSearch}" />
+                            Content="{IconPacks:PackIconModern Kind=PageSearch}" ToolTip="Search" />
                     <Button Margin="5,0,5,5"
                             Grid.Column="2"
-                            Content="{IconPacks:PackIconModern Kind=PageAdd}" />
+                            Content="{IconPacks:PackIconModern Kind=PageNew}" ToolTip="Create" />
                 </Grid>
 
                 <Label Grid.Column="0"
@@ -89,16 +90,67 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBox Margin="5,0,5,5"
+                    <TextBox x:Name="uploadStigLibraryTextbox" Margin="5,0,5,5"
                              HorizontalAlignment="Stretch"
                              VerticalAlignment="Center"
-                             Controls:TextBoxHelper.Watermark="STIG Library" />
+                             Controls:TextBoxHelper.Watermark="STIG Library"
+                             Controls:TextBoxHelper.ClearTextButton="True"
+                             Text="{Binding StigLibraryLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button Margin="5,0,5,5"
                             Grid.Column="1"
-                            Content="{IconPacks:PackIconModern Kind=PageSearch}" />
+                            Command="{Binding SelectStigLibraryCommand}"
+                            Content="{IconPacks:PackIconModern Kind=PageSearch}" ToolTip="Search" />
                     <Button Margin="5,0,5,5"
                             Grid.Column="2"
-                            Content="{IconPacks:PackIconFontAwesome Kind=FloppyOutline}" />
+                            Command="{Binding IngestStigLibraryCommand}"
+                            Content="{IconPacks:PackIconModern Kind=PageUpload}" ToolTip="Upload" />
+                </Grid>
+                <TextBox Margin="5,0,5,5"
+                         Style="{StaticResource ErrorTextBox}"
+                         Background="LightPink"
+                         Text="Please select a STIG Library for ingestion."
+                         TextAlignment="Center"
+                         TextWrapping="Wrap"
+                         Visibility="{Binding NoLibraryVisibility}" />
+                <TextBox Margin="5,0,5,5"
+                         Style="{StaticResource ErrorTextBox}"
+                         Background="LightPink"
+                         Text="STIG Library ingestion error - see log for details."
+                         TextAlignment="Center"
+                         TextWrapping="Wrap"
+                         Visibility="{Binding IngestionErrorVisibility}" />
+                <TextBox Margin="5,0,5,5"
+                         Style="{StaticResource SuccessTextBox}"
+                         Text="STIG Library successfully ingested."
+                         TextAlignment="Center"
+                         TextWrapping="Wrap"
+                         Visibility="{Binding IngestionSuccessVisibility}" />
+                <Grid Visibility="{Binding ProgressVisibility, FallbackValue=Collapsed}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <ProgressBar Margin="5,0,5,5"
+                                 Minimum="0"
+                                 Maximum="{Binding ProgressBarMax}"
+                                 Value="{Binding ProgressBarValue}"
+                                 Width="{Binding ActualWidth, ElementName=uploadStigLibraryTextbox}" />
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0"
+                                   Text="{Binding ProgressBarValue}"
+                                   TextAlignment="Center" />
+                        <TextBlock Grid.Column="1"
+                                   Text="/"
+                                   TextAlignment="Center" />
+                        <TextBlock Grid.Column="2"
+                                   Text="{Binding ProgressBarMax}"
+                                   TextAlignment="Center" />
+                    </Grid>
                 </Grid>
                 <Label Style="{StaticResource SecondLevelHeaderStyle}">
                     <TextBlock Text="Organization Management"
@@ -113,13 +165,14 @@
                     <TextBox Grid.Column="0"
                              Margin="5,0,5,5"
                              VerticalAlignment="Center"
-                             Controls:TextBoxHelper.Watermark="Enter a new organization name" />
+                             Controls:TextBoxHelper.Watermark="Enter a new organization name"
+                             Controls:TextBoxHelper.ClearTextButton="True"/>
                     <Button Grid.Column="1"
                             Margin="5,0,5,5"
-                            Content="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}" />
+                            Content="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"  ToolTip="Add Organization"/>
                     <Button Margin="5,0,5,5"
                             Grid.Column="2"
-                            Content="{IconPacks:PackIconMaterial Kind=MinusBoxOutline}" />
+                            Content="{IconPacks:PackIconMaterial Kind=MinusBoxOutline}" ToolTip="Remove Organization(s)" />
                 </Grid>
                 <DataGrid MinHeight="100"
                           Margin="5,0,5,5"

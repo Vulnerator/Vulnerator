@@ -1,11 +1,10 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using log4net;
 using System.Xml;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.ModelHelper;

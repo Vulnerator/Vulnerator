@@ -562,6 +562,16 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
+            <Style x:Key="SuccessTextBox"
+                   BasedOn="{StaticResource ErrorTextBox}"
+                   TargetType="{x:Type TextBox}">
+                <Setter Property="Background"
+                        Value="#ccffcc" />
+                <Setter Property="Foreground"
+                        Value="DarkGreen" />
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
