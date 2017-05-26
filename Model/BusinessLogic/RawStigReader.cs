@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Xml;
 using Vulnerator.Model.BusinessLogic;
 using Vulnerator.Model.Object;
 using Vulnerator.ViewModel.ViewModelHelper;
@@ -17,17 +18,14 @@ namespace Vulnerator.Model.BusinessLogic
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
-        public string ReadRawStig(string filename)
+        public string ReadRawStig(ZipArchiveEntry rawStig)
         {
             try
             {
-                log.Info(string.Format("Begin ingestion of raw STIG file {0}", filename));
-                using (ZipArchive zipArchive = ZipFile.Open(filename, ZipArchiveMode.Read))
+                log.Info(string.Format("Begin ingestion of raw STIG file {0}", rawStig.FullName));
+                using (XmlReader xmlReader = XmlReader.Create(rawStig.Open(), GenerateXmlReaderSettings()))
                 {
-                    foreach (ZipArchiveEntry entry in zipArchive.Entries.Where(x => x.Name.Contains("zip") && x.Name.Contains("STIG")))
-                    {
-                        Console.WriteLine(entry.Name);
-                    }
+                    xmlReader.Read();
                 }
                 return "Success";
             }
@@ -36,6 +34,25 @@ namespace Vulnerator.Model.BusinessLogic
                 log.Error("Unable to process STIG file.");
                 log.Debug("Exception details: " + exception);
                 return "Error";
+            }
+        }
+
+        private XmlReaderSettings GenerateXmlReaderSettings()
+        {
+            try
+            {
+                XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
+                xmlReaderSettings.IgnoreWhitespace = true;
+                xmlReaderSettings.IgnoreComments = true;
+                xmlReaderSettings.ValidationType = ValidationType.Schema;
+                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessInlineSchema;
+                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessSchemaLocation;
+                return xmlReaderSettings;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate XmlReaderSettings.");
+                throw exception;
             }
         }
     }

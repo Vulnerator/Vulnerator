@@ -180,10 +180,32 @@ namespace Vulnerator.ViewModel
                         ProgressBarMax = zipArchive.Entries.Count(x => x.Name.Contains("zip") && x.Name.Contains("STIG"));
                         foreach (ZipArchiveEntry entry in zipArchive.Entries.Where(x => x.Name.Contains("zip") && x.Name.Contains("STIG")))
                         {
-                            ProgressBarValue++;
-                            RawStigReader rawStigReader = new RawStigReader();
-                            rawStigReader.ReadRawStig(entry.FullName);
-                            System.Threading.Thread.Sleep(10);
+                            using (Stream stream = entry.Open())
+                            {
+                                using (ZipArchive innerZipArchive = new ZipArchive(stream, ZipArchiveMode.Read))
+                                {
+                                    if (innerZipArchive.Entries.FirstOrDefault(x => x.Name.Contains("STIG") && x.Name.Contains("zip")) != null)
+                                    {
+                                        ZipArchiveEntry innerEntry = innerZipArchive.Entries.FirstOrDefault(x => x.Name.Contains("STIG") && x.Name.Contains("zip"));
+                                        using (Stream secondStream = innerEntry.Open())
+                                        {
+                                            using (ZipArchive tertiaryZipArchive = new ZipArchive(stream, ZipArchiveMode.Read))
+                                            {
+                                                ZipArchiveEntry rawStig = tertiaryZipArchive.Entries.FirstOrDefault(x => x.Name.Contains("STIG") && x.Name.Contains("xml"));
+                                                RawStigReader rawStigReader = new RawStigReader();
+                                                rawStigReader.ReadRawStig(rawStig);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ZipArchiveEntry rawStig = innerZipArchive.Entries.FirstOrDefault(x => x.Name.Contains("STIG") && x.Name.Contains("xml"));
+                                        RawStigReader rawStigReader = new RawStigReader();
+                                        rawStigReader.ReadRawStig(rawStig);
+                                    }
+                                }
+                            }
+                            ProgressBarValue++;   
                         }
                     }
                     ProgressVisibility = "Collapsed";
