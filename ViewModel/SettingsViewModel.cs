@@ -177,21 +177,23 @@ namespace Vulnerator.ViewModel
                     IngestionSuccessVisibility = "Collapsed";
                     using (ZipArchive zipArchive = ZipFile.Open(StigLibraryLocation, ZipArchiveMode.Read))
                     {
-                        ProgressBarMax = zipArchive.Entries.Count(x => x.Name.Contains("zip") && x.Name.Contains("STIG"));
-                        foreach (ZipArchiveEntry entry in zipArchive.Entries.Where(x => x.Name.Contains("zip") && x.Name.Contains("STIG")))
+                        ProgressBarMax = zipArchive.Entries.Count(x => x.Name.EndsWith("zip"));
+                        foreach (ZipArchiveEntry entry in zipArchive.Entries.Where(x => x.Name.EndsWith("zip")))
                         {
                             using (Stream stream = entry.Open())
                             {
                                 using (ZipArchive innerZipArchive = new ZipArchive(stream, ZipArchiveMode.Read))
                                 {
-                                    if (innerZipArchive.Entries.FirstOrDefault(x => x.Name.Contains("STIG") && x.Name.Contains("zip")) != null)
+                                    if (innerZipArchive.Entries.FirstOrDefault(x => x.Name.EndsWith("zip")) != null)
                                     {
-                                        ZipArchiveEntry innerEntry = innerZipArchive.Entries.FirstOrDefault(x => x.Name.Contains("STIG") && x.Name.Contains("zip"));
+                                        ZipArchiveEntry innerEntry = innerZipArchive.Entries.FirstOrDefault(x => x.Name.EndsWith("zip"));
                                         using (Stream secondStream = innerEntry.Open())
                                         {
-                                            using (ZipArchive tertiaryZipArchive = new ZipArchive(stream, ZipArchiveMode.Read))
+                                            using (ZipArchive tertiaryZipArchive = new ZipArchive(secondStream, ZipArchiveMode.Read))
                                             {
-                                                ZipArchiveEntry rawStig = tertiaryZipArchive.Entries.FirstOrDefault(x => x.Name.Contains("STIG") && x.Name.Contains("xml"));
+                                                ZipArchiveEntry rawStig = tertiaryZipArchive.Entries.FirstOrDefault(x => x.Name.EndsWith("xml"));
+                                                if (rawStig == null)
+                                                { continue; }
                                                 RawStigReader rawStigReader = new RawStigReader();
                                                 rawStigReader.ReadRawStig(rawStig);
                                             }
@@ -199,7 +201,9 @@ namespace Vulnerator.ViewModel
                                     }
                                     else
                                     {
-                                        ZipArchiveEntry rawStig = innerZipArchive.Entries.FirstOrDefault(x => x.Name.Contains("STIG") && x.Name.Contains("xml"));
+                                        ZipArchiveEntry rawStig = innerZipArchive.Entries.FirstOrDefault(x => x.Name.EndsWith("xml"));
+                                        if (rawStig == null)
+                                        { continue; }
                                         RawStigReader rawStigReader = new RawStigReader();
                                         rawStigReader.ReadRawStig(rawStig);
                                     }

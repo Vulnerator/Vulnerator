@@ -33,7 +33,6 @@ namespace Vulnerator.ViewModel
         public static List<CciToNist> cciToNistList = new List<CciToNist>();
         public GitHubActions githubActions;
         public VulneratorDatabaseActions vulneratorDatabaseActions;
-        public string cciFileLocation = "Vulnerator.Resources.U_CCI_List.xml";
         public static bool excelFailed = false;
         public static bool reportSaveError = false;
         public static Stopwatch stopWatch = new Stopwatch();
@@ -803,8 +802,6 @@ namespace Vulnerator.ViewModel
             configAlter = new ConfigAlter();
             configAlter.CreateConfigurationXml();
             configAlter.CreateSettingsDictionary();
-            //vulneratorDatabaseActions = new VulneratorDatabaseActions();
-
             MitigationDatabaseLocation = ConfigAlter.ReadSettingsFromDictionary("tbMitDbLocation");
             ContactDatabaseLocation = ConfigAlter.ReadSettingsFromDictionary("tbContactDbLocation");
             IavmFilterOne = int.Parse(ConfigAlter.ReadSettingsFromDictionary("iavmFilterOne"));
@@ -822,10 +819,7 @@ namespace Vulnerator.ViewModel
             SystemGroupListForUpdating = new AsyncObservableCollection<UpdatableSystemGroup>();
             IssueList = new AsyncObservableCollection<Issue>();
             ReleaseList = new AsyncObservableCollection<Release>();
-            //vulneratorDatabaseActions.CreateVulneratorDatabase();
             findingsDatabaseActions = new FindingsDatabaseActions();
-            //vulneratorDatabaseActions.PopulateGuiLists(this);
-            GenerateCciToNistList();
             StatusItemList = new AsyncObservableCollection<StatusItem>();
             StatusItemList.Add(new StatusItem("Ongoing"));
             StatusItemList.Add(new StatusItem("Completed"));
@@ -842,87 +836,6 @@ namespace Vulnerator.ViewModel
 
         ~MainWindowViewModel()
         { configAlter.WriteSettingsToConfigurationXml(); }
-
-        #endregion
-
-        #region GenerateCciToNistList
-
-        private void GenerateCciToNistList()
-        {
-            try
-            {
-                string cciControl = string.Empty;
-                string definition = string.Empty;
-                using (Stream stream = assembly.GetManifestResourceStream(cciFileLocation))
-                {
-                    using (XmlReader xmlReader = XmlReader.Create(stream))
-                    {
-                        while (xmlReader.Read())
-                        {
-                            if (xmlReader.IsStartElement())
-                            {
-                                switch (xmlReader.Name)
-                                {
-                                    case "cci_item":
-                                        {
-                                            cciControl = xmlReader.GetAttribute("id");
-                                            break;
-                                        }
-                                    case "definition":
-                                        {
-                                            xmlReader.Read();
-                                            definition = xmlReader.Value;
-                                            break;
-                                        }
-                                    case "reference":
-                                        {
-                                            string control = xmlReader.GetAttribute("index");
-                                            string revision = string.Empty;
-                                            switch (xmlReader.GetAttribute("version"))
-                                            {
-                                                case "1":
-                                                    {
-                                                        revision = "NIST SP 800-53A";
-                                                        break;
-                                                    }
-                                                case "3":
-                                                    {
-                                                        revision = "NIST SP 800-53 Rev. 3";
-                                                        break;
-                                                    }
-                                                case "4":
-                                                    {
-                                                        revision = "NIST SP 800-53 Rev. 4";
-                                                        break;
-                                                    }
-                                                default:
-                                                    { break; }
-                                            }
-                                            if (cciToNistList.FirstOrDefault(x => x.CciNumber.Equals(cciControl) && x.NistControl.Equals(control) && x.Revision.Equals(revision)) == null)
-                                            {
-                                                CciToNist cciToNist = new CciToNist();
-                                                cciToNist.CciNumber = cciControl;
-                                                cciToNist.Definition = definition;
-                                                cciToNist.NistControl = control;
-                                                cciToNist.Revision = revision;
-                                                cciToNistList.Add(cciToNist);
-                                            }
-                                            break;
-                                        }
-                                    default:
-                                        { break; }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Uable to initialize CCI to NIST control reference list.");
-                log.Debug("Exception details: " + exception);
-            }
-        }
 
         #endregion
 

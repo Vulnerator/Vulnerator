@@ -1234,7 +1234,8 @@ CREATE TABLE VulnerabilityReferences
 CREATE TABLE VulnerabilitySources 
 	(
 	 Source_ID INTEGER PRIMARY KEY , 
-	 Source_Name NVARCHAR (100) NOT NULL, 
+	 Source_Name NVARCHAR (100) UNIQUE ON CONFLICT IGNORE NOT NULL, 
+	 Source_Secondary_Identifier NVARCHAR (100) UNIQUE ON CONFLICT IGNORE,
 	 Source_Version NVARCHAR (25) NOT NULL, 
 	 Source_Release NVARCHAR (25) NOT NULL
 	);

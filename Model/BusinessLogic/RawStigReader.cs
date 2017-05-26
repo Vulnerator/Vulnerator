@@ -18,7 +18,7 @@ namespace Vulnerator.Model.BusinessLogic
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
-        public string ReadRawStig(ZipArchiveEntry rawStig)
+        public void ReadRawStig(ZipArchiveEntry rawStig)
         {
             try
             {
@@ -27,13 +27,11 @@ namespace Vulnerator.Model.BusinessLogic
                 {
                     xmlReader.Read();
                 }
-                return "Success";
             }
             catch (Exception exception)
             {
                 log.Error("Unable to process STIG file.");
                 log.Debug("Exception details: " + exception);
-                return "Error";
             }
         }
 
