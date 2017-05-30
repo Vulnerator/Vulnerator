@@ -530,6 +530,11 @@ CREATE TABLE HardwareLocation
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
 	 FOREIGN KEY (Location_ID) REFERENCES Locations(Location_ID)
 	);
+CREATE TABLE IA_Controls
+	(
+	  IA_Control_ID INTEGER PRIMARY KEY ,
+	  IA_Control_Number NVARCHAR (10) NOT NULL
+	)
 CREATE TABLE IATA_Standards 
 	(
 	 IATA_Standard_ID INTEGER PRIMARY KEY , 
@@ -830,6 +835,11 @@ CREATE TABLE ResearchWeaponsSystems
 	 RDTE_ConnectedSystem NVARCHAR (5) NOT NULL ,
 	 FOREIGN KEY (ResearchWeaponsSystem_ID) REFERENCES PIT_Determination(ResearchWeaponsSystem_ID)
 	);
+CREATE TABLE ResponsibilityRoles
+	(
+	  Role_ID INTEGER PRIMARY KEY ,
+	  Role_Title NVARCHAR (25) NOT NULL
+	);
 CREATE TABLE SAP_AdditionalTestConsiderations 
 	(
 	 SAP_ID INTEGER NOT NULL , 
@@ -969,11 +979,6 @@ CREATE TABLE SoftwareHardware
 	 BaselineApprover NVARCHAR (50) ,
 	 FOREIGN KEY (Software_ID) REFERENCES Software(Software_ID),
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID)
-	);
-CREATE TABLE SourceFiles 
-	(
-	 Source_File_ID INTEGER PRIMARY KEY , 
-	 Source_File_Name NVARCHAR (500) NOT NULL 
 	);
 CREATE TABLE SpecialPurposeConsoles 
 	(
@@ -1163,11 +1168,21 @@ CREATE TABLE UniqueFindings
 	 Web_DB_Instance NVARCHAR(100),
 	 Classification NVARCHAR (25),
 	 FOREIGN KEY (Finding_Type_ID) REFERENCES FindingTypes(Finding_Type_ID),
-	 FOREIGN KEY (Source_ID) REFERENCES VulnerabilitySources(Source_ID),
-	 FOREIGN KEY (Source_File_ID) REFERENCES SourceFiles(Source_File_ID),
 	 FOREIGN KEY (Status_ID) REFERENCES FindingStatuses(Status_ID),
 	 FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID)
+	);
+	CREATE TABLE UniqueFindings_UniqueFindingsSourceFiles 
+	(
+	  Unique_Finding_ID INTEGER NOT NULL ,
+	  Finding_Source_File_ID INTEGER NOT NULL ,
+	  FOREIGN KEY (Unique_Finding_IDD) REFERENCES UniqueFindings(Unique_Finding_ID),
+	  FOREIGN KEY (Finding_Source_File_ID) REFERENCES UniqueFindingsSourceFiles(Finding_Source_File_ID)
+	);
+	CREATE TABLE UniqueFindingsSourceFiles 
+	(
+	 Finding_Source_File_ID INTEGER PRIMARY KEY , 
+	 Finding_Source_File_Name NVARCHAR (500) NOT NULL 
 	);
 CREATE TABLE UserCategories 
 	(
@@ -1191,16 +1206,24 @@ CREATE TABLE VulnerabilitesCCIs
 	 FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
 	 FOREIGN KEY (CCI_ID) REFERENCES CCIs(CCI_ID)
 	);
+CREATE TABLE Vulnerabilites_IA_Controls 
+	(
+	 Vulnerability_ID INTEGER NOT NULL , 
+	 IA_Control_ID INTEGER NOT NULL ,
+	 FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
+	 FOREIGN KEY (IA_Control_ID) REFERENCES IA_Controls(IA_Control_ID)
+	);
 CREATE TABLE Vulnerabilities 
 	(
 	 Vulnerability_ID INTEGER PRIMARY KEY , 
 	 Unique_Vulnerability_Identifier NVARCHAR (50) UNIQUE ON CONFLICT IGNORE ,
-	 STIG_V_ID NVARCHAR (25) , 
-	 Rule_Ver NVARCHAR (25),
+	 Vulnerability_Group_ID NVARCHAR (25) , 
+	 Vulnerability_Group_Title NVARCHAR (100) ,
+	 Secondary_Vulnerability_Identifier NVARCHAR (25),
 	 VulnerabilityFamilyOrClass NVARCHAR (100) , 
 	 Version NVARCHAR (25) , 
 	 Release NVARCHAR (25) , 
-	 Title NVARCHAR (100) NOT NULL , 
+	 Vulnerability_Title NVARCHAR (100) NOT NULL , 
 	 Description NVARCHAR , 
 	 Risk_Statement NVARCHAR , 
 	 Fix_Text NVARCHAR , 
@@ -1215,8 +1238,21 @@ CREATE TABLE Vulnerabilities
 	 Mitigations NVARCHAR (2000),
 	 Potential_Impacts NVARCHAR (2000),
 	 Third_Party_Tools NVARCHAR (500),
-	 Responsibility NVARCHAR (500),
 	 Severity_Override_Guidance NVARCHAR (2000)
+	);
+CREATE TABLE Vulnerbailities_RoleResponsibilities
+	(
+	  Vulnerability_ID INTEGER NOT NULL ,
+	  Role_ID INTEGER NOT NULL ,
+	  FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
+	  FOREIGN KEY (Role_ID) REFERENCES ResponsibilityRoles(Role_ID)
+	)
+CREATE TABLE Vulnerabilities_VulnerabilitySources 
+	(
+	  Vulnerability_ID INTEGER NOT NULL , 
+	  Vulnerability_Source_ID INTEGER NOT NULL
+	  FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
+	  FOREIGN KEY (Vulnerability_Source_ID) REFERENCES VulnerabilitySources(Vulnerability_Source_ID)
 	);
 CREATE TABLE Vulnerabilities_VulnerabilityReferences
 	(
@@ -1233,9 +1269,11 @@ CREATE TABLE VulnerabilityReferences
 	);
 CREATE TABLE VulnerabilitySources 
 	(
-	 Source_ID INTEGER PRIMARY KEY , 
+	 Vulnerability_Source_ID INTEGER PRIMARY KEY , 
 	 Source_Name NVARCHAR (100) UNIQUE ON CONFLICT IGNORE NOT NULL, 
 	 Source_Secondary_Identifier NVARCHAR (100) UNIQUE ON CONFLICT IGNORE,
+	 Vulnerability_Source_File_Name NVARCHAR (500) NOT NULL,
+	 Source_Description NVARCHAR (2000) ,
 	 Source_Version NVARCHAR (25) NOT NULL, 
 	 Source_Release NVARCHAR (25) NOT NULL
 	);
