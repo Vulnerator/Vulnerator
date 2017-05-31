@@ -12,7 +12,6 @@ namespace Vulnerator.Model.DataAccess
     public class DatabaseBuilder
     {
         private Assembly assembly = Assembly.GetExecutingAssembly();
-        //private static string databasePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         private static string databaseFile = Properties.Settings.Default.Database;
         public static string databaseConnection = @"Data Source = " + databaseFile + @"; Version=3;";
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
@@ -96,6 +95,7 @@ namespace Vulnerator.Model.DataAccess
                 {
                     using (SQLiteCommand sqliteCommand = new SQLiteCommand(ReadDdl("Vulnerator.Resources.DdlFiles.CreateDatabase.ddl"), sqliteConnection))
                     { sqliteCommand.ExecuteNonQuery(); }
+                    PopulateIaControlData();
                     PopulateCciData();
                     PopulateNistControls();
                     MapControlsToCci();
@@ -127,6 +127,76 @@ namespace Vulnerator.Model.DataAccess
             catch (Exception exception)
             {
                 log.Error("Unable to read DDL Resource File.");
+                throw exception;
+            }
+        }
+
+        private void PopulateIaControlData()
+        {
+            try
+            {
+                using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.IAControls_Mapping.xml"))
+                {
+                    using (SQLiteCommand sqliteCommand = sqliteConnection.CreateCommand())
+                    {
+                        sqliteCommand.CommandText = "INSERT INTO IA_Controls VALUES (NULL, @Number, @Impact, @Area, @Name, @Description, @Threat, @Implementation, @Resources);";
+                        using (XmlReader xmlReader = XmlReader.Create(stream))
+                        {
+                            while (xmlReader.Read())
+                            {
+                                if (xmlReader.IsStartElement())
+                                {
+                                    switch (xmlReader.Name)
+                                    {
+                                        case "IAControl":
+                                            {
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Number", xmlReader.GetAttribute("number")));
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Impact", xmlReader.GetAttribute("impact")));
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Area", xmlReader.GetAttribute("subject-area")));
+                                                break;
+                                            }
+                                        case "Control-Name":
+                                            {
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Name", ObtainCurrentNodeValue(xmlReader)));
+                                                break;
+                                            }
+                                        case "Description":
+                                            {
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Description", ObtainCurrentNodeValue(xmlReader)));
+                                                break;
+                                            }
+                                        case "Threat-Vuln-Countermeasure":
+                                            {
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Threat", ObtainCurrentNodeValue(xmlReader)));
+                                                break;
+                                            }
+                                        case "General-Implementation-Guidance":
+                                            {
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Implementation", ObtainCurrentNodeValue(xmlReader)));
+                                                break;
+                                            }
+                                        case "System-Specific-Guidance-Resources":
+                                            {
+                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Resources", ObtainCurrentNodeValue(xmlReader)));
+                                                break;
+                                            }
+                                        default:
+                                            { break; }
+                                    }
+                                }
+                                else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("IAControl"))
+                                {
+                                    sqliteCommand.ExecuteNonQuery();
+                                    sqliteCommand.Parameters.Clear();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to populate IA Control List.");
                 throw exception;
             }
         }

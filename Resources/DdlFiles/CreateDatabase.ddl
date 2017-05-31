@@ -533,8 +533,15 @@ CREATE TABLE HardwareLocation
 CREATE TABLE IA_Controls
 	(
 	  IA_Control_ID INTEGER PRIMARY KEY ,
-	  IA_Control_Number NVARCHAR (10) NOT NULL
-	)
+	  IA_Control_Number NVARCHAR (10) NOT NULL,
+	  Impact NVARCHAR (10) NOT NULL ,
+	  Subject_Area NVARCHAR (50) NOT NULL ,
+	  Name NVARCHAR (100) NOT NULL ,
+	  Description NVARCHAR (250) NOT NULL ,
+	  Threat_Vuln_Countermeasures NVARCHAR (2000) NOT NULL ,
+	  General_Implementation_Guidance NVARCHAR (2000) NOT NULL ,
+	  System_Specific_Guidance_Resources NVARCHAR (2000) NOT NULL
+	);
 CREATE TABLE IATA_Standards 
 	(
 	 IATA_Standard_ID INTEGER PRIMARY KEY , 
@@ -1176,7 +1183,7 @@ CREATE TABLE UniqueFindings
 	(
 	  Unique_Finding_ID INTEGER NOT NULL ,
 	  Finding_Source_File_ID INTEGER NOT NULL ,
-	  FOREIGN KEY (Unique_Finding_IDD) REFERENCES UniqueFindings(Unique_Finding_ID),
+	  FOREIGN KEY (Unique_Finding_ID) REFERENCES UniqueFindings(Unique_Finding_ID),
 	  FOREIGN KEY (Finding_Source_File_ID) REFERENCES UniqueFindingsSourceFiles(Finding_Source_File_ID)
 	);
 	CREATE TABLE UniqueFindingsSourceFiles 
@@ -1216,7 +1223,7 @@ CREATE TABLE Vulnerabilites_IA_Controls
 CREATE TABLE Vulnerabilities 
 	(
 	 Vulnerability_ID INTEGER PRIMARY KEY , 
-	 Unique_Vulnerability_Identifier NVARCHAR (50) UNIQUE ON CONFLICT IGNORE ,
+	 Unique_Vulnerability_Identifier NVARCHAR (50) UNIQUE ON CONFLICT IGNORE NOT NULL,
 	 Vulnerability_Group_ID NVARCHAR (25) , 
 	 Vulnerability_Group_Title NVARCHAR (100) ,
 	 Secondary_Vulnerability_Identifier NVARCHAR (25),
@@ -1239,7 +1246,9 @@ CREATE TABLE Vulnerabilities
 	 Mitigation_Control NVARCHAR (2000),
 	 Potential_Impacts NVARCHAR (2000),
 	 Third_Party_Tools NVARCHAR (500),
-	 Severity_Override_Guidance NVARCHAR (2000)
+	 Severity_Override_Guidance NVARCHAR (2000) ,
+	 Vulnerability_Source_ID INTEGER NOT NULL ,
+	 FOREIGN KEY (Vulnerability_Source_ID) REFERENCES VulnerabilitySources(Vulnerability_Source_ID)
 	);
 CREATE TABLE Vulnerbailities_RoleResponsibilities
 	(
@@ -1247,11 +1256,11 @@ CREATE TABLE Vulnerbailities_RoleResponsibilities
 	  Role_ID INTEGER NOT NULL ,
 	  FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
 	  FOREIGN KEY (Role_ID) REFERENCES ResponsibilityRoles(Role_ID)
-	)
+	);
 CREATE TABLE Vulnerabilities_VulnerabilitySources 
 	(
 	  Vulnerability_ID INTEGER NOT NULL , 
-	  Vulnerability_Source_ID INTEGER NOT NULL
+	  Vulnerability_Source_ID INTEGER NOT NULL ,
 	  FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
 	  FOREIGN KEY (Vulnerability_Source_ID) REFERENCES VulnerabilitySources(Vulnerability_Source_ID)
 	);

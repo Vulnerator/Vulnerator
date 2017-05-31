@@ -659,6 +659,9 @@
     <EmbeddedResource Include="Resources\RawData\NIST_800-53_MonitoringFrequency_Mapping.xml" />
     <EmbeddedResource Include="Resources\RawData\U_CCI_List.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\RawData\IAControls_Mapping.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

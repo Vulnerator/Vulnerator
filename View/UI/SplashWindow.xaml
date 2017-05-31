@@ -76,7 +76,8 @@
         <RadioButton x:Name="portable"
                      Margin="5,0,5,5"
                      HorizontalAlignment="Left"
-                     GroupName="environment">
+                     GroupName="environment"
+                     IsChecked="{Binding IsPortable}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Portable" />
                 <Rectangle Width="10"
@@ -120,6 +121,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Border BorderBrush="{DynamicResource TextBoxBorderBrush}"
                     BorderThickness="1"
@@ -129,9 +131,14 @@
             </Border>
             <Button Grid.Column="1"
                     Margin="5,0,5,5"
-                    ToolTip="Browse"
+                    ToolTip="Select"
                     Content="{IconPacks:PackIconModern Kind=PageSearch}"
                     Command="{Binding BrowseForDatabaseCommand}" />
+            <Button Grid.Column="2"
+                    Margin="0,0,5,5"
+                    ToolTip="Create"
+                    Content="{IconPacks:PackIconModern Kind=PageNew}"
+                    Command="{Binding CreateDatabaseCommand}" />
         </Grid>
         <Button Margin="5,0,5,5"
                 HorizontalAlignment="Center"
@@ -149,7 +156,7 @@
                  Margin="5,0,5,5"
                  Style="{StaticResource ErrorTextBox}"
                  Background="LightPink"
-                 Text="A database location is required for persistent usage; please select or create a database above."
+                 Text="{Binding ErrorText}"
                  TextAlignment="Center"
                  TextWrapping="Wrap"
                  Visibility="{Binding ErrorVisibility}" />

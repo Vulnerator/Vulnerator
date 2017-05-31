@@ -121,8 +121,17 @@
     <value>INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,@LifecycleStatus);</value>
     <comment>Insert Hardware SQLite command</comment>
   </data>
+  <data name="InsertVulnerability" xml:space="preserve">
+    <value>INSERT INTO Vulnerabilities () VALUES ();</value>
+  </data>
   <data name="InsertVulnerabilitySource" xml:space="preserve">
     <value>INSERT INTO VulnerabilitySources () VALUES ();</value>
     <comment>Roughed out SQLite command to insert vulnerability source into the  VulnerabilitySources</comment>
+  </data>
+  <data name="MapVulnerabilityToCci" xml:space="preserve">
+    <value>INSERT INTO VulnerabilitesCCIs VALUES (@Vulnerability_ID, (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI));</value>
+  </data>
+  <data name="MapVulnerabilityToIAControl" xml:space="preserve">
+    <value>INSERT INTO Vulnerabilities_IA_Controls VALUES (@Vulnerablity_ID, (SELECT IA_Control_ID FROM IA_Controls WHERE IA_Control_Number = @IA_Control));</value>
   </data>
 </root>
