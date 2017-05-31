@@ -68,5 +68,14 @@ namespace Vulnerator.Properties {
                 return ResourceManager.GetString("InsertHardware", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO VulnerabilitySources () VALUES ();.
+        /// </summary>
+        internal static string InsertVulnerabilitySource {
+            get {
+                return ResourceManager.GetString("InsertVulnerabilitySource", resourceCulture);
+            }
+        }
     }
 }

@@ -1236,6 +1236,7 @@ CREATE TABLE Vulnerabilities
 	 False_Negatives NVARCHAR (2000),
 	 Documentable NVARCHAR (5),
 	 Mitigations NVARCHAR (2000),
+	 Mitigation_Control NVARCHAR (2000),
 	 Potential_Impacts NVARCHAR (2000),
 	 Third_Party_Tools NVARCHAR (500),
 	 Severity_Override_Guidance NVARCHAR (2000)

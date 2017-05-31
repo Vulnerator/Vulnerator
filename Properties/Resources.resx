@@ -121,4 +121,8 @@
     <value>INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,@LifecycleStatus);</value>
     <comment>Insert Hardware SQLite command</comment>
   </data>
+  <data name="InsertVulnerabilitySource" xml:space="preserve">
+    <value>INSERT INTO VulnerabilitySources () VALUES ();</value>
+    <comment>Roughed out SQLite command to insert vulnerability source into the  VulnerabilitySources</comment>
+  </data>
 </root>
