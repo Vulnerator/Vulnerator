@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Object;
@@ -30,6 +31,8 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 log.Info(string.Format("Begin ingestion of raw STIG file {0}", rawStig.FullName));
+                if (rawStig.Name.Contains("U_BlackBerry_Device_Service_v6.2_V1R1_manual-xccdf.xml"))
+                { Console.WriteLine("Last isue!"); }
                 if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
                 { DatabaseBuilder.sqliteConnection.Open(); }
                 using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
@@ -148,8 +151,40 @@ namespace Vulnerator.Model.BusinessLogic
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Group"))
                     {
-                        InsertVulnerability(sqliteCommand);
-                        MapVulnerbailityToCCI(sqliteCommand);
+                        SQLiteCommand clonedSqliteCommand = (SQLiteCommand)sqliteCommand.Clone();
+                        clonedSqliteCommand.CommandText = Properties.Resources.VerifyVulnerabilityChange;
+                        bool updateRequired = false;
+                        using (SQLiteDataReader sqliteDataReader = clonedSqliteCommand.ExecuteReader())
+                        {
+                            if (sqliteDataReader.HasRows)
+                            {
+                                while (sqliteDataReader.Read())
+                                {
+                                    Console.WriteLine(sqliteDataReader["Release"].ToString());
+                                    if (sqliteDataReader["Release"].ToString() != sqliteCommand.Parameters["Release"].Value.ToString())
+                                    {
+                                        InsertVulnerability(sqliteCommand);
+                                        MapVulnerbailityToCCI(sqliteCommand);
+                                        updateRequired = true;
+                                    }
+                                    else
+                                    { sqliteCommand.Parameters.Clear(); }
+                                }
+                            }
+                            else
+                            {
+                                InsertVulnerability(sqliteCommand);
+                                MapVulnerbailityToCCI(sqliteCommand);
+                            }
+                            
+                        }
+                        if (updateRequired)
+                        {
+                            sqliteCommand.CommandText = Properties.Resources.UpdateDeltaAnalysisFlag;
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerabililty_ID", lastVulnerabilityId));
+                            sqliteCommand.ExecuteNonQuery();
+                            sqliteCommand.Parameters.Clear();
+                        }
                         return;
                     }
                 }
@@ -169,17 +204,17 @@ namespace Vulnerator.Model.BusinessLogic
                 foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                 {
                     if (sqliteCommand.Parameters.IndexOf(parameter) == 0)
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(44, "@" + parameter.ParameterName); }
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(55, "@" + parameter.ParameterName); }
                     else
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(44, "@" + parameter.ParameterName + ", "); }
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(55, "@" + parameter.ParameterName + ", "); }
 
                 }
                 foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                 {
                     if (sqliteCommand.Parameters.IndexOf(parameter) == 0)
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(34, parameter.ParameterName); }
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(45, parameter.ParameterName); }
                     else
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(34, parameter.ParameterName + ", "); }
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(45, parameter.ParameterName + ", "); }
                 }
                 sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.Parameters.Clear();
@@ -198,9 +233,14 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 string rule = xmlReader.GetAttribute("id");
-                rule = rule.Split('_')[0];
-                string ruleRelease = rule.Split('r')[1];
-                rule = rule.Split('r')[0];
+                string ruleRelease = string.Empty;
+                if (rule.Contains("_"))
+                { rule = rule.Split('_')[0]; }
+                if (rule.Contains("r"))
+                {
+                    ruleRelease = rule.Split('r')[1];
+                    rule = rule.Split('r')[0];
+                }
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Unique_Vulnerability_Identifier", rule));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Release", ruleRelease));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Raw_Risk", ConvertSeverityToRawRisk(xmlReader.GetAttribute("severity"))));
@@ -222,16 +262,18 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "description":
                                 {
-                                    ProcessRuleDescriptionNode(sqliteCommand, ObtainCurrentNodeValue(xmlReader));
+                                    ProcessRuleDescriptionNode(sqliteCommand, ObtainRuleDescriptionNodeValue(xmlReader));
                                     break;
                                 }
                             case "dc:identifier":
                                 {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Overflow", ObtainCurrentNodeValue(xmlReader)));
                                     break;
                                 }
                             case "ident":
                                 {
-                                    ccis.Add(ObtainCurrentNodeValue(xmlReader).Replace("CCI-", string.Empty));
+                                    if (xmlReader.GetAttribute("system").Equals("http://iase.disa.mil/cci"))
+                                    { ccis.Add(ObtainCurrentNodeValue(xmlReader).Replace("CCI-", string.Empty)); }
                                     break;
                                 }
                             case "fixtext":
@@ -350,17 +392,17 @@ namespace Vulnerator.Model.BusinessLogic
                 foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                 {
                     if (sqliteCommand.Parameters.IndexOf(parameter) == 0)
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(39, "@" + parameter.ParameterName); }
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(50, "@" + parameter.ParameterName); }
                     else
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(39, "@" + parameter.ParameterName + ", "); }
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(50, "@" + parameter.ParameterName + ", "); }
 
                 }
                 foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                 {
                     if (sqliteCommand.Parameters.IndexOf(parameter) == 0)
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(29, parameter.ParameterName); }
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(40, parameter.ParameterName); }
                     else
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(29, parameter.ParameterName + ", "); }
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(40, parameter.ParameterName + ", "); }
                 }
                 sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.CommandText = "SELECT last_insert_rowid();";
@@ -389,8 +431,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to vulnerability to CCI.");
-                throw exception;
+                log.Error("Unable to map vulnerability to CCI.");
+                log.Debug("Exception details: " + exception);
             }
         }
 
@@ -403,7 +445,7 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 log.Error("Unable to vulnerability to IA Control.");
-                throw exception;
+                log.Debug("Exception details: " + exception);
             }
         }
 
@@ -417,6 +459,7 @@ namespace Vulnerator.Model.BusinessLogic
                 xmlReaderSettings.ValidationType = ValidationType.Schema;
                 xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessInlineSchema;
                 xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessSchemaLocation;
+                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.AllowXmlAttributes;
                 return xmlReaderSettings;
             }
             catch (Exception exception)
@@ -432,13 +475,26 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 xmlReader.Read();
                 string value = xmlReader.Value;
-                value = value.Replace("<w", "w");
-                value = value.Replace("<h", "h");
-                value = value.Replace("m>", "m");
-                value = value.Replace("l>", "l");
-                value = value.Replace("x>", "x");
-                value = value.Replace("&gt", ">");
-                value = value.Replace("&lt", "<");
+                return value;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to obtain currently accessed node value.");
+                throw exception;
+            }
+        }
+
+        private string ObtainRuleDescriptionNodeValue(XmlReader xmlReader)
+        {
+            try
+            {
+                xmlReader.Read();
+                string value = xmlReader.Value;
+                value = value.Replace("&", "&amp;");
+                value = value.Replace("<", "&lt;");
+                value = value.Replace(">", "&gt;");
+                foreach (string key in replaceDictionary.Keys)
+                { value.Replace(key, replaceDictionary[key]); }
                 return value;
             }
             catch (Exception exception)
@@ -494,28 +550,28 @@ namespace Vulnerator.Model.BusinessLogic
         private static Dictionary<string,string> PopulateReplaceDictionary()
         {
             Dictionary<string, string> dictionary = new Dictionary<string, string>();
-            dictionary.Add("&ltVulnDiscussion&gt", "<VulnDiscussion>");
-            dictionary.Add("&lt/VulnDiscussion&gt", "</VulnDiscussion>");
-            dictionary.Add("&ltFalsePositives&gt", "<FalsePositives>");
-            dictionary.Add("&lt/FalsePositives&gt", "</FalsePositives>");
-            dictionary.Add("&ltFalseNegatives&gt", "<FalseNegatives>");
-            dictionary.Add("&lt/FalseNegatives&gt", "</FalseNegatives>");
-            dictionary.Add("&ltDocumentable&gt", "<Documentable>");
-            dictionary.Add("&lt/Documentable&gt", "</Documentable>");
-            dictionary.Add("&ltMitigations&gt", "<Mitigations>");
-            dictionary.Add("&lt/Mitigations&gt", "</Mitigations>");
-            dictionary.Add("&ltSeverityOverrideGuidance&gt", "<SeverityOverrideGuidance>");
-            dictionary.Add("&lt/SeverityOverrideGuidance&gt", "</SeverityOverrideGuidance>");
-            dictionary.Add("&ltPotentialImpacts&gt", "<PotentialImpacts>");
-            dictionary.Add("&lt/PotentialImpacts&gt", "</PotentialImpacts>");
-            dictionary.Add("&ltThirdPartyTools&gt", "<ThirdPartyTools>");
-            dictionary.Add("&lt/ThirdPartyTools&gt", "</ThirdPartyTools>");
-            dictionary.Add("&ltMitigationControl&gt", "<MitigationControl>");
-            dictionary.Add("&lt/MitigationControl&gt", "</MitigationControl>");
-            dictionary.Add("&ltResponsibility&gt", "<Responsibility>");
-            dictionary.Add("&lt/Responsibility&gt", "</Responsibility>");
-            dictionary.Add("&ltIAControls&gt", "<IAControls>");
-            dictionary.Add("&lt/IAControls&gt", "</IAControls>");
+            dictionary.Add("&lt;VulnDiscussion&gt;", "<VulnDiscussion>");
+            dictionary.Add("&lt;/VulnDiscussion&gt;", "</VulnDiscussion>");
+            dictionary.Add("&lt;FalsePositives&gt;", "<FalsePositives>");
+            dictionary.Add("&lt;/FalsePositives&gt;", "</FalsePositives>");
+            dictionary.Add("&lt;FalseNegatives&gt;", "<FalseNegatives>");
+            dictionary.Add("&lt;/FalseNegatives&gt;", "</FalseNegatives>");
+            dictionary.Add("&lt;Documentable&gt;", "<Documentable>");
+            dictionary.Add("&lt;/Documentable&gt;", "</Documentable>");
+            dictionary.Add("&lt;Mitigations&gt;", "<Mitigations>");
+            dictionary.Add("&lt;/Mitigations&gt;", "</Mitigations>");
+            dictionary.Add("&lt;SeverityOverrideGuidance&gt;", "<SeverityOverrideGuidance>");
+            dictionary.Add("&lt;/SeverityOverrideGuidance&gt;", "</SeverityOverrideGuidance>");
+            dictionary.Add("&lt;PotentialImpacts&gt;", "<PotentialImpacts>");
+            dictionary.Add("&lt;/PotentialImpacts&gt;", "</PotentialImpacts>");
+            dictionary.Add("&lt;ThirdPartyTools&gt;", "<ThirdPartyTools>");
+            dictionary.Add("&lt;/ThirdPartyTools&gt;", "</ThirdPartyTools>");
+            dictionary.Add("&lt;MitigationControl&gt;", "<MitigationControl>");
+            dictionary.Add("&lt;/MitigationControl&gt;", "</MitigationControl>");
+            dictionary.Add("&lt;Responsibility&gt;", "<Responsibility>");
+            dictionary.Add("&lt;/Responsibility&gt;", "</Responsibility>");
+            dictionary.Add("&lt;IAControls&gt;", "<IAControls>");
+            dictionary.Add("&lt;/IAControls&gt;", "</IAControls>");
             return dictionary;
         }
     }

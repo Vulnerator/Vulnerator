@@ -70,7 +70,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Vulnerabilities () VALUES ();.
+        ///   Looks up a localized string similar to INSERT OR REPLACE INTO Vulnerabilities () VALUES ();.
         /// </summary>
         internal static string InsertVulnerability {
             get {
@@ -79,7 +79,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO VulnerabilitySources () VALUES ();.
+        ///   Looks up a localized string similar to INSERT OR REPLACE INTO VulnerabilitySources () VALUES ();.
         /// </summary>
         internal static string InsertVulnerabilitySource {
             get {
@@ -88,7 +88,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO VulnerabilitesCCIs VALUES (@Vulnerability_ID, (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI));.
+        ///   Looks up a localized string similar to INSERT OR REPLACE INTO VulnerabilitesCCIs VALUES (@Vulnerability_ID, (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI));.
         /// </summary>
         internal static string MapVulnerabilityToCci {
             get {
@@ -97,11 +97,29 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Vulnerabilities_IA_Controls VALUES (@Vulnerablity_ID, (SELECT IA_Control_ID FROM IA_Controls WHERE IA_Control_Number = @IA_Control));.
+        ///   Looks up a localized string similar to INSERT OR REPLACE INTO Vulnerabilities_IA_Controls VALUES (@Vulnerablity_ID, (SELECT IA_Control_ID FROM IA_Controls WHERE IA_Control_Number = @IA_Control));.
         /// </summary>
         internal static string MapVulnerabilityToIAControl {
             get {
                 return ResourceManager.GetString("MapVulnerabilityToIAControl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE UniqueFindings SET Delta_Analysis_Required = &apos;True&apos; WHERE Vulnerability_ID = @Vulnerability_ID;.
+        /// </summary>
+        internal static string UpdateDeltaAnalysisFlag {
+            get {
+                return ResourceManager.GetString("UpdateDeltaAnalysisFlag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT Vulnerability_ID, Release FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;.
+        /// </summary>
+        internal static string VerifyVulnerabilityChange {
+            get {
+                return ResourceManager.GetString("VerifyVulnerabilityChange", resourceCulture);
             }
         }
     }

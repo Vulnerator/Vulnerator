@@ -35,6 +35,7 @@ namespace Vulnerator.ViewModel
         private Assembly assembly = Assembly.GetExecutingAssembly();
         private AsyncObservableCollection<Release> ReleaseList;
         private DatabaseBuilder databaseBuilder;
+        public Logger logger = new Logger();
         public static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
         public string ApplicationVersion
@@ -138,6 +139,8 @@ namespace Vulnerator.ViewModel
         /// </summary>
         public MainViewModel()
         {
+            logger.Setup();
+            log.Info("Initializing application.");
             configAlter = new ConfigAlter();
             configAlter.CreateConfigurationXml();
             configAlter.CreateSettingsDictionary();

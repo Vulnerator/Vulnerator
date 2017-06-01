@@ -15,12 +15,12 @@ namespace Vulnerator.View.UI
         public DevWindow()
         {
             InitializeComponent();
-            backgroundWorker = new BackgroundWorker();
-            loadingWindow = new LoadingWindow();
-            loadingWindow.Show();
-            backgroundWorker.RunWorkerAsync();
-            backgroundWorker.DoWork += new DoWorkEventHandler(backgroundWorker_DoWork);
-            backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_RunWorkerCompleted);
+            //backgroundWorker = new BackgroundWorker();
+            //loadingWindow = new LoadingWindow();
+            //loadingWindow.Show();
+            //backgroundWorker.RunWorkerAsync();
+            //backgroundWorker.DoWork += new DoWorkEventHandler(backgroundWorker_DoWork);
+            //backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_RunWorkerCompleted);
         }
 
         protected override void OnClosed(EventArgs e)

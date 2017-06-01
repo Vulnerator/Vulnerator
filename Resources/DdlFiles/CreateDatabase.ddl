@@ -1247,6 +1247,7 @@ CREATE TABLE Vulnerabilities
 	 Potential_Impacts NVARCHAR (2000),
 	 Third_Party_Tools NVARCHAR (500),
 	 Severity_Override_Guidance NVARCHAR (2000) ,
+	 Overflow NVARCHAR (2000) ,
 	 Vulnerability_Source_ID INTEGER NOT NULL ,
 	 FOREIGN KEY (Vulnerability_Source_ID) REFERENCES VulnerabilitySources(Vulnerability_Source_ID)
 	);

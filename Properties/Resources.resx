@@ -122,16 +122,22 @@
     <comment>Insert Hardware SQLite command</comment>
   </data>
   <data name="InsertVulnerability" xml:space="preserve">
-    <value>INSERT INTO Vulnerabilities () VALUES ();</value>
+    <value>INSERT OR REPLACE INTO Vulnerabilities () VALUES ();</value>
   </data>
   <data name="InsertVulnerabilitySource" xml:space="preserve">
-    <value>INSERT INTO VulnerabilitySources () VALUES ();</value>
+    <value>INSERT OR REPLACE INTO VulnerabilitySources () VALUES ();</value>
     <comment>Roughed out SQLite command to insert vulnerability source into the  VulnerabilitySources</comment>
   </data>
   <data name="MapVulnerabilityToCci" xml:space="preserve">
-    <value>INSERT INTO VulnerabilitesCCIs VALUES (@Vulnerability_ID, (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI));</value>
+    <value>INSERT OR REPLACE INTO VulnerabilitesCCIs VALUES (@Vulnerability_ID, (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI));</value>
   </data>
   <data name="MapVulnerabilityToIAControl" xml:space="preserve">
-    <value>INSERT INTO Vulnerabilities_IA_Controls VALUES (@Vulnerablity_ID, (SELECT IA_Control_ID FROM IA_Controls WHERE IA_Control_Number = @IA_Control));</value>
+    <value>INSERT OR REPLACE INTO Vulnerabilities_IA_Controls VALUES (@Vulnerablity_ID, (SELECT IA_Control_ID FROM IA_Controls WHERE IA_Control_Number = @IA_Control));</value>
+  </data>
+  <data name="UpdateDeltaAnalysisFlag" xml:space="preserve">
+    <value>UPDATE UniqueFindings SET Delta_Analysis_Required = 'True' WHERE Vulnerability_ID = @Vulnerability_ID;</value>
+  </data>
+  <data name="VerifyVulnerabilityChange" xml:space="preserve">
+    <value>SELECT Vulnerability_ID, Release FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;</value>
   </data>
 </root>

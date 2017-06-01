@@ -23,7 +23,7 @@ namespace Vulnerator.ViewModel
     {
         public static ConfigAlter configAlter;
         public static CommandParameters commandParameters = new CommandParameters();
-        public Logger logger = new Logger();
+        //public Logger logger = new Logger();
         public static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         public static UpdateMitigationParameters updateMitigationParameters = new UpdateMitigationParameters();
         public static UpdateContactParameters updateContactParameters = new UpdateContactParameters();
@@ -788,8 +788,8 @@ namespace Vulnerator.ViewModel
 
         public MainWindowViewModel()
         {
-            logger.Setup();
-            log.Info("Initializing application.");
+            //logger.Setup();
+            //log.Info("Initializing application.");
 
             if (System.IO.File.Exists(Environment.GetFolderPath(
                 Environment.SpecialFolder.ApplicationData) + @"\Vulnerator\VulneratorV6Log.txt"))

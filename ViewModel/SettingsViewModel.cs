@@ -177,8 +177,8 @@ namespace Vulnerator.ViewModel
                     IngestionSuccessVisibility = "Collapsed";
                     using (ZipArchive zipArchive = ZipFile.Open(StigLibraryLocation, ZipArchiveMode.Read))
                     {
-                        ProgressBarMax = zipArchive.Entries.Count(x => x.Name.EndsWith("zip"));
-                        foreach (ZipArchiveEntry entry in zipArchive.Entries.Where(x => x.Name.EndsWith("zip")))
+                        ProgressBarMax = zipArchive.Entries.Count(x => x.Name.EndsWith("zip") && !x.Name.Contains("SCAP_1-1"));
+                        foreach (ZipArchiveEntry entry in zipArchive.Entries.Where(x => x.Name.EndsWith("zip") && !x.Name.Contains("SCAP_1-1")))
                         {
                             using (Stream stream = entry.Open())
                             {
