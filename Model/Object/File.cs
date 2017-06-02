@@ -1,8 +1,9 @@
 ﻿using Vulnerator.ViewModel;
+using GalaSoft.MvvmLight;
 
 namespace Vulnerator.Model.Object
 {
-    public class File : BaseInpc
+    public class File : ViewModelBase
     {
         private string _fileName
         {
@@ -17,7 +18,7 @@ namespace Vulnerator.Model.Object
                 if (_fileName != value)
                 {
                     _fileName = value;
-                    OnPropertyChanged("FileName");
+                    RaisePropertyChanged("FileName");
                 }
             }
         }
@@ -35,7 +36,7 @@ namespace Vulnerator.Model.Object
                 if (_fileType != value)
                 {
                     _fileType = value;
-                    OnPropertyChanged("FileType");
+                    RaisePropertyChanged("FileType");
                 }
             }
         }
@@ -53,7 +54,7 @@ namespace Vulnerator.Model.Object
                 if (_fileSystemName != value)
                 {
                     _fileSystemName = value;
-                    OnPropertyChanged("FileSystemName");
+                    RaisePropertyChanged("FileSystemName");
                 }
             }
         }
@@ -71,7 +72,7 @@ namespace Vulnerator.Model.Object
                 if (_status != value)
                 {
                     _status = value;
-                    OnPropertyChanged("Status");
+                    RaisePropertyChanged("Status");
                 }
             }
         }
@@ -89,18 +90,37 @@ namespace Vulnerator.Model.Object
                 if (_filePath != value)
                 {
                     _filePath = value;
-                    OnPropertyChanged("FilePath");
+                    RaisePropertyChanged("FilePath");
                 }
             }
         }
 
-        public File(string fileName, string fileType, string status, string fileSystemName, string filePath)
+        private string _hostNameProvided
         {
-            this._fileName = fileName;
-            this._fileType = fileType;
-            this._fileSystemName = fileSystemName;
-            this._status = status;
-            this._filePath = filePath;
+            get;
+            set;
+        }
+        public string HostNameProvided
+        {
+            get { return _hostNameProvided; }
+            set
+            {
+                if (_hostNameProvided != value)
+                {
+                    _hostNameProvided = value;
+                    RaisePropertyChanged("HostNameProvided");
+                }
+            }
+        }
+
+        public File(string fileName, string fileType, string status, string fileSystemName, string filePath, string hostNameProvided)
+        {
+            _fileName = fileName;
+            _fileType = fileType;
+            _fileSystemName = fileSystemName;
+            _status = status;
+            _filePath = filePath;
+            _hostNameProvided = hostNameProvided;
         }
     }
 }

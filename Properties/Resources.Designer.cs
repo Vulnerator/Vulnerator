@@ -115,11 +115,20 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT Vulnerability_ID, Release FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;.
+        ///   Looks up a localized string similar to SELECT Vulnerability_ID, Release FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Source_ID = @Vulnerability_Source_ID;.
         /// </summary>
         internal static string VerifyVulnerabilityChange {
             get {
                 return ResourceManager.GetString("VerifyVulnerabilityChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Secondary_Identifier = @Source_Secondary_Identifier;.
+        /// </summary>
+        internal static string VerifyVulnerabilitySourceChange {
+            get {
+                return ResourceManager.GetString("VerifyVulnerabilitySourceChange", resourceCulture);
             }
         }
     }

@@ -158,6 +158,7 @@ namespace Vulnerator.ViewModel
 
         private void ingestStigLibraryBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            GuiFeedback guiFeedback = new GuiFeedback();
             try
             {
                 if (string.IsNullOrWhiteSpace(StigLibraryLocation))
@@ -194,6 +195,8 @@ namespace Vulnerator.ViewModel
                                                 ZipArchiveEntry rawStig = tertiaryZipArchive.Entries.FirstOrDefault(x => x.Name.EndsWith("xml"));
                                                 if (rawStig == null)
                                                 { continue; }
+                                                guiFeedback.SetFields(string.Format("Ingesting {0}", rawStig.Name), "Visible", true);
+                                                Messenger.Default.Send(guiFeedback);
                                                 RawStigReader rawStigReader = new RawStigReader();
                                                 rawStigReader.ReadRawStig(rawStig);
                                             }
@@ -204,6 +207,8 @@ namespace Vulnerator.ViewModel
                                         ZipArchiveEntry rawStig = innerZipArchive.Entries.FirstOrDefault(x => x.Name.EndsWith("xml"));
                                         if (rawStig == null)
                                         { continue; }
+                                        guiFeedback.SetFields(string.Format("Ingesting {0}", rawStig.Name), "Visible", true);
+                                        Messenger.Default.Send(guiFeedback);
                                         RawStigReader rawStigReader = new RawStigReader();
                                         rawStigReader.ReadRawStig(rawStig);
                                     }
@@ -212,6 +217,10 @@ namespace Vulnerator.ViewModel
                             ProgressBarValue++;   
                         }
                     }
+                    guiFeedback.SetFields("Awaiting user input", "Collapsed", true);
+                    Properties.Settings.Default.StigLibraryIngestDate = DateTime.Now.ToLongDateString();
+                    Messenger.Default.Send(guiFeedback);
+                    StigLibraryLocation = string.Empty;
                     ProgressVisibility = "Collapsed";
                     IngestionSuccessVisibility = "Visible";
                     IngestionErrorVisibility = "Collapsed";
@@ -220,6 +229,8 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
+                guiFeedback.SetFields("Awaiting user input", "Collapsed", true);
+                Messenger.Default.Send(guiFeedback);
                 ProgressVisibility = "Collapsed";
                 IngestionErrorVisibility = "Visible";
                 IngestionSuccessVisibility = "Collapsed";

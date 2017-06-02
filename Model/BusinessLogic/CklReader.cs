@@ -896,5 +896,33 @@ namespace Vulnerator.Model.BusinessLogic
             }
             return ddlText;
         }
+
+        public string CheckForHostName(string fileName)
+        {
+            try
+            {
+                XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
+                using (XmlReader xmlReader = XmlReader.Create(fileName, xmlReaderSettings))
+                {
+                    while (xmlReader.Read())
+                    {
+                        if (xmlReader.Name.Equals("HOST_NAME"))
+                        {
+                            if (string.IsNullOrWhiteSpace(ObtainCurrentNodeValue(xmlReader)))
+                            { return "False"; }
+                            else
+                            { return "True"; }
+                        }
+                    }
+                }
+                return "False";
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to verify host name exists.");
+                log.Debug("Exception details:", exception);
+                return "False";
+            }
+        }
     }
 }

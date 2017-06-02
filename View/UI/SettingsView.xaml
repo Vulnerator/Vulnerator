@@ -70,28 +70,43 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBox
-                            Margin="5,0,5,5"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Center"
-                            Controls:TextBoxHelper.Watermark="Database File"
-                            IsReadOnly="True"
-                            Text="{Binding Source={StaticResource Settings}, Path=Default.Database}" />
-                        <Button
-                            Grid.Column="1"
-                            Margin="5,0,5,5"
-                            Content="{IconPacks:PackIconModern Kind=PageSearch}"
-                            ToolTip="Search" />
-                        <Button
-                            Grid.Column="2"
-                            Margin="5,0,5,5"
-                            Content="{IconPacks:PackIconModern Kind=PageNew}"
-                            ToolTip="Create" />
+                        <TextBox Margin="5,0,5,5"
+                                 HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Center"
+                                 Controls:TextBoxHelper.Watermark="Database File"
+                                 IsReadOnly="True"
+                                 Text="{Binding Source={StaticResource Settings}, Path=Default.Database}" />
+                        <Button Grid.Column="1"
+                                Margin="5,0,5,5"
+                                Content="{IconPacks:PackIconModern Kind=PageSearch}"
+                                ToolTip="Search" />
+                        <Button Grid.Column="2"
+                                Margin="5,0,5,5"
+                                Content="{IconPacks:PackIconModern Kind=PageNew}"
+                                ToolTip="Create" />
                     </Grid>
-
-                    <Label Grid.Column="0" Style="{StaticResource SecondLevelHeaderStyle}">
-                        <TextBlock Text="Update STIG Library" TextTrimming="CharacterEllipsis" />
-                    </Label>
+                    <Grid Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0"
+                               Style="{StaticResource SecondLevelHeaderStyle}">
+                            <TextBlock Text="Update STIG Library"
+                                       TextTrimming="CharacterEllipsis" />
+                        </Label>
+                        <Label Grid.Column="2" VerticalAlignment="Bottom">
+                            <TextBlock Text="Last Update:"
+                                       TextTrimming="CharacterEllipsis" />
+                        </Label>
+                        <Label Grid.Column="3"
+                               VerticalAlignment="Bottom">
+                            <TextBlock Text="{Binding Source={StaticResource Settings}, Path=Default.StigLibraryIngestDate}"
+                                       TextTrimming="CharacterEllipsis" />
+                        </Label>
+                    </Grid>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />

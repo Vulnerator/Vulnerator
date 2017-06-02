@@ -142,5 +142,17 @@ namespace Vulnerator.Properties {
                 this["Organization"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("N/A")]
+        public string StigLibraryIngestDate {
+            get {
+                return ((string)(this["StigLibraryIngestDate"]));
+            }
+            set {
+                this["StigLibraryIngestDate"] = value;
+            }
+        }
     }
 }

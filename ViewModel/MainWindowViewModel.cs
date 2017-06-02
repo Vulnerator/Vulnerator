@@ -1071,11 +1071,11 @@ namespace Vulnerator.ViewModel
                         string fileName = Path.GetFileNameWithoutExtension(filePath);
                         if (Path.GetExtension(filePath).ToLower().Equals(".nessus"))
                         {
-                            FileList.Add(new Model.Object.File(fileName, "ACAS - Nessus", "Ready", string.Empty, filePath));
+                            FileList.Add(new Model.Object.File(fileName, "ACAS - Nessus", "Ready", string.Empty, filePath, "False"));
                         }
                         else
                         {
-                            FileList.Add(new Model.Object.File(fileName, "ACAS - CSV", "Ready", string.Empty, filePath));
+                            FileList.Add(new Model.Object.File(fileName, "ACAS - CSV", "Ready", string.Empty, filePath, "False"));
                         }
                     }
                 }
@@ -1100,7 +1100,7 @@ namespace Vulnerator.ViewModel
                     {
                         string filePath = openDialog.FileNames[i];
                         string fileName = Path.GetFileNameWithoutExtension(filePath);
-                        FileList.Add(new Model.Object.File(fileName, "Checklist", "Ready", string.Empty, filePath));
+                        FileList.Add(new Model.Object.File(fileName, "Checklist", "Ready", string.Empty, filePath, "False"));
                     }
                 }
             }
@@ -1126,11 +1126,11 @@ namespace Vulnerator.ViewModel
                         string fileName = Path.GetFileNameWithoutExtension(filePath);
                         if (Path.GetExtension(filePath).ToLower().Equals(".html"))
                         {
-                            FileList.Add(new Model.Object.File(fileName, "WASSP - HTML", "Ready", string.Empty, filePath));
+                            FileList.Add(new Model.Object.File(fileName, "WASSP - HTML", "Ready", string.Empty, filePath, "False"));
                         }
                         else
                         {
-                            FileList.Add(new Model.Object.File(fileName, "WASSP - XML", "Ready", string.Empty, filePath));
+                            FileList.Add(new Model.Object.File(fileName, "WASSP - XML", "Ready", string.Empty, filePath, "False"));
                         }
                     }
                 }
@@ -1155,7 +1155,7 @@ namespace Vulnerator.ViewModel
                     {
                         string filePath = openDialog.FileNames[i];
                         string fileName = Path.GetFileNameWithoutExtension(filePath);
-                        FileList.Add(new Model.Object.File(fileName, "SCAP Benchmark", "Ready", string.Empty, filePath));
+                        FileList.Add(new Model.Object.File(fileName, "SCAP Benchmark", "Ready", string.Empty, filePath, "False"));
                     }
                 }
             }
@@ -1179,7 +1179,7 @@ namespace Vulnerator.ViewModel
                     {
                         string filePath = openDialog.FileNames[i];
                         string fileName = Path.GetFileNameWithoutExtension(filePath);
-                        FileList.Add(new Model.Object.File(fileName, "Fortify FPR", "Ready", string.Empty, filePath));
+                        FileList.Add(new Model.Object.File(fileName, "Fortify FPR", "Ready", string.Empty, filePath, "False"));
                     }
                 }
             }

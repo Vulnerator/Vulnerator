@@ -138,6 +138,9 @@
     <value>UPDATE UniqueFindings SET Delta_Analysis_Required = 'True' WHERE Vulnerability_ID = @Vulnerability_ID;</value>
   </data>
   <data name="VerifyVulnerabilityChange" xml:space="preserve">
-    <value>SELECT Vulnerability_ID, Release FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;</value>
+    <value>SELECT Vulnerability_ID, Release FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Source_ID = @Vulnerability_Source_ID;</value>
+  </data>
+  <data name="VerifyVulnerabilitySourceChange" xml:space="preserve">
+    <value>SELECT Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Secondary_Identifier = @Source_Secondary_Identifier;</value>
   </data>
 </root>

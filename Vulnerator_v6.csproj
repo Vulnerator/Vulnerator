@@ -398,6 +398,7 @@
     <Compile Include="ViewModel\VulnerabilityViewModel.cs" />
     <Compile Include="View\Converter\BooleanToCollapsedConverter.cs" />
     <Compile Include="View\Converter\BooleanToHiddenConverter.cs" />
+    <Compile Include="View\Converter\BooleanToIconConverter.cs" />
     <Compile Include="View\Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="View\Converter\HtmlToFlowDocumentConverter.cs" />
     <Compile Include="View\Converter\ImportButtonTextAppendingConverter.cs" />

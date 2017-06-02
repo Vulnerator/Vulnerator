@@ -1179,14 +1179,15 @@ CREATE TABLE UniqueFindings
 	 FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID)
 	);
-	CREATE TABLE UniqueFindings_UniqueFindingsSourceFiles 
+CREATE INDEX Unique_Finding_Index ON UniqueFindings(Unique_Finding_ID);
+CREATE TABLE UniqueFindings_UniqueFindingsSourceFiles 
 	(
 	  Unique_Finding_ID INTEGER NOT NULL ,
 	  Finding_Source_File_ID INTEGER NOT NULL ,
 	  FOREIGN KEY (Unique_Finding_ID) REFERENCES UniqueFindings(Unique_Finding_ID),
 	  FOREIGN KEY (Finding_Source_File_ID) REFERENCES UniqueFindingsSourceFiles(Finding_Source_File_ID)
 	);
-	CREATE TABLE UniqueFindingsSourceFiles 
+CREATE TABLE UniqueFindingsSourceFiles 
 	(
 	 Finding_Source_File_ID INTEGER PRIMARY KEY , 
 	 Finding_Source_File_Name NVARCHAR (500) NOT NULL 
@@ -1251,6 +1252,7 @@ CREATE TABLE Vulnerabilities
 	 Vulnerability_Source_ID INTEGER NOT NULL ,
 	 FOREIGN KEY (Vulnerability_Source_ID) REFERENCES VulnerabilitySources(Vulnerability_Source_ID)
 	);
+CREATE INDEX Vulnerability_Index ON Vulnerabilities(Vulnerability_ID);
 CREATE TABLE Vulnerbailities_RoleResponsibilities
 	(
 	  Vulnerability_ID INTEGER NOT NULL ,
@@ -1283,11 +1285,12 @@ CREATE TABLE VulnerabilitySources
 	 Vulnerability_Source_ID INTEGER PRIMARY KEY , 
 	 Source_Name NVARCHAR (100) UNIQUE ON CONFLICT IGNORE NOT NULL, 
 	 Source_Secondary_Identifier NVARCHAR (100) UNIQUE ON CONFLICT IGNORE,
-	 Vulnerability_Source_File_Name NVARCHAR (500) NOT NULL,
+	 Vulnerability_Source_File_Name NVARCHAR (500) ,
 	 Source_Description NVARCHAR (2000) ,
 	 Source_Version NVARCHAR (25) NOT NULL, 
 	 Source_Release NVARCHAR (25) NOT NULL
 	);
+CREATE INDEX Vulnerability_Source_Index ON VulnerabilitySources(Vulnerability_Source_ID);
 CREATE TABLE VulnerabilitySourcesSoftware 
 	(
 	 Source_ID INTEGER NOT NULL , 

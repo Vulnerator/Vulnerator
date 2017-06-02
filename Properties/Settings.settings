@@ -32,5 +32,8 @@
     <Setting Name="Organization" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="StigLibraryIngestDate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">N/A</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
