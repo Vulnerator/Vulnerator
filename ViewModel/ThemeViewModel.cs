@@ -1,8 +1,10 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using MahApps.Metro;
 using System;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Vulnerator.ViewModel
 {
@@ -24,7 +26,6 @@ namespace Vulnerator.ViewModel
 
         public ThemeViewModel()
         {
-            //Properties.Settings.Default.Upgrade();
             SetTheme(Properties.Settings.Default["Theme"].ToString());
             SetAccent(Properties.Settings.Default["Accent"].ToString());
         }
@@ -58,7 +59,6 @@ namespace Vulnerator.ViewModel
         {
             Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
             ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent(parameter.ToString()), appStyle.Item1);
-            //ConfigAlter.WriteSettingsToDictionary("currentAccent", parameter.ToString());
             Properties.Settings.Default["Accent"] = parameter.ToString();
         }
     }

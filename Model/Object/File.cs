@@ -1,15 +1,10 @@
-﻿using Vulnerator.ViewModel;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 
 namespace Vulnerator.Model.Object
 {
     public class File : ViewModelBase
     {
-        private string _fileName
-        {
-            get;
-            set;
-        }
+        private string _fileName;
         public string FileName
         {
             get { return _fileName; }
@@ -23,11 +18,7 @@ namespace Vulnerator.Model.Object
             }
         }
 
-        private string _fileType
-        {
-            get;
-            set;
-        }
+        private string _fileType;
         public string FileType
         {
             get { return _fileType; }
@@ -41,11 +32,7 @@ namespace Vulnerator.Model.Object
             }
         }
 
-        private string _fileSystemName
-        {
-            get;
-            set;
-        }
+        private string _fileSystemName;
         public string FileSystemName
         {
             get { return _fileSystemName; }
@@ -59,11 +46,7 @@ namespace Vulnerator.Model.Object
             }
         }
 
-        private string _status
-        {
-            get;
-            set;
-        }
+        private string _status;
         public string Status
         {
             get { return _status; }
@@ -77,11 +60,7 @@ namespace Vulnerator.Model.Object
             }
         }
 
-        private string _filePath
-        {
-            get;
-            set;
-        }
+        private string _filePath;
         public string FilePath
         {
             get { return _filePath; }
@@ -95,23 +74,62 @@ namespace Vulnerator.Model.Object
             }
         }
 
-        private string _hostNameProvided
+        private string _identifiersProvided;
+        public string IdentifiersProvided
         {
-            get;
-            set;
-        }
-        public string HostNameProvided
-        {
-            get { return _hostNameProvided; }
+            get { return _identifiersProvided; }
             set
             {
-                if (_hostNameProvided != value)
+                if (_identifiersProvided != value)
                 {
-                    _hostNameProvided = value;
-                    RaisePropertyChanged("HostNameProvided");
+                    _identifiersProvided = value;
+                    RaisePropertyChanged("IdentifiersProvided");
                 }
             }
         }
+
+        private string _fileHostName;
+        public string FileHostName
+        {
+            get { return _fileHostName; }
+            set
+            {
+                if (_fileHostName != value)
+                {
+                    _fileHostName = value;
+                    RaisePropertyChanged("FileHostName");
+                }
+            }
+        }
+
+        private string _fileIpAddress;
+        public string FileIpAddress
+        {
+            get { return _fileIpAddress; }
+            set
+            {
+                if (_fileIpAddress != value)
+                {
+                    _fileIpAddress = value;
+                    RaisePropertyChanged("FileIpAddress");
+                }
+            }
+        }
+
+        private string _fileMacAddress;
+        public string FileMacAddress
+        {
+            get { return _fileMacAddress; }
+            set
+            {
+                if (_fileMacAddress != value)
+                {
+                    _fileMacAddress = value;
+                    RaisePropertyChanged("FileMacAddress");
+                }
+            }
+        }
+
 
         public File(string fileName, string fileType, string status, string fileSystemName, string filePath, string hostNameProvided)
         {
@@ -120,7 +138,16 @@ namespace Vulnerator.Model.Object
             _fileSystemName = fileSystemName;
             _status = status;
             _filePath = filePath;
-            _hostNameProvided = hostNameProvided;
+            _identifiersProvided = hostNameProvided;
         }
+
+        public void SetFileHostName(string hostName)
+        { _fileHostName = hostName; }
+
+        public void SetFileIpAddress(string ipAddress)
+        { _fileIpAddress = ipAddress; }
+
+        public void SetFileMacAddress(string macAddress)
+        { _fileMacAddress = macAddress; }
     }
 }

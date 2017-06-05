@@ -154,5 +154,53 @@ namespace Vulnerator.Properties {
                 this["StigLibraryIngestDate"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CklRequiresHostName {
+            get {
+                return ((bool)(this["CklRequiresHostName"]));
+            }
+            set {
+                this["CklRequiresHostName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CklRequiresIpAddress {
+            get {
+                return ((bool)(this["CklRequiresIpAddress"]));
+            }
+            set {
+                this["CklRequiresIpAddress"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CklrequiresMacAddress {
+            get {
+                return ((bool)(this["CklrequiresMacAddress"]));
+            }
+            set {
+                this["CklrequiresMacAddress"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DropIncompleteCklfiles {
+            get {
+                return ((bool)(this["DropIncompleteCklfiles"]));
+            }
+            set {
+                this["DropIncompleteCklfiles"] = value;
+            }
+        }
     }
 }

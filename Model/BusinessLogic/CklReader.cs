@@ -897,32 +897,93 @@ namespace Vulnerator.Model.BusinessLogic
             return ddlText;
         }
 
-        public string CheckForHostName(string fileName)
+        public Model.Object.File ObtainIdentifiers(Model.Object.File file)
         {
             try
             {
                 XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
-                using (XmlReader xmlReader = XmlReader.Create(fileName, xmlReaderSettings))
+                using (XmlReader xmlReader = XmlReader.Create(file.FilePath, xmlReaderSettings))
                 {
                     while (xmlReader.Read())
                     {
-                        if (xmlReader.Name.Equals("HOST_NAME"))
+                        if (xmlReader.IsStartElement())
                         {
-                            if (string.IsNullOrWhiteSpace(ObtainCurrentNodeValue(xmlReader)))
-                            { return "False"; }
-                            else
-                            { return "True"; }
+                            switch (xmlReader.Name)
+                            {
+                                case "HOST_NAME":
+                                    {
+                                        file.SetFileHostName(ObtainCurrentNodeValue(xmlReader));
+                                        break;
+                                    }
+                                case "HOST_IP":
+                                    {
+                                        file.SetFileIpAddress(ObtainCurrentNodeValue(xmlReader));
+                                        break;
+                                    }
+                                case "HOST_MAC":
+                                    {
+                                        file.SetFileMacAddress(ObtainCurrentNodeValue(xmlReader));
+                                        break;
+                                    }
+                                default:
+                                    { break; }
+                            }
                         }
+                        else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ASSET"))
+                        { break; }
                     }
                 }
-                return "False";
+                bool hostname = IdentifierRequired("HostName", file);
+                bool ipAddress = IdentifierRequired("IpAddress", file);
+                bool macAddress = IdentifierRequired("MacAddress", file);
+                if (!hostname || !ipAddress || !macAddress)
+                { file.IdentifiersProvided = "False"; }
+                return file;
             }
             catch (Exception exception)
             {
                 log.Error("Unable to verify host name exists.");
                 log.Debug("Exception details:", exception);
-                return "False";
+                return file;
             }
+        }
+
+        private bool IdentifierRequired(string fieldName, Model.Object.File file)
+        {
+            bool value = true;
+            switch (fieldName)
+            {
+                case "HostName":
+                    {
+                        if (Properties.Settings.Default.CklRequiresHostName)
+                        {
+                            if (string.IsNullOrWhiteSpace(file.FileHostName) || file.FileHostName.Contains("HOST NAME"))
+                            { value = false; }
+                        }
+                        break;
+                    }
+                case "IpAddress":
+                    {
+                        if (Properties.Settings.Default.CklRequiresIpAddress)
+                        {
+                            if (string.IsNullOrWhiteSpace(file.FileIpAddress) || file.FileIpAddress.Contains("IP"))
+                            { value = false; }
+                        }
+                        break;
+                    }
+                case "MacAddress":
+                    {
+                        if (Properties.Settings.Default.CklrequiresMacAddress)
+                        {
+                            if (string.IsNullOrWhiteSpace(file.FileMacAddress) || file.FileMacAddress.Contains("MAC"))
+                            { value = false; }
+                        }
+                        break;
+                    }
+                default:
+                    { break; }
+            }
+            return value;
         }
     }
 }

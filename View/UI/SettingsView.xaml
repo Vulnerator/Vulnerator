@@ -188,6 +188,22 @@
                                 TextAlignment="Center" />
                         </Grid>
                     </Grid>
+                    <Label Style="{StaticResource SecondLevelHeaderStyle}">
+                        <TextBlock Text="File Parsing"
+                                   TextTrimming="CharacterEllipsis" />
+                    </Label>
+                    <CheckBox Content="Require CKL Host Name"
+                              IsChecked="{Binding Source={StaticResource Settings}, Path=Default.CklRequiresHostName}"
+                              Margin="5,0,5,5" />
+                    <CheckBox Content="Require CKL IP Address"
+                              IsChecked="{Binding Source={StaticResource Settings}, Path=Default.CklRequiresIpAddress}"
+                              Margin="5,0,5,5" />
+                    <CheckBox Content="Require CKL MAC Address"
+                              IsChecked="{Binding Source={StaticResource Settings}, Path=Default.CklrequiresMacAddress}"
+                              Margin="5,0,5,5" />
+                    <CheckBox Content="Drop CKL Files Without Identifiers"
+                              IsChecked="{Binding Source={StaticResource Settings}, Path=Default.DropIncompleteCklfiles}"
+                              Margin="5,0,5,5" />
                     <Expander
                         Margin="5,0"
                         Background="Red"
