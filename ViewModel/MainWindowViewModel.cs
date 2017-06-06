@@ -1489,7 +1489,7 @@ namespace Vulnerator.ViewModel
                     case "Checklist":
                         {
                             CklReader cklReader = new CklReader();
-                            file.Status = cklReader.ReadCklFile(file.FilePath, file.FileSystemName.Split(':')[0].TrimEnd());
+                            file.Status = cklReader.ReadCklFile(file);
                             break;
                         }
                     case "WASSP - HTML":

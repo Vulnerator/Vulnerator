@@ -61,11 +61,38 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,@LifecycleStatus);.
+        ///   Looks up a localized string similar to INSERT INTO Groups VALUES (NULL, @Group_Name, &apos;False&apos;, NULL, NULL;.
+        /// </summary>
+        internal static string InsertGroup {
+            get {
+                return ResourceManager.GetString("InsertGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,NULL);.
         /// </summary>
         internal static string InsertHardware {
             get {
                 return ResourceManager.GetString("InsertHardware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO IP_Addresses VALUES (NULL, @IP_Address);.
+        /// </summary>
+        internal static string InsertIpAddress {
+            get {
+                return ResourceManager.GetString("InsertIpAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO MAC_Addresses VALUES (NULL, @MAC_Address);.
+        /// </summary>
+        internal static string InsertMacAddress {
+            get {
+                return ResourceManager.GetString("InsertMacAddress", resourceCulture);
             }
         }
         
@@ -88,6 +115,24 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO HardwareIpAddresses VALUES (@Hardware_ID, @IP_Address_ID);.
+        /// </summary>
+        internal static string MapIpToHardware {
+            get {
+                return ResourceManager.GetString("MapIpToHardware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO HardwareMacAddresses VALUES (@Hardware_ID, @MAC_Address_ID);.
+        /// </summary>
+        internal static string MapMacToHardware {
+            get {
+                return ResourceManager.GetString("MapMacToHardware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT OR REPLACE INTO VulnerabilitesCCIs VALUES (@Vulnerability_ID, (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI));.
         /// </summary>
         internal static string MapVulnerabilityToCci {
@@ -102,6 +147,15 @@ namespace Vulnerator.Properties {
         internal static string MapVulnerabilityToIAControl {
             get {
                 return ResourceManager.GetString("MapVulnerabilityToIAControl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT Unique_Finding_ID FROM UniqueFindings WHERE Vulnerability_ID = @Vulnerability_ID AND Hardware_ID = @Hardware_ID;.
+        /// </summary>
+        internal static string SelectUniqueFinding {
+            get {
+                return ResourceManager.GetString("SelectUniqueFinding", resourceCulture);
             }
         }
         

@@ -117,9 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="InsertGroup" xml:space="preserve">
+    <value>INSERT INTO Groups VALUES (NULL, @Group_Name, 'False', NULL, NULL;</value>
+  </data>
   <data name="InsertHardware" xml:space="preserve">
-    <value>INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,@LifecycleStatus);</value>
+    <value>INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,NULL);</value>
     <comment>Insert Hardware SQLite command</comment>
+  </data>
+  <data name="InsertIpAddress" xml:space="preserve">
+    <value>INSERT INTO IP_Addresses VALUES (NULL, @IP_Address);</value>
+  </data>
+  <data name="InsertMacAddress" xml:space="preserve">
+    <value>INSERT INTO MAC_Addresses VALUES (NULL, @MAC_Address);</value>
   </data>
   <data name="InsertVulnerability" xml:space="preserve">
     <value>INSERT OR REPLACE INTO Vulnerabilities () VALUES ();</value>
@@ -128,11 +137,20 @@
     <value>INSERT OR REPLACE INTO VulnerabilitySources () VALUES ();</value>
     <comment>Roughed out SQLite command to insert vulnerability source into the  VulnerabilitySources</comment>
   </data>
+  <data name="MapIpToHardware" xml:space="preserve">
+    <value>INSERT INTO HardwareIpAddresses VALUES (@Hardware_ID, @IP_Address_ID);</value>
+  </data>
+  <data name="MapMacToHardware" xml:space="preserve">
+    <value>INSERT INTO HardwareMacAddresses VALUES (@Hardware_ID, @MAC_Address_ID);</value>
+  </data>
   <data name="MapVulnerabilityToCci" xml:space="preserve">
     <value>INSERT OR REPLACE INTO VulnerabilitesCCIs VALUES (@Vulnerability_ID, (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI));</value>
   </data>
   <data name="MapVulnerabilityToIAControl" xml:space="preserve">
     <value>INSERT OR REPLACE INTO Vulnerabilities_IA_Controls VALUES (@Vulnerablity_ID, (SELECT IA_Control_ID FROM IA_Controls WHERE IA_Control_Number = @IA_Control));</value>
+  </data>
+  <data name="SelectUniqueFinding" xml:space="preserve">
+    <value>SELECT Unique_Finding_ID FROM UniqueFindings WHERE Vulnerability_ID = @Vulnerability_ID AND Hardware_ID = @Hardware_ID;</value>
   </data>
   <data name="UpdateDeltaAnalysisFlag" xml:space="preserve">
     <value>UPDATE UniqueFindings SET Delta_Analysis_Required = 'True' WHERE Vulnerability_ID = @Vulnerability_ID;</value>

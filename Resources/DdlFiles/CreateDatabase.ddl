@@ -403,11 +403,6 @@ CREATE TABLE ExternalSecurityServices
 	 SecurityRequirementsDescription NVARCHAR (500) NOT NULL , 
 	 RiskDetermination NVARCHAR (100) NOT NULL 
 	);
-CREATE TABLE FindingStatuses 
-	(
-	 Status_ID INTEGER PRIMARY KEY , 
-	 Status NVARCHAR (25) NOT NULL 
-	);
 CREATE TABLE FindingTypes 
 	(
 	 Finding_Type_ID INTEGER PRIMARY KEY , 
@@ -519,6 +514,13 @@ CREATE TABLE HardwareIpAddresses
 	 IP_Address_ID INTEGER NOT NULL ,
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
 	 FOREIGN KEY (IP_Address_ID) REFERENCES IpAddresses(IP_Address_ID)
+	);
+CREATE TABLE HardwareMacAddresses 
+	(
+	 Hardware_ID INTEGER NOT NULL , 
+	 MAC_Address_ID INTEGER NOT NULL ,
+	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
+	 FOREIGN KEY (MAC_Address_ID) REFERENCES MAC_Addresses(MAC_Address_ID)
 	);
 CREATE TABLE HardwareLocation 
 	(
@@ -633,6 +635,11 @@ CREATE TABLE Locations
 	 IsBaselineLocation_Global NVARCHAR (5) , 
 	 IsDeploymentLocation_Global NVARCHAR (5) , 
 	 IsTestLocation_Global NVARCHAR (5) 
+	);
+CREATE TABLE MAC_Addresses
+	(
+	  MAC_Address_ID INTEGER PRIMARY KEY ,
+	  MAC_Address NVARCHAR (50) NOT NULL
 	);
 CREATE TABLE MedicalTechnologies 
 	(
@@ -1163,9 +1170,8 @@ CREATE TABLE UniqueFindings
 	 Data_Expiration_Date DATE , 
 	 Delta_Analysis_Required NVARCHAR (5) NOT NULL , 
 	 Finding_Type_ID INTEGER NOT NULL , 
-	 Source_ID INTEGER NOT NULL , 
-	 Source_File_ID INTEGER NOT NULL , 
-	 Status_ID INTEGER NOT NULL , 
+	 Finding_Source_File_ID INTEGER NOT NULL , 
+	 Status NVARCHAR (25) NOT NULL , 
 	 Vulnerability_ID INTEGER NOT NULL , 
 	 Hardware_ID INTEGER NOT NULL ,
 	 Severity_Override NVARCHAR (25),
@@ -1175,9 +1181,9 @@ CREATE TABLE UniqueFindings
 	 Web_DB_Instance NVARCHAR(100),
 	 Classification NVARCHAR (25),
 	 FOREIGN KEY (Finding_Type_ID) REFERENCES FindingTypes(Finding_Type_ID),
-	 FOREIGN KEY (Status_ID) REFERENCES FindingStatuses(Status_ID),
 	 FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
-	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID)
+	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
+	 FOREIGN KEY (Finding_Source_File_ID) REFERENCES UniqueFindingsSourceFiles(Finding_Source_File_ID)
 	);
 CREATE INDEX Unique_Finding_Index ON UniqueFindings(Unique_Finding_ID);
 CREATE TABLE UniqueFindings_UniqueFindingsSourceFiles 
