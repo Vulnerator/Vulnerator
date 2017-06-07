@@ -117,8 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="InsertCklUniqueFinding" xml:space="preserve">
+    <value>INSERT INTO UniqueFindings (Unique_Finding_ID, Comments, Finding_Details, First_Discovered, Last_Observed, Approval_Status, Delta_Analysis_Required, Finding_Type_ID, Finding_Source_File_ID, Status, Vulnerability_ID, Hardware_ID, Severity_Override, Severity_Override_Justification, Technology_Area, Web_DB_Site, Web_DB_Instance, Classification) VALUES (NULL, @Comments, @Finding_Details, @First_Discovered, @Last_Observed, @Approval_Status, @Delta_Analysis_Required, @Finding_Type_ID, @Finding_Source_File_ID, @Status, @Vulnerability_ID, @Hardware_ID, @Severity_Override, @Severity_Override_Justification, @Technology_Area, @Web_DB_Site, @Web_DB_Instance, @Classification);</value>
+  </data>
   <data name="InsertGroup" xml:space="preserve">
-    <value>INSERT INTO Groups VALUES (NULL, @Group_Name, 'False', NULL, NULL;</value>
+    <value>INSERT INTO Groups VALUES (NULL, @Group_Name, 'False', NULL, NULL);</value>
   </data>
   <data name="InsertHardware" xml:space="preserve">
     <value>INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,NULL);</value>
@@ -130,17 +133,14 @@
   <data name="InsertMacAddress" xml:space="preserve">
     <value>INSERT INTO MAC_Addresses VALUES (NULL, @MAC_Address);</value>
   </data>
-  <data name="InsertUniqueFinding" xml:space="preserve">
-    <value>INSERT INTO UniqueFindings () VALUES ();</value>
-  </data>
   <data name="InsertUniqueFindingSource" xml:space="preserve">
     <value>INSERT INTO UniqueFindingsSourceFiles VALUES (NULL, @Finding_Source_File_Name);</value>
   </data>
   <data name="InsertVulnerability" xml:space="preserve">
-    <value>INSERT OR REPLACE INTO Vulnerabilities () VALUES ();</value>
+    <value>INSERT INTO Vulnerabilities () VALUES ();</value>
   </data>
   <data name="InsertVulnerabilitySource" xml:space="preserve">
-    <value>INSERT OR REPLACE INTO VulnerabilitySources () VALUES ();</value>
+    <value>INSERT INTO VulnerabilitySources () VALUES ();</value>
     <comment>Roughed out SQLite command to insert vulnerability source into the  VulnerabilitySources</comment>
   </data>
   <data name="MapIpToHardware" xml:space="preserve">
@@ -155,19 +155,28 @@
   <data name="MapVulnerabilityToIAControl" xml:space="preserve">
     <value>INSERT OR REPLACE INTO Vulnerabilities_IA_Controls VALUES (@Vulnerablity_ID, (SELECT IA_Control_ID FROM IA_Controls WHERE IA_Control_Number = @IA_Control));</value>
   </data>
+  <data name="SelectFindingTypeId" xml:space="preserve">
+    <value>SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = @Finding_Type;</value>
+  </data>
   <data name="SelectUniqueFinding" xml:space="preserve">
     <value>SELECT Unique_Finding_ID FROM UniqueFindings WHERE Vulnerability_ID = @Vulnerability_ID AND Hardware_ID = @Hardware_ID;</value>
+  </data>
+  <data name="UpdateCklUniqueFinding" xml:space="preserve">
+    <value>UPDATE UniqueFinding SET Finding_Details = @FindingDetails, Comments = @Comments, Severity_Override = @Severity_Override, Severity_Override_Justification = @Severity_Override_Justification, Last_Observed = @Last_Observed, Technology_Area = @Technology_Area, Web_DB_Site = @Web_DB_Site, Web_DB_Instance = @Web_DB_Instance, Finding_Source_File_ID = @Finding_Source_File_ID  WHERE Unique_Finding_ID = @Unique_Finding_ID</value>
   </data>
   <data name="UpdateDeltaAnalysisFlag" xml:space="preserve">
     <value>UPDATE UniqueFindings SET Delta_Analysis_Required = 'True' WHERE Vulnerability_ID = @Vulnerability_ID;</value>
   </data>
-  <data name="UpdateUniqueFinding" xml:space="preserve">
-    <value>UPDATE UniqueFinding SET Finding_Details = @FindingDetails, Comments = @Comments, Severity_Override = @Severity_Override, Severity_Override_Justification = @Severity_Override_Justification, Last_Observed = @Last_Observed WHERE Unique_Finding_ID = @Unique_Finding_ID</value>
+  <data name="UpdateVulnerability" xml:space="preserve">
+    <value>UPDATE Vulnerabilities SET  WHERE Vulnerability_ID = @Vulnerability_ID;</value>
+  </data>
+  <data name="UpdateVulnerabilitySource" xml:space="preserve">
+    <value>UPDATE VulnerabilitySources SET  WHERE Vulnerability_Source_ID = @Vulnerability_Source_ID;</value>
   </data>
   <data name="VerifyVulnerabilityChange" xml:space="preserve">
     <value>SELECT Vulnerability_ID, Release FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Source_ID = @Vulnerability_Source_ID;</value>
   </data>
   <data name="VerifyVulnerabilitySourceChange" xml:space="preserve">
-    <value>SELECT Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Secondary_Identifier = @Source_Secondary_Identifier;</value>
+    <value>SELECT Vulnerability_Source_ID, Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Secondary_Identifier = @Source_Secondary_Identifier;</value>
   </data>
 </root>

@@ -27,7 +27,7 @@ namespace Vulnerator.Model.BusinessLogic
         private string techArea = string.Empty;
         private string webDbSite = string.Empty;
         private string webDbInstance = string.Empty;
-        private int referencePrimaryKey = 0;
+        private string classification = string.Empty;
         private int hardwarePrimaryKey = 0;
         private int lastVulnerabilitySourceId = 0;
         private int lastVulnerabilityId = 0;
@@ -59,6 +59,7 @@ namespace Vulnerator.Model.BusinessLogic
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         InsertGroup(sqliteCommand, file);
+                        InsertSourceFile(sqliteCommand, file);
                         XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
                         using (XmlReader xmlReader = XmlReader.Create(file.FilePath, xmlReaderSettings))
                         {
@@ -108,10 +109,13 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 sqliteCommand.CommandText = Properties.Resources.InsertGroup;
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Group_Name", file.FileSystemName));
+                if (!string.IsNullOrWhiteSpace(file.FileSystemName))
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("Group_Name", file.FileSystemName)); }
+                else
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("Group_Name", "Unassigned")); }
                 sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.CommandText = "SELECT last_insert_rowid();";
-                groupPrimaryKey = (int)sqliteCommand.ExecuteScalar();
+                groupPrimaryKey = int.Parse(sqliteCommand.ExecuteScalar().ToString());
                 sqliteCommand.Parameters.Clear();
             }
             catch (Exception exception)
@@ -123,7 +127,20 @@ namespace Vulnerator.Model.BusinessLogic
 
         private void InsertSourceFile(SQLiteCommand sqliteCommand, Object.File file)
         {
-
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.InsertUniqueFindingSource;
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Source_File_Name", file.FileName));
+                sqliteCommand.ExecuteNonQuery();
+                sqliteCommand.Parameters.Clear();
+                sqliteCommand.CommandText = "SELECT last_insert_rowid();";
+                sourceFilePrimaryKey = int.Parse(sqliteCommand.ExecuteScalar().ToString());
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert unique finding source file \"{0}\".", file.FileName));
+                throw exception;
+            }
         }
 
         private void ParseAssetNode(XmlReader xmlReader, SQLiteCommand sqliteCommand)
@@ -145,7 +162,11 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "HOST_NAME":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Host_Name", ObtainCurrentNodeValue(xmlReader)));
+                                    string hostName = ObtainCurrentNodeValue(xmlReader);
+                                    if (!string.IsNullOrWhiteSpace(hostName) && !hostName.Equals("HOST NAME"))
+                                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Host_Name", hostName)); }
+                                    else
+                                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Host_Name", "Unassigned")); }
                                     break;
                                 }
                             case "HOST_IP":
@@ -185,10 +206,11 @@ namespace Vulnerator.Model.BusinessLogic
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ASSET"))
                     {
                         InsertHardware(sqliteCommand);
-                        if (!string.IsNullOrWhiteSpace(ip))
-                        { ParseIpAndMacAddress(sqliteCommand, ip, "IP_Addresses"); }
-                        if (!string.IsNullOrWhiteSpace(mac))
-                        { ParseIpAndMacAddress(sqliteCommand, mac, "MAC_Addresses"); }
+                        if (!string.IsNullOrWhiteSpace(ip) && !ip.Equals("IP"))
+                        { ParseIpAndMacAddress(sqliteCommand, ip); }
+                        if (!string.IsNullOrWhiteSpace(mac) && !mac.Equals("MAC"))
+                        { ParseIpAndMacAddress(sqliteCommand, mac); }
+                        return;
                     }
                 }
             }
@@ -209,10 +231,14 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters.Add(new SQLiteParameter("ModelNumber", string.Empty));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Is_IA_Enabled", string.Empty));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("SerialNumber", string.Empty));
+                if (!sqliteCommand.Parameters.Contains("Role"))
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("Role", string.Empty)); }
+                if (!sqliteCommand.Parameters.Contains("FQDN"))
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("FQDN", string.Empty)); }
                 sqliteCommand.CommandText = Properties.Resources.InsertHardware;
                 sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.CommandText = "SELECT last_insert_rowid();";
-                hardwarePrimaryKey = (int)sqliteCommand.ExecuteScalar();
+                hardwarePrimaryKey = int.Parse(sqliteCommand.ExecuteScalar().ToString());
                 sqliteCommand.Parameters.Clear();
             }
             catch (Exception exception)
@@ -222,27 +248,43 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private void ParseIpAndMacAddress(SQLiteCommand sqliteCommand, string parameter, string table)
+        private void ParseIpAndMacAddress(SQLiteCommand sqliteCommand, string parameter)
         {
             try
             {
-                Regex regex = new Regex(",|;");
-                if (regex.IsMatch(parameter))
+                string[] regexArray = new string[]
                 {
-                    char[] delimiters = new char[] { ',', ';' };
-                    foreach (char delimiter in delimiters)
+                    @"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$", //IPv4
+                    @"(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))", //IPv6
+                    @"^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$" //MAC
+                };
+                foreach (string expression in regexArray)
+                {
+                    Regex regex = new Regex(expression);
+                    foreach (Match match in regex.Matches(parameter))
                     {
-                        if (parameter.Contains(delimiter))
+                        switch (Array.IndexOf(regexArray, expression))
                         {
-                            string[] parameters = parameter.Split(delimiter).ToArray();
-                            foreach (string item in parameters)
-                            { InsertAndMapIpMacAddress(sqliteCommand, item, table); }
+                            case 0:
+                                {
+                                    InsertAndMapIpMacAddress(sqliteCommand, match.ToString(), "IP_Addresses");
+                                    break;
+                                }
+                            case 1:
+                                {
+                                    InsertAndMapIpMacAddress(sqliteCommand, match.ToString(), "IP_Addresses");
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    InsertAndMapIpMacAddress(sqliteCommand, match.ToString(), "MAC_Addresses");
+                                    break;
+                                }
+                            default:
+                                { break; }
                         }
                     }
-                    return;
                 }
-                else
-                { InsertAndMapIpMacAddress(sqliteCommand, parameter, table); }
             }
             catch (Exception exception)
             {
@@ -256,13 +298,18 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 if (table.Equals("IP_Addresses"))
-                { sqliteCommand.CommandText = Properties.Resources.InsertIpAddress; }
+                {
+                    sqliteCommand.CommandText = Properties.Resources.InsertIpAddress;
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("IP_Address", item));
+                }
                 else
-                { sqliteCommand.CommandText = Properties.Resources.InsertMacAddress; }
-                sqliteCommand.Parameters.Add(new SQLiteParameter("IP_Address", item));
+                {
+                    sqliteCommand.CommandText = Properties.Resources.InsertMacAddress;
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("MAC_Address", item));
+                }
                 sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.CommandText = "SELECT last_insert_rowid();";
-                int id = (int)sqliteCommand.ExecuteScalar();
+                int id = int.Parse(sqliteCommand.ExecuteScalar().ToString());
                 if (table.Equals("IP_Addresses"))
                 {
                     sqliteCommand.CommandText = Properties.Resources.MapIpToHardware;
@@ -290,7 +337,12 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 xmlReader.Read();
                 if (xmlReader.Name.Equals("STIG_TITLE"))
-                { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Name",ObtainCurrentNodeValue(xmlReader).Replace('_', ' '))); }
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Name",ObtainCurrentNodeValue(xmlReader).Replace('_', ' ')));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Version", string.Empty));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", string.Empty));
+                    InsertVulnerabilitySource(sqliteCommand);
+                }
                 else
                 {
                     while (xmlReader.Read())
@@ -312,7 +364,11 @@ namespace Vulnerator.Model.BusinessLogic
                                     }
                                 case "releaseinfo":
                                     {
-                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", ObtainStigInfoSubNodeValue(xmlReader)));
+                                        string release = ObtainStigInfoSubNodeValue(xmlReader);
+                                        if (release.Contains(" "))
+                                        { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", release.Split(' ')[1])); }
+                                        else
+                                        { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", release)); }
                                         break;
                                     }
                                 case "stigid":
@@ -357,17 +413,17 @@ namespace Vulnerator.Model.BusinessLogic
                 foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                 {
                     if (sqliteCommand.Parameters.IndexOf(parameter) == 0)
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(55, "@" + parameter.ParameterName); }
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(44, "@" + parameter.ParameterName); }
                     else
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(55, "@" + parameter.ParameterName + ", "); }
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(44, "@" + parameter.ParameterName + ", "); }
 
                 }
                 foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                 {
                     if (sqliteCommand.Parameters.IndexOf(parameter) == 0)
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(45, parameter.ParameterName); }
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(34, parameter.ParameterName); }
                     else
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(45, parameter.ParameterName + ", "); }
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(34, parameter.ParameterName + ", "); }
                 }
                 sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.Parameters.Clear();
@@ -409,7 +465,17 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "Rule_ID":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Unique_Vulnerability_Identifier", ObtainAttributeDataNodeValue(xmlReader)));
+                                    string rule = ObtainAttributeDataNodeValue(xmlReader);
+                                    string ruleRelease = string.Empty;
+                                    if (rule.Contains("_"))
+                                    { rule = rule.Split('_')[0]; }
+                                    if (rule.Contains("r"))
+                                    {
+                                        ruleRelease = rule.Split('r')[1];
+                                        rule = rule.Split('r')[0];
+                                    }
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Unique_Vulnerability_Identifier", rule));
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Release", ruleRelease));
                                     break;
                                 }
                             case "Rule_Ver":
@@ -486,6 +552,11 @@ namespace Vulnerator.Model.BusinessLogic
                                     ccis.Add(ObtainAttributeDataNodeValue(xmlReader).Replace("CCI-", string.Empty));
                                     break;
                                 }
+                            case "Class":
+                                {
+                                    classification = ObtainAttributeDataNodeValue(xmlReader);
+                                    break;
+                                }
                             default:
                                 { break; }
                         }
@@ -496,6 +567,7 @@ namespace Vulnerator.Model.BusinessLogic
                         if (ccis.Count > 0)
                         { MapVulnerbailityToCCI(sqliteCommand); }
                         ParseUniqueFindingData(sqliteCommand, xmlReader);
+                        return;
                     }
                 }
             }
@@ -510,21 +582,22 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Source_ID", lastVulnerabilitySourceId));
                 sqliteCommand.CommandText = Properties.Resources.InsertVulnerability;
                 foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                 {
                     if (sqliteCommand.Parameters.IndexOf(parameter) == 0)
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(50, "@" + parameter.ParameterName); }
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(39, "@" + parameter.ParameterName); }
                     else
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(50, "@" + parameter.ParameterName + ", "); }
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(39, "@" + parameter.ParameterName + ", "); }
 
                 }
                 foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                 {
                     if (sqliteCommand.Parameters.IndexOf(parameter) == 0)
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(40, parameter.ParameterName); }
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(29, parameter.ParameterName); }
                     else
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(40, parameter.ParameterName + ", "); }
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(29, parameter.ParameterName + ", "); }
                 }
                 sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.CommandText = "SELECT last_insert_rowid();";
@@ -533,7 +606,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert vulnerability.", sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
+                log.Error(string.Format("Unable to insert vulnerability \"{0}\".", sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
                 throw exception;
             }
         }
@@ -564,7 +637,7 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 xmlReader.Read();
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Status", xmlReader.Value));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Status", MakeStatusUseable(xmlReader.Value)));
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -597,7 +670,9 @@ namespace Vulnerator.Model.BusinessLogic
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("VULN"))
                     {
-
+                        InsertUniqueFinding(sqliteCommand);
+                        ClearGlobals();
+                        return;
                     }
                 }
             }
@@ -611,6 +686,55 @@ namespace Vulnerator.Model.BusinessLogic
         private void InsertUniqueFinding(SQLiteCommand sqliteCommand)
         {
 
+            try
+            {
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Technology_Area", techArea));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Web_DB_Site", webDbSite));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Web_DB_Instance", webDbInstance));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Last_Observed", DateTime.Now.ToLongDateString()));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Source_File_ID", sourceFilePrimaryKey));
+                SQLiteCommand clonedCommand = (SQLiteCommand)sqliteCommand.Clone();
+                clonedCommand.Parameters.Add(new SQLiteParameter("Hardware_ID", hardwarePrimaryKey));
+                clonedCommand.Parameters.Add(new SQLiteParameter("Vulnerability_ID", lastVulnerabilityId));
+                clonedCommand.CommandText = Properties.Resources.SelectUniqueFinding;
+                using (SQLiteDataReader sqliteDataReader = clonedCommand.ExecuteReader())
+                {
+                    while (sqliteDataReader.Read())
+                    {
+                        if (sqliteDataReader.HasRows)
+                        {
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("Unique_Finding_ID", sqliteDataReader["Unique_Finding_ID"].ToString()));
+                            sqliteCommand.CommandText = Properties.Resources.UpdateCklUniqueFinding;
+                            sqliteCommand.Parameters.Clear();
+                            return;
+                        }
+                    }
+                }
+                clonedCommand.CommandText = Properties.Resources.SelectFindingTypeId;
+                clonedCommand.Parameters.Add(new SQLiteParameter("Finding_Type", "CKL"));
+                using (SQLiteDataReader sqliteDataReader = clonedCommand.ExecuteReader())
+                {
+                    while (sqliteDataReader.Read())
+                    {
+                        if (sqliteDataReader.HasRows)
+                        { sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Type_ID", sqliteDataReader["Finding_Type_ID"].ToString())); }
+                    }
+                }
+                sqliteCommand.CommandText = Properties.Resources.InsertCklUniqueFinding;
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Hardware_ID", hardwarePrimaryKey));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_ID", lastVulnerabilityId));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("First_Discovered", DateTime.Now.ToLongDateString()));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Approval_Status", "False"));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Delta_Analysis_Required", "False"));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Classification", classification));
+                sqliteCommand.ExecuteNonQuery();
+                sqliteCommand.Parameters.Clear();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to insert unique finding.");
+                throw exception;
+            }
         }
 
         private XmlReaderSettings GenerateXmlReaderSettings()
@@ -744,6 +868,20 @@ namespace Vulnerator.Model.BusinessLogic
                 throw exception;
             }
         }
+
+        private void ClearGlobals()
+        {
+            stigInfo = string.Empty;
+            versionInfo = string.Empty;
+            releaseInfo = string.Empty;
+            techArea = string.Empty;
+            webDbSite = string.Empty;
+            webDbInstance = string.Empty;
+            classification = string.Empty;
+            hardwarePrimaryKey = 0;
+            lastVulnerabilityId = 0;
+            sourceFilePrimaryKey = 0;
+    }
 
         public string DdlTextReader(string ddlResourceFile)
         {

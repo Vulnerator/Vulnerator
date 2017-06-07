@@ -61,7 +61,16 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Groups VALUES (NULL, @Group_Name, &apos;False&apos;, NULL, NULL;.
+        ///   Looks up a localized string similar to INSERT INTO UniqueFindings (Unique_Finding_ID, Comments, Finding_Details, First_Discovered, Last_Observed, Approval_Status, Delta_Analysis_Required, Finding_Type_ID, Finding_Source_File_ID, Status, Vulnerability_ID, Hardware_ID, Severity_Override, Severity_Override_Justification, Technology_Area, Web_DB_Site, Web_DB_Instance, Classification) VALUES (NULL, @Comments, @Finding_Details, @First_Discovered, @Last_Observed, @Approval_Status, @Delta_Analysis_Required, @Finding_Type_ID, @Finding_Source_File_ID, @St [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string InsertCklUniqueFinding {
+            get {
+                return ResourceManager.GetString("InsertCklUniqueFinding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO Groups VALUES (NULL, @Group_Name, &apos;False&apos;, NULL, NULL);.
         /// </summary>
         internal static string InsertGroup {
             get {
@@ -97,15 +106,6 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO UniqueFindings () VALUES ();.
-        /// </summary>
-        internal static string InsertUniqueFinding {
-            get {
-                return ResourceManager.GetString("InsertUniqueFinding", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO UniqueFindingsSourceFiles VALUES (NULL, @Finding_Source_File_Name);.
         /// </summary>
         internal static string InsertUniqueFindingSource {
@@ -115,7 +115,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT OR REPLACE INTO Vulnerabilities () VALUES ();.
+        ///   Looks up a localized string similar to INSERT INTO Vulnerabilities () VALUES ();.
         /// </summary>
         internal static string InsertVulnerability {
             get {
@@ -124,7 +124,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT OR REPLACE INTO VulnerabilitySources () VALUES ();.
+        ///   Looks up a localized string similar to INSERT INTO VulnerabilitySources () VALUES ();.
         /// </summary>
         internal static string InsertVulnerabilitySource {
             get {
@@ -169,11 +169,29 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = @Finding_Type;.
+        /// </summary>
+        internal static string SelectFindingTypeId {
+            get {
+                return ResourceManager.GetString("SelectFindingTypeId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT Unique_Finding_ID FROM UniqueFindings WHERE Vulnerability_ID = @Vulnerability_ID AND Hardware_ID = @Hardware_ID;.
         /// </summary>
         internal static string SelectUniqueFinding {
             get {
                 return ResourceManager.GetString("SelectUniqueFinding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE UniqueFinding SET Finding_Details = @FindingDetails, Comments = @Comments, Severity_Override = @Severity_Override, Severity_Override_Justification = @Severity_Override_Justification, Last_Observed = @Last_Observed, Technology_Area = @Technology_Area, Web_DB_Site = @Web_DB_Site, Web_DB_Instance = @Web_DB_Instance, Finding_Source_File_ID = @Finding_Source_File_ID  WHERE Unique_Finding_ID = @Unique_Finding_ID.
+        /// </summary>
+        internal static string UpdateCklUniqueFinding {
+            get {
+                return ResourceManager.GetString("UpdateCklUniqueFinding", resourceCulture);
             }
         }
         
@@ -187,11 +205,20 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UPDATE UniqueFinding SET Finding_Details = @FindingDetails, Comments = @Comments, Severity_Override = @Severity_Override, Severity_Override_Justification = @Severity_Override_Justification, Last_Observed = @Last_Observed WHERE Unique_Finding_ID = @Unique_Finding_ID.
+        ///   Looks up a localized string similar to UPDATE Vulnerabilities SET  WHERE Vulnerability_ID = @Vulnerability_ID;.
         /// </summary>
-        internal static string UpdateUniqueFinding {
+        internal static string UpdateVulnerability {
             get {
-                return ResourceManager.GetString("UpdateUniqueFinding", resourceCulture);
+                return ResourceManager.GetString("UpdateVulnerability", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE VulnerabilitySources SET  WHERE Vulnerability_Source_ID = @Vulnerability_Source_ID;.
+        /// </summary>
+        internal static string UpdateVulnerabilitySource {
+            get {
+                return ResourceManager.GetString("UpdateVulnerabilitySource", resourceCulture);
             }
         }
         
@@ -205,7 +232,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Secondary_Identifier = @Source_Secondary_Identifier;.
+        ///   Looks up a localized string similar to SELECT Vulnerability_Source_ID, Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Secondary_Identifier = @Source_Secondary_Identifier;.
         /// </summary>
         internal static string VerifyVulnerabilitySourceChange {
             get {
