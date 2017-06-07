@@ -121,6 +121,11 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
+        private void InsertSourceFile(SQLiteCommand sqliteCommand, Object.File file)
+        {
+
+        }
+
         private void ParseAssetNode(XmlReader xmlReader, SQLiteCommand sqliteCommand)
         {
             try
@@ -562,7 +567,38 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Status", xmlReader.Value));
                 while (xmlReader.Read())
                 {
+                    if (xmlReader.IsStartElement())
+                    {
+                        switch (xmlReader.Name)
+                        {
+                            case "FINDING_DETAILS":
+                                {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Details", ObtainCurrentNodeValue(xmlReader)));
+                                    break;
+                                }
+                            case "COMMENTS":
+                                {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Comments", ObtainCurrentNodeValue(xmlReader)));
+                                    break;
+                                }
+                            case "SEVERITY_OVERRIDE":
+                                {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Severity_Override", ObtainCurrentNodeValue(xmlReader)));
+                                    break;
+                                }
+                            case "SEVERITY_JUSTIFICATION":
+                                {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Severity_Override_Justification", ObtainCurrentNodeValue(xmlReader)));
+                                    break;
+                                }
+                            default:
+                                { break; }
+                        }
+                    }
+                    else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("VULN"))
+                    {
 
+                    }
                 }
             }
             catch (Exception exception)
@@ -570,6 +606,11 @@ namespace Vulnerator.Model.BusinessLogic
                 log.Error("Unable to parse unique finding data.");
                 throw exception;
             }
+        }
+
+        private void InsertUniqueFinding(SQLiteCommand sqliteCommand)
+        {
+
         }
 
         private XmlReaderSettings GenerateXmlReaderSettings()

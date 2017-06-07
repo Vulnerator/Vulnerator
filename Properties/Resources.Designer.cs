@@ -97,6 +97,24 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO UniqueFindings () VALUES ();.
+        /// </summary>
+        internal static string InsertUniqueFinding {
+            get {
+                return ResourceManager.GetString("InsertUniqueFinding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO UniqueFindingsSourceFiles VALUES (NULL, @Finding_Source_File_Name);.
+        /// </summary>
+        internal static string InsertUniqueFindingSource {
+            get {
+                return ResourceManager.GetString("InsertUniqueFindingSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT OR REPLACE INTO Vulnerabilities () VALUES ();.
         /// </summary>
         internal static string InsertVulnerability {
@@ -165,6 +183,15 @@ namespace Vulnerator.Properties {
         internal static string UpdateDeltaAnalysisFlag {
             get {
                 return ResourceManager.GetString("UpdateDeltaAnalysisFlag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE UniqueFinding SET Finding_Details = @FindingDetails, Comments = @Comments, Severity_Override = @Severity_Override, Severity_Override_Justification = @Severity_Override_Justification, Last_Observed = @Last_Observed WHERE Unique_Finding_ID = @Unique_Finding_ID.
+        /// </summary>
+        internal static string UpdateUniqueFinding {
+            get {
+                return ResourceManager.GetString("UpdateUniqueFinding", resourceCulture);
             }
         }
         
