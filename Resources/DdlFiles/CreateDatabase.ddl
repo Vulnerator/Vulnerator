@@ -455,7 +455,7 @@ CREATE TABLE GroupsContacts
 CREATE TABLE Hardware 
 	(
 	 Hardware_ID INTEGER PRIMARY KEY , 
-	 Host_Name NVARCHAR (50) , 
+	 Host_Name NVARCHAR (50) UNIQUE ON CONFLICT IGNORE, 
 	 FQDN NVARCHAR (100),
 	 Is_Virtual_Server NVARCHAR (5) , 
 	 NIAP_Level NVARCHAR (25) , 
@@ -597,7 +597,7 @@ CREATE TABLE InterconnectedSystems
 CREATE TABLE IP_Addresses 
 	(
 	 IP_Address_ID INTEGER PRIMARY KEY , 
-	 Ip_Address NVARCHAR (25) NOT NULL 
+	 IP_Address NVARCHAR (25) NOT NULL UNIQUE ON CONFLICT IGNORE 
 	);
 CREATE TABLE JointAuthorizationOrganizations 
 	(
@@ -639,7 +639,7 @@ CREATE TABLE Locations
 CREATE TABLE MAC_Addresses
 	(
 	  MAC_Address_ID INTEGER PRIMARY KEY ,
-	  MAC_Address NVARCHAR (50) NOT NULL
+	  MAC_Address NVARCHAR (50) NOT NULL UNIQUE ON CONFLICT IGNORE
 	);
 CREATE TABLE MedicalTechnologies 
 	(

@@ -333,6 +333,7 @@
     <Compile Include="Model\DataAccess\DatabaseBuilder.cs" />
     <Compile Include="Model\DataAccess\DatabaseContext.cs" />
     <Compile Include="Model\DataAccess\DatabaseHandler.cs" />
+    <Compile Include="Model\DataAccess\DatabaseInterface.cs" />
     <Compile Include="Model\Object\Asset.cs" />
     <Compile Include="Model\Object\AssetOverviewLineItem.cs" />
     <Compile Include="Model\Object\Cci.cs" />
