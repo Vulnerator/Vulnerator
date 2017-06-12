@@ -71,6 +71,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Source_ID", lastVulnerabilitySourceId));
                 sqliteCommand.CommandText = Properties.Resources.InsertVulnerability;
                 foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                 {
@@ -126,7 +127,7 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public void MapVulnerabilityToCCI(SQLiteCommand sqliteCommand, List<string> ccis, int lastVulnerabilityId)
+        public void MapVulnerbailityToCCI(SQLiteCommand sqliteCommand, List<string> ccis, int lastVulnerabilityId)
         {
             try
             {
@@ -143,29 +144,6 @@ namespace Vulnerator.Model.DataAccess
             catch (Exception exception)
             {
                 log.Error(string.Format("Unable to map vulnerability to CCI \"{0}\".", sqliteCommand.Parameters["cci"].Value.ToString()));
-                log.Debug("Exception details: " + exception);
-            }
-        }
-
-        public void MapVulnerabilityToSource(SQLiteCommand sqliteCommand, int vulnerabilityId, int sourceId)
-        {
-            try
-            {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_ID", vulnerabilityId));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Source_ID", sourceId));
-                SQLiteCommand clonedCommand = (SQLiteCommand)sqliteCommand.Clone();
-                clonedCommand.CommandText = Properties.Resources.VerifyVulnerabilitySourceMapping;
-                sqliteCommand.CommandText = Properties.Resources.MapVulnerabilityToSource;
-                using (SQLiteDataReader sqliteDataReader = clonedCommand.ExecuteReader())
-                {
-                    if (!sqliteDataReader.HasRows)
-                    { sqliteCommand.ExecuteNonQuery(); }
-                }
-                sqliteCommand.Parameters.Clear();
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to map vulnerability to source.");
                 log.Debug("Exception details: " + exception);
             }
         }

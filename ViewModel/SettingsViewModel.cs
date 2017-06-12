@@ -219,7 +219,6 @@ namespace Vulnerator.ViewModel
                     }
                     guiFeedback.SetFields("Awaiting user input", "Collapsed", true);
                     Properties.Settings.Default.StigLibraryIngestDate = DateTime.Now.ToLongDateString();
-                    Properties.Settings.Default.StigLibraryDated = "False";
                     Messenger.Default.Send(guiFeedback);
                     StigLibraryLocation = string.Empty;
                     ProgressVisibility = "Collapsed";

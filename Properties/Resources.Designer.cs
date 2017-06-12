@@ -169,15 +169,6 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Vulnerabilities_VulnerabilitySources VALUES (@Vulnerability_ID, @Vulnerability_Source_ID);.
-        /// </summary>
-        internal static string MapVulnerabilityToSource {
-            get {
-                return ResourceManager.GetString("MapVulnerabilityToSource", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = @Finding_Type;.
         /// </summary>
         internal static string SelectFindingTypeId {
@@ -259,7 +250,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT Vulnerability_ID, Release FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;.
+        ///   Looks up a localized string similar to SELECT Vulnerability_ID, Release FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Source_ID = @Vulnerability_Source_ID;.
         /// </summary>
         internal static string VerifyVulnerabilityChange {
             get {
@@ -273,15 +264,6 @@ namespace Vulnerator.Properties {
         internal static string VerifyVulnerabilitySourceChange {
             get {
                 return ResourceManager.GetString("VerifyVulnerabilitySourceChange", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT * FROM Vulnerabilities_VulnerabilitySources WHERE Vulnerability_ID = @Vulnerability_ID AND Vulnerability_Source_ID = @Vulnerability_Source_ID;.
-        /// </summary>
-        internal static string VerifyVulnerabilitySourceMapping {
-            get {
-                return ResourceManager.GetString("VerifyVulnerabilitySourceMapping", resourceCulture);
             }
         }
     }

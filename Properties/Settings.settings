@@ -47,8 +47,5 @@
     <Setting Name="DropIncompleteCklfiles" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="StigLibraryDated" Type="System.String" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
   </Settings>
 </SettingsFile>
