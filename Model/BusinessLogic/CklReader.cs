@@ -593,7 +593,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 if (!sqliteDataReader.HasRows)
                                 {
                                     lastVulnerabilityId = databaseInterface.InsertVulnerability(sqliteCommand, lastVulnerabilitySourceId);
-                                    databaseInterface.MapVulnerbailityToCCI(sqliteCommand, ccis, lastVulnerabilityId);
+                                    databaseInterface.MapVulnerabilityToCCI(sqliteCommand, ccis, lastVulnerabilityId);
                                 }
                                 while (sqliteDataReader.Read())
                                 {
@@ -601,7 +601,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     {
                                         sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_ID", sqliteDataReader["Vulnerability_ID"].ToString()));
                                         lastVulnerabilityId = databaseInterface.UpdateVulnerability(sqliteCommand);
-                                        databaseInterface.MapVulnerbailityToCCI(sqliteCommand, ccis, lastVulnerabilityId);
+                                        databaseInterface.MapVulnerabilityToCCI(sqliteCommand, ccis, lastVulnerabilityId);
                                         deltaAnalysisRequired = true;
                                     }
                                 }
@@ -610,7 +610,7 @@ namespace Vulnerator.Model.BusinessLogic
                         else
                         {
                             lastVulnerabilityId = databaseInterface.InsertVulnerability(sqliteCommand, lastVulnerabilitySourceId);
-                            databaseInterface.MapVulnerbailityToCCI(sqliteCommand, ccis, lastVulnerabilityId);
+                            databaseInterface.MapVulnerabilityToCCI(sqliteCommand, ccis, lastVulnerabilityId);
                         }
                         ParseUniqueFindingData(sqliteCommand, xmlReader);
                         return;

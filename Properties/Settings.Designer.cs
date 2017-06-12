@@ -202,5 +202,17 @@ namespace Vulnerator.Properties {
                 this["DropIncompleteCklfiles"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public string StigLibraryDated {
+            get {
+                return ((string)(this["StigLibraryDated"]));
+            }
+            set {
+                this["StigLibraryDated"] = value;
+            }
+        }
     }
 }
