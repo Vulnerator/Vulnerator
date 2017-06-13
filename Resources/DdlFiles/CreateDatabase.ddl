@@ -1217,6 +1217,7 @@ CREATE TABLE VulnerabilitesCCIs
 	(
 	 Vulnerability_ID INTEGER NOT NULL , 
 	 CCI_ID INTEGER NOT NULL ,
+	 PRIMARY KEY (Vulnerability_ID, CCI_ID) ,
 	 FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
 	 FOREIGN KEY (CCI_ID) REFERENCES CCIs(CCI_ID)
 	);
@@ -1254,12 +1255,10 @@ CREATE TABLE Vulnerabilities
 	 Potential_Impacts NVARCHAR (2000),
 	 Third_Party_Tools NVARCHAR (500),
 	 Security_Override_Guidance NVARCHAR (2000) ,
-	 Overflow NVARCHAR (2000) ,
-	 Vulnerability_Source_ID INTEGER NOT NULL ,
-	 FOREIGN KEY (Vulnerability_Source_ID) REFERENCES VulnerabilitySources(Vulnerability_Source_ID)
+	 Overflow NVARCHAR (2000)
 	);
 CREATE INDEX Vulnerability_Index ON Vulnerabilities(Vulnerability_ID);
-CREATE TABLE Vulnerbailities_RoleResponsibilities
+CREATE TABLE Vulnerabilities_RoleResponsibilities
 	(
 	  Vulnerability_ID INTEGER NOT NULL ,
 	  Role_ID INTEGER NOT NULL ,
@@ -1270,6 +1269,7 @@ CREATE TABLE Vulnerabilities_VulnerabilitySources
 	(
 	  Vulnerability_ID INTEGER NOT NULL , 
 	  Vulnerability_Source_ID INTEGER NOT NULL ,
+	  PRIMARY KEY (Vulnerability_ID, Vulnerability_Source_ID) ,
 	  FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
 	  FOREIGN KEY (Vulnerability_Source_ID) REFERENCES VulnerabilitySources(Vulnerability_Source_ID)
 	);

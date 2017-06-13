@@ -155,6 +155,9 @@
   <data name="MapVulnerabilityToIAControl" xml:space="preserve">
     <value>INSERT OR REPLACE INTO Vulnerabilities_IA_Controls VALUES (@Vulnerablity_ID, (SELECT IA_Control_ID FROM IA_Controls WHERE IA_Control_Number = @IA_Control));</value>
   </data>
+  <data name="MapVulnerabilityToSource" xml:space="preserve">
+    <value>INSERT INTO Vulnerabilities_VulnerabilitySources VALUES (@Vulnerability_ID, @Vulnerability_Source_ID);</value>
+  </data>
   <data name="SelectFindingTypeId" xml:space="preserve">
     <value>SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = @Finding_Type;</value>
   </data>
@@ -183,7 +186,7 @@
     <value>UPDATE VulnerabilitySources SET  WHERE Vulnerability_Source_ID = @Vulnerability_Source_ID;</value>
   </data>
   <data name="VerifyVulnerabilityChange" xml:space="preserve">
-    <value>SELECT Vulnerability_ID, Release FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Source_ID = @Vulnerability_Source_ID;</value>
+    <value>SELECT Vulnerability_ID, Release FROM Vulnerabilities_VulnerabilitySources NATURAL JOIN Vulnerabilities NATURAL JOIN VulnerabilitySources WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Source_ID = @Vulnerability_Source_ID;</value>
   </data>
   <data name="VerifyVulnerabilitySourceChange" xml:space="preserve">
     <value>SELECT Vulnerability_Source_ID, Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Secondary_Identifier = @Source_Secondary_Identifier;</value>
