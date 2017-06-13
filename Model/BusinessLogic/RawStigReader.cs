@@ -87,7 +87,9 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "title":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Name", ObtainCurrentNodeValue(xmlReader)));
+                                    string sourceName = ObtainCurrentNodeValue(xmlReader).Replace('_', ' ');
+                                    sourceName = SanitizeSourceName(sourceName);
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Name", sourceName));
                                     break;
                                 }
                             case "description":
@@ -487,6 +489,37 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 log.Error("Unable to convert impact to raw risk.");
                 throw exception;
+            }
+        }
+
+        private string SanitizeSourceName(string sourceName)
+        {
+            try
+            {
+                bool isSRG = sourceName.Contains("SRG") || sourceName.Contains("Security Requirement") ? true : false;
+                string value = sourceName;
+                string[] replaceArray = new string[] { "STIG", "Security", "Technical", "Implementation", "Guide", "(", ")", "  " };
+                foreach (string item in replaceArray)
+                {
+                    if (item.Equals("  "))
+                    { value = value.Replace(item, " "); }
+                    else
+                    { value = value.Replace(item, ""); }
+                }
+                value = value.Trim();
+                if (!isSRG)
+                {
+                    value = string.Format("{0} Security Technical Implementation Guide", value);
+                    return value;
+                }
+                value = string.Format("{0} Security Requirements Guide", value);
+                return value;
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to sanitize source name \"{0}\".", sourceName));
+                log.Debug("Exception details:", exception);
+                return sourceName;
             }
         }
 

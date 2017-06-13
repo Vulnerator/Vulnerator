@@ -1290,7 +1290,7 @@ CREATE TABLE VulnerabilitySources
 	(
 	 Vulnerability_Source_ID INTEGER PRIMARY KEY , 
 	 Source_Name NVARCHAR (100) UNIQUE ON CONFLICT IGNORE NOT NULL, 
-	 Source_Secondary_Identifier NVARCHAR (100) UNIQUE ON CONFLICT IGNORE,
+	 Source_Secondary_Identifier NVARCHAR (100),
 	 Vulnerability_Source_File_Name NVARCHAR (500) ,
 	 Source_Description NVARCHAR (2000) ,
 	 Source_Version NVARCHAR (25) NOT NULL, 
