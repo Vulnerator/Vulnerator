@@ -31,9 +31,10 @@ namespace Vulnerator.Model.DataAccess
                     { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(34, parameter.ParameterName + ", "); }
                 }
                 sqliteCommand.ExecuteNonQuery();
+                sqliteCommand.CommandText = Properties.Resources.SelectVulnerabilitySource;
+                int sourceRowId = int.Parse(sqliteCommand.ExecuteScalar().ToString());
                 sqliteCommand.Parameters.Clear();
-                sqliteCommand.CommandText = "SELECT last_insert_rowid();";
-                return int.Parse(sqliteCommand.ExecuteScalar().ToString());
+                return sourceRowId;
             }
             catch (Exception exception)
             {
@@ -88,9 +89,10 @@ namespace Vulnerator.Model.DataAccess
                     { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(29, parameter.ParameterName + ", "); }
                 }
                 sqliteCommand.ExecuteNonQuery();
+                sqliteCommand.CommandText = Properties.Resources.SelectVulnerability;
+                int vulnRowId = int.Parse(sqliteCommand.ExecuteScalar().ToString());
                 sqliteCommand.Parameters.Clear();
-                sqliteCommand.CommandText = "SELECT last_insert_rowid();";
-                return int.Parse(sqliteCommand.ExecuteScalar().ToString());
+                return vulnRowId;
             }
             catch (Exception exception)
             {
@@ -114,6 +116,7 @@ namespace Vulnerator.Model.DataAccess
                     { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, string.Format("{0} = @{0}, ", parameter.ParameterName)); }
 
                 }
+                sqliteCommand.CommandText = sqliteCommand.CommandText.Replace(",  ", " ");
                 sqliteCommand.ExecuteNonQuery();
                 int vulnerabilityId = int.Parse(sqliteCommand.Parameters["Vulnerability_ID"].Value.ToString());
                 sqliteCommand.Parameters.Clear();

@@ -223,6 +223,24 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;.
+        /// </summary>
+        internal static string SelectVulnerability {
+            get {
+                return ResourceManager.GetString("SelectVulnerability", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name;.
+        /// </summary>
+        internal static string SelectVulnerabilitySource {
+            get {
+                return ResourceManager.GetString("SelectVulnerabilitySource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to UPDATE UniqueFindings SET Finding_Details = @Finding_Details, Comments = @Comments, Severity_Override = @Severity_Override, Severity_Override_Justification = @Severity_Override_Justification, Last_Observed = @Last_Observed, Technology_Area = @Technology_Area, Web_DB_Site = @Web_DB_Site, Web_DB_Instance = @Web_DB_Instance, Finding_Source_File_ID = @Finding_Source_File_ID, Status = @Status, Approval_Status = @Approval_Status, Delta_Analysis_Required = @Delta_Analysis_Required, Tool_Generated_Output = @Tool_Ge [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string UpdateCklUniqueFinding {
@@ -268,7 +286,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT Vulnerability_Source_ID, Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Secondary_Identifier = @Source_Secondary_Identifier;.
+        ///   Looks up a localized string similar to SELECT Vulnerability_Source_ID, Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Name = @Source_Name;.
         /// </summary>
         internal static string VerifyVulnerabilitySourceChange {
             get {

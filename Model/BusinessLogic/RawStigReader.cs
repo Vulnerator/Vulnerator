@@ -26,9 +26,9 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                log.Info(string.Format("Begin ingestion of raw STIG file {0}", rawStig.FullName));
-                if (rawStig.Name.Contains("U_BlackBerry_Device_Service_v6.2_V1R1_manual-xccdf.xml"))
-                { Console.WriteLine("Last isue!"); }
+                log.Info(string.Format("Begin ingestion of raw STIG file {0}", rawStig.Name));
+                if (rawStig.Name.Contains("U_McAfee_MOVE3_0_Agentless_SVA_V1R3_Manual-xccdf.xml"))
+                { Console.WriteLine("Not Parsing"); }
                 if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
                 { DatabaseBuilder.sqliteConnection.Open(); }
                 using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
@@ -52,6 +52,8 @@ namespace Vulnerator.Model.BusinessLogic
                                         case "Group":
                                             {
                                                 ReadGroupNode(sqliteCommand, xmlReader);
+                                                if (!sourceUpdated)
+                                                { return; }
                                                 break;
                                             }
                                         default:
@@ -128,7 +130,7 @@ namespace Vulnerator.Model.BusinessLogic
                                             int readerRelease;
                                             bool readerVersionPopulated = int.TryParse(sqliteDataReader["Source_Version"].ToString(), out readerVersion);
                                             bool readerReleasePopulated = int.TryParse(sqliteDataReader["Source_Release"].ToString(), out readerRelease);
-                                            if (readerVersionPopulated && readerReleasePopulated && (commandVersion < readerVersion || commandRelease < readerRelease))
+                                            if (readerVersionPopulated && readerReleasePopulated && (commandVersion > readerVersion || commandRelease > readerRelease))
                                             {
                                                 lastVulnerabilitySourceId = int.Parse(sqliteDataReader["Vulnerability_Source_ID"].ToString());
                                                 databaseInterface.UpdateVulnerabilitySource(sqliteCommand, lastVulnerabilitySourceId);
@@ -201,6 +203,10 @@ namespace Vulnerator.Model.BusinessLogic
                                 {
                                     if (int.Parse(sqliteDataReader["Release"].ToString()) < int.Parse(sqliteCommand.Parameters["Release"].Value.ToString()))
                                     {
+                                        lastVulnerabilityId = int.Parse(sqliteDataReader["Vulnerability_ID"].ToString());
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_ID", lastVulnerabilityId));
+                                        if (sqliteCommand.Parameters.Contains("Vulnerability_Source_ID"))
+                                        { sqliteCommand.Parameters.Remove("Vulnerability_Source_ID"); }
                                         databaseInterface.UpdateVulnerability(sqliteCommand);
                                         databaseInterface.MapVulnerabilityToCCI(sqliteCommand, ccis, lastVulnerabilityId);
                                         updateRequired = true;
@@ -214,6 +220,7 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             lastVulnerabilityId = databaseInterface.InsertVulnerability(sqliteCommand, lastVulnerabilitySourceId);
                             databaseInterface.MapVulnerabilityToCCI(sqliteCommand, ccis, lastVulnerabilityId);
+                            databaseInterface.MapVulnerabilityToSource(sqliteCommand, lastVulnerabilityId, lastVulnerabilitySourceId);
                             updateRequired = true;
                         }
                         if (updateRequired)
@@ -223,7 +230,6 @@ namespace Vulnerator.Model.BusinessLogic
                             sqliteCommand.ExecuteNonQuery();
                             sqliteCommand.Parameters.Clear();
                         }
-                        databaseInterface.MapVulnerabilityToSource(sqliteCommand, lastVulnerabilityId, lastVulnerabilitySourceId);
                         return;
                     }
                 }
