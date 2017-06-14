@@ -132,7 +132,7 @@ namespace Vulnerator.Model.BusinessLogic
                                             int readerRelease;
                                             bool readerVersionPopulated = int.TryParse(sqliteDataReader["Source_Version"].ToString(), out readerVersion);
                                             bool readerReleasePopulated = int.TryParse(sqliteDataReader["Source_Release"].ToString(), out readerRelease);
-                                            if (readerVersionPopulated && readerReleasePopulated && (commandVersion > readerVersion || commandRelease > readerRelease))
+                                            if (commandVersion > readerVersion || commandRelease > readerRelease)
                                             {
                                                 lastVulnerabilitySourceId = int.Parse(sqliteDataReader["Vulnerability_Source_ID"].ToString());
                                                 databaseInterface.UpdateVulnerabilitySource(sqliteCommand, lastVulnerabilitySourceId);
@@ -498,7 +498,7 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 bool isSRG = sourceName.Contains("SRG") || sourceName.Contains("Security Requirement") ? true : false;
                 string value = sourceName;
-                string[] replaceArray = new string[] { "STIG", "Security", "Technical", "Implementation", "Guide", "(", ")", "  " };
+                string[] replaceArray = new string[] { "STIG", "Security", "Technical", "Implementation", "Guide", "(", ")", "Requirements", "SRG", "  " };
                 foreach (string item in replaceArray)
                 {
                     if (item.Equals("  "))

@@ -176,7 +176,9 @@ namespace Vulnerator.ViewModel
                     NoLibraryVisibility = "Collapsed";
                     IngestionErrorVisibility = "Collapsed";
                     IngestionSuccessVisibility = "Collapsed";
-                    
+
+                    ParseZip(StigLibraryLocation);
+
                     guiFeedback.SetFields("Awaiting user input", "Collapsed", true);
                     Properties.Settings.Default.StigLibraryIngestDate = DateTime.Now.ToLongDateString();
                     Messenger.Default.Send(guiFeedback);
@@ -204,62 +206,49 @@ namespace Vulnerator.ViewModel
         {
             using (ZipArchive zipArchive = ZipFile.Open(StigLibraryLocation, ZipArchiveMode.Read))
             {
-                ProgressBarMax = zipArchive.Entries.Count(x => x.Name.EndsWith("zip") && !x.Name.Contains("SCAP_1-1"));
-                foreach (ZipArchiveEntry entry in zipArchive.Entries.Where(x => x.Name.EndsWith("zip") && !x.Name.Contains("SCAP_1-1")))
+                ProgressBarMax = zipArchive.Entries.Count();
+                foreach (ZipArchiveEntry entry in zipArchive.Entries)
                 {
                     if (entry.Name.EndsWith("zip"))
                     {
-                        continue;
-                    }
-                    if (entry.Name.EndsWith("/"))
-                    {
-                        continue;
+                        if (!entry.Name.Contains("SCAP_1-1"))
+                        { ParseZip(entry); }
                     }
                     if (entry.Name.EndsWith("xml"))
                     {
-                        continue;
+                        guiFeedback.SetFields(string.Format("Ingesting {0}", entry.Name), "Visible", true);
+                        Messenger.Default.Send(guiFeedback);
+                        RawStigReader rawStigReader = new RawStigReader();
+                        rawStigReader.ReadRawStig(entry);
                     }
                     ProgressBarValue++;
                 }
             }
         }
 
-        private void ParseZip(ZipArchiveEntry entry)
+        private void ParseZip(ZipArchiveEntry zipArchiveEntry)
         {
-            using (Stream stream = entry.Open())
+            using (Stream stream = zipArchiveEntry.Open())
             {
-                using (ZipArchive innerZipArchive = new ZipArchive(stream, ZipArchiveMode.Read))
+                using (ZipArchive zipArchive = new ZipArchive(stream, ZipArchiveMode.Read))
                 {
-                    if (innerZipArchive.Entries.FirstOrDefault(x => x.Name.EndsWith("zip")) != null)
+                    foreach (ZipArchiveEntry entry in zipArchive.Entries)
                     {
-                        ZipArchiveEntry innerEntry = innerZipArchive.Entries.FirstOrDefault(x => x.Name.EndsWith("zip"));
-                        using (Stream secondStream = innerEntry.Open())
+                        if (entry.Name.EndsWith("zip"))
                         {
-                            using (ZipArchive tertiaryZipArchive = new ZipArchive(secondStream, ZipArchiveMode.Read))
-                            {
-                                ZipArchiveEntry rawStig = tertiaryZipArchive.Entries.FirstOrDefault(x => x.Name.EndsWith("xml"));}
-                                guiFeedback.SetFields(string.Format("Ingesting {0}", rawStig.Name), "Visible", true);
-                                Messenger.Default.Send(guiFeedback);
-                                RawStigReader rawStigReader = new RawStigReader();
-                                rawStigReader.ReadRawStig(rawStig);
-                            }
+                            if (!entry.Name.Contains("SCAP_1-1"))
+                            { ParseZip(entry); }
                         }
-                    }
-                    else
-                    {
-                        ZipArchiveEntry rawStig = innerZipArchive.Entries.FirstOrDefault(x => x.Name.EndsWith("xml"));
-                        guiFeedback.SetFields(string.Format("Ingesting {0}", rawStig.Name), "Visible", true);
-                        Messenger.Default.Send(guiFeedback);
-                        RawStigReader rawStigReader = new RawStigReader();
-                        rawStigReader.ReadRawStig(rawStig);
+                        if (entry.Name.EndsWith("xml"))
+                        {
+                            guiFeedback.SetFields(string.Format("Ingesting {0}", entry.Name), "Visible", true);
+                            Messenger.Default.Send(guiFeedback);
+                            RawStigReader rawStigReader = new RawStigReader();
+                            rawStigReader.ReadRawStig(entry);
+                        }
                     }
                 }
             }
-        }
-
-        private void ParseFolder(string folderName)
-        {
-
         }
     }
 }
