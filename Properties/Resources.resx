@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="InsertAcasDiscoveredSoftware" xml:space="preserve">
+    <value>INSERT INTO Software (Software_ID, Discovered_Software_Name, Displayed_Software_Name, Is_OS_Or_Firmware) VALUES (NULL, @Discovered_Software_Name, @Displayed_Software_Name, @Is_OS_Or_Firmware);</value>
+  </data>
   <data name="InsertCklUniqueFinding" xml:space="preserve">
     <value>INSERT INTO UniqueFindings (Unique_Finding_ID, Comments, Finding_Details, First_Discovered, Last_Observed, Approval_Status, Delta_Analysis_Required, Finding_Type_ID, Finding_Source_File_ID, Status, Vulnerability_ID, Hardware_ID, Severity_Override, Severity_Override_Justification, Technology_Area, Web_DB_Site, Web_DB_Instance, Classification, Tool_Generated_Output) VALUES (NULL, @Comments, @Finding_Details, @First_Discovered, @Last_Observed, @Approval_Status, @Delta_Analysis_Required, @Finding_Type_ID, @Finding_Source_File_ID, @Status, @Vulnerability_ID, @Hardware_ID, @Severity_Override, @Severity_Override_Justification, @Technology_Area, @Web_DB_Site, @Web_DB_Instance, @Classification, @Tool_Generated_Output);</value>
   </data>
@@ -124,7 +127,7 @@
     <value>INSERT INTO Groups VALUES (NULL, @Group_Name, 'False', NULL, NULL);</value>
   </data>
   <data name="InsertHardware" xml:space="preserve">
-    <value>INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,NULL);</value>
+    <value>INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@NetBios,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,NULL);</value>
     <comment>Insert Hardware SQLite command</comment>
   </data>
   <data name="InsertIpAddress" xml:space="preserve">
@@ -175,6 +178,9 @@
   </data>
   <data name="SelectHardware" xml:space="preserve">
     <value>SELECT Hardware_ID FROM Hardware WHERE Host_Name = @Host_Name;</value>
+  </data>
+  <data name="SelectSoftware" xml:space="preserve">
+    <value>SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name;</value>
   </data>
   <data name="SelectUniqueFinding" xml:space="preserve">
     <value>SELECT Unique_Finding_ID FROM UniqueFindings WHERE Vulnerability_ID = @Vulnerability_ID AND Hardware_ID = @Hardware_ID;</value>

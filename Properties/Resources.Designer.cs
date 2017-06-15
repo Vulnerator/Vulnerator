@@ -61,6 +61,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO Software (Software_ID, Discovered_Software_Name, Displayed_Software_Name, Is_OS_Or_Firmware) VALUES (NULL, @Discovered_Software_Name, @Displayed_Software_Name, @Is_OS_Or_Firmware);.
+        /// </summary>
+        internal static string InsertAcasDiscoveredSoftware {
+            get {
+                return ResourceManager.GetString("InsertAcasDiscoveredSoftware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO UniqueFindings (Unique_Finding_ID, Comments, Finding_Details, First_Discovered, Last_Observed, Approval_Status, Delta_Analysis_Required, Finding_Type_ID, Finding_Source_File_ID, Status, Vulnerability_ID, Hardware_ID, Severity_Override, Severity_Override_Justification, Technology_Area, Web_DB_Site, Web_DB_Instance, Classification, Tool_Generated_Output) VALUES (NULL, @Comments, @Finding_Details, @First_Discovered, @Last_Observed, @Approval_Status, @Delta_Analysis_Required, @Finding_Type_ID, @Find [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InsertCklUniqueFinding {
@@ -79,7 +88,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,NULL);.
+        ///   Looks up a localized string similar to INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@NetBios,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,NULL);.
         /// </summary>
         internal static string InsertHardware {
             get {
@@ -228,6 +237,15 @@ namespace Vulnerator.Properties {
         internal static string SelectHardware {
             get {
                 return ResourceManager.GetString("SelectHardware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name;.
+        /// </summary>
+        internal static string SelectSoftware {
+            get {
+                return ResourceManager.GetString("SelectSoftware", resourceCulture);
             }
         }
         

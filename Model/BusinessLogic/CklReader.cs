@@ -247,6 +247,7 @@ namespace Vulnerator.Model.BusinessLogic
                 }
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Is_Virtual_Server", "False"));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("NIAP_Level", string.Empty));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("NetBIOS", string.Empty));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Manufacturer", string.Empty));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("ModelNumber", string.Empty));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Is_IA_Enabled", string.Empty));
@@ -715,7 +716,7 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Technology_Area", techArea));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Web_DB_Site", webDbSite));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Web_DB_Instance", webDbInstance));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Last_Observed", DateTime.Now.ToLongDateString()));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Last_Observed", DateTime.Now.ToShortDateString()));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Source_File_ID", sourceFilePrimaryKey));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Delta_Analysis_Required", deltaAnalysisRequired.ToString()));
                 SQLiteCommand clonedCommand = (SQLiteCommand)sqliteCommand.Clone();
@@ -750,7 +751,7 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.CommandText = Properties.Resources.InsertCklUniqueFinding;
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Hardware_ID", hardwarePrimaryKey));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_ID", lastVulnerabilityId));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("First_Discovered", DateTime.Now.ToLongDateString()));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("First_Discovered", DateTime.Now.ToShortDateString()));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Classification", classification));
                 sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.Parameters.Clear();

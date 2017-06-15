@@ -457,6 +457,7 @@ CREATE TABLE Hardware
 	 Hardware_ID INTEGER PRIMARY KEY , 
 	 Host_Name NVARCHAR (50) UNIQUE ON CONFLICT IGNORE, 
 	 FQDN NVARCHAR (100),
+	 NetBIOS NVARCHAR (100) ,
 	 Is_Virtual_Server NVARCHAR (5) , 
 	 NIAP_Level NVARCHAR (25) , 
 	 Manufacturer NVARCHAR (25) , 
@@ -952,7 +953,8 @@ CREATE TABLE Sensors
 CREATE TABLE Software 
 	(
 	 Software_ID INTEGER PRIMARY KEY , 
-	 Software_Name NVARCHAR (50) NOT NULL , 
+	 Discovered_Software_Name NVARCHAR (50) NOT NULL UNIQUE ON CONFLICT IGNORE, 
+	 Displayed_Software_Name NVARCHAR (100) NOT NULL ,
 	 Software_Acronym NVARCHAR (25) , 
 	 Software_Version NVARCHAR (25) , 
 	 Function NVARCHAR (500) , 
