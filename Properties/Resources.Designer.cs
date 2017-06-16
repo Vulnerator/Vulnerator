@@ -142,6 +142,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO SoftwareHardware (Software_ID, Hardware_ID) VALUES (@Software_ID, @Hardware_ID);.
+        /// </summary>
+        internal static string MapHardwareToSoftware {
+            get {
+                return ResourceManager.GetString("MapHardwareToSoftware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO HardwareIpAddresses VALUES (@Hardware_ID, @IP_Address_ID);.
         /// </summary>
         internal static string MapIpToHardware {

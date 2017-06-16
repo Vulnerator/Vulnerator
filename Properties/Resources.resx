@@ -146,6 +146,9 @@
     <value>INSERT INTO VulnerabilitySources () VALUES ();</value>
     <comment>Roughed out SQLite command to insert vulnerability source into the  VulnerabilitySources</comment>
   </data>
+  <data name="MapHardwareToSoftware" xml:space="preserve">
+    <value>INSERT INTO SoftwareHardware (Software_ID, Hardware_ID) VALUES (@Software_ID, @Hardware_ID);</value>
+  </data>
   <data name="MapIpToHardware" xml:space="preserve">
     <value>INSERT INTO HardwareIpAddresses VALUES (@Hardware_ID, @IP_Address_ID);</value>
   </data>
