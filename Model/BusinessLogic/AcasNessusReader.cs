@@ -369,6 +369,22 @@ namespace Vulnerator.Model.BusinessLogic
                                 {
                                     break;
                                 }
+                            case "cvss_base_score":
+                                {
+                                    break;
+                                }
+                            case "cvss_temporal_score":
+                                {
+                                    break;
+                                }
+                            case "cvss_vector":
+                                {
+                                    break;
+                                }
+                            case "cvss_temporal_vector":
+                                {
+                                    break;
+                                }
                             default:
                                 { break; }
                         }
