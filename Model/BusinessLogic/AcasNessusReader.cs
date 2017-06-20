@@ -32,6 +32,7 @@ namespace Vulnerator.Model.BusinessLogic
         private List<string> xrefs = new List<string>();
         private string[] vulnerabilityColumns = SetColumnArrays("Vulnerabilities");
         private string[] uniqueFindingsColumns = SetColumnArrays("UniqueFindings");
+
         /// <summary>
         /// Reads *.nessus files exported from within ACAS and writes the results to the appropriate DataTables.
         /// </summary>
