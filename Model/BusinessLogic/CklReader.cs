@@ -939,6 +939,34 @@ namespace Vulnerator.Model.BusinessLogic
             deltaAnalysisRequired = false;
     }
 
+        private static string[] SetColumnArrays(string tableName)
+        {
+            try
+            {
+                switch (tableName)
+                {
+
+                    case "UniqueFindings":
+                        {
+                            string[] value = new string[]
+                            {
+                                "Tool_Generated_Output", "Severity", "First_Discovered", "Last_Observed", "Approval_Status", "Delta_Analysis_Required",
+                                "Finding_Type_ID", "Source_File_ID", "Status", "Vulnerability_ID", "Unique_Finding_ID"
+                            };
+                            return value;
+                        }
+                    default:
+                        { throw new Exception("Invalid table name."); }
+                }
+
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format(""));
+                throw exception;
+            }
+        }
+
         public Object.File ObtainIdentifiers(Object.File file)
         {
             try

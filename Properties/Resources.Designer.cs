@@ -70,6 +70,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string InsertAcasUniqueFinding {
+            get {
+                return ResourceManager.GetString("InsertAcasUniqueFinding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO UniqueFindings (Unique_Finding_ID, Comments, Finding_Details, First_Discovered, Last_Observed, Approval_Status, Delta_Analysis_Required, Finding_Type_ID, Finding_Source_File_ID, Status, Vulnerability_ID, Hardware_ID, Severity_Override, Severity_Override_Justification, Technology_Area, Web_DB_Site, Web_DB_Instance, Classification, Tool_Generated_Output) VALUES (NULL, @Comments, @Finding_Details, @First_Discovered, @Last_Observed, @Approval_Status, @Delta_Analysis_Required, @Finding_Type_ID, @Find [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InsertCklUniqueFinding {
@@ -115,6 +124,24 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO PPS (NULL, @Port, @Protocol);.
+        /// </summary>
+        internal static string InsertPort {
+            get {
+                return ResourceManager.GetString("InsertPort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO UniqueFindings () VALUES ();.
+        /// </summary>
+        internal static string InsertUniqueFinding {
+            get {
+                return ResourceManager.GetString("InsertUniqueFinding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO UniqueFindingsSourceFiles VALUES (NULL, @Finding_Source_File_Name);.
         /// </summary>
         internal static string InsertUniqueFindingSource {
@@ -129,6 +156,15 @@ namespace Vulnerator.Properties {
         internal static string InsertVulnerability {
             get {
                 return ResourceManager.GetString("InsertVulnerability", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO VulnerabilityReferences (NULL, @Reference, @Reference_Type);.
+        /// </summary>
+        internal static string InsertVulnerabilityReference {
+            get {
+                return ResourceManager.GetString("InsertVulnerabilityReference", resourceCulture);
             }
         }
         
@@ -165,6 +201,24 @@ namespace Vulnerator.Properties {
         internal static string MapMacToHardware {
             get {
                 return ResourceManager.GetString("MapMacToHardware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO Hardware_PPS (NULL, @Hardware_ID, @PPS_ID);.
+        /// </summary>
+        internal static string MapPortToHardware {
+            get {
+                return ResourceManager.GetString("MapPortToHardware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO Vulnerabilities_VulnerabilityReferences (@Vulnerability_ID, @Reference_ID);.
+        /// </summary>
+        internal static string MapReferenceToVulnerability {
+            get {
+                return ResourceManager.GetString("MapReferenceToVulnerability", resourceCulture);
             }
         }
         
@@ -250,6 +304,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT PPS_ID FROM PPS WHERE Port = @Port AND Protocol = @Protocol;.
+        /// </summary>
+        internal static string SelectPort {
+            get {
+                return ResourceManager.GetString("SelectPort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name;.
         /// </summary>
         internal static string SelectSoftware {
@@ -291,6 +354,15 @@ namespace Vulnerator.Properties {
         internal static string SelectVulnerabilitySource {
             get {
                 return ResourceManager.GetString("SelectVulnerabilitySource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE UniqueFindings SET Tool_Generated_Output = @Tool_Generated_Output, Last_Observed = @Last_Observed WHERE Unique_Finding_ID = @Unique_Finding_ID;.
+        /// </summary>
+        internal static string UpdateAcasUniqueFinding {
+            get {
+                return ResourceManager.GetString("UpdateAcasUniqueFinding", resourceCulture);
             }
         }
         

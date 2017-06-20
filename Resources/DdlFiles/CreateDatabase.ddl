@@ -1292,7 +1292,7 @@ CREATE TABLE VulnerabilityReferences
 	(
 		Reference_ID INTEGER PRIMARY KEY,
 		Reference NVARCHAR (50) UNIQUE ON CONFLICT IGNORE,
-		Reference_Type NVARCHAR (25)
+		Reference_Type NVARCHAR (10)
 	);
 CREATE TABLE VulnerabilitySources 
 	(

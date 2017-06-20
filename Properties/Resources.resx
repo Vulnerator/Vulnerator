@@ -120,6 +120,9 @@
   <data name="InsertAcasDiscoveredSoftware" xml:space="preserve">
     <value>INSERT INTO Software (Software_ID, Discovered_Software_Name, Displayed_Software_Name, Is_OS_Or_Firmware) VALUES (NULL, @Discovered_Software_Name, @Displayed_Software_Name, @Is_OS_Or_Firmware);</value>
   </data>
+  <data name="InsertAcasUniqueFinding" xml:space="preserve">
+    <value />
+  </data>
   <data name="InsertCklUniqueFinding" xml:space="preserve">
     <value>INSERT INTO UniqueFindings (Unique_Finding_ID, Comments, Finding_Details, First_Discovered, Last_Observed, Approval_Status, Delta_Analysis_Required, Finding_Type_ID, Finding_Source_File_ID, Status, Vulnerability_ID, Hardware_ID, Severity_Override, Severity_Override_Justification, Technology_Area, Web_DB_Site, Web_DB_Instance, Classification, Tool_Generated_Output) VALUES (NULL, @Comments, @Finding_Details, @First_Discovered, @Last_Observed, @Approval_Status, @Delta_Analysis_Required, @Finding_Type_ID, @Finding_Source_File_ID, @Status, @Vulnerability_ID, @Hardware_ID, @Severity_Override, @Severity_Override_Justification, @Technology_Area, @Web_DB_Site, @Web_DB_Instance, @Classification, @Tool_Generated_Output);</value>
   </data>
@@ -136,11 +139,20 @@
   <data name="InsertMacAddress" xml:space="preserve">
     <value>INSERT INTO MAC_Addresses VALUES (NULL, @MAC_Address);</value>
   </data>
+  <data name="InsertPort" xml:space="preserve">
+    <value>INSERT INTO PPS (NULL, @Port, @Protocol);</value>
+  </data>
+  <data name="InsertUniqueFinding" xml:space="preserve">
+    <value>INSERT INTO UniqueFindings () VALUES ();</value>
+  </data>
   <data name="InsertUniqueFindingSource" xml:space="preserve">
     <value>INSERT INTO UniqueFindingsSourceFiles VALUES (NULL, @Finding_Source_File_Name);</value>
   </data>
   <data name="InsertVulnerability" xml:space="preserve">
     <value>INSERT INTO Vulnerabilities () VALUES ();</value>
+  </data>
+  <data name="InsertVulnerabilityReference" xml:space="preserve">
+    <value>INSERT INTO VulnerabilityReferences (NULL, @Reference, @Reference_Type);</value>
   </data>
   <data name="InsertVulnerabilitySource" xml:space="preserve">
     <value>INSERT INTO VulnerabilitySources () VALUES ();</value>
@@ -154,6 +166,12 @@
   </data>
   <data name="MapMacToHardware" xml:space="preserve">
     <value>INSERT INTO HardwareMacAddresses VALUES (@Hardware_ID, @MAC_Address_ID);</value>
+  </data>
+  <data name="MapPortToHardware" xml:space="preserve">
+    <value>INSERT INTO Hardware_PPS (NULL, @Hardware_ID, @PPS_ID);</value>
+  </data>
+  <data name="MapReferenceToVulnerability" xml:space="preserve">
+    <value>INSERT INTO Vulnerabilities_VulnerabilityReferences (@Vulnerability_ID, @Reference_ID);</value>
   </data>
   <data name="MapVulnerabilityToCci" xml:space="preserve">
     <value>INSERT OR REPLACE INTO VulnerabilitesCCIs VALUES (@Vulnerability_ID, (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI));</value>
@@ -182,6 +200,9 @@
   <data name="SelectHardware" xml:space="preserve">
     <value>SELECT Hardware_ID FROM Hardware WHERE Host_Name = @Host_Name;</value>
   </data>
+  <data name="SelectPort" xml:space="preserve">
+    <value>SELECT PPS_ID FROM PPS WHERE Port = @Port AND Protocol = @Protocol;</value>
+  </data>
   <data name="SelectSoftware" xml:space="preserve">
     <value>SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name;</value>
   </data>
@@ -196,6 +217,9 @@
   </data>
   <data name="SelectVulnerabilitySource" xml:space="preserve">
     <value>SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name;</value>
+  </data>
+  <data name="UpdateAcasUniqueFinding" xml:space="preserve">
+    <value>UPDATE UniqueFindings SET Tool_Generated_Output = @Tool_Generated_Output, Last_Observed = @Last_Observed WHERE Unique_Finding_ID = @Unique_Finding_ID;</value>
   </data>
   <data name="UpdateCklUniqueFinding" xml:space="preserve">
     <value>UPDATE UniqueFindings SET Finding_Details = @Finding_Details, Comments = @Comments, Severity_Override = @Severity_Override, Severity_Override_Justification = @Severity_Override_Justification, Last_Observed = @Last_Observed, Technology_Area = @Technology_Area, Web_DB_Site = @Web_DB_Site, Web_DB_Instance = @Web_DB_Instance, Finding_Source_File_ID = @Finding_Source_File_ID, Status = @Status, Approval_Status = @Approval_Status, Delta_Analysis_Required = @Delta_Analysis_Required, Tool_Generated_Output = @Tool_Generated_Output WHERE Unique_Finding_ID = @Unique_Finding_ID;</value>
