@@ -1278,7 +1278,7 @@ CREATE TABLE Vulnerabilities_VulnerabilitySources
 	(
 	  Vulnerability_ID INTEGER NOT NULL , 
 	  Vulnerability_Source_ID INTEGER NOT NULL ,
-	  PRIMARY KEY (Vulnerability_ID, Vulnerability_Source_ID) ,
+	  PRIMARY KEY (Vulnerability_ID, Vulnerability_Source_ID) ON CONFLICT IGNORE,
 	  FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
 	  FOREIGN KEY (Vulnerability_Source_ID) REFERENCES VulnerabilitySources(Vulnerability_Source_ID)
 	);
