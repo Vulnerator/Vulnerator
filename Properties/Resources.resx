@@ -140,7 +140,7 @@
     <value>INSERT INTO MAC_Addresses VALUES (NULL, @MAC_Address);</value>
   </data>
   <data name="InsertPort" xml:space="preserve">
-    <value>INSERT INTO PPS (NULL, @Port, @Protocol);</value>
+    <value>INSERT INTO PPS VALUES (NULL, @Port, @Protocol);</value>
   </data>
   <data name="InsertUniqueFinding" xml:space="preserve">
     <value>INSERT INTO UniqueFindings () VALUES ();</value>
@@ -152,7 +152,7 @@
     <value>INSERT INTO Vulnerabilities () VALUES ();</value>
   </data>
   <data name="InsertVulnerabilityReference" xml:space="preserve">
-    <value>INSERT INTO VulnerabilityReferences (NULL, @Reference, @Reference_Type);</value>
+    <value>INSERT INTO VulnerabilityReferences VALUES (NULL, @Reference, @Reference_Type);</value>
   </data>
   <data name="InsertVulnerabilitySource" xml:space="preserve">
     <value>INSERT INTO VulnerabilitySources () VALUES ();</value>
@@ -168,7 +168,7 @@
     <value>INSERT INTO HardwareMacAddresses VALUES (@Hardware_ID, @MAC_Address_ID);</value>
   </data>
   <data name="MapPortToHardware" xml:space="preserve">
-    <value>INSERT INTO Hardware_PPS (NULL, @Hardware_ID, @PPS_ID);</value>
+    <value>INSERT INTO Hardware_PPS (Hardware_ID, PPS_ID) VALUES (@Hardware_ID, @PPS_ID);</value>
   </data>
   <data name="MapReferenceToVulnerability" xml:space="preserve">
     <value>INSERT INTO Vulnerabilities_VulnerabilityReferences (@Vulnerability_ID, @Reference_ID);</value>
@@ -191,6 +191,9 @@
   <data name="RegexMAC" xml:space="preserve">
     <value>^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$</value>
   </data>
+  <data name="SelectAcasVulnerabilitySource" xml:space="preserve">
+    <value>SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release;</value>
+  </data>
   <data name="SelectFindingTypeId" xml:space="preserve">
     <value>SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = @Finding_Type;</value>
   </data>
@@ -199,6 +202,12 @@
   </data>
   <data name="SelectHardware" xml:space="preserve">
     <value>SELECT Hardware_ID FROM Hardware WHERE Host_Name = @Host_Name;</value>
+  </data>
+  <data name="SelectIpAddress" xml:space="preserve">
+    <value>SELECT IP_Address_ID FROM IP_Addresses WHERE IP_Address = @IP_Address;</value>
+  </data>
+  <data name="SelectMacAddress" xml:space="preserve">
+    <value>SELECT MAC_Address_ID FROM MAC_Addresses WHERE MAC_Address = @MAC_Address;</value>
   </data>
   <data name="SelectPort" xml:space="preserve">
     <value>SELECT PPS_ID FROM PPS WHERE Port = @Port AND Protocol = @Protocol;</value>
@@ -214,6 +223,9 @@
   </data>
   <data name="SelectVulnerability" xml:space="preserve">
     <value>SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;</value>
+  </data>
+  <data name="SelectVulnerabilityReference" xml:space="preserve">
+    <value>SELECT Reference_ID FROM VulnerabilityReferences WHERE Reference = @Reference AND Reference_Type = @Reference_Type;</value>
   </data>
   <data name="SelectVulnerabilitySource" xml:space="preserve">
     <value>SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name;</value>

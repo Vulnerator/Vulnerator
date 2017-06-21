@@ -124,7 +124,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO PPS (NULL, @Port, @Protocol);.
+        ///   Looks up a localized string similar to INSERT INTO PPS VALUES (NULL, @Port, @Protocol);.
         /// </summary>
         internal static string InsertPort {
             get {
@@ -160,7 +160,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO VulnerabilityReferences (NULL, @Reference, @Reference_Type);.
+        ///   Looks up a localized string similar to INSERT INTO VulnerabilityReferences VALUES (NULL, @Reference, @Reference_Type);.
         /// </summary>
         internal static string InsertVulnerabilityReference {
             get {
@@ -205,7 +205,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Hardware_PPS (NULL, @Hardware_ID, @PPS_ID);.
+        ///   Looks up a localized string similar to INSERT INTO Hardware_PPS (Hardware_ID, PPS_ID) VALUES (@Hardware_ID, @PPS_ID);.
         /// </summary>
         internal static string MapPortToHardware {
             get {
@@ -277,6 +277,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release;.
+        /// </summary>
+        internal static string SelectAcasVulnerabilitySource {
+            get {
+                return ResourceManager.GetString("SelectAcasVulnerabilitySource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = @Finding_Type;.
         /// </summary>
         internal static string SelectFindingTypeId {
@@ -300,6 +309,24 @@ namespace Vulnerator.Properties {
         internal static string SelectHardware {
             get {
                 return ResourceManager.GetString("SelectHardware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT IP_Address_ID FROM IP_Addresses WHERE IP_Address = @IP_Address;.
+        /// </summary>
+        internal static string SelectIpAddress {
+            get {
+                return ResourceManager.GetString("SelectIpAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT MAC_Address_ID FROM MAC_Addresses WHERE MAC_Address = @MAC_Address;.
+        /// </summary>
+        internal static string SelectMacAddress {
+            get {
+                return ResourceManager.GetString("SelectMacAddress", resourceCulture);
             }
         }
         
@@ -345,6 +372,15 @@ namespace Vulnerator.Properties {
         internal static string SelectVulnerability {
             get {
                 return ResourceManager.GetString("SelectVulnerability", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT Reference_ID FROM VulnerabilityReferences WHERE Reference = @Reference AND Reference_Type = @Reference_Type;.
+        /// </summary>
+        internal static string SelectVulnerabilityReference {
+            get {
+                return ResourceManager.GetString("SelectVulnerabilityReference", resourceCulture);
             }
         }
         

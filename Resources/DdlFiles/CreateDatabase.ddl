@@ -485,6 +485,7 @@ CREATE TABLE Hardware_PPS
 	 BoundaryCrossed NVARCHAR (25) , 
 	 DoD_Compliant NVARCHAR (5) , 
 	 Classification NVARCHAR (25) ,
+	 PRIMARY KEY (Hardware_ID, PPS_ID) ON CONFLICT IGNORE ,
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
 	 FOREIGN KEY (PPS_ID) REFERENCES PPS(PPS_ID)
 	);
@@ -1182,6 +1183,8 @@ CREATE TABLE UniqueFindings
 	 Web_DB_Site NVARCHAR(500),
 	 Web_DB_Instance NVARCHAR(100),
 	 Classification NVARCHAR (25),
+	 CVSS_Environmental_Score NVARCHAR (5) ,
+	 CVSS_Environmental_Vector NVARCHAR (25) ,
 	 FOREIGN KEY (Finding_Type_ID) REFERENCES FindingTypes(Finding_Type_ID),
 	 FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
@@ -1252,8 +1255,6 @@ CREATE TABLE Vulnerabilities
 	 CVSS_Base_Vector NVARCHAR (25) ,
 	 CVSS_Temporal_Score NVARCHAR (5) ,
 	 CVSS_Temporal_Vector NVARCHAR (25) ,
-	 CVSS_Environmental_Score NVARCHAR (5) ,
-	 CVSS_Environmental_Vector NVARCHAR (25) ,
 	 Check_Content NVARCHAR (2000),
 	 False_Positives NVARCHAR (2000),
 	 False_Negatives NVARCHAR (2000),
@@ -1297,7 +1298,7 @@ CREATE TABLE VulnerabilityReferences
 CREATE TABLE VulnerabilitySources 
 	(
 	 Vulnerability_Source_ID INTEGER PRIMARY KEY , 
-	 Source_Name NVARCHAR (100) UNIQUE ON CONFLICT IGNORE NOT NULL, 
+	 Source_Name NVARCHAR (100) NOT NULL, 
 	 Source_Secondary_Identifier NVARCHAR (100),
 	 Vulnerability_Source_File_Name NVARCHAR (500) ,
 	 Source_Description NVARCHAR (2000) ,
