@@ -1168,7 +1168,7 @@ CREATE TABLE UniqueFindings
 	 Residual_Risk NVARCHAR (25) , 
 	 First_Discovered DATE NOT NULL, 
 	 Last_Observed DATE NOT NULL, 
-	 Approval_Status NVARCHAR (5) NOT NULL, 
+	 Approval_Status NVARCHAR (25) NOT NULL, 
 	 Data_Entry_Date DATE , 
 	 Data_Expiration_Date DATE , 
 	 Delta_Analysis_Required NVARCHAR (5) NOT NULL , 

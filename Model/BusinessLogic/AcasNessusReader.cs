@@ -654,6 +654,7 @@ namespace Vulnerator.Model.BusinessLogic
                 SQLiteCommand clonedCommand = (SQLiteCommand)sqliteCommand.Clone();
                 clonedCommand.CommandText = Properties.Resources.SelectUniqueFinding;
                 clonedCommand.Parameters.Add(new SQLiteParameter("Vulnerability_ID", lastVulnerabilityId));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Status", "Ongoing"));
                 using (SQLiteDataReader sqliteDataReader = clonedCommand.ExecuteReader())
                 {
                     if (sqliteDataReader.HasRows)
@@ -665,9 +666,22 @@ namespace Vulnerator.Model.BusinessLogic
                         return;
                     }
                 }
+                clonedCommand.CommandText = Properties.Resources.SelectFindingTypeId;
+                clonedCommand.Parameters.Add(new SQLiteParameter("Finding_Type", "CKL"));
+                using (SQLiteDataReader sqliteDataReader = clonedCommand.ExecuteReader())
+                {
+                    while (sqliteDataReader.Read())
+                    {
+                        if (sqliteDataReader.HasRows)
+                        { sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Type_ID", sqliteDataReader["Finding_Type_ID"].ToString())); }
+                    }
+                }
                 sqliteCommand.CommandText = Properties.Resources.InsertUniqueFinding;
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Unique_Finding_ID", DBNull.Value));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("First_Discovered", DateTime.Now.ToShortDateString()));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Approval_Status", "Not Approved"));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Delta_Analysis_Required", "False"));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Source_File_ID", sourceFilePrimaryKey));
                 int i = 0;
                 foreach (string item in uniqueFindingsColumns)
                 {
@@ -783,7 +797,7 @@ namespace Vulnerator.Model.BusinessLogic
                             string[] value = new string[] 
                             {
                                 "Tool_Generated_Output", "Severity", "First_Discovered", "Last_Observed", "Approval_Status", "Delta_Analysis_Required",
-                                "Finding_Type_ID", "Source_File_ID", "Status", "Unique_Finding_ID"
+                                "Finding_Type_ID", "Finding_Source_File_ID", "Status", "Unique_Finding_ID", "Vulnerability_ID", "Hardware_ID"
                             };
                             return value;
                         }

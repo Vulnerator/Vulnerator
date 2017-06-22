@@ -394,7 +394,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UPDATE UniqueFindings SET Tool_Generated_Output = @Tool_Generated_Output, Last_Observed = @Last_Observed WHERE Unique_Finding_ID = @Unique_Finding_ID;.
+        ///   Looks up a localized string similar to UPDATE UniqueFindings SET Tool_Generated_Output = @Tool_Generated_Output, Last_Observed = @Last_Observed, Status = @Status WHERE Unique_Finding_ID = @Unique_Finding_ID;.
         /// </summary>
         internal static string UpdateAcasUniqueFinding {
             get {

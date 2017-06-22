@@ -722,7 +722,7 @@ namespace Vulnerator.Model.BusinessLogic
                 SQLiteCommand clonedCommand = (SQLiteCommand)sqliteCommand.Clone();
                 clonedCommand.Parameters.Add(new SQLiteParameter("Hardware_ID", hardwarePrimaryKey));
                 clonedCommand.Parameters.Add(new SQLiteParameter("Vulnerability_ID", lastVulnerabilityId));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Approval_Status", "False"));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Approval_Status", "Not Approved"));
                 clonedCommand.CommandText = Properties.Resources.SelectUniqueFinding;
                 using (SQLiteDataReader sqliteDataReader = clonedCommand.ExecuteReader())
                 {
