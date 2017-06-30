@@ -214,7 +214,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Vulnerabilities_VulnerabilityReferences (@Vulnerability_ID, @Reference_ID);.
+        ///   Looks up a localized string similar to INSERT INTO Vulnerabilities_VulnerabilityReferences VALUES (@Vulnerability_ID, @Reference_ID);.
         /// </summary>
         internal static string MapReferenceToVulnerability {
             get {

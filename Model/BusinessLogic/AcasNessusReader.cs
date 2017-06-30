@@ -70,7 +70,7 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
                 { DatabaseBuilder.sqliteConnection.Open(); }
-                using (SQLiteTransaction sqliteTransaction = FindingsDatabaseActions.sqliteConnection.BeginTransaction())
+                using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
                 {
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
@@ -460,6 +460,7 @@ namespace Vulnerator.Model.BusinessLogic
                         InsertAndMapReferences(sqliteCommand, cves, "CVE");
                         InsertAndMapReferences(sqliteCommand, xrefs, "Multi");
                         ClearGlobals();
+                        return;
                     }
                 }
             }
@@ -735,7 +736,7 @@ namespace Vulnerator.Model.BusinessLogic
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_ID", lastVulnerabilityId));
                     sqliteCommand.CommandText = Properties.Resources.InsertVulnerabilityReference;
-                    if (!referenceType.Equals("CVE") || !referenceType.Equals("CPE"))
+                    if (!referenceType.Equals("CVE") && !referenceType.Equals("CPE"))
                     {
                         referenceType = reference.Split(':')[0];
                         sqliteCommand.Parameters.Add(new SQLiteParameter("Reference", reference.Split(':')[1]));

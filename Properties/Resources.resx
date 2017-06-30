@@ -171,7 +171,7 @@
     <value>INSERT INTO Hardware_PPS (Hardware_ID, PPS_ID) VALUES (@Hardware_ID, @PPS_ID);</value>
   </data>
   <data name="MapReferenceToVulnerability" xml:space="preserve">
-    <value>INSERT INTO Vulnerabilities_VulnerabilityReferences (@Vulnerability_ID, @Reference_ID);</value>
+    <value>INSERT INTO Vulnerabilities_VulnerabilityReferences VALUES (@Vulnerability_ID, @Reference_ID);</value>
   </data>
   <data name="MapVulnerabilityToCci" xml:space="preserve">
     <value>INSERT OR REPLACE INTO VulnerabilitesCCIs VALUES (@Vulnerability_ID, (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI));</value>
