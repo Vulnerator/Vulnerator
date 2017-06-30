@@ -26,6 +26,8 @@ namespace Vulnerator.Model.BusinessLogic
         private int lastVulnerabilityId = 0;
         private int groupPrimaryKey = 0;
         private int sourceFilePrimaryKey = 0;
+        private string acasVersion = string.Empty;
+        private string acasRelease = string.Empty;
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private List<string> cves = new List<string>();
         private List<string> cpes = new List<string>();
@@ -325,8 +327,6 @@ namespace Vulnerator.Model.BusinessLogic
             string pluginId = xmlReader.GetAttribute("pluginID");
             try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Name", "Tenable Nessus Scanner"));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Secondary_Identifier", "Assured Compliance Assessment Solution (ACAS)"));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Last_Observed", DateTime.Now.ToShortDateString()));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Version", string.Empty));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", string.Empty));
@@ -474,6 +474,16 @@ namespace Vulnerator.Model.BusinessLogic
         { 
             try
             {
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Name", "Tenable Nessus Scanner"));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Secondary_Identifier", "Assured Compliance Assessment Solution (ACAS)"));
+                if (!string.IsNullOrWhiteSpace(acasVersion))
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Version", acasVersion)); }
+                else
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Version", "Version Unknown")); }
+                if (!string.IsNullOrWhiteSpace(acasRelease))
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", acasRelease)); }
+                else
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Version", "Release Unknown")); }
                 sqliteCommand.CommandText = Properties.Resources.SelectAcasVulnerabilitySource;
                 using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
@@ -866,14 +876,20 @@ namespace Vulnerator.Model.BusinessLogic
                 string line = string.Empty;
                 while (line != null)
                 {
-                    line = stringReader.ReadLine();
+                    if (string.IsNullOrWhiteSpace(line))
+                    {
+                        line = stringReader.ReadLine();
+                        continue;
+                    }
                     if (line.StartsWith("Nessus version"))
-                    { sqliteCommand.Parameters["Source_Version"].Value = line.Split(':')[1].Split('(')[0].Trim(); }
+                    { acasVersion = line.Split(':')[1].Split('(')[0].Trim(); }
                     else if (line.StartsWith("Plugin feed version"))
                     {
-                        sqliteCommand.Parameters["Source_Release"].Value = line.Split(':')[1].Trim();
+                        acasRelease = line.Split(':')[1].Trim();
                         line = null;
                     }
+                    if (line != null)
+                    { line = stringReader.ReadLine(); }
                 }
             }
             catch (Exception exception)
