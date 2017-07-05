@@ -189,7 +189,7 @@
     <value>(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))</value>
   </data>
   <data name="RegexMAC" xml:space="preserve">
-    <value>^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$</value>
+    <value>([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})</value>
   </data>
   <data name="SelectAcasVulnerabilitySource" xml:space="preserve">
     <value>SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release;</value>
@@ -201,7 +201,7 @@
     <value>SELECT Group_ID FROM Groups WHERE Group_Name = @Group_Name;</value>
   </data>
   <data name="SelectHardware" xml:space="preserve">
-    <value>SELECT Hardware_ID FROM Hardware WHERE Host_Name = @Host_Name;</value>
+    <value>SELECT Hardware_ID FROM Hardware WHERE Host_Name = @Host_Name AND NetBIOS = @NetBIOS and FQDN = @FQDN;</value>
   </data>
   <data name="SelectIpAddress" xml:space="preserve">
     <value>SELECT IP_Address_ID FROM IP_Addresses WHERE IP_Address = @IP_Address;</value>
@@ -231,7 +231,7 @@
     <value>SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name;</value>
   </data>
   <data name="UpdateAcasUniqueFinding" xml:space="preserve">
-    <value>UPDATE UniqueFindings SET Tool_Generated_Output = @Tool_Generated_Output, Last_Observed = @Last_Observed, Status = @Status WHERE Unique_Finding_ID = @Unique_Finding_ID;</value>
+    <value>UPDATE UniqueFindings SET Last_Observed = @Last_Observed, Status = @Status WHERE Unique_Finding_ID = @Unique_Finding_ID;</value>
   </data>
   <data name="UpdateCklUniqueFinding" xml:space="preserve">
     <value>UPDATE UniqueFindings SET Finding_Details = @Finding_Details, Comments = @Comments, Severity_Override = @Severity_Override, Severity_Override_Justification = @Severity_Override_Justification, Last_Observed = @Last_Observed, Technology_Area = @Technology_Area, Web_DB_Site = @Web_DB_Site, Web_DB_Instance = @Web_DB_Instance, Finding_Source_File_ID = @Finding_Source_File_ID, Status = @Status, Approval_Status = @Approval_Status, Delta_Analysis_Required = @Delta_Analysis_Required, Tool_Generated_Output = @Tool_Generated_Output WHERE Unique_Finding_ID = @Unique_Finding_ID;</value>

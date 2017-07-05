@@ -454,8 +454,8 @@ CREATE TABLE GroupsContacts
 	);
 CREATE TABLE Hardware 
 	(
-	 Hardware_ID INTEGER PRIMARY KEY , 
-	 Host_Name NVARCHAR (50) UNIQUE ON CONFLICT IGNORE, 
+	 Hardware_ID INTEGER PRIMARY KEY, 
+	 Host_Name NVARCHAR (50), 
 	 FQDN NVARCHAR (100),
 	 NetBIOS NVARCHAR (100) ,
 	 Is_Virtual_Server NVARCHAR (5) , 

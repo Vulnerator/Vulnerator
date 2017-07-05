@@ -1,17 +1,13 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SQLite;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using log4net;
 using System.Xml;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.ModelHelper;
 using Vulnerator.Model.Object;
-using Vulnerator.ViewModel;
 
 namespace Vulnerator.Model.BusinessLogic
 {

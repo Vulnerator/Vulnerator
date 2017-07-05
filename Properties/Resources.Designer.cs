@@ -268,7 +268,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$.
+        ///   Looks up a localized string similar to ([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2}).
         /// </summary>
         internal static string RegexMAC {
             get {
@@ -304,7 +304,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT Hardware_ID FROM Hardware WHERE Host_Name = @Host_Name;.
+        ///   Looks up a localized string similar to SELECT Hardware_ID FROM Hardware WHERE Host_Name = @Host_Name AND NetBIOS = @NetBIOS and FQDN = @FQDN;.
         /// </summary>
         internal static string SelectHardware {
             get {
@@ -394,7 +394,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UPDATE UniqueFindings SET Tool_Generated_Output = @Tool_Generated_Output, Last_Observed = @Last_Observed, Status = @Status WHERE Unique_Finding_ID = @Unique_Finding_ID;.
+        ///   Looks up a localized string similar to UPDATE UniqueFindings SET Last_Observed = @Last_Observed, Status = @Status WHERE Unique_Finding_ID = @Unique_Finding_ID;.
         /// </summary>
         internal static string UpdateAcasUniqueFinding {
             get {

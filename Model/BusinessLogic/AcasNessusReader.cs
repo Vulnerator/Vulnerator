@@ -5,6 +5,7 @@ using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using log4net;
 using System.Xml;
 using Vulnerator.Model.DataAccess;
@@ -28,12 +29,16 @@ namespace Vulnerator.Model.BusinessLogic
         private int sourceFilePrimaryKey = 0;
         private string acasVersion = string.Empty;
         private string acasRelease = string.Empty;
+        private string firstDiscovered = DateTime.Now.ToShortDateString();
+        private string lastObserved = DateTime.Now.ToShortDateString();
+        private string dateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private List<string> cves = new List<string>();
         private List<string> cpes = new List<string>();
         private List<string> xrefs = new List<string>();
         private string[] vulnerabilityColumns = SetColumnArrays("Vulnerabilities");
         private string[] uniqueFindingsColumns = SetColumnArrays("UniqueFindings");
+        
 
         /// <summary>
         /// Reads *.nessus files exported from within ACAS and writes the results to the appropriate DataTables.
@@ -206,6 +211,14 @@ namespace Vulnerator.Model.BusinessLogic
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("NetBIOS", ObtainCurrentNodeValue(xmlReader)));
                                     break;
                                 }
+                            case "HOST_END":
+                                {
+                                    DateTime scanEndTime;
+                                    if (DateTime.TryParseExact(ObtainCurrentNodeValue(xmlReader).Replace("  ", " "), dateTimeFormat, System.Globalization.CultureInfo.InvariantCulture,
+                                        System.Globalization.DateTimeStyles.None, out scanEndTime))
+                                    { firstDiscovered = lastObserved = scanEndTime.ToShortDateString(); }
+                                    break;
+                                }
                             default:
                                 { break; }
                         }
@@ -306,17 +319,26 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.CommandText = Properties.Resources.MapIpToHardware;
                 sqliteCommand.Parameters.Add(new SQLiteParameter("IP_Address_ID", ipId));
                 sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.CommandText = Properties.Resources.InsertMacAddress;
-                sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.CommandText = Properties.Resources.SelectMacAddress;
-                int macId = int.Parse(sqliteCommand.ExecuteScalar().ToString());
-                sqliteCommand.CommandText = Properties.Resources.MapIpToHardware;
-                sqliteCommand.Parameters.Add(new SQLiteParameter("MAC_Address_ID", macId));
-                sqliteCommand.ExecuteNonQuery();
+                if (sqliteCommand.Parameters.Contains("MAC_Address"))
+                {
+                    string macAddress = sqliteCommand.Parameters["MAC_Address"].Value.ToString();
+                    Regex regex = new Regex(Properties.Resources.RegexMAC);
+                    foreach (Match match in regex.Matches(macAddress))
+                    {
+                        sqliteCommand.Parameters["MAC_Address"].Value = match.ToString();
+                        sqliteCommand.CommandText = Properties.Resources.InsertMacAddress;
+                        sqliteCommand.ExecuteNonQuery();
+                        sqliteCommand.CommandText = Properties.Resources.SelectMacAddress;
+                        int macId = int.Parse(sqliteCommand.ExecuteScalar().ToString());
+                        sqliteCommand.CommandText = Properties.Resources.MapMacToHardware;
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("MAC_Address_ID", macId));
+                        sqliteCommand.ExecuteNonQuery();
+                    }
+                }
             }
             catch (Exception exception)
             {
-                log.Error(string.Format(""));
+                log.Error(string.Format("Unable to insert MAC / IP Address or map MAC / IP Address to hardware."));
                 log.Debug("Exception details:", exception);
                 throw exception;
             }
@@ -449,13 +471,11 @@ namespace Vulnerator.Model.BusinessLogic
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ReportItem"))
                     {
                         sqliteCommand.Parameters.Add(new SQLiteParameter("Hardware_ID", hardwarePrimaryKey));
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerabiity_Source_ID", lastVulnerabilitySourceId));
                         InsertVulnerabilitySource(sqliteCommand);
                         InsertVulnerability(sqliteCommand);
                         MapVulnerabilityToSource(sqliteCommand);
                         InsertAndMapPort(sqliteCommand);
                         InsertUniqueFinding(sqliteCommand);
-                        sqliteCommand.Parameters.Clear();
                         InsertAndMapReferences(sqliteCommand, cpes, "CPE");
                         InsertAndMapReferences(sqliteCommand, cves, "CVE");
                         InsertAndMapReferences(sqliteCommand, xrefs, "Multi");
@@ -484,7 +504,7 @@ namespace Vulnerator.Model.BusinessLogic
                 if (!string.IsNullOrWhiteSpace(acasRelease))
                 { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", acasRelease)); }
                 else
-                { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Version", "Release Unknown")); }
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", "Release Unknown")); }
                 sqliteCommand.CommandText = Properties.Resources.SelectAcasVulnerabilitySource;
                 using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
@@ -521,6 +541,8 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.CommandText = Properties.Resources.SelectVulnerabilitySource;
                 lastVulnerabilitySourceId = int.Parse(sqliteCommand.ExecuteScalar().ToString());
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerabiity_Source_ID", lastVulnerabilitySourceId));
+                MapUnknonwnVulnerabilitySources(sqliteCommand);
             }
             catch (Exception exception)
             {
@@ -528,6 +550,36 @@ namespace Vulnerator.Model.BusinessLogic
                     sqliteCommand.Parameters["Source_Name"].Value.ToString(),
                     sqliteCommand.Parameters["Source_Version"].Value.ToString(),
                     sqliteCommand.Parameters["Source_Release"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        private void MapUnknonwnVulnerabilitySources(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                SQLiteCommand clonedCommand = (SQLiteCommand)sqliteCommand.Clone();
+                clonedCommand.CommandText = "SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Version = 'Version Unknown'";
+                using (SQLiteDataReader sqliteDataReader = clonedCommand.ExecuteReader())
+                {
+                    if (sqliteDataReader.HasRows)
+                    {
+                        while (sqliteDataReader.Read())
+                        {
+                            int unknownSourceId = int.Parse(sqliteDataReader["Vulnerability_Source_ID"].ToString());
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("Old_Source", unknownSourceId));
+                            sqliteCommand.CommandText = "UPDATE Vulnerabilities_VulnerabilitySources SET Vulnerability_Source_ID = @Vulnerability_Source_ID WHERE @Vulnerability_Source_ID = @Old_Source;";
+                            sqliteCommand.ExecuteNonQuery();
+                            sqliteCommand.CommandText = "DELETE FROM VulnerabilitySources WHERE @Vulnerability_Source_ID = @Old_Source;";
+                            sqliteCommand.ExecuteNonQuery();
+                            sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["Old_Source"]);
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to re-map unknown ACAS Release / Version information."));
                 throw exception;
             }
         }
@@ -617,7 +669,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to map \"{0}\" back to a source"));
+                log.Error(string.Format("Unable to map vulnerability back to a source."));
                 throw exception;
             }
         }
@@ -673,6 +725,8 @@ namespace Vulnerator.Model.BusinessLogic
                         sqliteCommand.CommandText = Properties.Resources.UpdateAcasUniqueFinding;
                         while (sqliteDataReader.Read())
                         { sqliteCommand.Parameters.Add(new SQLiteParameter("Unique_Finding_ID", sqliteDataReader["Unique_Finding_ID"])); }
+                        if (sqliteCommand.Parameters.Contains("Tool_Generated_Output"))
+                        { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(74, ", Tool_Generated_Output = @Tool_Generated_Output"); }
                         sqliteCommand.ExecuteNonQuery();
                         return;
                     }
@@ -721,9 +775,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to associate plugin \"{0}\" with \"{1}\".",
-                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString(),
-                    sqliteCommand.Parameters["Hardware_ID"].Value.ToString()));
+                log.Error(string.Format("Unable to create a UniqueFinding record for plugin \"{0}\".",
+                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
                 throw exception;
             }
         }
@@ -779,12 +832,11 @@ namespace Vulnerator.Model.BusinessLogic
 
         private void ClearGlobals()
         {
-            hardwarePrimaryKey = 0;
-            softwarePrimaryKey = 0;
-            lastVulnerabilityId = 0;
+            hardwarePrimaryKey = softwarePrimaryKey = lastVulnerabilityId = 0;
             cves.Clear();
             cpes.Clear();
             xrefs.Clear();
+            firstDiscovered = lastObserved = DateTime.Now.ToShortDateString();
     }
 
         private static string[] SetColumnArrays(string tableName)
@@ -818,7 +870,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format(""));
+                log.Error(string.Format("Unable to set table column array(s)."));
                 throw exception;
             }
         }
