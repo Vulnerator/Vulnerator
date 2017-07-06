@@ -468,6 +468,7 @@ CREATE TABLE Hardware
 	 LifecycleStatus_ID INTEGER ,
 	 FOREIGN KEY (LifecycleStatus_ID) REFERENCES LifecycleStatuses(LifecycleStatus_ID)
 	);
+CREATE INDEX Hardware_Index ON Hardware(Hardware_ID);
 CREATE TABLE Hardware_MitigationsOrConditions 
 	(
 	 Hardware_ID INTEGER NOT NULL , 
@@ -601,6 +602,7 @@ CREATE TABLE IP_Addresses
 	 IP_Address_ID INTEGER PRIMARY KEY , 
 	 IP_Address NVARCHAR (25) NOT NULL UNIQUE ON CONFLICT IGNORE 
 	);
+CREATE INDEX IP_Address_Index ON IP_Addresses(IP_Address_ID);
 CREATE TABLE JointAuthorizationOrganizations 
 	(
 	 JointOrganization_ID INTEGER PRIMARY KEY , 
@@ -643,6 +645,7 @@ CREATE TABLE MAC_Addresses
 	  MAC_Address_ID INTEGER PRIMARY KEY ,
 	  MAC_Address NVARCHAR (50) NOT NULL UNIQUE ON CONFLICT IGNORE
 	);
+CREATE INDEX MAC_Address_Index ON MAC_Addresses(MAC_Address_ID);
 CREATE TABLE MedicalTechnologies 
 	(
 	 MedicalTechnology_ID INTEGER PRIMARY KEY , 
@@ -829,6 +832,7 @@ CREATE TABLE PPS
 	 Port INTEGER NOT NULL , 
 	 Protocol NVARCHAR (25) NOT NULL 
 	);
+CREATE INDEX PPS_Index ON PPS(PPS_ID);
 CREATE TABLE RelatedDocuments 
 	(
 	 RelatedDocument_ID INTEGER PRIMARY KEY , 
@@ -973,6 +977,7 @@ CREATE TABLE Software
 	 BaselineApprover_Global NVARCHAR (50) , 
 	 Instance NVARCHAR (25)
 	);
+CREATE INDEX Software_Index ON Software(Software_ID);
 CREATE TABLE Software_DADMS_Networks 
 	(
 	 Software_ID INTEGER NOT NULL , 
@@ -1169,8 +1174,8 @@ CREATE TABLE UniqueFindings
 	 First_Discovered DATE NOT NULL, 
 	 Last_Observed DATE NOT NULL, 
 	 Approval_Status NVARCHAR (25) NOT NULL, 
-	 Data_Entry_Date DATE , 
-	 Data_Expiration_Date DATE , 
+	 Approval_Date DATE , 
+	 Approval_Expiration_Date DATE , 
 	 Delta_Analysis_Required NVARCHAR (5) NOT NULL , 
 	 Finding_Type_ID INTEGER NOT NULL , 
 	 Finding_Source_File_ID INTEGER NOT NULL , 
@@ -1203,6 +1208,7 @@ CREATE TABLE UniqueFindingsSourceFiles
 	 Finding_Source_File_ID INTEGER PRIMARY KEY , 
 	 Finding_Source_File_Name NVARCHAR (500) NOT NULL UNIQUE ON CONFLICT IGNORE 
 	);
+CREATE INDEX Unique_Finding_Source_File_Index ON UniqueFindingsSourceFiles(Finding_Source_File_ID);
 CREATE TABLE UserCategories 
 	(
 	 UserCategory_ID INTEGER PRIMARY KEY , 
@@ -1241,10 +1247,10 @@ CREATE TABLE Vulnerabilities
 	 Vulnerability_Group_Title NVARCHAR (100) ,
 	 Secondary_Vulnerability_Identifier NVARCHAR (25),
 	 VulnerabilityFamilyOrClass NVARCHAR (100) , 
-	 Version NVARCHAR (25) , 
-	 Release NVARCHAR (25) , 
+	 Vulnerability_Version NVARCHAR (25) , 
+	 Vulnerability_Release NVARCHAR (25) , 
 	 Vulnerability_Title NVARCHAR (100) NOT NULL , 
-	 Description NVARCHAR , 
+	 Vulnerability_Description NVARCHAR , 
 	 Risk_Statement NVARCHAR , 
 	 Fix_Text NVARCHAR , 
 	 Published_Date DATE , 
@@ -1292,9 +1298,11 @@ CREATE TABLE Vulnerabilities_VulnerabilityReferences
 CREATE TABLE VulnerabilityReferences
 	(
 		Reference_ID INTEGER PRIMARY KEY,
-		Reference NVARCHAR (50) UNIQUE ON CONFLICT IGNORE,
-		Reference_Type NVARCHAR (10)
+		Reference NVARCHAR (50),
+		Reference_Type NVARCHAR (10),
+		UNIQUE (Reference, Reference_Type) ON CONFLICT IGNORE
 	);
+CREATE INDEX Vulnerability_Reference_Index ON VulnerabilityReferences(Reference_ID);
 CREATE TABLE VulnerabilitySources 
 	(
 	 Vulnerability_Source_ID INTEGER PRIMARY KEY , 

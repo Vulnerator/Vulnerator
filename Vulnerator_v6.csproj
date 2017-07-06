@@ -417,9 +417,6 @@
     <Compile Include="View\UI\DevWindow.xaml.cs">
       <DependentUpon>DevWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UI\LoadingWindow.xaml.cs">
-      <DependentUpon>LoadingWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\UI\MitigationsNistMappingView.xaml.cs">
       <DependentUpon>MitigationsNistMappingView.xaml</DependentUpon>
     </Compile>
@@ -502,10 +499,6 @@
     <Page Include="View\UI\DevWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\UI\LoadingWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\UI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

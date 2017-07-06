@@ -10,17 +10,9 @@ namespace Vulnerator.View.UI
     /// </summary>
     public partial class DevWindow
     {
-        BackgroundWorker backgroundWorker;
-        LoadingWindow loadingWindow;
         public DevWindow()
         {
             InitializeComponent();
-            //backgroundWorker = new BackgroundWorker();
-            //loadingWindow = new LoadingWindow();
-            //loadingWindow.Show();
-            //backgroundWorker.RunWorkerAsync();
-            //backgroundWorker.DoWork += new DoWorkEventHandler(backgroundWorker_DoWork);
-            //backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_RunWorkerCompleted);
         }
 
         protected override void OnClosed(EventArgs e)
@@ -29,11 +21,5 @@ namespace Vulnerator.View.UI
 
             Application.Current.Shutdown();
         }
-
-        void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        { System.Threading.Thread.Sleep(5000); }
-
-        void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        { loadingWindow.Close(); }
     }
 }

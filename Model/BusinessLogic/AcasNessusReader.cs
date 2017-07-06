@@ -36,16 +36,12 @@ namespace Vulnerator.Model.BusinessLogic
         private List<string> cves = new List<string>();
         private List<string> cpes = new List<string>();
         private List<string> xrefs = new List<string>();
-        private string[] vulnerabilityColumns = SetColumnArrays("Vulnerabilities");
-        private string[] uniqueFindingsColumns = SetColumnArrays("UniqueFindings");
         
 
         /// <summary>
         /// Reads *.nessus files exported from within ACAS and writes the results to the appropriate DataTables.
         /// </summary>
-        /// <param name="fileName">Name of *.nessus file to be parsed.</param>
-        /// <param name="mitigationsList">List of mitigation items for vulnerabilities to be read against.</param>
-        /// <param name="systemName">Name of the system that the mitigations check will be run against.</param>
+        /// <param name="file">File Object to be parsed</param>
         /// <returns>string Value</returns>
         public string ReadAcasNessusFile(Object.File file)
         {
@@ -175,7 +171,6 @@ namespace Vulnerator.Model.BusinessLogic
         private void ParseHostData(SQLiteCommand sqliteCommand, XmlReader xmlReader)
         {
             string hostIp = xmlReader.GetAttribute("name");
-            sqliteCommand.Parameters.Add(new SQLiteParameter("IP_Address", hostIp));
             try
             {
                 while (xmlReader.Read())
@@ -187,6 +182,7 @@ namespace Vulnerator.Model.BusinessLogic
                             case "hostname":
                                 {
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("Host_Name", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Host_Name", "TestName"));
                                     break;
                                 }
                             case "operating-system":
@@ -199,6 +195,11 @@ namespace Vulnerator.Model.BusinessLogic
                             case "host-fqdn":
                                 {
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("FQDN", ObtainCurrentNodeValue(xmlReader)));
+                                    break;
+                                }
+                            case "host-ip":
+                                {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("IP_Address", ObtainCurrentNodeValue(xmlReader)));
                                     break;
                                 }
                             case "mac-address":
@@ -278,7 +279,7 @@ namespace Vulnerator.Model.BusinessLogic
         { 
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.InsertAcasDiscoveredSoftware;
+                sqliteCommand.CommandText = Properties.Resources.InsertSoftware;
                 sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.CommandText = Properties.Resources.SelectSoftware;
                 softwarePrimaryKey = int.Parse(sqliteCommand.ExecuteScalar().ToString());
@@ -349,7 +350,7 @@ namespace Vulnerator.Model.BusinessLogic
             string pluginId = xmlReader.GetAttribute("pluginID");
             try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Last_Observed", DateTime.Now.ToShortDateString()));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Last_Observed", lastObserved));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Version", string.Empty));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", string.Empty));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Port", xmlReader.GetAttribute("port")));
@@ -476,6 +477,8 @@ namespace Vulnerator.Model.BusinessLogic
                         MapVulnerabilityToSource(sqliteCommand);
                         InsertAndMapPort(sqliteCommand);
                         InsertUniqueFinding(sqliteCommand);
+                        if (pluginId.Equals("51573") || pluginId.Equals("50652"))
+                        { Console.WriteLine("Pause"); }
                         InsertAndMapReferences(sqliteCommand, cpes, "CPE");
                         InsertAndMapReferences(sqliteCommand, cves, "CVE");
                         InsertAndMapReferences(sqliteCommand, xrefs, "Multi");
@@ -743,7 +746,7 @@ namespace Vulnerator.Model.BusinessLogic
                 }
                 sqliteCommand.CommandText = Properties.Resources.InsertUniqueFinding;
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Unique_Finding_ID", DBNull.Value));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("First_Discovered", DateTime.Now.ToShortDateString()));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("First_Discovered", firstDiscovered));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Approval_Status", "Not Approved"));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Delta_Analysis_Required", "False"));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Source_File_ID", sourceFilePrimaryKey));
@@ -839,42 +842,6 @@ namespace Vulnerator.Model.BusinessLogic
             firstDiscovered = lastObserved = DateTime.Now.ToShortDateString();
     }
 
-        private static string[] SetColumnArrays(string tableName)
-        { 
-            try
-            {
-                switch (tableName)
-                {
-                    case "Vulnerabilities":
-                        {
-                            string[] value = new string[] 
-                            {
-                                "Unique_Vulnerability_Identifier", "VulnerabilityFamilyOrClass", "Vulnerability_Title", "Description", "Risk_Statement",
-                                "Fix_Text", "Published_Date", "Modified_Date", "Fix_Published_Date", "Raw_Risk", "CVSS_Base_Score", "CVSS_Base_Vector",
-                                "CVSS_Temporal_Score", "CVSS_Temporal_Vector", "Check_Content", "Overflow"
-                            };
-                            return value;
-                        }
-                    case "UniqueFindings":
-                        {
-                            string[] value = new string[] 
-                            {
-                                "Tool_Generated_Output", "Severity", "First_Discovered", "Last_Observed", "Approval_Status", "Delta_Analysis_Required",
-                                "Finding_Type_ID", "Finding_Source_File_ID", "Status", "Unique_Finding_ID", "Vulnerability_ID", "Hardware_ID"
-                            };
-                            return value;
-                        }
-                    default:
-                        { throw new Exception("Invalid table name."); }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to set table column array(s)."));
-                throw exception;
-            }
-        }
-
         private XmlReaderSettings GenerateXmlReaderSettings()
         {
             try
@@ -948,6 +915,60 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 log.Error("Unable to set ACAS Nessus File source information.");
+                throw exception;
+            }
+        }
+
+        private void InsertParameterPlaceholders(SQLiteCommand sqliteCommand)
+        { 
+            try
+            {
+                string[] parameters = new string[] 
+                {
+                    // Groups Table
+                    "Group_ID", "Group_Name", "Is_Accreditation", "Accreditation_ID", "Organization_ID",
+                    // Hardware Table
+                    "Hardware_ID", "Host_Name", "FQDN", "NetBIOS", "Is_Virtual_Server", "NIAP_Level", "Manufacturuer", "ModelNumber",
+                    "Is_IA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID",
+                    // IP_Addresses Table
+                    "IP_Address_ID", "IP_Address",
+                    // MAC_Addresses Table
+                    "MAC_Address_ID", "MAC_Address",
+                    // PPS Table
+                    "PPS_ID", "Port", "Protocol",
+                    // Software Table
+                    "Software_ID", "Discovered_Software_Name", "Displayed_Software_Name", "Software_Acronym", "Software_Version",
+                    "Function", "Install_Date", "DADMS_ID", "DADMS_Disposition", "DADMS_LDA", "Has_Custom_Code", "IaOrIa_Enabled",
+                    "Is_OS_Or_Firmware", "FAM_Accepted", "Externally_Authorized", "ReportInAccreditation_Global",
+                    "ApprovedForBaseline_Global", "BaselineApprover_Global", "Instance",
+                    // UniqueFindings Table
+                    "Unique_Finding_ID", "Tool_Generated_Output", "Comments", "Finding_Details", "Technical_Mitigation",
+                    "Proposed_Mitigation", "Predisposing_Conditions", "Impact", "Likelihood", "Severity", "Risk", "Residual_Risk",
+                    "First_Discovered", "Last_Observed", "Approval_Status", "Approval_Date", "Approval_Expiration_Date",
+                    "Delta_Analysis_Required", "Finding_Type_ID", "Finding_Source_ID", "Status", "Vulnerability_ID", "Hardware_ID",
+                    "Severity_Override", "Severity_Override_Justification", "Technology_Area", "Web_DB_Site", "Web_DB_Instance",
+                    "Classification", "CVSS_Environmental_Score", "CVSS_Enivronmental_Vector",
+                    // UniqueFindingSourceFiles Table
+                    "Finding_Source_File_ID", "Finding_Source_File_Name", 
+                    // Vulnerabilities Table
+                    "Vulnerability_ID", "Unique_Vulnerability_Identifier", "Vulnerability_Group_ID", "Vulnerability_Group_Title",
+                    "Secondary_Vulnerability_Identifier", "VulnerabilityFamilyOrClass", "Vulnerability_Version", "Vulnerabiity_Release",
+                    "Vulnerability_Title", "Vulnerability_Description", "Risk_Statement", "Fixt_Text", "Published_Date", "Modified_Date",
+                    "Fix_Published_Date", "Raw_Risk", "CVSS_Base_Score", "CVSS_Base_Vector", "CVSS_Temporal_Score", "CVSS_Temporal_Vector",
+                    "Check_Content", "False_Positives", "False_Negatives", "Documentable", "Mitigations", "Mitigation_Control",
+                    "Potential_Impacts", "Third_Party_Tools", "Security_Override_Guidance", "Overflow",
+                    // VulnerabilityReferences Table
+                    "Reference_ID", "Reference", "Reference_Type",
+                    // VulnerabilitySources Table
+                    "Vulnerability_Source_ID", "Source_Name", "Source_Secondary_Identifier", "Vulnerability_Source_File_Name",
+                    "Source_Description", "Source_Version", "Source_Release"
+                };
+                foreach (string parameter in parameters)
+                { sqliteCommand.Parameters.Add(new SQLiteParameter(parameter)); }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert SQLiteParameter placeholders into SQLiteCommand"));
                 throw exception;
             }
         }

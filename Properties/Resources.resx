@@ -117,21 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="InsertAcasDiscoveredSoftware" xml:space="preserve">
-    <value>INSERT INTO Software (Software_ID, Discovered_Software_Name, Displayed_Software_Name, Is_OS_Or_Firmware) VALUES (NULL, @Discovered_Software_Name, @Displayed_Software_Name, @Is_OS_Or_Firmware);</value>
-  </data>
-  <data name="InsertAcasUniqueFinding" xml:space="preserve">
-    <value />
-  </data>
-  <data name="InsertCklUniqueFinding" xml:space="preserve">
-    <value>INSERT INTO UniqueFindings (Unique_Finding_ID, Comments, Finding_Details, First_Discovered, Last_Observed, Approval_Status, Delta_Analysis_Required, Finding_Type_ID, Finding_Source_File_ID, Status, Vulnerability_ID, Hardware_ID, Severity_Override, Severity_Override_Justification, Technology_Area, Web_DB_Site, Web_DB_Instance, Classification, Tool_Generated_Output) VALUES (NULL, @Comments, @Finding_Details, @First_Discovered, @Last_Observed, @Approval_Status, @Delta_Analysis_Required, @Finding_Type_ID, @Finding_Source_File_ID, @Status, @Vulnerability_ID, @Hardware_ID, @Severity_Override, @Severity_Override_Justification, @Technology_Area, @Web_DB_Site, @Web_DB_Instance, @Classification, @Tool_Generated_Output);</value>
-  </data>
   <data name="InsertGroup" xml:space="preserve">
     <value>INSERT INTO Groups VALUES (NULL, @Group_Name, 'False', NULL, NULL);</value>
   </data>
   <data name="InsertHardware" xml:space="preserve">
     <value>INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@NetBios,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,NULL);</value>
-    <comment>Insert Hardware SQLite command</comment>
   </data>
   <data name="InsertIpAddress" xml:space="preserve">
     <value>INSERT INTO IP_Addresses VALUES (NULL, @IP_Address);</value>
@@ -142,24 +132,26 @@
   <data name="InsertPort" xml:space="preserve">
     <value>INSERT INTO PPS VALUES (NULL, @Port, @Protocol);</value>
   </data>
+  <data name="InsertSoftware" xml:space="preserve">
+    <value>INSERT INTO Software VALUES (NULL, @Discovered_Software_Name, @Displayed_Software_Name, @Software_Acronym, @Software_Version, @Function, @Install_Date, @DADMS_ID, @DADMS_Disposition, @DADMS_LDA, @Has_Custom_Code, @IaOrIa_Enabled, @Is_OS_Or_Firmware, @FAM_Accepted, @Externally_Authorized, @ReportInAccreditation_Global, @ApprovedForBaseline_Global, @BaselineApprover_Global, @Instance);</value>
+  </data>
   <data name="InsertUniqueFinding" xml:space="preserve">
-    <value>INSERT INTO UniqueFindings () VALUES ();</value>
+    <value>INSERT INTO UniqueFindings VALUES (NULL, @Tool_Generated_Output, @Comments, @Finding_Details, @Technical_Mitigation, @Proposed_Mitigation, @Predisposing_Conditions, @Impact, @Likelihood, @Severity, @Risk, @Residual_Risk, @First_Discovered, @Last_Observed, @Approval_Status, @Approval_Date, @Approval_Expiration_Date, @Delta_Analysis_Required, @Finding_Type_ID, @Finding_Source_File_ID, @Status, @Vulnerability_ID, @Hardware_ID, @Severity_Override, @Severity_Override_Justification, @Technology_Area, @Web_DB_Site, @Web_DB_Instance, @Classification, @CVSS_Environmental_Score, @CVSS_Environmental_Vector);</value>
   </data>
   <data name="InsertUniqueFindingSource" xml:space="preserve">
     <value>INSERT INTO UniqueFindingsSourceFiles VALUES (NULL, @Finding_Source_File_Name);</value>
   </data>
   <data name="InsertVulnerability" xml:space="preserve">
-    <value>INSERT INTO Vulnerabilities () VALUES ();</value>
+    <value>INSERT INTO Vulnerabilities VALUES (NULL, @Unique_Vulnerability_Identifier, @Vulnerability_Group_ID, @Vulnerability_Group_Title, @Secondary_Vulnerability_Identifier, @VulnerabilityFamilyOrClass, @Vulnerability_Version, @Vulnerabiity_Release, @Vulnerability_Title, @Vulnerability_Description, @Risk_Statement, @Fix_Text, @Published_Date, @Modified_Date, @Fix_Published_Date, @Raw_Risk, @CVSS_Base_Score, @CVSS_Base_Vector, @CVSS_Temporal_Score, @CVSS_Temporal_Vector, @Check_Content, @False_Positives, @False_Negatives, @Documentable, @Mitigations, @Mitigation_Control, @Potential_Impacts, @Third_Party_Tools, @Security_Override_Guidance, @Overfow);</value>
   </data>
   <data name="InsertVulnerabilityReference" xml:space="preserve">
     <value>INSERT INTO VulnerabilityReferences VALUES (NULL, @Reference, @Reference_Type);</value>
   </data>
   <data name="InsertVulnerabilitySource" xml:space="preserve">
-    <value>INSERT INTO VulnerabilitySources () VALUES ();</value>
-    <comment>Roughed out SQLite command to insert vulnerability source into the  VulnerabilitySources</comment>
+    <value>INSERT INTO VulnerabilitySources VALUES (NULL, @Source_Name, @Source_Secondary_Identifier, @Vulnerability_Source_File_Name, @Source_Description, @Source_Version, @Source_Release);</value>
   </data>
   <data name="MapHardwareToSoftware" xml:space="preserve">
-    <value>INSERT INTO SoftwareHardware (Software_ID, Hardware_ID) VALUES (@Software_ID, @Hardware_ID);</value>
+    <value>INSERT INTO SoftwareHardware VALUES (@Software_ID, @Hardware_ID, @ReportInAccreditation, @ApprovedForBaseline, @BaselineApprover);</value>
   </data>
   <data name="MapIpToHardware" xml:space="preserve">
     <value>INSERT INTO HardwareIpAddresses VALUES (@Hardware_ID, @IP_Address_ID);</value>

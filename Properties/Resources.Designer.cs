@@ -61,33 +61,6 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Software (Software_ID, Discovered_Software_Name, Displayed_Software_Name, Is_OS_Or_Firmware) VALUES (NULL, @Discovered_Software_Name, @Displayed_Software_Name, @Is_OS_Or_Firmware);.
-        /// </summary>
-        internal static string InsertAcasDiscoveredSoftware {
-            get {
-                return ResourceManager.GetString("InsertAcasDiscoveredSoftware", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        internal static string InsertAcasUniqueFinding {
-            get {
-                return ResourceManager.GetString("InsertAcasUniqueFinding", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO UniqueFindings (Unique_Finding_ID, Comments, Finding_Details, First_Discovered, Last_Observed, Approval_Status, Delta_Analysis_Required, Finding_Type_ID, Finding_Source_File_ID, Status, Vulnerability_ID, Hardware_ID, Severity_Override, Severity_Override_Justification, Technology_Area, Web_DB_Site, Web_DB_Instance, Classification, Tool_Generated_Output) VALUES (NULL, @Comments, @Finding_Details, @First_Discovered, @Last_Observed, @Approval_Status, @Delta_Analysis_Required, @Finding_Type_ID, @Find [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string InsertCklUniqueFinding {
-            get {
-                return ResourceManager.GetString("InsertCklUniqueFinding", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO Groups VALUES (NULL, @Group_Name, &apos;False&apos;, NULL, NULL);.
         /// </summary>
         internal static string InsertGroup {
@@ -133,7 +106,16 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO UniqueFindings () VALUES ();.
+        ///   Looks up a localized string similar to INSERT INTO Software VALUES (NULL, @Discovered_Software_Name, @Displayed_Software_Name, @Software_Acronym, @Software_Version, @Function, @Install_Date, @DADMS_ID, @DADMS_Disposition, @DADMS_LDA, @Has_Custom_Code, @IaOrIa_Enabled, @Is_OS_Or_Firmware, @FAM_Accepted, @Externally_Authorized, @ReportInAccreditation_Global, @ApprovedForBaseline_Global, @BaselineApprover_Global, @Instance);.
+        /// </summary>
+        internal static string InsertSoftware {
+            get {
+                return ResourceManager.GetString("InsertSoftware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO UniqueFindings VALUES (NULL, @Tool_Generated_Output, @Comments, @Finding_Details, @Technical_Mitigation, @Proposed_Mitigation, @Predisposing_Conditions, @Impact, @Likelihood, @Severity, @Risk, @Residual_Risk, @First_Discovered, @Last_Observed, @Approval_Status, @Approval_Date, @Approval_Expiration_Date, @Delta_Analysis_Required, @Finding_Type_ID, @Finding_Source_File_ID, @Status, @Vulnerability_ID, @Hardware_ID, @Severity_Override, @Severity_Override_Justification, @Technology_Area, @Web_DB_Site [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InsertUniqueFinding {
             get {
@@ -151,7 +133,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Vulnerabilities () VALUES ();.
+        ///   Looks up a localized string similar to INSERT INTO Vulnerabilities VALUES (NULL, @Unique_Vulnerability_Identifier, @Vulnerability_Group_ID, @Vulnerability_Group_Title, @Secondary_Vulnerability_Identifier, @VulnerabilityFamilyOrClass, @Vulnerability_Version, @Vulnerabiity_Release, @Vulnerability_Title, @Vulnerability_Description, @Risk_Statement, @Fix_Text, @Published_Date, @Modified_Date, @Fix_Published_Date, @Raw_Risk, @CVSS_Base_Score, @CVSS_Base_Vector, @CVSS_Temporal_Score, @CVSS_Temporal_Vector, @Check_Content, @False_Positives, @False_Nega [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InsertVulnerability {
             get {
@@ -169,7 +151,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO VulnerabilitySources () VALUES ();.
+        ///   Looks up a localized string similar to INSERT INTO VulnerabilitySources VALUES (NULL, @Source_Name, @Source_Secondary_Identifier, @Vulnerability_Source_File_Name, @Source_Description, @Source_Version, @Source_Release);.
         /// </summary>
         internal static string InsertVulnerabilitySource {
             get {
@@ -178,7 +160,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO SoftwareHardware (Software_ID, Hardware_ID) VALUES (@Software_ID, @Hardware_ID);.
+        ///   Looks up a localized string similar to INSERT INTO SoftwareHardware VALUES (@Software_ID, @Hardware_ID, @ReportInAccreditation, @ApprovedForBaseline, @BaselineApprover);.
         /// </summary>
         internal static string MapHardwareToSoftware {
             get {

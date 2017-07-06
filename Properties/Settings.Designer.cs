@@ -202,5 +202,29 @@ namespace Vulnerator.Properties {
                 this["DropIncompleteCklfiles"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool HostNameFallbackFqdn {
+            get {
+                return ((bool)(this["HostNameFallbackFqdn"]));
+            }
+            set {
+                this["HostNameFallbackFqdn"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool HostNameFallbackNetBios {
+            get {
+                return ((bool)(this["HostNameFallbackNetBios"]));
+            }
+            set {
+                this["HostNameFallbackNetBios"] = value;
+            }
+        }
     }
 }
