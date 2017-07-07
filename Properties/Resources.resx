@@ -121,7 +121,7 @@
     <value>INSERT INTO Groups VALUES (NULL, @Group_Name, 'False', NULL, NULL);</value>
   </data>
   <data name="InsertHardware" xml:space="preserve">
-    <value>INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@NetBios,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,NULL);</value>
+    <value>INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@NetBIOS,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,NULL);</value>
   </data>
   <data name="InsertIpAddress" xml:space="preserve">
     <value>INSERT INTO IP_Addresses VALUES (NULL, @IP_Address);</value>
@@ -142,7 +142,7 @@
     <value>INSERT INTO UniqueFindingsSourceFiles VALUES (NULL, @Finding_Source_File_Name);</value>
   </data>
   <data name="InsertVulnerability" xml:space="preserve">
-    <value>INSERT INTO Vulnerabilities VALUES (NULL, @Unique_Vulnerability_Identifier, @Vulnerability_Group_ID, @Vulnerability_Group_Title, @Secondary_Vulnerability_Identifier, @VulnerabilityFamilyOrClass, @Vulnerability_Version, @Vulnerabiity_Release, @Vulnerability_Title, @Vulnerability_Description, @Risk_Statement, @Fix_Text, @Published_Date, @Modified_Date, @Fix_Published_Date, @Raw_Risk, @CVSS_Base_Score, @CVSS_Base_Vector, @CVSS_Temporal_Score, @CVSS_Temporal_Vector, @Check_Content, @False_Positives, @False_Negatives, @Documentable, @Mitigations, @Mitigation_Control, @Potential_Impacts, @Third_Party_Tools, @Security_Override_Guidance, @Overfow);</value>
+    <value>INSERT INTO Vulnerabilities VALUES (NULL, @Unique_Vulnerability_Identifier, @Vulnerability_Group_ID, @Vulnerability_Group_Title, @Secondary_Vulnerability_Identifier, @VulnerabilityFamilyOrClass, @Vulnerability_Version, @Vulnerability_Release, @Vulnerability_Title, @Vulnerability_Description, @Risk_Statement, @Fix_Text, @Published_Date, @Modified_Date, @Fix_Published_Date, @Raw_Risk, @CVSS_Base_Score, @CVSS_Base_Vector, @CVSS_Temporal_Score, @CVSS_Temporal_Vector, @Check_Content, @False_Positives, @False_Negatives, @Documentable, @Mitigations, @Mitigation_Control, @Potential_Impacts, @Third_Party_Tools, @Security_Override_Guidance, @Overflow);</value>
   </data>
   <data name="InsertVulnerabilityReference" xml:space="preserve">
     <value>INSERT INTO VulnerabilityReferences VALUES (NULL, @Reference, @Reference_Type);</value>
@@ -232,7 +232,7 @@
     <value>UPDATE UniqueFindings SET Delta_Analysis_Required = 'True' WHERE Vulnerability_ID = @Vulnerability_ID;</value>
   </data>
   <data name="UpdateVulnerability" xml:space="preserve">
-    <value>UPDATE Vulnerabilities SET  WHERE Vulnerability_ID = @Vulnerability_ID;</value>
+    <value>UPDATE Vulnerabilities SET Vulnerability_Title=@Vulnerability_Title, Vulnerability_Description = @Vulnerability_Description, Risk_Statement = @Risk_Statement, Fix_Text = @Fix_Text, Modified_Date = @Modified_Date, Fix_Published_Date = @Fix_Published_Date, Raw_Risk = @Raw_Risk WHERE Vulnerability_ID = @Vulnerability_ID;</value>
   </data>
   <data name="UpdateVulnerabilitySource" xml:space="preserve">
     <value>UPDATE VulnerabilitySources SET  WHERE Vulnerability_Source_ID = @Vulnerability_Source_ID;</value>

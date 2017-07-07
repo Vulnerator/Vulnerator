@@ -744,7 +744,7 @@ namespace Vulnerator.Model.BusinessLogic
                         { sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Type_ID", sqliteDataReader["Finding_Type_ID"].ToString())); }
                     }
                 }
-                sqliteCommand.CommandText = Properties.Resources.InsertCklUniqueFinding;
+                sqliteCommand.CommandText = Properties.Resources.InsertUniqueFinding;
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Hardware_ID", hardwarePrimaryKey));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_ID", lastVulnerabilityId));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("First_Discovered", DateTime.Now.ToShortDateString()));

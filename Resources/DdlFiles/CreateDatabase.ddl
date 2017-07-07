@@ -468,7 +468,6 @@ CREATE TABLE Hardware
 	 LifecycleStatus_ID INTEGER ,
 	 FOREIGN KEY (LifecycleStatus_ID) REFERENCES LifecycleStatuses(LifecycleStatus_ID)
 	);
-CREATE INDEX Hardware_Index ON Hardware(Hardware_ID);
 CREATE TABLE Hardware_MitigationsOrConditions 
 	(
 	 Hardware_ID INTEGER NOT NULL , 
@@ -515,6 +514,7 @@ CREATE TABLE HardwareIpAddresses
 	(
 	 Hardware_ID INTEGER NOT NULL , 
 	 IP_Address_ID INTEGER NOT NULL ,
+	 UNIQUE (Hardware_ID, IP_Address_ID) ON CONFLICT IGNORE,
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
 	 FOREIGN KEY (IP_Address_ID) REFERENCES IpAddresses(IP_Address_ID)
 	);
@@ -522,6 +522,7 @@ CREATE TABLE HardwareMacAddresses
 	(
 	 Hardware_ID INTEGER NOT NULL , 
 	 MAC_Address_ID INTEGER NOT NULL ,
+	 UNIQUE (Hardware_ID, MAC_Address_ID) ON CONFLICT IGNORE,
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
 	 FOREIGN KEY (MAC_Address_ID) REFERENCES MAC_Addresses(MAC_Address_ID)
 	);
@@ -1195,7 +1196,6 @@ CREATE TABLE UniqueFindings
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
 	 FOREIGN KEY (Finding_Source_File_ID) REFERENCES UniqueFindingsSourceFiles(Finding_Source_File_ID)
 	);
-CREATE INDEX Unique_Finding_Index ON UniqueFindings(Unique_Finding_ID);
 CREATE TABLE UniqueFindings_UniqueFindingsSourceFiles 
 	(
 	  Unique_Finding_ID INTEGER NOT NULL ,
@@ -1208,7 +1208,6 @@ CREATE TABLE UniqueFindingsSourceFiles
 	 Finding_Source_File_ID INTEGER PRIMARY KEY , 
 	 Finding_Source_File_Name NVARCHAR (500) NOT NULL UNIQUE ON CONFLICT IGNORE 
 	);
-CREATE INDEX Unique_Finding_Source_File_Index ON UniqueFindingsSourceFiles(Finding_Source_File_ID);
 CREATE TABLE UserCategories 
 	(
 	 UserCategory_ID INTEGER PRIMARY KEY , 
@@ -1272,7 +1271,7 @@ CREATE TABLE Vulnerabilities
 	 Security_Override_Guidance NVARCHAR (2000) ,
 	 Overflow NVARCHAR (2000)
 	);
-CREATE INDEX Vulnerability_Index ON Vulnerabilities(Vulnerability_ID);
+CREATE INDEX Vulnerability_Index ON Vulnerabilities(Unique_Vulnerability_Identifier);
 CREATE TABLE Vulnerabilities_RoleResponsibilities
 	(
 	  Vulnerability_ID INTEGER NOT NULL ,

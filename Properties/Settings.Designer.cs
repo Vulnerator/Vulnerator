@@ -226,5 +226,29 @@ namespace Vulnerator.Properties {
                 this["HostNameFallbackNetBios"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CaptureAcasPortInformation {
+            get {
+                return ((bool)(this["CaptureAcasPortInformation"]));
+            }
+            set {
+                this["CaptureAcasPortInformation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CaptureAcasReferenceInformation {
+            get {
+                return ((bool)(this["CaptureAcasReferenceInformation"]));
+            }
+            set {
+                this["CaptureAcasReferenceInformation"] = value;
+            }
+        }
     }
 }
