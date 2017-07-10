@@ -286,7 +286,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT Hardware_ID FROM Hardware WHERE Host_Name = @Host_Name AND NetBIOS = @NetBIOS and FQDN = @FQDN;.
+        ///   Looks up a localized string similar to SELECT Hardware_ID FROM Hardware WHERE Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS;.
         /// </summary>
         internal static string SelectHardware {
             get {

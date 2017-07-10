@@ -193,7 +193,7 @@
     <value>SELECT Group_ID FROM Groups WHERE Group_Name = @Group_Name;</value>
   </data>
   <data name="SelectHardware" xml:space="preserve">
-    <value>SELECT Hardware_ID FROM Hardware WHERE Host_Name = @Host_Name AND NetBIOS = @NetBIOS and FQDN = @FQDN;</value>
+    <value>SELECT Hardware_ID FROM Hardware WHERE Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS;</value>
   </data>
   <data name="SelectIpAddress" xml:space="preserve">
     <value>SELECT IP_Address_ID FROM IP_Addresses WHERE IP_Address = @IP_Address;</value>
