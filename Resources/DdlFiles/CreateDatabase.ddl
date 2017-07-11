@@ -460,6 +460,7 @@ CREATE TABLE Hardware
 	 Host_Name NVARCHAR (50), 
 	 FQDN NVARCHAR (100),
 	 NetBIOS NVARCHAR (100) ,
+	 Scan_IP NVARCHAR (25),
 	 Is_Virtual_Server NVARCHAR (5) , 
 	 NIAP_Level NVARCHAR (25) , 
 	 Manufacturer NVARCHAR (25) , 
@@ -468,7 +469,8 @@ CREATE TABLE Hardware
 	 SerialNumber NVARCHAR (50) ,
 	 Role NVARCHAR (25),
 	 LifecycleStatus_ID INTEGER ,
-	 FOREIGN KEY (LifecycleStatus_ID) REFERENCES LifecycleStatuses(LifecycleStatus_ID)
+	 FOREIGN KEY (LifecycleStatus_ID) REFERENCES LifecycleStatuses(LifecycleStatus_ID),
+	 UNIQUE (Scan_IP, FQDN) ON CONFLICT IGNORE
 	);
 CREATE INDEX HardwareIndex ON Hardware(Host_Name, FQDN, NetBIOS);
 CREATE TABLE Hardware_MitigationsOrConditions 
@@ -512,6 +514,7 @@ CREATE TABLE HardwareGroups
 	 Group_ID INTEGER NOT NULL ,
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
 	 FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID)
+	 UNIQUE (Hardware_ID, Group_ID) ON CONFLICT IGNORE
 	);
 CREATE TABLE HardwareIpAddresses 
 	(
@@ -614,7 +617,7 @@ CREATE TABLE JointAuthorizationOrganizations
 	);
 CREATE TABLE LifecycleStatuses 
 	(
-	 LifecycleStatus_ID INTEGER NOT NULL , 
+	 LifecycleStatus_ID INTEGER PRIMARY KEY , 
 	 LifecycleStatus NVARCHAR (25) NOT NULL 
 	);
 CREATE TABLE Limitations 
@@ -1314,9 +1317,10 @@ CREATE TABLE VulnerabilitySources
 	 Vulnerability_Source_File_Name NVARCHAR (500) ,
 	 Source_Description NVARCHAR (2000) ,
 	 Source_Version NVARCHAR (25) NOT NULL, 
-	 Source_Release NVARCHAR (25) NOT NULL
+	 Source_Release NVARCHAR (25) NOT NULL, 
+	 UNIQUE (Source_Name, Source_Version, Source_Release) ON CONFLICT IGNORE
 	);
-CREATE INDEX Vulnerability_Source_Index ON VulnerabilitySources(Source_Name);
+CREATE INDEX Vulnerability_Source_Index ON VulnerabilitySources(Source_Name, Source_Version, Source_Release);
 CREATE TABLE VulnerabilitySourcesSoftware 
 	(
 	 Source_ID INTEGER NOT NULL , 
@@ -1393,3 +1397,7 @@ INSERT INTO Overlays VALUES (NULL, "Privacy High");
 INSERT INTO Overlays VALUES (NULL, "Privacy Moderate");
 INSERT INTO Overlays VALUES (NULL, "Privacy PHI");
 INSERT INTO Overlays VALUES (NULL, "Space");
+INSERT INTO LifecycleStatuses VALUES (NULL, 'Uncategorized');
+INSERT INTO LifecycleStatuses VALUES (NULL, 'Pending');
+INSERT INTO LifecycleStatuses VALUES (NULL, 'Active');
+INSERT INTO LifecycleStatuses VALUES (NULL, 'Decommisioned');

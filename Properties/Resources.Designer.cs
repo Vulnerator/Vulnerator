@@ -70,7 +70,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@NetBIOS,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,NULL);.
+        ///   Looks up a localized string similar to INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@NetBIOS,@Scan_IP,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,(SELECT LifecycleStatus_ID FROM LifecycleStatuses WHERE LifecycleStatus = &apos;Not Categorized&apos;));.
         /// </summary>
         internal static string InsertHardware {
             get {
@@ -115,7 +115,27 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO UniqueFindings VALUES (NULL, @Tool_Generated_Output, @Comments, @Finding_Details, @Technical_Mitigation, @Proposed_Mitigation, @Predisposing_Conditions, @Impact, @Likelihood, @Severity, @Risk, @Residual_Risk, @First_Discovered, @Last_Observed, @Approval_Status, @Approval_Date, @Approval_Expiration_Date, @Delta_Analysis_Required, @Finding_Type_ID, @Finding_Source_File_ID, @Status, @Vulnerability_ID, @Hardware_ID, @Severity_Override, @Severity_Override_Justification, @Technology_Area, @Web_DB_Site [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to INSERT INTO UniqueFindings VALUES (
+        ///	NULL, 
+        ///	@Tool_Generated_Output, 
+        ///	@Comments, 
+        ///	@Finding_Details, 
+        ///	@Technical_Mitigation, 
+        ///	@Proposed_Mitigation, 
+        ///	@Predisposing_Conditions, 
+        ///	@Impact, 
+        ///	@Likelihood, 
+        ///	@Severity, 
+        ///	@Risk, 
+        ///	@Residual_Risk, 
+        ///	@First_Discovered, 
+        ///	@Last_Observed, 
+        ///	@Approval_Status, 
+        ///	@Approval_Date, 
+        ///	@Approval_Expiration_Date, 
+        ///	@Delta_Analysis_Required, 
+        ///	(SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = &apos;ACAS&apos;), 
+        ///	(SELECT Finding_Source_File_ID FROM U [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InsertUniqueFinding {
             get {
@@ -151,7 +171,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO VulnerabilitySources VALUES (NULL, @Source_Name, @Source_Secondary_Identifier, @Vulnerability_Source_File_Name, @Source_Description, @Source_Version, @Source_Release);.
+        ///   Looks up a localized string similar to INSERT OR IGNORE INTO VulnerabilitySources VALUES (NULL, @Source_Name, @Source_Secondary_Identifier, @Vulnerability_Source_File_Name, @Source_Description, @Source_Version, @Source_Release);.
         /// </summary>
         internal static string InsertVulnerabilitySource {
             get {
@@ -160,7 +180,16 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO SoftwareHardware VALUES (@Software_ID, @Hardware_ID, @ReportInAccreditation, @ApprovedForBaseline, @BaselineApprover);.
+        ///   Looks up a localized string similar to INSERT INTO HardwareGroups VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), (SELECT Group_ID FROM Groups WHERE Group_Name = @Group_Name));.
+        /// </summary>
+        internal static string MapHardwareToGroup {
+            get {
+                return ResourceManager.GetString("MapHardwareToGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO SoftwareHardware VALUES ((SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), @ReportInAccreditation, @ApprovedForBaseline, @BaselineApprover);.
         /// </summary>
         internal static string MapHardwareToSoftware {
             get {
@@ -169,7 +198,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO HardwareIpAddresses VALUES (@Hardware_ID, @IP_Address_ID);.
+        ///   Looks up a localized string similar to INSERT INTO HardwareIpAddresses VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), (SELECT IP_Address_ID FROM IP_Addresses WHERE IP_Address = @IP_Address));.
         /// </summary>
         internal static string MapIpToHardware {
             get {
@@ -178,7 +207,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO HardwareMacAddresses VALUES (@Hardware_ID, @MAC_Address_ID);.
+        ///   Looks up a localized string similar to INSERT INTO HardwareMacAddresses VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), (SELECT MAC_Address_ID FROM MAC_Addresses WHERE MAC_Address = @MAC_Address));.
         /// </summary>
         internal static string MapMacToHardware {
             get {
@@ -187,7 +216,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Hardware_PPS (Hardware_ID, PPS_ID) VALUES (@Hardware_ID, @PPS_ID);.
+        ///   Looks up a localized string similar to INSERT INTO Hardware_PPS (Hardware_ID, PPS_ID) VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), (SELECT PPS_ID FROM PPS WHERE Port = @Port AND Protocol = @Protocol));.
         /// </summary>
         internal static string MapPortToHardware {
             get {
@@ -196,7 +225,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Vulnerabilities_VulnerabilityReferences VALUES (@Vulnerability_ID, @Reference_ID);.
+        ///   Looks up a localized string similar to INSERT INTO Vulnerabilities_VulnerabilityReferences VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier), (SELECT Reference_ID FROM VulnerabilityReferences WHERE Reference = @Reference AND Reference_Type = @Reference_Type));.
         /// </summary>
         internal static string MapReferenceToVulnerability {
             get {
@@ -205,7 +234,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT OR REPLACE INTO VulnerabilitesCCIs VALUES (@Vulnerability_ID, (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI));.
+        ///   Looks up a localized string similar to INSERT OR REPLACE INTO VulnerabilitesCCIs VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier), (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI));.
         /// </summary>
         internal static string MapVulnerabilityToCci {
             get {
@@ -223,7 +252,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Vulnerabilities_VulnerabilitySources VALUES (@Vulnerability_ID, @Vulnerability_Source_ID);.
+        ///   Looks up a localized string similar to INSERT INTO Vulnerabilities_VulnerabilitySources VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier), (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release));.
         /// </summary>
         internal static string MapVulnerabilityToSource {
             get {
@@ -376,7 +405,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UPDATE UniqueFindings SET Last_Observed = @Last_Observed, Status = @Status WHERE Unique_Finding_ID = @Unique_Finding_ID;.
+        ///   Looks up a localized string similar to UPDATE UniqueFindings SET Last_Observed = @Last_Observed, Status = @Status, Tool_Generated_Output = @Tool_Generated_Output NATURAL JOIN Hardware NATURAL JOIN Vulnerabilities WHERE Hardware_ID = (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP) AND Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;.
         /// </summary>
         internal static string UpdateAcasUniqueFinding {
             get {
@@ -403,7 +432,16 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UPDATE Vulnerabilities SET Vulnerability_Title=@Vulnerability_Title, Vulnerability_Description = @Vulnerability_Description, Risk_Statement = @Risk_Statement, Fix_Text = @Fix_Text, Modified_Date = @Modified_Date, Fix_Published_Date = @Fix_Published_Date, Raw_Risk = @Raw_Risk WHERE Vulnerability_ID = @Vulnerability_ID;.
+        ///   Looks up a localized string similar to UPDATE Vulnerabilities_VulnerabilitySources SET Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release) WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Version = &apos;Version Unknown&apos;);.
+        /// </summary>
+        internal static string UpdateUnknownAcasVersion {
+            get {
+                return ResourceManager.GetString("UpdateUnknownAcasVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE Vulnerabilities SET Vulnerability_Title=@Vulnerability_Title, Vulnerability_Description = @Vulnerability_Description, Risk_Statement = @Risk_Statement, Fix_Text = @Fix_Text, Modified_Date = @Modified_Date, Fix_Published_Date = @Fix_Published_Date, Raw_Risk = @Raw_Risk WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;.
         /// </summary>
         internal static string UpdateVulnerability {
             get {
