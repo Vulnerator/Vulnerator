@@ -206,30 +206,6 @@ namespace Vulnerator.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool HostNameFallbackFqdn {
-            get {
-                return ((bool)(this["HostNameFallbackFqdn"]));
-            }
-            set {
-                this["HostNameFallbackFqdn"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool HostNameFallbackNetBios {
-            get {
-                return ((bool)(this["HostNameFallbackNetBios"]));
-            }
-            set {
-                this["HostNameFallbackNetBios"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool CaptureAcasPortInformation {
             get {
                 return ((bool)(this["CaptureAcasPortInformation"]));
@@ -241,13 +217,25 @@ namespace Vulnerator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool CaptureAcasReferenceInformation {
             get {
                 return ((bool)(this["CaptureAcasReferenceInformation"]));
             }
             set {
                 this["CaptureAcasReferenceInformation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CaptureAcasEnumeratedSoftware {
+            get {
+                return ((bool)(this["CaptureAcasEnumeratedSoftware"]));
+            }
+            set {
+                this["CaptureAcasEnumeratedSoftware"] = value;
             }
         }
     }

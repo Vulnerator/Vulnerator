@@ -34,16 +34,6 @@ namespace Vulnerator.Model.BusinessLogic
         private List<string> cves = new List<string>();
         private List<string> cpes = new List<string>();
         private List<string> xrefs = new List<string>();
-        private Stopwatch parseHostStopwatch = new Stopwatch();
-        private Stopwatch hardwareStopwatch = new Stopwatch();
-        private Stopwatch ipStopwatch = new Stopwatch();
-        private Stopwatch macStopwatch = new Stopwatch();
-        private Stopwatch sourceStopwatch = new Stopwatch();
-        private Stopwatch parseVulnStopwatch = new Stopwatch();
-        private Stopwatch vulnStopwatch = new Stopwatch();
-        private Stopwatch findingStopwatch = new Stopwatch();
-        private Stopwatch softwareStopwatch = new Stopwatch();
-
 
         /// <summary>
         /// Reads *.nessus files exported from within ACAS and writes the results to the appropriate DataTables.
@@ -62,16 +52,6 @@ namespace Vulnerator.Model.BusinessLogic
 
                 fileName = file.FileName;
                 ParseNessusWithXmlReader(file);
-
-                log.Info(string.Format("Host Parse Time: {0}", parseHostStopwatch.Elapsed.ToString()));
-                log.Info(string.Format("Vuln Parse Time: {0}", parseVulnStopwatch.Elapsed.ToString()));
-                log.Info(string.Format("Hardware Insert Time: {0}", hardwareStopwatch.Elapsed.ToString()));
-                log.Info(string.Format("IP Insert Time: {0}", ipStopwatch.Elapsed.ToString()));
-                log.Info(string.Format("MAC Insert Time: {0}", macStopwatch.Elapsed.ToString()));
-                log.Info(string.Format("Source Insert Time: {0}", sourceStopwatch.Elapsed.ToString()));
-                log.Info(string.Format("Vuln Insert Time: {0}", vulnStopwatch.Elapsed.ToString()));
-                log.Info(string.Format("Finding Insert Time: {0}", findingStopwatch.Elapsed.ToString()));
-                log.Info(string.Format("Software Insert Time: {0}", softwareStopwatch.Elapsed.ToString()));
 
                 return "Processed";
             }
@@ -172,7 +152,6 @@ namespace Vulnerator.Model.BusinessLogic
 
         private void ParseHostData(SQLiteCommand sqliteCommand, XmlReader xmlReader)
         {
-            parseHostStopwatch.Start();
             string hostIp = xmlReader.GetAttribute("name");
             try
             {
@@ -230,29 +209,16 @@ namespace Vulnerator.Model.BusinessLogic
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("HostProperties"))
                     {
-                        parseHostStopwatch.Stop();
-                        hardwareStopwatch.Start();
                         InsertHardware(sqliteCommand);
-                        hardwareStopwatch.Stop();
-                        ipStopwatch.Start();
                         InsertIpAddress(sqliteCommand);
                         MapIpAddress(sqliteCommand);
-                        ipStopwatch.Stop();
-                        hardwareStopwatch.Start();
                         MapHardwareToGroup(sqliteCommand);
-                        hardwareStopwatch.Stop();
                         if (!string.IsNullOrWhiteSpace(sqliteCommand.Parameters["MAC_Address"].Value.ToString()))
-                        {
-                            macStopwatch.Start();
-                            InsertAndMapMacAddress(sqliteCommand);
-                            macStopwatch.Stop();
-                        }
+                        { InsertAndMapMacAddress(sqliteCommand); }
                         if (sqliteCommand.Parameters.Contains("Discovered_Software_Name"))
                         {
-                            softwareStopwatch.Start();
                             InsertSoftware(sqliteCommand);
                             MapHardwareToSoftware(sqliteCommand);
-                            softwareStopwatch.Stop();
                         }
                         return;
                     }
@@ -383,7 +349,6 @@ namespace Vulnerator.Model.BusinessLogic
 
         private void ParseVulnerability(SQLiteCommand sqliteCommand, XmlReader xmlReader)
         {
-            parseVulnStopwatch.Start();
             string pluginId = xmlReader.GetAttribute("pluginID");
             try
             {
@@ -404,7 +369,7 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "description":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Description", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Description", ObtainCurrentNodeValue(xmlReader)));
                                     break;
                                 }
                             case "plugin_modification_date":
@@ -499,6 +464,12 @@ namespace Vulnerator.Model.BusinessLogic
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("CVSS_Temporal_Vector", ObtainCurrentNodeValue(xmlReader)));
                                     break;
                                 }
+                            case "script_version":
+                                {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Version", ObtainCurrentNodeValue(xmlReader)));
+                                    ParsePluginRevision(sqliteCommand);
+                                    break;
+                                }
                             default:
                                 { break; }
                         }
@@ -506,19 +477,12 @@ namespace Vulnerator.Model.BusinessLogic
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ReportItem"))
                     {
                         sqliteCommand.Parameters.Add(new SQLiteParameter("Scan_IP", ipAddress));
-                        parseVulnStopwatch.Stop();
-                        sourceStopwatch.Start();
                         InsertVulnerabilitySource(sqliteCommand);
-                        sourceStopwatch.Stop();
-                        vulnStopwatch.Start();
                         InsertVulnerability(sqliteCommand);
                         MapVulnerabilityToSource(sqliteCommand);
-                        vulnStopwatch.Stop();
                         if (Properties.Settings.Default.CaptureAcasPortInformation)
                         { InsertAndMapPort(sqliteCommand); }
-                        findingStopwatch.Start();
                         InsertUniqueFinding(sqliteCommand);
-                        findingStopwatch.Stop();
                         if (Properties.Settings.Default.CaptureAcasReferenceInformation)
                         {
                             InsertAndMapReferences(sqliteCommand, cpes, "CPE");
@@ -535,6 +499,68 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 log.Error(string.Format("Unable to parse plugin \"{0}\".", pluginId));
+                throw exception;
+            }
+        }
+
+        private void ParseWindowsSoftware(SQLiteCommand sqliteCommand)
+        { 
+            try
+            {
+                string rawOutput = sqliteCommand.Parameters["Tool_Generated_Output"].Value.ToString();
+                using (StringReader stringReader = new StringReader(rawOutput))
+                {
+                    string line;
+                    int i = 0;
+                    while ((line = stringReader.ReadLine()) != null)
+                    {
+                        if (i < 2)
+                        {
+                            i++;
+                            continue;
+                        }
+                        sqliteCommand.Parameters["Discovered_Software_Name"].Value = line.Split('[')[0];
+                        
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to parse Windows software (Plugin 20811) for \"{0}\".",
+                    sqliteCommand.Parameters["Scan_IP"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        private void ParseSshSoftware(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to parse SSH software (Plugin 22869) for \"{0}\".",
+                    sqliteCommand.Parameters["Scan_IP"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        private void ParsePluginRevision(SQLiteCommand sqliteCommand)
+        { 
+            try
+            {
+                string pluginVersion = sqliteCommand.Parameters["Vulnerability_Version"].Value.ToString();
+                pluginVersion = pluginVersion.Replace("$", string.Empty);
+                if (pluginVersion.Contains(":"))
+                { pluginVersion = pluginVersion.Split(':')[1]; }
+                pluginVersion = pluginVersion.Trim();
+                sqliteCommand.Parameters["Vulnerability_Version"].Value = pluginVersion;
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to parse the version information for plugin \"{0}\".",
+                    sqliteCommand.Parameters["Vulnerability_Version"].Value.ToString()));
                 throw exception;
             }
         }
@@ -589,6 +615,7 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 sqliteCommand.CommandText = Properties.Resources.UpdateVulnerability;
+                sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.CommandText = Properties.Resources.InsertVulnerability;
                 sqliteCommand.ExecuteNonQuery();
             }
@@ -635,13 +662,15 @@ namespace Vulnerator.Model.BusinessLogic
         { 
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.InsertUniqueFinding;
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Status", "Ongoing"));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Unique_Finding_ID", DBNull.Value));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("First_Discovered", firstDiscovered));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Approval_Status", "Not Approved"));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Delta_Analysis_Required", "False"));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Source_File_Name", fileName));
+                sqliteCommand.CommandText = Properties.Resources.UpdateAcasUniqueFinding;
+                sqliteCommand.ExecuteNonQuery();
+                sqliteCommand.CommandText = Properties.Resources.InsertUniqueFinding;
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -701,7 +730,6 @@ namespace Vulnerator.Model.BusinessLogic
             cves.Clear();
             cpes.Clear();
             xrefs.Clear();
-            firstDiscovered = lastObserved = DateTime.Now.ToShortDateString();
     }
 
         private XmlReaderSettings GenerateXmlReaderSettings()

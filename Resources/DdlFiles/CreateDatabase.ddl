@@ -837,7 +837,8 @@ CREATE TABLE PPS
 	(
 	 PPS_ID INTEGER PRIMARY KEY , 
 	 Port INTEGER NOT NULL , 
-	 Protocol NVARCHAR (25) NOT NULL 
+	 Protocol NVARCHAR (25) NOT NULL ,
+	 UNIQUE (Port, Protocol) ON CONFLICT IGNORE
 	);
 CREATE INDEX PPS_Index ON PPS(Port,Protocol);
 CREATE TABLE RelatedDocuments 
@@ -970,7 +971,6 @@ CREATE TABLE Software
 	 Software_Acronym NVARCHAR (25) , 
 	 Software_Version NVARCHAR (25) , 
 	 Function NVARCHAR (500) , 
-	 Install_Date DATE , 
 	 DADMS_ID INTEGER , 
 	 DADMS_Disposition NVARCHAR (25) , 
 	 DADMS_LDA DATE , 
@@ -1003,11 +1003,13 @@ CREATE TABLE SoftwareHardware
 	(
 	 Software_ID INTEGER NOT NULL , 
 	 Hardware_ID INTEGER NOT NULL , 
+	 Install_Date DATE NOT NULL,
 	 ReportInAccreditation NVARCHAR (5) , 
 	 ApprovedForBaseline NVARCHAR (5) , 
 	 BaselineApprover NVARCHAR (50) ,
 	 FOREIGN KEY (Software_ID) REFERENCES Software(Software_ID),
-	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID)
+	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
+	 UNIQUE (Software_ID, Hardware_ID) ON CONFLICT IGNORE
 	);
 CREATE TABLE SpecialPurposeConsoles 
 	(
@@ -1200,7 +1202,8 @@ CREATE TABLE UniqueFindings
 	 FOREIGN KEY (Finding_Type_ID) REFERENCES FindingTypes(Finding_Type_ID),
 	 FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
-	 FOREIGN KEY (Finding_Source_File_ID) REFERENCES UniqueFindingsSourceFiles(Finding_Source_File_ID)
+	 FOREIGN KEY (Finding_Source_File_ID) REFERENCES UniqueFindingsSourceFiles(Finding_Source_File_ID),
+	 UNIQUE (Vulnerability_ID, Hardware_ID) ON CONFLICT IGNORE
 	);
 CREATE TABLE UniqueFindings_UniqueFindingsSourceFiles 
 	(
