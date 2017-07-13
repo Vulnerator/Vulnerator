@@ -133,7 +133,26 @@
     <value>INSERT INTO PPS VALUES (NULL, @Port, @Protocol);</value>
   </data>
   <data name="InsertSoftware" xml:space="preserve">
-    <value>INSERT INTO Software VALUES (NULL, @Discovered_Software_Name, @Displayed_Software_Name, @Software_Acronym, @Software_Version, @Function, @Install_Date, @DADMS_ID, @DADMS_Disposition, @DADMS_LDA, @Has_Custom_Code, @IaOrIa_Enabled, @Is_OS_Or_Firmware, @FAM_Accepted, @Externally_Authorized, @ReportInAccreditation_Global, @ApprovedForBaseline_Global, @BaselineApprover_Global, @Instance);</value>
+    <value>INSERT INTO Software VALUES (
+	NULL, 
+	@Discovered_Software_Name, 
+	@Displayed_Software_Name, 
+	@Software_Acronym, 
+	@Software_Version, 
+	@Function, 
+	@DADMS_ID, 
+	@DADMS_Disposition, 
+	@DADMS_LDA, 
+	@Has_Custom_Code, 
+	@IaOrIa_Enabled, 
+	@Is_OS_Or_Firmware, 
+	@FAM_Accepted, 
+	@Externally_Authorized, 
+	@ReportInAccreditation_Global, 
+	@ApprovedForBaseline_Global, 
+	@BaselineApprover_Global, 
+	@Instance
+);</value>
   </data>
   <data name="InsertUniqueFinding" xml:space="preserve">
     <value>INSERT INTO UniqueFindings VALUES (
@@ -185,7 +204,7 @@
     <value>INSERT INTO HardwareGroups VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), (SELECT Group_ID FROM Groups WHERE Group_Name = @Group_Name));</value>
   </data>
   <data name="MapHardwareToSoftware" xml:space="preserve">
-    <value>INSERT INTO SoftwareHardware VALUES ((SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), @ReportInAccreditation, @ApprovedForBaseline, @BaselineApprover);</value>
+    <value>INSERT INTO SoftwareHardware VALUES ((SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP),@Install_Date  ,@ReportInAccreditation, @ApprovedForBaseline, @BaselineApprover);</value>
   </data>
   <data name="MapIpToHardware" xml:space="preserve">
     <value>INSERT INTO HardwareIpAddresses VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), (SELECT IP_Address_ID FROM IP_Addresses WHERE IP_Address = @IP_Address));</value>
@@ -207,6 +226,27 @@
   </data>
   <data name="MapVulnerabilityToSource" xml:space="preserve">
     <value>INSERT INTO Vulnerabilities_VulnerabilitySources VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier), (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release));</value>
+  </data>
+  <data name="RegexAcasLinuxSoftwareName" xml:space="preserve">
+    <value>^(?:\w)+(?:-?\.?[A-Za-z]+)*</value>
+  </data>
+  <data name="RegexAcasLinuxSoftwareVersion" xml:space="preserve">
+    <value>(?:(?:\d+\.?-?)+(?:\w+)?\.?-?)+(?=\|)</value>
+  </data>
+  <data name="RegexAcasSoftwareInstallDate" xml:space="preserve">
+    <value>(?&lt;=\[installed on\s)(?:\d{2,4}\/\d{1,2}\/\d{1,2})(?=\])</value>
+  </data>
+  <data name="RegexAcasSolarisSoftwareName" xml:space="preserve">
+    <value>^(?:\w)+(?:-?(?:\w?)+)+</value>
+  </data>
+  <data name="RegexAcasSolarisSoftwareVersion" xml:space="preserve">
+    <value>(?:\d+\.?)+,?(?:REV=(?:\d+\.?)+)?</value>
+  </data>
+  <data name="RegexAcasWindowsSoftwareName" xml:space="preserve">
+    <value>^.+?(?:(?=\[)|(?=\r?\n))</value>
+  </data>
+  <data name="RegexAcasWindowsSoftwareVersion" xml:space="preserve">
+    <value>(?&lt;=\[version\s)(?:\d+(?:(?:(?:\.|-?)\d*)*)|(?:\w+))(?=\])</value>
   </data>
   <data name="RegexIPv4" xml:space="preserve">
     <value>^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$</value>

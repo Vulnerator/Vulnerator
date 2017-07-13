@@ -168,8 +168,9 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "operating-system":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Discovered_Software_Name", ObtainCurrentNodeValue(xmlReader)));
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Displayed_Software_Name", ObtainCurrentNodeValue(xmlReader)));
+                                    string operatingSystem = ObtainCurrentNodeValue(xmlReader);
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Discovered_Software_Name", operatingSystem));
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Displayed_Software_Name", operatingSystem));
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("Is_OS_Or_Firmware", "True"));
                                     break;
                                 }
@@ -489,6 +490,19 @@ namespace Vulnerator.Model.BusinessLogic
                             InsertAndMapReferences(sqliteCommand, cves, "CVE");
                             InsertAndMapReferences(sqliteCommand, xrefs, "Multi");
                         }
+                        if (Properties.Settings.Default.CaptureAcasEnumeratedSoftware)
+                        {
+                            switch (sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString())
+                            {
+                                case "20811":
+                                    {
+                                        ParseWindowsSoftware(sqliteCommand);
+                                        break;
+                                    }
+                                default:
+                                    { break; }
+                            }
+                        }
                         ClearGlobals();
                         foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                         { parameter.Value = string.Empty; }
@@ -507,6 +521,13 @@ namespace Vulnerator.Model.BusinessLogic
         { 
             try
             {
+                sqliteCommand.Parameters["Is_OS_Or_Firmware"].Value = "False";
+                string[] regexArray = new string[] 
+                {
+                    Properties.Resources.RegexAcasWindowsSoftwareName,
+                    Properties.Resources.RegexAcasWindowsSoftwareVersion,
+                    Properties.Resources.RegexAcasSoftwareInstallDate
+                };
                 string rawOutput = sqliteCommand.Parameters["Tool_Generated_Output"].Value.ToString();
                 using (StringReader stringReader = new StringReader(rawOutput))
                 {
@@ -519,8 +540,40 @@ namespace Vulnerator.Model.BusinessLogic
                             i++;
                             continue;
                         }
-                        sqliteCommand.Parameters["Discovered_Software_Name"].Value = line.Split('[')[0];
-                        
+                        foreach (string expression in regexArray)
+                        {
+                            Regex regex = new Regex(expression);
+                            switch (Array.IndexOf(regexArray, expression))
+                            {
+                                case 0:
+                                    {
+                                        string name = ObtainParsedSoftwareName(regex.Match(line), "20811");
+                                        sqliteCommand.Parameters["Discovered_Software_Name"].Value = name;
+                                        sqliteCommand.Parameters["Displayed_Software_Name"].Value = name;
+                                        break;
+                                    }
+                                case 1:
+                                    {
+                                        sqliteCommand.Parameters["Software_Version"].Value = regex.Match(line).Value.Trim();
+                                        break;
+                                    }
+                                case 2:
+                                    {
+                                        sqliteCommand.Parameters["Install_Date"].Value = regex.Match(line).Value.Trim();
+                                        break;
+                                    }
+                                default:
+                                    { break; }
+                            }
+                        }
+                        if (!string.IsNullOrWhiteSpace(sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString()))
+                        {
+                            InsertSoftware(sqliteCommand);
+                            MapHardwareToSoftware(sqliteCommand);
+                        }
+                        string[] parametersToClear = new string[] { "Discovered_Software_Name", "Displayed_Software_Name", "Software_Version", "Install_Date" };
+                        foreach (string parameter in parametersToClear)
+                        { sqliteCommand.Parameters[parameter].Value = string.Empty; }
                     }
                 }
             }
@@ -546,8 +599,52 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private void ParsePluginRevision(SQLiteCommand sqliteCommand)
+        private void ParseSolarisSoftware(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to parse Solaris software (Plugin 29217) for \"{0}\".",
+                    sqliteCommand.Parameters["Scan_IP"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        private string ObtainParsedSoftwareName(Match match, string pluginId)
         { 
+            try
+            {
+                string name = match.Value.Trim();
+                switch (pluginId)
+                {
+                    case "20811":
+                        {
+                            if (name.StartsWith("{") || name.StartsWith("KB") || string.IsNullOrWhiteSpace(name))
+                            { return string.Empty; }
+                            string[] ignoredSoftwareArray = new string[] { "Security Update", "Update for", "Hotfix for", "Language Pack" };
+                            foreach (string ignorable in ignoredSoftwareArray)
+                            {
+                                if (name.Contains(ignorable))
+                                { return string.Empty; }
+                            }
+                            return name;
+                        }
+                    default:
+                        { return string.Empty; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to obtain the software name for plugin \"{0}\"."));
+                throw exception;
+            }
+        }
+
+        private void ParsePluginRevision(SQLiteCommand sqliteCommand)
+        {
             try
             {
                 string pluginVersion = sqliteCommand.Parameters["Vulnerability_Version"].Value.ToString();

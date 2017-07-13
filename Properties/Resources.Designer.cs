@@ -106,7 +106,26 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Software VALUES (NULL, @Discovered_Software_Name, @Displayed_Software_Name, @Software_Acronym, @Software_Version, @Function, @Install_Date, @DADMS_ID, @DADMS_Disposition, @DADMS_LDA, @Has_Custom_Code, @IaOrIa_Enabled, @Is_OS_Or_Firmware, @FAM_Accepted, @Externally_Authorized, @ReportInAccreditation_Global, @ApprovedForBaseline_Global, @BaselineApprover_Global, @Instance);.
+        ///   Looks up a localized string similar to INSERT INTO Software VALUES (
+        ///	NULL, 
+        ///	@Discovered_Software_Name, 
+        ///	@Displayed_Software_Name, 
+        ///	@Software_Acronym, 
+        ///	@Software_Version, 
+        ///	@Function, 
+        ///	@DADMS_ID, 
+        ///	@DADMS_Disposition, 
+        ///	@DADMS_LDA, 
+        ///	@Has_Custom_Code, 
+        ///	@IaOrIa_Enabled, 
+        ///	@Is_OS_Or_Firmware, 
+        ///	@FAM_Accepted, 
+        ///	@Externally_Authorized, 
+        ///	@ReportInAccreditation_Global, 
+        ///	@ApprovedForBaseline_Global, 
+        ///	@BaselineApprover_Global, 
+        ///	@Instance
+        ///);.
         /// </summary>
         internal static string InsertSoftware {
             get {
@@ -189,7 +208,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO SoftwareHardware VALUES ((SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), @ReportInAccreditation, @ApprovedForBaseline, @BaselineApprover);.
+        ///   Looks up a localized string similar to INSERT INTO SoftwareHardware VALUES ((SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP),@Install_Date  ,@ReportInAccreditation, @ApprovedForBaseline, @BaselineApprover);.
         /// </summary>
         internal static string MapHardwareToSoftware {
             get {
@@ -257,6 +276,69 @@ namespace Vulnerator.Properties {
         internal static string MapVulnerabilityToSource {
             get {
                 return ResourceManager.GetString("MapVulnerabilityToSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ^(?:\w)+(?:-?\.?[A-Za-z]+)*.
+        /// </summary>
+        internal static string RegexAcasLinuxSoftwareName {
+            get {
+                return ResourceManager.GetString("RegexAcasLinuxSoftwareName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (?:(?:\d+\.?-?)+(?:\w+)?\.?-?)+(?=\|).
+        /// </summary>
+        internal static string RegexAcasLinuxSoftwareVersion {
+            get {
+                return ResourceManager.GetString("RegexAcasLinuxSoftwareVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (?&lt;=\[installed on\s)(?:\d{2,4}\/\d{1,2}\/\d{1,2})(?=\]).
+        /// </summary>
+        internal static string RegexAcasSoftwareInstallDate {
+            get {
+                return ResourceManager.GetString("RegexAcasSoftwareInstallDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ^(?:\w)+(?:-?(?:\w?)+)+.
+        /// </summary>
+        internal static string RegexAcasSolarisSoftwareName {
+            get {
+                return ResourceManager.GetString("RegexAcasSolarisSoftwareName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (?:\d+\.?)+,?(?:REV=(?:\d+\.?)+)?.
+        /// </summary>
+        internal static string RegexAcasSolarisSoftwareVersion {
+            get {
+                return ResourceManager.GetString("RegexAcasSolarisSoftwareVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ^.+?(?:(?=\[)|(?=\r?\n)).
+        /// </summary>
+        internal static string RegexAcasWindowsSoftwareName {
+            get {
+                return ResourceManager.GetString("RegexAcasWindowsSoftwareName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (?&lt;=\[version\s)(?:\d+(?:(?:(?:\.|-?)\d*)*)|(?:\w+))(?=\]).
+        /// </summary>
+        internal static string RegexAcasWindowsSoftwareVersion {
+            get {
+                return ResourceManager.GetString("RegexAcasWindowsSoftwareVersion", resourceCulture);
             }
         }
         
