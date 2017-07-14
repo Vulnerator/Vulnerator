@@ -501,7 +501,12 @@ namespace Vulnerator.Model.BusinessLogic
                                     }
                                 case "22869":
                                     {
-                                        ParseSshSoftware(sqliteCommand);
+                                        ParseUnixSoftware(sqliteCommand, "22869");
+                                        break;
+                                    }
+                                case "29217":
+                                    {
+                                        ParseUnixSoftware(sqliteCommand, "29217");
                                         break;
                                     }
                                 default:
@@ -590,16 +595,29 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private void ParseSshSoftware(SQLiteCommand sqliteCommand)
+        private void ParseUnixSoftware(SQLiteCommand sqliteCommand, string pluginId)
         {
             try
             {
+                string[] regexArray;
                 sqliteCommand.Parameters["Is_OS_Or_Firmware"].Value = "False";
-                string[] regexArray = new string[]
+                if (pluginId.Equals("22869"))
                 {
-                    Properties.Resources.RegexAcasLinuxSoftwareName,
-                    Properties.Resources.RegexAcasLinuxSoftwareVersion
-                };
+                    regexArray = new string[]
+                    {
+                        Properties.Resources.RegexAcasLinuxSoftwareName,
+                        Properties.Resources.RegexAcasLinuxSoftwareVersion
+                    };
+                }
+                else
+                {
+                    regexArray = new string[]
+                    {
+                        Properties.Resources.RegexAcasSolarisSoftwareName,
+                        Properties.Resources.RegexAcasSolarisSoftwareVersion
+                    };
+                }
+                
                 string rawOutput = sqliteCommand.Parameters["Tool_Generated_Output"].Value.ToString();
                 using (StringReader stringReader = new StringReader(rawOutput))
                 {
@@ -607,13 +625,14 @@ namespace Vulnerator.Model.BusinessLogic
                     int i = 0;
                     while ((line = stringReader.ReadLine()) != null)
                     {
-                        if (line.Contains("Solaris"))
+                        if (pluginId.Equals("22869") && line.Contains("Solaris"))
                         { return; }
                         if (i < 2)
                         {
                             i++;
                             continue;
                         }
+                        line = line.Trim();
                         foreach (string expression in regexArray)
                         {
                             Regex regex = new Regex(expression);
@@ -648,21 +667,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to parse SSH software (Plugin 22869) for \"{0}\".",
-                    sqliteCommand.Parameters["Scan_IP"].Value.ToString()));
-                throw exception;
-            }
-        }
-
-        private void ParseSolarisSoftware(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to parse Solaris software (Plugin 29217) for \"{0}\".",
+                log.Error(string.Format("Unable to parse SSH software (Plugin 22869/29217) for \"{0}\".",
                     sqliteCommand.Parameters["Scan_IP"].Value.ToString()));
                 throw exception;
             }
