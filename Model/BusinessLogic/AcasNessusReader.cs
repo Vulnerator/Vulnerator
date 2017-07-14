@@ -499,6 +499,11 @@ namespace Vulnerator.Model.BusinessLogic
                                         ParseWindowsSoftware(sqliteCommand);
                                         break;
                                     }
+                                case "22869":
+                                    {
+                                        ParseSshSoftware(sqliteCommand);
+                                        break;
+                                    }
                                 default:
                                     { break; }
                             }
@@ -547,7 +552,7 @@ namespace Vulnerator.Model.BusinessLogic
                             {
                                 case 0:
                                     {
-                                        string name = ObtainParsedSoftwareName(regex.Match(line), "20811");
+                                        string name = SanitizeWindowsSoftwareName(regex.Match(line), "20811");
                                         sqliteCommand.Parameters["Discovered_Software_Name"].Value = name;
                                         sqliteCommand.Parameters["Displayed_Software_Name"].Value = name;
                                         break;
@@ -589,7 +594,57 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-
+                sqliteCommand.Parameters["Is_OS_Or_Firmware"].Value = "False";
+                string[] regexArray = new string[]
+                {
+                    Properties.Resources.RegexAcasLinuxSoftwareName,
+                    Properties.Resources.RegexAcasLinuxSoftwareVersion
+                };
+                string rawOutput = sqliteCommand.Parameters["Tool_Generated_Output"].Value.ToString();
+                using (StringReader stringReader = new StringReader(rawOutput))
+                {
+                    string line;
+                    int i = 0;
+                    while ((line = stringReader.ReadLine()) != null)
+                    {
+                        if (line.Contains("Solaris"))
+                        { return; }
+                        if (i < 2)
+                        {
+                            i++;
+                            continue;
+                        }
+                        foreach (string expression in regexArray)
+                        {
+                            Regex regex = new Regex(expression);
+                            switch (Array.IndexOf(regexArray, expression))
+                            {
+                                case 0:
+                                    {
+                                        string name = regex.Match(line).Value.Trim();
+                                        sqliteCommand.Parameters["Discovered_Software_Name"].Value = name;
+                                        sqliteCommand.Parameters["Displayed_Software_Name"].Value = name;
+                                        break;
+                                    }
+                                case 1:
+                                    {
+                                        sqliteCommand.Parameters["Software_Version"].Value = regex.Match(line).Value.Trim();
+                                        break;
+                                    }
+                                default:
+                                    { break; }
+                            }
+                        }
+                        if (!string.IsNullOrWhiteSpace(sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString()))
+                        {
+                            InsertSoftware(sqliteCommand);
+                            MapHardwareToSoftware(sqliteCommand);
+                        }
+                        string[] parametersToClear = new string[] { "Discovered_Software_Name", "Displayed_Software_Name", "Software_Version", "Install_Date" };
+                        foreach (string parameter in parametersToClear)
+                        { sqliteCommand.Parameters[parameter].Value = string.Empty; }
+                    }
+                }
             }
             catch (Exception exception)
             {
@@ -613,28 +668,20 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private string ObtainParsedSoftwareName(Match match, string pluginId)
+        private string SanitizeWindowsSoftwareName(Match match, string pluginId)
         { 
             try
             {
                 string name = match.Value.Trim();
-                switch (pluginId)
+                if (name.StartsWith("{") || name.StartsWith("KB") || string.IsNullOrWhiteSpace(name))
+                { return string.Empty; }
+                string[] ignoredSoftwareArray = new string[] { "Security Update", "Update for", "Hotfix for", "Language Pack" };
+                foreach (string ignorable in ignoredSoftwareArray)
                 {
-                    case "20811":
-                        {
-                            if (name.StartsWith("{") || name.StartsWith("KB") || string.IsNullOrWhiteSpace(name))
-                            { return string.Empty; }
-                            string[] ignoredSoftwareArray = new string[] { "Security Update", "Update for", "Hotfix for", "Language Pack" };
-                            foreach (string ignorable in ignoredSoftwareArray)
-                            {
-                                if (name.Contains(ignorable))
-                                { return string.Empty; }
-                            }
-                            return name;
-                        }
-                    default:
-                        { return string.Empty; }
+                    if (name.Contains(ignorable))
+                    { return string.Empty; }
                 }
+                return name;
             }
             catch (Exception exception)
             {

@@ -280,7 +280,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ^(?:\w)+(?:-?\.?[A-Za-z]+)*.
+        ///   Looks up a localized string similar to ^(\w)+(-?\.?[A-Za-z]+)*.
         /// </summary>
         internal static string RegexAcasLinuxSoftwareName {
             get {
@@ -289,7 +289,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to (?:(?:\d+\.?-?)+(?:\w+)?\.?-?)+(?=\|).
+        ///   Looks up a localized string similar to ((\d+\.?-?)+(\w+)?\.?-?)+(?=\|).
         /// </summary>
         internal static string RegexAcasLinuxSoftwareVersion {
             get {
@@ -298,7 +298,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to (?&lt;=\[installed on\s)(?:\d{2,4}\/\d{1,2}\/\d{1,2})(?=\]).
+        ///   Looks up a localized string similar to (?&lt;=\[installed on\s)(\d{2,4}\/\d{1,2}\/\d{1,2})(?=\]).
         /// </summary>
         internal static string RegexAcasSoftwareInstallDate {
             get {
@@ -307,7 +307,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ^(?:\w)+(?:-?(?:\w?)+)+.
+        ///   Looks up a localized string similar to ^(\w)+(-?(\w?)+)+.
         /// </summary>
         internal static string RegexAcasSolarisSoftwareName {
             get {
@@ -316,7 +316,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to (?:\d+\.?)+,?(?:REV=(?:\d+\.?)+)?.
+        ///   Looks up a localized string similar to (\d+\.?)+,?(REV=(\d+\.?)+)?.
         /// </summary>
         internal static string RegexAcasSolarisSoftwareVersion {
             get {
@@ -325,7 +325,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ^.+?(?:(?=\[)|(?=\r?\n)).
+        ///   Looks up a localized string similar to ^.+?((?=\[)|(?=\r?\n)).
         /// </summary>
         internal static string RegexAcasWindowsSoftwareName {
             get {
@@ -334,7 +334,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to (?&lt;=\[version\s)(?:\d+(?:(?:(?:\.|-?)\d*)*)|(?:\w+))(?=\]).
+        ///   Looks up a localized string similar to (?&lt;=\[version\s)(\d+(((\.|-?)\d*)*)|(\w+))(?=\]).
         /// </summary>
         internal static string RegexAcasWindowsSoftwareVersion {
             get {
