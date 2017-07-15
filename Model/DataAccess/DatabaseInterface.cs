@@ -10,31 +10,12 @@ namespace Vulnerator.Model.DataAccess
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
-        public int InsertVulnerabilitySource(SQLiteCommand sqliteCommand)
+        public void InsertVulnerabilitySource(SQLiteCommand sqliteCommand)
         {
             try
             {
                 sqliteCommand.CommandText = Properties.Resources.InsertVulnerabilitySource;
-                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
-                {
-                    if (sqliteCommand.Parameters.IndexOf(parameter) == 0)
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(44, "@" + parameter.ParameterName); }
-                    else
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(44, "@" + parameter.ParameterName + ", "); }
-
-                }
-                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
-                {
-                    if (sqliteCommand.Parameters.IndexOf(parameter) == 0)
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(34, parameter.ParameterName); }
-                    else
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(34, parameter.ParameterName + ", "); }
-                }
                 sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.CommandText = Properties.Resources.SelectVulnerabilitySource;
-                int sourceRowId = int.Parse(sqliteCommand.ExecuteScalar().ToString());
-                sqliteCommand.Parameters.Clear();
-                return sourceRowId;
             }
             catch (Exception exception)
             {
@@ -47,19 +28,8 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Source_ID", lastVulnerabilitySourceId));
                 sqliteCommand.CommandText = Properties.Resources.UpdateVulnerabilitySource;
-                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
-                {
-                    if (parameter.ParameterName.Equals("Vulnerability_ID"))
-                    { continue; }
-                    if (sqliteCommand.Parameters.IndexOf(parameter) == 0)
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(32, string.Format("{0} = @{0}", parameter.ParameterName)); }
-                    else
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(32, string.Format("{0} = @{0}, ", parameter.ParameterName)); }
-                }
                 sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.Parameters.Clear();
             }
             catch (Exception exception)
             {
@@ -68,31 +38,12 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public int InsertVulnerability(SQLiteCommand sqliteCommand, int lastVulnerabilitySourceId)
+        public void InsertVulnerability(SQLiteCommand sqliteCommand, int lastVulnerabilitySourceId)
         {
             try
             {
                 sqliteCommand.CommandText = Properties.Resources.InsertVulnerability;
-                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
-                {
-                    if (sqliteCommand.Parameters.IndexOf(parameter) == 0)
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(39, "@" + parameter.ParameterName); }
-                    else
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(39, "@" + parameter.ParameterName + ", "); }
-
-                }
-                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
-                {
-                    if (sqliteCommand.Parameters.IndexOf(parameter) == 0)
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(29, parameter.ParameterName); }
-                    else
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(29, parameter.ParameterName + ", "); }
-                }
                 sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.CommandText = Properties.Resources.SelectVulnerability;
-                int vulnRowId = int.Parse(sqliteCommand.ExecuteScalar().ToString());
-                sqliteCommand.Parameters.Clear();
-                return vulnRowId;
             }
             catch (Exception exception)
             {
@@ -101,26 +52,12 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public int UpdateVulnerability(SQLiteCommand sqliteCommand)
+        public void UpdateVulnerability(SQLiteCommand sqliteCommand)
         {
             try
             {
                 sqliteCommand.CommandText = Properties.Resources.UpdateVulnerability;
-                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
-                {
-                    if (parameter.ParameterName.Equals("Vulnerability_ID"))
-                    { continue; }
-                    if (sqliteCommand.Parameters.IndexOf(parameter) == 0)
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, string.Format("{0} = @{0}", parameter.ParameterName)); }
-                    else
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, string.Format("{0} = @{0}, ", parameter.ParameterName)); }
-
-                }
-                sqliteCommand.CommandText = sqliteCommand.CommandText.Replace(",  ", " ");
                 sqliteCommand.ExecuteNonQuery();
-                int vulnerabilityId = int.Parse(sqliteCommand.Parameters["Vulnerability_ID"].Value.ToString());
-                sqliteCommand.Parameters.Clear();
-                return vulnerabilityId;
             }
             catch (Exception exception)
             {
@@ -136,10 +73,9 @@ namespace Vulnerator.Model.DataAccess
                 sqliteCommand.CommandText = Properties.Resources.MapVulnerabilityToCci;
                 foreach (string cci in ccis)
                 {
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_ID", lastVulnerabilityId));
                     sqliteCommand.Parameters.Add(new SQLiteParameter("CCI", cci));
                     sqliteCommand.ExecuteNonQuery();
-                    sqliteCommand.Parameters.Clear();
+                    sqliteCommand.Parameters["CCI"].Value = string.Empty;
                 }
                 ccis.Clear();
             }
@@ -154,11 +90,8 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_ID", vulnerabilityId));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Source_ID", sourceId));
                 sqliteCommand.CommandText = Properties.Resources.MapVulnerabilityToSource;
                 sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.Parameters.Clear();
             }
             catch (Exception exception)
             {

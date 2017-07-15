@@ -56,6 +56,7 @@ namespace Vulnerator.Model.BusinessLogic
                 {
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
+                        InsertParameterPlaceholders(sqliteCommand);
                         InsertGroup(sqliteCommand, file);
                         InsertSourceFile(sqliteCommand, file);
                         XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
@@ -110,17 +111,8 @@ namespace Vulnerator.Model.BusinessLogic
                 { sqliteCommand.Parameters.Add(new SQLiteParameter("Group_Name", file.FileSystemName)); }
                 else
                 { sqliteCommand.Parameters.Add(new SQLiteParameter("Group_Name", "Unassigned")); }
-                sqliteCommand.CommandText = Properties.Resources.SelectGroup;
-                if (int.TryParse(Convert.ToString(sqliteCommand.ExecuteScalar()), out groupPrimaryKey))
-                {
-                    sqliteCommand.Parameters.Clear();
-                    return;
-                }
                 sqliteCommand.CommandText = Properties.Resources.InsertGroup;
                 sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.CommandText = "SELECT last_insert_rowid();";
-                groupPrimaryKey = int.Parse(sqliteCommand.ExecuteScalar().ToString());
-                sqliteCommand.Parameters.Clear();
             }
             catch (Exception exception)
             {
@@ -134,17 +126,8 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Source_File_Name", file.FileName));
-                sqliteCommand.CommandText = Properties.Resources.SelectUniqueFindingSourceFile;
-                if (int.TryParse(Convert.ToString(sqliteCommand.ExecuteScalar()), out sourceFilePrimaryKey))
-                {
-                    sqliteCommand.Parameters.Clear();
-                    return;
-                }
                 sqliteCommand.CommandText = Properties.Resources.InsertUniqueFindingSource;
                 sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.Parameters.Clear();
-                sqliteCommand.CommandText = "SELECT last_insert_rowid();";
-                sourceFilePrimaryKey = int.Parse(sqliteCommand.ExecuteScalar().ToString());
             }
             catch (Exception exception)
             {
@@ -235,28 +218,9 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.SelectHardware;
-                if (int.TryParse(Convert.ToString(sqliteCommand.ExecuteScalar()), out hardwarePrimaryKey))
-                {
-                    sqliteCommand.Parameters.Clear();
-                    return;
-                }
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Is_Virtual_Server", "False"));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("NIAP_Level", string.Empty));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("NetBIOS", string.Empty));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Manufacturer", string.Empty));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("ModelNumber", string.Empty));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Is_IA_Enabled", string.Empty));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("SerialNumber", string.Empty));
-                if (!sqliteCommand.Parameters.Contains("Role"))
-                { sqliteCommand.Parameters.Add(new SQLiteParameter("Role", string.Empty)); }
-                if (!sqliteCommand.Parameters.Contains("FQDN"))
-                { sqliteCommand.Parameters.Add(new SQLiteParameter("FQDN", string.Empty)); }
                 sqliteCommand.CommandText = Properties.Resources.InsertHardware;
                 sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.CommandText = "SELECT last_insert_rowid();";
-                hardwarePrimaryKey = int.Parse(sqliteCommand.ExecuteScalar().ToString());
-                sqliteCommand.Parameters.Clear();
             }
             catch (Exception exception)
             {
@@ -320,21 +284,11 @@ namespace Vulnerator.Model.BusinessLogic
                     sqliteCommand.Parameters.Add(new SQLiteParameter("MAC_Address", item));
                 }
                 sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.CommandText = "SELECT last_insert_rowid();";
-                int id = int.Parse(sqliteCommand.ExecuteScalar().ToString());
                 if (table.Equals("IP_Addresses"))
-                {
-                    sqliteCommand.CommandText = Properties.Resources.MapIpToHardware;
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("IP_Address_ID", id));
-                }
+                { sqliteCommand.CommandText = Properties.Resources.MapIpToHardware; }
                 else
-                {
-                    sqliteCommand.CommandText = Properties.Resources.MapMacToHardware;
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("MAC_Address_ID", id));
-                }
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Hardware_ID", hardwarePrimaryKey));
+                { sqliteCommand.CommandText = Properties.Resources.MapMacToHardware; }
                 sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.Parameters.Clear();
             }
             catch (Exception exception)
             {
@@ -353,9 +307,7 @@ namespace Vulnerator.Model.BusinessLogic
                     string sourceName = ObtainCurrentNodeValue(xmlReader).Replace('_', ' ');
                     sourceName = SanitizeSourceName(sourceName);
                     sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Name",sourceName));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Version", string.Empty));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", string.Empty));
-                    lastVulnerabilitySourceId = databaseInterface.InsertVulnerabilitySource(sqliteCommand);
+                    databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                 }
                 else
                 {
@@ -418,7 +370,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 bool commandReleasePopulated = int.TryParse(sqliteCommand.Parameters["Source_Release"].Value.ToString(), out commandRelease);
                                 if (!sqliteDataReader.HasRows || !commandVersionPopulated || !commandReleasePopulated)
                                 {
-                                    lastVulnerabilitySourceId = databaseInterface.InsertVulnerabilitySource(sqliteCommand);
+                                    databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                                     return;
                                 }
                                 while (sqliteDataReader.Read())
@@ -429,16 +381,11 @@ namespace Vulnerator.Model.BusinessLogic
                                     bool readerReleasePopulated = int.TryParse(sqliteDataReader["Source_Release"].ToString(), out readerRelease);
                                     if (commandVersion > readerVersion || commandRelease > readerRelease)
                                     {
-                                        lastVulnerabilitySourceId = int.Parse(sqliteDataReader["Vulnerability_Source_ID"].ToString());
                                         databaseInterface.UpdateVulnerabilitySource(sqliteCommand, lastVulnerabilitySourceId);
-                                        sqliteCommand.Parameters.Clear();
                                         return;
                                     }
                                     else
-                                    {
-                                        sqliteCommand.Parameters.Clear();
-                                        return;
-                                    }
+                                    { return; }
                                 }
                             }
                             return;
@@ -581,7 +528,6 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         SQLiteCommand clonedCommand = (SQLiteCommand)sqliteCommand.Clone();
                         clonedCommand.CommandText = Properties.Resources.VerifyVulnerabilityChange;
-                        clonedCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Source_ID", lastVulnerabilitySourceId));
                         bool updateRequired = false;
                         if (sqliteCommand.Parameters.Contains("Release"))
                         {
@@ -589,7 +535,7 @@ namespace Vulnerator.Model.BusinessLogic
                             {
                                 if (!sqliteDataReader.HasRows)
                                 {
-                                    lastVulnerabilityId = databaseInterface.InsertVulnerability(sqliteCommand, lastVulnerabilitySourceId);
+                                    databaseInterface.InsertVulnerability(sqliteCommand, lastVulnerabilitySourceId);
                                     databaseInterface.MapVulnerabilityToCCI(sqliteCommand, ccis, lastVulnerabilityId);
                                     databaseInterface.MapVulnerabilityToSource(sqliteCommand, lastVulnerabilityId, lastVulnerabilitySourceId);
                                 }
@@ -706,51 +652,20 @@ namespace Vulnerator.Model.BusinessLogic
 
         private void InsertUniqueFinding(SQLiteCommand sqliteCommand)
         {
-
             try
             {
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Technology_Area", techArea));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Web_DB_Site", webDbSite));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Web_DB_Instance", webDbInstance));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Last_Observed", DateTime.Now.ToShortDateString()));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Source_File_ID", sourceFilePrimaryKey));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Delta_Analysis_Required", deltaAnalysisRequired.ToString()));
-                SQLiteCommand clonedCommand = (SQLiteCommand)sqliteCommand.Clone();
-                clonedCommand.Parameters.Add(new SQLiteParameter("Hardware_ID", hardwarePrimaryKey));
-                clonedCommand.Parameters.Add(new SQLiteParameter("Vulnerability_ID", lastVulnerabilityId));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Approval_Status", "Not Approved"));
-                clonedCommand.CommandText = Properties.Resources.SelectUniqueFinding;
-                using (SQLiteDataReader sqliteDataReader = clonedCommand.ExecuteReader())
-                {
-                    while (sqliteDataReader.Read())
-                    {
-                        if (sqliteDataReader.HasRows)
-                        {
-                            sqliteCommand.Parameters.Add(new SQLiteParameter("Unique_Finding_ID", sqliteDataReader["Unique_Finding_ID"].ToString()));
-                            sqliteCommand.CommandText = Properties.Resources.UpdateCklUniqueFinding;
-                            sqliteCommand.ExecuteNonQuery();
-                            sqliteCommand.Parameters.Clear();
-                            return;
-                        }
-                    }
-                }
-                clonedCommand.CommandText = Properties.Resources.SelectFindingTypeId;
-                clonedCommand.Parameters.Add(new SQLiteParameter("Finding_Type", "CKL"));
-                using (SQLiteDataReader sqliteDataReader = clonedCommand.ExecuteReader())
-                {
-                    while (sqliteDataReader.Read())
-                    {
-                        if (sqliteDataReader.HasRows)
-                        { sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Type_ID", sqliteDataReader["Finding_Type_ID"].ToString())); }
-                    }
-                }
+                sqliteCommand.CommandText = Properties.Resources.UpdateCklUniqueFinding;
+                sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.CommandText = Properties.Resources.InsertUniqueFinding;
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Hardware_ID", hardwarePrimaryKey));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_ID", lastVulnerabilityId));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("First_Discovered", DateTime.Now.ToShortDateString()));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Classification", classification));
                 sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.Parameters.Clear();
             }
             catch (Exception exception)
             {
@@ -931,37 +846,8 @@ namespace Vulnerator.Model.BusinessLogic
             webDbSite = string.Empty;
             webDbInstance = string.Empty;
             classification = string.Empty;
-            lastVulnerabilityId = 0;
             deltaAnalysisRequired = false;
     }
-
-        private static string[] SetColumnArrays(string tableName)
-        {
-            try
-            {
-                switch (tableName)
-                {
-
-                    case "UniqueFindings":
-                        {
-                            string[] value = new string[]
-                            {
-                                "Tool_Generated_Output", "Severity", "First_Discovered", "Last_Observed", "Approval_Status", "Delta_Analysis_Required",
-                                "Finding_Type_ID", "Source_File_ID", "Status", "Vulnerability_ID", "Unique_Finding_ID"
-                            };
-                            return value;
-                        }
-                    default:
-                        { throw new Exception("Invalid table name."); }
-                }
-
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format(""));
-                throw exception;
-            }
-        }
 
         public Object.File ObtainIdentifiers(Object.File file)
         {
@@ -1050,6 +936,53 @@ namespace Vulnerator.Model.BusinessLogic
                     { break; }
             }
             return value;
+        }
+
+        private void InsertParameterPlaceholders(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                string[] parameters = new string[]
+                {
+                    // Groups Table
+                    "Group_ID", "Group_Name", "Is_Accreditation", "Accreditation_ID", "Organization_ID",
+                    // Hardware Table
+                    "Hardware_ID", "Host_Name", "FQDN", "NetBIOS", "Is_Virtual_Server", "NIAP_Level", "Manufacturer", "ModelNumber",
+                    "Is_IA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID", "Scan_IP",
+                    // IP_Addresses Table
+                    "IP_Address_ID", "IP_Address",
+                    // MAC_Addresses Table
+                    "MAC_Address_ID", "MAC_Address",
+                    // UniqueFindings Table
+                    "Unique_Finding_ID", "Tool_Generated_Output", "Comments", "Finding_Details", "Technical_Mitigation",
+                    "Proposed_Mitigation", "Predisposing_Conditions", "Impact", "Likelihood", "Severity", "Risk", "Residual_Risk",
+                    "First_Discovered", "Last_Observed", "Approval_Status", "Approval_Date", "Approval_Expiration_Date",
+                    "Delta_Analysis_Required", "Finding_Type_ID", "Finding_Source_ID", "Status", "Vulnerability_ID", "Hardware_ID",
+                    "Severity_Override", "Severity_Override_Justification", "Technology_Area", "Web_DB_Site", "Web_DB_Instance",
+                    "Classification", "CVSS_Environmental_Score", "CVSS_Environmental_Vector",
+                    // UniqueFindingSourceFiles Table
+                    "Finding_Source_File_ID", "Finding_Source_File_Name", 
+                    // Vulnerabilities Table
+                    "Vulnerability_ID", "Unique_Vulnerability_Identifier", "Vulnerability_Group_ID", "Vulnerability_Group_Title",
+                    "Secondary_Vulnerability_Identifier", "VulnerabilityFamilyOrClass", "Vulnerability_Version", "Vulnerability_Release",
+                    "Vulnerability_Title", "Vulnerability_Description", "Risk_Statement", "Fix_Text", "Published_Date", "Modified_Date",
+                    "Fix_Published_Date", "Raw_Risk", "CVSS_Base_Score", "CVSS_Base_Vector", "CVSS_Temporal_Score", "CVSS_Temporal_Vector",
+                    "Check_Content", "False_Positives", "False_Negatives", "Documentable", "Mitigations", "Mitigation_Control",
+                    "Potential_Impacts", "Third_Party_Tools", "Security_Override_Guidance", "Overflow",
+                    // VulnerabilityReferences Table
+                    "Reference_ID", "Reference", "Reference_Type",
+                    // VulnerabilitySources Table
+                    "Vulnerability_Source_ID", "Source_Name", "Source_Secondary_Identifier", "Vulnerability_Source_File_Name",
+                    "Source_Description", "Source_Version", "Source_Release"
+                };
+                foreach (string parameter in parameters)
+                { sqliteCommand.Parameters.Add(new SQLiteParameter(parameter, string.Empty)); }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert SQLiteParameter placeholders into SQLiteCommand"));
+                throw exception;
+            }
         }
     }
 }
