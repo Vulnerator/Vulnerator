@@ -257,9 +257,6 @@
   <data name="RegexMAC" xml:space="preserve">
     <value>([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})</value>
   </data>
-  <data name="SelectAcasVulnerabilitySource" xml:space="preserve">
-    <value>SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release;</value>
-  </data>
   <data name="SelectFindingTypeId" xml:space="preserve">
     <value>SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = @Finding_Type;</value>
   </data>
@@ -287,17 +284,23 @@
   <data name="SelectUniqueFindingSourceFile" xml:space="preserve">
     <value>SELECT Finding_Source_File_ID FROM UniqueFindingsSourceFiles WHERE Finding_Source_File_Name = @Finding_Source_File_Name;</value>
   </data>
-  <data name="SelectVulnerability" xml:space="preserve">
-    <value>SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;</value>
-  </data>
   <data name="SelectVulnerabilityReference" xml:space="preserve">
     <value>SELECT Reference_ID FROM VulnerabilityReferences WHERE Reference = @Reference AND Reference_Type = @Reference_Type;</value>
   </data>
-  <data name="SelectVulnerabilitySource" xml:space="preserve">
-    <value>SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name;</value>
+  <data name="SelectVulnerabilitySourceVersionAndRelease" xml:space="preserve">
+    <value>SELECT Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Name = @Source_Name;</value>
+  </data>
+  <data name="SelectVulnerabilityVersionAndRelease" xml:space="preserve">
+    <value>SELECT Vulnerability_Version, Vulnerability_Release FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;</value>
   </data>
   <data name="UpdateAcasUniqueFinding" xml:space="preserve">
     <value>UPDATE UniqueFindings SET Last_Observed = @Last_Observed, Status = @Status, Tool_Generated_Output = @Tool_Generated_Output WHERE Hardware_ID = (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP) AND Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier) AND Last_Observed &lt; @Last_Observed;</value>
+  </data>
+  <data name="UpdateAcasVulnerability" xml:space="preserve">
+    <value>UPDATE Vulnerabilities SET Vulnerability_Title=@Vulnerability_Title, Vulnerability_Description = @Vulnerability_Description, Risk_Statement = @Risk_Statement, Fix_Text = @Fix_Text, Modified_Date = @Modified_Date, Fix_Published_Date = @Fix_Published_Date, Raw_Risk = @Raw_Risk, Vulnerability_Version = @Vulnerability_Version, Vulnerability_Release = @Vulnerability_Release WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Modified_Date &lt; @Modified_Date;</value>
+  </data>
+  <data name="UpdateAcasVulnerabilitySource" xml:space="preserve">
+    <value>UPDATE Vulnerabilities_VulnerabilitySources SET Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release) WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Version = 'Version Unknown');</value>
   </data>
   <data name="UpdateCklUniqueFinding" xml:space="preserve">
     <value>UPDATE UniqueFindings SET Finding_Details = @Finding_Details, Comments = @Comments, Severity_Override = @Severity_Override, Severity_Override_Justification = @Severity_Override_Justification, Last_Observed = @Last_Observed, Technology_Area = @Technology_Area, Web_DB_Site = @Web_DB_Site, Web_DB_Instance = @Web_DB_Instance, Finding_Source_File_ID = @Finding_Source_File_ID, Status = @Status, Approval_Status = @Approval_Status, Delta_Analysis_Required = @Delta_Analysis_Required, Tool_Generated_Output = @Tool_Generated_Output WHERE Unique_Finding_ID = @Unique_Finding_ID;</value>
@@ -305,19 +308,10 @@
   <data name="UpdateDeltaAnalysisFlag" xml:space="preserve">
     <value>UPDATE UniqueFindings SET Delta_Analysis_Required = 'True' WHERE Vulnerability_ID = @Vulnerability_ID;</value>
   </data>
-  <data name="UpdateUnknownAcasVersion" xml:space="preserve">
-    <value>UPDATE Vulnerabilities_VulnerabilitySources SET Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release) WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Version = 'Version Unknown');</value>
-  </data>
   <data name="UpdateVulnerability" xml:space="preserve">
-    <value>UPDATE Vulnerabilities SET Vulnerability_Title=@Vulnerability_Title, Vulnerability_Description = @Vulnerability_Description, Risk_Statement = @Risk_Statement, Fix_Text = @Fix_Text, Modified_Date = @Modified_Date, Fix_Published_Date = @Fix_Published_Date, Raw_Risk = @Raw_Risk WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Modified_Date &lt; @Modified_Date;</value>
+    <value>UPDATE Vulnerabilities SET Vulnerability_Title=@Vulnerability_Title, Vulnerability_Description = @Vulnerability_Description, Risk_Statement = @Risk_Statement, Fix_Text = @Fix_Text, Modified_Date = @Modified_Date, Fix_Published_Date = @Fix_Published_Date, Raw_Risk = @Raw_Risk, Vulnerability_Version = @Vulnerability_Version, Vulnerability_Release = @Vulnerability_Release WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;</value>
   </data>
   <data name="UpdateVulnerabilitySource" xml:space="preserve">
-    <value>UPDATE VulnerabilitySources SET  WHERE Vulnerability_Source_ID = @Vulnerability_Source_ID;</value>
-  </data>
-  <data name="VerifyVulnerabilityChange" xml:space="preserve">
-    <value>SELECT Vulnerability_ID, Release FROM Vulnerabilities_VulnerabilitySources NATURAL JOIN Vulnerabilities NATURAL JOIN VulnerabilitySources WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Source_ID = @Vulnerability_Source_ID;</value>
-  </data>
-  <data name="VerifyVulnerabilitySourceChange" xml:space="preserve">
-    <value>SELECT Vulnerability_Source_ID, Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Name = @Source_Name;</value>
+    <value>UPDATE VulnerabilitySources SET Source_Name = @Source_Name, Source_Secondary_Identifier = @Source_Secondary_Identifier, Vulnerability_Source_File_Name = @Vulnerability_Source_File_Name, Source_Description = @Source_Description, Source_Version = @Source_Version, Source_Release = @Source_Release WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name);</value>
   </data>
 </root>

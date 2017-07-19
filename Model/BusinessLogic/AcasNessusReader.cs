@@ -747,7 +747,7 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.UpdateUnknownAcasVersion;
+                sqliteCommand.CommandText = Properties.Resources.UpdateAcasVulnerabilitySource;
                 sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.CommandText = "DELETE FROM VulnerabilitySources WHERE Source_Version = 'Version Unknown';";
                 sqliteCommand.ExecuteNonQuery();
@@ -763,7 +763,7 @@ namespace Vulnerator.Model.BusinessLogic
         { 
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.UpdateVulnerability;
+                sqliteCommand.CommandText = Properties.Resources.UpdateAcasVulnerability;
                 sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.CommandText = Properties.Resources.InsertVulnerability;
                 sqliteCommand.ExecuteNonQuery();

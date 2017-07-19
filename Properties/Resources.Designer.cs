@@ -370,15 +370,6 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release;.
-        /// </summary>
-        internal static string SelectAcasVulnerabilitySource {
-            get {
-                return ResourceManager.GetString("SelectAcasVulnerabilitySource", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = @Finding_Type;.
         /// </summary>
         internal static string SelectFindingTypeId {
@@ -460,15 +451,6 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;.
-        /// </summary>
-        internal static string SelectVulnerability {
-            get {
-                return ResourceManager.GetString("SelectVulnerability", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to SELECT Reference_ID FROM VulnerabilityReferences WHERE Reference = @Reference AND Reference_Type = @Reference_Type;.
         /// </summary>
         internal static string SelectVulnerabilityReference {
@@ -478,11 +460,20 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name;.
+        ///   Looks up a localized string similar to SELECT Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Name = @Source_Name;.
         /// </summary>
-        internal static string SelectVulnerabilitySource {
+        internal static string SelectVulnerabilitySourceVersionAndRelease {
             get {
-                return ResourceManager.GetString("SelectVulnerabilitySource", resourceCulture);
+                return ResourceManager.GetString("SelectVulnerabilitySourceVersionAndRelease", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT Vulnerability_Version, Vulnerability_Release FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;.
+        /// </summary>
+        internal static string SelectVulnerabilityVersionAndRelease {
+            get {
+                return ResourceManager.GetString("SelectVulnerabilityVersionAndRelease", resourceCulture);
             }
         }
         
@@ -492,6 +483,24 @@ namespace Vulnerator.Properties {
         internal static string UpdateAcasUniqueFinding {
             get {
                 return ResourceManager.GetString("UpdateAcasUniqueFinding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE Vulnerabilities SET Vulnerability_Title=@Vulnerability_Title, Vulnerability_Description = @Vulnerability_Description, Risk_Statement = @Risk_Statement, Fix_Text = @Fix_Text, Modified_Date = @Modified_Date, Fix_Published_Date = @Fix_Published_Date, Raw_Risk = @Raw_Risk, Vulnerability_Version = @Vulnerability_Version, Vulnerability_Release = @Vulnerability_Release WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Modified_Date &lt; @Modified_Date;.
+        /// </summary>
+        internal static string UpdateAcasVulnerability {
+            get {
+                return ResourceManager.GetString("UpdateAcasVulnerability", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE Vulnerabilities_VulnerabilitySources SET Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release) WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Version = &apos;Version Unknown&apos;);.
+        /// </summary>
+        internal static string UpdateAcasVulnerabilitySource {
+            get {
+                return ResourceManager.GetString("UpdateAcasVulnerabilitySource", resourceCulture);
             }
         }
         
@@ -514,16 +523,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UPDATE Vulnerabilities_VulnerabilitySources SET Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release) WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Version = &apos;Version Unknown&apos;);.
-        /// </summary>
-        internal static string UpdateUnknownAcasVersion {
-            get {
-                return ResourceManager.GetString("UpdateUnknownAcasVersion", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to UPDATE Vulnerabilities SET Vulnerability_Title=@Vulnerability_Title, Vulnerability_Description = @Vulnerability_Description, Risk_Statement = @Risk_Statement, Fix_Text = @Fix_Text, Modified_Date = @Modified_Date, Fix_Published_Date = @Fix_Published_Date, Raw_Risk = @Raw_Risk WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Modified_Date &lt; @Modified_Date;.
+        ///   Looks up a localized string similar to UPDATE Vulnerabilities SET Vulnerability_Title=@Vulnerability_Title, Vulnerability_Description = @Vulnerability_Description, Risk_Statement = @Risk_Statement, Fix_Text = @Fix_Text, Modified_Date = @Modified_Date, Fix_Published_Date = @Fix_Published_Date, Raw_Risk = @Raw_Risk, Vulnerability_Version = @Vulnerability_Version, Vulnerability_Release = @Vulnerability_Release WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;.
         /// </summary>
         internal static string UpdateVulnerability {
             get {
@@ -532,29 +532,11 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UPDATE VulnerabilitySources SET  WHERE Vulnerability_Source_ID = @Vulnerability_Source_ID;.
+        ///   Looks up a localized string similar to UPDATE VulnerabilitySources SET Source_Name = @Source_Name, Source_Secondary_Identifier = @Source_Secondary_Identifier, Vulnerability_Source_File_Name = @Vulnerability_Source_File_Name, Source_Description = @Source_Description, Source_Version = @Source_Version, Source_Release = @Source_Release WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name);.
         /// </summary>
         internal static string UpdateVulnerabilitySource {
             get {
                 return ResourceManager.GetString("UpdateVulnerabilitySource", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT Vulnerability_ID, Release FROM Vulnerabilities_VulnerabilitySources NATURAL JOIN Vulnerabilities NATURAL JOIN VulnerabilitySources WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Source_ID = @Vulnerability_Source_ID;.
-        /// </summary>
-        internal static string VerifyVulnerabilityChange {
-            get {
-                return ResourceManager.GetString("VerifyVulnerabilityChange", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT Vulnerability_Source_ID, Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Name = @Source_Name;.
-        /// </summary>
-        internal static string VerifyVulnerabilitySourceChange {
-            get {
-                return ResourceManager.GetString("VerifyVulnerabilitySourceChange", resourceCulture);
             }
         }
     }

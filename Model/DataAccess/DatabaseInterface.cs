@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Text.RegularExpressions;
 using Vulnerator.Model.Object;
 
 namespace Vulnerator.Model.DataAccess
@@ -19,17 +20,35 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to insert vulnerability source.");
+                log.Error(string.Format("Unable to insert vulnerability source \"{0}\".", sqliteCommand.Parameters["Source_Name"].Value.ToString()));
                 throw exception;
             }
         }
 
-        public void UpdateVulnerabilitySource(SQLiteCommand sqliteCommand, int lastVulnerabilitySourceId)
+        public void UpdateVulnerabilitySource(SQLiteCommand sqliteCommand, string findingType)
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.UpdateVulnerabilitySource;
-                sqliteCommand.ExecuteNonQuery();
+                switch (findingType)
+                {
+                    case "ACAS":
+                        {
+                            sqliteCommand.CommandText = Properties.Resources.UpdateAcasVulnerabilitySource;
+                            sqliteCommand.ExecuteNonQuery();
+                            return;
+                        }
+                    case "CKL":
+                        {
+                            if (VulnerabilitySourceUpdateRequired(sqliteCommand))
+                            {
+                                sqliteCommand.CommandText = Properties.Resources.UpdateVulnerabilitySource;
+                                sqliteCommand.ExecuteNonQuery();
+                            }
+                            return;
+                        }
+                    default:
+                        { break; }
+                }
             }
             catch (Exception exception)
             {
@@ -38,7 +57,7 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public void InsertVulnerability(SQLiteCommand sqliteCommand, int lastVulnerabilitySourceId)
+        public void InsertVulnerability(SQLiteCommand sqliteCommand)
         {
             try
             {
@@ -52,12 +71,31 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public void UpdateVulnerability(SQLiteCommand sqliteCommand)
+        public bool UpdateVulnerability(SQLiteCommand sqliteCommand, string findingType)
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.UpdateVulnerability;
-                sqliteCommand.ExecuteNonQuery();
+                switch (findingType)
+                {
+                    case "ACAS":
+                        {
+                            sqliteCommand.CommandText = Properties.Resources.UpdateAcasVulnerabilitySource;
+                            sqliteCommand.ExecuteNonQuery();
+                            return;
+                        }
+                    case "CKL":
+                        {
+                            if (VulnerabilitySourceUpdateRequired(sqliteCommand))
+                            {
+                                sqliteCommand.CommandText = Properties.Resources.UpdateVulnerabilitySource;
+                                sqliteCommand.ExecuteNonQuery();
+                            }
+                            return;
+                        }
+                    default:
+                        { break; }
+                }
+                return false;
             }
             catch (Exception exception)
             {
@@ -66,7 +104,7 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public void MapVulnerabilityToCCI(SQLiteCommand sqliteCommand, List<string> ccis, int lastVulnerabilityId)
+        public void MapVulnerabilityToCCI(SQLiteCommand sqliteCommand, List<string> ccis)
         {
             try
             {
@@ -86,7 +124,7 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public void MapVulnerabilityToSource(SQLiteCommand sqliteCommand, int vulnerabilityId, int sourceId)
+        public void MapVulnerabilityToSource(SQLiteCommand sqliteCommand)
         {
             try
             {
@@ -95,8 +133,78 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to map vulnerability \"{0}\" to source \"{1}\".", vulnerabilityId, sourceId));
+                log.Error(string.Format("Unable to map vulnerability \"{0}\" to source \"{1}\"."));
                 log.Debug("Exception details: " + exception);
+            }
+        }
+
+        private bool VulnerabilitySourceUpdateRequired(SQLiteCommand sqliteCommand)
+        { 
+            try
+            {
+                bool versionUpdated = false;
+                bool versionSame = false;
+                bool releaseUpdated = false;
+                sqliteCommand.CommandText = Properties.Resources.SelectVulnerabilitySourceVersionAndRelease;
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                {
+                    if (sqliteDataReader.HasRows)
+                    {
+                        while (sqliteDataReader.Read())
+                        {
+                            if (string.IsNullOrWhiteSpace(sqliteDataReader["Source_Version"].ToString()) || string.IsNullOrWhiteSpace(sqliteDataReader["Source_Release"].ToString()))
+                            { return true; }
+                            Regex regex = new Regex(@"\D");
+                            int newVersion;
+                            int newRelease;
+                            bool newVersionParsed = int.TryParse(regex.Replace(sqliteCommand.Parameters["Source_Version"].Value.ToString(), string.Empty), out newVersion);
+                            bool newReleaseParsed = int.TryParse(regex.Replace(sqliteCommand.Parameters["Source_Release"].Value.ToString(), string.Empty), out newRelease);
+                            int oldVersion;
+                            int oldRelease;
+                            bool oldVersionParsed = int.TryParse(regex.Replace(sqliteDataReader["Source_Version"].ToString(), string.Empty), out oldVersion);
+                            bool oldReleaseParsed = int.TryParse(regex.Replace(sqliteDataReader["Source_Release"].ToString(), string.Empty), out oldRelease);
+                            if (newVersionParsed && oldVersionParsed)
+                            {
+                                versionUpdated = (newVersion > oldVersion) ? true : false;
+                                versionSame = (newVersion == oldVersion) ? true : false;
+                            }
+                            if (newReleaseParsed && oldReleaseParsed && (newRelease > oldRelease))
+                            { releaseUpdated = true; }
+                            if (versionUpdated || (versionSame && releaseUpdated))
+                            { return true; }
+                        }
+                    }
+                    return false;
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format(""));
+                throw exception;
+            }
+        }
+
+        private bool VulnerabilityUpdateRequired(SQLiteCommand sqliteCommand)
+        { 
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.SelectVulnerabilityVersionAndRelease;
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                {
+                    if (sqliteDataReader.HasRows)
+                    {
+                        while (sqliteDataReader.Read())
+                        {
+
+                        }
+                    }
+                }
+                return false;
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format(""));
+                throw exception;
             }
         }
     }
