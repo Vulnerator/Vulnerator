@@ -1,11 +1,12 @@
 ﻿using log4net;
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -24,30 +25,33 @@ namespace Vulnerator.Model.BusinessLogic
     /// </summary>
     public class XccdfReader
     {
+        private Assembly assembly = Assembly.GetExecutingAssembly();
+        DatabaseInterface databaseInterface = new DatabaseInterface();
         private string fileNameWithoutPath = string.Empty;
         private string xccdfTitle = string.Empty;
         private string versionInfo = string.Empty;
         private string releaseInfo = string.Empty;
         private string acasXccdfHostName = string.Empty;
         private string acasXccdfHostIp = string.Empty;
+        private string firstDiscovered = DateTime.Now.ToShortDateString();
+        private string lastObserved = DateTime.Now.ToShortDateString();
         private bool incorrectFileType = false;
-        private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
-        private bool RevisionThreeSelected { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("revisionThreeRadioButton")); } }
-        private bool RevisionFourSelected { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("revisionFourRadioButton")); } }
-        private bool AppendixASelected { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbNistAppendixA")); } }
+        private List<string> ccis = new List<string>();
+        private List<string> ips = new List<string>();
+        private List<string> macs = new List<string>();
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
-        public string ReadXccdfFile(string fileName, string systemName)
+        public string ReadXccdfFile(Object.File file)
         {
             try
             {
-                if (fileName.IsFileInUse())
+                if (file.FileName.IsFileInUse())
                 {
-                    log.Error(fileName + " is in use; please close any open instances and try again.");
+                    log.Error(file.FileName + " is in use; please close any open instances and try again.");
                     return "Failed; File In Use";
                 }
 
-                ParseXccdfWithXmlReader(fileName, systemName);
+                ParseXccdfWithXmlReader(file);
                 if (!incorrectFileType)
                 { return "Processed"; }
                 else
@@ -61,25 +65,23 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private void ParseXccdfWithXmlReader(string fileName, string systemName)
+        private void ParseXccdfWithXmlReader(Object.File file)
         {
             try
             {
                 XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
-                fileNameWithoutPath = Path.GetFileName(fileName);
+                fileNameWithoutPath = Path.GetFileName(file.FileName);
 
                 using (SQLiteTransaction sqliteTransaction = FindingsDatabaseActions.sqliteConnection.BeginTransaction())
                 {
                     using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
                     {
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", systemName));
-                        sqliteCommand.CommandText = SetSqliteCommandText("Groups");
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", file.FileSystemName));
                         sqliteCommand.ExecuteNonQuery();
                         sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "XCCDF"));
                         sqliteCommand.Parameters.Add(new SQLiteParameter("FileName", fileNameWithoutPath));
-                        sqliteCommand.CommandText = SetSqliteCommandText("FileNames");
                         sqliteCommand.ExecuteNonQuery();
-                        using (XmlReader xmlReader = XmlReader.Create(fileName, xmlReaderSettings))
+                        using (XmlReader xmlReader = XmlReader.Create(file.FileName, xmlReaderSettings))
                         {
                             while (xmlReader.Read())
                             {
@@ -131,7 +133,7 @@ namespace Vulnerator.Model.BusinessLogic
 
         #region Parse XCCDF File From SCC
 
-        private void ParseXccdfFromScc(XmlReader xmlReader, string systemName, SQLiteCommand sqliteCommand)
+        private void ParseXccdfFromScc(XmlReader xmlReader, SQLiteCommand sqliteCommand)
         {
             try
             {
@@ -141,55 +143,14 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         switch (xmlReader.Name)
                         {
-                            case "cdf:title":
+                            case "cdf:Benchmark":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source", GetSccXccdfTitle(xmlReader)));
-                                    break;
-                                }
-                            case "cdf:plain-text":
-                                {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Release", GetSccXccdfRelease(xmlReader)));
-                                    break;
-                                }
-                            case "cdf:version":
-                                {
-                                    bool sourceExists = false;
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Version", GetSccXccdfVersion(xmlReader)));
-                                    sqliteCommand.CommandText = "SELECT * FROM VulnerabilitySources WHERE Source = @Source AND Version = @Version AND Release = @Release;";
-                                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
-                                    {
-                                        if (sqliteDataReader.HasRows)
-                                        { sourceExists = true; }
-                                    }
-                                    if (!sourceExists)
-                                    {
-                                        sqliteCommand.CommandText = SetSqliteCommandText("VulnerabilitySources");
-                                        sqliteCommand.ExecuteNonQuery();
-                                    }
-                                    break;
-                                }
-                            case "cdf:Profile":
-                                {
-                                    xmlReader.Read();
-                                    while (xmlReader.Name != "cdf:Profile")
-                                    { xmlReader.Read(); }
-                                    break;
-                                }
-                            case "cdf:Value":
-                                {
-                                    xmlReader.Read();
-                                    while (xmlReader.Name != "cdf:Value")
-                                    { xmlReader.Read(); }
+                                    ReadBenchmarkNode(sqliteCommand, xmlReader);
                                     break;
                                 }
                             case "cdf:Group":
                                 {
-                                    GetSccXccdfVulnerabilityInformation(xmlReader, sqliteCommand, systemName);
-                                    InsertVulnerabilityCommand(sqliteCommand);
-                                    if (sqliteCommand.Parameters.Contains("NistControl"))
-                                    { sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["NistControl"]); }
-                                    if (sqliteCommand.Parameters.Contains("IaControls"))
-                                    { sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["IaControls"]); }
+                                    GetSccXccdfVulnerabilityInformation(xmlReader, sqliteCommand);
                                     break;
                                 }
                             case "cdf:TestResult":
@@ -210,124 +171,85 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private string GetSccXccdfTitle(XmlReader xmlReader)
+        private void ReadBenchmarkNode(SQLiteCommand sqliteCommand, XmlReader xmlReader)
         {
             try
             {
-                xmlReader.Read();
-                xccdfTitle = xmlReader.Value + " Benchmark";
-                return xccdfTitle;
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to get XCCDF title.");
-                throw exception;
-            }
-        }
-        
-        private string GetSccXccdfRelease(XmlReader xmlReader)
-        {
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(xmlReader.GetAttribute("id")) && xmlReader.GetAttribute("id").Equals("release-info"))
-                {
-                    xmlReader.Read();
-                    releaseInfo = "R" + xmlReader.Value.Split(' ')[1].Split(' ')[0];
-                }
-                return releaseInfo;
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to get XCCDF release.");
-                throw exception;
-            }
-        }
-
-        private string GetSccXccdfVersion(XmlReader xmlReader)
-        {
-            try
-            {
-                xmlReader.Read();
-                versionInfo = "V" + xmlReader.Value;
-                return versionInfo;
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to get XCCDF version.");
-                throw exception;
-            }
-        }
-
-        private void GetSccXccdfVulnerabilityInformation(XmlReader xmlReader, SQLiteCommand sqliteCommand, string systemName)
-        {
-            try
-            {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("VulnId", xmlReader.GetAttribute("id")));
-
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Secondary_Identifier", xmlReader.GetAttribute("id")));
                 while (xmlReader.Read())
                 {
-                    if (xmlReader.IsStartElement() && xmlReader.Name.Equals("cdf:Rule"))
+                    if (xmlReader.IsStartElement())
                     {
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("RuleId", xmlReader.GetAttribute("id")));
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("RawRisk",
-                            ConvertSeverityToRawRisk(xmlReader.GetAttribute("severity"))));
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("Impact",
-                            ConvertSeverityToImpact(xmlReader.GetAttribute("severity"))));
-
-                        while (xmlReader.Read())
+                        switch (xmlReader.Name)
                         {
-                            if (xmlReader.IsStartElement())
-                            {
-                                switch (xmlReader.Name)
+                            case "cdf:title":
                                 {
-                                    case "cdf:title":
-                                        {
-                                            xmlReader.Read();
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter("VulnTitle", xmlReader.Value));
-                                            break;
-                                        }
-                                    case "cdf:description":
-                                        {
-                                            xmlReader.Read();
-                                            GetDescriptionAndIacFromSccFile(xmlReader.Value, sqliteCommand);
-                                            break;
-                                        }
-                                    case "cdf:ident":
-                                        {
-                                            if (xmlReader.GetAttribute("system").Equals(@"http://iase.disa.mil/cci"))
-                                            {
-                                                xmlReader.Read();
-                                                string cciRef = xmlReader.Value;
-                                                string cciValue = string.Empty;
-                                                if (!string.IsNullOrWhiteSpace(cciRef))
-                                                {
-                                                    foreach (CciToNist cciToNist in MainWindowViewModel.cciToNistList.Where(x => x.CciNumber.Equals(cciRef)))
-                                                    {
-                                                        if (RevisionThreeSelected && cciToNist.Revision.Contains("Rev. 3") && !cciValue.Contains(cciToNist.NistControl))
-                                                        { cciValue = cciValue + cciToNist.NistControl + Environment.NewLine; }
-                                                        if (RevisionFourSelected && cciToNist.Revision.Contains("Rev. 4") && !cciValue.Contains(cciToNist.NistControl))
-                                                        { cciValue = cciValue + cciToNist.NistControl + Environment.NewLine; }
-                                                        if (AppendixASelected && cciToNist.Revision.Contains("53A") && !cciValue.Contains(cciToNist.NistControl))
-                                                        { cciValue = cciValue + cciToNist.NistControl + Environment.NewLine; }
-                                                    }
-                                                    sqliteCommand.Parameters.Add(new SQLiteParameter("NistControl", cciValue));
-                                                    sqliteCommand.Parameters.Add(new SQLiteParameter("CciNumber", cciRef));
-                                                }
-                                            }
-                                            break;
-                                        }
-                                    case "cdf:fixtext":
-                                        {
-                                            xmlReader.Read();
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter("FixText", xmlReader.Value.Replace("&gt;", ">")));
-                                            break;
-                                        }
-                                    default:
-                                        { break; }
+                                    string sourceName = ObtainCurrentNodeValue(xmlReader).Replace('_', ' ');
+                                    sourceName = SanitizeSourceName(sourceName);
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Name", sourceName));
+                                    break;
                                 }
-                            }
-                            else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("cdf:Rule"))
-                            { return; }
+                            case "cdf:description":
+                                {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Description", ObtainCurrentNodeValue(xmlReader)));
+                                    break;
+                                }
+                            case "cdf:plain-text":
+                                {
+                                    string release = ObtainCurrentNodeValue(xmlReader);
+                                    if (release.Contains(" "))
+                                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", release.Split(' ')[1])); }
+                                    else
+                                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", release)); }
+                                    break;
+                                }
+                            case "cdf:version":
+                                {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Version", ObtainCurrentNodeValue(xmlReader)));
+                                    break;
+                                }
+                            case "cdf:Profile":
+                                {
+                                    databaseInterface.InsertVulnerabilitySource(sqliteCommand);
+                                    databaseInterface.UpdateVulnerabilitySource(sqliteCommand, "CKL");
+                                    return;
+                                }
+                            default:
+                                { break; }
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to process Benchmark node.");
+                throw exception;
+            }
+        }
+
+        private void GetSccXccdfVulnerabilityInformation(XmlReader xmlReader, SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.Parameters["Vulnerability_Group_ID"].Value = xmlReader.GetAttribute("id");
+                while (xmlReader.Read())
+                {
+                    if (xmlReader.IsStartElement())
+                    {
+                        switch (xmlReader.Name)
+                        {
+                            case "cdf:title":
+                                {
+                                    sqliteCommand.Parameters["Vulnerability_Group_Title"].Value = ObtainCurrentNodeValue(xmlReader);
+                                    break;
+                                }
+                            case "cdf:Rule":
+                                {
+                                    ParseSccXccdfRuleNode(sqliteCommand, xmlReader);
+                                    break;
+                                }
+                            default:
+                                { break; }
                         }
                     }
 
@@ -340,10 +262,157 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
+        private void ParseSccXccdfRuleNode(SQLiteCommand sqliteCommand, XmlReader xmlReader)
+        { 
+            try
+            {
+                sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = xmlReader.GetAttribute("id");
+                sqliteCommand.Parameters["Raw_Risk"].Value = ConvertSeverityToRawRisk(xmlReader.GetAttribute("severity"));
+                while (xmlReader.Read())
+                {
+                    if (xmlReader.IsStartElement())
+                    {
+                        switch (xmlReader.Name)
+                        {
+                            case "cdf:title":
+                                {
+                                    sqliteCommand.Parameters["Vulnerability_Title"].Value = ObtainCurrentNodeValue(xmlReader);
+                                    break;
+                                }
+                            case "cdf:description":
+                                {
+                                    ProcessRuleDescriptionNode(sqliteCommand, ObtainCurrentNodeValue(xmlReader));
+                                    break;
+                                }
+                            case "cdf:ident":
+                                {
+                                    if (xmlReader.GetAttribute("system").Equals("http://iase.disa.mil/cci"))
+                                    { ccis.Add(ObtainCurrentNodeValue(xmlReader).Replace("CCI-", string.Empty)); }
+                                    break;
+                                }
+                            case "cdf:fixtext":
+                                {
+                                    sqliteCommand.Parameters["Fix_Text"].Value = ObtainCurrentNodeValue(xmlReader);
+                                    break;
+                                }
+                            default:
+                                { break; }
+                        }
+                    }
+                    else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("cdf:Group"))
+                    {
+                        databaseInterface.UpdateVulnerability(sqliteCommand);
+                        databaseInterface.InsertVulnerability(sqliteCommand);
+                        if (ccis.Count > 0)
+                        {
+                            foreach (string cci in ccis)
+                            {
+                                sqliteCommand.Parameters["CCI"].Value = cci;
+                                databaseInterface.MapVulnerabilityToCci(sqliteCommand);
+                                sqliteCommand.Parameters["CCI"].Value = string.Empty;
+                            }
+                        }
+                        return;
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to parse SCC XCCDF \"Rule\" node."));
+                throw exception;
+            }
+        }
+
+        private void ProcessRuleDescriptionNode(SQLiteCommand sqliteCommand, string descriptionNodeValue)
+        {
+            try
+            {
+                string rootNode = @"<root></root>";
+                descriptionNodeValue = rootNode.Insert(6, descriptionNodeValue);
+                using (XmlReader xmlReader = XmlReader.Create(GenerateStreamFromString(descriptionNodeValue)))
+                {
+                    while (xmlReader.Read())
+                    {
+                        if (xmlReader.IsStartElement())
+                        {
+                            switch (xmlReader.Name)
+                            {
+                                case "VulnDiscussion":
+                                    {
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Description", ObtainCurrentNodeValue(xmlReader)));
+                                        break;
+                                    }
+                                case "FalsePositives":
+                                    {
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("False_Positives", ObtainCurrentNodeValue(xmlReader)));
+                                        break;
+                                    }
+                                case "FalseNegatives":
+                                    {
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("False_Negatives", ObtainCurrentNodeValue(xmlReader)));
+                                        break;
+                                    }
+                                case "Documentable":
+                                    {
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Documentable", ObtainCurrentNodeValue(xmlReader)));
+                                        break;
+                                    }
+                                case "Mitigations":
+                                    {
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Mitigations", ObtainCurrentNodeValue(xmlReader)));
+                                        break;
+                                    }
+                                case "SeverityOverrideGuidance":
+                                    {
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Severity_Override_Guidance", ObtainCurrentNodeValue(xmlReader)));
+                                        break;
+                                    }
+                                case "PotentialImpacts":
+                                    {
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Potential_Impacts", ObtainCurrentNodeValue(xmlReader)));
+                                        break;
+                                    }
+                                case "ThirdPartyTools":
+                                    {
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Third_Party_Tools", ObtainCurrentNodeValue(xmlReader)));
+                                        break;
+                                    }
+                                case "MitigationControl":
+                                    {
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Mitigation_Control", ObtainCurrentNodeValue(xmlReader)));
+                                        break;
+                                    }
+                                case "Responsibility":
+                                    {
+                                        responsibilities.Add(ObtainCurrentNodeValue(xmlReader));
+                                        break;
+                                    }
+                                case "IAControls":
+                                    {
+                                        iaControls.Add(ObtainCurrentNodeValue(xmlReader));
+                                        break;
+                                    }
+                                default:
+                                    { break; }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to process Rule description node.");
+                throw exception;
+            }
+        }
+
         private void ParseSccXccdfTestResult(XmlReader xmlReader, SQLiteCommand sqliteCommand)
         {
             try
             {
+                DateTime scanEndTime;
+                if (DateTime.TryParse(xmlReader.GetAttribute("end-time"), out scanEndTime))
+                { firstDiscovered = lastObserved = scanEndTime.ToShortDateString(); }
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -353,21 +422,16 @@ namespace Vulnerator.Model.BusinessLogic
                             case "cdf:target-facts":
                                 {
                                     SetAffectedAssetInformationFromSccFile(xmlReader, sqliteCommand);
-                                    InsertAssetCommand(sqliteCommand);
                                     break;
                                 }
                             case "cdf:rule-result":
                                 {
                                     SetXccdfScanResultFromSccFile(xmlReader, sqliteCommand);
-                                    sqliteCommand.CommandText = SetSqliteCommandText("UniqueFinding");
-                                    sqliteCommand.ExecuteNonQuery();
                                     break;
                                 }
                             case "cdf:score":
                                 {
                                     SetXccdfScoreFromSccFile(xmlReader, sqliteCommand);
-                                    sqliteCommand.CommandText = SetSqliteCommandText("ScapScores");
-                                    sqliteCommand.ExecuteNonQuery();
                                     break;
                                 }
                             default:
@@ -395,17 +459,27 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "urn:scap:fact:asset:identifier:host_name":
                                 {
-                                    xmlReader.Read();
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", xmlReader.Value));
+                                    sqliteCommand.Parameters["Host_Name"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "urn:scap:fact:asset:identifier:ipv4":
                                 {
-                                    xmlReader.Read();
-                                    if (!sqliteCommand.Parameters.Contains("IpAddress"))
-                                    { sqliteCommand.Parameters.Add(new SQLiteParameter("IpAddress", xmlReader.Value)); }
-                                    else
-                                    { sqliteCommand.Parameters["IpAddress"].Value += @"/" + xmlReader.Value; }
+                                    ips.Add(ObtainCurrentNodeValue(xmlReader));
+                                    break;
+                                }
+                            case "urn:scap:fact:asset:identifier:ipv6":
+                                {
+                                    ips.Add(ObtainCurrentNodeValue(xmlReader));
+                                    break;
+                                }
+                            case "urn:scap:fact:asset:identifier:mac":
+                                {
+                                    macs.Add(ObtainCurrentNodeValue(xmlReader));
+                                    break;
+                                }
+                            case "urn:scap:fact:asset:identifier:fqdn":
+                                {
+                                    sqliteCommand.Parameters["FQDN"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             default:
@@ -414,15 +488,26 @@ namespace Vulnerator.Model.BusinessLogic
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("cdf:target-facts"))
                     {
-                        if (sqliteCommand.Parameters.Contains("HostName") && UserPrefersHostName)
+                        databaseInterface.InsertHardware(sqliteCommand);
+                        databaseInterface.InsertAndMapIpAddress(sqliteCommand);
+                        databaseInterface.MapHardwareToGroup(sqliteCommand);
+                        if (ips.Count > 0)
                         {
-                            sqliteCommand.Parameters.Add(new SQLiteParameter(
-                                "AssetIdToReport", sqliteCommand.Parameters["HostName"].Value));
+                            foreach (string ip in ips)
+                            {
+                                sqliteCommand.Parameters["IP_Address"].Value = ip;
+                                databaseInterface.InsertAndMapIpAddress(sqliteCommand);
+                                sqliteCommand.Parameters["MAC_Address"].Value = string.Empty;
+                            }
                         }
-                        else
+                        if (macs.Count > 0)
                         {
-                            sqliteCommand.Parameters.Add(new SQLiteParameter(
-                                "AssetIdToReport", sqliteCommand.Parameters["IpAddress"].Value));
+                            foreach (string mac in macs)
+                            {
+                                sqliteCommand.Parameters["IP_Address"].Value = mac;
+                                databaseInterface.InsertAndMapIpAddress(sqliteCommand);
+                                sqliteCommand.Parameters["MAC_Address"].Value = string.Empty;
+                            }
                         }
                         return;
                     }
@@ -439,20 +524,19 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                if (sqliteCommand.Parameters.Contains("RuleId"))
-                { sqliteCommand.Parameters["RuleId"].Value = xmlReader.GetAttribute("idref"); }
-                else
-                { sqliteCommand.Parameters.Add(new SQLiteParameter("RuleId", xmlReader.GetAttribute("idref"))); }
+                sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = xmlReader.GetAttribute("idref");
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement() && xmlReader.Name.Equals("cdf:result"))
                     {
-                        xmlReader.Read();
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("Status", ConvertXccdfResultToStatus(xmlReader.Value)));
+                        sqliteCommand.Parameters["Status"].Value = ConvertXccdfResultToStatus(ObtainCurrentNodeValue(xmlReader));
                         break;
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("cdf:rule-result"))
-                    { return; }
+                    {
+                        PrepareUniqueFinding(sqliteCommand);
+                        return;
+                    }
                 }
             }
             catch (Exception exception)
@@ -461,15 +545,34 @@ namespace Vulnerator.Model.BusinessLogic
                 throw exception;
             }
         }
-        
+
+        private void PrepareUniqueFinding(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Last_Observed", lastObserved));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Delta_Analysis_Required", "False"));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Approval_Status", "Not Approved"));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("First_Discovered", firstDiscovered));
+                databaseInterface.UpdateUniqueFinding(sqliteCommand, "CKL");
+                databaseInterface.InsertUniqueFinding(sqliteCommand);
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to create a uniqueFinding record for plugin \"{0}\".",
+                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
+                throw exception;
+            }
+        }
+
         private void SetXccdfScoreFromSccFile(XmlReader xmlReader, SQLiteCommand sqliteCommand)
         {
             while (!xmlReader.Name.Equals("cdf:TestResult"))
             {
                 if (!string.IsNullOrWhiteSpace(xmlReader.GetAttribute("system")) && xmlReader.GetAttribute("system").Equals("urn:xccdf:scoring:default"))
                 {
-                    xmlReader.Read();
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("ScapScore", xmlReader.Value));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Score", ObtainCurrentNodeValue(xmlReader)));
+                    sqliteCommand.Parameters["Scan_Date"].Value = DateTime.Now.ToShortDateString();
                 }
                 else
                 { xmlReader.Read(); }
@@ -906,112 +1009,102 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private string SetSqliteCommandText(string tableName)
+        private void InsertParameterPlaceholders(SQLiteCommand sqliteCommand)
         {
             try
             {
-                switch (tableName)
+                string[] parameters = new string[]
                 {
-                    case "Groups":
-                        { return "INSERT INTO Groups VALUES (NULL, @GroupName);"; }
-                    case "VulnerabilitySources":
-                        { return "INSERT INTO VulnerabilitySources VALUES (NULL, @Source, @Version, @Release);"; }
-                    case "Assets":
-                        { return "INSERT INTO Assets (AssetIdToReport, GroupIndex) VALUES (@AssetIdToReport, " +
-                                "(SELECT GroupIndex FROM Groups WHERE GroupName = @GroupName));"; }
-                    case "FileNames":
-                        { return "INSERT INTO FileNames VALUES (NULL, @FileName);"; }
-                    case "ScapScores":
-                        {
-                            return "INSERT INTO ScapScores VALUES (@ScapScore, " +
-                                "(SELECT AssetIndex FROM Assets WHERE AssetIdToReport = @AssetIdToReport), " +
-                                "(SELECT SourceIndex FROM VulnerabilitySources WHERE Source = @Source));";
-                        }
-                    case "Vulnerability":
-                        {
-                            return "INSERT INTO Vulnerability (VulnId, VulnTitle, Description, RawRisk, " +
-                                "Impact, RuleId) VALUES (@VulnId, @VulnTitle, @Description, @RawRisk, @Impact, @RuleId);";
-                        }
-                    case "UniqueFinding":
-                        {
-                            return "INSERT INTO UniqueFinding (FindingTypeIndex, SourceIndex, StatusIndex, " +
-                                "FileNameIndex, VulnerabilityIndex, AssetIndex) VALUES (" +
-                                "(SELECT FindingTypeIndex FROM FindingTypes WHERE FindingType = @FindingType), " +
-                                "(SELECT SourceIndex FROM VulnerabilitySources WHERE Source = @Source), " +
-                                "(SELECT StatusIndex FROM FindingStatuses WHERE Status = @Status), " +
-                                "(SELECT FileNameIndex FROM FileNames WHERE FileName = @FileName), " +
-                                "(SELECT VulnerabilityIndex FROM Vulnerability WHERE RuleId = @RuleId), " +
-                                "(SELECT AssetIndex FROM Assets WHERE AssetIdToReport = @AssetIdToReport));";
-                        }
-                    default:
-                        { break; }
-                }
-                return "";
+                    // Groups Table
+                    "Group_ID", "Group_Name", "Is_Accreditation", "Accreditation_ID", "Organization_ID",
+                    // Hardware Table
+                    "Hardware_ID", "Host_Name", "FQDN", "NetBIOS", "Is_Virtual_Server", "NIAP_Level", "Manufacturer", "ModelNumber",
+                    "Is_IA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID", "Scan_IP",
+                    // IP_Addresses Table
+                    "IP_Address_ID", "IP_Address",
+                    // MAC_Addresses Table
+                    "MAC_Address_ID", "MAC_Address",
+                    // UniqueFindings Table
+                    "Unique_Finding_ID", "Tool_Generated_Output", "Comments", "Finding_Details", "Technical_Mitigation",
+                    "Proposed_Mitigation", "Predisposing_Conditions", "Impact", "Likelihood", "Severity", "Risk", "Residual_Risk",
+                    "First_Discovered", "Last_Observed", "Approval_Status", "Approval_Date", "Approval_Expiration_Date",
+                    "Delta_Analysis_Required", "Finding_Type_ID", "Finding_Source_ID", "Status", "Vulnerability_ID", "Hardware_ID",
+                    "Severity_Override", "Severity_Override_Justification", "Technology_Area", "Web_DB_Site", "Web_DB_Instance",
+                    "Classification", "CVSS_Environmental_Score", "CVSS_Environmental_Vector",
+                    // UniqueFindingSourceFiles Table
+                    "Finding_Source_File_ID", "Finding_Source_File_Name", 
+                    // Vulnerabilities Table
+                    "Vulnerability_ID", "Unique_Vulnerability_Identifier", "Vulnerability_Group_ID", "Vulnerability_Group_Title",
+                    "Secondary_Vulnerability_Identifier", "VulnerabilityFamilyOrClass", "Vulnerability_Version", "Vulnerability_Release",
+                    "Vulnerability_Title", "Vulnerability_Description", "Risk_Statement", "Fix_Text", "Published_Date", "Modified_Date",
+                    "Fix_Published_Date", "Raw_Risk", "CVSS_Base_Score", "CVSS_Base_Vector", "CVSS_Temporal_Score", "CVSS_Temporal_Vector",
+                    "Check_Content", "False_Positives", "False_Negatives", "Documentable", "Mitigations", "Mitigation_Control",
+                    "Potential_Impacts", "Third_Party_Tools", "Security_Override_Guidance", "Overflow",
+                    // VulnerabilityReferences Table
+                    "Reference_ID", "Reference", "Reference_Type",
+                    // VulnerabilitySources Table
+                    "Vulnerability_Source_ID", "Source_Name", "Source_Secondary_Identifier", "Vulnerability_Source_File_Name",
+                    "Source_Description", "Source_Version", "Source_Release",
+                    // CCI Table
+                    "CCI",
+                    // ScapScores Table
+                    "Score", "Scan_Date"
+                };
+                foreach (string parameter in parameters)
+                { sqliteCommand.Parameters.Add(new SQLiteParameter(parameter, string.Empty)); }
             }
             catch (Exception exception)
             {
-                log.Error("Unable to set SQLite command text.");
+                log.Error(string.Format("Unable to insert SQLiteParameter placeholders into SQLiteCommand"));
                 throw exception;
             }
         }
 
-        private void InsertVulnerabilityCommand(SQLiteCommand sqliteCommand)
+        private string ObtainCurrentNodeValue(XmlReader xmlReader)
         {
             try
             {
-                sqliteCommand.CommandText = SetSqliteCommandText("Vulnerability");
-                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
-                {
-                    if (parameter.ParameterName.Equals("NistControl"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(92, "@NistControl, "); }
-                    if (parameter.ParameterName.Equals("IaControls"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(92, "@IaControl, "); }
-                    if (parameter.ParameterName.Equals("CciNumber"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(92, "@CciNumber, "); }
-                }
-                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
-                {
-                    if (parameter.ParameterName.Equals("NistControl"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, "NistControl, "); }
-                    if (parameter.ParameterName.Equals("IaControls"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, "IaControl, "); }
-                    if (parameter.ParameterName.Equals("CciNumber"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, "CciNumber, "); }
-                }
-                sqliteCommand.ExecuteNonQuery();
+                xmlReader.Read();
+                string value = xmlReader.Value;
+                value = value.Replace("&gt", ">");
+                value = value.Replace("&lt", "<");
+                return value;
             }
             catch (Exception exception)
             {
-                log.Error("Unable to set command to insert vulnerability.");
+                log.Error("Unable to obtain currently accessed node value.");
                 throw exception;
             }
         }
 
-        private void InsertAssetCommand(SQLiteCommand sqliteCommand)
+        private string SanitizeSourceName(string sourceName)
         {
             try
             {
-                sqliteCommand.CommandText = SetSqliteCommandText("Assets");
-                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
+                bool isSRG = sourceName.Contains("SRG") || sourceName.Contains("Security Requirement") ? true : false;
+                string value = sourceName;
+                string[] replaceArray = new string[] { "STIG", "Security", "Technical", "Implementation", "Guide", "(", ")", "Requirements", "Technologies", "SRG", "  " };
+                foreach (string item in replaceArray)
                 {
-                    if (parameter.ParameterName.Equals("HostName"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(57, "@HostName, "); }
-                    if (parameter.ParameterName.Equals("IpAddress"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(57, "@IpAddress, "); }
+                    if (item.Equals("  "))
+                    { value = value.Replace(item, " "); }
+                    else
+                    { value = value.Replace(item, ""); }
                 }
-                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
+                value = value.Trim();
+                if (!isSRG)
                 {
-                    if (parameter.ParameterName.Equals("HostName"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(20, "HostName, "); }
-                    if (parameter.ParameterName.Equals("IpAddress"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(20, "IpAddress, "); }
+                    value = string.Format("{0} Security Technical Implementation Guide", value);
+                    return value;
                 }
-                sqliteCommand.ExecuteNonQuery();
+                value = string.Format("{0} Security Requirements Guide", value);
+                return value;
             }
             catch (Exception exception)
             {
-                log.Error("Unable to set command to insert asset.");
-                throw exception;
+                log.Error(string.Format("Unable to sanitize source name \"{0}\".", sourceName));
+                log.Debug("Exception details:", exception);
+                return sourceName;
             }
         }
     }

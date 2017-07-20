@@ -74,8 +74,8 @@ namespace Vulnerator.Model.BusinessLogic
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         InsertParameterPlaceholders(sqliteCommand);
-                        InsertGroup(sqliteCommand, file);
-                        InsertSourceFile(sqliteCommand, file);
+                        databaseInterface.InsertGroup(sqliteCommand, file);
+                        databaseInterface.InsertParsedFile(sqliteCommand, file);
                         XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
                         using (XmlReader xmlReader = XmlReader.Create(file.FilePath, xmlReaderSettings))
                         {
@@ -112,40 +112,6 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 log.Error("Unable to parse nessus file with XmlReader.");
-                throw exception;
-            }
-        }
-
-        private void InsertGroup(SQLiteCommand sqliteCommand, Object.File file)
-        {
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(file.FileSystemName))
-                { groupName = file.FileSystemName; }
-                else
-                { groupName = "Unassigned"; }
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Group_Name", groupName));
-                sqliteCommand.CommandText = Properties.Resources.InsertGroup;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to insert group \"{0}\" into database.", file.FileSystemName));
-                throw exception;
-            }
-        }
-
-        private void InsertSourceFile(SQLiteCommand sqliteCommand, Object.File file)
-        {
-            try
-            {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Source_File_Name", file.FileName));
-                sqliteCommand.CommandText = Properties.Resources.InsertUniqueFindingSource;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to insert unique finding source file \"{0}\".", file.FileName));
                 throw exception;
             }
         }
@@ -210,16 +176,23 @@ namespace Vulnerator.Model.BusinessLogic
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("HostProperties"))
                     {
-                        InsertHardware(sqliteCommand);
-                        InsertIpAddress(sqliteCommand);
-                        MapIpAddress(sqliteCommand);
-                        MapHardwareToGroup(sqliteCommand);
+                        databaseInterface.InsertHardware(sqliteCommand);
+                        databaseInterface.InsertAndMapIpAddress(sqliteCommand);
+                        databaseInterface.MapHardwareToGroup(sqliteCommand);
                         if (!string.IsNullOrWhiteSpace(sqliteCommand.Parameters["MAC_Address"].Value.ToString()))
-                        { InsertAndMapMacAddress(sqliteCommand); }
-                        if (sqliteCommand.Parameters.Contains("Discovered_Software_Name"))
                         {
-                            InsertSoftware(sqliteCommand);
-                            MapHardwareToSoftware(sqliteCommand);
+                            string macAddress = sqliteCommand.Parameters["MAC_Address"].Value.ToString();
+                            Regex regex = new Regex(Properties.Resources.RegexMAC);
+                            foreach (Match match in regex.Matches(macAddress))
+                            {
+                                sqliteCommand.Parameters["MAC_Address"].Value = match.ToString();
+                                databaseInterface.InsertAndMapMacAddress(sqliteCommand);
+                            }
+                        }
+                        if (!string.IsNullOrWhiteSpace(sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString())))
+                        {
+                            databaseInterface.InsertSoftware(sqliteCommand);
+                            databaseInterface.MapHardwareToSoftware(sqliteCommand);
                         }
                         return;
                     }
@@ -228,122 +201,6 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 log.Error(string.Format("Unable to parse host \"{0}\".", hostIp));
-                throw exception;
-            }
-        }
-
-        private void InsertHardware(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Is_Virtual_Server", "False"));
-                sqliteCommand.CommandText = Properties.Resources.InsertHardware;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to insert host \"{0}\".", sqliteCommand.Parameters["IP_Address"].Value.ToString()));
-                throw exception;
-            }
-        }
-        
-        private void MapHardwareToGroup(SQLiteCommand sqliteCommand)
-        { 
-            try
-            {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Group_Name", groupName));
-                sqliteCommand.CommandText = Properties.Resources.MapHardwareToGroup;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to map \"{0}\" to \"{1}\".", 
-                    sqliteCommand.Parameters["Host_Name"].Value.ToString(), 
-                    sqliteCommand.Parameters["Group_Name"].Value.ToString()));
-                throw exception;
-            }
-        }
-
-        private void InsertSoftware(SQLiteCommand sqliteCommand)
-        { 
-            try
-            {
-                sqliteCommand.CommandText = Properties.Resources.InsertSoftware;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to insert software \"{0}\" into table.", sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString()));
-                throw exception;
-            }
-        }
-
-        private void MapHardwareToSoftware(SQLiteCommand sqliteCommand)
-        { 
-            try
-            {
-                sqliteCommand.CommandText = Properties.Resources.MapHardwareToSoftware;
-                sqliteCommand.Parameters.Add(new SQLiteParameter("ReportInAccreditation", "False"));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("ApprovedForBaseline", "False"));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("BaselineApprover", DBNull.Value));
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to map software \"{0}\" to \"{1}\".",
-                    sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString(),
-                    sqliteCommand.Parameters["Host_Name"].Value.ToString()));
-                throw exception;
-            }
-        }
-
-        private void InsertIpAddress(SQLiteCommand sqliteCommand)
-        { 
-            try
-            {
-                sqliteCommand.CommandText = Properties.Resources.InsertIpAddress;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to insert IP Address \"{0}\"."));
-                log.Debug("Exception details:", exception);
-                throw exception;
-            }
-        }
-
-        private void MapIpAddress(SQLiteCommand sqliteCommand)
-        { 
-            try
-            {
-                sqliteCommand.CommandText = Properties.Resources.MapIpToHardware;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to map IP Address \"{0}\" to host \"{1}\"."));
-                throw exception;
-            }
-        }
-
-        private void InsertAndMapMacAddress(SQLiteCommand sqliteCommand)
-        { 
-            try
-            {
-                string macAddress = sqliteCommand.Parameters["MAC_Address"].Value.ToString();
-                Regex regex = new Regex(Properties.Resources.RegexMAC);
-                foreach (Match match in regex.Matches(macAddress))
-                {
-                    sqliteCommand.Parameters["MAC_Address"].Value = match.ToString();
-                    sqliteCommand.CommandText = Properties.Resources.InsertMacAddress;
-                    sqliteCommand.ExecuteNonQuery();
-                    sqliteCommand.CommandText = Properties.Resources.MapMacToHardware;
-                    sqliteCommand.ExecuteNonQuery();
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to insert / map MAC Address \"{0}\" belonging to host \"{1}\"."));
                 throw exception;
             }
         }
@@ -478,17 +335,18 @@ namespace Vulnerator.Model.BusinessLogic
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ReportItem"))
                     {
                         sqliteCommand.Parameters.Add(new SQLiteParameter("Scan_IP", ipAddress));
-                        InsertVulnerabilitySource(sqliteCommand);
-                        InsertVulnerability(sqliteCommand);
-                        MapVulnerabilityToSource(sqliteCommand);
+                        PrepareVulnerabilitySource(sqliteCommand);
+                        databaseInterface.UpdateVulnerability(sqliteCommand);
+                        databaseInterface.InsertVulnerability(sqliteCommand);
+                        databaseInterface.MapVulnerabilityToSource(sqliteCommand);
                         if (Properties.Settings.Default.CaptureAcasPortInformation)
-                        { InsertAndMapPort(sqliteCommand); }
-                        InsertUniqueFinding(sqliteCommand);
+                        { databaseInterface.InsertAndMapPort(sqliteCommand); }
+                        PrepareUniqueFinding(sqliteCommand);
                         if (Properties.Settings.Default.CaptureAcasReferenceInformation)
                         {
-                            InsertAndMapReferences(sqliteCommand, cpes, "CPE");
-                            InsertAndMapReferences(sqliteCommand, cves, "CVE");
-                            InsertAndMapReferences(sqliteCommand, xrefs, "Multi");
+                            databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand, cpes, "CPE");
+                            databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand, cves, "CVE");
+                            databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand, xrefs, "Multi");
                         }
                         if (Properties.Settings.Default.CaptureAcasEnumeratedSoftware)
                         {
@@ -578,8 +436,8 @@ namespace Vulnerator.Model.BusinessLogic
                         }
                         if (!string.IsNullOrWhiteSpace(sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString()))
                         {
-                            InsertSoftware(sqliteCommand);
-                            MapHardwareToSoftware(sqliteCommand);
+                            databaseInterface.InsertSoftware(sqliteCommand);
+                            databaseInterface.MapHardwareToSoftware(sqliteCommand);
                         }
                         string[] parametersToClear = new string[] { "Discovered_Software_Name", "Displayed_Software_Name", "Software_Version", "Install_Date" };
                         foreach (string parameter in parametersToClear)
@@ -656,8 +514,8 @@ namespace Vulnerator.Model.BusinessLogic
                         }
                         if (!string.IsNullOrWhiteSpace(sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString()))
                         {
-                            InsertSoftware(sqliteCommand);
-                            MapHardwareToSoftware(sqliteCommand);
+                            databaseInterface.InsertSoftware(sqliteCommand);
+                            databaseInterface.MapHardwareToSoftware(sqliteCommand);
                         }
                         string[] parametersToClear = new string[] { "Discovered_Software_Name", "Displayed_Software_Name", "Software_Version", "Install_Date" };
                         foreach (string parameter in parametersToClear)
@@ -714,7 +572,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private void InsertVulnerabilitySource(SQLiteCommand sqliteCommand)
+        private void PrepareVulnerabilitySource(SQLiteCommand sqliteCommand)
         { 
             try
             {
@@ -728,10 +586,9 @@ namespace Vulnerator.Model.BusinessLogic
                 { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", acasRelease)); }
                 else
                 { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", "Release Unknown")); }
-                sqliteCommand.CommandText = Properties.Resources.InsertVulnerabilitySource;
-                sqliteCommand.ExecuteNonQuery();
+                databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                 if (!sqliteCommand.Parameters["Source_Version"].Value.ToString().Equals("Version Unknown"))
-                { MapUnknownVulnerabilitySources(sqliteCommand); }
+                { databaseInterface.UpdateVulnerabilitySource(sqliteCommand, "ACAS"); }
             }
             catch (Exception exception)
             {
@@ -743,71 +600,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private void MapUnknownVulnerabilitySources(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                sqliteCommand.CommandText = Properties.Resources.UpdateAcasVulnerabilitySource;
-                sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.CommandText = "DELETE FROM VulnerabilitySources WHERE Source_Version = 'Version Unknown';";
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to re-map unknown ACAS Release / Version information."));
-                throw exception;
-            }
-        }
-
-        private void InsertVulnerability(SQLiteCommand sqliteCommand)
-        { 
-            try
-            {
-                sqliteCommand.CommandText = Properties.Resources.UpdateAcasVulnerability;
-                sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.CommandText = Properties.Resources.InsertVulnerability;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to insert plugin \"{0}\" into Vulnerabilities.", sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
-                throw exception;
-            }
-        }
-
-        private void MapVulnerabilityToSource(SQLiteCommand sqliteCommand)
-        { 
-            try
-            {
-                sqliteCommand.CommandText = Properties.Resources.MapVulnerabilityToSource;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to map vulnerability back to a source."));
-                throw exception;
-            }
-        }
-
-        private void InsertAndMapPort(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                sqliteCommand.CommandText = Properties.Resources.InsertPort;
-                sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.CommandText = Properties.Resources.MapPortToHardware;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to insert or map port \"{0} {1}\".", 
-                    sqliteCommand.Parameters["Protocol"].Value.ToString(),
-                    sqliteCommand.Parameters["Port"].Value.ToString()));
-                throw exception;
-            }
-        }
-
-        private void InsertUniqueFinding(SQLiteCommand sqliteCommand)
+        private void PrepareUniqueFinding(SQLiteCommand sqliteCommand)
         { 
             try
             {
@@ -817,42 +610,13 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Approval_Status", "Not Approved"));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Delta_Analysis_Required", "False"));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Source_File_Name", fileName));
-                sqliteCommand.CommandText = Properties.Resources.UpdateAcasUniqueFinding;
-                sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.CommandText = Properties.Resources.InsertUniqueFinding;
-                sqliteCommand.ExecuteNonQuery();
+                databaseInterface.UpdateUniqueFinding(sqliteCommand, "ACAS");
+                databaseInterface.InsertUniqueFinding(sqliteCommand);
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to create a UniqueFinding record for plugin \"{0}\".",
+                log.Error(string.Format("Unable to create a uniqueFinding record for plugin \"{0}\".",
                     sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
-                throw exception;
-            }
-        }
-
-        private void InsertAndMapReferences(SQLiteCommand sqliteCommand, List<string> references, string referenceType)
-        { 
-            try
-            {
-                foreach (string reference in references)
-                {
-                    sqliteCommand.CommandText = Properties.Resources.InsertVulnerabilityReference;
-                    if (!referenceType.Equals("CVE") && !referenceType.Equals("CPE"))
-                    {
-                        referenceType = reference.Split(':')[0];
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("Reference", reference.Split(':')[1]));
-                    }
-                    else
-                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Reference", reference)); }
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Reference_Type", referenceType));
-                    sqliteCommand.ExecuteNonQuery();
-                    sqliteCommand.CommandText = Properties.Resources.MapReferenceToVulnerability;
-                    sqliteCommand.ExecuteNonQuery();
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to insert / map reference."));
                 throw exception;
             }
         }

@@ -61,6 +61,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM VulnerabilitySources WHERE Source_Version = &apos;Version Unknown&apos;;.
+        /// </summary>
+        internal static string DeleteUnknownAcasVersions {
+            get {
+                return ResourceManager.GetString("DeleteUnknownAcasVersions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO Groups VALUES (NULL, @Group_Name, &apos;False&apos;, NULL, NULL);.
         /// </summary>
         internal static string InsertGroup {
@@ -102,6 +111,15 @@ namespace Vulnerator.Properties {
         internal static string InsertPort {
             get {
                 return ResourceManager.GetString("InsertPort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO ScapScores VALUES (NULL, @Score, (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), (SELECT Finding_Source_File_ID FROM UniqueFindingSourceFiles WHERE Finding_Source_File_Name = @Finding_Source_File_Name), @Scan_Date);.
+        /// </summary>
+        internal static string InsertScapScore {
+            get {
+                return ResourceManager.GetString("InsertScapScore", resourceCulture);
             }
         }
         
@@ -370,96 +388,6 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = @Finding_Type;.
-        /// </summary>
-        internal static string SelectFindingTypeId {
-            get {
-                return ResourceManager.GetString("SelectFindingTypeId", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT Group_ID FROM Groups WHERE Group_Name = @Group_Name;.
-        /// </summary>
-        internal static string SelectGroup {
-            get {
-                return ResourceManager.GetString("SelectGroup", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT Hardware_ID FROM Hardware WHERE Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS;.
-        /// </summary>
-        internal static string SelectHardware {
-            get {
-                return ResourceManager.GetString("SelectHardware", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT IP_Address_ID FROM IP_Addresses WHERE IP_Address = @IP_Address;.
-        /// </summary>
-        internal static string SelectIpAddress {
-            get {
-                return ResourceManager.GetString("SelectIpAddress", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT MAC_Address_ID FROM MAC_Addresses WHERE MAC_Address = @MAC_Address;.
-        /// </summary>
-        internal static string SelectMacAddress {
-            get {
-                return ResourceManager.GetString("SelectMacAddress", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT PPS_ID FROM PPS WHERE Port = @Port AND Protocol = @Protocol;.
-        /// </summary>
-        internal static string SelectPort {
-            get {
-                return ResourceManager.GetString("SelectPort", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name;.
-        /// </summary>
-        internal static string SelectSoftware {
-            get {
-                return ResourceManager.GetString("SelectSoftware", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT Unique_Finding_ID FROM UniqueFindings WHERE Vulnerability_ID = @Vulnerability_ID AND Hardware_ID = @Hardware_ID;.
-        /// </summary>
-        internal static string SelectUniqueFinding {
-            get {
-                return ResourceManager.GetString("SelectUniqueFinding", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT Finding_Source_File_ID FROM UniqueFindingsSourceFiles WHERE Finding_Source_File_Name = @Finding_Source_File_Name;.
-        /// </summary>
-        internal static string SelectUniqueFindingSourceFile {
-            get {
-                return ResourceManager.GetString("SelectUniqueFindingSourceFile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT Reference_ID FROM VulnerabilityReferences WHERE Reference = @Reference AND Reference_Type = @Reference_Type;.
-        /// </summary>
-        internal static string SelectVulnerabilityReference {
-            get {
-                return ResourceManager.GetString("SelectVulnerabilityReference", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to SELECT Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Name = @Source_Name;.
         /// </summary>
         internal static string SelectVulnerabilitySourceVersionAndRelease {
@@ -487,7 +415,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UPDATE Vulnerabilities SET Vulnerability_Title=@Vulnerability_Title, Vulnerability_Description = @Vulnerability_Description, Risk_Statement = @Risk_Statement, Fix_Text = @Fix_Text, Modified_Date = @Modified_Date, Fix_Published_Date = @Fix_Published_Date, Raw_Risk = @Raw_Risk, Vulnerability_Version = @Vulnerability_Version, Vulnerability_Release = @Vulnerability_Release WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Modified_Date &lt; @Modified_Date;.
+        ///   Looks up a localized string similar to UPDATE UniqueFindings SET 
+        ///	Last_Observed = @Last_Observed, 
+        ///	Status = @Status, 
+        ///	Finding_Source_File_ID = (SELECT Finding_Source_File_ID FROM UniqueFindingsSourceFiles WHERE Finding_Source_File_Name = @Finding_Source_File_Name),
+        ///	Tool_Generated_Output = @Tool_Generated_Output 
+        ///WHERE 
+        ///	Hardware_ID = (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP) 
+        ///AND 
+        ///	Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifie [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string UpdateAcasVulnerability {
             get {
@@ -505,7 +441,17 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UPDATE UniqueFindings SET Finding_Details = @Finding_Details, Comments = @Comments, Severity_Override = @Severity_Override, Severity_Override_Justification = @Severity_Override_Justification, Last_Observed = @Last_Observed, Technology_Area = @Technology_Area, Web_DB_Site = @Web_DB_Site, Web_DB_Instance = @Web_DB_Instance, Finding_Source_File_ID = @Finding_Source_File_ID, Status = @Status, Approval_Status = @Approval_Status, Delta_Analysis_Required = @Delta_Analysis_Required, Tool_Generated_Output = @Tool_Ge [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to UPDATE UniqueFindings SET 
+        ///	Finding_Details = @Finding_Details, 
+        ///	Comments = @Comments, 
+        ///	Severity_Override = @Severity_Override, 
+        ///	Severity_Override_Justification = @Severity_Override_Justification, 
+        ///	Last_Observed = @Last_Observed, 
+        ///	Technology_Area = @Technology_Area, 
+        ///	Web_DB_Site = @Web_DB_Site, 
+        ///	Web_DB_Instance = @Web_DB_Instance, 
+        ///	Finding_Source_File_ID = (SELECT Finding_Source_File_ID FROM UniqueFindingsSourceFiles WHERE Finding_Source_File_Name = @Finding_Source_File_Name), 
+        ///	Status = @ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string UpdateCklUniqueFinding {
             get {
@@ -514,7 +460,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UPDATE UniqueFindings SET Delta_Analysis_Required = &apos;True&apos; WHERE Vulnerability_ID = @Vulnerability_ID;.
+        ///   Looks up a localized string similar to UPDATE UniqueFindings SET Delta_Analysis_Required = &apos;True&apos; WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier);.
         /// </summary>
         internal static string UpdateDeltaAnalysisFlag {
             get {
