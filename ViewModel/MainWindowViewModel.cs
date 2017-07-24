@@ -1507,7 +1507,7 @@ namespace Vulnerator.ViewModel
                     case "SCAP Benchmark":
                         {
                             XccdfReader xccdfReader = new XccdfReader();
-                            file.Status = xccdfReader.ReadXccdfFile(file.FilePath, file.FileSystemName.Split(':')[0].TrimEnd());
+                            file.Status = xccdfReader.ReadXccdfFile(file);
                             break;
                         }
                     case "Fortify FPR":

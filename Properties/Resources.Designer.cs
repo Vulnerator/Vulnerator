@@ -115,7 +115,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO ScapScores VALUES (NULL, @Score, (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), (SELECT Finding_Source_File_ID FROM UniqueFindingSourceFiles WHERE Finding_Source_File_Name = @Finding_Source_File_Name), @Scan_Date);.
+        ///   Looks up a localized string similar to INSERT INTO ScapScores VALUES (NULL, @Score, (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), (SELECT Finding_Source_File_ID FROM UniqueFindingSourceFiles WHERE Finding_Source_File_Name = @Finding_Source_File_Name), (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name), @Scan_Date);.
         /// </summary>
         internal static string InsertScapScore {
             get {
@@ -384,6 +384,24 @@ namespace Vulnerator.Properties {
         internal static string RegexMAC {
             get {
                 return ResourceManager.GetString("RegexMAC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (?&lt;=R)\d+(?=_STIG).
+        /// </summary>
+        internal static string RegexXccdfStigRelease {
+            get {
+                return ResourceManager.GetString("RegexXccdfStigRelease", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (?&lt;=V)\d+.
+        /// </summary>
+        internal static string RegexXccdfStigVersion {
+            get {
+                return ResourceManager.GetString("RegexXccdfStigVersion", resourceCulture);
             }
         }
         

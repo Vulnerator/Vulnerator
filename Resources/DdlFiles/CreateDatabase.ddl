@@ -947,10 +947,12 @@ CREATE TABLE ScapScores
 	 Score INTEGER NOT NULL , 
 	 Hardware_ID INTEGER NOT NULL , 
 	 Finding_Source_File_ID INTEGER NOT NULL ,
+	 Vulnerability_Source_ID INTEGER NOT NULL,
 	 Scan_Date DATE NOT NULL ,
-	 UNIQUE (Hardware_ID, Finding_Source_File_Name) ON CONFLICT IGNORE,
+	 UNIQUE (Hardware_ID, Finding_Source_File_ID, Vulnerability_Source_ID) ON CONFLICT IGNORE,
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
-	 FOREIGN KEY (Finding_Source_File_ID) REFERENCES UniqueFindingSourceFiles(Finding_Source_File_ID)
+	 FOREIGN KEY (Finding_Source_File_ID) REFERENCES UniqueFindingSourceFiles(Finding_Source_File_ID),
+	 FOREIGN KEY (Vulnerability_Source_ID) REFERENCES VulnerabilitySources(Vulnerability_Source_ID)
 	);
 CREATE TABLE Sensors 
 	(

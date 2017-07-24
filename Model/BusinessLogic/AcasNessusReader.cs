@@ -189,7 +189,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 databaseInterface.InsertAndMapMacAddress(sqliteCommand);
                             }
                         }
-                        if (!string.IsNullOrWhiteSpace(sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString())))
+                        if (!string.IsNullOrWhiteSpace(sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString()))
                         {
                             databaseInterface.InsertSoftware(sqliteCommand);
                             databaseInterface.MapHardwareToSoftware(sqliteCommand);
