@@ -1376,7 +1376,7 @@ CREATE TABLE WindowsLocalUserSettings
 	 Local_Never_Logged_On NVARCHAR (5) NOT NULL , 
 	 Local_PW_Never_Expires NVARCHAR (5) NOT NULL 
 	);
-INSERT INTO Groups VALUES (NULL, '', 0, NULL, NULL);
+INSERT INTO Groups VALUES (NULL, 'Unassigned', 'False', NULL, NULL);
 INSERT INTO FindingTypes VALUES (NULL, 'ACAS');
 INSERT INTO FindingTypes VALUES (NULL, 'CKL');
 INSERT INTO FindingTypes VALUES (NULL, 'Fortify');

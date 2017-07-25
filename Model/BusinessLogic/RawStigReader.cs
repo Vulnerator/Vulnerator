@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.IO.Compression;
+using System.Text.RegularExpressions;
 using System.Xml;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Object;
@@ -98,7 +99,10 @@ namespace Vulnerator.Model.BusinessLogic
                                 {
                                     string release = ObtainCurrentNodeValue(xmlReader);
                                     if (release.Contains(" "))
-                                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", release.Split(' ')[1])); }
+                                    {
+                                        Regex regex = new Regex(Properties.Resources.RegexRawStigRelease);
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", regex.Match(release)));
+                                    }
                                     else
                                     { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", release)); }
                                     break;
@@ -263,7 +267,7 @@ namespace Vulnerator.Model.BusinessLogic
                             {
                                 case "VulnDiscussion":
                                     {
-                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Description", ObtainCurrentNodeValue(xmlReader)));
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Description", ObtainCurrentNodeValue(xmlReader)));
                                         break;
                                     }
                                 case "FalsePositives":

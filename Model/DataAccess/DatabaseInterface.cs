@@ -361,6 +361,22 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public void InsertScapScore(SQLiteCommand sqliteCommand)
+        { 
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.InsertScapScore;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert SCAP score for \"{0}\" - \"{1}\".", 
+                    sqliteCommand.Parameters["Host_Name"].Value.ToString(),
+                    sqliteCommand.Parameters["Source_Name"].Value.ToString()));
+                throw exception;
+            }
+        }
+
         private bool VulnerabilitySourceUpdateRequired(SQLiteCommand sqliteCommand)
         { 
             try
