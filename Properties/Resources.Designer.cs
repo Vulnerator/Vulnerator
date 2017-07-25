@@ -361,6 +361,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CAT\s(?:I{1,3}(?:V)?)(?:,\s)*.
+        /// </summary>
+        internal static string RegexCatText {
+            get {
+                return ResourceManager.GetString("RegexCatText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$.
         /// </summary>
         internal static string RegexIPv4 {
@@ -393,6 +402,15 @@ namespace Vulnerator.Properties {
         internal static string RegexRawStigRelease {
             get {
                 return ResourceManager.GetString("RegexRawStigRelease", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (?:(?:\w)+(?:-|\.|_)?)+.
+        /// </summary>
+        internal static string RegexStigId {
+            get {
+                return ResourceManager.GetString("RegexStigId", resourceCulture);
             }
         }
         

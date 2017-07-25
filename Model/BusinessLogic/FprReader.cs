@@ -16,24 +16,24 @@ namespace Vulnerator.Model.BusinessLogic
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private string softwareName = string.Empty;
-        private string lastObserved = string.Empty;
+        private string firstDiscovered = DateTime.Now.ToShortDateString();
+        private string lastObserved = DateTime.Now.ToShortDateString();
         private string file = string.Empty;
         private string sourcePlaceholder = "HPE Fortify SCA";
         private string version = string.Empty;
-        private List<FprDescription> fprDescriptionList = new List<FprDescription>();
+        private DatabaseInterface databaseInterface = new DatabaseInterface();
         private List<FprVulnerability> fprVulnerabilityList = new List<FprVulnerability>();
 
-        public string ReadFpr(string fileName, string systemName)
+        public string ReadFpr(Object.File file)
         {
             try
             {
-                if (fileName.IsFileInUse())
+                if (file.FilePath.IsFileInUse())
                 {
-                    log.Error(fileName + " is in use; please close any open instances and try again.");
+                    log.Error(file.FileName + " is in use; please close any open instances and try again.");
                     return "Failed; File In Use";
                 }
-                file = Path.GetFileName(fileName);
-                ReadFprArchive(fileName, systemName);
+                ReadFprArchive(file);
                 return "Processed";
             }
             catch (Exception exception)
@@ -44,23 +44,25 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private void ReadFprArchive(string fileName, string systemName)
+        private void ReadFprArchive(Object.File file)
         {
             try
             {
+
                 using (SQLiteTransaction sqliteTransaction = FindingsDatabaseActions.sqliteConnection.BeginTransaction())
                 {
-                    CreateAddFileNameCommand(fileName);
-                    CreateAddGroupNameCommand(systemName);
-                    CreateAddSourceCommand();
-                    using (Stream stream = System.IO.File.OpenRead(fileName))
+                    using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
-                        using (ZipArchive zipArchive = new ZipArchive(stream, ZipArchiveMode.Read))
+                        InsertParameterPlaceholders(sqliteCommand);
+                        using (Stream stream = System.IO.File.OpenRead(file.FilePath))
                         {
-                            ZipArchiveEntry auditFvdl = zipArchive.Entries.FirstOrDefault(x => x.Name.Equals("audit.fvdl"));
-                            ParseAuditFvdlWithXmlReader(auditFvdl, systemName);
-                            ZipArchiveEntry auditXml = zipArchive.Entries.FirstOrDefault(x => x.Name.Equals("audit.xml"));
-                            ParseAuditXmlWithXmlReader(auditXml);
+                            using (ZipArchive zipArchive = new ZipArchive(stream, ZipArchiveMode.Read))
+                            {
+                                ZipArchiveEntry auditFvdl = zipArchive.Entries.FirstOrDefault(x => x.Name.Equals("audit.fvdl"));
+                                ParseAuditFvdlWithXmlReader(auditFvdl, sqliteCommand);
+                                ZipArchiveEntry auditXml = zipArchive.Entries.FirstOrDefault(x => x.Name.Equals("audit.xml"));
+                                ParseAuditXmlWithXmlReader(auditXml);
+                            }
                         }
                     }
                     sqliteTransaction.Commit();
@@ -73,7 +75,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private void ParseAuditFvdlWithXmlReader(ZipArchiveEntry zipArchiveEntry, string systemName)
+        private void ParseAuditFvdlWithXmlReader(ZipArchiveEntry zipArchiveEntry, SQLiteCommand sqliteCommand)
         {
             try
             {
@@ -88,12 +90,12 @@ namespace Vulnerator.Model.BusinessLogic
                             {
                                 case "CreatedTS":
                                     {
-                                        lastObserved = DateTime.Parse(xmlReader.GetAttribute("date")).ToLongDateString();
+                                        firstDiscovered = lastObserved = DateTime.Parse(xmlReader.GetAttribute("date")).ToShortDateString();
                                         break;
                                     }
                                 case "BuildID":
                                     {
-                                        CreateAddAssetCommand(xmlReader, systemName);
+                                        sqliteCommand.Parameters["Discovered_Software_Name"].Value = ObtainCurrentNodeValue(xmlReader);
                                         break;
                                     }
                                 case "Vulnerability":
@@ -108,7 +110,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     }
                                 case "EngineVersion":
                                     {
-                                        CreateUpdateSourceCommand(xmlReader);
+                                        sqliteCommand.Parameters["Source_Version"].Value = ObtainCurrentNodeValue(xmlReader);
                                         break;
                                     }
                                 default:
@@ -116,11 +118,6 @@ namespace Vulnerator.Model.BusinessLogic
                             }
                         }
                     }
-                }
-                foreach (FprVulnerability fprVulnerability in fprVulnerabilityList)
-                {
-                    using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
-                    { AddVulnerabilityAndUniqueFinding(fprVulnerability); }
                 }
             }
             catch (Exception exception)
@@ -135,9 +132,6 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 FprVulnerability fprVulnerability = new FprVulnerability();
-                string kingdom = string.Empty;
-                string type = string.Empty;
-                string subType = string.Empty;
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -151,17 +145,17 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "Kingdom":
                                 {
-                                    kingdom = ObtainCurrentNodeValue(xmlReader);
+                                    fprVulnerability.Kingdom = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "Type":
                                 {
-                                    type = ObtainCurrentNodeValue(xmlReader);
+                                    fprVulnerability.Type = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "Subtype":
                                 {
-                                    subType = ObtainCurrentNodeValue(xmlReader);
+                                    fprVulnerability.Type = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "InstanceID":
@@ -191,10 +185,6 @@ namespace Vulnerator.Model.BusinessLogic
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Vulnerability"))
                     {
-                        if (!string.IsNullOrWhiteSpace(subType))
-                        { fprVulnerability.Category = kingdom + " : " + type + " : " + subType; }
-                        else
-                        { fprVulnerability.Category = kingdom + " : " + type; }
                         fprVulnerabilityList.Add(fprVulnerability);
                         return;
                     }
@@ -211,8 +201,12 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                FprDescription fprDescription = new FprDescription();
-                fprDescription.ClassId = xmlReader.GetAttribute("classID");
+                string classId = xmlReader.GetAttribute("classID");
+                string output = string.Empty;
+                string description = string.Empty;
+                string riskStatement = string.Empty;
+                string fixText = string.Empty;
+                Dictionary<string, string> references = new Dictionary<string, string>();
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -221,21 +215,17 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "Abstract":
                                 {
-                                    xmlReader.Read();
-                                    fprDescription.VulnTitle = SanitizeVulnTitle(xmlReader.Value);
-                                    fprDescription.RiskStatement = SanitizeRiskStatement(xmlReader.Value);
+                                    output = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "Explanation":
                                 {
-                                    xmlReader.Read();
-                                    fprDescription.Description = SanitizeDescription(xmlReader.Value);
+                                    description = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "Recommendations":
                                 {
-                                    xmlReader.Read();
-                                    fprDescription.FixText = SanitizeRecommendations(xmlReader.Value);
+                                    fixText = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "Reference":
@@ -243,8 +233,8 @@ namespace Vulnerator.Model.BusinessLogic
                                     string value = ObtainReferencesValue(xmlReader);
                                     string key = ObtainReferencesKey(xmlReader);
                                     string keyCheck;
-                                    if (!fprDescription.References.TryGetValue(key, out keyCheck))
-                                    { fprDescription.References.Add(key, value); }
+                                    if (!references.TryGetValue(key, out keyCheck))
+                                    { references.Add(key, value); }
                                     break;
                                 }
                             default:
@@ -253,7 +243,7 @@ namespace Vulnerator.Model.BusinessLogic
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name == "Description")
                     {
-                        fprDescriptionList.Add(fprDescription);
+                        
                         return;
                     }
                 }
@@ -262,226 +252,6 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 log.Error("Unable to parse FVDL Description node.");
-                throw exception;
-            }
-        }
-
-        private void CreateAddFileNameCommand(string fileName)
-        {
-            try
-            {
-                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
-                {
-                    sqliteCommand.CommandText = "INSERT INTO FileNames VALUES (NULL, @FileName);";
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("FileName", Path.GetFileName(fileName)));
-                    sqliteCommand.ExecuteNonQuery();
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to insert file name into FileNames.");
-                throw exception;
-            }
-        }
-
-        private void CreateAddGroupNameCommand(string groupName)
-        {
-            try
-            {
-                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
-                {
-                    sqliteCommand.CommandText = "INSERT INTO Groups VALUES (NULL, @GroupName);";
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", groupName));
-                    sqliteCommand.ExecuteNonQuery();
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to insert GroupName into Groups.");
-                throw exception;
-            }
-        }
-
-        private void CreateAddAssetCommand(XmlReader xmlReader, string systemName)
-        {
-            try
-            {
-                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
-                {
-                    softwareName = ObtainCurrentNodeValue(xmlReader);
-                    if (string.IsNullOrWhiteSpace(softwareName))
-                    { softwareName = file; }
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", softwareName));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", systemName));
-                    sqliteCommand.CommandText = "INSERT INTO Assets (AssetIndex, AssetIdToReport, HostName, GroupIndex) " +
-                        "VALUES(NULL, @AssetIdToReport, @AssetIdToReport, (SELECT GroupIndex FROM Groups WHERE GroupName = @GroupName));";
-                    sqliteCommand.ExecuteNonQuery();
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to insert Asset into Assets.");
-                throw exception;
-            }
-        }
-
-        private void CreateAddSourceCommand()
-        {
-            try
-            {
-                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
-                {
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source", sourcePlaceholder));
-                    sqliteCommand.CommandText = "INSERT INTO VulnerabilitySources (SourceIndex, Source, Version) VALUES (NULL, @Source, 'V?');";
-                    sqliteCommand.ExecuteNonQuery();
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to insert Source into VunerabilitySources.");
-                throw exception;
-            }
-        }
-
-        private void AddVulnerabilityAndUniqueFinding(FprVulnerability fprVulnerability)
-        {
-            try
-            {
-                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
-                {
-                    FprDescription fprDescription = fprDescriptionList.FirstOrDefault(x => x.ClassId == fprVulnerability.ClassId);
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("VulnId", fprVulnerability.ClassId));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Description", InjectDefinitionValues(fprDescription.Description, fprVulnerability)));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("RiskStatement", InjectDefinitionValues(fprDescription.RiskStatement, fprVulnerability)));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("VulnTitle", InjectDefinitionValues(fprDescription.VulnTitle, fprVulnerability)));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("CrossReferences", fprVulnerability.InstanceId));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("CheckContent", fprVulnerability.Category));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("FileName", file));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("LastObserved", lastObserved));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", softwareName));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Version", version));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("FindingDetails", "Instance ID:" + Environment.NewLine + fprVulnerability.InstanceId));
-                    List<KeyValuePair<string, string>> nistControls = fprDescription.References.Where(
-                        x => x.Key.Contains("800-53")).OrderByDescending(x => x.Key).ToList();
-                    if (nistControls != null && nistControls.Count > 0)
-                    { sqliteCommand.Parameters.Add(new SQLiteParameter("NistControl", nistControls[0].Value.Split(' ')[0])); }
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("FixText", fprDescription.FixText));
-                    List<KeyValuePair<string, string>> asdStigs = fprDescription.References.Where(
-                        x => x.Key.Contains("AS&D")).ToList();
-                    string[] delimiter = new string[] { "CAT" };
-                    if (asdStigs != null && asdStigs.Count > 0)
-                    {
-                        asdStigs = asdStigs.OrderByDescending(x => Convert.ToDecimal(x.Key.Substring(5,1))).
-                            ThenByDescending(x => x.Key.Split(',')[0].Substring(7).Length).
-                            ThenByDescending(x => x.Key.Substring(7)).ToList();
-                        if (asdStigs[0].Value.Contains(", "))
-                        {
-                            string[] asdStigValues = asdStigs[0].Value.Split(',').ToArray();
-                            foreach (string stigValue in asdStigValues)
-                            {
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("StigId", stigValue.Trim().Split(' ')[0]));
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("RawRisk", stigValue.Split(delimiter, StringSplitOptions.None)[1].Trim()));
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("Impact", RawRiskToImpactConverter(stigValue.Split(delimiter, StringSplitOptions.None)[1].Trim())));
-                                CreateAddVulnerabilityCommand(sqliteCommand);
-                                CreateAddUniqueFindingCommand(sqliteCommand);
-                            }
-                        }
-                        else
-                        {
-                            sqliteCommand.Parameters.Add(new SQLiteParameter("StigId", asdStigs[0].Value.Replace(", ", Environment.NewLine).Trim().Split(' ')[0]));
-                            sqliteCommand.Parameters.Add(new SQLiteParameter("RawRisk", asdStigs[0].Value.Split(delimiter, StringSplitOptions.None)[1].Trim()));
-                            sqliteCommand.Parameters.Add(new SQLiteParameter("Impact", RawRiskToImpactConverter(asdStigs[0].Value.Split(delimiter, StringSplitOptions.None)[1].Trim())));
-                            CreateAddVulnerabilityCommand(sqliteCommand);
-                            CreateAddUniqueFindingCommand(sqliteCommand);
-                        }
-                    }
-                    else
-                    {
-                        CreateAddVulnerabilityCommand(sqliteCommand);
-                        CreateAddUniqueFindingCommand(sqliteCommand);
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to generate SQLiteParameter List.");
-                throw exception;
-            }
-        }
-
-        private void CreateAddVulnerabilityCommand(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                string[] ignorableParametersArray = new string[] { "FileName", "LastObserved", "AssetIdToReport", "FindingDetails", "Version" };
-                sqliteCommand.CommandText = "INSERT INTO Vulnerability () VALUES ();";
-                for (int i = 0; i < sqliteCommand.Parameters.Count; i++)
-                {
-                    if (ignorableParametersArray.Contains(sqliteCommand.Parameters[i].ParameterName))
-                    { continue; }
-                    if (i == 0)
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(37, "@" + sqliteCommand.Parameters[i].ParameterName); }
-                    else
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(37, "@" + sqliteCommand.Parameters[i].ParameterName + ", "); }
-                }
-                for (int i = 0; i < sqliteCommand.Parameters.Count; i++)
-                {
-                    if (ignorableParametersArray.Contains(sqliteCommand.Parameters[i].ParameterName))
-                    { continue; }
-                    if (i == 0)
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, sqliteCommand.Parameters[i].ParameterName); }
-                    else
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, sqliteCommand.Parameters[i].ParameterName + ", "); }
-                }
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to insert Vulnerability into Vulnerability.");
-                throw exception;
-            }
-        }
-
-        private void CreateAddUniqueFindingCommand(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                sqliteCommand.CommandText = "INSERT INTO UniqueFinding (FindingDetails, LastObserved, " +
-                    "FindingTypeIndex, SourceIndex, FileNameIndex, VulnerabilityIndex, StatusIndex, AssetIndex) " +
-                    "VALUES (@FindingDetails, @LastObserved, " +
-                    "(SELECT FindingTypeIndex FROM FindingTypes WHERE FindingType = 'FPR'), " +
-                    "(SELECT SourceIndex FROM VulnerabilitySources WHERE Source = 'HPE Fortify SCA' AND Version = @Version), " +
-                    "(SELECT FileNameIndex FROM FileNames WHERE FileName = @FileName), " +
-                    "(SELECT VulnerabilityIndex FROM Vulnerability WHERE CrossReferences = @CrossReferences), " +
-                    "(SELECT StatusIndex FROM FindingStatuses WHERE Status = 'Ongoing'), " +
-                    "(SELECT AssetIndex FROM Assets WHERE AssetIdToReport = @AssetIdToReport));";
-                if (sqliteCommand.Parameters.Contains("StigId"))
-                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(515, " AND StigId = @StigId"); }
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to insert UniqueFinding into UniqueFindings.");
-                throw exception;
-            }
-        }
-
-        private void CreateUpdateSourceCommand(XmlReader xmlReader)
-        {
-            try
-            {
-                xmlReader.Read();
-                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
-                {
-                    version = xmlReader.Value;
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Version", version));
-                    sqliteCommand.CommandText = "UPDATE VulnerabilitySources SET Version = @Version WHERE Source = 'HPE Fortify SCA' AND Version = 'V?';";
-                    sqliteCommand.ExecuteNonQuery();
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to update Source.");
                 throw exception;
             }
         }
@@ -952,6 +722,57 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 log.Error("Unable to convert analysis value.");
+                throw exception;
+            }
+        }
+
+        private void InsertParameterPlaceholders(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                string[] parameters = new string[]
+                {
+                    // Groups Table
+                    "Group_ID", "Group_Name", "Is_Accreditation", "Accreditation_ID", "Organization_ID",
+                    // Hardware Table
+                    "Hardware_ID", "Host_Name", "FQDN", "NetBIOS", "Is_Virtual_Server", "NIAP_Level", "Manufacturer", "ModelNumber",
+                    "Is_IA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID", "Scan_IP",
+                    // IP_Addresses Table
+                    "IP_Address_ID", "IP_Address",
+                    // MAC_Addresses Table
+                    "MAC_Address_ID", "MAC_Address",
+                    // UniqueFindings Table
+                    "Unique_Finding_ID", "", "Tool_Generated_Output", "Comments", "Finding_Details", "Technical_Mitigation",
+                    "Proposed_Mitigation", "Predisposing_Conditions", "Impact", "Likelihood", "Severity", "Risk", "Residual_Risk",
+                    "First_Discovered", "Last_Observed", "Approval_Status", "Approval_Date", "Approval_Expiration_Date",
+                    "Delta_Analysis_Required", "Finding_Type_ID", "Finding_Source_ID", "Status", "Vulnerability_ID", "Hardware_ID",
+                    "Severity_Override", "Severity_Override_Justification", "Technology_Area", "Web_DB_Site", "Web_DB_Instance",
+                    "Classification", "CVSS_Environmental_Score", "CVSS_Environmental_Vector",
+                    // UniqueFindingSourceFiles Table
+                    "Finding_Source_File_ID", "Finding_Source_File_Name", 
+                    // Vulnerabilities Table
+                    "Vulnerability_ID", "Instance_Identifier", "Unique_Vulnerability_Identifier", "Vulnerability_Group_ID", "Vulnerability_Group_Title",
+                    "Secondary_Vulnerability_Identifier", "VulnerabilityFamilyOrClass", "Vulnerability_Version", "Vulnerability_Release",
+                    "Vulnerability_Title", "Vulnerability_Description", "Risk_Statement", "Fix_Text", "Published_Date", "Modified_Date",
+                    "Fix_Published_Date", "Raw_Risk", "CVSS_Base_Score", "CVSS_Base_Vector", "CVSS_Temporal_Score", "CVSS_Temporal_Vector",
+                    "Check_Content", "False_Positives", "False_Negatives", "Documentable", "Mitigations", "Mitigation_Control",
+                    "Potential_Impacts", "Third_Party_Tools", "Security_Override_Guidance", "Overflow",
+                    // VulnerabilityReferences Table
+                    "Reference_ID", "Reference", "Reference_Type",
+                    // VulnerabilitySources Table
+                    "Vulnerability_Source_ID", "Source_Name", "Source_Secondary_Identifier", "Vulnerability_Source_File_Name",
+                    "Source_Description", "Source_Version", "Source_Release",
+                    // CCI Table
+                    "CCI",
+                    // ScapScores Table
+                    "Score", "Scan_Date"
+                };
+                foreach (string parameter in parameters)
+                { sqliteCommand.Parameters.Add(new SQLiteParameter(parameter, string.Empty)); }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert SQLiteParameter placeholders into SQLiteCommand"));
                 throw exception;
             }
         }

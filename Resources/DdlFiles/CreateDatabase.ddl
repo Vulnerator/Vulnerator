@@ -1173,6 +1173,7 @@ CREATE TABLE TrainingSimulationSystems
 CREATE TABLE UniqueFindings 
 	(
 	 Unique_Finding_ID INTEGER PRIMARY KEY , 
+	 Instance_Identifier NVARCHAR(50) ,
 	 Tool_Generated_Output NVARCHAR , 
 	 Comments NVARCHAR , 
 	 Finding_Details NVARCHAR , 
@@ -1207,7 +1208,7 @@ CREATE TABLE UniqueFindings
 	 FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
 	 FOREIGN KEY (Finding_Source_File_ID) REFERENCES UniqueFindingsSourceFiles(Finding_Source_File_ID),
-	 UNIQUE (Vulnerability_ID, Hardware_ID) ON CONFLICT IGNORE
+	 UNIQUE (Instance_Identifier, Hardware_ID, Vulnerability_ID) ON CONFLICT IGNORE
 	);
 CREATE TABLE UniqueFindings_UniqueFindingsSourceFiles 
 	(

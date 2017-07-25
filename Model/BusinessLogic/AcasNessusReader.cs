@@ -745,7 +745,7 @@ namespace Vulnerator.Model.BusinessLogic
                     "Is_OS_Or_Firmware", "FAM_Accepted", "Externally_Authorized", "ReportInAccreditation_Global",
                     "ApprovedForBaseline_Global", "BaselineApprover_Global", "Instance",
                     // UniqueFindings Table
-                    "Unique_Finding_ID", "Tool_Generated_Output", "Comments", "Finding_Details", "Technical_Mitigation",
+                    "Unique_Finding_ID", "Instance_Identifier", "Tool_Generated_Output", "Comments", "Finding_Details", "Technical_Mitigation",
                     "Proposed_Mitigation", "Predisposing_Conditions", "Impact", "Likelihood", "Severity", "Risk", "Residual_Risk",
                     "First_Discovered", "Last_Observed", "Approval_Status", "Approval_Date", "Approval_Expiration_Date",
                     "Delta_Analysis_Required", "Finding_Type_ID", "Finding_Source_ID", "Status", "Vulnerability_ID", "Hardware_ID",
