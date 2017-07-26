@@ -5,6 +5,7 @@ using System.Data.SQLite;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.ModelHelper;
@@ -48,12 +49,15 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-
+                if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
+                { DatabaseBuilder.sqliteConnection.Open(); }
                 using (SQLiteTransaction sqliteTransaction = FindingsDatabaseActions.sqliteConnection.BeginTransaction())
                 {
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         InsertParameterPlaceholders(sqliteCommand);
+                        databaseInterface.InsertGroup(sqliteCommand, file);
+                        databaseInterface.InsertParsedFile(sqliteCommand, file);
                         using (Stream stream = System.IO.File.OpenRead(file.FilePath))
                         {
                             using (ZipArchive zipArchive = new ZipArchive(stream, ZipArchiveMode.Read))
@@ -61,12 +65,40 @@ namespace Vulnerator.Model.BusinessLogic
                                 ZipArchiveEntry auditFvdl = zipArchive.Entries.FirstOrDefault(x => x.Name.Equals("audit.fvdl"));
                                 ParseAuditFvdlWithXmlReader(auditFvdl, sqliteCommand);
                                 ZipArchiveEntry auditXml = zipArchive.Entries.FirstOrDefault(x => x.Name.Equals("audit.xml"));
-                                ParseAuditXmlWithXmlReader(auditXml);
+                                if (auditXml != null)
+                                { ParseAuditXmlWithXmlReader(auditXml); }
+                            }
+                        }
+                        sqliteCommand.Parameters["Source_Name"].Value = "HPE Fortify SCA";
+                        sqliteCommand.Parameters["Source_Version"].Value = version;
+                        sqliteCommand.Parameters["Discovered_Software_Name"].Value = softwareName;
+                        sqliteCommand.Parameters["Displayed_Software_Name"].Value = softwareName;
+                        databaseInterface.InsertVulnerabilitySource(sqliteCommand);
+                        databaseInterface.InsertSoftware(sqliteCommand);
+                        foreach (FprVulnerability fprVulnerability in fprVulnerabilityList)
+                        {
+                            sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = fprVulnerability.ClassId;
+                            sqliteCommand.Parameters["Vulnerability_Group_Title"].Value = fprVulnerability.Kingdom;
+                            sqliteCommand.Parameters["VulnerabilityFamilyOrClass"].Value = fprVulnerability.Type;
+                            sqliteCommand.Parameters["Vulnerability_Title"].Value = fprVulnerability.SubType;
+                            sqliteCommand.Parameters["Vulnerability_Description"].Value = fprVulnerability.Description;
+                            sqliteCommand.Parameters["Risk_Statement"].Value = fprVulnerability.RiskStatement;
+                            sqliteCommand.Parameters["Fix_Text"].Value = fprVulnerability.FixText;
+                            databaseInterface.InsertVulnerability(sqliteCommand);
+                            databaseInterface.MapVulnerabilityToSource(sqliteCommand);
+                            string[] persistentParameters = new string[] {
+                                "Source_Name", "Source_Version", "Discovered_Software_Name", "Displayed_Software_Name", "Finding_Source_File_Name"
+                            };
+                            foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
+                            {
+                                if (!persistentParameters.Contains(parameter.ParameterName))
+                                { sqliteCommand.Parameters[parameter.ParameterName].Value = string.Empty; }
                             }
                         }
                     }
                     sqliteTransaction.Commit();
                 }
+                DatabaseBuilder.sqliteConnection.Close();
             }
             catch (Exception exception)
             {
@@ -95,7 +127,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     }
                                 case "BuildID":
                                     {
-                                        sqliteCommand.Parameters["Discovered_Software_Name"].Value = ObtainCurrentNodeValue(xmlReader);
+                                        softwareName = ObtainCurrentNodeValue(xmlReader);
                                         break;
                                     }
                                 case "Vulnerability":
@@ -110,7 +142,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     }
                                 case "EngineVersion":
                                     {
-                                        sqliteCommand.Parameters["Source_Version"].Value = ObtainCurrentNodeValue(xmlReader);
+                                        version = ObtainCurrentNodeValue(xmlReader);
                                         break;
                                     }
                                 default:
@@ -155,7 +187,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "Subtype":
                                 {
-                                    fprVulnerability.Type = ObtainCurrentNodeValue(xmlReader);
+                                    fprVulnerability.SubType = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "InstanceID":
@@ -202,11 +234,11 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 string classId = xmlReader.GetAttribute("classID");
-                string output = string.Empty;
-                string description = string.Empty;
-                string riskStatement = string.Empty;
-                string fixText = string.Empty;
-                Dictionary<string, string> references = new Dictionary<string, string>();
+                string abstractNode = string.Empty;
+                string explanationNode = string.Empty;
+                string recommendationsNode = string.Empty;
+                Tuple<string, string> abstractOutput = new Tuple<string, string>(string.Empty, string.Empty);
+                List<Tuple<string, string>> references = new List<Tuple<string, string>>();
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -215,26 +247,37 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "Abstract":
                                 {
-                                    output = ObtainCurrentNodeValue(xmlReader);
+                                    abstractNode = ObtainCurrentNodeValue(xmlReader);
+                                    abstractOutput = SanitizeAndParseAbstract(abstractNode);
                                     break;
                                 }
                             case "Explanation":
                                 {
-                                    description = ObtainCurrentNodeValue(xmlReader);
+                                    explanationNode = ObtainCurrentNodeValue(xmlReader);
+                                    explanationNode = SanitizeAndParseExplanation(explanationNode);
                                     break;
                                 }
                             case "Recommendations":
                                 {
-                                    fixText = ObtainCurrentNodeValue(xmlReader);
+                                    recommendationsNode = ObtainCurrentNodeValue(xmlReader);
+                                    recommendationsNode = SanitizeAndParseRecommendations(recommendationsNode);
                                     break;
                                 }
                             case "Reference":
                                 {
                                     string value = ObtainReferencesValue(xmlReader);
                                     string key = ObtainReferencesKey(xmlReader);
-                                    string keyCheck;
-                                    if (!references.TryGetValue(key, out keyCheck))
-                                    { references.Add(key, value); }
+                                    if (key.Equals("Discard"))
+                                    { break; }
+                                    Regex regex = new Regex(Properties.Resources.RegexCatText);
+                                    value = regex.Replace(value, string.Empty);
+                                    regex = new Regex(Properties.Resources.RegexStigId);
+                                    foreach (Match match in regex.Matches(value))
+                                    {
+                                        Tuple<string, string> reference = new Tuple<string, string>(key, match.ToString());
+                                        if (!references.Contains(reference))
+                                        { references.Add(reference); }
+                                    }
                                     break;
                                 }
                             default:
@@ -243,7 +286,15 @@ namespace Vulnerator.Model.BusinessLogic
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name == "Description")
                     {
-                        
+                        foreach (FprVulnerability fprVulnerability in fprVulnerabilityList.Where(x => x.ClassId.Equals(classId)))
+                        {
+                            fprVulnerability.Description = explanationNode;
+                            fprVulnerability.FixText = recommendationsNode;
+                            fprVulnerability.Output = InjectDefinitionValues(abstractOutput.Item1, fprVulnerability);
+                            fprVulnerability.RiskStatement = abstractOutput.Item2;
+                            foreach (Tuple<string, string> reference in references)
+                            { fprVulnerability.References.Add(reference); }
+                        }
                         return;
                     }
                 }
@@ -256,15 +307,10 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private string SantizeNodeContent(XmlReader xmlReader)
+        private string SantizeNodeContent(string content)
         {
             try
-            {
-                string nodeValue = ObtainCurrentNodeValue(xmlReader);
-                nodeValue = nodeValue.Replace("&lt;", "<");
-                nodeValue = nodeValue.Replace("&gt;", ">");
-                return nodeValue;
-            }
+            { return content.Replace("&lt;", "<").Replace("&gt;", ">"); }
             catch (Exception exception)
             {
                 log.Error("Unable to sanitize node content.");
@@ -272,97 +318,112 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private string SanitizeVulnTitle(string unsanitizedVulnTitle)
+        private Tuple<string,string> SanitizeAndParseAbstract(string unsanitizedAbstract)
         {
             try
             {
-                string delimiter = "<AltParagraph>";
-                string sanitizedVulnTitle = unsanitizedVulnTitle;
-                if (sanitizedVulnTitle.Contains(delimiter))
-                { sanitizedVulnTitle = unsanitizedVulnTitle.Split(new string[] { delimiter }, StringSplitOptions.None)[0]; }
-                sanitizedVulnTitle = sanitizedVulnTitle.Replace("<Content>", "");
-                sanitizedVulnTitle = sanitizedVulnTitle.Replace("<Paragraph>", "");
+                string sanitizedAbstract = SantizeNodeContent(unsanitizedAbstract);
+                string riskStatement = string.Empty;
+                string output = string.Empty;
                 string[] stringsToRemove = new string[] {
-                    "<Content>", "<Paragraph>", "</Paragraph>", "</Content>", "<b>", "</b>", "<pre>", "</pre>", "<code>", "</code>", "&lt;", "&gt;"
+                    "<b>", "</b>", "<pre>", "</pre>", "<code>", "</code>", "&lt;", "&gt;"
                 };
-                foreach (string trash in stringsToRemove)
-                { sanitizedVulnTitle = sanitizedVulnTitle.Replace(trash, ""); }
-                return sanitizedVulnTitle;
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to sanitize VulnTitle value.");
-                throw exception;
-            }
-        }
-
-        private string SanitizeRiskStatement(string unsanitizedRiskStatement)
-        {
-            try
-            {
-                string delimiter = "<AltParagraph>";
-                string sanitizedRiskStatement = unsanitizedRiskStatement;
-                if (sanitizedRiskStatement.Contains(delimiter))
-                { sanitizedRiskStatement = unsanitizedRiskStatement.Split(new string[] { delimiter }, StringSplitOptions.None)[1]; }
-                delimiter = "</AltParagraph>";
-                if (sanitizedRiskStatement.Contains(delimiter))
-                { sanitizedRiskStatement = sanitizedRiskStatement.Split(new string[] { delimiter }, StringSplitOptions.None)[0]; }
-                string[] stringsToRemove = new string[] {
-                    "<Content>", "<Paragraph>", "</Paragraph>", "</Content>", "<b>", "</b>", "<pre>", "</pre>", "<code>", "</code>", "&lt;", "&gt;"
-                };
-                foreach (string trash in stringsToRemove)
-                { sanitizedRiskStatement = sanitizedRiskStatement.Replace(trash, ""); }
-                return sanitizedRiskStatement;
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to sanitize RiskStatement value.");
-                throw exception;
-            }
-        }
-
-        private string SanitizeDescription(string unsanitizedDescription)
-        {
-            try
-            {
-                string sanitizedDescription = unsanitizedDescription;
-                string doubleCarriageReturn = Environment.NewLine + Environment.NewLine;
-                string[] stringsToRemove = new string[] {
-                    "<Content>", "<Paragraph>", "</Paragraph>", "</Content>", "<b>", "</b>", "<pre>", "</pre>", "<code>", "</code>", "&lt;", "&gt;"
-                };
-                foreach (string trash in stringsToRemove)
+                foreach (string item in stringsToRemove)
+                { sanitizedAbstract = sanitizedAbstract.Replace(item, string.Empty); }
+                sanitizedAbstract = sanitizedAbstract.Replace("<Replace", "&lt;Replace").Replace("/>", "/&gt;");
+                Stream stream = GenerateStreamFromString(sanitizedAbstract);
+                using (XmlReader xmlReader = XmlReader.Create(stream))
                 {
-                    switch (trash)
+                    while (xmlReader.Read())
                     {
-                        case "<Paragraph>":
+                        if (xmlReader.IsStartElement())
+                        {
+                            switch (xmlReader.Name)
                             {
-                                sanitizedDescription = sanitizedDescription.Replace(trash, doubleCarriageReturn);
-                                break;
+                                case "Paragraph":
+                                    {
+                                        output = ObtainCurrentNodeValue(xmlReader);
+                                        break;
+                                    }
+                                case "AltParagraph":
+                                    {
+                                        riskStatement = ObtainCurrentNodeValue(xmlReader);
+                                        break;
+                                    }
+                                default:
+                                    { break; }
                             }
+                        }
+                        else if (xmlReader.NodeType == XmlNodeType.Text)
+                        { riskStatement = xmlReader.Value; }
+                    }
+                }
+                return new Tuple<string, string>(output, riskStatement);
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to sanitize the \"Abstract\" node value.");
+                throw exception;
+            }
+        }
+
+        private string SanitizeAndParseExplanation(string unsanitizedExplanation)
+        {
+            try
+            {
+                string sanitizedExplanation = unsanitizedExplanation;
+                string doubleCarriageReturn = Environment.NewLine + Environment.NewLine;
+                string description = string.Empty;
+                string[] stringsToRemove = new string[] {
+                    "<b>", "</b>", "<pre>", "</pre>", "<code>", "</code>", "&lt;", "&gt;"
+                };
+                foreach (string item in stringsToRemove)
+                {
+                    switch (item)
+                    {
                         case "<b>":
                             {
-                                sanitizedDescription = sanitizedDescription.Replace(trash, doubleCarriageReturn);
+                                sanitizedExplanation = unsanitizedExplanation.Replace(item, doubleCarriageReturn);
                                 break;
                             }
                         case "</b>":
                             {
-                                sanitizedDescription = sanitizedDescription.Replace(trash, Environment.NewLine);
+                                sanitizedExplanation = unsanitizedExplanation.Replace(item, Environment.NewLine);
                                 break;
                             }
                         case "<pre>":
                             {
-                                sanitizedDescription = sanitizedDescription.Replace(trash, doubleCarriageReturn);
+                                sanitizedExplanation = unsanitizedExplanation.Replace(item, doubleCarriageReturn);
                                 break;
                             }
                         default:
                             {
-                                sanitizedDescription = sanitizedDescription.Replace(trash, "");
+                                sanitizedExplanation = unsanitizedExplanation.Replace(item, "");
                                 break;
                             }
                     }
-
                 }
-                return sanitizedDescription;
+                Stream stream = GenerateStreamFromString(sanitizedExplanation);
+                using (XmlReader xmlReader = XmlReader.Create(stream))
+                {
+                    while (xmlReader.Read())
+                    {
+                        if (xmlReader.NodeType == XmlNodeType.Text)
+                        {
+                            description = string.Concat(description, xmlReader.Value);
+                            continue;
+                        }
+                        if (xmlReader.IsStartElement())
+                        {
+                            if (xmlReader.Name.Equals("Content"))
+                            { continue; }
+                            string nodeName = xmlReader.Name;
+                            while (xmlReader.NodeType != XmlNodeType.EndElement && !xmlReader.Name.Equals(nodeName))
+                            { xmlReader.Read(); }
+                        }
+                    }
+                }
+                return description;
             }
             catch (Exception exception)
             {
@@ -371,7 +432,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private string SanitizeRecommendations(string unsanitizedRecommendations)
+        private string SanitizeAndParseRecommendations(string unsanitizedRecommendations)
         {
             try
             {
@@ -460,9 +521,6 @@ namespace Vulnerator.Model.BusinessLogic
                     }
                 }
             }
-
-            output = output.Replace("<", "");
-            output = output.Replace(">", "");
             return output;
         }
 
@@ -495,11 +553,9 @@ namespace Vulnerator.Model.BusinessLogic
                     { break; }
                 }
                 xmlReader.Read();
-                if (xmlReader.Value.Contains("Security Technical Implementation"))
-                { key = "AS&D" + xmlReader.Value.RemoveAlphaCharacters(); }
-                else
-                { key = xmlReader.Value; }
-                return key;
+                if (!xmlReader.Value.Contains("Security Technical Implementation"))
+                { return "Discard"; }
+                return "STIG";
             }
             catch (Exception exception)
             {
@@ -558,7 +614,6 @@ namespace Vulnerator.Model.BusinessLogic
                         }
                         else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ns2:Issue"))
                         {
-                            FinalizeUniqueFinding(instanceId, analysisValue, commentsDictionary);
                             commentsDictionary.Clear();
                             instanceId = string.Empty;
                             analysisValue = string.Empty;
@@ -640,39 +695,6 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private void FinalizeUniqueFinding(string instanceId, string analysisValue, Dictionary<DateTime, string> commentsDictionary)
-        {
-            try
-            {
-                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
-                {
-                    string comment = string.Empty;
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("FindingDetails", "%" + instanceId + "%"));
-                    string status = ConvertAnalysisValue(analysisValue);
-                    if (status.Equals("Completed"))
-                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Status", status)); }
-                    else
-                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Status", "Ongoing")); }
-                    if (commentsDictionary.Count > 0)
-                    {
-                        List<KeyValuePair<DateTime, string>> orderedComments = commentsDictionary.OrderByDescending(x => x.Key).ToList();
-                        comment = "Analysis Value:" + Environment.NewLine + analysisValue;
-                        comment = comment + Environment.NewLine + Environment.NewLine + "User Comments:" + Environment.NewLine + orderedComments[0].Value;
-                    }
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Comments", comment));
-                    sqliteCommand.CommandText = "UPDATE UniqueFinding SET Comments = @Comments, " +
-                        "StatusIndex = (SELECT StatusIndex FROM FindingStatuses WHERE Status = @Status) " +
-                        "WHERE FindingDetails LIKE @FindingDetails;";
-                    sqliteCommand.ExecuteNonQuery();
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to finalize UniqueFinding.");
-                throw exception;
-            }
-        }
-
         private XmlReaderSettings GenerateXmlReaderSettings()
         {
             try
@@ -726,6 +748,24 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
+        private Stream GenerateStreamFromString(string streamString)
+        {
+            try
+            {
+                MemoryStream memoryStream = new MemoryStream();
+                StreamWriter streamWriter = new StreamWriter(memoryStream);
+                streamWriter.Write(streamString);
+                streamWriter.Flush();
+                memoryStream.Position = 0;
+                return memoryStream;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to generate a Stream from the provided string.");
+                throw exception;
+            }
+        }
+
         private void InsertParameterPlaceholders(SQLiteCommand sqliteCommand)
         {
             try
@@ -741,6 +781,11 @@ namespace Vulnerator.Model.BusinessLogic
                     "IP_Address_ID", "IP_Address",
                     // MAC_Addresses Table
                     "MAC_Address_ID", "MAC_Address",
+                    // Software Table
+                    "Software_ID", "Discovered_Software_Name", "Displayed_Software_Name", "Software_Acronym", "Software_Version",
+                    "Function", "Install_Date", "DADMS_ID", "DADMS_Disposition", "DADMS_LDA", "Has_Custom_Code", "IaOrIa_Enabled",
+                    "Is_OS_Or_Firmware", "FAM_Accepted", "Externally_Authorized", "ReportInAccreditation_Global",
+                    "ApprovedForBaseline_Global", "BaselineApprover_Global", "Instance",
                     // UniqueFindings Table
                     "Unique_Finding_ID", "", "Tool_Generated_Output", "Comments", "Finding_Details", "Technical_Mitigation",
                     "Proposed_Mitigation", "Predisposing_Conditions", "Impact", "Likelihood", "Severity", "Risk", "Residual_Risk",
