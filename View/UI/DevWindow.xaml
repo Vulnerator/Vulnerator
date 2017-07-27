@@ -29,17 +29,21 @@
                       GlowBrush="{DynamicResource AccentColorBrush}"
                       Icon="/Vulnerator;component/Resources/chart.ico"
                       KeyboardNavigation.TabNavigation="Continue"
+                      WindowCloseButtonStyle="{DynamicResource CustomCloseWindowButtonStyle}"
                       ResizeMode="CanResize"
                       mc:Ignorable="d">
 
     <!--  Window Icon Template  -->
     <Controls:MetroWindow.IconTemplate>
         <DataTemplate>
-            <IconPacks:PackIconModern Width="{TemplateBinding Width}"
-                                      Height="{TemplateBinding Height}"
-                                      Margin="4"
-                                      Foreground="{DynamicResource IdealForegroundColorBrush}"
-                                      Kind="GraphBar" />
+            <Border Width="48">
+                <IconPacks:PackIconModern Width="{TemplateBinding Width}"
+                                          Height="{TemplateBinding Height}"
+                                          Margin="4"
+                                          HorizontalAlignment="Center"
+                                          Foreground="{DynamicResource IdealForegroundColorBrush}"
+                                          Kind="GraphBar" />
+            </Border>
         </DataTemplate>
     </Controls:MetroWindow.IconTemplate>
 

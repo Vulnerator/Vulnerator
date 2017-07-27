@@ -307,7 +307,7 @@ namespace Vulnerator.Model.BusinessLogic
                         }
                         else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("STIG_INFO"))
                         {
-                            databaseInterface.UpdateVulnerabilitySource(sqliteCommand, "CKL");
+                            databaseInterface.UpdateVulnerabilitySource(sqliteCommand);
                             databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                             return;
                         }
@@ -534,15 +534,16 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Technology_Area", techArea));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Web_DB_Site", webDbSite));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Web_DB_Instance", webDbInstance));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Last_Observed", DateTime.Now.ToShortDateString()));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Delta_Analysis_Required", "False"));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Approval_Status", "Not Approved"));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("First_Discovered", DateTime.Now.ToShortDateString()));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Classification", classification));
-                databaseInterface.UpdateUniqueFinding(sqliteCommand, "CKL");
+                sqliteCommand.Parameters["Technology_Area"].Value = techArea;
+                sqliteCommand.Parameters["Web_DB_Site"].Value = webDbSite;
+                sqliteCommand.Parameters["Web_DB_Instance"].Value = webDbInstance;
+                sqliteCommand.Parameters["Last_Observed"].Value = DateTime.Now.ToShortDateString();
+                sqliteCommand.Parameters["Delta_Analysis_Required"].Value = "False";
+                sqliteCommand.Parameters["Approval_Status"].Value = "Not Approved";
+                sqliteCommand.Parameters["First_Discovered"].Value = DateTime.Now.ToShortDateString();
+                sqliteCommand.Parameters["Classification"].Value = classification;
+                sqliteCommand.Parameters["Finding_Type"].Value = "CKL";
+                databaseInterface.UpdateUniqueFinding(sqliteCommand);
                 databaseInterface.InsertUniqueFinding(sqliteCommand);
             }
             catch (Exception exception)
@@ -824,6 +825,8 @@ namespace Vulnerator.Model.BusinessLogic
                 {
                     // Groups Table
                     "Group_ID", "Group_Name", "Is_Accreditation", "Accreditation_ID", "Organization_ID",
+                    // FindingTypes Table
+                    "Finding_Type",
                     // Hardware Table
                     "Hardware_ID", "Host_Name", "FQDN", "NetBIOS", "Is_Virtual_Server", "NIAP_Level", "Manufacturer", "ModelNumber",
                     "Is_IA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID", "Scan_IP",
@@ -831,6 +834,11 @@ namespace Vulnerator.Model.BusinessLogic
                     "IP_Address_ID", "IP_Address",
                     // MAC_Addresses Table
                     "MAC_Address_ID", "MAC_Address",
+                    // Software Table
+                    "Software_ID", "Discovered_Software_Name", "Displayed_Software_Name", "Software_Acronym", "Software_Version",
+                    "Function", "Install_Date", "DADMS_ID", "DADMS_Disposition", "DADMS_LDA", "Has_Custom_Code", "IaOrIa_Enabled",
+                    "Is_OS_Or_Firmware", "FAM_Accepted", "Externally_Authorized", "ReportInAccreditation_Global",
+                    "ApprovedForBaseline_Global", "BaselineApprover_Global", "Instance",
                     // UniqueFindings Table
                     "Unique_Finding_ID", "Instance_Identifier", "Tool_Generated_Output", "Comments", "Finding_Details", "Technical_Mitigation",
                     "Proposed_Mitigation", "Predisposing_Conditions", "Impact", "Likelihood", "Severity", "Risk", "Residual_Risk",

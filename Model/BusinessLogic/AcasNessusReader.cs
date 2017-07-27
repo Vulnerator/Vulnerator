@@ -34,6 +34,7 @@ namespace Vulnerator.Model.BusinessLogic
         private List<string> cves = new List<string>();
         private List<string> cpes = new List<string>();
         private List<string> xrefs = new List<string>();
+        private string[] persistentParameters = new string[] { };
 
         /// <summary>
         /// Reads *.nessus files exported from within ACAS and writes the results to the appropriate DataTables.
@@ -193,6 +194,7 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             databaseInterface.InsertSoftware(sqliteCommand);
                             databaseInterface.MapHardwareToSoftware(sqliteCommand);
+                            sqliteCommand.Parameters["Discovered_Software_Name"].Value = string.Empty;
                         }
                         return;
                     }
@@ -588,7 +590,7 @@ namespace Vulnerator.Model.BusinessLogic
                 { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", "Release Unknown")); }
                 databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                 if (!sqliteCommand.Parameters["Source_Version"].Value.ToString().Equals("Version Unknown"))
-                { databaseInterface.UpdateVulnerabilitySource(sqliteCommand, "ACAS"); }
+                { databaseInterface.UpdateVulnerabilitySource(sqliteCommand); }
             }
             catch (Exception exception)
             {
@@ -604,13 +606,14 @@ namespace Vulnerator.Model.BusinessLogic
         { 
             try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Status", "Ongoing"));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Unique_Finding_ID", DBNull.Value));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("First_Discovered", firstDiscovered));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Approval_Status", "Not Approved"));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Delta_Analysis_Required", "False"));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Source_File_Name", fileName));
-                databaseInterface.UpdateUniqueFinding(sqliteCommand, "ACAS");
+                sqliteCommand.Parameters["Status"].Value = "Ongoing";
+                sqliteCommand.Parameters["Unique_Finding_ID"].Value = DBNull.Value;
+                sqliteCommand.Parameters["First_Discovered"].Value = firstDiscovered;
+                sqliteCommand.Parameters["Approval_Status"].Value = "Not Approved";
+                sqliteCommand.Parameters["Delta_Analysis_Required"].Value = "False";
+                sqliteCommand.Parameters["Finding_Source_File_Name"].Value = fileName;
+                sqliteCommand.Parameters["Finding_Type"].Value = "ACAS";
+                databaseInterface.UpdateUniqueFinding(sqliteCommand);
                 databaseInterface.InsertUniqueFinding(sqliteCommand);
             }
             catch (Exception exception)
@@ -730,6 +733,8 @@ namespace Vulnerator.Model.BusinessLogic
                 {
                     // Groups Table
                     "Group_ID", "Group_Name", "Is_Accreditation", "Accreditation_ID", "Organization_ID",
+                    // FindingTypes Table
+                    "Finding_Type",
                     // Hardware Table
                     "Hardware_ID", "Host_Name", "FQDN", "NetBIOS", "Is_Virtual_Server", "NIAP_Level", "Manufacturer", "ModelNumber",
                     "Is_IA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID", "Scan_IP",

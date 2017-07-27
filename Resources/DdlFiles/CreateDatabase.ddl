@@ -470,7 +470,7 @@ CREATE TABLE Hardware
 	 Role NVARCHAR (25),
 	 LifecycleStatus_ID INTEGER ,
 	 FOREIGN KEY (LifecycleStatus_ID) REFERENCES LifecycleStatuses(LifecycleStatus_ID),
-	 UNIQUE (Scan_IP, FQDN) ON CONFLICT IGNORE
+	 UNIQUE (Scan_IP, Host_Name, FQDN, NetBIOS) ON CONFLICT IGNORE
 	);
 CREATE INDEX HardwareIndex ON Hardware(Host_Name, FQDN, NetBIOS);
 CREATE TABLE Hardware_MitigationsOrConditions 
@@ -1195,7 +1195,8 @@ CREATE TABLE UniqueFindings
 	 Finding_Source_File_ID INTEGER NOT NULL , 
 	 Status NVARCHAR (25) NOT NULL , 
 	 Vulnerability_ID INTEGER NOT NULL , 
-	 Hardware_ID INTEGER NOT NULL ,
+	 Hardware_ID INTEGER ,
+	 Software_ID INTEGER ,
 	 Severity_Override NVARCHAR (25),
 	 Severity_Override_Justification NVARCHAR (2000),
 	 Technology_Area NVARCHAR (100),
@@ -1208,7 +1209,7 @@ CREATE TABLE UniqueFindings
 	 FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
 	 FOREIGN KEY (Finding_Source_File_ID) REFERENCES UniqueFindingsSourceFiles(Finding_Source_File_ID),
-	 UNIQUE (Instance_Identifier, Hardware_ID, Vulnerability_ID) ON CONFLICT IGNORE
+	 UNIQUE (Instance_Identifier, Hardware_ID, Software_ID, Vulnerability_ID) ON CONFLICT IGNORE
 	);
 CREATE TABLE UniqueFindings_UniqueFindingsSourceFiles 
 	(

@@ -154,6 +154,7 @@ namespace Vulnerator.Properties {
         /// <summary>
         ///   Looks up a localized string similar to INSERT INTO UniqueFindings VALUES (
         ///	NULL, 
+        ///	@Instance_Identifier,
         ///	@Tool_Generated_Output, 
         ///	@Comments, 
         ///	@Finding_Details, 
@@ -171,8 +172,8 @@ namespace Vulnerator.Properties {
         ///	@Approval_Date, 
         ///	@Approval_Expiration_Date, 
         ///	@Delta_Analysis_Required, 
-        ///	(SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = &apos;ACAS&apos;), 
-        ///	(SELECT Finding_Source_File_ID FROM U [rest of string was truncated]&quot;;.
+        ///	(SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = @Finding_Type), 
+        ///	(SELEC [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InsertUniqueFinding {
             get {
@@ -217,7 +218,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO HardwareGroups VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), (SELECT Group_ID FROM Groups WHERE Group_Name = @Group_Name));.
+        ///   Looks up a localized string similar to INSERT INTO HardwareGroups VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT Group_ID FROM Groups WHERE Group_Name = @Group_Name));.
         /// </summary>
         internal static string MapHardwareToGroup {
             get {
@@ -433,37 +434,20 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UPDATE UniqueFindings SET Last_Observed = @Last_Observed, Status = @Status, Tool_Generated_Output = @Tool_Generated_Output WHERE Hardware_ID = (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP) AND Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier) AND Last_Observed &lt; @Last_Observed;.
+        ///   Looks up a localized string similar to UPDATE UniqueFindings SET Delta_Analysis_Required = &apos;True&apos; WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier);.
         /// </summary>
-        internal static string UpdateAcasUniqueFinding {
+        internal static string UpdateDeltaAnalysisFlag {
             get {
-                return ResourceManager.GetString("UpdateAcasUniqueFinding", resourceCulture);
+                return ResourceManager.GetString("UpdateDeltaAnalysisFlag", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UPDATE UniqueFindings SET 
-        ///	Last_Observed = @Last_Observed, 
-        ///	Status = @Status, 
-        ///	Finding_Source_File_ID = (SELECT Finding_Source_File_ID FROM UniqueFindingsSourceFiles WHERE Finding_Source_File_Name = @Finding_Source_File_Name),
-        ///	Tool_Generated_Output = @Tool_Generated_Output 
-        ///WHERE 
-        ///	Hardware_ID = (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP) 
-        ///AND 
-        ///	Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifie [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to UPDATE UniqueFindings SET Last_Observed = @Last_Observed, Status = @Status, Tool_Generated_Output = @Tool_Generated_Output WHERE Hardware_ID = (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP) AND Software_ID = (SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name) AND Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier) AND Last_Observed &lt; @Last_Observed;.
         /// </summary>
-        internal static string UpdateAcasVulnerability {
+        internal static string UpdateUniqueFindingFromAcas {
             get {
-                return ResourceManager.GetString("UpdateAcasVulnerability", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to UPDATE Vulnerabilities_VulnerabilitySources SET Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release) WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Version = &apos;Version Unknown&apos;);.
-        /// </summary>
-        internal static string UpdateAcasVulnerabilitySource {
-            get {
-                return ResourceManager.GetString("UpdateAcasVulnerabilitySource", resourceCulture);
+                return ResourceManager.GetString("UpdateUniqueFindingFromAcas", resourceCulture);
             }
         }
         
@@ -480,18 +464,9 @@ namespace Vulnerator.Properties {
         ///	Finding_Source_File_ID = (SELECT Finding_Source_File_ID FROM UniqueFindingsSourceFiles WHERE Finding_Source_File_Name = @Finding_Source_File_Name), 
         ///	Status = @ [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string UpdateCklUniqueFinding {
+        internal static string UpdateUniqueFindingFromCkl {
             get {
-                return ResourceManager.GetString("UpdateCklUniqueFinding", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to UPDATE UniqueFindings SET Delta_Analysis_Required = &apos;True&apos; WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier);.
-        /// </summary>
-        internal static string UpdateDeltaAnalysisFlag {
-            get {
-                return ResourceManager.GetString("UpdateDeltaAnalysisFlag", resourceCulture);
+                return ResourceManager.GetString("UpdateUniqueFindingFromCkl", resourceCulture);
             }
         }
         
@@ -505,11 +480,37 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UPDATE UniqueFindings SET 
+        ///	Last_Observed = @Last_Observed, 
+        ///	Status = @Status, 
+        ///	Finding_Source_File_ID = (SELECT Finding_Source_File_ID FROM UniqueFindingsSourceFiles WHERE Finding_Source_File_Name = @Finding_Source_File_Name),
+        ///	Tool_Generated_Output = @Tool_Generated_Output 
+        ///WHERE 
+        ///	Hardware_ID = (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP) 
+        ///AND 
+        ///	Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifie [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string UpdateVulnerabilityFromAcas {
+            get {
+                return ResourceManager.GetString("UpdateVulnerabilityFromAcas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to UPDATE VulnerabilitySources SET Source_Name = @Source_Name, Source_Secondary_Identifier = @Source_Secondary_Identifier, Vulnerability_Source_File_Name = @Vulnerability_Source_File_Name, Source_Description = @Source_Description, Source_Version = @Source_Version, Source_Release = @Source_Release WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name);.
         /// </summary>
         internal static string UpdateVulnerabilitySource {
             get {
                 return ResourceManager.GetString("UpdateVulnerabilitySource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE Vulnerabilities_VulnerabilitySources SET Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release) WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Version = &apos;Version Unknown&apos;);.
+        /// </summary>
+        internal static string UpdateVulnerabilitySourceFromAcas {
+            get {
+                return ResourceManager.GetString("UpdateVulnerabilitySourceFromAcas", resourceCulture);
             }
         }
     }

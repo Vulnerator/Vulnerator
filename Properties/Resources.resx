@@ -163,6 +163,7 @@
   <data name="InsertUniqueFinding" xml:space="preserve">
     <value>INSERT INTO UniqueFindings VALUES (
 	NULL, 
+	@Instance_Identifier,
 	@Tool_Generated_Output, 
 	@Comments, 
 	@Finding_Details, 
@@ -180,11 +181,12 @@
 	@Approval_Date, 
 	@Approval_Expiration_Date, 
 	@Delta_Analysis_Required, 
-	(SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = 'ACAS'), 
+	(SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = @Finding_Type), 
 	(SELECT Finding_Source_File_ID FROM UniqueFindingsSourceFiles WHERE Finding_Source_File_Name = @Finding_Source_File_Name), 
 	@Status, 
 	(SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier= @Unique_Vulnerability_Identifier),
 	(SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), 
+	(SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name) ,
 	@Severity_Override, 
 	@Severity_Override_Justification, 
 	@Technology_Area, 
@@ -207,7 +209,7 @@
     <value>INSERT OR IGNORE INTO VulnerabilitySources VALUES (NULL, @Source_Name, @Source_Secondary_Identifier, @Vulnerability_Source_File_Name, @Source_Description, @Source_Version, @Source_Release);</value>
   </data>
   <data name="MapHardwareToGroup" xml:space="preserve">
-    <value>INSERT INTO HardwareGroups VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), (SELECT Group_ID FROM Groups WHERE Group_Name = @Group_Name));</value>
+    <value>INSERT INTO HardwareGroups VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT Group_ID FROM Groups WHERE Group_Name = @Group_Name));</value>
   </data>
   <data name="MapHardwareToSoftware" xml:space="preserve">
     <value>INSERT INTO SoftwareHardware VALUES ((SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP),@Install_Date  ,@ReportInAccreditation, @ApprovedForBaseline, @BaselineApprover);</value>
@@ -278,26 +280,13 @@
   <data name="SelectVulnerabilityVersionAndRelease" xml:space="preserve">
     <value>SELECT Vulnerability_Version, Vulnerability_Release FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;</value>
   </data>
-  <data name="UpdateAcasUniqueFinding" xml:space="preserve">
-    <value>UPDATE UniqueFindings SET Last_Observed = @Last_Observed, Status = @Status, Tool_Generated_Output = @Tool_Generated_Output WHERE Hardware_ID = (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP) AND Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier) AND Last_Observed &lt; @Last_Observed;</value>
+  <data name="UpdateDeltaAnalysisFlag" xml:space="preserve">
+    <value>UPDATE UniqueFindings SET Delta_Analysis_Required = 'True' WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier);</value>
   </data>
-  <data name="UpdateAcasVulnerability" xml:space="preserve">
-    <value>UPDATE UniqueFindings SET 
-	Last_Observed = @Last_Observed, 
-	Status = @Status, 
-	Finding_Source_File_ID = (SELECT Finding_Source_File_ID FROM UniqueFindingsSourceFiles WHERE Finding_Source_File_Name = @Finding_Source_File_Name),
-	Tool_Generated_Output = @Tool_Generated_Output 
-WHERE 
-	Hardware_ID = (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP) 
-AND 
-	Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier) 
-AND 
-	Last_Observed &lt; @Last_Observed;</value>
+  <data name="UpdateUniqueFindingFromAcas" xml:space="preserve">
+    <value>UPDATE UniqueFindings SET Last_Observed = @Last_Observed, Status = @Status, Tool_Generated_Output = @Tool_Generated_Output WHERE Hardware_ID = (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP) AND Software_ID = (SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name) AND Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier) AND Last_Observed &lt; @Last_Observed;</value>
   </data>
-  <data name="UpdateAcasVulnerabilitySource" xml:space="preserve">
-    <value>UPDATE Vulnerabilities_VulnerabilitySources SET Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release) WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Version = 'Version Unknown');</value>
-  </data>
-  <data name="UpdateCklUniqueFinding" xml:space="preserve">
+  <data name="UpdateUniqueFindingFromCkl" xml:space="preserve">
     <value>UPDATE UniqueFindings SET 
 	Finding_Details = @Finding_Details, 
 	Comments = @Comments, 
@@ -317,13 +306,26 @@ AND
 AND 
 	Last_Observed &lt; @Last_Observed;</value>
   </data>
-  <data name="UpdateDeltaAnalysisFlag" xml:space="preserve">
-    <value>UPDATE UniqueFindings SET Delta_Analysis_Required = 'True' WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier);</value>
-  </data>
   <data name="UpdateVulnerability" xml:space="preserve">
     <value>UPDATE Vulnerabilities SET Vulnerability_Title=@Vulnerability_Title, Vulnerability_Description = @Vulnerability_Description, Risk_Statement = @Risk_Statement, Fix_Text = @Fix_Text, Modified_Date = @Modified_Date, Fix_Published_Date = @Fix_Published_Date, Raw_Risk = @Raw_Risk, Vulnerability_Version = @Vulnerability_Version, Vulnerability_Release = @Vulnerability_Release WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;</value>
   </data>
+  <data name="UpdateVulnerabilityFromAcas" xml:space="preserve">
+    <value>UPDATE UniqueFindings SET 
+	Last_Observed = @Last_Observed, 
+	Status = @Status, 
+	Finding_Source_File_ID = (SELECT Finding_Source_File_ID FROM UniqueFindingsSourceFiles WHERE Finding_Source_File_Name = @Finding_Source_File_Name),
+	Tool_Generated_Output = @Tool_Generated_Output 
+WHERE 
+	Hardware_ID = (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP) 
+AND 
+	Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier) 
+AND 
+	Last_Observed &lt; @Last_Observed;</value>
+  </data>
   <data name="UpdateVulnerabilitySource" xml:space="preserve">
     <value>UPDATE VulnerabilitySources SET Source_Name = @Source_Name, Source_Secondary_Identifier = @Source_Secondary_Identifier, Vulnerability_Source_File_Name = @Vulnerability_Source_File_Name, Source_Description = @Source_Description, Source_Version = @Source_Version, Source_Release = @Source_Release WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name);</value>
+  </data>
+  <data name="UpdateVulnerabilitySourceFromAcas" xml:space="preserve">
+    <value>UPDATE Vulnerabilities_VulnerabilitySources SET Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release) WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Version = 'Version Unknown');</value>
   </data>
 </root>

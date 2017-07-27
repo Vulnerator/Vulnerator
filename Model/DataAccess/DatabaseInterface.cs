@@ -81,6 +81,10 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
+                if (sqliteCommand.Parameters["Finding_Type"].Value.ToString().Equals("Fortify"))
+                { sqliteCommand.Parameters["Has_Custom_Code"].Value = "True"; }
+                else
+                { sqliteCommand.Parameters["Has_Custom_Code"].Value = "False"; }
                 sqliteCommand.CommandText = Properties.Resources.InsertSoftware;
                 sqliteCommand.ExecuteNonQuery();
             }
@@ -157,15 +161,15 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public void UpdateVulnerabilitySource(SQLiteCommand sqliteCommand, string findingType)
+        public void UpdateVulnerabilitySource(SQLiteCommand sqliteCommand)
         {
             try
             {
-                switch (findingType)
+                switch (sqliteCommand.Parameters["Finding_Type"].Value.ToString())
                 {
                     case "ACAS":
                         {
-                            sqliteCommand.CommandText = Properties.Resources.UpdateAcasVulnerabilitySource;
+                            sqliteCommand.CommandText = Properties.Resources.UpdateVulnerabilitySourceFromAcas;
                             sqliteCommand.ExecuteNonQuery();
                             sqliteCommand.CommandText = Properties.Resources.DeleteUnknownAcasVersions;
                             sqliteCommand.ExecuteNonQuery();
@@ -286,21 +290,21 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public void UpdateUniqueFinding(SQLiteCommand sqliteCommand, string findingType)
+        public void UpdateUniqueFinding(SQLiteCommand sqliteCommand)
         { 
             try
             {
-                switch (findingType)
+                switch (sqliteCommand.Parameters["Finding_Type"].Value.ToString())
                 {
                     case "ACAS":
                         {
-                            sqliteCommand.CommandText = Properties.Resources.UpdateAcasUniqueFinding;
+                            sqliteCommand.CommandText = Properties.Resources.UpdateUniqueFindingFromAcas;
                             sqliteCommand.ExecuteNonQuery();
                             break;
                         }
                     case "CKL":
                         {
-                            sqliteCommand.CommandText = Properties.Resources.UpdateCklUniqueFinding;
+                            sqliteCommand.CommandText = Properties.Resources.UpdateUniqueFindingFromCkl;
                             sqliteCommand.ExecuteNonQuery();
                             break;
                         }

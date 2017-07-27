@@ -19,8 +19,6 @@ namespace Vulnerator.Model.BusinessLogic
         private string softwareName = string.Empty;
         private string firstDiscovered = DateTime.Now.ToShortDateString();
         private string lastObserved = DateTime.Now.ToShortDateString();
-        private string file = string.Empty;
-        private string sourcePlaceholder = "HPE Fortify SCA";
         private string version = string.Empty;
         private DatabaseInterface databaseInterface = new DatabaseInterface();
         private List<FprVulnerability> fprVulnerabilityList = new List<FprVulnerability>();
@@ -73,6 +71,10 @@ namespace Vulnerator.Model.BusinessLogic
                         sqliteCommand.Parameters["Source_Version"].Value = version;
                         sqliteCommand.Parameters["Discovered_Software_Name"].Value = softwareName;
                         sqliteCommand.Parameters["Displayed_Software_Name"].Value = softwareName;
+                        sqliteCommand.Parameters["Finding_Source_File_Name"].Value = file.FileName;
+                        sqliteCommand.Parameters["Finding_Type"].Value = "Fortify";
+                        sqliteCommand.Parameters["First_Discovered"].Value = firstDiscovered;
+                        sqliteCommand.Parameters["Last_Observed"].Value = lastObserved;
                         databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                         databaseInterface.InsertSoftware(sqliteCommand);
                         foreach (FprVulnerability fprVulnerability in fprVulnerabilityList)
@@ -84,10 +86,16 @@ namespace Vulnerator.Model.BusinessLogic
                             sqliteCommand.Parameters["Vulnerability_Description"].Value = fprVulnerability.Description;
                             sqliteCommand.Parameters["Risk_Statement"].Value = fprVulnerability.RiskStatement;
                             sqliteCommand.Parameters["Fix_Text"].Value = fprVulnerability.FixText;
+                            sqliteCommand.Parameters["Instance_Identifier"].Value = fprVulnerability.InstanceId;
+                            sqliteCommand.Parameters["Tool_Generated_Output"].Value = fprVulnerability.Output;
+                            sqliteCommand.Parameters["Status"].Value = fprVulnerability.Status;
+                            sqliteCommand.Parameters["Comments"].Value = fprVulnerability.Comments;
                             databaseInterface.InsertVulnerability(sqliteCommand);
                             databaseInterface.MapVulnerabilityToSource(sqliteCommand);
+                            databaseInterface.InsertUniqueFinding(sqliteCommand);
                             string[] persistentParameters = new string[] {
-                                "Source_Name", "Source_Version", "Discovered_Software_Name", "Displayed_Software_Name", "Finding_Source_File_Name"
+                                "Source_Name", "Source_Version", "Discovered_Software_Name", "Displayed_Software_Name", "Finding_Source_File_Name",
+                                "Finding_Type", "First_Discovered", "Last_Observed"
                             };
                             foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                             {
@@ -164,6 +172,7 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 FprVulnerability fprVulnerability = new FprVulnerability();
+                fprVulnerability.Status = "Not Reviewed";
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -614,6 +623,19 @@ namespace Vulnerator.Model.BusinessLogic
                         }
                         else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ns2:Issue"))
                         {
+                            FprVulnerability fprVulnerability = fprVulnerabilityList.FirstOrDefault(x => x.InstanceId.Equals(instanceId));
+                            if (fprVulnerability != null)
+                            {
+                                fprVulnerability.Status = ConvertAnalysisValue(analysisValue);
+                                if (commentsDictionary.Count > 0)
+                                {
+                                    commentsDictionary.OrderByDescending(x => x.Key);
+                                    fprVulnerability.Comments = string.Format("{0}:{1}{2}",
+                                        commentsDictionary.Last().Key.ToShortDateString(),
+                                        Environment.NewLine,
+                                        commentsDictionary.Last().Value);
+                                }
+                            }
                             commentsDictionary.Clear();
                             instanceId = string.Empty;
                             analysisValue = string.Empty;
@@ -732,14 +754,23 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                if (analysisValue.Equals("Not an Issue"))
-                { return "Completed"; }
-                if (analysisValue.Equals("Not a Finding"))
-                { return "Completed"; }
-                else if (analysisValue.Equals("true"))
-                { return "Analysis Not Set"; }
-                else
-                { return analysisValue; }
+                switch (analysisValue)
+                {
+                    case "Not an Issue":
+                        { return "Completed"; }
+                    case "Not a Finding":
+                        { return "Completed"; }
+                    case "Reliability Issue":
+                        { return "Ongoing"; }
+                    case "Bad Practice":
+                        { return "Ongoing"; }
+                    case "Suspicious":
+                        { return "Ongoing"; }
+                    case "Exploitable":
+                        { return "Ongoing"; }
+                    default:
+                        { return analysisValue; }
+                }
             }
             catch (Exception exception)
             {
@@ -774,6 +805,8 @@ namespace Vulnerator.Model.BusinessLogic
                 {
                     // Groups Table
                     "Group_ID", "Group_Name", "Is_Accreditation", "Accreditation_ID", "Organization_ID",
+                    // FindingTypes Table
+                    "Finding_Type",
                     // Hardware Table
                     "Hardware_ID", "Host_Name", "FQDN", "NetBIOS", "Is_Virtual_Server", "NIAP_Level", "Manufacturer", "ModelNumber",
                     "Is_IA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID", "Scan_IP",
