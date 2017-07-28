@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -27,6 +28,7 @@ namespace Vulnerator.Model.BusinessLogic
         private string classification = string.Empty;
         private List<string> ccis = new List<string>();
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
+        private string[] persistentParameters = new string[] { "Group_Name", "Finding_Source_File_Name", "Source_Name" };
 
         /// <summary>
         /// Reads *.ckl files exported from the DISA STIG Viewer and writes the results to the appropriate DataTables.
@@ -51,6 +53,7 @@ namespace Vulnerator.Model.BusinessLogic
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         InsertParameterPlaceholders(sqliteCommand);
+                        databaseInterface.InsertDataEntryDate(sqliteCommand);
                         databaseInterface.InsertGroup(sqliteCommand, file);
                         databaseInterface.InsertParsedFile(sqliteCommand, file);
                         XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
@@ -459,6 +462,11 @@ namespace Vulnerator.Model.BusinessLogic
                             }
                         }
                         ParseUniqueFindingData(sqliteCommand, xmlReader);
+                        foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
+                        {
+                            if (!persistentParameters.Contains(parameter.ParameterName))
+                            { parameter.Value = string.Empty; }
+                        }
                         return;
                     }
                 }

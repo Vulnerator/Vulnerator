@@ -34,7 +34,8 @@ namespace Vulnerator.Model.BusinessLogic
         private List<string> cves = new List<string>();
         private List<string> cpes = new List<string>();
         private List<string> xrefs = new List<string>();
-        private string[] persistentParameters = new string[] { };
+        List<Tuple<string, string>> references = new List<Tuple<string, string>>();
+        private string[] persistentParameters = new string[] { "Group_Name", "Finding_Source_File_Name", "Source_Name" };
 
         /// <summary>
         /// Reads *.nessus files exported from within ACAS and writes the results to the appropriate DataTables.
@@ -75,6 +76,7 @@ namespace Vulnerator.Model.BusinessLogic
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         InsertParameterPlaceholders(sqliteCommand);
+                        databaseInterface.InsertDataEntryDate(sqliteCommand);
                         databaseInterface.InsertGroup(sqliteCommand, file);
                         databaseInterface.InsertParsedFile(sqliteCommand, file);
                         XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
@@ -286,22 +288,25 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "xref":
                                 {
-                                    xrefs.Add(ObtainCurrentNodeValue(xmlReader));
+                                    string reference = ObtainCurrentNodeValue(xmlReader);
+                                    string referenceType = reference.Split(':')[0].Trim();
+                                    reference = reference.Split(':')[1].Trim();
+                                    references.Add(new Tuple<string, string>(referenceType, reference));
                                     break;
                                 }
                             case "cve":
                                 {
-                                    cves.Add(ObtainCurrentNodeValue(xmlReader));
+                                    references.Add(new Tuple<string, string>("CVE", ObtainCurrentNodeValue(xmlReader)));
                                     break;
                                 }
                             case "cpe":
                                 {
-                                    cpes.Add(ObtainCurrentNodeValue(xmlReader));
+                                    references.Add(new Tuple<string, string>("CPE", ObtainCurrentNodeValue(xmlReader)));
                                     break;
                                 }
                             case "bid":
                                 {
-                                    xrefs.Add(string.Format("BID:{0}", ObtainCurrentNodeValue(xmlReader)));
+                                    references.Add(new Tuple<string, string>("BID", ObtainCurrentNodeValue(xmlReader)));
                                     break;
                                 }
                             case "cvss_base_score":
@@ -346,9 +351,8 @@ namespace Vulnerator.Model.BusinessLogic
                         PrepareUniqueFinding(sqliteCommand);
                         if (Properties.Settings.Default.CaptureAcasReferenceInformation)
                         {
-                            databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand, cpes, "CPE");
-                            databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand, cves, "CVE");
-                            databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand, xrefs, "Multi");
+                            foreach (Tuple<string, string> reference in references)
+                            { databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand, reference); }
                         }
                         if (Properties.Settings.Default.CaptureAcasEnumeratedSoftware)
                         {
@@ -375,7 +379,10 @@ namespace Vulnerator.Model.BusinessLogic
                         }
                         ClearGlobals();
                         foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
-                        { parameter.Value = string.Empty; }
+                        {
+                            if (!persistentParameters.Contains(parameter.ParameterName))
+                            { parameter.Value = string.Empty; }
+                        }
                         return;
                     }
                 }

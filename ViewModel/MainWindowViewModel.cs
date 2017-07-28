@@ -1476,7 +1476,7 @@ namespace Vulnerator.ViewModel
                     case "ACAS - CSV":
                         {
                             AcasCsvReader acasCsvReader = new AcasCsvReader();
-                            file.Status = acasCsvReader.ReadAcasCsvFile(file.FilePath, file.FileSystemName.Split(':')[0].TrimEnd());
+                            file.Status = acasCsvReader.ReadAcasCsvFile(file);
                             break;
                         }
                     case "ACAS - Nessus":

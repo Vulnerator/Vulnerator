@@ -22,6 +22,10 @@ namespace Vulnerator.Model.BusinessLogic
         private string version = string.Empty;
         private DatabaseInterface databaseInterface = new DatabaseInterface();
         private List<FprVulnerability> fprVulnerabilityList = new List<FprVulnerability>();
+        string[] persistentParameters = new string[] {
+            "Source_Name", "Source_Version", "Discovered_Software_Name", "Displayed_Software_Name", "Finding_Source_File_Name",
+            "Finding_Type", "First_Discovered", "Last_Observed"
+        };
 
         public string ReadFpr(Object.File file)
         {
@@ -54,6 +58,7 @@ namespace Vulnerator.Model.BusinessLogic
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         InsertParameterPlaceholders(sqliteCommand);
+                        databaseInterface.InsertDataEntryDate(sqliteCommand);
                         databaseInterface.InsertGroup(sqliteCommand, file);
                         databaseInterface.InsertParsedFile(sqliteCommand, file);
                         using (Stream stream = System.IO.File.OpenRead(file.FilePath))
@@ -93,10 +98,8 @@ namespace Vulnerator.Model.BusinessLogic
                             databaseInterface.InsertVulnerability(sqliteCommand);
                             databaseInterface.MapVulnerabilityToSource(sqliteCommand);
                             databaseInterface.InsertUniqueFinding(sqliteCommand);
-                            string[] persistentParameters = new string[] {
-                                "Source_Name", "Source_Version", "Discovered_Software_Name", "Displayed_Software_Name", "Finding_Source_File_Name",
-                                "Finding_Type", "First_Discovered", "Last_Observed"
-                            };
+                            foreach (Tuple<string,string> reference in fprVulnerability.References)
+                            { databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand, reference); }
                             foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                             {
                                 if (!persistentParameters.Contains(parameter.ParameterName))

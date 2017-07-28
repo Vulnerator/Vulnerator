@@ -334,6 +334,11 @@ CREATE TABLE DADMS_Networks
 	 DADMS_Network_ID INTEGER PRIMARY KEY , 
 	 DADMS_Network_Name NVARCHAR (50) NOT NULL 
 	);
+CREATE TABLE Data_Entry_Dates
+	(
+	 Date_ID INTEGER PRIMARY KEY,
+	 Entry_Date DATE NOT NULL UNIQUE ON CONFLICT IGNORE
+	);
 CREATE TABLE DiagnosticTestingSystems 
 	(
 	 DiagnosticTesting_ID INTEGER PRIMARY KEY , 
@@ -1307,6 +1312,7 @@ CREATE TABLE Vulnerabilities_VulnerabilityReferences
 	(
 		Vulnerability_ID INTEGER NOT NULL,
 		Reference_ID INTEGER NOT NULL,
+		UNIQUE (Vulnerability_ID, Reference_ID) ON CONFLICT IGNORE,
 		FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
 		FOREIGN KEY (Reference_ID) REFERENCES VulnerabilityReferences(Reference_ID)
 	);

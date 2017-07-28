@@ -42,6 +42,7 @@ namespace Vulnerator.Model.BusinessLogic
         private List<string> responsibilities = new List<string>();
         private List<string> iaControls = new List<string>();
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
+        private string[] persistentParameters = new string[] { "Group_Name", "Finding_Source_File_Name", "Source_Name" };
 
         public string ReadXccdfFile(Object.File file)
         {
@@ -80,6 +81,7 @@ namespace Vulnerator.Model.BusinessLogic
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         InsertParameterPlaceholders(sqliteCommand);
+                        databaseInterface.InsertDataEntryDate(sqliteCommand);
                         sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", file.FileSystemName));
                         databaseInterface.InsertGroup(sqliteCommand, file);
                         sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "XCCDF"));
@@ -559,6 +561,11 @@ namespace Vulnerator.Model.BusinessLogic
                         PrepareUniqueFinding(sqliteCommand);
                         return;
                     }
+                }
+                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
+                {
+                    if (!persistentParameters.Contains(parameter.ParameterName))
+                    { parameter.Value = string.Empty; }
                 }
             }
             catch (Exception exception)

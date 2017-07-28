@@ -11,6 +11,21 @@ namespace Vulnerator.Model.DataAccess
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
+        public void InsertDataEntryDate(SQLiteCommand sqliteCommand)
+        { 
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.InsertDataEntryDate;
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Entry_Date", DateTime.Now.ToShortDateString()));
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert a new Data Entry Date"));
+                throw exception;
+            }
+        }
+
         public void InsertGroup(SQLiteCommand sqliteCommand, File file)
         {
             try
@@ -341,6 +356,24 @@ namespace Vulnerator.Model.DataAccess
                     sqliteCommand.CommandText = Properties.Resources.MapReferenceToVulnerability;
                     sqliteCommand.ExecuteNonQuery();
                 }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert / map reference."));
+                throw exception;
+            }
+        }
+
+        public void InsertAndMapVulnerabilityReferences(SQLiteCommand sqliteCommand, Tuple<string,string> reference)
+        {
+            try
+            {
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Reference", reference.Item2));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Reference_Type", reference.Item1));
+                sqliteCommand.CommandText = Properties.Resources.InsertVulnerabilityReference;
+                sqliteCommand.ExecuteNonQuery();
+                sqliteCommand.CommandText = Properties.Resources.MapReferenceToVulnerability;
+                sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
             {

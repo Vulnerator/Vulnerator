@@ -120,6 +120,9 @@
   <data name="DeleteUnknownAcasVersions" xml:space="preserve">
     <value>DELETE FROM VulnerabilitySources WHERE Source_Version = 'Version Unknown';</value>
   </data>
+  <data name="InsertDataEntryDate" xml:space="preserve">
+    <value>INSERT INTO Data_Entry_Dates VALUES (NULL, @Entry_Date);</value>
+  </data>
   <data name="InsertGroup" xml:space="preserve">
     <value>INSERT INTO Groups VALUES (NULL, @Group_Name, 'False', NULL, NULL);</value>
   </data>

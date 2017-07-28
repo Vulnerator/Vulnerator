@@ -70,6 +70,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO Data_Entry_Dates VALUES (NULL, @Entry_Date);.
+        /// </summary>
+        internal static string InsertDataEntryDate {
+            get {
+                return ResourceManager.GetString("InsertDataEntryDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO Groups VALUES (NULL, @Group_Name, &apos;False&apos;, NULL, NULL);.
         /// </summary>
         internal static string InsertGroup {
