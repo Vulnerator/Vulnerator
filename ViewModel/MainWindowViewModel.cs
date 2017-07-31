@@ -1495,7 +1495,7 @@ namespace Vulnerator.ViewModel
                     case "WASSP - HTML":
                         {
                             WasspReader wasspReader = new WasspReader();
-                            file.Status = wasspReader.ReadWassp(file.FilePath, file.FileSystemName.Split(':')[0].TrimEnd());
+                            file.Status = wasspReader.ReadWassp(file);
                             break;
                         }
                     case "WASSP - XML":

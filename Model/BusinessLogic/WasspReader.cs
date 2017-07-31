@@ -2,6 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SQLite;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -16,27 +17,26 @@ namespace Vulnerator.Model.BusinessLogic
         private string fileNameWithoutPath = string.Empty;
         private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
+        private DatabaseInterface databaseInterface = new DatabaseInterface();
 
-        public string ReadWassp(string fileName, string systemName)
+        public string ReadWassp(Object.File file)
         {
             try
             {
-                if (fileName.IsFileInUse())
+                if (file.FilePath.IsFileInUse())
                 {
-                    log.Error(fileName + " is in use; please close any open instances and try again.");
+                    log.Error(file.FileName + " is in use; please close any open instances and try again.");
                     return "Failed; File In Use";
                 }
 
-                fileNameWithoutPath = Path.GetFileName(fileName);
-
                 HTMLtoXML htmlReader = new HTMLtoXML();
-                string wasspFile = htmlReader.Convert(fileName);
+                string wasspFile = htmlReader.Convert(file.FilePath);
 
                 if (wasspFile.Equals("Failed; See Log"))
                 { return wasspFile; }
                 else
                 {
-                    ParseWasspWithXmlReader(wasspFile, systemName);
+                    ParseWasspWithXmlReader(wasspFile, file);
                     System.IO.File.Delete(wasspFile);
                     return "Processed"; 
                 }
@@ -49,36 +49,93 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private void ParseWasspWithXmlReader(string fileName, string systemName)
+        private void ParseWasspWithXmlReader(string wasspFile, Object.File file)
         {
             try
             {
-                XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
-                xmlReaderSettings.IgnoreWhitespace = true;
-                xmlReaderSettings.IgnoreComments = true;
-                xmlReaderSettings.ValidationType = ValidationType.Schema;
-                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessInlineSchema;
-                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessSchemaLocation;
-
-                using (SQLiteTransaction sqliteTransaction = FindingsDatabaseActions.sqliteConnection.BeginTransaction())
+                XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
+                if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
+                { DatabaseBuilder.sqliteConnection.Open(); }
+                using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
                 {
-                    using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+                    using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "WASSP"));
-                        sqliteCommand.Parameters.Add(new SQLiteParameter(
-                            "Source", "Windows Automated Security Scanning Program (WASSP)"));
-                        sqliteCommand.CommandText = SetSqliteCommandText("VulnerabilitySources");
-                        sqliteCommand.ExecuteNonQuery();
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", systemName));
-                        sqliteCommand.CommandText = SetSqliteCommandText("Groups");
-                        sqliteCommand.ExecuteNonQuery();
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("FileName", fileNameWithoutPath));
-                        sqliteCommand.CommandText = SetSqliteCommandText("FileNames");
-                        sqliteCommand.ExecuteNonQuery();
-
-                        using (XmlReader xmlReader = XmlReader.Create(fileName, xmlReaderSettings))
+                        databaseInterface.InsertParameterPlaceholders(sqliteCommand);
+                        sqliteCommand.Parameters["Finding_Type"].Value = "WASSP";
+                        sqliteCommand.Parameters["Source_Name"].Value = "Windows Automated Security Scanning Program (WASSP)";
+                        databaseInterface.InsertGroup(sqliteCommand, file);
+                        databaseInterface.InsertParsedFile(sqliteCommand, file);
+                        using (XmlReader xmlReader = XmlReader.Create(wasspFile, xmlReaderSettings))
                         {
-                            ParseVulnerabilityInfoFromWassp(sqliteCommand, xmlReader);
+                            while (xmlReader.Read())
+                            {
+                                if (xmlReader.IsStartElement() && xmlReader.Name.Equals("table"))
+                                {
+                                    while (xmlReader.Read())
+                                    {
+                                        if (xmlReader.NodeType == XmlNodeType.Element)
+                                        {
+                                            switch (xmlReader.Name)
+                                            {
+                                                case "MachineInfo":
+                                                    {
+                                                        sqliteCommand.Parameters["Host_Name"].Value = ObtainItemValue(xmlReader);
+                                                        break;
+                                                    }
+                                                case "TestInfo":
+                                                    {
+                                                        sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = ObtainItemValue(xmlReader);
+                                                        break;
+                                                    }
+                                                case "DateInfo":
+                                                    {
+                                                        string dateTime = ObtainItemValue(xmlReader).Replace("\n", string.Empty);
+                                                        sqliteCommand.Parameters["First_Discovered"].Value = DateTime.ParseExact(
+                                                            dateTime, "ddd MMM dd HH:mm:ss yyyy", CultureInfo.InvariantCulture).ToShortDateString();
+                                                        sqliteCommand.Parameters["Last_Observed"].Value = sqliteCommand.Parameters["First_Discovered"].Value;
+                                                        break;
+                                                    }
+                                                case "ValueInfo":
+                                                    {
+                                                        sqliteCommand.Parameters["Vulnerability_Title"].Value = ObtainItemValue(xmlReader);
+                                                        break;
+                                                    }
+                                                case "DescriptionInfo":
+                                                    {
+                                                        sqliteCommand.Parameters["Vulnerability_Description"].Value = ObtainItemValue(xmlReader);
+                                                        break;
+                                                    }
+                                                case "TestRes":
+                                                    {
+                                                        sqliteCommand.Parameters["Status"].Value = ConvertTestResultToStatus(ObtainItemValue(xmlReader));
+                                                        break;
+                                                    }
+                                                case "VulnInfo":
+                                                    {
+                                                        sqliteCommand.Parameters["Raw_Risk"].Value = ConvertImpactToRawRisk(ObtainItemValue(xmlReader));
+                                                        break;
+                                                    }
+                                                case "RecInfo":
+                                                    {
+                                                        sqliteCommand.Parameters["Fix_Text"].Value = ObtainItemValue(xmlReader);
+                                                        break;
+                                                    }
+                                                default:
+                                                    { break; }
+                                            }
+                                        }
+                                        else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("table"))
+                                        {
+                                            databaseInterface.InsertVulnerabilitySource(sqliteCommand);
+                                            databaseInterface.InsertHardware(sqliteCommand);
+                                            databaseInterface.InsertVulnerability(sqliteCommand);
+                                            databaseInterface.InsertUniqueFinding(sqliteCommand);
+                                            databaseInterface.UpdateUniqueFinding(sqliteCommand);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                     sqliteTransaction.Commit();
@@ -89,154 +146,8 @@ namespace Vulnerator.Model.BusinessLogic
                 log.Error("Unable to parse WASSP file with XML reader.");
                 throw exception;
             }
-        }
-
-        private void ParseVulnerabilityInfoFromWassp(SQLiteCommand sqliteCommand, XmlReader xmlReader)
-        {
-            try
-            {
-                while (xmlReader.Read())
-                {
-                    if (xmlReader.IsStartElement() && xmlReader.Name.Equals("table"))
-                    {
-                        while (xmlReader.Read())
-                        {
-                            if (xmlReader.NodeType == XmlNodeType.Element)
-                            {
-                                switch (xmlReader.Name)
-                                {
-                                    case "MachineInfo":
-                                        {
-                                            RetrieveAndWriteHostInformation(sqliteCommand, xmlReader);
-                                            break;
-                                        }
-                                    case "TestInfo":
-                                        {
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter(
-                                                "VulnId", ObtainItemValue(xmlReader)));
-                                            break;
-                                        }
-                                    case "Requirements":
-                                        {
-                                            RetrieveRequirements(sqliteCommand, xmlReader);
-                                            break;
-                                        }
-                                    case "ValueInfo":
-                                        {
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter(
-                                                "VulnTitle", ObtainItemValue(xmlReader)));
-                                            break;
-                                        }
-                                    case "DescriptionInfo":
-                                        {
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter(
-                                                "Description", ObtainItemValue(xmlReader)));
-                                            break;
-                                        }
-                                    case "TestRes":
-                                        {
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter(
-                                                "Status", ConvertTestResultToStatus(ObtainItemValue(xmlReader))));
-                                            break;
-                                        }
-                                    case "VulnInfo":
-                                        {
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter(
-                                                "Impact", ObtainItemValue(xmlReader)));
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter(
-                                                "RawRisk", ConvertImpactToRawRisk(xmlReader.Value)));
-                                            break;
-                                        }
-                                    case "RecInfo":
-                                        {
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter(
-                                                "FixText", ObtainItemValue(xmlReader)));
-                                            break;
-                                        }
-                                    default:
-                                        { break; }
-                                }
-                            }
-                            else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("table"))
-                            {
-                                InsertVulnerabilityCommand(sqliteCommand);
-                                sqliteCommand.CommandText = SetSqliteCommandText("UniqueFinding");
-                                sqliteCommand.ExecuteNonQuery();
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to parse vulnerability information from WASSP file.");
-                throw exception;
-            }
-        }
-
-        private void RetrieveAndWriteHostInformation(SQLiteCommand sqliteCommand, XmlReader xmlReader)
-        {
-            try
-            {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("HostName", ObtainItemValue(xmlReader)));
-                sqliteCommand.Parameters.Add(new SQLiteParameter(
-                    "IpAddress", "Not Provided"));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("AssetIdToReport", sqliteCommand.Parameters["HostName"].Value));
-
-                sqliteCommand.CommandText = SetSqliteCommandText("Assets");
-                InsertAssetCommand(sqliteCommand);
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to retrieve and/or write host information.");
-                throw exception;
-            }
-        }
-
-        private void RetrieveRequirements(SQLiteCommand sqliteCommand, XmlReader xmlReader)
-        {
-            try
-            {
-                while (xmlReader.Read())
-                {
-                    if (xmlReader.IsStartElement() && xmlReader.Name.Equals("a"))
-                    {
-                        xmlReader.Read();
-                        Regex CciRegex = new Regex(@"\b[A-Z]{2}-");
-                        Regex IacRegex = new Regex(@"\b[A-Z]{4}-");
-                        if (CciRegex.IsMatch(xmlReader.Value))
-                        {
-                            if (!sqliteCommand.Parameters.Contains("NistControl"))
-                            { sqliteCommand.Parameters.Add(new SQLiteParameter("NistControl", xmlReader.Value)); }
-                            else
-                            {
-                                sqliteCommand.Parameters["NistControl"].Value =
-                                    sqliteCommand.Parameters["NistControl"].Value + Environment.NewLine +
-                                    xmlReader.Value;
-                            }
-                        }
-                        else if (IacRegex.IsMatch(xmlReader.Value))
-                        {
-                            if (!sqliteCommand.Parameters.Contains("IaControl"))
-                            { sqliteCommand.Parameters.Add(new SQLiteParameter("IaControl", xmlReader.Value)); }
-                            else
-                            {
-                                sqliteCommand.Parameters["IaControl"].Value =
-                                    sqliteCommand.Parameters["IaControl"].Value + Environment.NewLine +
-                                    xmlReader.Value;
-                            }
-                        }
-                    }
-                    else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Requirements"))
-                    { break; }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to retrieve requirements node value.");
-                throw exception;
-            }
+            finally
+            { DatabaseBuilder.sqliteConnection.Close(); }
         }
 
         private string ObtainItemValue(XmlReader xmlReader)
@@ -308,113 +219,21 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private string SetSqliteCommandText(string tableName)
+        private XmlReaderSettings GenerateXmlReaderSettings()
         {
             try
             {
-                switch (tableName)
-                {
-                    case "Groups":
-                        { return "INSERT INTO Groups VALUES (NULL, @GroupName);"; }
-                    case "VulnerabilitySources":
-                        { return "INSERT INTO VulnerabilitySources VALUES (NULL, @Source, '', '');"; }
-                    case "Assets":
-                        {
-                            return "INSERT INTO Assets (AssetIdToReport, GroupIndex) VALUES (@AssetIdToReport, " +
-                                  "(SELECT GroupIndex FROM Groups WHERE GroupName = @GroupName));";
-                        }
-                    case "FileNames":
-                        { return "INSERT INTO FileNames VALUES (NULL, @FileName);"; }
-                    case "ScapScores":
-                        {
-                            return "INSERT INTO ScapScores VALUES (@ScapScore, " +
-                                "(SELECT AssetIndex FROM Assets WHERE AssetIdToReport = @AssetIdToReport), " +
-                                "(SELECT SourceIndex FROM VulnerabilitySources WHERE Source = @Source));";
-                        }
-                    case "Vulnerability":
-                        {
-                            return "INSERT INTO Vulnerability (VulnId, VulnTitle, Description, RawRisk, " +
-                                "Impact) VALUES (@VulnId, @VulnTitle, @Description, @RawRisk, @Impact);";
-                        }
-                    case "UniqueFinding":
-                        {
-                            return "INSERT INTO UniqueFinding (FindingTypeIndex, SourceIndex, StatusIndex, " +
-                                "FileNameIndex, VulnerabilityIndex, AssetIndex) VALUES (" +
-                                "(SELECT FindingTypeIndex FROM FindingTypes WHERE FindingType = @FindingType), " +
-                                "(SELECT SourceIndex FROM VulnerabilitySources WHERE Source = @Source), " +
-                                "(SELECT StatusIndex FROM FindingStatuses WHERE Status = @Status), " +
-                                "(SELECT FileNameIndex FROM FileNames WHERE FileName = @FileName), " +
-                                "(SELECT VulnerabilityIndex FROM Vulnerability WHERE VulnId = @VulnId), " +
-                                "(SELECT AssetIndex FROM Assets WHERE AssetIdToReport = @AssetIdToReport));";
-                        }
-                    default:
-                        { break; }
-                }
-                return "";
+                XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
+                xmlReaderSettings.IgnoreWhitespace = true;
+                xmlReaderSettings.IgnoreComments = true;
+                xmlReaderSettings.ValidationType = ValidationType.Schema;
+                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessInlineSchema;
+                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessSchemaLocation;
+                return xmlReaderSettings;
             }
             catch (Exception exception)
             {
-                log.Error("Unable to set SQLite command text.");
-                throw exception;
-            }
-        }
-
-        private void InsertVulnerabilityCommand(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                sqliteCommand.CommandText = SetSqliteCommandText("Vulnerability");
-                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
-                {
-                    if (parameter.ParameterName.Equals("NistControl"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(84, "@NistControl, "); }
-                    if (parameter.ParameterName.Equals("IaControl"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(84, "@IaControl, "); }
-                    if (parameter.ParameterName.Equals("FixText"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(84, "@FixText, "); }
-                }
-                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
-                {
-                    if (parameter.ParameterName.Equals("NistControl"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, "NistControl, "); }
-                    if (parameter.ParameterName.Equals("IaControl"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, "IaControl, "); }
-                    if (parameter.ParameterName.Equals("FixText"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, "FixText, "); }
-                }
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to create command to insert vulnerability.");
-                throw exception;
-            }
-        }
-
-        private void InsertAssetCommand(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                sqliteCommand.CommandText = SetSqliteCommandText("Assets");
-                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
-                {
-                    if (parameter.ParameterName.Equals("HostName"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(57, "@HostName, "); }
-                    if (parameter.ParameterName.Equals("IpAddress"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(57, "@IpAddress, "); }
-                }
-                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
-                {
-                    if (parameter.ParameterName.Equals("HostName"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(20, "HostName, "); }
-                    if (parameter.ParameterName.Equals("IpAddress"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(20, "IpAddress, "); }
-                }
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to create command to insert asset.");
+                log.Error("Unable to generate XmlReaderSettings.");
                 throw exception;
             }
         }

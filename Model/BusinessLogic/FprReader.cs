@@ -109,13 +109,14 @@ namespace Vulnerator.Model.BusinessLogic
                     }
                     sqliteTransaction.Commit();
                 }
-                DatabaseBuilder.sqliteConnection.Close();
             }
             catch (Exception exception)
             {
                 log.Error("Unable to read FPR Archive.");
                 throw exception;
             }
+            finally
+            { DatabaseBuilder.sqliteConnection.Close(); }
         }
 
         private void ParseAuditFvdlWithXmlReader(ZipArchiveEntry zipArchiveEntry, SQLiteCommand sqliteCommand)
