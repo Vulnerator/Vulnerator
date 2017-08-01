@@ -466,6 +466,8 @@ CREATE TABLE Hardware
 	 FQDN NVARCHAR (100),
 	 NetBIOS NVARCHAR (100) ,
 	 Scan_IP NVARCHAR (25),
+	 Found_21745 NVARCHAR (5),
+	 Found_26917 NVARCHAR (5),
 	 Is_Virtual_Server NVARCHAR (5) , 
 	 NIAP_Level NVARCHAR (25) , 
 	 Manufacturer NVARCHAR (25) , 

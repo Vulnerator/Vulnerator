@@ -88,7 +88,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@NetBIOS,@Scan_IP,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,(SELECT LifecycleStatus_ID FROM LifecycleStatuses WHERE LifecycleStatus = &apos;Uncategorized&apos;));.
+        ///   Looks up a localized string similar to INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@NetBIOS,@Scan_IP, @Found_21745, @Found_26917,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,(SELECT LifecycleStatus_ID FROM LifecycleStatuses WHERE LifecycleStatus = &apos;Uncategorized&apos;));.
         /// </summary>
         internal static string InsertHardware {
             get {
@@ -439,6 +439,15 @@ namespace Vulnerator.Properties {
         internal static string SelectVulnerabilityVersionAndRelease {
             get {
                 return ResourceManager.GetString("SelectVulnerabilityVersionAndRelease", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE Hardware SET Found_21745 = @Found_21745, Found_26917 = @Found_26917 WHERE Scan_IP = @Scan_IP;.
+        /// </summary>
+        internal static string SetCredentialedScanStatus {
+            get {
+                return ResourceManager.GetString("SetCredentialedScanStatus", resourceCulture);
             }
         }
         

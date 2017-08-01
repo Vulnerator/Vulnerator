@@ -215,15 +215,19 @@ namespace Vulnerator.Model.BusinessLogic
             string pluginId = xmlReader.GetAttribute("pluginID");
             try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Last_Observed", lastObserved));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Version", string.Empty));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", string.Empty));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Port", xmlReader.GetAttribute("port")));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Protocol", xmlReader.GetAttribute("protocol")));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Service", xmlReader.GetAttribute("svc_name")));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Unique_Vulnerability_Identifier", pluginId));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Title", xmlReader.GetAttribute("pluginName")));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("VulnerabilityFamilyOrClass", xmlReader.GetAttribute("pluginFamily")));
+                sqliteCommand.Parameters["Last_Observed"].Value = lastObserved;
+                sqliteCommand.Parameters["Source_Version"].Value = string.Empty;
+                sqliteCommand.Parameters["Source_Release"].Value = string.Empty;
+                sqliteCommand.Parameters["Port"].Value = xmlReader.GetAttribute("port");
+                sqliteCommand.Parameters["Protocol"].Value = xmlReader.GetAttribute("protocol");
+                sqliteCommand.Parameters["Service"].Value = xmlReader.GetAttribute("svc_name");
+                sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = pluginId;
+                sqliteCommand.Parameters["Vulnerability_Title"].Value = xmlReader.GetAttribute("pluginName");
+                sqliteCommand.Parameters["VulnerabilityFamilyOrClass"].Value = xmlReader.GetAttribute("pluginFamily");
+                if (sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString().Equals("21745"))
+                { sqliteCommand.Parameters["Found_21745"].Value = "True"; }
+                if (sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString().Equals("26917"))
+                { sqliteCommand.Parameters["Found_26917"].Value = "True"; }
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -342,7 +346,8 @@ namespace Vulnerator.Model.BusinessLogic
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ReportItem"))
                     {
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("Scan_IP", ipAddress));
+                        sqliteCommand.Parameters["Scan_IP"].Value = ipAddress;
+                        databaseInterface.SetCredentialedScanStatus(sqliteCommand);
                         PrepareVulnerabilitySource(sqliteCommand);
                         databaseInterface.UpdateVulnerability(sqliteCommand);
                         databaseInterface.InsertVulnerability(sqliteCommand);

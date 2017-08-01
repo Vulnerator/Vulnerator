@@ -520,7 +520,7 @@ namespace Vulnerator.Model.DataAccess
                     "Finding_Type",
                     // Hardware Table
                     "Hardware_ID", "Host_Name", "FQDN", "NetBIOS", "Is_Virtual_Server", "NIAP_Level", "Manufacturer", "ModelNumber",
-                    "Is_IA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID", "Scan_IP",
+                    "Is_IA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID", "Scan_IP", "Found_21745", "Found_26917",
                     // IP_Addresses Table
                     "IP_Address_ID", "IP_Address",
                     // MAC_Addresses Table
@@ -560,6 +560,21 @@ namespace Vulnerator.Model.DataAccess
             catch (Exception exception)
             {
                 log.Error(string.Format("Unable to insert SQLiteParameter placeholders into SQLiteCommand"));
+                throw exception;
+            }
+        }
+
+        public void SetCredentialedScanStatus(SQLiteCommand sqliteCommand)
+        { 
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.SetCredentialedScanStatus;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to set the credentialed scan status for \"{0}\".", 
+                    sqliteCommand.Parameters["Scan-IP"].Value.ToString()));
                 throw exception;
             }
         }
