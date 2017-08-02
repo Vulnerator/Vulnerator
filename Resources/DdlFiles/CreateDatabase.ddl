@@ -462,6 +462,7 @@ CREATE TABLE GroupsContacts
 CREATE TABLE Hardware 
 	(
 	 Hardware_ID INTEGER PRIMARY KEY, 
+	 Displayed_Host_Name NVARCHAR (50),
 	 Host_Name NVARCHAR (50), 
 	 FQDN NVARCHAR (100),
 	 NetBIOS NVARCHAR (100) ,

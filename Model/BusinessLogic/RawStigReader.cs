@@ -77,7 +77,7 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Secondary_Identifier", xmlReader.GetAttribute("id")));
+                sqliteCommand.Parameters["Source_Secondary_Identifier"].Value = xmlReader.GetAttribute("id");
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -136,7 +136,7 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Group_ID", xmlReader.GetAttribute("id")));
+                sqliteCommand.Parameters["Vulnerability_Group_ID"].Value = xmlReader.GetAttribute("id");
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -145,7 +145,7 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "title":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Group_Title", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["Vulnerability_Group_Title"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "Rule":
@@ -192,9 +192,9 @@ namespace Vulnerator.Model.BusinessLogic
                     ruleVersion = rule.Split('r')[1];
                     rule = rule.Split('r')[0];
                 }
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Unique_Vulnerability_Identifier", rule));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Version", ruleVersion));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Raw_Risk", ConvertSeverityToRawRisk(xmlReader.GetAttribute("severity"))));
+                sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = rule;
+                sqliteCommand.Parameters["Vulnerability_Version"].Value = ruleVersion;
+                sqliteCommand.Parameters["Raw_Risk"].Value = ConvertSeverityToRawRisk(xmlReader.GetAttribute("severity"));
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -203,12 +203,12 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "version":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Secondary_Vulnerability_Identifier", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["Secondary_Vulnerability_Identifier"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "title":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Title", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["Vulnerability_Title"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "description":
@@ -218,7 +218,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "dc:identifier":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Overflow", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["Overflow"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "ident":
@@ -229,12 +229,12 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "fixtext":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Fix_Text", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["Fix_Text"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "check-content":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Check_Content", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["Check_Content"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             default:
@@ -268,47 +268,47 @@ namespace Vulnerator.Model.BusinessLogic
                             {
                                 case "VulnDiscussion":
                                     {
-                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Description", ObtainCurrentNodeValue(xmlReader)));
+                                        sqliteCommand.Parameters["Vulnerability_Description"].Value = ObtainCurrentNodeValue(xmlReader);
                                         break;
                                     }
                                 case "FalsePositives":
                                     {
-                                        sqliteCommand.Parameters.Add(new SQLiteParameter("False_Positives", ObtainCurrentNodeValue(xmlReader)));
+                                        sqliteCommand.Parameters["False_Positives"].Value = ObtainCurrentNodeValue(xmlReader);
                                         break;
                                     }
                                 case "FalseNegatives":
                                     {
-                                        sqliteCommand.Parameters.Add(new SQLiteParameter("False_Negatives", ObtainCurrentNodeValue(xmlReader)));
+                                        sqliteCommand.Parameters["False_Negatives"].Value = ObtainCurrentNodeValue(xmlReader);
                                         break;
                                     }
                                 case "Documentable":
                                     {
-                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Documentable", ObtainCurrentNodeValue(xmlReader)));
+                                        sqliteCommand.Parameters["Documentable"].Value = ObtainCurrentNodeValue(xmlReader);
                                         break;
                                     }
                                 case "Mitigations":
                                     {
-                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Mitigations", ObtainCurrentNodeValue(xmlReader)));
+                                        sqliteCommand.Parameters["Mitigations"].Value = ObtainCurrentNodeValue(xmlReader);
                                         break;
                                     }
                                 case "SeverityOverrideGuidance":
                                     {
-                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Severity_Override_Guidance", ObtainCurrentNodeValue(xmlReader)));
+                                        sqliteCommand.Parameters["Severity_Override_Guidance"].Value = ObtainCurrentNodeValue(xmlReader);
                                         break;
                                     }
                                 case "PotentialImpacts":
                                     {
-                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Potential_Impacts", ObtainCurrentNodeValue(xmlReader)));
+                                        sqliteCommand.Parameters["Potential_Impacts"].Value = ObtainCurrentNodeValue(xmlReader);
                                         break;
                                     }
                                 case "ThirdPartyTools":
                                     {
-                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Third_Party_Tools", ObtainCurrentNodeValue(xmlReader)));
+                                        sqliteCommand.Parameters["Third_Party_Tools"].Value = ObtainCurrentNodeValue(xmlReader);
                                         break;
                                     }
                                 case "MitigationControl":
                                     {
-                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Mitigation_Control", ObtainCurrentNodeValue(xmlReader)));
+                                        sqliteCommand.Parameters["Mitigation_Controls"].Value = ObtainCurrentNodeValue(xmlReader);
                                         break;
                                     }
                                 case "Responsibility":

@@ -81,6 +81,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 sqliteCommand.Parameters["Vulnerability_Title"].Value = csvReader.GetField("Plugin Name");
                                 sqliteCommand.Parameters["Scan_IP"].Value = csvReader.GetField("IP Address");
                                 sqliteCommand.Parameters["Host_Name"].Value = csvReader.GetField("DNS Name");
+                                sqliteCommand.Parameters["Displayed_Host_Name"].Value = csvReader.GetField("DNS Name");
                                 sqliteCommand.Parameters["NetBIOS"].Value = csvReader.GetField("NetBIOS Name");
                                 sqliteCommand.Parameters["Risk_Statement"].Value = csvReader.GetField("Synopsis");
                                 sqliteCommand.Parameters["Vulnerability_Description"].Value = csvReader.GetField("Description");
@@ -98,7 +99,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     else
                                     { references.Add(SanitizeCrossReferences(crossReferences)); }
                                 }
-                                sqliteCommand.Parameters["Last_Observed"].Value = csvReader.GetField("Last Observed");
+                                sqliteCommand.Parameters["Last_Observed"].Value = DateTime.Parse(csvReader.GetField("Last Observed")).ToShortDateString();
                                 sqliteCommand.Parameters["Modified_Date"].Value = csvReader.GetField("Plugin Modification Date");
                                 sqliteCommand.Parameters["CVSS_Temporal_Score"].Value = csvReader.GetField("CVSS Temporal Score");
                                 sqliteCommand.Parameters["CVSS_Base_Score"].Value = csvReader.GetField("CVSS Base Score");
@@ -117,9 +118,9 @@ namespace Vulnerator.Model.BusinessLogic
                                 sqliteCommand.Parameters["Protocol"].Value = csvReader.GetField("Protocol");
                                 sqliteCommand.Parameters["Port"].Value = csvReader.GetField("Port");
                                 sqliteCommand.Parameters["VulnerabilityFamilyOrClass"].Value = csvReader.GetField("Family");
-                                sqliteCommand.Parameters["First_Discovered"].Value = csvReader.GetField("First Discovered");
-                                sqliteCommand.Parameters["Published_Date"].Value = csvReader.GetField("Plugin Publication Date");
-                                sqliteCommand.Parameters["Fix_Published_Date"].Value = csvReader.GetField("Patch Publication Date");
+                                sqliteCommand.Parameters["First_Discovered"].Value = DateTime.Parse(csvReader.GetField("First Discovered")).ToShortDateString();
+                                sqliteCommand.Parameters["Published_Date"].Value = DateTime.Parse(csvReader.GetField("Plugin Publication Date")).ToShortDateString();
+                                sqliteCommand.Parameters["Fix_Published_Date"].Value = DateTime.Parse(csvReader.GetField("Patch Publication Date")).ToShortDateString();
                                 sqliteCommand.Parameters["Vulnerability_Version"].Value = csvReader.GetField("Version");
                                 ParsePluginRevision(sqliteCommand);
                                 sqliteCommand.Parameters["MAC_Address"].Value = csvReader.GetField("MAC Address");
@@ -156,7 +157,11 @@ namespace Vulnerator.Model.BusinessLogic
                                 if (Properties.Settings.Default.CaptureAcasReferenceInformation)
                                 {
                                     foreach (Tuple<string, string> reference in references)
-                                    { databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand, reference); }
+                                    {
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Reference", reference.Item2));
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Reference_Type", reference.Item1));
+                                        databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand);
+                                    }
                                 }
                                 PrepareUniqueFinding(sqliteCommand);
                                 foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
@@ -164,6 +169,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     if (!persistentParameters.Contains(parameter.ParameterName))
                                     { parameter.Value = string.Empty; }
                                 }
+                                references.Clear();
                             }
                         }
                     }

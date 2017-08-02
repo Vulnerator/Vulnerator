@@ -99,7 +99,11 @@ namespace Vulnerator.Model.BusinessLogic
                             databaseInterface.MapVulnerabilityToSource(sqliteCommand);
                             databaseInterface.InsertUniqueFinding(sqliteCommand);
                             foreach (Tuple<string,string> reference in fprVulnerability.References)
-                            { databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand, reference); }
+                            {
+                                sqliteCommand.Parameters.Add(new SQLiteParameter("Reference", reference.Item2));
+                                sqliteCommand.Parameters.Add(new SQLiteParameter("Reference_Type", reference.Item1));
+                                databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand);
+                            }
                             foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                             {
                                 if (!persistentParameters.Contains(parameter.ParameterName))

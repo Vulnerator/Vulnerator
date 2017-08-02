@@ -274,7 +274,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.InsertPort;
+                sqliteCommand.CommandText = Properties.Resources.InsertPPS;
                 sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.CommandText = Properties.Resources.MapPortToHardware;
                 sqliteCommand.ExecuteNonQuery();
@@ -364,12 +364,10 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public void InsertAndMapVulnerabilityReferences(SQLiteCommand sqliteCommand, Tuple<string,string> reference)
+        public void InsertAndMapVulnerabilityReferences(SQLiteCommand sqliteCommand)
         {
             try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Reference", reference.Item2));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Reference_Type", reference.Item1));
                 sqliteCommand.CommandText = Properties.Resources.InsertVulnerabilityReference;
                 sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.CommandText = Properties.Resources.MapReferenceToVulnerability;
@@ -514,19 +512,21 @@ namespace Vulnerator.Model.DataAccess
             {
                 string[] parameters = new string[]
                 {
+                    // CCI Table
+                    "CCI",
                     // Groups Table
                     "Group_ID", "Group_Name", "Is_Accreditation", "Accreditation_ID", "Organization_ID",
                     // FindingTypes Table
                     "Finding_Type",
                     // Hardware Table
                     "Hardware_ID", "Host_Name", "FQDN", "NetBIOS", "Is_Virtual_Server", "NIAP_Level", "Manufacturer", "ModelNumber",
-                    "Is_IA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID", "Scan_IP", "Found_21745", "Found_26917",
+                    "Is_IA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID", "Scan_IP", "Found_21745", "Found_26917", "Displayed_Host_Name",
                     // IP_Addresses Table
                     "IP_Address_ID", "IP_Address",
                     // MAC_Addresses Table
                     "MAC_Address_ID", "MAC_Address",
                     // PPS Table
-                    "PPS_ID", "Port", "Protocol",
+                    "PPS_ID", "Port", "Protocol", "Service",
                     // Software Table
                     "Software_ID", "Discovered_Software_Name", "Displayed_Software_Name", "Software_Acronym", "Software_Version",
                     "Function", "Install_Date", "DADMS_ID", "DADMS_Disposition", "DADMS_LDA", "Has_Custom_Code", "IaOrIa_Enabled",

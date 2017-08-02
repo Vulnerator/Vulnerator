@@ -30,12 +30,11 @@ namespace Vulnerator.Model.BusinessLogic
         private string firstDiscovered = DateTime.Now.ToShortDateString();
         private string lastObserved = DateTime.Now.ToShortDateString();
         private string dateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
+        private bool found21745 = false;
+        private bool found26917 = false;
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
-        private List<string> cves = new List<string>();
-        private List<string> cpes = new List<string>();
-        private List<string> xrefs = new List<string>();
         List<Tuple<string, string>> references = new List<Tuple<string, string>>();
-        private string[] persistentParameters = new string[] { "Group_Name", "Finding_Source_File_Name", "Source_Name" };
+        private string[] persistentParameters = new string[] { "Group_Name", "Finding_Source_File_Name", "Source_Name", "Scan_IP", "Host_Name" };
 
         /// <summary>
         /// Reads *.nessus files exported from within ACAS and writes the results to the appropriate DataTables.
@@ -104,7 +103,12 @@ namespace Vulnerator.Model.BusinessLogic
                                     }
                                 }
                                 else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ReportHost"))
-                                { ClearGlobals(); }
+                                {
+                                    sqliteCommand.Parameters["Found_21745"].Value = found21745;
+                                    sqliteCommand.Parameters["Found_26917"].Value = found26917;
+                                    databaseInterface.SetCredentialedScanStatus(sqliteCommand);
+                                    found21745 = found26917 = false;
+                                }
                             }
                         }
                     }
@@ -225,9 +229,9 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["Vulnerability_Title"].Value = xmlReader.GetAttribute("pluginName");
                 sqliteCommand.Parameters["VulnerabilityFamilyOrClass"].Value = xmlReader.GetAttribute("pluginFamily");
                 if (sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString().Equals("21745"))
-                { sqliteCommand.Parameters["Found_21745"].Value = "True"; }
+                { found21745 = true; }
                 if (sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString().Equals("26917"))
-                { sqliteCommand.Parameters["Found_26917"].Value = "True"; }
+                { found26917 = true; }
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -236,44 +240,44 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "description":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Description", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["Vulnerability_Description"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "plugin_modification_date":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Modified_Date", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["Modified_Date"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "plugin_publication_date":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Published_Date", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["Published_Date"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "patch_publication_date":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Fix_Published_Date", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["Fix_Published_Date"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "risk_factor":
                                 {
                                     xmlReader.Read();
                                     if (string.IsNullOrWhiteSpace(sqliteCommand.Parameters["Raw_Risk"].Value.ToString()))
-                                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Raw_Risk", ConvertRiskFactorToRawRisk(xmlReader.Value))); }
+                                    { sqliteCommand.Parameters["Raw_Risk"].Value = ConvertRiskFactorToRawRisk(xmlReader.Value); }
                                     break;
                                 }
                             case "solution":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Fix_Text", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["Fix_Text"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "synopsis":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Risk_Statement", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["Risk_Statement"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "plugin_output":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Tool_Generated_Output", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["Tool_Generated_Output"].Value = ObtainCurrentNodeValue(xmlReader);
                                     switch (pluginId)
                                     {
                                         case "19506":
@@ -288,7 +292,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "stig_severity":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Raw_Risk", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["Raw_Risk"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "xref":
@@ -316,27 +320,27 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "cvss_base_score":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("CVSS_Base_Score", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["CVSS_Base_Score"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "cvss_temporal_score":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("CVSS_Temporal_Score", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["CVSS_Temporal_Score"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "cvss_vector":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("CVSS_Base_Vector", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["CVSS_Base_Vector"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "cvss_temporal_vector":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("CVSS_Temporal_Vector", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["CVSS_Temporal_Vector"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "script_version":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Version", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["Vulnerability_Version"].Value = ObtainCurrentNodeValue(xmlReader);
                                     ParsePluginRevision(sqliteCommand);
                                     break;
                                 }
@@ -347,7 +351,6 @@ namespace Vulnerator.Model.BusinessLogic
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ReportItem"))
                     {
                         sqliteCommand.Parameters["Scan_IP"].Value = ipAddress;
-                        databaseInterface.SetCredentialedScanStatus(sqliteCommand);
                         PrepareVulnerabilitySource(sqliteCommand);
                         databaseInterface.UpdateVulnerability(sqliteCommand);
                         databaseInterface.InsertVulnerability(sqliteCommand);
@@ -358,7 +361,11 @@ namespace Vulnerator.Model.BusinessLogic
                         if (Properties.Settings.Default.CaptureAcasReferenceInformation)
                         {
                             foreach (Tuple<string, string> reference in references)
-                            { databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand, reference); }
+                            {
+                                sqliteCommand.Parameters["Reference"].Value = reference.Item2;
+                                sqliteCommand.Parameters["Reference_Type"].Value = reference.Item1;
+                                databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand);
+                            }
                         }
                         if (Properties.Settings.Default.CaptureAcasEnumeratedSoftware)
                         {
@@ -383,12 +390,12 @@ namespace Vulnerator.Model.BusinessLogic
                                     { break; }
                             }
                         }
-                        ClearGlobals();
                         foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                         {
                             if (!persistentParameters.Contains(parameter.ParameterName))
                             { parameter.Value = string.Empty; }
                         }
+                        references.Clear();
                         return;
                     }
                 }
@@ -591,16 +598,16 @@ namespace Vulnerator.Model.BusinessLogic
         { 
             try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Name", "Tenable Nessus Scanner"));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Secondary_Identifier", "Assured Compliance Assessment Solution (ACAS)"));
+                sqliteCommand.Parameters["Source_Name"].Value = "Tenable Nessus Scanner";
+                sqliteCommand.Parameters["Source_Secondary_Identifier"].Value = "Assured Compliance Assessment Solution (ACAS)";
                 if (!string.IsNullOrWhiteSpace(acasVersion))
-                { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Version", acasVersion)); }
+                { sqliteCommand.Parameters["Source_Version"].Value = acasVersion; }
                 else
-                { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Version", "Version Unknown")); }
+                { sqliteCommand.Parameters["Source_Version"].Value = "Version Unknown"; }
                 if (!string.IsNullOrWhiteSpace(acasRelease))
-                { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", acasRelease)); }
+                { sqliteCommand.Parameters["Source_Release"].Value = acasRelease; }
                 else
-                { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", "Release Unknown")); }
+                { sqliteCommand.Parameters["Source_Release"].Value = "Release Unknown"; }
                 databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                 if (!sqliteCommand.Parameters["Source_Version"].Value.ToString().Equals("Version Unknown"))
                 { databaseInterface.UpdateVulnerabilitySource(sqliteCommand); }
@@ -653,13 +660,6 @@ namespace Vulnerator.Model.BusinessLogic
                 throw exception;
             }
         }
-
-        private void ClearGlobals()
-        {
-            cves.Clear();
-            cpes.Clear();
-            xrefs.Clear();
-    }
 
         private XmlReaderSettings GenerateXmlReaderSettings()
         {

@@ -127,7 +127,7 @@
     <value>INSERT INTO Groups VALUES (NULL, @Group_Name, 'False', NULL, NULL);</value>
   </data>
   <data name="InsertHardware" xml:space="preserve">
-    <value>INSERT INTO Hardware VALUES (NULL,@Host_Name,@FQDN,@NetBIOS,@Scan_IP, @Found_21745, @Found_26917,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,(SELECT LifecycleStatus_ID FROM LifecycleStatuses WHERE LifecycleStatus = 'Uncategorized'));</value>
+    <value>INSERT INTO Hardware VALUES (NULL,@Displayed_Host_Name, @Host_Name,@FQDN,@NetBIOS,@Scan_IP, @Found_21745, @Found_26917,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,(SELECT LifecycleStatus_ID FROM LifecycleStatuses WHERE LifecycleStatus = 'Uncategorized'));</value>
   </data>
   <data name="InsertIpAddress" xml:space="preserve">
     <value>INSERT INTO IP_Addresses VALUES (NULL, @IP_Address);</value>
@@ -135,7 +135,7 @@
   <data name="InsertMacAddress" xml:space="preserve">
     <value>INSERT INTO MAC_Addresses VALUES (NULL, @MAC_Address);</value>
   </data>
-  <data name="InsertPort" xml:space="preserve">
+  <data name="InsertPPS" xml:space="preserve">
     <value>INSERT INTO PPS VALUES (NULL, @Port, @Protocol);</value>
   </data>
   <data name="InsertScapScore" xml:space="preserve">
@@ -218,10 +218,10 @@
     <value>INSERT INTO SoftwareHardware VALUES ((SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP),@Install_Date  ,@ReportInAccreditation, @ApprovedForBaseline, @BaselineApprover);</value>
   </data>
   <data name="MapIpToHardware" xml:space="preserve">
-    <value>INSERT INTO HardwareIpAddresses VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), (SELECT IP_Address_ID FROM IP_Addresses WHERE IP_Address = @IP_Address));</value>
+    <value>INSERT INTO HardwareIpAddresses VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name), (SELECT IP_Address_ID FROM IP_Addresses WHERE IP_Address = @IP_Address));</value>
   </data>
   <data name="MapMacToHardware" xml:space="preserve">
-    <value>INSERT INTO HardwareMacAddresses VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), (SELECT MAC_Address_ID FROM MAC_Addresses WHERE MAC_Address = @MAC_Address));</value>
+    <value>INSERT INTO HardwareMacAddresses VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name), (SELECT MAC_Address_ID FROM MAC_Addresses WHERE MAC_Address = @MAC_Address));</value>
   </data>
   <data name="MapPortToHardware" xml:space="preserve">
     <value>INSERT INTO Hardware_PPS (Hardware_ID, PPS_ID) VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), (SELECT PPS_ID FROM PPS WHERE Port = @Port AND Protocol = @Protocol));</value>
@@ -284,7 +284,7 @@
     <value>SELECT Vulnerability_Version, Vulnerability_Release FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;</value>
   </data>
   <data name="SetCredentialedScanStatus" xml:space="preserve">
-    <value>UPDATE Hardware SET Found_21745 = @Found_21745, Found_26917 = @Found_26917 WHERE Scan_IP = @Scan_IP;</value>
+    <value>UPDATE Hardware SET Found_21745 = @Found_21745, Found_26917 = @Found_26917 WHERE Scan_IP = @Scan_IP AND Host_Name=@Host_Name;</value>
   </data>
   <data name="UpdateDeltaAnalysisFlag" xml:space="preserve">
     <value>UPDATE UniqueFindings SET Delta_Analysis_Required = 'True' WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier);</value>
