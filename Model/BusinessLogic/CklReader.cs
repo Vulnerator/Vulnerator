@@ -363,7 +363,7 @@ namespace Vulnerator.Model.BusinessLogic
                                         ruleRelease = rule.Split('r')[1];
                                         rule = rule.Split('r')[0];
                                     }
-                                    sqliteCommand.Parameters["Unique_Vulnerability-Identifier"].Value = rule;
+                                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = rule;
                                     sqliteCommand.Parameters["Vulnerability_Version"].Value = ruleRelease;
                                     break;
                                 }
@@ -462,6 +462,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 databaseInterface.MapVulnerabilityToCci(sqliteCommand);
                                 sqliteCommand.Parameters["CCI"].Value = string.Empty;
                             }
+                            ccis.Clear();
                         }
                         ParseUniqueFindingData(sqliteCommand, xmlReader);
                         foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
@@ -519,7 +520,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "SEVERITY_JUSTIFICATION":
                                 {
-                                    sqliteCommand.Parameters["Serverity_Override_Justification"].Value = ObtainCurrentNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["Severity_Override_Justification"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             default:

@@ -277,6 +277,29 @@
   <data name="RegexStigId" xml:space="preserve">
     <value>(?:(?:\w)+(?:-|\.|_)?)+</value>
   </data>
+  <data name="SelectGroupedPoamVulnerabilities" xml:space="preserve">
+    <value>SELECT
+    Unique_Vulnerability_Identifier,
+    Vulnerability_Title,
+    Vulnerability_Description,
+    Source_Name,
+    Source_Version,
+    Source_Release,
+    Raw_Risk,
+    GROUP_CONCAT(DISTINCT Scan_IP) AS IPs,
+    Control_Family || '-' || Control_Number || '.' || Enhancement AS NIST_Control
+FROM UniqueFindings
+NATURAL JOIN Vulnerabilities
+NATURAL JOIN Hardware
+NATURAL JOIN FindingTypes
+LEFT JOIN VulnerabilitesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitesCCIs.Vulnerability_ID
+LEFT JOIN CCIs ON VulnerabilitesCCIs.CCI_ID = CCIs.CCI_ID
+LEFT JOIN NistControlsCCIs ON CCIs.CCI_ID = NistControlsCCIs.CCI_ID
+LEFT JOIN NistControls ON NistControlsCCIs.NIST_Control_ID = NistControls.NIST_Control_ID
+LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
+LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID
+WHERE Finding_Type = 'ACAS'</value>
+  </data>
   <data name="SelectVulnerabilitySourceVersionAndRelease" xml:space="preserve">
     <value>SELECT Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Name = @Source_Name;</value>
   </data>

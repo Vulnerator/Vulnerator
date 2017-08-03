@@ -425,6 +425,30 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT
+        ///    Unique_Vulnerability_Identifier,
+        ///    Vulnerability_Title,
+        ///    Vulnerability_Description,
+        ///    Source_Name,
+        ///    Source_Version,
+        ///    Source_Release,
+        ///    Raw_Risk,
+        ///    GROUP_CONCAT(DISTINCT Scan_IP) AS IPs,
+        ///    Control_Family || &apos;-&apos; || Control_Number || &apos;.&apos; || Enhancement AS NIST_Control
+        ///FROM UniqueFindings
+        ///NATURAL JOIN Vulnerabilities
+        ///NATURAL JOIN Hardware
+        ///NATURAL JOIN FindingTypes
+        ///LEFT JOIN VulnerabilitesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitesCCIs.Vulnerability_ID
+        ///L [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SelectGroupedPoamVulnerabilities {
+            get {
+                return ResourceManager.GetString("SelectGroupedPoamVulnerabilities", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Name = @Source_Name;.
         /// </summary>
         internal static string SelectVulnerabilitySourceVersionAndRelease {

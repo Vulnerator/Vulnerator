@@ -33,7 +33,7 @@ namespace Vulnerator.Model.BusinessLogic
         private bool found21745 = false;
         private bool found26917 = false;
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
-        List<Tuple<string, string>> references = new List<Tuple<string, string>>();
+        List<VulnerabilityReference> references = new List<VulnerabilityReference>();
         private string[] persistentParameters = new string[] { "Group_Name", "Finding_Source_File_Name", "Source_Name", "Scan_IP", "Host_Name" };
 
         /// <summary>
@@ -300,22 +300,22 @@ namespace Vulnerator.Model.BusinessLogic
                                     string reference = ObtainCurrentNodeValue(xmlReader);
                                     string referenceType = reference.Split(':')[0].Trim();
                                     reference = reference.Split(':')[1].Trim();
-                                    references.Add(new Tuple<string, string>(referenceType, reference));
+                                    references.Add(new VulnerabilityReference(reference, referenceType));
                                     break;
                                 }
                             case "cve":
                                 {
-                                    references.Add(new Tuple<string, string>("CVE", ObtainCurrentNodeValue(xmlReader)));
+                                    references.Add(new VulnerabilityReference(ObtainCurrentNodeValue(xmlReader), "CVE"));
                                     break;
                                 }
                             case "cpe":
                                 {
-                                    references.Add(new Tuple<string, string>("CPE", ObtainCurrentNodeValue(xmlReader)));
+                                    references.Add(new VulnerabilityReference(ObtainCurrentNodeValue(xmlReader), "CPE"));
                                     break;
                                 }
                             case "bid":
                                 {
-                                    references.Add(new Tuple<string, string>("BID", ObtainCurrentNodeValue(xmlReader)));
+                                    references.Add(new VulnerabilityReference(ObtainCurrentNodeValue(xmlReader), "BID"));
                                     break;
                                 }
                             case "cvss_base_score":
@@ -360,10 +360,10 @@ namespace Vulnerator.Model.BusinessLogic
                         PrepareUniqueFinding(sqliteCommand);
                         if (Properties.Settings.Default.CaptureAcasReferenceInformation)
                         {
-                            foreach (Tuple<string, string> reference in references)
+                            foreach (VulnerabilityReference reference in references)
                             {
-                                sqliteCommand.Parameters["Reference"].Value = reference.Item2;
-                                sqliteCommand.Parameters["Reference_Type"].Value = reference.Item1;
+                                sqliteCommand.Parameters["Reference"].Value = reference.Reference;
+                                sqliteCommand.Parameters["Reference_Type"].Value = reference.ReferenceType;
                                 databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand);
                             }
                         }
@@ -633,7 +633,7 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["Delta_Analysis_Required"].Value = "False";
                 sqliteCommand.Parameters["Finding_Source_File_Name"].Value = fileName;
                 sqliteCommand.Parameters["Finding_Type"].Value = "ACAS";
-                databaseInterface.UpdateUniqueFinding(sqliteCommand);
+                //databaseInterface.UpdateUniqueFinding(sqliteCommand);
                 databaseInterface.InsertUniqueFinding(sqliteCommand);
             }
             catch (Exception exception)

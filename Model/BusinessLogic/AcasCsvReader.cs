@@ -28,7 +28,7 @@ namespace Vulnerator.Model.BusinessLogic
         private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private string[] persistentParameters = new string[] { "Group_Name", "Finding_Source_File_Name", "Source_Name" };
-        List<Tuple<string, string>> references = new List<Tuple<string, string>>();
+        List<VulnerabilityReference> references = new List<VulnerabilityReference>();
         private DatabaseInterface databaseInterface = new DatabaseInterface();
 
         /// <summary>
@@ -156,10 +156,10 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                                 if (Properties.Settings.Default.CaptureAcasReferenceInformation)
                                 {
-                                    foreach (Tuple<string, string> reference in references)
+                                    foreach (VulnerabilityReference reference in references)
                                     {
-                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Reference", reference.Item2));
-                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Reference_Type", reference.Item1));
+                                        sqliteCommand.Parameters["Reference"].Value = reference.Reference;
+                                        sqliteCommand.Parameters["Reference_Type"].Value = reference.ReferenceType;
                                         databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand);
                                     }
                                 }
@@ -187,13 +187,13 @@ namespace Vulnerator.Model.BusinessLogic
             { DatabaseBuilder.sqliteConnection.Close(); }
         }
 
-        private Tuple<string,string> SanitizeCrossReferences(string unsanitizedCrossReference)
+        private VulnerabilityReference SanitizeCrossReferences(string unsanitizedCrossReference)
         { 
             try
             {
                 string referenceType = unsanitizedCrossReference.Split('#')[0].Trim();
                 string reference = unsanitizedCrossReference.Split('#')[1].Trim();
-                return new Tuple<string, string>(referenceType, reference);
+                return new VulnerabilityReference(reference, referenceType);
             }
             catch (Exception exception)
             {
