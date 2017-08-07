@@ -289,9 +289,9 @@
     GROUP_CONCAT(DISTINCT Scan_IP) AS IPs,
     Control_Family || '-' || Control_Number || '.' || Enhancement AS NIST_Control
 FROM UniqueFindings
-NATURAL JOIN Vulnerabilities
-NATURAL JOIN Hardware
-NATURAL JOIN FindingTypes
+LEFT JOIN Vulnerabilities
+LEFT JOIN Hardware
+LEFT JOIN FindingTypes
 LEFT JOIN VulnerabilitesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitesCCIs.Vulnerability_ID
 LEFT JOIN CCIs ON VulnerabilitesCCIs.CCI_ID = CCIs.CCI_ID
 LEFT JOIN NistControlsCCIs ON CCIs.CCI_ID = NistControlsCCIs.CCI_ID

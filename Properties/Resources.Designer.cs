@@ -436,11 +436,11 @@ namespace Vulnerator.Properties {
         ///    GROUP_CONCAT(DISTINCT Scan_IP) AS IPs,
         ///    Control_Family || &apos;-&apos; || Control_Number || &apos;.&apos; || Enhancement AS NIST_Control
         ///FROM UniqueFindings
-        ///NATURAL JOIN Vulnerabilities
-        ///NATURAL JOIN Hardware
-        ///NATURAL JOIN FindingTypes
+        ///LEFT JOIN Vulnerabilities
+        ///LEFT JOIN Hardware
+        ///LEFT JOIN FindingTypes
         ///LEFT JOIN VulnerabilitesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitesCCIs.Vulnerability_ID
-        ///L [rest of string was truncated]&quot;;.
+        ///LEFT JOIN  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SelectGroupedPoamVulnerabilities {
             get {
