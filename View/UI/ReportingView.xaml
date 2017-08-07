@@ -27,11 +27,162 @@
         <Converters:BooleanToCollapsedConverter x:Key="CollapsedConverter" />
     </UserControl.Resources>
 
-    <Grid Background="{DynamicResource WindowBackgroundBrush}">
+    <!--<Grid Background="{DynamicResource WindowBackgroundBrush}">-->
+    <Grid Background="White">
         <ScrollViewer Margin="5"
-                      HorizontalScrollBarVisibility="Disabled"
+                      HorizontalScrollBarVisibility="Auto"
                       VerticalScrollBarVisibility="Auto">
-            <WrapPanel>
+            <Grid Height="Auto"
+                  VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <Label Style="{StaticResource TopLevelHeaderStyle}">
+                        <TextBlock Text="Select Reports"
+                                   TextTrimming="CharacterEllipsis" />
+                    </Label>
+                    <Label Style="{StaticResource SecondLevelHeaderStyle}">
+                        <TextBlock Text="Continuous Monitoring"
+                                   TextTrimming="CharacterEllipsis" />
+                    </Label>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <CheckBox x:Name="reportAssetOverviewCheckbox"
+                                  Grid.Row="0"
+                                  Grid.Column="0"
+                                  Margin="5,0,5,5"
+                                  Content="Asset Overview" />
+                        <CheckBox x:Name="reportPoamRarCheckbox"
+                                  Grid.Row="0"
+                                  Grid.Column="1"
+                                  Margin="5,0,5,5"
+                                  Content="POA&amp;M / RAR" />
+                        <CheckBox x:Name="reportPdfSummaryCheckbox"
+                                  Grid.Row="1"
+                                  Grid.Column="0"
+                                  Margin="5,0,5,5"
+                                  Content="PDF Summary" />
+                        <CheckBox x:Name="reportExcelSummaryCheckbox"
+                                  Grid.Row="1"
+                                  Grid.Column="1"
+                                  Margin="5,0,5,5"
+                                  Content="Excel Summary" />
+                        <CheckBox x:Name="reportOsBreakdownCheckbox"
+                                  Grid.Row="2"
+                                  Grid.Column="0"
+                                  Margin="5,0,5,5"
+                                  Content="OS Breakdown" />
+                        <CheckBox x:Name="reportUserBreakdownCheckbox"
+                                  Grid.Row="2"
+                                  Grid.Column="1"
+                                  Margin="5,0,5,5"
+                                  Content="User Breakdown" />
+                        <CheckBox x:Name="reportTestPlanCheckbox"
+                                  Grid.Row="3"
+                                  Grid.Column="0"
+                                  Margin="5,0,5,5"
+                                  Content="Test Plan" />
+                        <CheckBox x:Name="reportFindingTypeOverviewCheckbox"
+                                  Grid.Row="3"
+                                  Grid.Column="1"
+                                  Margin="5,0,5,5"
+                                  Content="Finding Type Overview" />
+                    </Grid>
+                    <Label Style="{StaticResource SecondLevelHeaderStyle}">
+                        <TextBlock Text="Configuration Management"
+                                   TextTrimming="CharacterEllipsis" />
+                    </Label>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <CheckBox x:Name="reportSoftwareListCheckbox"
+                                  Grid.Row="0"
+                                  Grid.Column="0"
+                                  Margin="5,0,5,5"
+                                  Content="Software List" />
+                        <CheckBox x:Name="reportHardwareListCheckbox"
+                                  Grid.Row="0"
+                                  Grid.Column="1"
+                                  Margin="5,0,5,5"
+                                  Content="Hardware List" />
+                        <CheckBox x:Name="reportHardwareContactsCheckbox"
+                                  Grid.Row="1"
+                                  Grid.Column="0"
+                                  Margin="5,0,5,5"
+                                  Content="POC Mapping (HW)" />
+                        <CheckBox x:Name="reportSoftwareContactsCheckbox"
+                                  Grid.Row="1"
+                                  Grid.Column="1"
+                                  Margin="5,0,5,5"
+                                  Content="POC Mapping (SW)" />
+                        <CheckBox x:Name="reportPpsCheckbox"
+                                  Grid.Row="2"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  Margin="5,0,5,5"
+                                  Content="Ports, Protocols, &amp; Services" />
+                    </Grid>
+                    <Label Style="{StaticResource SecondLevelHeaderStyle}">
+                        <TextBlock Text="RMF Package"
+                                   TextTrimming="CharacterEllipsis" />
+                    </Label>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <CheckBox x:Name="reportSpCheckbox"
+                                  Grid.Row="0"
+                                  Grid.Column="0"
+                                  Margin="5,0,5,5"
+                                  Content="Security Plan" />
+                        <CheckBox x:Name="reportSapCheckbox"
+                                  Grid.Row="0"
+                                  Grid.Column="1"
+                                  Margin="5,0,5,5"
+                                  Content="Security Assessment Plan" />
+                    </Grid>
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <Label Style="{StaticResource TopLevelHeaderStyle}">
+                        <TextBlock Text="Manipulate Data"
+                                   TextTrimming="CharacterEllipsis" />
+                    </Label>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <Label Style="{StaticResource TopLevelHeaderStyle}">
+                        <TextBlock Text="Export"
+                                   TextTrimming="CharacterEllipsis" />
+                    </Label>
+                </StackPanel>
+            </Grid>
+            <!--<WrapPanel>
                 <Expander Margin="5"
                           Background="{DynamicResource WindowBackgroundBrush}"
                           BorderThickness="0"
@@ -403,7 +554,7 @@
                         </Grid>
                     </StackPanel>
                 </Expander>
-            </WrapPanel>
+            </WrapPanel>-->
         </ScrollViewer>
     </Grid>
 </UserControl>
