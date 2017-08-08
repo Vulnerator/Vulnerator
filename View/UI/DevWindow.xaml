@@ -161,21 +161,12 @@
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                         <Controls:HamburgerMenuIconItem Label="RMF"
-                                                           Tag="{StaticResource rmfView}">
+                                                        Tag="{StaticResource rmfView}">
                             <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconMaterial HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
                                                             Kind="Certificate"
                                                             ToolTip="RMF" />
-                            </Controls:HamburgerMenuIconItem.Icon>
-                        </Controls:HamburgerMenuIconItem>
-                        <Controls:HamburgerMenuIconItem Label="Reporting"
-                                                           Tag="{StaticResource reportingView}">
-                            <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconFontAwesome HorizontalAlignment="Center"
-                                                               VerticalAlignment="Center"
-                                                               Kind="FilesOutline"
-                                                               ToolTip="Reporting" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                         <Controls:HamburgerMenuIconItem Label="Configuration Management"

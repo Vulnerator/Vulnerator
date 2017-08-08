@@ -20,47 +20,12 @@ namespace Vulnerator.Model.BusinessLogic
     /// </summary>
     class OpenXmlReportCreator
     {
-        #region Member Variables
-
-        private int IavmFilterOne { get { return int.Parse(ConfigAlter.ReadSettingsFromDictionary("iavmFilterOne")); } }
-        private int IavmFilterTwo { get { return int.Parse(ConfigAlter.ReadSettingsFromDictionary("iavmFilterTwo")); } }
-        private int IavmFilterThree { get { return int.Parse(ConfigAlter.ReadSettingsFromDictionary("iavmFilterThree")); } }
-        private int IavmFilterFour { get { return int.Parse(ConfigAlter.ReadSettingsFromDictionary("iavmFilterFour")); } }
-        private bool IncludeOngoingFindings { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbOpen")); } }
-        private bool IncludeCompletedFindings { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbCompleted")); } }
-        private bool IncludeNotApplicableFindings { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbNotApplicable")); } }
-        private bool IncludeNotReviewedFindings { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbNotReviewed")); } }
-        private bool IncludeCriticalFindings { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbCritical")); } }
-        private bool IncludeHighFindings { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbHigh")); } }
-        private bool IncludeMediumFindings { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbMedium")); } }
-        private bool IncludeLowFindings { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbLow")); } }
-        private bool IncludeInformationalFindings { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbInfo")); } }
-        private bool IncludCatIFindings { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbCatI")); } }
-        private bool IncludCatIIFindings { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbCatII")); } }
-        private bool IncludCatIIIFindings { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbCatIII")); } }
-        private bool IncludCatIVFindings { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbCatIV")); } }
-        private bool IsDiacapPackage { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbDiacap")); } }
-        private bool RevisionThreeSelected { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("revisionThreeRadioButton")); } }
-        private bool AssetOverviewTabIsNeeded { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbAssetOverview")); } }
-        private bool PoamAndRarTabsAreNeeded { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbPoamRar")); } }
-        private bool DiscrepanciesTabIsNeeded { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbDiscrepancies")); } }
-        private bool AcasOutputTabIsNeeded { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbAcasOutput")); } }
-        private bool StigDetailsTabIsNeeded { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbStigDetails")); } }
-        private bool FprDetailsTabIsNeeded { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbFprDetails")); } }
-        private bool AcasFindingsShouldBeMerged { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbMergeAcas")); } }
-        private bool CklFindingsShouldBeMerged { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbMergeCkl")); } }
-        private bool XccdfFindingsShouldBeMerged { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbMergeXccdf")); } }
-        private bool WasspFindingsShouldBeMerged { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbMergeWassp")); } }
-        private bool FprFindingsShouldBeMerged { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbMergeFpr")); } }
-        private bool UserRequiresComments { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbComments")); } }
-        private bool UserRequiresFindingDetails { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbFindingDetails")); } }
-        private bool TestPlanIsRequired { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbTestPlan")); } }
         private Dictionary<string, int> sharedStringDictionary = new Dictionary<string, int>();
         private int sharedStringMaxIndex = 0;
-        private string ContactOrganization = ConfigAlter.ReadSettingsFromDictionary("tbEmassOrg");
-        private string ContactName = ConfigAlter.ReadSettingsFromDictionary("tbEmassName");
-        private string ContactNumber = ConfigAlter.ReadSettingsFromDictionary("tbEmassNumber");
-        private string ContactEmail = ConfigAlter.ReadSettingsFromDictionary("tbEmassEmail");
+        private string ContactOrganization = Properties.Settings.Default.Organization;
+        private string ContactName = Properties.Settings.Default.Name;
+        private string ContactNumber = Properties.Settings.Default.Phone;
+        private string ContactEmail = Properties.Settings.Default.Email;
         private int poamRowCounterIndex = 1;
         private int assetOverviewRowCounterIndex = 1;
         private int testPlanRowCounterIndex = 1;
@@ -80,8 +45,6 @@ namespace Vulnerator.Model.BusinessLogic
         private OpenXmlWriter fprDetailsOpenXmlWriter;
         private OpenXmlWriter testPlanOpenXmlWriter;
 
-        #endregion Member Variables
-
         public string CreateExcelReport(string fileName)
         {
             try
@@ -96,7 +59,7 @@ namespace Vulnerator.Model.BusinessLogic
                     Sheets sheets = workbook.AppendChild(new Sheets());
                     StartSpreadsheets(workbookPart, sheets);
 
-                    if (AssetOverviewTabIsNeeded)
+                    if (false)
                     {
                         log.Info("Creating Asset Overview tab.");
                         if (CountVulnerabilitiesByFindingType("ACAS") > 0)
@@ -131,7 +94,7 @@ namespace Vulnerator.Model.BusinessLogic
                         }
                     }
 
-                    if (TestPlanIsRequired)
+                    if (false)
                     {
                         log.Info("Creating Test Plan tab.");
                         WriteTestPlanHeaderRowOne();
@@ -143,36 +106,36 @@ namespace Vulnerator.Model.BusinessLogic
                         ObtainTestPlanItems("FPR");
                     }
 
-                    if (PoamAndRarTabsAreNeeded)
+                    if (Properties.Settings.Default.ReportPoamRar)
                     {
                         log.Info("Creating POA&M and RAR tabs.");
-                        WriteFindingsToPoamAndRar("ACAS", AcasFindingsShouldBeMerged);
-                        WriteFindingsToPoamAndRar("CKL", CklFindingsShouldBeMerged);
-                        WriteFindingsToPoamAndRar("XCCDF", XccdfFindingsShouldBeMerged);
-                        WriteFindingsToPoamAndRar("WASSP", WasspFindingsShouldBeMerged);
-                        WriteFindingsToPoamAndRar("FPR", FprFindingsShouldBeMerged);
+                        WriteFindingsToPoamAndRar("ACAS", true);
+                        //WriteFindingsToPoamAndRar("CKL", true);
+                        //WriteFindingsToPoamAndRar("XCCDF", true);
+                        //WriteFindingsToPoamAndRar("WASSP", true);
+                        //WriteFindingsToPoamAndRar("FPR", true);
                     }
 
-                    if (AcasOutputTabIsNeeded)
+                    if (false)
                     {
                         log.Info("Creating ACAS Output tab.");
                         WriteIndividualAcasOutput();
                     }
 
-                    if (DiscrepanciesTabIsNeeded)
+                    if (false)
                     {
                         log.Info("Creating Discrepancies tab.");
                         WriteIndividualDiscrepancies();
                     }
 
-                    if (StigDetailsTabIsNeeded)
+                    if (false)
                     {
                         log.Info("Creating STIG Details tab.");
                         WriteStigDetailItems("CKL");
                         WriteStigDetailItems("XCCDF");
                     }
 
-                    if (FprDetailsTabIsNeeded)
+                    if (false)
                     {
                         log.Info("Creating Fortify Details tab.");
                         WriteFprDetailsItems("FPR");
@@ -197,22 +160,22 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                if (AssetOverviewTabIsNeeded)
+                if (false)
                 { StartAssetOverview(workbookPart, sheets); }
-                if (TestPlanIsRequired)
+                if (false)
                 { StartTestPlan(workbookPart, sheets); }
-                if (PoamAndRarTabsAreNeeded)
+                if (Properties.Settings.Default.ReportPoamRar)
                 {
                     StartPoam(workbookPart, sheets);
-                    StartRar(workbookPart, sheets);
+                    //StartRar(workbookPart, sheets);
                 }
-                if (AcasOutputTabIsNeeded)
+                if (false)
                 { StartAcasOutput(workbookPart, sheets); }
-                if (DiscrepanciesTabIsNeeded)
+                if (false)
                 { StartDiscrepancies(workbookPart, sheets); }
-                if (StigDetailsTabIsNeeded)
+                if (false)
                 { StartStigDetails(workbookPart, sheets); }
-                if (FprDetailsTabIsNeeded)
+                if (false)
                 { StartFprDetails(workbookPart, sheets); }
             }
             catch (Exception exception)
@@ -226,23 +189,20 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+                if (!DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
+                { DatabaseBuilder.sqliteConnection.Open(); }
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
-                    sqliteCommand.CommandText = SetSqliteCommandText(findingsAreMerged, findingType);
+                    sqliteCommand.CommandText = Properties.Resources.SelectGroupedPoamVulnerabilities;
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
                         while (sqliteDataReader.Read())
                         {
-                            if (sqliteDataReader["VulnId"].ToString().Equals("Plugin"))
-                            { continue; }
-                            if (!FilterBySeverity(sqliteDataReader["Impact"].ToString(), sqliteDataReader["RawRisk"].ToString()))
-                            { continue; }
-                            if (!FilterByStatus(sqliteDataReader["Status"].ToString()))
+                            if (sqliteDataReader["Unique_Vulnerability_Identifier"].ToString().Equals("Plugin"))
                             { continue; }
 
                             WriteFindingToPoam(sqliteDataReader);
-                            WriteFindingToRar(sqliteDataReader);
+                            //WriteFindingToRar(sqliteDataReader);
                         }
                     }
                 }
@@ -252,28 +212,30 @@ namespace Vulnerator.Model.BusinessLogic
                 log.Error("Unable to write findings to the POA&M and/or RAR tab(s).");
                 throw exception;
             }
+            finally
+            { DatabaseBuilder.sqliteConnection.Close(); }
         }
 
         private void EndSpreadsheets()
         {
             try
             {
-                if (AssetOverviewTabIsNeeded)
+                if (false)
                 { EndAssetOverview(); }
-                if (TestPlanIsRequired)
+                if (false)
                 { EndTestPlan(); }
-                if (PoamAndRarTabsAreNeeded)
+                if (Properties.Settings.Default.ReportPoamRar)
                 {
                     EndPoam();
-                    EndRar();
+                    //EndRar();
                 }
-                if (AcasOutputTabIsNeeded)
+                if (false)
                 { EndAcasOutput(); }
-                if (DiscrepanciesTabIsNeeded)
+                if (false)
                 { EndDiscrepancies(); }
-                if (StigDetailsTabIsNeeded)
+                if (false)
                 { EndStigDetails(); }
-                if (FprDetailsTabIsNeeded)
+                if (false)
                 { EndFprDetails(); }
             }
             catch (Exception exception)
@@ -850,62 +812,49 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                //MitigationItem mitigation = mitigationList.FirstOrDefault(
-                //    x => x.MitigationGroupName.Equals(sqliteDataReader["GroupName"].ToString()) &&
-                //        x.MitigationVulnerabilityId.Equals(sqliteDataReader["VulnId"].ToString()));
 
-                //if (mitigation != null)
-                //{
-                //    if (!FilterByStatus(mitigation.MitigationStatus))
-                //    { return; }
-                //}
-                if (!FilterByStatus(sqliteDataReader["Status"].ToString()))
-                { return; }
 
                 poamOpenXmlWriter.WriteStartElement(new Row());
                 WriteCellValue(poamOpenXmlWriter, poamRowCounterIndex.ToString(), 16);
 
-                string descriptionCellValue = "Title: " + Environment.NewLine + sqliteDataReader["VulnTitle"].ToString() + doubleCarriageReturn +
-                    "Description: " + Environment.NewLine + sqliteDataReader["Description"].ToString() + doubleCarriageReturn +
-                    "Devices Affected:" + Environment.NewLine + sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine);
+                string descriptionCellValue = "Title: " + Environment.NewLine + sqliteDataReader["Vulnerability_Title"].ToString() + doubleCarriageReturn +
+                    "Description: " + Environment.NewLine + sqliteDataReader["Vulnerability_Description"].ToString() + doubleCarriageReturn +
+                    "Devices Affected:" + Environment.NewLine + sqliteDataReader["IPs"].ToString().Replace(",", Environment.NewLine);
 
                 WriteCellValue(
                     poamOpenXmlWriter,
                     LargeCellValueHandler(
                         descriptionCellValue,
-                        sqliteDataReader["VulnId"].ToString(),
-                        sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine),
+                        sqliteDataReader["Unique_vulnerability_Identifier"].ToString(),
+                        sqliteDataReader["IPs"].ToString().Replace(",", Environment.NewLine),
                         "Description"
                     ), 
                     20);
-                if (IsDiacapPackage)
-                { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["IaControl"].ToString(), 24); }
+                if (false)
+                { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["NIST_Control"].ToString(), 24); }
                 else
                 {
-                    if (!string.IsNullOrWhiteSpace(sqliteDataReader["NistControl"].ToString()))
-                    { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["NistControl"].ToString(), 24); }
-                    else if (!string.IsNullOrWhiteSpace(sqliteDataReader["IaControl"].ToString()))
-                    { WriteCellValue(poamOpenXmlWriter, ConvertDiacapToRmf(sqliteDataReader["IaControl"].ToString()), 24); }
+                    if (!string.IsNullOrWhiteSpace(sqliteDataReader["NIST_Control"].ToString()))
+                    { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["NIST_Control"].ToString(), 24); }
+                    else if (!string.IsNullOrWhiteSpace(sqliteDataReader["NIST_Control"].ToString()))
+                    { WriteCellValue(poamOpenXmlWriter, "", 24); }
                     else
                     { WriteCellValue(poamOpenXmlWriter, string.Empty, 24); }
                 }
                 WriteCellValue(poamOpenXmlWriter, ContactOrganization + ", " + ContactName + ", " + ContactNumber + ", " + ContactEmail, 20);
-                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["VulnId"].ToString(), 24);
-                if (!string.IsNullOrWhiteSpace(sqliteDataReader["RawRisk"].ToString()))
-                { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["RawRisk"].ToString(), 24); }
-                else
-                { WriteCellValue(poamOpenXmlWriter, ConvertAcasSeverityToDisaCategory(sqliteDataReader["Impact"].ToString()), 24); }
+                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Unique_Vulnerability_Identifier"].ToString(), 24);
+                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Raw_Risk"].ToString(), 24);
                 if (/*mitigation != null*/ false)
                 { /*WriteCellValue(poamOpenXmlWriter, mitigation.MitigationText, 20);*/ }
                 else
                 {
                     string mitigationText = string.Empty;
-                    if (UserRequiresComments)
+                    if (true)
                     { mitigationText = sqliteDataReader["Comments"].ToString(); }
-                    if (UserRequiresFindingDetails)
+                    if (true)
                     {
                         if (string.IsNullOrWhiteSpace(mitigationText))
-                        { mitigationText = sqliteDataReader["FindingDetails"].ToString(); }
+                        { mitigationText = sqliteDataReader["Finding_Details"].ToString(); }
                         else
                         { mitigationText += doubleCarriageReturn + sqliteDataReader["FindingDetails"].ToString(); }
                     }
@@ -913,8 +862,8 @@ namespace Vulnerator.Model.BusinessLogic
                         poamOpenXmlWriter,
                         LargeCellValueHandler(
                             mitigationText,
-                            sqliteDataReader["VulnId"].ToString(),
-                            sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine),
+                            sqliteDataReader["Unique_Vulnerability_Identifier"].ToString(),
+                            sqliteDataReader["IPs"].ToString().Replace(",", Environment.NewLine),
                             "Mitigation"
                         ), 
                         20);
@@ -924,23 +873,13 @@ namespace Vulnerator.Model.BusinessLogic
                 WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
                 WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
                 WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-                if (sqliteDataReader["FindingType"].ToString().Equals("WASSP"))
-                { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Source"].ToString(), 24); }
-                else if (!sqliteDataReader["FindingType"].ToString().Equals("ACAS"))
-                {
-                    WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Source"].ToString() + " :: " +
-                        sqliteDataReader["Version"].ToString() + sqliteDataReader["Release"].ToString(), 24);
-                }
-                else
-                {
-                    WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Source"].ToString() + " :: " +
-                        sqliteDataReader["Version"].ToString() + "." + sqliteDataReader["Release"].ToString(), 24);
-                }
+                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Source_Name"].ToString() + " :: " +
+                        sqliteDataReader["Source_Version"].ToString() + "." + sqliteDataReader["Source_Release"].ToString(), 24);
                 if (/*mitigation != null*/ false)
                 { /*WriteCellValue(poamOpenXmlWriter, mitigation.MitigationStatus, 24);*/ }
                 else
                 { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24); }
-                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine), 20);
+                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["IPs"].ToString().Replace(",", Environment.NewLine), 20);
                 poamOpenXmlWriter.WriteEndElement();
                 poamRowCounterIndex++;
             }
@@ -1106,14 +1045,14 @@ namespace Vulnerator.Model.BusinessLogic
 
                 rarOpenXmlWriter.WriteStartElement(new Row());
                 WriteCellValue(rarOpenXmlWriter, string.Empty, 0);
-                if (IsDiacapPackage)
+                if (false)
                 { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["IaControl"].ToString(), 24); }
                 else
                 {
                     if (!string.IsNullOrWhiteSpace(sqliteDataReader["NistControl"].ToString()))
                     { WriteCellValue(rarOpenXmlWriter, sqliteDataReader["NistControl"].ToString(), 24); }
                     else if (!string.IsNullOrWhiteSpace(sqliteDataReader["IaControl"].ToString()))
-                    { WriteCellValue(rarOpenXmlWriter, ConvertDiacapToRmf(sqliteDataReader["IaControl"].ToString()), 24); }
+                    { WriteCellValue(rarOpenXmlWriter, "", 24); }
                     else
                     { WriteCellValue(rarOpenXmlWriter, string.Empty, 24); }
                 }
@@ -1144,9 +1083,9 @@ namespace Vulnerator.Model.BusinessLogic
                 else
                 {
                     string mitigationText = string.Empty;
-                    if (UserRequiresComments)
+                    if (true)
                     { mitigationText = sqliteDataReader["Comments"].ToString(); }
-                    if (UserRequiresFindingDetails)
+                    if (true)
                     {
                         if (!string.IsNullOrWhiteSpace(mitigationText))
                         { mitigationText = mitigationText + doubleCarriageReturn + sqliteDataReader["FindingDetails"].ToString(); }
@@ -2301,93 +2240,6 @@ namespace Vulnerator.Model.BusinessLogic
 
         #region Data Preparation
 
-        private bool FilterBySeverity(string impact, string rawRisk)
-        {
-            try
-            {
-                bool riskFactorMatch = true;
-                bool stigSeverityMatch = true;
-                bool riskFactorToStigSeverityCrossRef = true;
-                if (!string.IsNullOrWhiteSpace(impact))
-                {
-                    switch (impact)
-                    {
-                        case "Critical":
-                            { riskFactorMatch = IncludeCriticalFindings; riskFactorToStigSeverityCrossRef = IncludCatIFindings; break; }
-                        case "High":
-                            { riskFactorMatch = IncludeHighFindings; riskFactorToStigSeverityCrossRef = IncludCatIFindings; break; }
-                        case "Medium":
-                            { riskFactorMatch = IncludeMediumFindings; riskFactorToStigSeverityCrossRef = IncludCatIIFindings; break; }
-                        case "Low":
-                            { riskFactorMatch = IncludeLowFindings; riskFactorToStigSeverityCrossRef = IncludCatIIIFindings; break; }
-                        case "Informational":
-                            { riskFactorMatch = IncludeInformationalFindings; riskFactorToStigSeverityCrossRef = IncludCatIVFindings; break; }
-                        default:
-                            { break; }
-                    }
-                }
-                if (!string.IsNullOrWhiteSpace(rawRisk))
-                {
-                    switch (rawRisk)
-                    {
-                        case "I":
-                            { stigSeverityMatch = IncludCatIFindings; break; }
-                        case "II":
-                            { stigSeverityMatch = IncludCatIIFindings; break; }
-                        case "III":
-                            { stigSeverityMatch = IncludCatIIIFindings; break; }
-                        case "IV":
-                            { stigSeverityMatch = IncludCatIVFindings; break; }
-                        default:
-                            { break; }
-                    }
-                }
-                if (!riskFactorMatch || !stigSeverityMatch || !riskFactorToStigSeverityCrossRef)
-                { return false; }
-                else
-                { return true; }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to filter Excel report results by severity value.");
-                throw exception;
-            }
-        }
-
-        private bool FilterByStatus(string status)
-        {
-            try
-            {
-                bool severityMatch = true;
-                switch (status)
-                {
-                    case "Ongoing":
-                        { severityMatch = IncludeOngoingFindings; break; }
-                    case "Completed":
-                        { severityMatch = IncludeCompletedFindings; break; }
-                    case "Not Reviewed":
-                        { severityMatch = IncludeNotReviewedFindings; break; }
-                    case "Not Applicable":
-                        { severityMatch = IncludeNotApplicableFindings; break; }
-                    case "Unknown":
-                        { break; }
-                    case "Undetermined":
-                        { break; }
-                    default:
-                        { break; }
-                }
-                if (!severityMatch)
-                { return false; }
-                else
-                { return true; }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to filter Excel report by status value.");
-                throw exception;
-            }
-        }
-
         private string ConvertAcasSeverityToDisaCategory(string acasSeverity)
         {
             try
@@ -2431,30 +2283,6 @@ namespace Vulnerator.Model.BusinessLogic
                     { return "VL"; }
                 default:
                     { return "Unknown"; }
-            }
-        }
-
-        private string CompareIavmAgeToUserSettings(string iavmAge)
-        {
-            try
-            {
-                int iavmAgeAsInt = int.Parse(iavmAge);
-
-                if (iavmAgeAsInt > IavmFilterFour)
-                { return "> " + IavmFilterFour.ToString() + " Days"; }
-                else if (iavmAgeAsInt > IavmFilterThree)
-                { return "> " + IavmFilterThree.ToString() + " Days"; }
-                else if (iavmAgeAsInt > IavmFilterTwo)
-                { return "> " + IavmFilterTwo.ToString() + " Days"; }
-                else if (iavmAgeAsInt > IavmFilterOne)
-                { return "> " + IavmFilterOne.ToString() + " Days"; }
-                else
-                { return "< " + IavmFilterOne.ToString() + " Days"; }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to compare IAVM age to user settings.");
-                throw exception;
             }
         }
 
@@ -2781,58 +2609,6 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 log.Error("Unable to set credentialed string for Excel report.");
-                throw exception;
-            }
-        }
-
-        private string ConvertDiacapToRmf(string diacapControls)
-        {
-            try
-            {
-                string nistControls = string.Empty;
-                if (diacapControls.Contains(','))
-                {
-                    string[] diacapControlArray = diacapControls.Split(',').ToArray();
-
-                    foreach (string control in diacapControlArray)
-                    {
-                        string value;
-                        if (RevisionThreeSelected && DiacapToRmf.RevisionThree.TryGetValue(control, out value))
-                        { nistControls = nistControls + value + Environment.NewLine; }
-                        else if (DiacapToRmf.RevisionFour.TryGetValue(control, out value))
-                        { nistControls = nistControls + value + Environment.NewLine; }
-                    }
-                }
-                else
-                {
-                    string value;
-                    if (RevisionThreeSelected && DiacapToRmf.RevisionThree.TryGetValue(diacapControls, out value))
-                    { nistControls = nistControls + value + Environment.NewLine; }
-                    else if (DiacapToRmf.RevisionFour.TryGetValue(diacapControls, out value))
-                    { nistControls = nistControls + value + Environment.NewLine; }
-                }
-                return nistControls;
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to convert DIACAP control(s) " + diacapControls + " to NIST control(s).");
-                throw exception;
-            }
-        }
-
-        private void AddIavmsToObservableCollection(AsyncObservableCollection<Iavm> iavmList, DataRow acasFindingRow)
-        {
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(acasFindingRow["IavmNumber"].ToString()))
-                {
-                    iavmList.Add(new Iavm(false, acasFindingRow["IavmNumber"].ToString(), acasFindingRow["VulnId"].ToString(), acasFindingRow["VulnTitle"].ToString(),
-                        acasFindingRow["HostName"].ToString(), CompareIavmAgeToUserSettings(acasFindingRow["Age"].ToString()), acasFindingRow["SystemName"].ToString()));
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to add IAVM to ObservableCollection.");
                 throw exception;
             }
         }

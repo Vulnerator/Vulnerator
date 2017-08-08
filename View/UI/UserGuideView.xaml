@@ -36,7 +36,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Expander Grid.Column="0"
-                  Margin="5,5,0,5"
+                  Margin="5,10,0,0"
                   Background="{DynamicResource WindowBackgroundBrush}"
                   BorderThickness="0"
                   ExpandDirection="Right"

@@ -431,16 +431,15 @@ namespace Vulnerator.Properties {
         ///    Vulnerability_Description,
         ///    Source_Name,
         ///    Source_Version,
-        ///    Source_Release,
-        ///    Raw_Risk,
+        ///    Source_Release, Comments, Finding_Details, Finding_Type,
+        ///    Raw_Risk, Status,
         ///    GROUP_CONCAT(DISTINCT Scan_IP) AS IPs,
         ///    Control_Family || &apos;-&apos; || Control_Number || &apos;.&apos; || Enhancement AS NIST_Control
         ///FROM UniqueFindings
         ///LEFT JOIN Vulnerabilities
         ///LEFT JOIN Hardware
         ///LEFT JOIN FindingTypes
-        ///LEFT JOIN VulnerabilitesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitesCCIs.Vulnerability_ID
-        ///LEFT JOIN  [rest of string was truncated]&quot;;.
+        ///LEFT JOIN VulnerabilitesCCIs ON Vulnerabilities.Vulnerability_ID  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SelectGroupedPoamVulnerabilities {
             get {

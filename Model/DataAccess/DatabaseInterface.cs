@@ -547,12 +547,14 @@ namespace Vulnerator.Model.DataAccess
                     "Vulnerability_Title", "Vulnerability_Description", "Risk_Statement", "Fix_Text", "Published_Date", "Modified_Date",
                     "Fix_Published_Date", "Raw_Risk", "CVSS_Base_Score", "CVSS_Base_Vector", "CVSS_Temporal_Score", "CVSS_Temporal_Vector",
                     "Check_Content", "False_Positives", "False_Negatives", "Documentable", "Mitigations", "Mitigation_Control",
-                    "Potential_Impacts", "Third_Party_Tools", "Security_Override_Guidance", "Overflow",
+                    "Potential_Impacts", "Third_Party_Tools", "Security_Override_Guidance", "Overflow", "Severity_Override_Guidance",
                     // VulnerabilityReferences Table
                     "Reference_ID", "Reference", "Reference_Type",
                     // VulnerabilitySources Table
                     "Vulnerability_Source_ID", "Source_Name", "Source_Secondary_Identifier", "Vulnerability_Source_File_Name",
-                    "Source_Description", "Source_Version", "Source_Release"
+                    "Source_Description", "Source_Version", "Source_Release",
+                    // ScapScores Table
+                    "Score", "Scan_Date"
                 };
                 foreach (string parameter in parameters)
                 { sqliteCommand.Parameters.Add(new SQLiteParameter(parameter, string.Empty)); }

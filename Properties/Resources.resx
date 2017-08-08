@@ -284,8 +284,8 @@
     Vulnerability_Description,
     Source_Name,
     Source_Version,
-    Source_Release,
-    Raw_Risk,
+    Source_Release, Comments, Finding_Details, Finding_Type,
+    Raw_Risk, Status,
     GROUP_CONCAT(DISTINCT Scan_IP) AS IPs,
     Control_Family || '-' || Control_Number || '.' || Enhancement AS NIST_Control
 FROM UniqueFindings
@@ -298,7 +298,7 @@ LEFT JOIN NistControlsCCIs ON CCIs.CCI_ID = NistControlsCCIs.CCI_ID
 LEFT JOIN NistControls ON NistControlsCCIs.NIST_Control_ID = NistControls.NIST_Control_ID
 LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
 LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID
-WHERE Finding_Type = 'ACAS'</value>
+WHERE Finding_Type = 'ACAS' GROUP BY Unique_Vulnerability_Identifier</value>
   </data>
   <data name="SelectVulnerabilitySourceVersionAndRelease" xml:space="preserve">
     <value>SELECT Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Name = @Source_Name;</value>
