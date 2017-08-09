@@ -413,7 +413,6 @@ CREATE TABLE FindingTypes
 	 Finding_Type_ID INTEGER PRIMARY KEY , 
 	 Finding_Type NVARCHAR (25) NOT NULL 
 	);
-CREATE INDEX FindingTypeIndex ON FindingTypes(Finding_Type);
 CREATE TABLE FISMA 
 	(
 	 FISMA_ID INTEGER PRIMARY KEY , 
@@ -444,7 +443,6 @@ CREATE TABLE Groups
 	 Accreditation_ID INTEGER , 
 	 Organization_ID INTEGER 
 	);
-CREATE INDEX GroupIndex ON Groups(Group_Name);
 CREATE TABLE Groups_MitigationsOrConditions 
 	(
 	 MitigationOrCondition_ID INTEGER NOT NULL , 
@@ -480,7 +478,6 @@ CREATE TABLE Hardware
 	 FOREIGN KEY (LifecycleStatus_ID) REFERENCES LifecycleStatuses(LifecycleStatus_ID),
 	 UNIQUE (Scan_IP, Host_Name, FQDN, NetBIOS) ON CONFLICT IGNORE
 	);
-CREATE INDEX HardwareIndex ON Hardware(Host_Name, FQDN, NetBIOS);
 CREATE TABLE Hardware_MitigationsOrConditions 
 	(
 	 Hardware_ID INTEGER NOT NULL , 
@@ -617,7 +614,6 @@ CREATE TABLE IP_Addresses
 	 IP_Address_ID INTEGER PRIMARY KEY , 
 	 IP_Address NVARCHAR (25) NOT NULL UNIQUE ON CONFLICT IGNORE 
 	);
-CREATE INDEX IP_Address_Index ON IP_Addresses(IP_Address);
 CREATE TABLE JointAuthorizationOrganizations 
 	(
 	 JointOrganization_ID INTEGER PRIMARY KEY , 
@@ -660,7 +656,6 @@ CREATE TABLE MAC_Addresses
 	  MAC_Address_ID INTEGER PRIMARY KEY ,
 	  MAC_Address NVARCHAR (50) NOT NULL UNIQUE ON CONFLICT IGNORE
 	);
-CREATE INDEX MAC_Address_Index ON MAC_Addresses(MAC_Address);
 CREATE TABLE MedicalTechnologies 
 	(
 	 MedicalTechnology_ID INTEGER PRIMARY KEY , 
@@ -848,7 +843,6 @@ CREATE TABLE PPS
 	 Protocol NVARCHAR (25) NOT NULL ,
 	 UNIQUE (Port, Protocol) ON CONFLICT IGNORE
 	);
-CREATE INDEX PPS_Index ON PPS(Port,Protocol);
 CREATE TABLE RelatedDocuments 
 	(
 	 RelatedDocument_ID INTEGER PRIMARY KEY , 
@@ -996,7 +990,6 @@ CREATE TABLE Software
 	 BaselineApprover_Global NVARCHAR (50) , 
 	 Instance NVARCHAR (25)
 	);
-CREATE INDEX Software_Index ON Software(Discovered_Software_Name);
 CREATE TABLE Software_DADMS_Networks 
 	(
 	 Software_ID INTEGER NOT NULL , 
@@ -1231,7 +1224,6 @@ CREATE TABLE UniqueFindingsSourceFiles
 	 Finding_Source_File_ID INTEGER PRIMARY KEY , 
 	 Finding_Source_File_Name NVARCHAR (500) NOT NULL UNIQUE ON CONFLICT IGNORE 
 	);
-CREATE INDEX Finding_Source_File_Index ON UniqueFindingsSourceFiles(Finding_Source_File_Name);
 CREATE TABLE UserCategories 
 	(
 	 UserCategory_ID INTEGER PRIMARY KEY , 
@@ -1247,7 +1239,7 @@ CREATE TABLE UtilityDistribution
 	 DamageControlMonitoring NVARCHAR (5) NOT NULL ,
 	 FOREIGN KEY (UtilityDistribution_ID) REFERENCES PIT_Determination(UtilityDistribution_ID)
 	);
-CREATE TABLE VulnerabilitesCCIs 
+CREATE TABLE VulnerabilitiesCCIs 
 	(
 	 Vulnerability_ID INTEGER NOT NULL , 
 	 CCI_ID INTEGER NOT NULL ,
@@ -1255,7 +1247,7 @@ CREATE TABLE VulnerabilitesCCIs
 	 FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
 	 FOREIGN KEY (CCI_ID) REFERENCES CCIs(CCI_ID)
 	);
-CREATE TABLE Vulnerabilites_IA_Controls 
+CREATE TABLE Vulnerabilities_IA_Controls 
 	(
 	 Vulnerability_ID INTEGER NOT NULL , 
 	 IA_Control_ID INTEGER NOT NULL ,
@@ -1295,7 +1287,6 @@ CREATE TABLE Vulnerabilities
 	 Security_Override_Guidance NVARCHAR (2000) ,
 	 Overflow NVARCHAR (2000)
 	);
-CREATE INDEX Vulnerability_Index ON Vulnerabilities(Unique_Vulnerability_Identifier);
 CREATE TABLE Vulnerabilities_RoleResponsibilities
 	(
 	  Vulnerability_ID INTEGER NOT NULL ,
@@ -1326,7 +1317,6 @@ CREATE TABLE VulnerabilityReferences
 		Reference_Type NVARCHAR (10),
 		UNIQUE (Reference, Reference_Type) ON CONFLICT IGNORE
 	);
-CREATE INDEX Vulnerability_Reference_Index ON VulnerabilityReferences(Reference, Reference_Type);
 CREATE TABLE VulnerabilitySources 
 	(
 	 Vulnerability_Source_ID INTEGER PRIMARY KEY , 
@@ -1338,7 +1328,6 @@ CREATE TABLE VulnerabilitySources
 	 Source_Release NVARCHAR (25) NOT NULL, 
 	 UNIQUE (Source_Name, Source_Version, Source_Release) ON CONFLICT IGNORE
 	);
-CREATE INDEX Vulnerability_Source_Index ON VulnerabilitySources(Source_Name, Source_Version, Source_Release);
 CREATE TABLE VulnerabilitySourcesSoftware 
 	(
 	 Source_ID INTEGER NOT NULL , 

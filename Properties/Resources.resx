@@ -292,13 +292,16 @@ FROM UniqueFindings
 LEFT JOIN Vulnerabilities
 LEFT JOIN Hardware
 LEFT JOIN FindingTypes
-LEFT JOIN VulnerabilitesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitesCCIs.Vulnerability_ID
-LEFT JOIN CCIs ON VulnerabilitesCCIs.CCI_ID = CCIs.CCI_ID
+LEFT JOIN VulnerabilitesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesCCIs.Vulnerability_ID
+LEFT JOIN CCIs ON VulnerabilitiesCCIs.CCI_ID = CCIs.CCI_ID
 LEFT JOIN NistControlsCCIs ON CCIs.CCI_ID = NistControlsCCIs.CCI_ID
 LEFT JOIN NistControls ON NistControlsCCIs.NIST_Control_ID = NistControls.NIST_Control_ID
 LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
 LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID
 WHERE Finding_Type = 'ACAS' GROUP BY Unique_Vulnerability_Identifier</value>
+  </data>
+  <data name="SelectIndexes" xml:space="preserve">
+    <value>SELECT name FROM sqlite_master WHERE type == 'index';</value>
   </data>
   <data name="SelectVulnerabilitySourceVersionAndRelease" xml:space="preserve">
     <value>SELECT Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Name = @Source_Name;</value>

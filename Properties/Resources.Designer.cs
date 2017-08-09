@@ -448,6 +448,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT name FROM sqlite_master WHERE type == &apos;index&apos;;.
+        /// </summary>
+        internal static string SelectIndexes {
+            get {
+                return ResourceManager.GetString("SelectIndexes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Name = @Source_Name;.
         /// </summary>
         internal static string SelectVulnerabilitySourceVersionAndRelease {

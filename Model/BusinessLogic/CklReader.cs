@@ -28,7 +28,7 @@ namespace Vulnerator.Model.BusinessLogic
         private string classification = string.Empty;
         private List<string> ccis = new List<string>();
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
-        private string[] persistentParameters = new string[] { "Group_Name", "Finding_Source_File_Name", "Source_Name" };
+        private string[] persistentParameters = new string[] { "Group_Name", "Finding_Source_File_Name", "Source_Name", "Source_Version", "Source_Release" };
 
         /// <summary>
         /// Reads *.ckl files exported from the DISA STIG Viewer and writes the results to the appropriate DataTables.
@@ -454,6 +454,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         databaseInterface.UpdateVulnerability(sqliteCommand);
                         databaseInterface.InsertVulnerability(sqliteCommand);
+                        databaseInterface.MapVulnerabilityToSource(sqliteCommand);
                         if (ccis.Count > 0)
                         {
                             foreach (string cci in ccis)
