@@ -11,6 +11,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using Vulnerator.Model.BusinessLogic;
+using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Object;
 using Vulnerator.ViewModel.ViewModelHelper;
 
@@ -22,6 +23,7 @@ namespace Vulnerator.ViewModel
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private BackgroundWorker backgroundWorker;
         private GuiFeedback guiFeedback = new GuiFeedback();
+        private DatabaseInterface databaseInterface = new DatabaseInterface();
 
         private string stigLibraryLocation;
         public string StigLibraryLocation
@@ -176,9 +178,9 @@ namespace Vulnerator.ViewModel
                     NoLibraryVisibility = "Collapsed";
                     IngestionErrorVisibility = "Collapsed";
                     IngestionSuccessVisibility = "Collapsed";
-
+                    databaseInterface.DropVulnerabilityRelatedIndices();
                     ParseZip(StigLibraryLocation);
-
+                    databaseInterface.CreateVulnerabilityRelatedIndices();
                     guiFeedback.SetFields("Awaiting user input", "Collapsed", true);
                     Properties.Settings.Default.StigLibraryIngestDate = DateTime.Now.ToLongDateString();
                     Messenger.Default.Send(guiFeedback);

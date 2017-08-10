@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Vulnerator.Model.Object;
 
@@ -26,7 +28,7 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public void InsertGroup(SQLiteCommand sqliteCommand, File file)
+        public void InsertGroup(SQLiteCommand sqliteCommand, Object.File file)
         {
             try
             {
@@ -46,7 +48,7 @@ namespace Vulnerator.Model.DataAccess
             }
         }
         
-        public void InsertParsedFile(SQLiteCommand sqliteCommand, File file)
+        public void InsertParsedFile(SQLiteCommand sqliteCommand, Object.File file)
         {
             try
             {
@@ -577,6 +579,103 @@ namespace Vulnerator.Model.DataAccess
             {
                 log.Error(string.Format("Unable to set the credentialed scan status for \"{0}\".", 
                     sqliteCommand.Parameters["Scan-IP"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        public void DropVulnerabilityRelatedIndices()
+        { 
+            try
+            {
+                if (!DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
+                { DatabaseBuilder.sqliteConnection.Open(); }
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.CommandText = "PRAGMA user_version";
+                    int latestVersion = int.Parse(sqliteCommand.ExecuteScalar().ToString());
+                    for (int i = 0; i <= latestVersion; i++)
+                    {
+                        switch (i)
+                        {
+                            case 0:
+                                {
+                                    sqliteCommand.CommandText = ReadDdl("Vulnerator.Resources.DdlFiles.v6-2-0_DropVulnerabilityRelatedIndices.ddl");
+                                    break;
+
+                                }
+                            default:
+                                { break; }
+                        }
+                        if (sqliteCommand.CommandText.Equals(string.Empty))
+                        { return; }
+                        sqliteCommand.ExecuteNonQuery();
+                        sqliteCommand.CommandText = string.Empty;
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to drop vulnerability related indices."));
+                throw exception;
+            }
+            finally
+            { DatabaseBuilder.sqliteConnection.Close(); }
+        }
+
+        public void CreateVulnerabilityRelatedIndices()
+        {
+            try
+            {
+                if (!DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
+                { DatabaseBuilder.sqliteConnection.Open(); }
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.CommandText = "PRAGMA user_version";
+                    int latestVersion = int.Parse(sqliteCommand.ExecuteScalar().ToString());
+                    for (int i = 0; i <= latestVersion; i++)
+                    {
+                        switch (i)
+                        {
+                            case 0:
+                                {
+                                    sqliteCommand.CommandText = ReadDdl("Vulnerator.Resources.DdlFiles.v6-2-0_CreateVulnerabilityRelatedIndices.ddl");
+                                    break;
+                                }
+                            default:
+                                { break; }
+                        }
+                        if (sqliteCommand.CommandText.Equals(string.Empty))
+                        { return; }
+                        sqliteCommand.ExecuteNonQuery();
+                        sqliteCommand.CommandText = string.Empty;
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to create vulnerability related indices."));
+                throw exception;
+            }
+            finally
+            { DatabaseBuilder.sqliteConnection.Close(); }
+        }
+
+        private string ReadDdl(string ddlResourceFile)
+        {
+            try
+            {
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                string ddlText = string.Empty;
+                using (Stream stream = assembly.GetManifestResourceStream(ddlResourceFile))
+                {
+                    using (StreamReader streamReader = new StreamReader(stream))
+                    { ddlText = streamReader.ReadToEnd(); }
+                }
+                return ddlText;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to read DDL Resource File.");
                 throw exception;
             }
         }

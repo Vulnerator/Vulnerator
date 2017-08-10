@@ -612,13 +612,15 @@
     </None>
     <AppDesigner Include="Properties\" />
     <None Include="readme.md" />
-    <EmbeddedResource Include="Resources\DdlFiles\CreateDatabase.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\v6-2-0_CreateDatabase.ddl" />
     <EmbeddedResource Include="Resources\UserGuide\Change-Log.md" />
     <EmbeddedResource Include="Resources\UserGuide\Error-Reporting.md" />
     <EmbeddedResource Include="Resources\UserGuide\Getting-Started.md" />
     <EmbeddedResource Include="Resources\UserGuide\Home.md" />
     <EmbeddedResource Include="Resources\UserGuide\Looking-Ahead.md" />
     <EmbeddedResource Include="Resources\UserGuide\Using-the-Software.md" />
+    <EmbeddedResource Include="Resources\DdlFiles\v6-2-0_CreateVulnerabilityRelatedIndices.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\v6-2-0_DropVulnerabilityRelatedIndices.ddl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

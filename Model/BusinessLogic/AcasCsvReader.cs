@@ -55,7 +55,6 @@ namespace Vulnerator.Model.BusinessLogic
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
-                        databaseInterface.InsertDataEntryDate(sqliteCommand);
                         databaseInterface.InsertGroup(sqliteCommand, file);
                         databaseInterface.InsertParsedFile(sqliteCommand, file);
                         sqliteCommand.Parameters["Finding_Type"].Value = "ACAS";

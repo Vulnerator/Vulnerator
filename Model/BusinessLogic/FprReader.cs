@@ -58,7 +58,6 @@ namespace Vulnerator.Model.BusinessLogic
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         InsertParameterPlaceholders(sqliteCommand);
-                        databaseInterface.InsertDataEntryDate(sqliteCommand);
                         databaseInterface.InsertGroup(sqliteCommand, file);
                         databaseInterface.InsertParsedFile(sqliteCommand, file);
                         using (Stream stream = System.IO.File.OpenRead(file.FilePath))

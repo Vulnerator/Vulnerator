@@ -16,64 +16,46 @@ namespace Vulnerator.Model.DataAccess
         public static string databaseConnection = @"Data Source = " + databaseFile + @"; Version=3;";
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         public static SQLiteConnection sqliteConnection = new SQLiteConnection(databaseConnection);
-        public SQLiteTransaction sqliteTransaction;
 
         public DatabaseBuilder()
         {
             try
             {
-                if (System.IO.File.Exists(databaseFile))
-                { CheckDatabase(); }
-                else
-                { CreateDatabase(); }
+                if (!System.IO.File.Exists(databaseFile))
+                {
+                    CreateDatabase();
+                    return;
+                }
+                if (!sqliteConnection.State.ToString().Equals("Open"))
+                { sqliteConnection.Open(); }
+                using (SQLiteTransaction sqliteTransaction = sqliteConnection.BeginTransaction())
+                {
+                    using (SQLiteCommand sqliteCommand = sqliteConnection.CreateCommand())
+                    {
+                        sqliteCommand.CommandText = "PRAGMA user_version";
+                        int latestVersion = int.Parse(sqliteCommand.ExecuteScalar().ToString());
+                        for (int i = 0; i <= latestVersion; i++)
+                        { UpdateDatabase(i, sqliteCommand); }
+                    }
+                    sqliteTransaction.Commit();
+                }
+                
             }
             catch (Exception exception)
             {
                 log.Error("Unable create database file.");
                 log.Debug("Exception details:", exception);
             }
+            finally
+            { sqliteConnection.Close(); }
         }
 
-        private void CheckDatabase()
-        {
-            try
-            {
-                int currentVersion = 0;
-                int latestVersion = 1;
-                sqliteConnection.Open();
-                using (SQLiteCommand sqliteCommand = new SQLiteCommand("PRAGMA user_version", sqliteConnection))
-                { currentVersion = int.Parse(sqliteCommand.ExecuteScalar().ToString()); }
-                sqliteConnection.Close();
-                if (currentVersion == latestVersion)
-                { return; }
-                else
-                {
-                    using (SQLiteCommand sqliteCommand = new SQLiteCommand("", sqliteConnection))
-                    {
-                        for (int i = currentVersion; i <= latestVersion; i++)
-                        { UpdateDatabase(i); }
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to verify the version of the Vulnerator Database.");
-                throw exception;
-            }
-        }
-
-        private void UpdateDatabase(int version)
+        private void UpdateDatabase(int version, SQLiteCommand sqlitecommand)
         {
             try
             {
                 switch (version)
                 {
-                    case 0:
-                        {
-                            System.IO.File.Delete(databaseFile);
-                            CreateDatabase();
-                            break;
-                        }
                     default:
                         { break; }
                 }
@@ -89,20 +71,24 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
+                log.Info("Begin creating database.");
                 SQLiteConnection.CreateFile(databaseFile);
-                sqliteConnection.Open();
-                using (sqliteTransaction = sqliteConnection.BeginTransaction())
+                if (!sqliteConnection.State.ToString().Equals("Open"))
+                { sqliteConnection.Open(); }
+                using (SQLiteTransaction sqliteTransaction = sqliteConnection.BeginTransaction())
                 {
-                    using (SQLiteCommand sqliteCommand = new SQLiteCommand(ReadDdl("Vulnerator.Resources.DdlFiles.CreateDatabase.ddl"), sqliteConnection))
-                    { sqliteCommand.ExecuteNonQuery(); }
-                    PopulateIaControlData();
-                    PopulateCciData();
-                    PopulateNistControls();
-                    MapControlsToCci();
-                    MapControlsToMonitoringFrequency();
+                    using (SQLiteCommand sqliteCommand = sqliteConnection.CreateCommand())
+                    {
+                        sqliteCommand.CommandText = ReadDdl("Vulnerator.Resources.DdlFiles.v6-2-0_CreateDatabase.ddl");
+                        sqliteCommand.ExecuteNonQuery();
+                        PopulateIaControlData(sqliteCommand);
+                        PopulateCciData(sqliteCommand);
+                        PopulateNistControls(sqliteCommand);
+                        MapControlsToCci(sqliteCommand);
+                        MapControlsToMonitoringFrequency(sqliteCommand);
+                    }
                     sqliteTransaction.Commit();
                 }
-                sqliteConnection.Close();
                 log.Info("Database created successfully.");
             }
             catch (Exception exception)
@@ -131,64 +117,61 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        private void PopulateIaControlData()
+        private void PopulateIaControlData(SQLiteCommand sqliteCommand)
         {
             try
             {
                 using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.IAControls_Mapping.xml"))
                 {
-                    using (SQLiteCommand sqliteCommand = sqliteConnection.CreateCommand())
+                    sqliteCommand.CommandText = "INSERT INTO IA_Controls VALUES (NULL, @Number, @Impact, @Area, @Name, @Description, @Threat, @Implementation, @Resources);";
+                    using (XmlReader xmlReader = XmlReader.Create(stream))
                     {
-                        sqliteCommand.CommandText = "INSERT INTO IA_Controls VALUES (NULL, @Number, @Impact, @Area, @Name, @Description, @Threat, @Implementation, @Resources);";
-                        using (XmlReader xmlReader = XmlReader.Create(stream))
+                        while (xmlReader.Read())
                         {
-                            while (xmlReader.Read())
+                            if (xmlReader.IsStartElement())
                             {
-                                if (xmlReader.IsStartElement())
+                                switch (xmlReader.Name)
                                 {
-                                    switch (xmlReader.Name)
-                                    {
-                                        case "IAControl":
-                                            {
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Number", xmlReader.GetAttribute("number")));
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Impact", xmlReader.GetAttribute("impact")));
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Area", xmlReader.GetAttribute("subject-area")));
-                                                break;
-                                            }
-                                        case "Control-Name":
-                                            {
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Name", ObtainCurrentNodeValue(xmlReader)));
-                                                break;
-                                            }
-                                        case "Description":
-                                            {
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Description", ObtainCurrentNodeValue(xmlReader)));
-                                                break;
-                                            }
-                                        case "Threat-Vuln-Countermeasure":
-                                            {
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Threat", ObtainCurrentNodeValue(xmlReader)));
-                                                break;
-                                            }
-                                        case "General-Implementation-Guidance":
-                                            {
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Implementation", ObtainCurrentNodeValue(xmlReader)));
-                                                break;
-                                            }
-                                        case "System-Specific-Guidance-Resources":
-                                            {
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Resources", ObtainCurrentNodeValue(xmlReader)));
-                                                break;
-                                            }
-                                        default:
-                                            { break; }
-                                    }
+                                    case "IAControl":
+                                        {
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Number", xmlReader.GetAttribute("number")));
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Impact", xmlReader.GetAttribute("impact")));
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Area", xmlReader.GetAttribute("subject-area")));
+                                            break;
+                                        }
+                                    case "Control-Name":
+                                        {
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Name", ObtainCurrentNodeValue(xmlReader)));
+                                            break;
+                                        }
+                                    case "Description":
+                                        {
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Description", ObtainCurrentNodeValue(xmlReader)));
+                                            break;
+                                        }
+                                    case "Threat-Vuln-Countermeasure":
+                                        {
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Threat", ObtainCurrentNodeValue(xmlReader)));
+                                            break;
+                                        }
+                                    case "General-Implementation-Guidance":
+                                        {
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Implementation", ObtainCurrentNodeValue(xmlReader)));
+                                            break;
+                                        }
+                                    case "System-Specific-Guidance-Resources":
+                                        {
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Resources", ObtainCurrentNodeValue(xmlReader)));
+                                            break;
+                                        }
+                                    default:
+                                        { break; }
                                 }
-                                else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("IAControl"))
-                                {
-                                    sqliteCommand.ExecuteNonQuery();
-                                    sqliteCommand.Parameters.Clear();
-                                }
+                            }
+                            else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("IAControl"))
+                            {
+                                sqliteCommand.ExecuteNonQuery();
+                                sqliteCommand.Parameters.Clear();
                             }
                         }
                     }
@@ -201,7 +184,7 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        private void PopulateCciData()
+        private void PopulateCciData(SQLiteCommand sqliteCommand)
         {
             try
             {
@@ -247,7 +230,7 @@ namespace Vulnerator.Model.DataAccess
                                 }
                             }
                             else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("cci_item"))
-                            { InsertCciValues(cci); }
+                            { InsertCciValues(cci, sqliteCommand); }
                         }
                     }
                 }
@@ -259,19 +242,17 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        private void InsertCciValues(Cci cci)
+        private void InsertCciValues(Cci cci, SQLiteCommand sqliteCommand)
         {
             try
             {
-                using (SQLiteCommand sqliteCommand = sqliteConnection.CreateCommand())
-                {
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("CCI", cci.CciItem));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Definition", cci.Definition));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Type", cci.Type));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Status", cci.Status));
-                    sqliteCommand.CommandText = "INSERT INTO Ccis VALUES (NULL, @CCI, @Definition, @Type, @Status);";
-                    sqliteCommand.ExecuteNonQuery();
-                }
+                sqliteCommand.Parameters.Add(new SQLiteParameter("CCI", cci.CciItem));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Definition", cci.Definition));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Type", cci.Type));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Status", cci.Status));
+                sqliteCommand.CommandText = "INSERT INTO Ccis VALUES (NULL, @CCI, @Definition, @Type, @Status);";
+                sqliteCommand.ExecuteNonQuery();
+                sqliteCommand.Parameters.Clear();
             }
             catch (Exception exception)
             {
@@ -280,7 +261,7 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        private void PopulateNistControls()
+        private void PopulateNistControls(SQLiteCommand sqliteCommand)
         {
             try
             {
@@ -299,77 +280,74 @@ namespace Vulnerator.Model.DataAccess
 
                 Dictionary<string, string> ciaTriadFlags = new Dictionary<string, string>();
 
-                using (SQLiteCommand sqliteCommand = sqliteConnection.CreateCommand())
+                using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.NIST_800-53_CNSS_Mapping.xml"))
                 {
-                    using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.NIST_800-53_CNSS_Mapping.xml"))
+                    using (XmlReader xmlReader = XmlReader.Create(stream))
                     {
-                        using (XmlReader xmlReader = XmlReader.Create(stream))
+                        while (xmlReader.Read())
                         {
-                            while (xmlReader.Read())
+                            if (xmlReader.IsStartElement())
                             {
-                                if (xmlReader.IsStartElement())
+                                switch (xmlReader.Name)
                                 {
-                                    switch (xmlReader.Name)
-                                    {
-                                        case "Control":
-                                            {
-                                                ciaTriadFlags = new Dictionary<string, string>();
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Family", xmlReader.GetAttribute("family")));
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Number", xmlReader.GetAttribute("number")));
-                                                if (!xmlReader.GetAttribute("enhancement").Equals("0"))
-                                                { sqliteCommand.Parameters.Add(new SQLiteParameter("Enhancement", xmlReader.GetAttribute("enhancement"))); }
-                                                break;
-                                            }
-                                        case "Title":
-                                            {
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Title", ObtainCurrentNodeValue(xmlReader)));
-                                                break;
-                                            }
-                                        case "Text":
-                                            {
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Text", ObtainCurrentNodeValue(xmlReader)));
-                                                break;
-                                            }
-                                        case "SupplementalGuidance":
-                                            {
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("SupplementalGuidance", ObtainCurrentNodeValue(xmlReader)));
-                                                break;
-                                            }
-                                        case "Confidentiality":
-                                            {
-                                                ciaTriadFlags.Add("HighConfidentiality", xmlReader.GetAttribute("high"));
-                                                ciaTriadFlags.Add("ModerateConfidentiality", xmlReader.GetAttribute("moderate"));
-                                                ciaTriadFlags.Add("LowConfidentiality", xmlReader.GetAttribute("low"));
-                                                break;
-                                            }
-                                        case "Integrity":
-                                            {
-                                                ciaTriadFlags.Add("HighIntegrity", xmlReader.GetAttribute("high"));
-                                                ciaTriadFlags.Add("ModerateIntegrity", xmlReader.GetAttribute("moderate"));
-                                                ciaTriadFlags.Add("LowIntegrity", xmlReader.GetAttribute("low"));
-                                                break;
-                                            }
-                                        case "Availability":
-                                            {
-                                                ciaTriadFlags.Add("HighAvailability", xmlReader.GetAttribute("high"));
-                                                ciaTriadFlags.Add("ModerateAvailability", xmlReader.GetAttribute("moderate"));
-                                                ciaTriadFlags.Add("LowAvailability", xmlReader.GetAttribute("low"));
-                                                break;
-                                            }
-                                        default:
-                                            { break; }
-                                    }
+                                    case "Control":
+                                        {
+                                            ciaTriadFlags = new Dictionary<string, string>();
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Family", xmlReader.GetAttribute("family")));
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Number", xmlReader.GetAttribute("number")));
+                                            if (!xmlReader.GetAttribute("enhancement").Equals("0"))
+                                            { sqliteCommand.Parameters.Add(new SQLiteParameter("Enhancement", xmlReader.GetAttribute("enhancement"))); }
+                                            break;
+                                        }
+                                    case "Title":
+                                        {
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Title", ObtainCurrentNodeValue(xmlReader)));
+                                            break;
+                                        }
+                                    case "Text":
+                                        {
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Text", ObtainCurrentNodeValue(xmlReader)));
+                                            break;
+                                        }
+                                    case "SupplementalGuidance":
+                                        {
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("SupplementalGuidance", ObtainCurrentNodeValue(xmlReader)));
+                                            break;
+                                        }
+                                    case "Confidentiality":
+                                        {
+                                            ciaTriadFlags.Add("HighConfidentiality", xmlReader.GetAttribute("high"));
+                                            ciaTriadFlags.Add("ModerateConfidentiality", xmlReader.GetAttribute("moderate"));
+                                            ciaTriadFlags.Add("LowConfidentiality", xmlReader.GetAttribute("low"));
+                                            break;
+                                        }
+                                    case "Integrity":
+                                        {
+                                            ciaTriadFlags.Add("HighIntegrity", xmlReader.GetAttribute("high"));
+                                            ciaTriadFlags.Add("ModerateIntegrity", xmlReader.GetAttribute("moderate"));
+                                            ciaTriadFlags.Add("LowIntegrity", xmlReader.GetAttribute("low"));
+                                            break;
+                                        }
+                                    case "Availability":
+                                        {
+                                            ciaTriadFlags.Add("HighAvailability", xmlReader.GetAttribute("high"));
+                                            ciaTriadFlags.Add("ModerateAvailability", xmlReader.GetAttribute("moderate"));
+                                            ciaTriadFlags.Add("LowAvailability", xmlReader.GetAttribute("low"));
+                                            break;
+                                        }
+                                    default:
+                                        { break; }
                                 }
-                                else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Control"))
-                                {
-                                    InsertNistControls(sqliteCommand);
-                                    MapControlsToCia(sqliteCommand, ciaTriadFlags);
-                                    sqliteCommand.CommandText = string.Empty;
-                                    sqliteCommand.Parameters.Clear();
-                                    highConfidentiality = moderateConfidentiality = lowConfidentiality = string.Empty;
-                                    highIntegrity = moderateIntegrity = lowIntegrity = string.Empty;
-                                    highAvailability = moderateAvailability = lowAvailability = string.Empty;
-                                }
+                            }
+                            else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Control"))
+                            {
+                                InsertNistControls(sqliteCommand);
+                                MapControlsToCia(sqliteCommand, ciaTriadFlags);
+                                sqliteCommand.CommandText = string.Empty;
+                                sqliteCommand.Parameters.Clear();
+                                highConfidentiality = moderateConfidentiality = lowConfidentiality = string.Empty;
+                                highIntegrity = moderateIntegrity = lowIntegrity = string.Empty;
+                                highAvailability = moderateAvailability = lowAvailability = string.Empty;
                             }
                         }
                     }
@@ -454,66 +432,63 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        private void MapControlsToCci()
+        private void MapControlsToCci(SQLiteCommand sqliteCommand)
         {
             try
             {
-                using (SQLiteCommand sqliteCommand = sqliteConnection.CreateCommand())
+                using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.NIST_800-53_CCI_Mapping.xml"))
                 {
-                    using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.NIST_800-53_CCI_Mapping.xml"))
+                    using (XmlReader xmlReader = XmlReader.Create(stream))
                     {
-                        using (XmlReader xmlReader = XmlReader.Create(stream))
+                        while (xmlReader.Read())
                         {
-                            while (xmlReader.Read())
+                            if (xmlReader.IsStartElement())
                             {
-                                if (xmlReader.IsStartElement())
+                                switch (xmlReader.Name)
                                 {
-                                    switch (xmlReader.Name)
-                                    {
-                                        case "Pair":
-                                            {
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Family", xmlReader.GetAttribute("family")));
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Number", xmlReader.GetAttribute("number")));
-                                                if (!xmlReader.GetAttribute("enhancement").Equals("0"))
-                                                { sqliteCommand.Parameters.Add(new SQLiteParameter("Enhancement", xmlReader.GetAttribute("enhancement"))); }
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("DoD_AP", xmlReader.GetAttribute("dod-ap")));
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("ControlIndicator", xmlReader.GetAttribute("indicator")));
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("CCI", xmlReader.GetAttribute("cci")));
-                                                break;
-                                            }
-                                        case "ImplementationGuidance":
-                                            {
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("ImplementationGuidance", ObtainCurrentNodeValue(xmlReader)));
-                                                break;
-                                            }
-                                        case "AssessmentProcedures":
-                                            {
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("AP_Text", ObtainCurrentNodeValue(xmlReader)));
-                                                break;
-                                            }
-                                        default:
-                                            { break; }
-                                    }
+                                    case "Pair":
+                                        {
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Family", xmlReader.GetAttribute("family")));
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Number", xmlReader.GetAttribute("number")));
+                                            if (!xmlReader.GetAttribute("enhancement").Equals("0"))
+                                            { sqliteCommand.Parameters.Add(new SQLiteParameter("Enhancement", xmlReader.GetAttribute("enhancement"))); }
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("DoD_AP", xmlReader.GetAttribute("dod-ap")));
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("ControlIndicator", xmlReader.GetAttribute("indicator")));
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("CCI", xmlReader.GetAttribute("cci")));
+                                            break;
+                                        }
+                                    case "ImplementationGuidance":
+                                        {
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("ImplementationGuidance", ObtainCurrentNodeValue(xmlReader)));
+                                            break;
+                                        }
+                                    case "AssessmentProcedures":
+                                        {
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("AP_Text", ObtainCurrentNodeValue(xmlReader)));
+                                            break;
+                                        }
+                                    default:
+                                        { break; }
                                 }
-                                else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Pair"))
+                            }
+                            else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Pair"))
+                            {
+                                if (!sqliteCommand.Parameters.Contains("DoD_AP"))
+                                { sqliteCommand.Parameters.Add(new SQLiteParameter("DoD_AP", DBNull.Value)); }
+                                if (sqliteCommand.Parameters.Contains("Enhancement"))
                                 {
-                                    if (!sqliteCommand.Parameters.Contains("DoD_AP"))
-                                    { sqliteCommand.Parameters.Add(new SQLiteParameter("DoD_AP", DBNull.Value)); }
-                                    if (sqliteCommand.Parameters.Contains("Enhancement"))
-                                    {
-                                        sqliteCommand.CommandText = "INSERT INTO NistControlsCCIs VALUES " +
-                                            "((SELECT NIST_Control_ID FROM NistControls WHERE Control_Family = @Family AND Control_Number = @Number AND Enhancement = @Enhancement), " +
-                                            "(SELECT CCI_ID FROM CCIs WHERE CCI = @CCI), @DoD_AP, @ControlIndicator, @ImplementationGuidance, @AP_Text);";
-                                    }
-                                    else
-                                    {
-                                        sqliteCommand.CommandText = "INSERT INTO NistControlsCCIs VALUES " +
-                                            "((SELECT NIST_Control_ID FROM NistControls WHERE Control_Family = @Family AND Control_Number = @Number AND Enhancement IS NULL), " +
-                                            "(SELECT CCI_ID FROM CCIs WHERE CCI = @CCI), @DoD_AP, @ControlIndicator, @ImplementationGuidance, @AP_Text);";
-                                    }
-                                    sqliteCommand.ExecuteNonQuery();
-                                    sqliteCommand.Parameters.Clear();
+                                    sqliteCommand.CommandText = "INSERT INTO NistControlsCCIs VALUES " +
+                                        "((SELECT NIST_Control_ID FROM NistControls WHERE Control_Family = @Family AND Control_Number = @Number AND Enhancement = @Enhancement), " +
+                                        "(SELECT CCI_ID FROM CCIs WHERE CCI = @CCI), @DoD_AP, @ControlIndicator, @ImplementationGuidance, @AP_Text);";
                                 }
+                                else
+                                {
+                                    sqliteCommand.CommandText = "INSERT INTO NistControlsCCIs VALUES " +
+                                        "((SELECT NIST_Control_ID FROM NistControls WHERE Control_Family = @Family AND Control_Number = @Number AND Enhancement IS NULL), " +
+                                        "(SELECT CCI_ID FROM CCIs WHERE CCI = @CCI), @DoD_AP, @ControlIndicator, @ImplementationGuidance, @AP_Text);";
+                                }
+                                sqliteCommand.ExecuteNonQuery();
+                                sqliteCommand.Parameters.Clear();
                             }
                         }
                     }
@@ -526,48 +501,45 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        private void MapControlsToCnssOverlays()
+        private void MapControlsToCnssOverlays(SQLiteCommand sqliteCommand)
         {
             try
             {
                 Dictionary<string, string> overlayApplicability = new Dictionary<string, string>();
-                using (SQLiteCommand sqliteCommand = sqliteConnection.CreateCommand())
+                using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.NIST_800-53_CNSS-Overlay_Mapping.xml"))
                 {
-                    using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.NIST_800-53_CNSS-Overlay_Mapping.xml"))
+                    using (XmlReader xmlReader = XmlReader.Create(stream))
                     {
-                        using (XmlReader xmlReader = XmlReader.Create(stream))
+                        while (xmlReader.Read())
                         {
-                            while (xmlReader.Read())
+                            if (xmlReader.IsStartElement())
                             {
-                                if (xmlReader.IsStartElement())
+                                switch (xmlReader.Name)
                                 {
-                                    switch (xmlReader.Name)
-                                    {
-                                        case "Control":
-                                            {
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Family", xmlReader.GetAttribute("family")));
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Number", xmlReader.GetAttribute("number")));
-                                                if (!xmlReader.GetAttribute("enhancement").Equals("0"))
-                                                { sqliteCommand.Parameters.Add(new SQLiteParameter("Enhancement", xmlReader.GetAttribute("enhancement"))); }
-                                                break;
-                                            }
-                                        default:
-                                            {
-                                                overlayApplicability.Add(xmlReader.Name.Replace("-", " "), ObtainCurrentNodeValue(xmlReader));
-                                                break;
-                                            }
-                                    }
+                                    case "Control":
+                                        {
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Family", xmlReader.GetAttribute("family")));
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Number", xmlReader.GetAttribute("number")));
+                                            if (!xmlReader.GetAttribute("enhancement").Equals("0"))
+                                            { sqliteCommand.Parameters.Add(new SQLiteParameter("Enhancement", xmlReader.GetAttribute("enhancement"))); }
+                                            break;
+                                        }
+                                    default:
+                                        {
+                                            overlayApplicability.Add(xmlReader.Name.Replace("-", " "), ObtainCurrentNodeValue(xmlReader));
+                                            break;
+                                        }
                                 }
-                                else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Control"))
+                            }
+                            else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Control"))
+                            {
+                                if (sqliteCommand.Parameters.Contains("enhancement"))
                                 {
-                                    if (sqliteCommand.Parameters.Contains("enhancement"))
-                                    {
 
-                                    }
-                                    else
-                                    {
+                                }
+                                else
+                                {
 
-                                    }
                                 }
                             }
                         }
@@ -581,54 +553,51 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        private void MapControlsToMonitoringFrequency()
+        private void MapControlsToMonitoringFrequency(SQLiteCommand sqliteCommand)
         {
             try
             {
-                using (SQLiteCommand sqliteCommand = sqliteConnection.CreateCommand())
+                using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.NIST_800-53_MonitoringFrequency_Mapping.xml"))
                 {
-                    using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.NIST_800-53_MonitoringFrequency_Mapping.xml"))
+                    using (XmlReader xmlReader = XmlReader.Create(stream))
                     {
-                        using (XmlReader xmlReader = XmlReader.Create(stream))
+                        while (xmlReader.Read())
                         {
-                            while (xmlReader.Read())
+                            if (xmlReader.IsStartElement())
                             {
-                                if (xmlReader.IsStartElement())
+                                switch (xmlReader.Name)
                                 {
-                                    switch (xmlReader.Name)
-                                    {
-                                        case "Control":
-                                            {
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Family", xmlReader.GetAttribute("family")));
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Number", xmlReader.GetAttribute("number")));
-                                                if (!xmlReader.GetAttribute("enhancement").Equals("0"))
-                                                { sqliteCommand.Parameters.Add(new SQLiteParameter("Enhancement", xmlReader.GetAttribute("enhancement"))); }
-                                                break;
-                                            }
-                                        case "Frequency":
-                                            {
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("Frequency", ObtainCurrentNodeValue(xmlReader)));
-                                                break;
-                                            }
-                                        default:
-                                            { break; }
-                                    }
+                                    case "Control":
+                                        {
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Family", xmlReader.GetAttribute("family")));
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Number", xmlReader.GetAttribute("number")));
+                                            if (!xmlReader.GetAttribute("enhancement").Equals("0"))
+                                            { sqliteCommand.Parameters.Add(new SQLiteParameter("Enhancement", xmlReader.GetAttribute("enhancement"))); }
+                                            break;
+                                        }
+                                    case "Frequency":
+                                        {
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Frequency", ObtainCurrentNodeValue(xmlReader)));
+                                            break;
+                                        }
+                                    default:
+                                        { break; }
                                 }
-                                else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Control"))
+                            }
+                            else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Control"))
+                            {
+                                if (sqliteCommand.Parameters.Contains("Enhancement"))
                                 {
-                                    if (sqliteCommand.Parameters.Contains("Enhancement"))
-                                    {
-                                        sqliteCommand.CommandText = "UPDATE NistControls SET Monitoring_Frequency = @Frequency WHERE Control_Family = @Family AND " +
-                                            "Control_Number = @Number AND Enhancement = @Enhancement;";
-                                    }
-                                    else
-                                    {
-                                        sqliteCommand.CommandText = "UPDATE NistControls SET Monitoring_Frequency = @Frequency WHERE Control_Family = @Family AND " +
-                                            "Control_Number = @Number AND Enhancement IS NULL;";
-                                    }
-                                    sqliteCommand.ExecuteNonQuery();
-                                    sqliteCommand.Parameters.Clear();
+                                    sqliteCommand.CommandText = "UPDATE NistControls SET Monitoring_Frequency = @Frequency WHERE Control_Family = @Family AND " +
+                                        "Control_Number = @Number AND Enhancement = @Enhancement;";
                                 }
+                                else
+                                {
+                                    sqliteCommand.CommandText = "UPDATE NistControls SET Monitoring_Frequency = @Frequency WHERE Control_Family = @Family AND " +
+                                        "Control_Number = @Number AND Enhancement IS NULL;";
+                                }
+                                sqliteCommand.ExecuteNonQuery();
+                                sqliteCommand.Parameters.Clear();
                             }
                         }
                     }

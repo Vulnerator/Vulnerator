@@ -334,11 +334,6 @@ CREATE TABLE DADMS_Networks
 	 DADMS_Network_ID INTEGER PRIMARY KEY , 
 	 DADMS_Network_Name NVARCHAR (50) NOT NULL 
 	);
-CREATE TABLE Data_Entry_Dates
-	(
-	 Date_ID INTEGER PRIMARY KEY,
-	 Entry_Date DATE NOT NULL UNIQUE ON CONFLICT IGNORE
-	);
 CREATE TABLE DiagnosticTestingSystems 
 	(
 	 DiagnosticTesting_ID INTEGER PRIMARY KEY , 
@@ -834,7 +829,10 @@ CREATE TABLE PIT_Determination
 	 TacticalSupportDatabase_ID INTEGER , 
 	 IsTacticalDecisionAid NVARCHAR (5) , 
 	 OtherSystemTypeDescription NVARCHAR (100) ,
-	 FOREIGN KEY (PIT_Determination_ID) REFERENCES Accreditations(PIT_Determination_ID)
+	 FOREIGN KEY (PIT_Determination_ID) REFERENCES Accreditations(PIT_Determination_ID),
+	 FOREIGN KEY (NavigationSystem_ID) REFERENCES NavigationTransportationSystems(NavigationSystem_ID),
+	 FOREIGN KEY (DiagnosticTesting_ID) REFERENCES DiagnosticTestingSystems(DiagnosticTesting_ID),
+	 FOREIGN KEY (MedicalTechnology_ID) REFERENCES MedicalTechnologies(MedicalTechnology_ID)
 	);
 CREATE TABLE PPS 
 	(
@@ -1040,7 +1038,8 @@ CREATE TABLE StepOneQuestionnaire
 	 SystemEnterpriseArchitecture NVARCHAR (2000) NOT NULL , 
 	 ATC_ID INTEGER , 
 	 NistControlSet NVARCHAR (50) NOT NULL ,
-	 FOREIGN KEY (StepOneQuestionnaire_ID) REFERENCES Accreditations(StepOneQuestionnaire_ID)
+	 FOREIGN KEY (StepOneQuestionnaire_ID) REFERENCES Accreditations(StepOneQuestionnaire_ID),
+	 FOREIGN KEY (ATC_ID) REFERENCES ATC_IATC(ATC_ID)
 	);
 CREATE TABLE StepOneQuestionnaire_Connectivity 
 	(
@@ -1068,7 +1067,7 @@ CREATE TABLE StepOneQuestionnaireEncryptionTechniques
 	 StepOneQuestionnaire_ID INTEGER NOT NULL , 
 	 EncryptionTechnique_ID INTEGER NOT NULL ,
 	 FOREIGN KEY (StepOneQuestionnaire_ID) REFERENCES StepOneQuestionnaire(StepOneQuestionnaire_ID),
-	 FOREIGN KEY (EncryptionTechnique_ID) REFERENCES EncryptionTechnique(EncryptionTechnique_ID)
+	 FOREIGN KEY (EncryptionTechnique_ID) REFERENCES EncryptionTechniques(EncryptionTechnique_ID)
 	);
 CREATE TABLE StepOneQuestionnaireNetworkConnectionRules 
 	(
@@ -1097,7 +1096,8 @@ CREATE TABLE SystemCategorization
 	 IsJointAuthorization NVARCHAR (5) NOT NULL , 
 	 NssQuestionnaire_ID INTEGER NOT NULL , 
 	 CategorizationIsApproved NVARCHAR (5) NOT NULL ,
-	 FOREIGN KEY (SystemCategorization_ID) REFERENCES Accreditations(SystemCategorization_ID)
+	 FOREIGN KEY (SystemCategorization_ID) REFERENCES Accreditations(SystemCategorization_ID),
+	 FOREIGN KEY (NssQuestionnaire_ID) REFERENCES NssQuestionnaire(NssQuestionnaire_ID)
 	);
 CREATE TABLE SystemCategorizationGoverningPolicies 
 	(
@@ -1155,7 +1155,8 @@ CREATE TABLE TestScheduleItems
 	 TestScheduleItem_ID INTEGER PRIMARY KEY , 
 	 TestEvent NVARCHAR (100) , 
 	 Category_ID INTEGER NOT NULL , 
-	 DurationInDays INTEGER NOT NULL 
+	 DurationInDays INTEGER NOT NULL ,
+	 FOREIGN KEY (Category_ID) REFERENCES Categories(Category_ID)
 	);
 CREATE TABLE Titles 
 	(

@@ -230,7 +230,7 @@
     <value>INSERT INTO Vulnerabilities_VulnerabilityReferences VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier), (SELECT Reference_ID FROM VulnerabilityReferences WHERE Reference = @Reference AND Reference_Type = @Reference_Type));</value>
   </data>
   <data name="MapVulnerabilityToCci" xml:space="preserve">
-    <value>INSERT OR REPLACE INTO VulnerabilitesCCIs VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier), (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI));</value>
+    <value>INSERT OR REPLACE INTO VulnerabilitiesCCIs VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier), (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI));</value>
   </data>
   <data name="MapVulnerabilityToIAControl" xml:space="preserve">
     <value>INSERT OR REPLACE INTO Vulnerabilities_IA_Controls VALUES (@Vulnerablity_ID, (SELECT IA_Control_ID FROM IA_Controls WHERE IA_Control_Number = @IA_Control));</value>

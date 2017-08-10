@@ -281,7 +281,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT OR REPLACE INTO VulnerabilitesCCIs VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier), (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI));.
+        ///   Looks up a localized string similar to INSERT OR REPLACE INTO VulnerabilitiesCCIs VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier), (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI));.
         /// </summary>
         internal static string MapVulnerabilityToCci {
             get {
