@@ -61,11 +61,11 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM VulnerabilitySources WHERE Source_Version = &apos;Version Unknown&apos;;.
+        ///   Looks up a localized string similar to DELETE FROM Vulnerabilities_VulnerabilitySources WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Version = &apos;Version Unknown&apos;);.
         /// </summary>
-        internal static string DeleteUnknownAcasVersions {
+        internal static string DeleteAcasVulnerabilitiesMappedToUnknownVersion {
             get {
-                return ResourceManager.GetString("DeleteUnknownAcasVersions", resourceCulture);
+                return ResourceManager.GetString("DeleteAcasVulnerabilitiesMappedToUnknownVersion", resourceCulture);
             }
         }
         
@@ -308,6 +308,24 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (?&lt;=(?:\w{2})\s{2})(?:\w+(?:-?\.?\+*)*)+.
+        /// </summary>
+        internal static string RegexAcasDebianSoftwareName {
+            get {
+                return ResourceManager.GetString("RegexAcasDebianSoftwareName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (?:\s{10,})(?:\d+(?:\w*(?:-?\.?\+*\:?\~?)*)*)+.
+        /// </summary>
+        internal static string RegexAcasDebianSoftwareVersion {
+            get {
+                return ResourceManager.GetString("RegexAcasDebianSoftwareVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ^(\w)+(-?\.?[A-Za-z]+)*.
         /// </summary>
         internal static string RegexAcasLinuxSoftwareName {
@@ -427,19 +445,20 @@ namespace Vulnerator.Properties {
         /// <summary>
         ///   Looks up a localized string similar to SELECT
         ///    Unique_Vulnerability_Identifier,
+        ///    Vulnerability_Version,
         ///    Vulnerability_Title,
         ///    Vulnerability_Description,
         ///    Source_Name,
         ///    Source_Version,
-        ///    Source_Release, Comments, Finding_Details, Finding_Type,
-        ///    Raw_Risk, Status,
+        ///    Source_Release, 
+        ///    Comments, 
+        ///    Finding_Details,
+        ///    Raw_Risk, 
+        ///    Status,
         ///    GROUP_CONCAT(DISTINCT Scan_IP) AS IPs,
-        ///    Control_Family || &apos;-&apos; || Control_Number || &apos;.&apos; || Enhancement AS NIST_Control
-        ///FROM UniqueFindings
-        ///LEFT JOIN Vulnerabilities
-        ///LEFT JOIN Hardware
-        ///LEFT JOIN FindingTypes
-        ///LEFT JOIN VulnerabilitesCCIs ON Vulnerabilities.Vulnerability_ID  [rest of string was truncated]&quot;;.
+        ///    GROUP_CONCAT(DISTINCT (Control_Family || &apos;-&apos; || Control_Number || &apos;.&apos; || Enhancement)) AS NIST_Controls
+        ///FROM Vulnerabilities
+        ///LEFT JOIN UniqueFindings ON Vulnerabilities.Vulnerability_ID = UniqueFindings [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SelectGroupedPoamVulnerabilities {
             get {
@@ -547,7 +566,17 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UPDATE VulnerabilitySources SET Source_Name = @Source_Name, Source_Secondary_Identifier = @Source_Secondary_Identifier, Vulnerability_Source_File_Name = @Vulnerability_Source_File_Name, Source_Description = @Source_Description, Source_Version = @Source_Version, Source_Release = @Source_Release WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name);.
+        ///   Looks up a localized string similar to UPDATE 
+        ///	VulnerabilitySources 
+        ///SET 
+        ///	Source_Name = @Source_Name, 
+        ///	Source_Secondary_Identifier = @Source_Secondary_Identifier, 
+        ///	Vulnerability_Source_File_Name = @Vulnerability_Source_File_Name, 
+        ///	Source_Description = @Source_Description, 
+        ///	Source_Version = @Source_Version, 
+        ///	Source_Release = @Source_Release 
+        ///WHERE 
+        ///	Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name);.
         /// </summary>
         internal static string UpdateVulnerabilitySource {
             get {
@@ -556,7 +585,12 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UPDATE Vulnerabilities_VulnerabilitySources SET Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release) WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Version = &apos;Version Unknown&apos;);.
+        ///   Looks up a localized string similar to UPDATE 
+        ///    Vulnerabilities_VulnerabilitySources 
+        ///SET 
+        ///    Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release)
+        ///WHERE
+        ///    Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = &apos;Version Unknown&apos;).
         /// </summary>
         internal static string UpdateVulnerabilitySourceFromAcas {
             get {

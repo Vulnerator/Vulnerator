@@ -193,6 +193,7 @@ namespace Vulnerator.Model.BusinessLogic
                 { DatabaseBuilder.sqliteConnection.Open(); }
                 using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Type", findingType));
                     sqliteCommand.CommandText = Properties.Resources.SelectGroupedPoamVulnerabilities;
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
@@ -831,12 +832,12 @@ namespace Vulnerator.Model.BusinessLogic
                     ), 
                     20);
                 if (false)
-                { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["NIST_Control"].ToString(), 24); }
+                { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["NIST_Controls"].ToString(), 24); }
                 else
                 {
-                    if (!string.IsNullOrWhiteSpace(sqliteDataReader["NIST_Control"].ToString()))
-                    { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["NIST_Control"].ToString(), 24); }
-                    else if (!string.IsNullOrWhiteSpace(sqliteDataReader["NIST_Control"].ToString()))
+                    if (!string.IsNullOrWhiteSpace(sqliteDataReader["NIST_Controls"].ToString()))
+                    { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["NIST_Controls"].ToString(), 24); }
+                    else if (!string.IsNullOrWhiteSpace(sqliteDataReader["NIST_Controls"].ToString()))
                     { WriteCellValue(poamOpenXmlWriter, "", 24); }
                     else
                     { WriteCellValue(poamOpenXmlWriter, string.Empty, 24); }

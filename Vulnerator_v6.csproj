@@ -401,7 +401,6 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MessengerToken.cs" />
     <Compile Include="ViewModel\NewsViewModel.cs" />
-    <Compile Include="ViewModel\ReportingViewModel.cs" />
     <Compile Include="ViewModel\RmfViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\SplashViewModel.cs" />
@@ -435,9 +434,6 @@
     </Compile>
     <Compile Include="View\UI\NewsView.xaml.cs">
       <DependentUpon>NewsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\UI\ReportingView.xaml.cs">
-      <DependentUpon>ReportingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UI\RmfView.xaml.cs">
       <DependentUpon>RmfView.xaml</DependentUpon>
@@ -547,10 +543,6 @@
     <Page Include="View\UI\NoInternetApplication.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\UI\ReportingView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\UI\RmfView.xaml">
       <Generator>MSBuild:Compile</Generator>

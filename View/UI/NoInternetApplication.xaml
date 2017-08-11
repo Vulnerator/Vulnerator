@@ -34,26 +34,14 @@
                    VerticalAlignment="Top" 
                    Height="96" 
                    Margin="10,0"/>
-        <Button Content="Close" 
-                HorizontalAlignment="Left" 
-                Margin="128,1,0,0" 
-                Grid.Row="2" 
-                VerticalAlignment="Top" 
+        <Button Content="Close"
+                HorizontalAlignment="Left"
+                Margin="128,1,0,0"
+                Grid.Row="2"
+                VerticalAlignment="Top"
                 Width="116"
                 Height="26"
-                Style="{StaticResource MetroFlatButton}" 
-                Click="CloseClick"/>
-        <Rectangle Fill="Red"
-                   HorizontalAlignment="Left" 
-                   Height="17" 
-                   Margin="10,8,0,0" 
-                   Grid.RowSpan="1" 
-                   VerticalAlignment="Top" 
-                   Width="17">
-            <Rectangle.OpacityMask>
-                <VisualBrush Stretch="Fill"
-                             Visual="{StaticResource appbar_warning}" />
-            </Rectangle.OpacityMask>
-        </Rectangle>
+                Style="{StaticResource MetroFlatButton}"
+                Click="CloseClick" />
     </Grid>
 </Controls:MetroWindow>

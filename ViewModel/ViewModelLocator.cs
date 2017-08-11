@@ -43,7 +43,6 @@ namespace Vulnerator.ViewModel
 
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<VulnerabilityViewModel>();
-            SimpleIoc.Default.Register<ReportingViewModel>();
             SimpleIoc.Default.Register<UserGuideViewModel>();
             SimpleIoc.Default.Register<AboutViewModel>();
             SimpleIoc.Default.Register<NewsViewModel>();
@@ -61,9 +60,6 @@ namespace Vulnerator.ViewModel
 
         public NewsViewModel News
         { get { return ServiceLocator.Current.GetInstance<NewsViewModel>(); } }
-
-        public ReportingViewModel Reporting
-        { get { return ServiceLocator.Current.GetInstance<ReportingViewModel>(); } }
 
         public RmfViewModel Rmf
         { get { return ServiceLocator.Current.GetInstance<RmfViewModel>(); } }

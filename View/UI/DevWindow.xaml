@@ -104,7 +104,6 @@
         <local:AboutView x:Key="aboutView" />
         <local:ConfigurationManagementView x:Key="configurationManagementView" />
         <local:NewsView x:Key="newsView" />
-        <local:ReportingView x:Key="reportingView" />
         <local:RmfView x:Key="rmfView" />
         <local:SettingsView x:Key="settingsView" />
         <local:ThemeView x:Key="themeView" />

@@ -188,7 +188,7 @@ namespace Vulnerator.Model.DataAccess
                         {
                             sqliteCommand.CommandText = Properties.Resources.UpdateVulnerabilitySourceFromAcas;
                             sqliteCommand.ExecuteNonQuery();
-                            sqliteCommand.CommandText = Properties.Resources.DeleteUnknownAcasVersions;
+                            sqliteCommand.CommandText = Properties.Resources.DeleteAcasVulnerabilitiesMappedToUnknownVersion;
                             sqliteCommand.ExecuteNonQuery();
                             return;
                         }

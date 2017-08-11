@@ -1329,13 +1329,6 @@ CREATE TABLE VulnerabilitySources
 	 Source_Release NVARCHAR (25) NOT NULL, 
 	 UNIQUE (Source_Name, Source_Version, Source_Release) ON CONFLICT IGNORE
 	);
-CREATE TABLE VulnerabilitySourcesSoftware 
-	(
-	 Source_ID INTEGER NOT NULL , 
-	 Software_ID INTEGER NOT NULL ,
-	 FOREIGN KEY (Source_ID) REFERENCES VulnerabilitySources(Source_ID),
-	 FOREIGN KEY (Software_ID) REFERENCES Software(Software_ID)
-	);
 CREATE TABLE Waivers 
 	(
 	 Waiver_ID INTEGER PRIMARY KEY , 

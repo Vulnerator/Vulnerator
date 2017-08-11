@@ -34,7 +34,7 @@ namespace Vulnerator.Model.BusinessLogic
         private bool found26917 = false;
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         List<VulnerabilityReference> references = new List<VulnerabilityReference>();
-        private string[] persistentParameters = new string[] { "Group_Name", "Finding_Source_File_Name", "Source_Name", "Scan_IP", "Host_Name" };
+        private string[] persistentParameters = new string[] { "Group_Name", "Finding_Source_File_Name", "Source_Name", "Scan_IP", "Host_Name", "Finding_Type" };
 
         /// <summary>
         /// Reads *.nessus files exported from within ACAS and writes the results to the appropriate DataTables.
@@ -75,6 +75,7 @@ namespace Vulnerator.Model.BusinessLogic
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
+                        sqliteCommand.Parameters["Finding_Type"].Value = "ACAS";
                         databaseInterface.InsertGroup(sqliteCommand, file);
                         databaseInterface.InsertParsedFile(sqliteCommand, file);
                         XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
@@ -631,7 +632,6 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["Approval_Status"].Value = "Not Approved";
                 sqliteCommand.Parameters["Delta_Analysis_Required"].Value = "False";
                 sqliteCommand.Parameters["Finding_Source_File_Name"].Value = fileName;
-                sqliteCommand.Parameters["Finding_Type"].Value = "ACAS";
                 //databaseInterface.UpdateUniqueFinding(sqliteCommand);
                 databaseInterface.InsertUniqueFinding(sqliteCommand);
             }

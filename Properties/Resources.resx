@@ -117,8 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DeleteUnknownAcasVersions" xml:space="preserve">
-    <value>DELETE FROM VulnerabilitySources WHERE Source_Version = 'Version Unknown';</value>
+  <data name="DeleteAcasVulnerabilitiesMappedToUnknownVersion" xml:space="preserve">
+    <value>DELETE FROM Vulnerabilities_VulnerabilitySources WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Version = 'Version Unknown');</value>
   </data>
   <data name="InsertDataEntryDate" xml:space="preserve">
     <value>INSERT INTO Data_Entry_Dates VALUES (NULL, @Entry_Date);</value>
@@ -238,6 +238,12 @@
   <data name="MapVulnerabilityToSource" xml:space="preserve">
     <value>INSERT INTO Vulnerabilities_VulnerabilitySources VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier), (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release));</value>
   </data>
+  <data name="RegexAcasDebianSoftwareName" xml:space="preserve">
+    <value>(?&lt;=(?:\w{2})\s{2})(?:\w+(?:-?\.?\+*)*)+</value>
+  </data>
+  <data name="RegexAcasDebianSoftwareVersion" xml:space="preserve">
+    <value>(?:\s{10,})(?:\d+(?:\w*(?:-?\.?\+*\:?\~?)*)*)+</value>
+  </data>
   <data name="RegexAcasLinuxSoftwareName" xml:space="preserve">
     <value>^(\w)+(-?\.?[A-Za-z]+)*</value>
   </data>
@@ -280,25 +286,31 @@
   <data name="SelectGroupedPoamVulnerabilities" xml:space="preserve">
     <value>SELECT
     Unique_Vulnerability_Identifier,
+    Vulnerability_Version,
     Vulnerability_Title,
     Vulnerability_Description,
     Source_Name,
     Source_Version,
-    Source_Release, Comments, Finding_Details, Finding_Type,
-    Raw_Risk, Status,
+    Source_Release, 
+    Comments, 
+    Finding_Details,
+    Raw_Risk, 
+    Status,
     GROUP_CONCAT(DISTINCT Scan_IP) AS IPs,
-    Control_Family || '-' || Control_Number || '.' || Enhancement AS NIST_Control
-FROM UniqueFindings
-LEFT JOIN Vulnerabilities
-LEFT JOIN Hardware
-LEFT JOIN FindingTypes
-LEFT JOIN VulnerabilitesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesCCIs.Vulnerability_ID
+    GROUP_CONCAT(DISTINCT (Control_Family || '-' || Control_Number || '.' || Enhancement)) AS NIST_Controls
+FROM Vulnerabilities
+LEFT JOIN UniqueFindings ON Vulnerabilities.Vulnerability_ID = UniqueFindings.Vulnerability_ID
+LEFT JOIN Hardware ON UniqueFindings.Hardware_ID = Hardware.Hardware_ID
+LEFT JOIN FindingTypes On UniqueFindings.Finding_Type_ID = FindingTypes.Finding_Type_ID
+LEFT JOIN VulnerabilitiesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesCCIs.Vulnerability_ID
 LEFT JOIN CCIs ON VulnerabilitiesCCIs.CCI_ID = CCIs.CCI_ID
 LEFT JOIN NistControlsCCIs ON CCIs.CCI_ID = NistControlsCCIs.CCI_ID
 LEFT JOIN NistControls ON NistControlsCCIs.NIST_Control_ID = NistControls.NIST_Control_ID
 LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
 LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID
-WHERE Finding_Type = 'ACAS' GROUP BY Unique_Vulnerability_Identifier</value>
+WHERE Finding_Type = @Finding_Type
+GROUP BY Unique_Vulnerability_Identifier, Source_Version, Source_Release
+ORDER BY Unique_vulnerability_Identifier</value>
   </data>
   <data name="SelectIndexes" xml:space="preserve">
     <value>SELECT name FROM sqlite_master WHERE type == 'index';</value>
@@ -355,9 +367,24 @@ AND
 	Last_Observed &lt; @Last_Observed;</value>
   </data>
   <data name="UpdateVulnerabilitySource" xml:space="preserve">
-    <value>UPDATE VulnerabilitySources SET Source_Name = @Source_Name, Source_Secondary_Identifier = @Source_Secondary_Identifier, Vulnerability_Source_File_Name = @Vulnerability_Source_File_Name, Source_Description = @Source_Description, Source_Version = @Source_Version, Source_Release = @Source_Release WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name);</value>
+    <value>UPDATE 
+	VulnerabilitySources 
+SET 
+	Source_Name = @Source_Name, 
+	Source_Secondary_Identifier = @Source_Secondary_Identifier, 
+	Vulnerability_Source_File_Name = @Vulnerability_Source_File_Name, 
+	Source_Description = @Source_Description, 
+	Source_Version = @Source_Version, 
+	Source_Release = @Source_Release 
+WHERE 
+	Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name);</value>
   </data>
   <data name="UpdateVulnerabilitySourceFromAcas" xml:space="preserve">
-    <value>UPDATE Vulnerabilities_VulnerabilitySources SET Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release) WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Version = 'Version Unknown');</value>
+    <value>UPDATE 
+    Vulnerabilities_VulnerabilitySources 
+SET 
+    Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release)
+WHERE
+    Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = 'Version Unknown')</value>
   </data>
 </root>
