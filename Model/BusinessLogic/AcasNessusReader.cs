@@ -224,7 +224,7 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["Source_Release"].Value = string.Empty;
                 sqliteCommand.Parameters["Port"].Value = xmlReader.GetAttribute("port");
                 sqliteCommand.Parameters["Protocol"].Value = xmlReader.GetAttribute("protocol");
-                sqliteCommand.Parameters["Service"].Value = xmlReader.GetAttribute("svc_name");
+                sqliteCommand.Parameters["Discovered_Service"].Value = sqliteCommand.Parameters["Display_Service"].Value = xmlReader.GetAttribute("svc_name");
                 sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = pluginId;
                 sqliteCommand.Parameters["Vulnerability_Title"].Value = xmlReader.GetAttribute("pluginName");
                 sqliteCommand.Parameters["VulnerabilityFamilyOrClass"].Value = xmlReader.GetAttribute("pluginFamily");

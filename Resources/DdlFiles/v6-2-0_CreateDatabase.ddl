@@ -485,12 +485,13 @@ CREATE TABLE Hardware_PPS
 	 Hardware_ID INTEGER NOT NULL , 
 	 PPS_ID INTEGER NOT NULL , 
 	 ReportInAccreditation NVARCHAR (5) , 
-	 AssociatedService NVARCHAR (25) , 
+	 Discovered_Service NVARCHAR (25) , 
+	 Display_Service NVARCHAR (50),
 	 Direction NVARCHAR (25) , 
 	 BoundaryCrossed NVARCHAR (25) , 
 	 DoD_Compliant NVARCHAR (5) , 
 	 Classification NVARCHAR (25) ,
-	 PRIMARY KEY (Hardware_ID, PPS_ID) ON CONFLICT IGNORE ,
+	 PRIMARY KEY (Hardware_ID, PPS_ID, Discovered_Service) ON CONFLICT IGNORE ,
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
 	 FOREIGN KEY (PPS_ID) REFERENCES PPS(PPS_ID)
 	);
@@ -1212,13 +1213,6 @@ CREATE TABLE UniqueFindings
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
 	 FOREIGN KEY (Finding_Source_File_ID) REFERENCES UniqueFindingsSourceFiles(Finding_Source_File_ID),
 	 UNIQUE (Instance_Identifier, Hardware_ID, Software_ID, Vulnerability_ID) ON CONFLICT IGNORE
-	);
-CREATE TABLE UniqueFindings_UniqueFindingsSourceFiles 
-	(
-	  Unique_Finding_ID INTEGER NOT NULL ,
-	  Finding_Source_File_ID INTEGER NOT NULL ,
-	  FOREIGN KEY (Unique_Finding_ID) REFERENCES UniqueFindings(Unique_Finding_ID),
-	  FOREIGN KEY (Finding_Source_File_ID) REFERENCES UniqueFindingsSourceFiles(Finding_Source_File_ID)
 	);
 CREATE TABLE UniqueFindingsSourceFiles 
 	(

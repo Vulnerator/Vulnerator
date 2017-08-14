@@ -54,7 +54,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="CaptureAcasEnumeratedSoftware" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ReportAssetOverview" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -121,6 +121,9 @@
     </Setting>
     <Setting Name="IncludeCatFourInReports" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RegexCciDetection" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

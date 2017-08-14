@@ -263,7 +263,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Hardware_PPS (Hardware_ID, PPS_ID) VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), (SELECT PPS_ID FROM PPS WHERE Port = @Port AND Protocol = @Protocol));.
+        ///   Looks up a localized string similar to INSERT INTO Hardware_PPS (Hardware_ID, PPS_ID, Discovered_Service, Display_Service) VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), (SELECT PPS_ID FROM PPS WHERE Port = @Port AND Protocol = @Protocol), @Discovered_Service, @Display_Service);.
         /// </summary>
         internal static string MapPortToHardware {
             get {
@@ -394,6 +394,15 @@ namespace Vulnerator.Properties {
         internal static string RegexCatText {
             get {
                 return ResourceManager.GetString("RegexCatText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string RegexCciSelector {
+            get {
+                return ResourceManager.GetString("RegexCciSelector", resourceCulture);
             }
         }
         

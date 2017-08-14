@@ -528,7 +528,7 @@ namespace Vulnerator.Model.DataAccess
                     // MAC_Addresses Table
                     "MAC_Address_ID", "MAC_Address",
                     // PPS Table
-                    "PPS_ID", "Port", "Protocol", "Service",
+                    "PPS_ID", "Port", "Protocol", "Discovered_Service", "Display_Service",
                     // Software Table
                     "Software_ID", "Discovered_Software_Name", "Displayed_Software_Name", "Software_Acronym", "Software_Version",
                     "Function", "Install_Date", "DADMS_ID", "DADMS_Disposition", "DADMS_LDA", "Has_Custom_Code", "IaOrIa_Enabled",

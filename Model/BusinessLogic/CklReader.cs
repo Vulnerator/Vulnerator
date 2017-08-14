@@ -28,7 +28,9 @@ namespace Vulnerator.Model.BusinessLogic
         private string classification = string.Empty;
         private List<string> ccis = new List<string>();
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
-        private string[] persistentParameters = new string[] { "Group_Name", "Finding_Source_File_Name", "Source_Name", "Source_Version", "Source_Release" };
+        private string[] persistentParameters = new string[] {
+            "Group_Name", "Finding_Source_File_Name", "Source_Name", "Source_Version", "Source_Release", "Host_Name", "Scan_IP", "FQDN", "NetBIOS", "Finding_Type"
+        };
 
         /// <summary>
         /// Reads *.ckl files exported from the DISA STIG Viewer and writes the results to the appropriate DataTables.
@@ -226,20 +228,14 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 if (table.Equals("IP_Addresses"))
                 {
-                    sqliteCommand.CommandText = Properties.Resources.InsertIpAddress;
                     sqliteCommand.Parameters["IP_Address"].Value = item;
+                    databaseInterface.InsertAndMapIpAddress(sqliteCommand);
                 }
                 else
                 {
-                    sqliteCommand.CommandText = Properties.Resources.InsertMacAddress;
                     sqliteCommand.Parameters["MAC_Address"].Value = item;
+                    databaseInterface.InsertAndMapMacAddress(sqliteCommand);
                 }
-                sqliteCommand.ExecuteNonQuery();
-                if (table.Equals("IP_Addresses"))
-                { databaseInterface.InsertAndMapIpAddress(sqliteCommand); }
-                else
-                { databaseInterface.InsertAndMapMacAddress(sqliteCommand); }
-                sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
             {

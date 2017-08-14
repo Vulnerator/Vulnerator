@@ -229,7 +229,7 @@ namespace Vulnerator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool CaptureAcasEnumeratedSoftware {
             get {
                 return ((bool)(this["CaptureAcasEnumeratedSoftware"]));
@@ -500,6 +500,18 @@ namespace Vulnerator.Properties {
             }
             set {
                 this["IncludeCatFourInReports"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RegexCciDetection {
+            get {
+                return ((string)(this["RegexCciDetection"]));
+            }
+            set {
+                this["RegexCciDetection"] = value;
             }
         }
     }
