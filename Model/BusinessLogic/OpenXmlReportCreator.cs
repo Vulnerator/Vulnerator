@@ -110,7 +110,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         log.Info("Creating POA&M and RAR tabs.");
                         WriteFindingsToPoamAndRar("ACAS", true);
-                        //WriteFindingsToPoamAndRar("CKL", true);
+                        WriteFindingsToPoamAndRar("CKL", true);
                         //WriteFindingsToPoamAndRar("XCCDF", true);
                         //WriteFindingsToPoamAndRar("WASSP", true);
                         //WriteFindingsToPoamAndRar("FPR", true);
@@ -857,7 +857,7 @@ namespace Vulnerator.Model.BusinessLogic
                         if (string.IsNullOrWhiteSpace(mitigationText))
                         { mitigationText = sqliteDataReader["Finding_Details"].ToString(); }
                         else
-                        { mitigationText += doubleCarriageReturn + sqliteDataReader["FindingDetails"].ToString(); }
+                        { mitigationText += doubleCarriageReturn + sqliteDataReader["Finding_Details"].ToString(); }
                     }
                     WriteCellValue(
                         poamOpenXmlWriter,
