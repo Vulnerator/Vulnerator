@@ -17,9 +17,12 @@ namespace Vulnerator.Model.BusinessLogic
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         DatabaseInterface databaseInterface = new DatabaseInterface();
-        private string[] persistentParameters = new string[] { "Group_Name", "Finding_Source_File_Name", "Source_Name", "Scan_IP", "Host_Name", "Finding_Type" };
+        private string[] persistentParameters = new string[] {
+            "Group_Name", "Finding_Source_File_Name", "Source_Name", "Source_Version", "Source_Release", "Scan_IP", "Host_Name", "Finding_Type"
+        };
+        string ccis = string.Empty;
 
-        public string ReadAnsibleFile(Object.File file)
+        public string ReadAnsibleFile(File file)
         { 
             try
             {
@@ -36,7 +39,9 @@ namespace Vulnerator.Model.BusinessLogic
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
+                        sqliteCommand.Parameters["Finding_Type"].Value = "CKL";
                         databaseInterface.InsertGroup(sqliteCommand, file);
+                        databaseInterface.InsertParsedFile(sqliteCommand, file);
                         using (XmlReader xmlReader = XmlReader.Create(file.FilePath, GenerateXmlReaderSettings()))
                         {
                             while (xmlReader.Read())
@@ -58,24 +63,16 @@ namespace Vulnerator.Model.BusinessLogic
                                         case "finding":
                                             {
                                                 ParseFindingData(sqliteCommand, xmlReader);
-                                                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
-                                                {
-                                                    if (!persistentParameters.Contains(parameter.ParameterName))
-                                                    { parameter.Value = string.Empty; }
-                                                }
                                                 break;
                                             }
                                         default:
                                             { break; }
                                     }
                                 }
-                                else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals(""))
-                                {
-
-                                }
                             }
                         }
                     }
+                    sqliteTransaction.Commit();
                 }
                 return "Processed";
             }
@@ -94,17 +91,18 @@ namespace Vulnerator.Model.BusinessLogic
 
             try
             {
-                sqliteCommand.Parameters["Discovered_Host_Name"].Value = xmlReader.GetAttribute("hostname");
+                sqliteCommand.Parameters["Host_Name"].Value = xmlReader.GetAttribute("hostname");
                 sqliteCommand.Parameters["Displayed_Host_Name"].Value = xmlReader.GetAttribute("hostname");
                 string ipAddress = xmlReader.GetAttribute("ip_address");
                 string macAddress = xmlReader.GetAttribute("mac_address");
                 databaseInterface.InsertHardware(sqliteCommand);
+                databaseInterface.MapHardwareToGroup(sqliteCommand);
                 ParseIpAndMacAddress(sqliteCommand, ipAddress);
                 ParseIpAndMacAddress(sqliteCommand, macAddress);
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert Hardware \"{0}\".", sqliteCommand.Parameters["Discovered_Host_Name"].Value.ToString()));
+                log.Error(string.Format("Unable to insert Hardware \"{0}\".", sqliteCommand.Parameters["Host_Name"].Value.ToString()));
                 throw exception;
             }
         }
@@ -182,7 +180,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format(""));
+                log.Error(string.Format("Unable to parse Ansible source data."));
                 throw exception;
             }
         }
@@ -191,16 +189,112 @@ namespace Vulnerator.Model.BusinessLogic
         { 
             try
             {
-
+                sqliteCommand.Parameters["Vulnerability_Group_ID"].Value = xmlReader.GetAttribute("v_id");
+                string rule = xmlReader.GetAttribute("rule_id");
+                string ruleRelease = string.Empty;
+                if (rule.Contains("_"))
+                { rule = rule.Split('_')[0]; }
+                if (rule.Contains("r"))
+                {
+                    ruleRelease = rule.Split('r')[1];
+                    rule = rule.Split('r')[0];
+                }
+                sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = rule.Trim();
+                sqliteCommand.Parameters["Vulnerability_Version"].Value = ruleRelease.Trim();
+                sqliteCommand.Parameters["Raw_Risk"].Value = xmlReader.GetAttribute("raw_risk");
+                sqliteCommand.Parameters["First_Discovered"].Value = xmlReader.GetAttribute("datetime");
+                sqliteCommand.Parameters["Last_Observed"].Value = xmlReader.GetAttribute("datetime");
+                while (xmlReader.Read())
+                {
+                    if (xmlReader.IsStartElement())
+                    {
+                        switch (xmlReader.Name)
+                        {
+                            case "title":
+                                {
+                                    sqliteCommand.Parameters["Vulnerability_Title"].Value = Regex.Replace(ObtainCurrentNodeValue(xmlReader), @"\s+", " ").Trim();
+                                    break;
+                                }
+                            case "discussion":
+                                {
+                                    sqliteCommand.Parameters["Vulnerability_Description"].Value = Regex.Replace(ObtainCurrentNodeValue(xmlReader), @"\s+", " ").Trim();
+                                    break;
+                                }
+                            case "check_content":
+                                {
+                                    sqliteCommand.Parameters["Check_Content"].Value = Regex.Replace(ObtainCurrentNodeValue(xmlReader), @"\s+", " ").Trim();
+                                    break;
+                                }
+                            case "fix_text":
+                                {
+                                    sqliteCommand.Parameters["Fix_Text"].Value = Regex.Replace(ObtainCurrentNodeValue(xmlReader), @"\s+", " ").Trim();
+                                    break;
+                                }
+                            case "procedure":
+                                {
+                                    sqliteCommand.Parameters["Tool_Generated_Output"].Value = Regex.Replace(ObtainCurrentNodeValue(xmlReader), @"\s+", " ").Trim();
+                                    break;
+                                }
+                            case "output":
+                                {
+                                    sqliteCommand.Parameters["Tool_Generated_Output"].Value = string.Format(
+                                        "{0}{1}{2}{3}{4}{5}",
+                                        sqliteCommand.Parameters["Tool_Generated_Output"].Value.ToString(),
+                                        Environment.NewLine,
+                                        Environment.NewLine,
+                                        "Output:",
+                                        Environment.NewLine,
+                                        Regex.Replace(ObtainCurrentNodeValue(xmlReader), @"\s+", " ").Trim()
+                                        );
+                                    break;
+                                }
+                            case "comments":
+                                {
+                                    sqliteCommand.Parameters["Comments"].Value = Regex.Replace(ObtainCurrentNodeValue(xmlReader), @"\s+", " ").Trim();
+                                    break;
+                                }
+                            case "status":
+                                {
+                                    sqliteCommand.Parameters["Status"].Value = Regex.Replace(ObtainCurrentNodeValue(xmlReader), @"\s+", " ").Trim();
+                                    break;
+                                }
+                            case "CCI":
+                                {
+                                    ccis = Regex.Replace(ObtainCurrentNodeValue(xmlReader), @"\s+", " ").Trim();
+                                    break;
+                                }
+                            default:
+                                { break; }
+                        }
+                    }
+                    else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("finding"))
+                    {
+                        databaseInterface.InsertVulnerability(sqliteCommand);
+                        databaseInterface.MapVulnerabilityToSource(sqliteCommand);
+                        databaseInterface.InsertUniqueFinding(sqliteCommand);
+                        Regex regex = new Regex(Properties.Resources.RegexCciSelector);
+                        foreach (Match match in regex.Matches(ccis))
+                        {
+                            sqliteCommand.Parameters["CCI"].Value = match.ToString().Replace("CCI-", string.Empty);
+                            databaseInterface.MapVulnerabilityToCci(sqliteCommand);
+                        }
+                        foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
+                        {
+                            if (!persistentParameters.Contains(parameter.ParameterName))
+                            { parameter.Value = string.Empty; }
+                        }
+                        ccis = string.Empty;
+                        return;
+                    } 
+                }
             }
             catch (Exception exception)
             {
-                log.Error(string.Format(""));
+                log.Error(string.Format("Unable to parse finding node for \"{0}\".", 
+                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
                 throw exception;
             }  
         }
-
-        
 
         private XmlReaderSettings GenerateXmlReaderSettings()
         {

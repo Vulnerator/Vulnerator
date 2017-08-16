@@ -398,7 +398,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to CCI-\d*.
         /// </summary>
         internal static string RegexCciSelector {
             get {
