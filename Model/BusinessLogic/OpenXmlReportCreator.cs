@@ -73,7 +73,7 @@ namespace Vulnerator.Model.BusinessLogic
 
                     StartSpreadsheets(workbookPart, sheets);
 
-                    if (Properties.Settings.Default.ReportAssetOverview)
+                    if (false)
                     {
                         log.Info("Creating Asset Overview tab.");
                         foreach (string findingType in findingTypes)
@@ -142,7 +142,7 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                if (Properties.Settings.Default.ReportAssetOverview)
+                if (false)
                 { StartAssetOverview(workbookPart, sheets); }
                 if (Properties.Settings.Default.ReportTestPlan)
                 { StartTestPlan(workbookPart, sheets); }
@@ -199,7 +199,7 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                if (Properties.Settings.Default.ReportAssetOverview)
+                if (false)
                 { EndAssetOverview(); }
                 if (Properties.Settings.Default.ReportTestPlan)
                 { EndTestPlan(); }

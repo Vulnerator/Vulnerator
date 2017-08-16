@@ -11,8 +11,8 @@
     xmlns:viewHelper="clr-namespace:Vulnerator.View.ViewHelper"
     xmlns:vm="clr-namespace:Vulnerator.ViewModel"
     d1p1:Ignorable="d"
-             Startup="Application_Startup"
-    ShutdownMode="OnExplicitShutdown">
+    ShutdownMode="OnExplicitShutdown"
+    Startup="Application_Startup">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -33,12 +33,9 @@
             </ResourceDictionary.MergedDictionaries>
             <Properties:Settings x:Key="Settings" />
             <vm:MainWindowViewModel x:Key="MainWindowViewModel" />
-            <Style x:Key="ThirdLevelHeaderStyle"
-                   TargetType="Label">
-                <Setter Property="FontSize"
-                        Value="16" />
-                <Setter Property="HorizontalAlignment"
-                        Value="Left" />
+            <Style x:Key="ThirdLevelHeaderStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
             </Style>
             <Style x:Key="SecondLevelHeaderStyle" TargetType="Label">
                 <Setter Property="FontSize" Value="20" />
@@ -574,31 +571,26 @@
                 </Setter>
             </Style>
 
-            <Style x:Key="SuccessTextBox"
-                   BasedOn="{StaticResource ErrorTextBox}"
-                   TargetType="{x:Type TextBox}">
-                <Setter Property="Background"
-                        Value="#ccffcc" />
-                <Setter Property="Foreground"
-                        Value="DarkGreen" />
+            <Style
+                x:Key="SuccessTextBox"
+                BasedOn="{StaticResource ErrorTextBox}"
+                TargetType="{x:Type TextBox}">
+                <Setter Property="Background" Value="#ccffcc" />
+                <Setter Property="Foreground" Value="DarkGreen" />
             </Style>
 
-            <Style x:Key="CustomCloseWindowButtonStyle"
-                   TargetType="{x:Type Button}"
-                   BasedOn="{StaticResource MetroWindowButtonStyle}">
+            <Style
+                x:Key="CustomCloseWindowButtonStyle"
+                BasedOn="{StaticResource MetroWindowButtonStyle}"
+                TargetType="{x:Type Button}">
                 <Style.Triggers>
 
-                    <Trigger Property="IsMouseOver"
-                             Value="True">
-                        <Setter Property="Background"
-                                Value="#EB2F2F" />
-                        <Setter Property="Foreground"
-                                Value="{DynamicResource WhiteBrush}" />
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#EB2F2F" />
+                        <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
                     </Trigger>
-                    <Trigger Property="IsPressed"
-                             Value="True">
-                        <Setter Property="Background"
-                                Value="#7C0000" />
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="Background" Value="#7C0000" />
                     </Trigger>
 
                 </Style.Triggers>

@@ -56,9 +56,6 @@
     <Setting Name="CaptureAcasEnumeratedSoftware" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="ReportAssetOverview" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="ReportPoamRar" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
@@ -98,8 +95,8 @@
     <Setting Name="IncludeAnsibleInReports" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="VulnerabilityExportGrouping" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+    <Setting Name="GroupPoamRar" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="UtilizeCklCommentsForMitigation" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

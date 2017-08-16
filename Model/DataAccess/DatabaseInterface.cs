@@ -36,7 +36,7 @@ namespace Vulnerator.Model.DataAccess
                 if (!string.IsNullOrWhiteSpace(file.FileSystemName))
                 { groupName = file.FileSystemName; }
                 else
-                { groupName = "Unassigned"; }
+                { groupName = "All"; }
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Group_Name", groupName));
                 sqliteCommand.CommandText = Properties.Resources.InsertGroup;
                 sqliteCommand.ExecuteNonQuery();

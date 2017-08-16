@@ -1364,7 +1364,21 @@ CREATE TABLE WindowsLocalUserSettings
 	 Local_Never_Logged_On NVARCHAR (5) NOT NULL , 
 	 Local_PW_Never_Expires NVARCHAR (5) NOT NULL 
 	);
-INSERT INTO Groups VALUES (NULL, 'Unassigned', 'False', NULL, NULL);
+CREATE TABLE RequiredReports
+	(
+	 Required_Report_ID INTEGER PRIMARY KEY ,
+	 Report_Name NVARCHAR (50) NOT NULL ,
+	 Report_Bound_Property NVARCHAR (25) NOT NULL,
+	 Report_Type NVARCHAR (10) NOT NULL ,
+	 Report_Category_ID NVARCHAR (50) NOT NULL ,
+	 FOREIGN KEY (Report_Category_ID) REFERENCES ReportCategories(Report_Category_ID)
+	);
+CREATE TABLE ReportCategories
+	(
+	 Report_Category_ID INTEGER PRIMARY KEY,
+	 Report_Category_Name NVARCHAR (25) NOT NULL
+	);
+INSERT INTO Groups VALUES (NULL, 'All', 'False', NULL, NULL);
 INSERT INTO FindingTypes VALUES (NULL, 'ACAS');
 INSERT INTO FindingTypes VALUES (NULL, 'CKL');
 INSERT INTO FindingTypes VALUES (NULL, 'XCCDF');
@@ -1396,3 +1410,11 @@ INSERT INTO LifecycleStatuses VALUES (NULL, 'Uncategorized');
 INSERT INTO LifecycleStatuses VALUES (NULL, 'Pending');
 INSERT INTO LifecycleStatuses VALUES (NULL, 'Active');
 INSERT INTO LifecycleStatuses VALUES (NULL, 'Decommisioned');
+INSERT INTO ReportCategories VALUES (NULL, "Vulnerability Management");
+INSERT INTO ReportCategories VALUES (NULL, "Configuration Management");
+INSERT INTO ReportCategories VALUES (NULL, "RMF");
+INSERT INTO RequiredReports VALUES (NULL, "Excel Summary", "Default.ReportExcelSummary", "Excel", (SELECT Report_Category_ID FROM ReportCategories WHERE Report_Category_Name = "Vulnerability Management"));
+INSERT INTO RequiredReports VALUES (NULL, "POA&M / RAR", "Default.ReportPoamRar", "Excel", (SELECT Report_Category_ID FROM ReportCategories WHERE Report_Category_Name = "Vulnerability Management"));
+INSERT INTO RequiredReports VALUES (NULL, "SCAP & STIG Discrepancies", "Default.ReportScapStigDiscrepancies", "Excel", (SELECT Report_Category_ID FROM ReportCategories WHERE Report_Category_Name = "Vulnerability Management"));
+INSERT INTO RequiredReports VALUES (NULL, "Vulnerability Deep Dive (By Finding Type)", "Default.ReportVulnerabilityDeepDive", "Excel", (SELECT Report_Category_ID FROM ReportCategories WHERE Report_Category_Name = "Vulnerability Management"));
+INSERT INTO RequiredReports VALUES (NULL, "Test Plan", "Default.ReportTestPlan", "Excel", (SELECT Report_Category_ID FROM ReportCategories WHERE Report_Category_Name = "Vulnerability Management"));

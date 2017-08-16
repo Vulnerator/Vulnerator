@@ -12,6 +12,8 @@ namespace Vulnerator.Model.DataAccess
         public DbSet<Asset> Assets { get; set; }
         public DbSet<Mitigation> Mitigations { get; set; }
         public DbSet<FindingStatus> FindingStatuses { get; set; }
+        
+        public DbSet<Report> Reports { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         { optionsBuilder.UseSqlite(@"Filename=" + databaseFile); }
