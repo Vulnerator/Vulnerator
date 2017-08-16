@@ -81,7 +81,6 @@ namespace Vulnerator.Model.BusinessLogic
                         XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
                         using (XmlReader xmlReader = XmlReader.Create(file.FilePath, xmlReaderSettings))
                         {
-                            WorkingSystem workingSystem = new WorkingSystem();
                             while (xmlReader.Read())
                             {
                                 if (xmlReader.IsStartElement())

@@ -50,7 +50,7 @@ namespace Vulnerator.Model.BusinessLogic
 
                 if (!DatabaseBuilder.sqliteConnection.State.Equals("Open"))
                 { DatabaseBuilder.sqliteConnection.Open(); }
-                using (SQLiteTransaction sqliteTransaction = FindingsDatabaseActions.sqliteConnection.BeginTransaction())
+                using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
                 {
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {

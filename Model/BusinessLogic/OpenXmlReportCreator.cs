@@ -381,7 +381,7 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 int count = 0;
-                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
                     sqliteCommand.CommandText = "SELECT COUNT(VulnId) AS Count FROM UniqueFinding NATURAL JOIN FindingTypes NATURAL JOIN Vulnerability WHERE FindingType = @FindingType;";
@@ -405,7 +405,7 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 List<AssetOverviewLineItem> assetList = new List<AssetOverviewLineItem>();
-                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
                     sqliteCommand.CommandText = "SELECT AssetIdToReport, HostName, IpAddress, GroupName, " + 
@@ -1227,7 +1227,7 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "ACAS"));
                     sqliteCommand.CommandText = SetSqliteCommandText(false, "ACAS");
@@ -1416,7 +1416,7 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
                     sqliteCommand.CommandText = SetSqliteCommandText(false, findingType);
@@ -1607,7 +1607,7 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
                     sqliteCommand.CommandText = SetSqliteCommandText(false, findingType);
@@ -1971,7 +1971,7 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.CommandText = "SELECT DISTINCT Source, Version, Release, HostName, IpAddress, FileName " +
                         "FROM UniqueFinding NATURAL JOIN FileNames NATURAL JOIN Assets " +
@@ -2307,7 +2307,7 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 List<DiscrepancyItem> itemList = new List<DiscrepancyItem>();
-                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
                     sqliteCommand.CommandText = "SELECT VulnId, VulnTitle, RuleId, Status, AssetIdToReport, FileName, Source, " +
@@ -2568,7 +2568,7 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 string credentialedString = "No";
-                using (SQLiteCommand sqliteCommand = FindingsDatabaseActions.sqliteConnection.CreateCommand())
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("IpAddress", ipAddress));
                     sqliteCommand.CommandText = "SELECT Found21745, Found26917 FROM Assets WHERE IpAddress = @IpAddress;";
