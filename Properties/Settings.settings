@@ -123,7 +123,13 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="RegexCciDetection" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">CCI-\d*</Value>
+    </Setting>
+    <Setting Name="ReportScapStigDiscrepancies" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ReportVulnerabilityDeepDive" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -1367,9 +1367,9 @@ CREATE TABLE WindowsLocalUserSettings
 INSERT INTO Groups VALUES (NULL, 'Unassigned', 'False', NULL, NULL);
 INSERT INTO FindingTypes VALUES (NULL, 'ACAS');
 INSERT INTO FindingTypes VALUES (NULL, 'CKL');
-INSERT INTO FindingTypes VALUES (NULL, 'Fortify');
 INSERT INTO FindingTypes VALUES (NULL, 'XCCDF');
 INSERT INTO FindingTypes VALUES (NULL, 'WASSP');
+INSERT INTO FindingTypes VALUES (NULL, 'Fortify');
 INSERT INTO AvailabilityLevels VALUES (NULL, 'High');
 INSERT INTO AvailabilityLevels VALUES (NULL, 'Moderate');
 INSERT INTO AvailabilityLevels VALUES (NULL, 'Low');

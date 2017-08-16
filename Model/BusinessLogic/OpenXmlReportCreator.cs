@@ -49,6 +49,8 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
+                if (!DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
+                { DatabaseBuilder.sqliteConnection.Open(); }
                 using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Create(fileName, SpreadsheetDocumentType.Workbook))
                 {
                     log.Info("Creating workbook framework.");
@@ -57,86 +59,64 @@ namespace Vulnerator.Model.BusinessLogic
                     workbookStylesPart.Stylesheet = CreateStylesheet();
                     Workbook workbook = workbookPart.Workbook = new Workbook();
                     Sheets sheets = workbook.AppendChild(new Sheets());
-                    StartSpreadsheets(workbookPart, sheets);
 
-                    if (false)
+                    List<string> findingTypes = new List<string>();
+                    using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
-                        log.Info("Creating Asset Overview tab.");
-                        if (CountVulnerabilitiesByFindingType("ACAS") > 0)
+                        sqliteCommand.CommandText = "SELECT Finding_Type FROM FindingTypes;";
+                        using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                         {
-                            WriteFindingTypeHeaderRowOne("ACAS");
-                            WriteFindingTypeHeaderRowTwo("ACAS");
-                            WriteAssetOverviewItems("ACAS");
-                        }
-                        if (CountVulnerabilitiesByFindingType("CKL") > 0)
-                        {
-                            WriteFindingTypeHeaderRowOne("CKL");
-                            WriteFindingTypeHeaderRowTwo("CKL");
-                            WriteAssetOverviewItems("CKL");
-                        }
-                        if (CountVulnerabilitiesByFindingType("XCCDF") > 0)
-                        {
-                            WriteFindingTypeHeaderRowOne("XCCDF");
-                            WriteFindingTypeHeaderRowTwo("XCCDF");
-                            WriteAssetOverviewItems("XCCDF");
-                        }
-                        if (CountVulnerabilitiesByFindingType("WASSP") > 0)
-                        {
-                            WriteFindingTypeHeaderRowOne("WASSP");
-                            WriteFindingTypeHeaderRowTwo("WASSP");
-                            WriteAssetOverviewItems("WASSP");
-                        }
-                        if (CountVulnerabilitiesByFindingType("FPR") > 0)
-                        {
-                            WriteFindingTypeHeaderRowOne("FPR");
-                            WriteFindingTypeHeaderRowTwo("FPR");
-                            WriteAssetOverviewItems("FPR");
+                            while (sqliteDataReader.Read())
+                            { findingTypes.Add(sqliteDataReader["Finding_Type"].ToString()); }
                         }
                     }
 
-                    if (false)
+                    StartSpreadsheets(workbookPart, sheets);
+
+                    if (Properties.Settings.Default.ReportAssetOverview)
+                    {
+                        log.Info("Creating Asset Overview tab.");
+                        foreach (string findingType in findingTypes)
+                        {
+                            if (CountVulnerabilitiesByFindingType(findingType) > 0)
+                            {
+                                WriteFindingTypeHeaderRowOne(findingType);
+                                WriteFindingTypeHeaderRowTwo(findingType);
+                                WriteAssetOverviewItems(findingType);
+                            }
+                        }
+                    }
+
+                    if (Properties.Settings.Default.ReportTestPlan)
                     {
                         log.Info("Creating Test Plan tab.");
                         WriteTestPlanHeaderRowOne();
                         WriteTestPlanHeaderRowTwo();
                         WriteTestPlanHeaderRowThree();
-                        ObtainTestPlanItems("ACAS");
-                        ObtainTestPlanItems("XCCDF");
-                        ObtainTestPlanItems("CKL");
-                        ObtainTestPlanItems("FPR");
+                        foreach (string findingType in findingTypes)
+                        { ObtainTestPlanItems(findingType); }
                     }
 
                     if (Properties.Settings.Default.ReportPoamRar)
                     {
                         log.Info("Creating POA&M and RAR tabs.");
-                        WriteFindingsToPoamAndRar("ACAS", true);
-                        //WriteFindingsToPoamAndRar("CKL", true);
-                        //WriteFindingsToPoamAndRar("XCCDF", true);
-                        //WriteFindingsToPoamAndRar("WASSP", true);
-                        //WriteFindingsToPoamAndRar("FPR", true);
+                        foreach (string findingType in findingTypes)
+                        { WriteFindingsToPoamAndRar(findingType); }
                     }
 
-                    if (false)
-                    {
-                        log.Info("Creating ACAS Output tab.");
-                        WriteIndividualAcasOutput();
-                    }
-
-                    if (false)
+                    if (Properties.Settings.Default.ReportScapStigDiscrepancies)
                     {
                         log.Info("Creating Discrepancies tab.");
                         WriteIndividualDiscrepancies();
                     }
 
-                    if (false)
+                    if (Properties.Settings.Default.ReportVulnerabilityDeepDive)
                     {
+                        log.Info("Creating ACAS Output tab.");
+                        WriteIndividualAcasOutput();
                         log.Info("Creating STIG Details tab.");
                         WriteStigDetailItems("CKL");
                         WriteStigDetailItems("XCCDF");
-                    }
-
-                    if (false)
-                    {
                         log.Info("Creating Fortify Details tab.");
                         WriteFprDetailsItems("FPR");
                     }
@@ -154,29 +134,31 @@ namespace Vulnerator.Model.BusinessLogic
                 log.Debug("Exception details: " + exception);
                 return "Excel report creation failed - see log for details";
             }
+            finally
+            { DatabaseBuilder.sqliteConnection.Close(); }
         }
 
         private void StartSpreadsheets(WorkbookPart workbookPart, Sheets sheets)
         {
             try
             {
-                if (false)
+                if (Properties.Settings.Default.ReportAssetOverview)
                 { StartAssetOverview(workbookPart, sheets); }
-                if (false)
+                if (Properties.Settings.Default.ReportTestPlan)
                 { StartTestPlan(workbookPart, sheets); }
                 if (Properties.Settings.Default.ReportPoamRar)
                 {
                     StartPoam(workbookPart, sheets);
-                    //StartRar(workbookPart, sheets);
+                    StartRar(workbookPart, sheets);
                 }
-                if (false)
-                { StartAcasOutput(workbookPart, sheets); }
-                if (false)
+                if (Properties.Settings.Default.ReportScapStigDiscrepancies)
                 { StartDiscrepancies(workbookPart, sheets); }
-                if (false)
-                { StartStigDetails(workbookPart, sheets); }
-                if (false)
-                { StartFprDetails(workbookPart, sheets); }
+                if (Properties.Settings.Default.ReportVulnerabilityDeepDive)
+                {
+                    StartAcasOutput(workbookPart, sheets);
+                    StartStigDetails(workbookPart, sheets);
+                    StartFprDetails(workbookPart, sheets);
+                }
             }
             catch (Exception exception)
             {
@@ -185,12 +167,10 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private void WriteFindingsToPoamAndRar(string findingType, bool findingsAreMerged)
+        private void WriteFindingsToPoamAndRar(string findingType)
         {
             try
             {
-                if (!DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
-                { DatabaseBuilder.sqliteConnection.Open(); }
                 using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Type", findingType));
@@ -203,7 +183,7 @@ namespace Vulnerator.Model.BusinessLogic
                             { continue; }
 
                             WriteFindingToPoam(sqliteDataReader);
-                            //WriteFindingToRar(sqliteDataReader);
+                            WriteFindingToRar(sqliteDataReader);
                         }
                     }
                 }
@@ -213,31 +193,29 @@ namespace Vulnerator.Model.BusinessLogic
                 log.Error("Unable to write findings to the POA&M and/or RAR tab(s).");
                 throw exception;
             }
-            finally
-            { DatabaseBuilder.sqliteConnection.Close(); }
         }
 
         private void EndSpreadsheets()
         {
             try
             {
-                if (false)
+                if (Properties.Settings.Default.ReportAssetOverview)
                 { EndAssetOverview(); }
-                if (false)
+                if (Properties.Settings.Default.ReportTestPlan)
                 { EndTestPlan(); }
                 if (Properties.Settings.Default.ReportPoamRar)
                 {
                     EndPoam();
-                    //EndRar();
+                    EndRar();
                 }
-                if (false)
-                { EndAcasOutput(); }
-                if (false)
+                if (Properties.Settings.Default.ReportScapStigDiscrepancies)
                 { EndDiscrepancies(); }
-                if (false)
-                { EndStigDetails(); }
-                if (false)
-                { EndFprDetails(); }
+                if (Properties.Settings.Default.ReportVulnerabilityDeepDive)
+                {
+                    EndAcasOutput();
+                    EndStigDetails();
+                    EndFprDetails();
+                }
             }
             catch (Exception exception)
             {
