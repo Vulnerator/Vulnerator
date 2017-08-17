@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Vulnerator.Model.DataAccess;
@@ -20,6 +21,9 @@ namespace Vulnerator.Model.BusinessLogic
         private List<string> ccis = new List<string>();
         private List<string> responsibilities = new List<string>();
         private Dictionary<string, string> replaceDictionary = PopulateReplaceDictionary();
+        private string[] persistentParameters = new string[] {
+            "Vulnerability_Source_File_Name", "Source_Description", "Source_Secondary_Identifier", "Source_Name", "Source_Version", "Source_Release", "Host_Name", "Scan_IP"
+        };
 
         public void ReadRawStig(ZipArchiveEntry rawStig)
         {
@@ -159,6 +163,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         databaseInterface.UpdateVulnerability(sqliteCommand);
                         databaseInterface.InsertVulnerability(sqliteCommand);
+                        databaseInterface.MapVulnerabilityToSource(sqliteCommand);
                         if (ccis.Count > 0)
                         {
                             foreach (string cci in ccis)
@@ -167,6 +172,12 @@ namespace Vulnerator.Model.BusinessLogic
                                 databaseInterface.MapVulnerabilityToCci(sqliteCommand);
                                 sqliteCommand.Parameters["CCI"].Value = string.Empty;
                             }
+                        }
+                        ccis.Clear();
+                        foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
+                        {
+                            if (!persistentParameters.Contains(parameter.ParameterName))
+                            { parameter.Value = string.Empty; }
                         }
                         return;
                     }

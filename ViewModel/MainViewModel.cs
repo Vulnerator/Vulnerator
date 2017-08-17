@@ -47,6 +47,9 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        public string ActiveUser
+        { get { return Environment.UserName; } }
+
         private string _newVersionText = "Update Info Unavailable";
         /// <summary>
         /// String to notify users of new application version(s) available for download
@@ -148,6 +151,7 @@ namespace Vulnerator.ViewModel
             databaseBuilder = new DatabaseBuilder();
             VersionTest();
             Messenger.Default.Register<GuiFeedback>(this, (guiFeedback) => UpdateGui(guiFeedback));
+            Properties.Settings.Default.ActiveUser = ActiveUser;
         }
 
         ~MainViewModel()

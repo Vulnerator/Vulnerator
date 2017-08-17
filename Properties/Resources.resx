@@ -286,6 +286,27 @@
   <data name="RegexStigId" xml:space="preserve">
     <value>(?:(?:\w)+(?:-|\.|_)?)+</value>
   </data>
+  <data name="SelectAnsibleTowerData" xml:space="preserve">
+    <value>SELECT
+    Vulnerability_ID,
+    Vulnerability_Group_ID,
+    Unique_Vulnerability_Identifier,
+    Vulnerability_Version,
+    Raw_Risk,
+    Vulnerability_Title,
+    Vulnerability_Description,
+    Check_Content,
+    Fix_Text,
+    GROUP_CONCAT(DISTINCT CCI) AS CCIs
+FROM Vulnerabilities
+LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
+LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID
+LEFT JOIN VulnerabilitiesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesCCIs.Vulnerability_ID
+LEFT JOIN CCIs ON VulnerabilitiesCCIs.CCI_ID = CCIs.CCI_ID
+WHERE Source_Name LIKE @Operating_System
+GROUP BY Unique_Vulnerability_Identifier
+ORDER BY Vulnerability_Group_ID</value>
+  </data>
   <data name="SelectGroupedPoamVulnerabilities" xml:space="preserve">
     <value>SELECT
     Unique_Vulnerability_Identifier,

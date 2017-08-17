@@ -2,8 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Vulnerator.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="Version" Type="System.String" Scope="User">
-      <Value Profile="(Default)">6.2.0</Value>
+    <Setting Name="VersionMetaData" Type="System.String" Scope="User">
+      <Value Profile="(Default)">alpha1</Value>
     </Setting>
     <Setting Name="Theme" Type="System.String" Scope="User">
       <Value Profile="(Default)">BaseLight</Value>
@@ -127,6 +127,9 @@
     </Setting>
     <Setting Name="ReportVulnerabilityDeepDive" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ActiveUser" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

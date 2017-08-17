@@ -118,9 +118,9 @@ namespace Vulnerator.Model.DataAccess
 
         private static string ConnectionString()
         {
-            SQLiteConnectionStringBuilder sqlBuilder = new SQLiteConnectionStringBuilder();
-            sqlBuilder.DataSource = DatabaseBuilder.databaseConnection;
-            return sqlBuilder.ToString();
+            SQLiteConnectionStringBuilder sqliteConnectionStringBuilder = new SQLiteConnectionStringBuilder();
+            sqliteConnectionStringBuilder.DataSource = Properties.Settings.Default.Database.Split(';')[0];
+            return sqliteConnectionStringBuilder.ToString();
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

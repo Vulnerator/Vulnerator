@@ -20,47 +20,55 @@
     d:DesignWidth="800"
     DataContext="{Binding Settings, Source={StaticResource Locator}}"
     mc:Ignorable="d">
-    <ScrollViewer Background="{DynamicResource WindowBackgroundBrush}"
-                  HorizontalScrollBarVisibility="Disabled"
-                  VerticalScrollBarVisibility="Auto">
+    <ScrollViewer
+        Background="{DynamicResource WindowBackgroundBrush}"
+        HorizontalScrollBarVisibility="Disabled"
+        VerticalScrollBarVisibility="Auto">
         <StackPanel>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <StackPanel Margin="5"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch">
-                    <Label Grid.Column="0"
-                           Style="{StaticResource SecondLevelHeaderStyle}">
-                        <TextBlock Text="User Information"
-                                   TextTrimming="CharacterEllipsis" />
+                <StackPanel
+                    Margin="5"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch">
+                    <Label Grid.Column="0" Style="{StaticResource SecondLevelHeaderStyle}">
+                        <TextBlock Text="User Information" TextTrimming="CharacterEllipsis" />
                     </Label>
-                    <TextBox Margin="5,0,5,5"
-                             Controls:TextBoxHelper.ClearTextButton="True"
-                             Controls:TextBoxHelper.UseFloatingWatermark="True"
-                             Controls:TextBoxHelper.Watermark="Name (First Last)"
-                             Text="{Binding Source={StaticResource Settings}, Path=Default.Name}" />
-                    <TextBox Margin="5,0,5,5"
-                             Controls:TextBoxHelper.ClearTextButton="True"
-                             Controls:TextBoxHelper.UseFloatingWatermark="True"
-                             Controls:TextBoxHelper.Watermark="Phone (Digits Only)"
-                             Text="{Binding Source={StaticResource Settings}, Path=Default.Phone}" />
-                    <TextBox Margin="5,0,5,5"
-                             Controls:TextBoxHelper.ClearTextButton="True"
-                             Controls:TextBoxHelper.UseFloatingWatermark="True"
-                             Controls:TextBoxHelper.Watermark="Email (you@example.com)"
-                             Text="{Binding Source={StaticResource Settings}, Path=Default.Email}" />
-                    <TextBox Margin="5,0,5,5"
-                             Controls:TextBoxHelper.ClearTextButton="True"
-                             Controls:TextBoxHelper.UseFloatingWatermark="True"
-                             Controls:TextBoxHelper.Watermark="Organization (i.e. NAVAIR)"
-                             Text="{Binding Source={StaticResource Settings}, Path=Default.Organization}" />
-                    <Label Grid.Column="0"
-                           Style="{StaticResource SecondLevelHeaderStyle}">
-                        <TextBlock Text="Database File"
-                                   TextTrimming="CharacterEllipsis" />
+                    <TextBox
+                        Margin="5,0,5,5"
+                        Controls:TextBoxHelper.UseFloatingWatermark="True"
+                        Controls:TextBoxHelper.Watermark="Active User"
+                        IsReadOnly="True"
+                        Text="{Binding Source={StaticResource Settings}, Path=Default.ActiveUser}" />
+                    <TextBox
+                        Margin="5,0,5,5"
+                        Controls:TextBoxHelper.ClearTextButton="True"
+                        Controls:TextBoxHelper.UseFloatingWatermark="True"
+                        Controls:TextBoxHelper.Watermark="Name (First Last)"
+                        Text="{Binding Source={StaticResource Settings}, Path=Default.Name}" />
+                    <TextBox
+                        Margin="5,0,5,5"
+                        Controls:TextBoxHelper.ClearTextButton="True"
+                        Controls:TextBoxHelper.UseFloatingWatermark="True"
+                        Controls:TextBoxHelper.Watermark="Phone (Digits Only)"
+                        Text="{Binding Source={StaticResource Settings}, Path=Default.Phone}" />
+                    <TextBox
+                        Margin="5,0,5,5"
+                        Controls:TextBoxHelper.ClearTextButton="True"
+                        Controls:TextBoxHelper.UseFloatingWatermark="True"
+                        Controls:TextBoxHelper.Watermark="Email (you@example.com)"
+                        Text="{Binding Source={StaticResource Settings}, Path=Default.Email}" />
+                    <TextBox
+                        Margin="5,0,5,5"
+                        Controls:TextBoxHelper.ClearTextButton="True"
+                        Controls:TextBoxHelper.UseFloatingWatermark="True"
+                        Controls:TextBoxHelper.Watermark="Organization (i.e. NAVAIR)"
+                        Text="{Binding Source={StaticResource Settings}, Path=Default.Organization}" />
+                    <Label Grid.Column="0" Style="{StaticResource SecondLevelHeaderStyle}">
+                        <TextBlock Text="Database File" TextTrimming="CharacterEllipsis" />
                     </Label>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -68,20 +76,23 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBox Margin="5,0,5,5"
-                                 HorizontalAlignment="Stretch"
-                                 VerticalAlignment="Center"
-                                 Controls:TextBoxHelper.Watermark="Database File"
-                                 IsReadOnly="True"
-                                 Text="{Binding Source={StaticResource Settings}, Path=Default.Database}" />
-                        <Button Grid.Column="1"
-                                Margin="5,0,5,5"
-                                Content="{IconPacks:PackIconModern Kind=PageSearch}"
-                                ToolTip="Search" />
-                        <Button Grid.Column="2"
-                                Margin="5,0,5,5"
-                                Content="{IconPacks:PackIconModern Kind=PageNew}"
-                                ToolTip="Create" />
+                        <TextBox
+                            Margin="5,0,5,5"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            Controls:TextBoxHelper.Watermark="Database File"
+                            IsReadOnly="True"
+                            Text="{Binding Source={StaticResource Settings}, Path=Default.Database}" />
+                        <Button
+                            Grid.Column="1"
+                            Margin="5,0,5,5"
+                            Content="{IconPacks:PackIconModern Kind=PageSearch}"
+                            ToolTip="Search" />
+                        <Button
+                            Grid.Column="2"
+                            Margin="5,0,5,5"
+                            Content="{IconPacks:PackIconModern Kind=PageNew}"
+                            ToolTip="Create" />
                     </Grid>
                     <Grid Grid.Column="0">
                         <Grid.ColumnDefinitions>
@@ -90,20 +101,14 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0"
-                               Style="{StaticResource SecondLevelHeaderStyle}">
-                            <TextBlock Text="Update STIG Library"
-                                       TextTrimming="CharacterEllipsis" />
+                        <Label Grid.Column="0" Style="{StaticResource SecondLevelHeaderStyle}">
+                            <TextBlock Text="Update STIG Library" TextTrimming="CharacterEllipsis" />
                         </Label>
-                        <Label Grid.Column="2"
-                               VerticalAlignment="Bottom">
-                            <TextBlock Text="Last Update:"
-                                       TextTrimming="CharacterEllipsis" />
+                        <Label Grid.Column="2" VerticalAlignment="Bottom">
+                            <TextBlock Text="Last Update:" TextTrimming="CharacterEllipsis" />
                         </Label>
-                        <Label Grid.Column="3"
-                               VerticalAlignment="Bottom">
-                            <TextBlock Text="{Binding Source={StaticResource Settings}, Path=Default.StigLibraryIngestDate}"
-                                       TextTrimming="CharacterEllipsis" />
+                        <Label Grid.Column="3" VerticalAlignment="Bottom">
+                            <TextBlock Text="{Binding Source={StaticResource Settings}, Path=Default.StigLibraryIngestDate}" TextTrimming="CharacterEllipsis" />
                         </Label>
                     </Grid>
                     <Grid>
@@ -112,75 +117,86 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBox x:Name="uploadStigLibraryTextbox"
-                                 Margin="5,0,5,5"
-                                 HorizontalAlignment="Stretch"
-                                 VerticalAlignment="Center"
-                                 Controls:TextBoxHelper.ClearTextButton="True"
-                                 Controls:TextBoxHelper.Watermark="STIG Library"
-                                 Text="{Binding StigLibraryLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <Button Grid.Column="1"
-                                Margin="5,0,5,5"
-                                Command="{Binding SelectStigLibraryCommand}"
-                                Content="{IconPacks:PackIconModern Kind=PageSearch}"
-                                ToolTip="Search" />
-                        <Button Grid.Column="2"
-                                Margin="5,0,5,5"
-                                Command="{Binding IngestStigLibraryCommand}"
-                                Content="{IconPacks:PackIconModern Kind=PageUpload}"
-                                ToolTip="Upload" />
+                        <TextBox
+                            x:Name="uploadStigLibraryTextbox"
+                            Margin="5,0,5,5"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            Controls:TextBoxHelper.ClearTextButton="True"
+                            Controls:TextBoxHelper.Watermark="STIG Library"
+                            Text="{Binding StigLibraryLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Button
+                            Grid.Column="1"
+                            Margin="5,0,5,5"
+                            Command="{Binding SelectStigLibraryCommand}"
+                            Content="{IconPacks:PackIconModern Kind=PageSearch}"
+                            ToolTip="Search" />
+                        <Button
+                            Grid.Column="2"
+                            Margin="5,0,5,5"
+                            Command="{Binding IngestStigLibraryCommand}"
+                            Content="{IconPacks:PackIconModern Kind=PageUpload}"
+                            ToolTip="Upload" />
                     </Grid>
-                    <TextBox Margin="5,0,5,5"
-                             Background="LightPink"
-                             Style="{StaticResource ErrorTextBox}"
-                             Text="Please select a STIG Library for ingestion."
-                             TextAlignment="Center"
-                             TextWrapping="Wrap"
-                             Visibility="{Binding NoLibraryVisibility}" />
-                    <TextBox Margin="5,0,5,5"
-                             Background="LightPink"
-                             Style="{StaticResource ErrorTextBox}"
-                             Text="STIG Library ingestion error - see log for details."
-                             TextAlignment="Center"
-                             TextWrapping="Wrap"
-                             Visibility="{Binding IngestionErrorVisibility}" />
-                    <TextBox Margin="5,0,5,5"
-                             Style="{StaticResource SuccessTextBox}"
-                             Text="STIG Library successfully ingested."
-                             TextAlignment="Center"
-                             TextWrapping="Wrap"
-                             Visibility="{Binding IngestionSuccessVisibility}" />
+                    <TextBox
+                        Margin="5,0,5,5"
+                        Background="LightPink"
+                        Style="{StaticResource ErrorTextBox}"
+                        Text="Please select a STIG Library for ingestion."
+                        TextAlignment="Center"
+                        TextWrapping="Wrap"
+                        Visibility="{Binding NoLibraryVisibility}" />
+                    <TextBox
+                        Margin="5,0,5,5"
+                        Background="LightPink"
+                        Style="{StaticResource ErrorTextBox}"
+                        Text="STIG Library ingestion error - see log for details."
+                        TextAlignment="Center"
+                        TextWrapping="Wrap"
+                        Visibility="{Binding IngestionErrorVisibility}" />
+                    <TextBox
+                        Margin="5,0,5,5"
+                        Style="{StaticResource SuccessTextBox}"
+                        Text="STIG Library successfully ingested."
+                        TextAlignment="Center"
+                        TextWrapping="Wrap"
+                        Visibility="{Binding IngestionSuccessVisibility}" />
                     <Grid Visibility="{Binding ProgressVisibility, FallbackValue=Collapsed}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <ProgressBar Width="{Binding ActualWidth, ElementName=uploadStigLibraryTextbox}"
-                                     Margin="5,0,5,5"
-                                     Maximum="{Binding ProgressBarMax}"
-                                     Minimum="0"
-                                     Value="{Binding ProgressBarValue}" />
+                        <ProgressBar
+                            Width="{Binding ActualWidth, ElementName=uploadStigLibraryTextbox}"
+                            Margin="5,0,5,5"
+                            Maximum="{Binding ProgressBarMax}"
+                            Minimum="0"
+                            Value="{Binding ProgressBarValue}" />
                         <Grid Grid.Column="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0"
-                                       Text="{Binding ProgressBarValue}"
-                                       TextAlignment="Center" />
-                            <TextBlock Grid.Column="1"
-                                       Text="/"
-                                       TextAlignment="Center" />
-                            <TextBlock Grid.Column="2"
-                                       Text="{Binding ProgressBarMax}"
-                                       TextAlignment="Center" />
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{Binding ProgressBarValue}"
+                                TextAlignment="Center" />
+                            <TextBlock
+                                Grid.Column="1"
+                                Text="/"
+                                TextAlignment="Center" />
+                            <TextBlock
+                                Grid.Column="2"
+                                Text="{Binding ProgressBarMax}"
+                                TextAlignment="Center" />
                         </Grid>
                     </Grid>
 
-                    <Expander Margin="5,0"
-                              Background="Red"
-                              BorderBrush="Red">
+                    <Expander
+                        Margin="5,0"
+                        Background="Red"
+                        BorderBrush="Red">
                         <Expander.Header>
                             <Label Foreground="White">
                                 <Grid>
@@ -188,14 +204,16 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconOcticons Grid.Column="0"
-                                                                Margin="5,0"
-                                                                HorizontalAlignment="Center"
-                                                                VerticalAlignment="Center"
-                                                                Kind="Alert" />
-                                    <TextBlock Grid.Column="1"
-                                               Text="Danger Zone"
-                                               TextTrimming="CharacterEllipsis" />
+                                    <IconPacks:PackIconOcticons
+                                        Grid.Column="0"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="Alert" />
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Text="Danger Zone"
+                                        TextTrimming="CharacterEllipsis" />
                                 </Grid>
                             </Label>
                         </Expander.Header>
@@ -205,13 +223,13 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Button Width="{Binding ElementName=purgeAccreditationsButton, Path=ActualWidth}"
-                                        Margin="5,0,5,5"
-                                        VerticalAlignment="Center"
-                                        Content="Purge Vulnerabilities" />
+                                <Button
+                                    Width="{Binding ElementName=purgeAccreditationsButton, Path=ActualWidth}"
+                                    Margin="5,0,5,5"
+                                    VerticalAlignment="Center"
+                                    Content="Purge Vulnerabilities" />
                                 <Label Grid.Column="1">
-                                    <TextBlock Text="Warning: This will permanently erase all vulnerability data"
-                                               TextWrapping="Wrap" />
+                                    <TextBlock Text="Warning: This will permanently erase all vulnerability data" TextWrapping="Wrap" />
                                 </Label>
                             </Grid>
                             <Grid>
@@ -219,13 +237,13 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Button Width="{Binding ElementName=purgeAccreditationsButton, Path=ActualWidth}"
-                                        Margin="5,0,5,5"
-                                        VerticalAlignment="Center"
-                                        Content="Purge Mitigations" />
+                                <Button
+                                    Width="{Binding ElementName=purgeAccreditationsButton, Path=ActualWidth}"
+                                    Margin="5,0,5,5"
+                                    VerticalAlignment="Center"
+                                    Content="Purge Mitigations" />
                                 <Label Grid.Column="1">
-                                    <TextBlock Text="Warning: This will permanently erase all mitigation data"
-                                               TextWrapping="Wrap" />
+                                    <TextBlock Text="Warning: This will permanently erase all mitigation data" TextWrapping="Wrap" />
                                 </Label>
                             </Grid>
                             <Grid>
@@ -233,13 +251,13 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Button Width="{Binding ElementName=purgeAccreditationsButton, Path=ActualWidth}"
-                                        Margin="5,0,5,5"
-                                        VerticalAlignment="Center"
-                                        Content="Purge Contacts" />
+                                <Button
+                                    Width="{Binding ElementName=purgeAccreditationsButton, Path=ActualWidth}"
+                                    Margin="5,0,5,5"
+                                    VerticalAlignment="Center"
+                                    Content="Purge Contacts" />
                                 <Label Grid.Column="1">
-                                    <TextBlock Text="Warning: This will permanently erase all contact data"
-                                               TextWrapping="Wrap" />
+                                    <TextBlock Text="Warning: This will permanently erase all contact data" TextWrapping="Wrap" />
                                 </Label>
                             </Grid>
                             <Grid>
@@ -247,13 +265,13 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Button Width="{Binding ElementName=purgeAccreditationsButton, Path=ActualWidth}"
-                                        Margin="5,0,5,5"
-                                        VerticalAlignment="Center"
-                                        Content="Purge Organizations" />
+                                <Button
+                                    Width="{Binding ElementName=purgeAccreditationsButton, Path=ActualWidth}"
+                                    Margin="5,0,5,5"
+                                    VerticalAlignment="Center"
+                                    Content="Purge Organizations" />
                                 <Label Grid.Column="1">
-                                    <TextBlock Text="Warning: This will permanently erase all organization data"
-                                               TextWrapping="Wrap" />
+                                    <TextBlock Text="Warning: This will permanently erase all organization data" TextWrapping="Wrap" />
                                 </Label>
                             </Grid>
                             <Grid>
@@ -261,13 +279,13 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Button x:Name="purgeAccreditationsButton"
-                                        Margin="5,0,5,5"
-                                        VerticalAlignment="Center"
-                                        Content="Purge Accreditations" />
+                                <Button
+                                    x:Name="purgeAccreditationsButton"
+                                    Margin="5,0,5,5"
+                                    VerticalAlignment="Center"
+                                    Content="Purge Accreditations" />
                                 <Label Grid.Column="1">
-                                    <TextBlock Text="Warning: This will permanently erase all accreditation data"
-                                               TextWrapping="Wrap" />
+                                    <TextBlock Text="Warning: This will permanently erase all accreditation data" TextWrapping="Wrap" />
                                 </Label>
                             </Grid>
                             <Grid>
@@ -275,13 +293,13 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Button Width="{Binding ElementName=purgeAccreditationsButton, Path=ActualWidth}"
-                                        Margin="5,0,5,5"
-                                        VerticalAlignment="Center"
-                                        Content="Purge Projects" />
+                                <Button
+                                    Width="{Binding ElementName=purgeAccreditationsButton, Path=ActualWidth}"
+                                    Margin="5,0,5,5"
+                                    VerticalAlignment="Center"
+                                    Content="Purge Projects" />
                                 <Label Grid.Column="1">
-                                    <TextBlock Text="Warning: This will permanently erase all user-defined project data"
-                                               TextWrapping="Wrap" />
+                                    <TextBlock Text="Warning: This will permanently erase all user-defined project data" TextWrapping="Wrap" />
                                 </Label>
                             </Grid>
                             <Grid>
@@ -289,13 +307,13 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Button Width="{Binding ElementName=purgeAccreditationsButton, Path=ActualWidth}"
-                                        Margin="5,0,5,5"
-                                        VerticalAlignment="Center"
-                                        Content="Purge Hardware" />
+                                <Button
+                                    Width="{Binding ElementName=purgeAccreditationsButton, Path=ActualWidth}"
+                                    Margin="5,0,5,5"
+                                    VerticalAlignment="Center"
+                                    Content="Purge Hardware" />
                                 <Label Grid.Column="1">
-                                    <TextBlock Text="Warning: This will permanently erase all hardware data"
-                                               TextWrapping="Wrap" />
+                                    <TextBlock Text="Warning: This will permanently erase all hardware data" TextWrapping="Wrap" />
                                 </Label>
                             </Grid>
                             <Grid>
@@ -303,22 +321,23 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Button Width="{Binding ElementName=purgeAccreditationsButton, Path=ActualWidth}"
-                                        Margin="5,0,5,5"
-                                        VerticalAlignment="Center"
-                                        Content="Purge Software" />
+                                <Button
+                                    Width="{Binding ElementName=purgeAccreditationsButton, Path=ActualWidth}"
+                                    Margin="5,0,5,5"
+                                    VerticalAlignment="Center"
+                                    Content="Purge Software" />
                                 <Label Grid.Column="1">
-                                    <TextBlock Text="Warning: This will permanently erase all software data"
-                                               TextWrapping="Wrap" />
+                                    <TextBlock Text="Warning: This will permanently erase all software data" TextWrapping="Wrap" />
                                 </Label>
                             </Grid>
                         </StackPanel>
                     </Expander>
                 </StackPanel>
-                <StackPanel Grid.Column="1"
-                            Margin="5"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch">
+                <StackPanel
+                    Grid.Column="1"
+                    Margin="5"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch">
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -327,33 +346,36 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <Label Style="{StaticResource SecondLevelHeaderStyle}">
-                            <TextBlock Text="Overlay Management"
-                                       TextTrimming="CharacterEllipsis"
-                                       TextWrapping="NoWrap" />
+                            <TextBlock
+                                Text="Overlay Management"
+                                TextTrimming="CharacterEllipsis"
+                                TextWrapping="NoWrap" />
                         </Label>
-                        <Button Grid.Column="2"
-                                Margin="5,0,5,5"
-                                Content="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
-                                ToolTip="Add Overlay" />
-                        <Button Grid.Column="3"
-                                Margin="5,0,5,5"
-                                Content="{IconPacks:PackIconMaterial Kind=MinusBoxOutline}"
-                                ToolTip="Remove Overlay(s)" />
+                        <Button
+                            Grid.Column="2"
+                            Margin="5,0,5,5"
+                            Content="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                            ToolTip="Add Overlay" />
+                        <Button
+                            Grid.Column="3"
+                            Margin="5,0,5,5"
+                            Content="{IconPacks:PackIconMaterial Kind=MinusBoxOutline}"
+                            ToolTip="Remove Overlay(s)" />
                     </Grid>
-                    <DataGrid MinHeight="100"
-                              Margin="5,0,5,5"
-                              BorderThickness="1"
-                              CanUserAddRows="True"
-                              HeadersVisibility="None"
-                              Style="{StaticResource GreyBorderedDataGridStyle}">
+                    <DataGrid
+                        MinHeight="100"
+                        Margin="5,0,5,5"
+                        BorderThickness="1"
+                        CanUserAddRows="True"
+                        HeadersVisibility="None"
+                        Style="{StaticResource GreyBorderedDataGridStyle}">
                         <DataGrid.Columns>
                             <DataGridCheckBoxColumn />
                             <DataGridTextColumn />
                         </DataGrid.Columns>
                     </DataGrid>
                     <Label Style="{StaticResource SecondLevelHeaderStyle}">
-                        <TextBlock Text="Organization Management"
-                                   TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="Organization Management" TextTrimming="CharacterEllipsis" />
                     </Label>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -361,26 +383,30 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0"
-                                 Margin="5,0,5,5"
-                                 VerticalAlignment="Center"
-                                 Controls:TextBoxHelper.ClearTextButton="True"
-                                 Controls:TextBoxHelper.Watermark="Enter a new organization name" />
-                        <Button Grid.Column="1"
-                                Margin="5,0,5,5"
-                                Content="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
-                                ToolTip="Add Organization" />
-                        <Button Grid.Column="2"
-                                Margin="5,0,5,5"
-                                Content="{IconPacks:PackIconMaterial Kind=MinusBoxOutline}"
-                                ToolTip="Remove Organization(s)" />
+                        <TextBox
+                            Grid.Column="0"
+                            Margin="5,0,5,5"
+                            VerticalAlignment="Center"
+                            Controls:TextBoxHelper.ClearTextButton="True"
+                            Controls:TextBoxHelper.Watermark="Enter a new organization name" />
+                        <Button
+                            Grid.Column="1"
+                            Margin="5,0,5,5"
+                            Content="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                            ToolTip="Add Organization" />
+                        <Button
+                            Grid.Column="2"
+                            Margin="5,0,5,5"
+                            Content="{IconPacks:PackIconMaterial Kind=MinusBoxOutline}"
+                            ToolTip="Remove Organization(s)" />
                     </Grid>
-                    <DataGrid MinHeight="100"
-                              Margin="5,0,5,5"
-                              BorderThickness="1"
-                              CanUserAddRows="True"
-                              HeadersVisibility="None"
-                              Style="{StaticResource GreyBorderedDataGridStyle}">
+                    <DataGrid
+                        MinHeight="100"
+                        Margin="5,0,5,5"
+                        BorderThickness="1"
+                        CanUserAddRows="True"
+                        HeadersVisibility="None"
+                        Style="{StaticResource GreyBorderedDataGridStyle}">
                         <DataGrid.Columns>
                             <DataGridCheckBoxColumn />
                             <DataGridTextColumn />

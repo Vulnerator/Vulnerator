@@ -453,6 +453,28 @@ namespace Vulnerator.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
+        ///    Vulnerability_ID,
+        ///    Vulnerability_Group_ID,
+        ///    Unique_Vulnerability_Identifier,
+        ///    Vulnerability_Version,
+        ///    Raw_Risk,
+        ///    Vulnerability_Title,
+        ///    Vulnerability_Description,
+        ///    Check_Content,
+        ///    Fix_Text,
+        ///    GROUP_CONCAT(DISTINCT CCI) AS CCIs
+        ///FROM Vulnerabilities
+        ///LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
+        ///LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulne [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SelectAnsibleTowerData {
+            get {
+                return ResourceManager.GetString("SelectAnsibleTowerData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
         ///    Unique_Vulnerability_Identifier,
         ///    Vulnerability_Version,
         ///    Vulnerability_Title,

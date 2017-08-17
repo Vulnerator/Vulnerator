@@ -25,13 +25,13 @@ namespace Vulnerator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("6.2.0")]
-        public string Version {
+        [global::System.Configuration.DefaultSettingValueAttribute("alpha1")]
+        public string VersionMetaData {
             get {
-                return ((string)(this["Version"]));
+                return ((string)(this["VersionMetaData"]));
             }
             set {
-                this["Version"] = value;
+                this["VersionMetaData"] = value;
             }
         }
         
@@ -524,6 +524,18 @@ namespace Vulnerator.Properties {
             }
             set {
                 this["ReportVulnerabilityDeepDive"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ActiveUser {
+            get {
+                return ((string)(this["ActiveUser"]));
+            }
+            set {
+                this["ActiveUser"] = value;
             }
         }
     }

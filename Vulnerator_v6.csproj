@@ -325,6 +325,7 @@
     <Compile Include="Model\BusinessLogic\AcasNessusReader.cs" />
     <Compile Include="Model\BusinessLogic\AcasCsvReader.cs" />
     <Compile Include="Model\BusinessLogic\AnsibleReader.cs" />
+    <Compile Include="Model\BusinessLogic\AnsibleTowerBuilder.cs" />
     <Compile Include="Model\BusinessLogic\RawStigReader.cs" />
     <Compile Include="Model\DataAccess\DatabaseBuilder.cs" />
     <Compile Include="Model\DataAccess\DatabaseContext.cs" />
@@ -442,6 +443,7 @@
     <Compile Include="Model\Object\UpdateDictionaryParameter.cs" />
     <Compile Include="Model\Object\UserGuidePage.cs" />
     <Compile Include="Model\Object\VulnerabilityReference.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="ViewModel\AboutViewModel.cs" />
     <Compile Include="ViewModel\AsyncObservableCollection.cs" />
     <Compile Include="Model\Object\CciToNist.cs" />
@@ -714,7 +716,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\RawData\IAControls_Mapping.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Model\Temp\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

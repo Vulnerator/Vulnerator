@@ -20,7 +20,10 @@ namespace Vulnerator.ViewModel
             get
             {
                 Assembly assembly = Assembly.GetExecutingAssembly();
-                return FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion.ToString();
+                return string.Format("{0}{1}",
+                    FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion.ToString(),
+                    Properties.Settings.Default.VersionMetaData
+                    );
             }
         }
 
