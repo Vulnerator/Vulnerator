@@ -212,6 +212,96 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        public RelayCommand<object> AboutLinksCommand
+        { get { return new RelayCommand<object>(AboutLinks); } }
+
+        private void AboutLinks(object param)
+        {
+            string p = param.ToString();
+
+            switch (p)
+            {
+                case "projectButton":
+                    {
+                        VisitProjectPage();
+                        break;
+                    }
+                case "wikiButton":
+                    {
+                        VisitWikiPage();
+                        break;
+                    }
+                case "githubButton":
+                    {
+                        VisitRepo();
+                        break;
+                    }
+                case "issueButton":
+                    {
+                        VisitIssues();
+                        break;
+                    }
+                default:
+                    { break; }
+            }
+        }
+
+        private void VisitProjectPage()
+        {
+            string goTo = "https://vulnerator.github.io/Vulnerator";
+            try
+            { Process.Start(GetDefaultBrowserPath(), goTo); }
+            catch (Exception exception)
+            {
+                log.Error("Unable to launch link; no internet application exists.");
+                NoInternetApplication internetWarning = new NoInternetApplication();
+                internetWarning.ShowDialog();
+                return;
+            }
+        }
+
+        private void VisitWikiPage()
+        {
+            string goTo = "https://github.com/Vulnerator/Vulnerator/wiki";
+            try
+            { Process.Start(GetDefaultBrowserPath(), goTo); }
+            catch (Exception exception)
+            {
+                log.Error("Unable to launch link; no internet application exists.");
+                NoInternetApplication internetWarning = new NoInternetApplication();
+                internetWarning.ShowDialog();
+                return;
+            }
+        }
+
+        private void VisitRepo()
+        {
+            string goTo = "https://github.com/Vulnerator/Vulnerator";
+            try
+            { Process.Start(GetDefaultBrowserPath(), goTo); }
+            catch (Exception exception)
+            {
+                log.Error("Unable to launch link; no internet application exists.");
+                NoInternetApplication internetWarning = new NoInternetApplication();
+                internetWarning.ShowDialog();
+                return;
+            }
+        }
+
+        private void VisitIssues()
+        {
+            string goTo = "https://github.com/Vulnerator/Vulnerator/issues";
+            try
+            { Process.Start(GetDefaultBrowserPath(), goTo); }
+            catch (Exception exception)
+            {
+                log.Error("Unable to launch link; no internet application exists.");
+                NoInternetApplication internetWarning = new NoInternetApplication();
+                internetWarning.ShowDialog();
+                return;
+            }
+        }
+
         public static string GetDefaultBrowserPath()
         {
             string urlAssociation = @"Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http";

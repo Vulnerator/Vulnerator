@@ -63,25 +63,21 @@
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
                             Content="{IconPacks:PackIconOcticons Bookmark}"
-                            DataContext="{StaticResource MainWindowViewModel}"
                             ToolTip="GitHub Project Page" />
                     <Button x:Name="githubButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
                             Content="{IconPacks:PackIconOcticons Octoface}"
-                            DataContext="{StaticResource MainWindowViewModel}"
                             ToolTip="GitHub Repository" />
                     <Button x:Name="wikiButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
                             Content="{IconPacks:PackIconOcticons Book}"
-                            DataContext="{StaticResource MainWindowViewModel}"
                             ToolTip="Wiki" />
                     <Button x:Name="issueButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
                             Content="{IconPacks:PackIconOcticons IssueOpened}"
-                            DataContext="{StaticResource MainWindowViewModel}"
                             ToolTip="Issues" />
                 </Controls:WindowCommands>
             </StackPanel>

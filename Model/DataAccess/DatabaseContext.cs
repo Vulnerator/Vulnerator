@@ -1,12 +1,11 @@
 ﻿using System.Data.Entity;
+using System.Data.SQLite;
 using Vulnerator.Model.Entity;
 
 namespace Vulnerator.Model.DataAccess
 {
     public class DatabaseContext : DbContext
     {
-        private static string databaseFile = Properties.Settings.Default.Database;
-
         public virtual DbSet<Accessibility> Accessibilities { get; set; }
         public virtual DbSet<Accreditation> Accreditations { get; set; }
         public virtual DbSet<AccreditationsNistControl> AccreditationsNistControls { get; set; }
@@ -113,6 +112,16 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<NistControlsIntegrityLevel> NistControlsIntegrityLevels { get; set; }
         public virtual DbSet<SoftwareHardware> SoftwareHardwares { get; set; }
         public virtual DbSet<SystemCategorizationInformationType> SystemCategorizationInformationTypes { get; set; }
+
+        public DatabaseContext() : base(ConnectionString())
+        { }
+
+        private static string ConnectionString()
+        {
+            SQLiteConnectionStringBuilder sqlBuilder = new SQLiteConnectionStringBuilder();
+            sqlBuilder.DataSource = DatabaseBuilder.databaseConnection;
+            return sqlBuilder.ToString();
+        }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

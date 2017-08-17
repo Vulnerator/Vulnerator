@@ -441,7 +441,6 @@
     <Compile Include="Model\Object\MitigationCommandParameter.cs" />
     <Compile Include="Model\Object\UpdateDictionaryParameter.cs" />
     <Compile Include="Model\Object\UserGuidePage.cs" />
-    <Compile Include="Model\Object\Vulnerability.cs" />
     <Compile Include="Model\Object\VulnerabilityReference.cs" />
     <Compile Include="ViewModel\AboutViewModel.cs" />
     <Compile Include="ViewModel\AsyncObservableCollection.cs" />
