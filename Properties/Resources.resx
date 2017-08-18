@@ -287,8 +287,8 @@
     <value>(?:(?:\w)+(?:-|\.|_)?)+</value>
   </data>
   <data name="SelectAnsibleTowerData" xml:space="preserve">
-    <value>SELECT
-    Vulnerability_ID,
+    <value>SELECT Source_Name,
+    Vulnerabilities.Vulnerability_ID,
     Vulnerability_Group_ID,
     Unique_Vulnerability_Identifier,
     Vulnerability_Version,
@@ -347,6 +347,66 @@ ORDER BY Unique_vulnerability_Identifier</value>
   </data>
   <data name="SetCredentialedScanStatus" xml:space="preserve">
     <value>UPDATE Hardware SET Found_21745 = @Found_21745, Found_26917 = @Found_26917 WHERE Scan_IP = @Scan_IP AND Host_Name=@Host_Name;</value>
+  </data>
+  <data name="String" xml:space="preserve">
+    <value>SELECT</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value>Source_Name,</value>
+  </data>
+  <data name="String10" xml:space="preserve">
+    <value>Fix_Text,</value>
+  </data>
+  <data name="String11" xml:space="preserve">
+    <value>GROUP_CONCAT(DISTINCT CCI) AS CCIs</value>
+  </data>
+  <data name="String12" xml:space="preserve">
+    <value>FROM Vulnerabilities</value>
+  </data>
+  <data name="String13" xml:space="preserve">
+    <value>LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID</value>
+  </data>
+  <data name="String14" xml:space="preserve">
+    <value>LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID</value>
+  </data>
+  <data name="String15" xml:space="preserve">
+    <value>LEFT JOIN VulnerabilitiesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesCCIs.Vulnerability_ID</value>
+  </data>
+  <data name="String16" xml:space="preserve">
+    <value>LEFT JOIN CCIs ON VulnerabilitiesCCIs.CCI_ID = CCIs.CCI_ID</value>
+  </data>
+  <data name="String17" xml:space="preserve">
+    <value>WHERE Source_Name LIKE '%Solaris%'</value>
+  </data>
+  <data name="String18" xml:space="preserve">
+    <value>GROUP BY Unique_Vulnerability_Identifier</value>
+  </data>
+  <data name="String19" xml:space="preserve">
+    <value>ORDER BY Vulnerability_Group_ID</value>
+  </data>
+  <data name="String2" xml:space="preserve">
+    <value>Vulnerability_ID,</value>
+  </data>
+  <data name="String3" xml:space="preserve">
+    <value>Vulnerability_Group_ID,</value>
+  </data>
+  <data name="String4" xml:space="preserve">
+    <value>Unique_Vulnerability_Identifier,</value>
+  </data>
+  <data name="String5" xml:space="preserve">
+    <value>Vulnerability_Version,</value>
+  </data>
+  <data name="String6" xml:space="preserve">
+    <value>Raw_Risk,</value>
+  </data>
+  <data name="String7" xml:space="preserve">
+    <value>Vulnerability_Title,</value>
+  </data>
+  <data name="String8" xml:space="preserve">
+    <value>Vulnerability_Description,</value>
+  </data>
+  <data name="String9" xml:space="preserve">
+    <value>Check_Content,</value>
   </data>
   <data name="UpdateDeltaAnalysisFlag" xml:space="preserve">
     <value>UPDATE UniqueFindings SET Delta_Analysis_Required = 'True' WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier);</value>

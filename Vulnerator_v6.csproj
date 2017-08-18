@@ -185,6 +185,21 @@
       <HintPath>packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\WindowsAPICodePack.1.1.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.ExtendedLinguisticServices, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\WindowsAPICodePack.1.1.0\lib\Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Sensors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\WindowsAPICodePack.1.1.0\lib\Microsoft.WindowsAPICodePack.Sensors.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\WindowsAPICodePack.1.1.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.ShellExtensions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\WindowsAPICodePack.1.1.0\lib\Microsoft.WindowsAPICodePack.ShellExtensions.dll</HintPath>
+    </Reference>
     <Reference Include="MigraDoc.DocumentObjectModel-wpf, Version=1.50.4589.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <HintPath>packages\PDFsharp-MigraDoc-wpf.1.50.4589-beta4\lib\net30\MigraDoc.DocumentObjectModel-wpf.dll</HintPath>
       <Private>True</Private>
