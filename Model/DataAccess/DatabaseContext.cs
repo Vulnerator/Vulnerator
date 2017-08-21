@@ -113,13 +113,13 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<SoftwareHardware> SoftwareHardwares { get; set; }
         public virtual DbSet<SystemCategorizationInformationType> SystemCategorizationInformationTypes { get; set; }
 
-        public DatabaseContext() : base(ConnectionString())
+        public DatabaseContext() : base(DatabaseBuilder.sqliteConnection, false)
         { }
 
         private static string ConnectionString()
         {
-            SQLiteConnectionStringBuilder sqliteConnectionStringBuilder = new SQLiteConnectionStringBuilder();
-            sqliteConnectionStringBuilder.DataSource = Properties.Settings.Default.Database.Split(';')[0];
+            SQLiteConnectionStringBuilder sqliteConnectionStringBuilder = new SQLiteConnectionStringBuilder()
+            {  DataSource = Properties.Settings.Default.Database.Split(';')[0] };
             return sqliteConnectionStringBuilder.ToString();
         }
 

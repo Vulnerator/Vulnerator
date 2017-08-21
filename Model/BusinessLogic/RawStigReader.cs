@@ -319,7 +319,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     }
                                 case "MitigationControl":
                                     {
-                                        sqliteCommand.Parameters["Mitigation_Controls"].Value = ObtainCurrentNodeValue(xmlReader);
+                                        sqliteCommand.Parameters["Mitigation_Control"].Value = ObtainCurrentNodeValue(xmlReader);
                                         break;
                                     }
                                 case "Responsibility":
@@ -391,7 +391,7 @@ namespace Vulnerator.Model.BusinessLogic
                 value = value.Replace("<", "&lt;");
                 value = value.Replace(">", "&gt;");
                 foreach (string key in replaceDictionary.Keys)
-                { value.Replace(key, replaceDictionary[key]); }
+                {value =  value.Replace(key, replaceDictionary[key]); }
                 return value;
             }
             catch (Exception exception)

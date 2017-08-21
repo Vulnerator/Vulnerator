@@ -48,19 +48,22 @@ namespace Vulnerator.Model.BusinessLogic
                                 xmlWriter.WriteAttributeString("v_id", sqliteDataReader["Vulnerability_Group_ID"].ToString());
                                 xmlWriter.WriteAttributeString("rule_id", ruleId);
                                 xmlWriter.WriteAttributeString("raw_risk", sqliteDataReader["Raw_Risk"].ToString());
-                                xmlWriter.WriteAttributeString("datetime", string.Empty);
+                                xmlWriter.WriteAttributeString("datetime", "{{ ansible_date_time.date }}");
                                 xmlWriter.WriteElementString("title", sqliteDataReader["Vulnerability_Title"].ToString());
                                 xmlWriter.WriteElementString("discussion", sqliteDataReader["Vulnerability_Description"].ToString());
                                 xmlWriter.WriteElementString("check_content", sqliteDataReader["Check_Content"].ToString());
                                 xmlWriter.WriteElementString("fix_text", sqliteDataReader["Fix_Text"].ToString());
-                                xmlWriter.WriteElementString("procedure", string.Empty);
-                                xmlWriter.WriteElementString("output", string.Empty);
-                                xmlWriter.WriteElementString("comments", string.Empty);
-                                xmlWriter.WriteElementString("status", string.Empty);
+                                xmlWriter.WriteElementString("procedure", "{ Procedure goes here }");
+                                xmlWriter.WriteElementString("output", "{ Output goes here }");
+                                xmlWriter.WriteElementString("comments", "{ Comments go here }");
+                                xmlWriter.WriteElementString("status", "{ Status goes here }");
                                 xmlWriter.WriteStartElement("ccis");
                                 Regex regex = new Regex(Properties.Resources.RegexCciSelector);
                                 foreach (Match match in regex.Matches(sqliteDataReader["CCIs"].ToString()))
-                                { xmlWriter.WriteElementString("cci", match.ToString()); }
+                                {
+                                    if (!string.IsNullOrWhiteSpace(match.ToString()))
+                                    { xmlWriter.WriteElementString("cci", string.Format("CCI-{0}", match.ToString())); }
+                                }
                                 xmlWriter.WriteEndElement();
                                 xmlWriter.WriteEndElement();
                             }
@@ -83,9 +86,16 @@ namespace Vulnerator.Model.BusinessLogic
         { 
             try
             {
-                XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
-                xmlWriterSettings.Indent = true;
-                xmlWriterSettings.IndentChars = "\t";
+                XmlWriterSettings xmlWriterSettings = new XmlWriterSettings()
+                {
+                    Indent = true,
+                    OmitXmlDeclaration = true,
+                    NewLineOnAttributes = true,
+                    IndentChars = "\t",
+                    NewLineChars = Environment.NewLine,
+                    NewLineHandling = NewLineHandling.Replace
+                };
+                
                 return xmlWriterSettings;
             }
             catch (Exception exception)

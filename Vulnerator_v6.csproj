@@ -478,7 +478,6 @@
     <Compile Include="Model\BusinessLogic\MitigationsTextParser.cs" />
     <Compile Include="Model\BusinessLogic\OpenXmlReportCreator.cs" />
     <Compile Include="Model\BusinessLogic\PdfReportCreator.cs" />
-    <Compile Include="Model\SqlCommandParameters.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MessengerToken.cs" />
     <Compile Include="ViewModel\NewsViewModel.cs" />
@@ -591,7 +590,6 @@
     </Compile>
     <Compile Include="Model\BusinessLogic\ConfigAlter.cs" />
     <Compile Include="ViewModel\BaseInpc.cs" />
-    <Compile Include="Model\CommandParameters.cs" />
     <Compile Include="ViewModel\DelegateCommand.cs" />
     <Compile Include="View\Converter\StringToBoolConverter.cs" />
     <Page Include="View\UI\MitigationsNistMappingView.xaml">
@@ -732,7 +730,7 @@
     <EmbeddedResource Include="Resources\RawData\IAControls_Mapping.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Model\Temp\" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

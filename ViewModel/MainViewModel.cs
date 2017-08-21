@@ -47,9 +47,6 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        public string ActiveUser
-        { get { return Environment.UserName; } }
-
         private string _newVersionText = "Update Info Unavailable";
         /// <summary>
         /// String to notify users of new application version(s) available for download
@@ -150,8 +147,9 @@ namespace Vulnerator.ViewModel
             githubActions = new GitHubActions();
             databaseBuilder = new DatabaseBuilder();
             VersionTest();
+            Properties.Settings.Default.ActiveUser = Environment.UserName;
             Messenger.Default.Register<GuiFeedback>(this, (guiFeedback) => UpdateGui(guiFeedback));
-            Properties.Settings.Default.ActiveUser = ActiveUser;
+            Messenger.Default.Register<string>(this, (databaseLocation) => InstantiateNewDatabase(databaseLocation));
         }
 
         ~MainViewModel()
@@ -162,6 +160,22 @@ namespace Vulnerator.ViewModel
             ProgressLabelText = guiFeedback.ProgressLabelText;
             ProgressRingVisibility = guiFeedback.ProgressRingVisibility;
             IsEnabled = guiFeedback.IsEnabled;
+        }
+
+        private void InstantiateNewDatabase(string databaseLocation)
+        { 
+            try
+            {
+                Properties.Settings.Default.Database = databaseLocation;
+                DatabaseBuilder.databaseConnection = string.Format(@"Data Source = {0}; Version=3;", Properties.Settings.Default.Database);
+                DatabaseBuilder.sqliteConnection = new System.Data.SQLite.SQLiteConnection(DatabaseBuilder.databaseConnection);
+                databaseBuilder = new DatabaseBuilder();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to instantiate database"));
+                log.Debug("Exception details:", exception);
+            }
         }
 
         private void VersionTest()

@@ -25,6 +25,7 @@ namespace Vulnerator.ViewModel
         private BackgroundWorker backgroundWorker;
         private GuiFeedback guiFeedback = new GuiFeedback();
         private DatabaseInterface databaseInterface = new DatabaseInterface();
+        string ansibleReportFolder = string.Empty;
 
         private string stigLibraryLocation;
         public string StigLibraryLocation
@@ -122,6 +123,39 @@ namespace Vulnerator.ViewModel
                     RaisePropertyChanged("IngestionSuccessVisibility");
                 }
             }
+        }
+
+        public RelayCommand BrowseForDatabaseCommand
+        { get { return new RelayCommand(BrowseForDatabase); } }
+
+        private void BrowseForDatabase()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.CheckFileExists = true;
+            openFileDialog.DefaultExt = "sqlite";
+            openFileDialog.Filter = "SQLite File (*sqlite)|*.sqlite";
+            openFileDialog.Title = "Please select a SQLite file";
+            if ((bool)openFileDialog.ShowDialog())
+            {
+                Properties.Settings.Default.Database = openFileDialog.FileName;
+                DatabaseBuilder.databaseConnection = string.Format(@"Data Source = {0}; Version=3;", Properties.Settings.Default.Database);
+                DatabaseBuilder.sqliteConnection = new System.Data.SQLite.SQLiteConnection(DatabaseBuilder.databaseConnection);
+            }
+        }
+
+        public RelayCommand CreateDatabaseCommand
+        { get { return new RelayCommand(CreateDatabase); } }
+
+        private void CreateDatabase()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.OverwritePrompt = true;
+            saveFileDialog.DefaultExt = "sqlite";
+            saveFileDialog.Filter = "SQLite File (*sqlite)|*.sqlite";
+            saveFileDialog.Title = "Please provide a name for the SQLite file";
+            saveFileDialog.CheckPathExists = true;
+            if ((bool)saveFileDialog.ShowDialog())
+            { Messenger.Default.Send<string>(saveFileDialog.FileName); }
         }
 
         public RelayCommand SelectStigLibraryCommand
@@ -261,34 +295,17 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                //backgroundWorker = new BackgroundWorker();
-                //backgroundWorker.DoWork += buildAnsibleTowerReportsBackgroundWorker_DoWork;
-                //backgroundWorker.RunWorkerAsync();
-                //backgroundWorker.Dispose();
-
                 CommonOpenFileDialog commonOpenFileDialog = new CommonOpenFileDialog();
                 commonOpenFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 commonOpenFileDialog.IsFolderPicker = true;
                 if (commonOpenFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
                 {
-                    string[] operatingSystems = new string[] { "Red Hat Enterprise Linux 6", "Red Hat Enterprise Linux 7", "Solaris 10", "Solaris 11" };
-                    foreach (string os in operatingSystems)
-                    {
-                        string progressLabel = string.Format("Processing {0}", os);
-                        guiFeedback.SetFields(progressLabel, "Visible", true);
-                        Messenger.Default.Send(guiFeedback);
-                        string tempOs = os;
-                        if (os.Contains("Red Hat"))
-                        { tempOs = "Red Hat"; }
-                        string saveFolder = string.Format("{0}\\{1}", commonOpenFileDialog.FileName, tempOs.Replace(" ", ""));
-                        if (!Directory.Exists(saveFolder))
-                        { Directory.CreateDirectory(saveFolder); }
-                        AnsibleTowerBuilder ansibleTowerBuilder = new AnsibleTowerBuilder();
-                        ansibleTowerBuilder.BuildRoles(os, saveFolder);
-                    }
+                    ansibleReportFolder = commonOpenFileDialog.FileName;
+                    backgroundWorker = new BackgroundWorker();
+                    backgroundWorker.DoWork += buildAnsibleTowerReportsBackgroundWorker_DoWork;
+                    backgroundWorker.RunWorkerAsync();
+                    backgroundWorker.Dispose();
                 }
-                guiFeedback.SetFields("Ansible Tower report creation complete", "Collapsed", true);
-                Messenger.Default.Send(guiFeedback);
             }
             catch (Exception exception)
             { log.Debug("Exception details:", exception); }
@@ -298,24 +315,22 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                CommonOpenFileDialog commonOpenFileDialog = new CommonOpenFileDialog();
-                commonOpenFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                commonOpenFileDialog.IsFolderPicker = true;
-                if (commonOpenFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
+                string[] operatingSystems = new string[] { "Red Hat Enterprise Linux 6", "Red Hat Enterprise Linux 7", "Solaris 10", "Solaris 11", "SUSE" };
+                foreach (string os in operatingSystems)
                 {
-                    string[] operatingSystems = new string[] { "Red Hat", "Solaris 10", "Solaris 11" };
-                    foreach (string os in operatingSystems)
-                    {
-                        string progressLabel = string.Format("Processing {0}", os);
-                        guiFeedback.SetFields(progressLabel, "Visible", true);
-                        Messenger.Default.Send(guiFeedback);
-                        string saveFolder = string.Format("{0}\\{1}", commonOpenFileDialog.FileName, os.Replace(" ", string.Empty));
-                        if (!Directory.Exists(saveFolder))
-                        { Directory.CreateDirectory(saveFolder); }
-                        AnsibleTowerBuilder ansibleTowerBuilder = new AnsibleTowerBuilder();
-                        ansibleTowerBuilder.BuildRoles(os, saveFolder);
-                    }
+                    string progressLabel = string.Format("Processing {0}", os);
+                    guiFeedback.SetFields(progressLabel, "Visible", true);
+                    Messenger.Default.Send(guiFeedback);
+                    string tempOs = os;
+                    if (os.Contains("Red Hat"))
+                    { tempOs = "Red Hat"; }
+                    string saveFolder = string.Format("{0}\\{1}", ansibleReportFolder, tempOs.Replace(" ", ""));
+                    if (!Directory.Exists(saveFolder))
+                    { Directory.CreateDirectory(saveFolder); }
+                    AnsibleTowerBuilder ansibleTowerBuilder = new AnsibleTowerBuilder();
+                    ansibleTowerBuilder.BuildRoles(os, saveFolder);
                 }
+                ansibleReportFolder = string.Empty;
                 guiFeedback.SetFields("Ansible Tower report creation complete", "Collapsed", true);
                 Messenger.Default.Send(guiFeedback);
             }

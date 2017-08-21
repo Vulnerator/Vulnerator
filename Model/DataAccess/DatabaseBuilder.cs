@@ -12,8 +12,9 @@ namespace Vulnerator.Model.DataAccess
     public class DatabaseBuilder
     {
         private Assembly assembly = Assembly.GetExecutingAssembly();
-        private static string databaseFile = Properties.Settings.Default.Database;
-        public static string databaseConnection = @"Data Source = " + databaseFile + @"; Version=3;";
+        public static string databaseConnection = string.Format(
+            @"Data Source = {0}; Version=3;datetimeformat=Ticks;", 
+            Properties.Settings.Default.Database);
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         public static SQLiteConnection sqliteConnection = new SQLiteConnection(databaseConnection);
 
@@ -21,7 +22,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                if (!System.IO.File.Exists(databaseFile))
+                if (!System.IO.File.Exists(Properties.Settings.Default.Database))
                 {
                     CreateDatabase();
                     return;
@@ -72,7 +73,7 @@ namespace Vulnerator.Model.DataAccess
             try
             {
                 log.Info("Begin creating database.");
-                SQLiteConnection.CreateFile(databaseFile);
+                SQLiteConnection.CreateFile(Properties.Settings.Default.Database);
                 if (!sqliteConnection.State.ToString().Equals("Open"))
                 { sqliteConnection.Open(); }
                 using (SQLiteTransaction sqliteTransaction = sqliteConnection.BeginTransaction())

@@ -478,15 +478,27 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
+                string rawOutput = sqliteCommand.Parameters["Tool_Generated_Output"].Value.ToString();
                 string[] regexArray;
                 sqliteCommand.Parameters["Is_OS_Or_Firmware"].Value = "False";
                 if (pluginId.Equals("22869"))
                 {
-                    regexArray = new string[]
+                    if (rawOutput.Contains("Debian"))
                     {
-                        Properties.Resources.RegexAcasLinuxSoftwareName,
-                        Properties.Resources.RegexAcasLinuxSoftwareVersion
-                    };
+                        regexArray = new string[]
+                        {
+                            Properties.Resources.RegexAcasDebianSoftwareName,
+                            Properties.Resources.RegexAcasDebianSoftwareVersion
+                        };
+                    }
+                    else
+                    {
+                        regexArray = new string[]
+                        {
+                            Properties.Resources.RegexAcasLinuxSoftwareName,
+                            Properties.Resources.RegexAcasLinuxSoftwareVersion
+                        };
+                    }
                 }
                 else
                 {
@@ -496,8 +508,6 @@ namespace Vulnerator.Model.BusinessLogic
                         Properties.Resources.RegexAcasSolarisSoftwareVersion
                     };
                 }
-                
-                string rawOutput = sqliteCommand.Parameters["Tool_Generated_Output"].Value.ToString();
                 using (StringReader stringReader = new StringReader(rawOutput))
                 {
                     string line;
