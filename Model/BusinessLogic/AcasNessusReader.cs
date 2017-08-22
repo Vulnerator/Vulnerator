@@ -34,7 +34,10 @@ namespace Vulnerator.Model.BusinessLogic
         private bool found26917 = false;
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         List<VulnerabilityReference> references = new List<VulnerabilityReference>();
-        private string[] persistentParameters = new string[] { "Group_Name", "Finding_Source_File_Name", "Source_Name", "Scan_IP", "Host_Name", "Finding_Type" };
+        private string[] persistentParameters = new string[] 
+        {
+            "Group_Name", "Finding_Source_File_Name", "Source_Name", "Scan_IP", "Host_Name", "Finding_Type", "FQDN", "NetBIOS"
+        };
 
         /// <summary>
         /// Reads *.nessus files exported from within ACAS and writes the results to the appropriate DataTables.
@@ -136,37 +139,38 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "hostname":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Host_Name", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["Host_Name"].Value = ObtainCurrentNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["Displayed_Host_Name"].Value = sqliteCommand.Parameters["Host_Name"].Value;
                                     break;
                                 }
                             case "operating-system":
                                 {
                                     string operatingSystem = ObtainCurrentNodeValue(xmlReader);
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Discovered_Software_Name", operatingSystem));
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Displayed_Software_Name", operatingSystem));
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Is_OS_Or_Firmware", "True"));
+                                    sqliteCommand.Parameters["Discovered_Software_Name"].Value = operatingSystem;
+                                    sqliteCommand.Parameters["Displayed_Software_Name"].Value = operatingSystem;
+                                    sqliteCommand.Parameters["Is_OS_Or_Firmware"].Value = "True";
                                     break;
                                 }
                             case "host-fqdn":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("FQDN", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["FQDN"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "host-ip":
                                 {
                                     ipAddress = ObtainCurrentNodeValue(xmlReader);
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("IP_Address", ipAddress));
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Scan_IP", ipAddress));
+                                    sqliteCommand.Parameters["IP_Address"].Value = ipAddress;
+                                    sqliteCommand.Parameters["Scan_IP"].Value = ipAddress;
                                     break;
                                 }
                             case "mac-address":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("MAC_Address", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["MAC_Address"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "netbios-name":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("NetBIOS", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters["NetBIOS"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "HOST_END":
@@ -641,7 +645,6 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["Approval_Status"].Value = "Not Approved";
                 sqliteCommand.Parameters["Delta_Analysis_Required"].Value = "False";
                 sqliteCommand.Parameters["Finding_Source_File_Name"].Value = fileName;
-                //databaseInterface.UpdateUniqueFinding(sqliteCommand);
                 databaseInterface.InsertUniqueFinding(sqliteCommand);
             }
             catch (Exception exception)

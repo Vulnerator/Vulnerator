@@ -141,9 +141,6 @@ namespace Vulnerator.ViewModel
         {
             logger.Setup();
             log.Info("Initializing application.");
-            configAlter = new ConfigAlter();
-            configAlter.CreateConfigurationXml();
-            configAlter.CreateSettingsDictionary();
             githubActions = new GitHubActions();
             databaseBuilder = new DatabaseBuilder();
             VersionTest();
@@ -151,9 +148,6 @@ namespace Vulnerator.ViewModel
             Messenger.Default.Register<GuiFeedback>(this, (guiFeedback) => UpdateGui(guiFeedback));
             Messenger.Default.Register<string>(this, (databaseLocation) => InstantiateNewDatabase(databaseLocation));
         }
-
-        ~MainViewModel()
-        { configAlter.WriteSettingsToConfigurationXml(); }
 
         private void UpdateGui(GuiFeedback guiFeedback)
         {
