@@ -486,10 +486,11 @@ namespace Vulnerator.Properties {
         ///    Finding_Details,
         ///    Raw_Risk, 
         ///    Status,
+        ///    Displayed_Software_Name,
+        ///    GROUP_CONCAT(DISTINCt Reference) AS Reference,
         ///    GROUP_CONCAT(DISTINCT Scan_IP) AS IPs,
         ///    GROUP_CONCAT(DISTINCT (Control_Family || &apos;-&apos; || Control_Number || &apos;.&apos; || Enhancement)) AS NIST_Controls
-        ///FROM Vulnerabilities
-        ///LEFT JOIN UniqueFindings ON Vulnerabilities.Vulnerability_ID = UniqueFindings [rest of string was truncated]&quot;;.
+        ///FROM Vulnerabilit [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SelectGroupedPoamVulnerabilities {
             get {

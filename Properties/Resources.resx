@@ -320,10 +320,13 @@ ORDER BY Vulnerability_Group_ID</value>
     Finding_Details,
     Raw_Risk, 
     Status,
+    Displayed_Software_Name,
+    GROUP_CONCAT(DISTINCt Reference) AS Reference,
     GROUP_CONCAT(DISTINCT Scan_IP) AS IPs,
     GROUP_CONCAT(DISTINCT (Control_Family || '-' || Control_Number || '.' || Enhancement)) AS NIST_Controls
 FROM Vulnerabilities
 LEFT JOIN UniqueFindings ON Vulnerabilities.Vulnerability_ID = UniqueFindings.Vulnerability_ID
+LEFT JOIN Software ON UniqueFindings.Software_ID = Software.Software_ID
 LEFT JOIN Hardware ON UniqueFindings.Hardware_ID = Hardware.Hardware_ID
 LEFT JOIN FindingTypes On UniqueFindings.Finding_Type_ID = FindingTypes.Finding_Type_ID
 LEFT JOIN VulnerabilitiesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesCCIs.Vulnerability_ID
@@ -332,9 +335,11 @@ LEFT JOIN NistControlsCCIs ON CCIs.CCI_ID = NistControlsCCIs.CCI_ID
 LEFT JOIN NistControls ON NistControlsCCIs.NIST_Control_ID = NistControls.NIST_Control_ID
 LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
 LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID
-WHERE Finding_Type = @Finding_Type
-GROUP BY Unique_Vulnerability_Identifier, Source_Version, Source_Release
-ORDER BY Unique_vulnerability_Identifier</value>
+LEFT JOIN Vulnerabilities_VulnerabilityReferences ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilityReferences.Vulnerability_ID
+LEFT JOIN VulnerabilityReferences ON Vulnerabilities_VulnerabilityReferences.Reference_ID = VulnerabilityReferences.Reference_ID
+WHERE Finding_Type = 'Fortify'
+GROUP BY Status, Unique_Vulnerability_Identifier, Source_Version, Source_Release
+ORDER BY Unique_Vulnerability_Identifier</value>
   </data>
   <data name="SelectIndexes" xml:space="preserve">
     <value>SELECT name FROM sqlite_master WHERE type == 'index';</value>

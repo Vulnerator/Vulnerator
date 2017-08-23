@@ -149,7 +149,7 @@ namespace Vulnerator.Model.BusinessLogic
                 if (Properties.Settings.Default.ReportPoamRar)
                 {
                     StartPoam(workbookPart, sheets);
-                    StartRar(workbookPart, sheets);
+                    //StartRar(workbookPart, sheets);
                 }
                 if (Properties.Settings.Default.ReportScapStigDiscrepancies)
                 { StartDiscrepancies(workbookPart, sheets); }
@@ -183,7 +183,7 @@ namespace Vulnerator.Model.BusinessLogic
                             { continue; }
 
                             WriteFindingToPoam(sqliteDataReader);
-                            WriteFindingToRar(sqliteDataReader);
+                            //WriteFindingToRar(sqliteDataReader);
                         }
                     }
                 }
@@ -206,7 +206,7 @@ namespace Vulnerator.Model.BusinessLogic
                 if (Properties.Settings.Default.ReportPoamRar)
                 {
                     EndPoam();
-                    EndRar();
+                    //EndRar();
                 }
                 if (Properties.Settings.Default.ReportScapStigDiscrepancies)
                 { EndDiscrepancies(); }
@@ -791,62 +791,68 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-
-
                 poamOpenXmlWriter.WriteStartElement(new Row());
                 WriteCellValue(poamOpenXmlWriter, poamRowCounterIndex.ToString(), 16);
-
-                string descriptionCellValue = "Title: " + Environment.NewLine + sqliteDataReader["Vulnerability_Title"].ToString() + doubleCarriageReturn +
+                if (!string.IsNullOrWhiteSpace(sqliteDataReader["Displayed_Software_Name"].ToString()))
+                {
+                    string descriptionCellValue = "Title: " + Environment.NewLine + sqliteDataReader["Vulnerability_Title"].ToString() + doubleCarriageReturn +
                     "Description: " + Environment.NewLine + sqliteDataReader["Vulnerability_Description"].ToString() + doubleCarriageReturn +
-                    "Devices Affected:" + Environment.NewLine + sqliteDataReader["IPs"].ToString().Replace(",", Environment.NewLine);
+                    "Devices Affected:" + Environment.NewLine + sqliteDataReader["Displayed_Software_Name"].ToString().Replace(",", Environment.NewLine);
 
-                WriteCellValue(
-                    poamOpenXmlWriter,
-                    LargeCellValueHandler(
-                        descriptionCellValue,
-                        sqliteDataReader["Unique_vulnerability_Identifier"].ToString(),
-                        sqliteDataReader["IPs"].ToString().Replace(",", Environment.NewLine),
-                        "Description"
-                    ), 
-                    20);
-                if (false)
-                { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["NIST_Controls"].ToString(), 24); }
-                else
-                {
-                    if (!string.IsNullOrWhiteSpace(sqliteDataReader["NIST_Controls"].ToString()))
-                    { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["NIST_Controls"].ToString(), 24); }
-                    else if (!string.IsNullOrWhiteSpace(sqliteDataReader["NIST_Controls"].ToString()))
-                    { WriteCellValue(poamOpenXmlWriter, "", 24); }
-                    else
-                    { WriteCellValue(poamOpenXmlWriter, string.Empty, 24); }
-                }
-                WriteCellValue(poamOpenXmlWriter, ContactOrganization + ", " + ContactName + ", " + ContactNumber + ", " + ContactEmail, 20);
-                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Unique_Vulnerability_Identifier"].ToString(), 24);
-                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Raw_Risk"].ToString(), 24);
-                if (/*mitigation != null*/ false)
-                { /*WriteCellValue(poamOpenXmlWriter, mitigation.MitigationText, 20);*/ }
-                else
-                {
-                    string mitigationText = string.Empty;
-                    if (true)
-                    { mitigationText = sqliteDataReader["Comments"].ToString(); }
-                    if (true)
-                    {
-                        if (string.IsNullOrWhiteSpace(mitigationText))
-                        { mitigationText = sqliteDataReader["Finding_Details"].ToString(); }
-                        else
-                        { mitigationText += doubleCarriageReturn + sqliteDataReader["FindingDetails"].ToString(); }
-                    }
                     WriteCellValue(
                         poamOpenXmlWriter,
                         LargeCellValueHandler(
-                            mitigationText,
-                            sqliteDataReader["Unique_Vulnerability_Identifier"].ToString(),
-                            sqliteDataReader["IPs"].ToString().Replace(",", Environment.NewLine),
-                            "Mitigation"
-                        ), 
+                            descriptionCellValue,
+                            sqliteDataReader["Unique_vulnerability_Identifier"].ToString(),
+                            sqliteDataReader["Displayed_Software_Name"].ToString().Replace(",", Environment.NewLine),
+                            "Description"
+                        ),
                         20);
                 }
+                else
+                {
+                    string descriptionCellValue = "Title: " + Environment.NewLine + sqliteDataReader["Vulnerability_Title"].ToString() + doubleCarriageReturn +
+                    "Description: " + Environment.NewLine + sqliteDataReader["Vulnerability_Description"].ToString() + doubleCarriageReturn +
+                    "Devices Affected:" + Environment.NewLine + sqliteDataReader["IPs"].ToString().Replace(",", Environment.NewLine);
+
+                    WriteCellValue(
+                        poamOpenXmlWriter,
+                        LargeCellValueHandler(
+                            descriptionCellValue,
+                            sqliteDataReader["Unique_vulnerability_Identifier"].ToString(),
+                            sqliteDataReader["IPs"].ToString().Replace(",", Environment.NewLine),
+                            "Description"
+                        ),
+                        20);
+                }
+                if (!string.IsNullOrWhiteSpace(sqliteDataReader["NIST_Controls"].ToString()))
+                { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["NIST_Controls"].ToString(), 24); }
+                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["NIST_Controls"].ToString()))
+                { WriteCellValue(poamOpenXmlWriter, "", 24); }
+                else
+                { WriteCellValue(poamOpenXmlWriter, string.Empty, 24); }
+                WriteCellValue(poamOpenXmlWriter, ContactOrganization + ", " + ContactName + ", " + ContactNumber + ", " + ContactEmail, 20);
+                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Unique_Vulnerability_Identifier"].ToString(), 24);
+                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Raw_Risk"].ToString(), 24);
+                string mitigationText = string.Empty;
+                if (true)
+                { mitigationText = sqliteDataReader["Comments"].ToString(); }
+                if (true)
+                {
+                    if (string.IsNullOrWhiteSpace(mitigationText))
+                    { mitigationText = sqliteDataReader["Finding_Details"].ToString(); }
+                    else
+                    { mitigationText += doubleCarriageReturn + sqliteDataReader["FindingDetails"].ToString(); }
+                }
+                WriteCellValue(
+                    poamOpenXmlWriter,
+                    LargeCellValueHandler(
+                        mitigationText,
+                        sqliteDataReader["Unique_Vulnerability_Identifier"].ToString(),
+                        sqliteDataReader["IPs"].ToString().Replace(",", Environment.NewLine),
+                        "Mitigation"
+                    ),
+                    20);
                 WriteCellValue(poamOpenXmlWriter, string.Empty, 24);
                 WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
                 WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
@@ -854,11 +860,10 @@ namespace Vulnerator.Model.BusinessLogic
                 WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
                 WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Source_Name"].ToString() + " :: " +
                         sqliteDataReader["Source_Version"].ToString() + "." + sqliteDataReader["Source_Release"].ToString(), 24);
-                if (/*mitigation != null*/ false)
-                { /*WriteCellValue(poamOpenXmlWriter, mitigation.MitigationStatus, 24);*/ }
-                else
-                { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24); }
-                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["IPs"].ToString().Replace(",", Environment.NewLine), 20);
+                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24);
+                if (!string.IsNullOrWhiteSpace(sqliteDataReader["IPs"].ToString()))
+                { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["IPs"].ToString().Replace(",", Environment.NewLine), 20); }
+                else { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Reference"].ToString().Replace(",", Environment.NewLine), 20); }
                 poamOpenXmlWriter.WriteEndElement();
                 poamRowCounterIndex++;
             }
