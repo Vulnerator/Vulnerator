@@ -139,14 +139,22 @@ namespace Vulnerator.ViewModel
         /// </summary>
         public MainViewModel()
         {
-            logger.Setup();
-            log.Info("Initializing application.");
-            githubActions = new GitHubActions();
-            databaseBuilder = new DatabaseBuilder();
-            VersionTest();
-            Properties.Settings.Default.ActiveUser = Environment.UserName;
-            Messenger.Default.Register<GuiFeedback>(this, (guiFeedback) => UpdateGui(guiFeedback));
-            Messenger.Default.Register<string>(this, (databaseLocation) => InstantiateNewDatabase(databaseLocation));
+            try
+            {
+                logger.Setup();
+                log.Info("Initializing application.");
+                githubActions = new GitHubActions();
+                databaseBuilder = new DatabaseBuilder();
+                VersionTest();
+                Properties.Settings.Default.ActiveUser = Environment.UserName;
+                Messenger.Default.Register<GuiFeedback>(this, (guiFeedback) => UpdateGui(guiFeedback));
+                Messenger.Default.Register<string>(this, (databaseLocation) => InstantiateNewDatabase(databaseLocation));
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to instantiate MainViewModel."));
+                log.Debug("Exception details:", exception);
+            }
         }
 
         private void UpdateGui(GuiFeedback guiFeedback)

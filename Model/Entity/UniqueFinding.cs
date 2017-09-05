@@ -8,6 +8,9 @@ namespace Vulnerator.Model.Entity
 
     public partial class UniqueFinding
     {
+        [NotMapped]
+        public bool IsChecked { get; set; }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long Unique_Finding_ID { get; set; }
