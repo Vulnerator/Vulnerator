@@ -25,7 +25,7 @@ namespace Vulnerator.Model.Object
                         issue.Title = issues[i].Title;
                         issue.Body = ParseMarkdown(issues[i].Body);
                         issue.Number = issues[i].Number;
-                        issue.HtmlUrl = issues[i].HtmlUrl.AbsoluteUri;
+                        issue.HtmlUrl = issues[i].HtmlUrl;
                         if (issues[i].Milestone != null)
                         { issue.Milestone = issues[i].Milestone.Title; }
                         else
