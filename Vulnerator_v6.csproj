@@ -249,6 +249,7 @@
     <Reference Include="System.Data">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.SQLite, Version=1.0.105.2, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>packages\System.Data.SQLite.Core.1.0.105.2\lib\net451\System.Data.SQLite.dll</HintPath>
       <Private>True</Private>
@@ -459,8 +460,6 @@
     <Compile Include="Model\Object\AssetOverviewLineItem.cs" />
     <Compile Include="Model\Object\Cci.cs" />
     <Compile Include="Model\Object\File.cs" />
-    <Compile Include="Model\Object\MitigationCommandParameter.cs" />
-    <Compile Include="Model\Object\UpdateDictionaryParameter.cs" />
     <Compile Include="Model\Object\UserGuidePage.cs" />
     <Compile Include="Model\Object\VulnerabilityReference.cs" />
     <Compile Include="Settings.cs" />
@@ -483,6 +482,7 @@
     <Compile Include="Model\BusinessLogic\MitigationsTextParser.cs" />
     <Compile Include="Model\BusinessLogic\OpenXmlReportCreator.cs" />
     <Compile Include="Model\BusinessLogic\PdfReportCreator.cs" />
+    <Compile Include="ViewModel\ConfigurationManagementViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MessengerToken.cs" />
     <Compile Include="ViewModel\NewsViewModel.cs" />
@@ -502,9 +502,7 @@
     <Compile Include="View\Converter\HtmlToFlowDocumentConverter.cs" />
     <Compile Include="View\Converter\ImportButtonTextAppendingConverter.cs" />
     <Compile Include="View\Converter\InverseBooleanConverter.cs" />
-    <Compile Include="View\Converter\MitigationCommandConverter.cs" />
     <Compile Include="View\Converter\SelectedItemToContentConverter.cs" />
-    <Compile Include="View\Converter\UpdateDictionaryConverter.cs" />
     <Compile Include="View\UI\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>

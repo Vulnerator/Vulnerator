@@ -50,6 +50,7 @@ namespace Vulnerator.ViewModel
             SimpleIoc.Default.Register<RmfViewModel>();
             SimpleIoc.Default.Register<SplashViewModel>();
             SimpleIoc.Default.Register<SettingsViewModel>();
+            SimpleIoc.Default.Register<ConfigurationManagementViewModel>();
         }
 
         public AboutViewModel About
@@ -78,6 +79,9 @@ namespace Vulnerator.ViewModel
 
         public VulnerabilityViewModel Vulnerability
         { get { return ServiceLocator.Current.GetInstance<VulnerabilityViewModel>(); } }
+
+        public ConfigurationManagementViewModel ConfigurationManagement
+        { get { return ServiceLocator.Current.GetInstance<ConfigurationManagementViewModel>(); } }
 
         public static void Cleanup()
         { }

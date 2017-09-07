@@ -107,5 +107,8 @@ namespace Vulnerator.Model.Entity
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MAC_Addresses> MAC_Addresses { get; set; }
+
+        [NotMapped]
+        public string OS { get; set; }
     }
 }
