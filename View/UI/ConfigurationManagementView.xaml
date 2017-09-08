@@ -52,14 +52,11 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn
-                                    Width="*"
-                                    Binding="{Binding Displayed_Host_Name}"
-                                    IsReadOnly="True">
+                                <DataGridTextColumn Width="*" Binding="{Binding Displayed_Host_Name}">
                                     <DataGridTextColumn.Header>
                                         <TextBlock
                                             HorizontalAlignment="Center"
-                                            Text="Host Name"
+                                            Text="Preferred Host Name"
                                             TextTrimming="CharacterEllipsis" />
                                     </DataGridTextColumn.Header>
                                     <DataGridTextColumn.ElementStyle>
@@ -118,6 +115,7 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
@@ -133,20 +131,204 @@
                                             Margin="5,0,5,5"
                                             VerticalAlignment="Top"
                                             Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                            Controls:TextBoxHelper.Watermark="Last Scan Date"
-                                            Text="{Binding}" />
+                                            Controls:TextBoxHelper.Watermark="Discovered Host Name"
+                                            IsReadOnly="True"
+                                            Text="{Binding Host_Name}" />
                                         <TextBox
+                                            Grid.Column="1"
+                                            Margin="5,0,5,5"
+                                            VerticalAlignment="Top"
+                                            Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                            Controls:TextBoxHelper.Watermark="Last Scan Date"
+                                            IsReadOnly="True"
+                                            Text="{Binding Found_21745}" />
+                                        <TextBox
+                                            Grid.Column="2"
                                             Margin="5,0,5,5"
                                             VerticalAlignment="Top"
                                             Controls:TextBoxHelper.UseFloatingWatermark="True"
                                             Controls:TextBoxHelper.Watermark="Uncredentialed - 21745"
+                                            IsReadOnly="True"
                                             Text="{Binding Found_21745}" />
                                         <TextBox
+                                            Grid.Column="3"
                                             Margin="5,0,5,5"
                                             VerticalAlignment="Top"
                                             Controls:TextBoxHelper.UseFloatingWatermark="True"
                                             Controls:TextBoxHelper.Watermark="Uncredentialed - 26917"
+                                            IsReadOnly="True"
                                             Text="{Binding Found_26917}" />
+                                        <DataGrid
+                                            Grid.Row="1"
+                                            Height="200"
+                                            Margin="5,0,5,5"
+                                            VerticalAlignment="Top"
+                                            AutoGenerateColumns="False"
+                                            CanUserAddRows="True"
+                                            ItemsSource="{Binding IP_Addresses}"
+                                            Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*" Binding="{Binding IP_Address}">
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock
+                                                            HorizontalAlignment="Center"
+                                                            Text="IP Address"
+                                                            TextTrimming="CharacterEllipsis" />
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <DataGrid
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Height="200"
+                                            Margin="5,0,5,5"
+                                            VerticalAlignment="Top"
+                                            AutoGenerateColumns="False"
+                                            CanUserAddRows="True"
+                                            ItemsSource="{Binding MAC_Addresses}"
+                                            Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*" Binding="{Binding MAC_Address}">
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock
+                                                            HorizontalAlignment="Center"
+                                                            Text="MAC Address"
+                                                            TextTrimming="CharacterEllipsis" />
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <DataGrid
+                                            Grid.Row="1"
+                                            Grid.Column="2"
+                                            Height="200"
+                                            Margin="5,0,5,5"
+                                            VerticalAlignment="Top"
+                                            AutoGenerateColumns="False"
+                                            CanUserAddRows="True"
+                                            ItemsSource="{Binding Groups}"
+                                            Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*" Binding="{Binding Group_Name}">
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock
+                                                            HorizontalAlignment="Center"
+                                                            Text="Group Name"
+                                                            TextTrimming="CharacterEllipsis" />
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <DataGrid
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Height="200"
+                                            Margin="5,0,5,5"
+                                            VerticalAlignment="Top"
+                                            AutoGenerateColumns="False"
+                                            CanUserAddRows="True"
+                                            ItemsSource="{Binding Contacts}"
+                                            Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*" Binding="{Binding First_Name}">
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock
+                                                            HorizontalAlignment="Center"
+                                                            Text="First Name"
+                                                            TextTrimming="CharacterEllipsis" />
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn Width="*" Binding="{Binding Last_Name}">
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock
+                                                            HorizontalAlignment="Center"
+                                                            Text="Last Name"
+                                                            TextTrimming="CharacterEllipsis" />
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn Width="*" Binding="{Binding Email}">
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock
+                                                            HorizontalAlignment="Center"
+                                                            Text="Email"
+                                                            TextTrimming="CharacterEllipsis" />
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <DataGrid
+                                            Grid.Row="2"
+                                            Grid.ColumnSpan="4"
+                                            Height="200"
+                                            Margin="5,0,5,5"
+                                            VerticalAlignment="Top"
+                                            AutoGenerateColumns="False"
+                                            CanUserAddRows="True"
+                                            ItemsSource="{Binding Hardware_PPS}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*" Binding="{Binding PP.Port}">
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock
+                                                            HorizontalAlignment="Center"
+                                                            Text="Port"
+                                                            TextTrimming="CharacterEllipsis" />
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn Width="*" Binding="{Binding PP.Protocol}">
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock
+                                                            HorizontalAlignment="Center"
+                                                            Text="Protocol"
+                                                            TextTrimming="CharacterEllipsis" />
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn Width="*" Binding="{Binding Discovered_Service}">
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock
+                                                            HorizontalAlignment="Center"
+                                                            Text="Discovered Service Name"
+                                                            TextTrimming="CharacterEllipsis" />
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn Width="*" Binding="{Binding Display_Service}">
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock
+                                                            HorizontalAlignment="Center"
+                                                            Text="Preferred Service Name"
+                                                            TextTrimming="CharacterEllipsis" />
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn Width="*" Binding="{Binding ReportInAccreditation}">
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock
+                                                            HorizontalAlignment="Center"
+                                                            Text="Report in Accreditation"
+                                                            TextTrimming="CharacterEllipsis" />
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <DataGrid
+                                            Grid.Row="3"
+                                            Grid.ColumnSpan="4"
+                                            Height="200"
+                                            Margin="5,0,5,5"
+                                            VerticalAlignment="Top"
+                                            AutoGenerateColumns="False"
+                                            CanUserAddRows="True"
+                                            ItemsSource="{Binding SoftwareHardwares}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*" Binding="{Binding Software.Discovered_Software_Name}">
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock
+                                                            HorizontalAlignment="Center"
+                                                            Text="Discovered Software Name"
+                                                            TextTrimming="CharacterEllipsis" />
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
                                     </Grid>
                                 </DataTemplate>
                             </DataGrid.RowDetailsTemplate>
