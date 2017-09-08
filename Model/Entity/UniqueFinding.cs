@@ -63,6 +63,9 @@ namespace Vulnerator.Model.Entity
 
         public DateTime? Approval_Expiration_Date { get; set; }
 
+        [StringLength(50)]
+        public string Approved_By { get; set; }
+
         [Required]
         [StringLength(5)]
         public string Delta_Analysis_Required { get; set; }

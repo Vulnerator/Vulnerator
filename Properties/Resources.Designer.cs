@@ -88,7 +88,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Hardware VALUES (NULL,@Displayed_Host_Name, @Host_Name,@FQDN,@NetBIOS,@Scan_IP, @Found_21745, @Found_26917,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,(SELECT LifecycleStatus_ID FROM LifecycleStatuses WHERE LifecycleStatus = &apos;Uncategorized&apos;));.
+        ///   Looks up a localized string similar to INSERT INTO Hardware VALUES (NULL,@Displayed_Host_Name, @Host_Name,@FQDN,@NetBIOS,@Scan_IP, @Found_21745, @Found_26917,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,(SELECT LifecycleStatus_ID FROM LifecycleStatuses WHERE LifecycleStatus = &apos;Uncategorized&apos;), @OS);.
         /// </summary>
         internal static string InsertHardware {
             get {
@@ -178,11 +178,10 @@ namespace Vulnerator.Properties {
         ///	@First_Discovered, 
         ///	@Last_Observed, 
         ///	@Approval_Status, 
-        ///	@Approval_Date, 
+        ///	@Approval_Date, @Approved_By,
         ///	@Approval_Expiration_Date, 
         ///	@Delta_Analysis_Required, 
-        ///	(SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = @Finding_Type), 
-        ///	(SELEC [rest of string was truncated]&quot;;.
+        ///	(SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = @Finding_Typ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InsertUniqueFinding {
             get {

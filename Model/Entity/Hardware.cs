@@ -71,6 +71,9 @@ namespace Vulnerator.Model.Entity
         [StringLength(25)]
         public string Role { get; set; }
 
+        [StringLength(100)]
+        public string OS { get; set; }
+
         public long? LifecycleStatus_ID { get; set; }
 
         public virtual LifecycleStatus LifecycleStatus { get; set; }
@@ -107,8 +110,5 @@ namespace Vulnerator.Model.Entity
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MAC_Addresses> MAC_Addresses { get; set; }
-
-        [NotMapped]
-        public string OS { get; set; }
     }
 }

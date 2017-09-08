@@ -521,7 +521,7 @@ namespace Vulnerator.Model.DataAccess
                     // FindingTypes Table
                     "Finding_Type",
                     // Hardware Table
-                    "Hardware_ID", "Host_Name", "FQDN", "NetBIOS", "Is_Virtual_Server", "NIAP_Level", "Manufacturer", "ModelNumber",
+                    "Hardware_ID", "Host_Name", "FQDN", "NetBIOS", "Is_Virtual_Server", "NIAP_Level", "Manufacturer", "ModelNumber", "OS",
                     "Is_IA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID", "Scan_IP", "Found_21745", "Found_26917", "Displayed_Host_Name",
                     // IP_Addresses Table
                     "IP_Address_ID", "IP_Address",
@@ -537,7 +537,7 @@ namespace Vulnerator.Model.DataAccess
                     // UniqueFindings Table
                     "Unique_Finding_ID", "Instance_Identifier", "Tool_Generated_Output", "Comments", "Finding_Details", "Technical_Mitigation",
                     "Proposed_Mitigation", "Predisposing_Conditions", "Impact", "Likelihood", "Severity", "Risk", "Residual_Risk",
-                    "First_Discovered", "Last_Observed", "Approval_Status", "Approval_Date", "Approval_Expiration_Date",
+                    "First_Discovered", "Last_Observed", "Approval_Status", "Approval_Date", "Approval_Expiration_Date", "Approved_By",
                     "Delta_Analysis_Required", "Finding_Type_ID", "Finding_Source_ID", "Status", "Vulnerability_ID", "Hardware_ID",
                     "Severity_Override", "Severity_Override_Justification", "Technology_Area", "Web_DB_Site", "Web_DB_Instance",
                     "Classification", "CVSS_Environmental_Score", "CVSS_Environmental_Vector",

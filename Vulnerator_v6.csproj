@@ -561,7 +561,7 @@
     <Compile Include="View\UI\NoInternetApplication.xaml.cs">
       <DependentUpon>NoInternetApplication.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Validation\NumberValidationRule.cs" />
+    <Compile Include="View\Validation\PhoneNumberValidationRule.cs" />
     <Compile Include="View\ViewHelper\TextBlockExtensions.cs" />
     <Page Include="Resources\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>

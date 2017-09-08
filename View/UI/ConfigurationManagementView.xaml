@@ -27,7 +27,9 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
-                        <ColumnDefinition Width=".5*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <DockPanel Grid.Column="0" Margin="0,0,0,5">
                         <Label DockPanel.Dock="Top" Style="{StaticResource TopLevelHeaderStyle}">
@@ -40,198 +42,241 @@
                             HorizontalScrollBarVisibility="Disabled"
                             ItemsSource="{Binding Hardwares}">
                             <DataGrid.Columns>
-                                <DataGridTemplateColumn Width="*">
-                                    <DataGridTemplateColumn.Header>
+                                <DataGridTemplateColumn Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox
+                                                Margin="5,0,0,0"
+                                                HorizontalAlignment="Center"
+                                                IsChecked="{Binding IsChecked}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Displayed_Host_Name}"
+                                    IsReadOnly="True">
+                                    <DataGridTextColumn.Header>
                                         <TextBlock
                                             HorizontalAlignment="Center"
                                             Text="Host Name"
                                             TextTrimming="CharacterEllipsis" />
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock
-                                                Text="{Binding Displayed_Host_Name}"
-                                                TextTrimming="CharacterEllipsis"
-                                                TextWrapping="NoWrap"
-                                                ToolTip="{Binding Displayed_Host_Name}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Width="*">
-                                    <DataGridTemplateColumn.Header>
+                                    </DataGridTextColumn.Header>
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}" TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*" Binding="{Binding FQDN}">
+                                    <DataGridTextColumn.Header>
                                         <TextBlock
                                             HorizontalAlignment="Center"
+                                            VerticalAlignment="Stretch"
                                             Text="FQDN"
                                             TextTrimming="CharacterEllipsis" />
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock
-                                                Text="{Binding FQDN}"
-                                                TextTrimming="CharacterEllipsis"
-                                                TextWrapping="NoWrap"
-                                                ToolTip="{Binding FQDN}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Width="*">
-                                    <DataGridTemplateColumn.Header>
+                                    </DataGridTextColumn.Header>
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}" TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*" Binding="{Binding NetBIOS}">
+                                    <DataGridTextColumn.Header>
                                         <TextBlock
                                             HorizontalAlignment="Center"
+                                            VerticalAlignment="Stretch"
                                             Text="NetBIOS"
                                             TextTrimming="CharacterEllipsis" />
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock
-                                                Text="{Binding NetBIOS}"
-                                                TextTrimming="CharacterEllipsis"
-                                                TextWrapping="NoWrap"
-                                                ToolTip="{Binding NetBIOS}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Width="*">
-                                    <DataGridTemplateColumn.Header>
+                                    </DataGridTextColumn.Header>
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}" TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*" Binding="{Binding Scan_IP}">
+                                    <DataGridTextColumn.Header>
                                         <TextBlock
                                             HorizontalAlignment="Center"
-                                            Text="Scan IP"
+                                            VerticalAlignment="Stretch"
+                                            Text="Last Scan IP"
                                             TextTrimming="CharacterEllipsis" />
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock
-                                                Text="{Binding Scan_IP}"
-                                                TextTrimming="CharacterEllipsis"
-                                                TextWrapping="NoWrap"
-                                                ToolTip="{Binding Scan_IP}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Width="*">
-                                    <DataGridTemplateColumn.Header>
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
-                                            Text="Found 21745"
-                                            TextTrimming="CharacterEllipsis" />
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock
-                                                Text="{Binding Found_21745}"
-                                                TextTrimming="CharacterEllipsis"
-                                                TextWrapping="NoWrap"
-                                                ToolTip="{Binding Found_21745}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Width="*">
-                                    <DataGridTemplateColumn.Header>
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
-                                            Text="Found 26917"
-                                            TextTrimming="CharacterEllipsis" />
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock
-                                                Text="{Binding Found_26917}"
-                                                TextTrimming="CharacterEllipsis"
-                                                TextWrapping="NoWrap"
-                                                ToolTip="{Binding Found_26917}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
+                                    </DataGridTextColumn.Header>
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}" TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <TextBox
+                                            Margin="5,0,5,5"
+                                            VerticalAlignment="Top"
+                                            Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                            Controls:TextBoxHelper.Watermark="Last Scan Date"
+                                            Text="{Binding}" />
+                                        <TextBox
+                                            Margin="5,0,5,5"
+                                            VerticalAlignment="Top"
+                                            Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                            Controls:TextBoxHelper.Watermark="Uncredentialed - 21745"
+                                            Text="{Binding Found_21745}" />
+                                        <TextBox
+                                            Margin="5,0,5,5"
+                                            VerticalAlignment="Top"
+                                            Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                            Controls:TextBoxHelper.Watermark="Uncredentialed - 26917"
+                                            Text="{Binding Found_26917}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                         </DataGrid>
                     </DockPanel>
-                    <DockPanel Grid.Column="1" Margin="5,0,0,5">
-                        <Label DockPanel.Dock="Top" Style="{StaticResource TopLevelHeaderStyle}">
-                            <TextBlock Text="Add/Update Asset" TextTrimming="CharacterEllipsis" />
-                        </Label>
-                        <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto">
-                            <StackPanel>
-                                <Label>
-                                    <TextBlock Text="Host Name" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <TextBox Margin="5,0,5,5" Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label>
-                                    <TextBlock Text="Operating System" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <TextBox Margin="5,0,5,5" Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label>
-                                    <TextBlock Text="Last Scan Date" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <TextBox Margin="5,0,5,5" Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label>
-                                    <TextBlock Text="Associated IP(s)" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid
-                                    MinHeight="100"
-                                    Margin="5,0,5,5"
-                                    BorderThickness="1"
-                                    CanUserAddRows="True"
-                                    HeadersVisibility="None"
-                                    Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <Label>
-                                    <TextBlock Text="Accreditation" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid
-                                    MinHeight="100"
-                                    Margin="5,0,5,5"
-                                    BorderThickness="1"
-                                    CanUserAddRows="True"
-                                    HeadersVisibility="None"
-                                    Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <Label>
-                                    <TextBlock Text="Associated Project(s)" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid
-                                    MinHeight="100"
-                                    Margin="5,0,5,5"
-                                    BorderThickness="1"
-                                    CanUserAddRows="True"
-                                    HeadersVisibility="None"
-                                    Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <Label>
-                                    <TextBlock Text="Installed Software" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid
-                                    MinHeight="100"
-                                    Margin="5,0"
-                                    BorderThickness="1"
-                                    CanUserAddRows="True"
-                                    HeadersVisibility="None"
-                                    Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </StackPanel>
-                        </ScrollViewer>
-                    </DockPanel>
+                    <Expander
+                        Grid.Column="1"
+                        Background="{DynamicResource WindowBackgroundBrush}"
+                        BorderThickness="0"
+                        ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterial
+                                        Grid.Column="0"
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="FilterOutline">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource LabelTextBrush}"
+                                        Text="Filter"
+                                        TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                    <Expander
+                        Grid.Column="2"
+                        Background="{DynamicResource WindowBackgroundBrush}"
+                        BorderThickness="0"
+                        ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterial
+                                        Grid.Column="0"
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="CheckAll">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource LabelTextBrush}"
+                                        Text="Bulk Process"
+                                        TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                    <Expander
+                        Grid.Column="3"
+                        Background="{DynamicResource WindowBackgroundBrush}"
+                        BorderThickness="0"
+                        ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterialLight
+                                        Grid.Column="0"
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="CloudDownload">
+                                        <IconPacks:PackIconMaterialLight.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterialLight.LayoutTransform>
+                                    </IconPacks:PackIconMaterialLight>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource LabelTextBrush}"
+                                        Text="Reporting"
+                                        TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
                 </Grid>
             </TabItem>
             <TabItem Header="Software">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
-                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <DockPanel Grid.Column="0" Margin="0,0,0,5">
                         <Label DockPanel.Dock="Top" Style="{StaticResource TopLevelHeaderStyle}">
@@ -244,101 +289,126 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </DockPanel>
-                    <DockPanel Grid.Column="1" Margin="5,0,0,5">
-                        <Label DockPanel.Dock="Top" Style="{StaticResource TopLevelHeaderStyle}">
-                            <TextBlock Text="Add/Update Software" TextTrimming="CharacterEllipsis" />
-                        </Label>
-                        <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto">
-                            <StackPanel>
+                    <Expander
+                        Grid.Column="1"
+                        Background="{DynamicResource WindowBackgroundBrush}"
+                        BorderThickness="0"
+                        ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0">
-                                        <TextBlock Text="Discovered Software Name" TextTrimming="CharacterEllipsis" />
-                                    </Label>
-                                    <CheckBox
+                                    <IconPacks:PackIconMaterial
+                                        Grid.Column="0"
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="FilterOutline">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock
                                         Grid.Column="1"
-                                        Margin="5,0,5,5"
-                                        Content="Custom Code" />
-                                    <CheckBox
-                                        Grid.Column="2"
-                                        Margin="5,0,5,5"
-                                        Content="IA or IA Enabled" />
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource LabelTextBrush}"
+                                        Text="Filter"
+                                        TextTrimming="CharacterEllipsis" />
                                 </Grid>
-                                <TextBox Margin="5,0,5,5" Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label Grid.Column="0">
-                                    <TextBlock Text="Software Display Name" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <TextBox Margin="5,0,5,5" Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label>
-                                    <TextBlock Text="DADMS ID" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <TextBox Margin="5,0,5,5" Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label>
-                                    <TextBlock Text="DADMS Disposition" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <ComboBox Margin="5,0,5,5" Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label>
-                                    <TextBlock Text="DADMS SECNAV LDA" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <TextBox Margin="5,0,5,5" Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label>
-                                    <TextBlock Text="Associated Host(s)" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid
-                                    MinHeight="100"
-                                    Margin="5,0,5,5"
-                                    BorderThickness="1"
-                                    CanUserAddRows="True"
-                                    HeadersVisibility="None"
-                                    Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn />
-                                        <DataGridTextColumn />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <Label>
-                                    <TextBlock Text="Associated Projects(s)" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid
-                                    MinHeight="100"
-                                    Margin="5,0,5,5"
-                                    BorderThickness="1"
-                                    CanUserAddRows="True"
-                                    HeadersVisibility="None"
-                                    Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <Label>
-                                    <TextBlock Text="Associated Accreditation(s)" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid
-                                    MinHeight="100"
-                                    Margin="5,0"
-                                    BorderThickness="1"
-                                    CanUserAddRows="True"
-                                    HeadersVisibility="None"
-                                    Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </StackPanel>
-                        </ScrollViewer>
-                    </DockPanel>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                    <Expander
+                        Grid.Column="2"
+                        Background="{DynamicResource WindowBackgroundBrush}"
+                        BorderThickness="0"
+                        ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterial
+                                        Grid.Column="0"
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="CheckAll">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource LabelTextBrush}"
+                                        Text="Bulk Process"
+                                        TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                    <Expander
+                        Grid.Column="3"
+                        Background="{DynamicResource WindowBackgroundBrush}"
+                        BorderThickness="0"
+                        ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterialLight
+                                        Grid.Column="0"
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="CloudDownload">
+                                        <IconPacks:PackIconMaterialLight.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterialLight.LayoutTransform>
+                                    </IconPacks:PackIconMaterialLight>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource LabelTextBrush}"
+                                        Text="Reporting"
+                                        TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
                 </Grid>
             </TabItem>
             <TabItem Header="Contacts">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
-                        <ColumnDefinition Width=".5*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <DockPanel Grid.Column="0" Margin="0,0,0,5">
                         <Label DockPanel.Dock="Top" Style="{StaticResource TopLevelHeaderStyle}">
@@ -355,103 +425,126 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </DockPanel>
-                    <DockPanel Grid.Column="1" Margin="5,0,0,5">
-                        <Label DockPanel.Dock="Top" Style="{StaticResource TopLevelHeaderStyle}">
-                            <TextBlock Text="Add/Update Contact" TextTrimming="CharacterEllipsis" />
-                        </Label>
-                        <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto">
-                            <StackPanel>
-                                <Label>
-                                    <TextBlock Text="First Name" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <TextBox Margin="5,0,5,5" Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label>
-                                    <TextBlock Text="Last Name" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <TextBox Margin="5,0,5,5" Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label>
-                                    <TextBlock Text="Phone Number" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <TextBox Margin="5,0,5,5" Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label>
-                                    <TextBlock Text="Email" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <TextBox Margin="5,0,5,5" Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label>
-                                    <TextBlock Text="Title" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <ComboBox Margin="5,0,5,5" Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label>
-                                    <TextBlock Text="Associated Accreditation(s)" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid
-                                    MinHeight="100"
-                                    Margin="5,0,5,5"
-                                    BorderThickness="1"
-                                    CanUserAddRows="True"
-                                    HeadersVisibility="None"
-                                    Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <Label>
-                                    <TextBlock Text="Associated Project(s)" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid
-                                    MinHeight="100"
-                                    Margin="5,0,5,5"
-                                    BorderThickness="1"
-                                    CanUserAddRows="True"
-                                    HeadersVisibility="None"
-                                    Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <Label>
-                                    <TextBlock Text="Associated Host(s)" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid
-                                    MinHeight="100"
-                                    Margin="5,0,5,5"
-                                    BorderThickness="1"
-                                    CanUserAddRows="True"
-                                    HeadersVisibility="None"
-                                    Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn />
-                                        <DataGridTextColumn />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <Label>
-                                    <TextBlock Text="Associated Software" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid
-                                    MinHeight="100"
-                                    Margin="5,0"
-                                    BorderThickness="1"
-                                    CanUserAddRows="True"
-                                    HeadersVisibility="None"
-                                    Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </StackPanel>
-                        </ScrollViewer>
-                    </DockPanel>
+                    <Expander
+                        Grid.Column="1"
+                        Background="{DynamicResource WindowBackgroundBrush}"
+                        BorderThickness="0"
+                        ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterial
+                                        Grid.Column="0"
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="FilterOutline">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource LabelTextBrush}"
+                                        Text="Filter"
+                                        TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                    <Expander
+                        Grid.Column="2"
+                        Background="{DynamicResource WindowBackgroundBrush}"
+                        BorderThickness="0"
+                        ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterial
+                                        Grid.Column="0"
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="CheckAll">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource LabelTextBrush}"
+                                        Text="Bulk Process"
+                                        TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                    <Expander
+                        Grid.Column="3"
+                        Background="{DynamicResource WindowBackgroundBrush}"
+                        BorderThickness="0"
+                        ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterialLight
+                                        Grid.Column="0"
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="CloudDownload">
+                                        <IconPacks:PackIconMaterialLight.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterialLight.LayoutTransform>
+                                    </IconPacks:PackIconMaterialLight>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource LabelTextBrush}"
+                                        Text="Reporting"
+                                        TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
                 </Grid>
             </TabItem>
             <TabItem Header="Projects">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
-                        <ColumnDefinition Width=".5*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <DockPanel Grid.Column="0" Margin="0,0,0,5">
                         <Label DockPanel.Dock="Top" Style="{StaticResource TopLevelHeaderStyle}">
@@ -465,60 +558,126 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </DockPanel>
-                    <DockPanel Grid.Column="1" Margin="5,0,0,5">
-                        <Label DockPanel.Dock="Top" Style="{StaticResource TopLevelHeaderStyle}">
-                            <TextBlock Text="Add/Update Project" TextTrimming="CharacterEllipsis" />
-                        </Label>
-                        <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto">
-                            <StackPanel>
-                                <Label>
-                                    <TextBlock Text="Project Name" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <TextBox Margin="5,0,5,5" Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label>
-                                    <TextBlock Text="Associated Accreditation" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <ComboBox Margin="5,0,5,5" Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label>
-                                    <TextBlock Text="Associated Assets" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid
-                                    MinHeight="100"
-                                    Margin="5,0,5,5"
-                                    BorderThickness="1"
-                                    CanUserAddRows="True"
-                                    HeadersVisibility="None"
-                                    Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <Label>
-                                    <TextBlock Text="Associated Contacts" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid
-                                    MinHeight="100"
-                                    Margin="5,0"
-                                    BorderThickness="1"
-                                    CanUserAddRows="True"
-                                    HeadersVisibility="None"
-                                    Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </StackPanel>
-                        </ScrollViewer>
-                    </DockPanel>
+                    <Expander
+                        Grid.Column="1"
+                        Background="{DynamicResource WindowBackgroundBrush}"
+                        BorderThickness="0"
+                        ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterial
+                                        Grid.Column="0"
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="FilterOutline">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource LabelTextBrush}"
+                                        Text="Filter"
+                                        TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                    <Expander
+                        Grid.Column="2"
+                        Background="{DynamicResource WindowBackgroundBrush}"
+                        BorderThickness="0"
+                        ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterial
+                                        Grid.Column="0"
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="CheckAll">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource LabelTextBrush}"
+                                        Text="Bulk Process"
+                                        TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                    <Expander
+                        Grid.Column="3"
+                        Background="{DynamicResource WindowBackgroundBrush}"
+                        BorderThickness="0"
+                        ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterialLight
+                                        Grid.Column="0"
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="CloudDownload">
+                                        <IconPacks:PackIconMaterialLight.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterialLight.LayoutTransform>
+                                    </IconPacks:PackIconMaterialLight>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource LabelTextBrush}"
+                                        Text="Reporting"
+                                        TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
                 </Grid>
             </TabItem>
             <TabItem Header="Accreditations">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
-                        <ColumnDefinition Width=".5*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <DockPanel Grid.Column="0" Margin="0,0,0,5">
                         <Label DockPanel.Dock="Top" Style="{StaticResource TopLevelHeaderStyle}">
@@ -532,72 +691,117 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </DockPanel>
-                    <DockPanel Grid.Column="1" Margin="5,0,0,5">
-                        <Label DockPanel.Dock="Top" Style="{StaticResource TopLevelHeaderStyle}">
-                            <TextBlock Text="Add/Update Accreditation" TextTrimming="CharacterEllipsis" />
-                        </Label>
-                        <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto">
-                            <StackPanel>
-                                <Label>
-                                    <TextBlock Text="Accreditation Name" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <TextBox Margin="5,0,5,5" Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label>
-                                    <TextBlock Text="Acronym" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <TextBox Margin="5,0,5,5" Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label>
-                                    <TextBlock Text="eMASS ID" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <TextBox Margin="5,0,5,5" Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label>
-                                    <TextBlock Text="Associated Projects" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid
-                                    MinHeight="100"
-                                    Margin="5,0,5,5"
-                                    BorderThickness="1"
-                                    CanUserAddRows="True"
-                                    HeadersVisibility="None"
-                                    Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <Label>
-                                    <TextBlock Text="Associated Assets" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid
-                                    MinHeight="100"
-                                    Margin="5,0,5,5"
-                                    BorderThickness="1"
-                                    CanUserAddRows="True"
-                                    HeadersVisibility="None"
-                                    Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <Label>
-                                    <TextBlock Text="Associated Contacts" TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid
-                                    MinHeight="100"
-                                    Margin="5,0"
-                                    BorderThickness="1"
-                                    CanUserAddRows="True"
-                                    HeadersVisibility="None"
-                                    Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </StackPanel>
-                        </ScrollViewer>
-                    </DockPanel>
+                    <Expander
+                        Grid.Column="1"
+                        Background="{DynamicResource WindowBackgroundBrush}"
+                        BorderThickness="0"
+                        ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterial
+                                        Grid.Column="0"
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="FilterOutline">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource LabelTextBrush}"
+                                        Text="Filter"
+                                        TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                    <Expander
+                        Grid.Column="2"
+                        Background="{DynamicResource WindowBackgroundBrush}"
+                        BorderThickness="0"
+                        ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterial
+                                        Grid.Column="0"
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="CheckAll">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource LabelTextBrush}"
+                                        Text="Bulk Process"
+                                        TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                    <Expander
+                        Grid.Column="3"
+                        Background="{DynamicResource WindowBackgroundBrush}"
+                        BorderThickness="0"
+                        ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterialLight
+                                        Grid.Column="0"
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="CloudDownload">
+                                        <IconPacks:PackIconMaterialLight.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterialLight.LayoutTransform>
+                                    </IconPacks:PackIconMaterialLight>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource LabelTextBrush}"
+                                        Text="Reporting"
+                                        TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
                 </Grid>
             </TabItem>
         </Controls:MetroAnimatedSingleRowTabControl>

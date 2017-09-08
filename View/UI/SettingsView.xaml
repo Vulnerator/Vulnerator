@@ -6,6 +6,7 @@
     xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
     xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:LiveCharts="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+    xmlns:Validation="clr-namespace:Vulnerator.View.Validation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dat="clr-namespace:System.Windows.Data;assembly=PresentationFramework"
     xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
@@ -20,6 +21,7 @@
     d:DesignWidth="800"
     DataContext="{Binding Settings, Source={StaticResource Locator}}"
     mc:Ignorable="d">
+    <UserControl.Resources />
     <ScrollViewer
         Background="{DynamicResource WindowBackgroundBrush}"
         HorizontalScrollBarVisibility="Disabled"
@@ -53,14 +55,32 @@
                         Margin="5,0,5,5"
                         Controls:TextBoxHelper.ClearTextButton="True"
                         Controls:TextBoxHelper.UseFloatingWatermark="True"
-                        Controls:TextBoxHelper.Watermark="Phone (Digits Only)"
-                        Text="{Binding Source={StaticResource Settings}, Path=Default.Phone}" />
+                        Controls:TextBoxHelper.Watermark="Phone (Digits Only)">
+                        <Binding
+                            Mode="TwoWay"
+                            Path="Default.Phone"
+                            Source="{StaticResource Settings}"
+                            UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <Validation:PhoneNumberValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox>
                     <TextBox
                         Margin="5,0,5,5"
                         Controls:TextBoxHelper.ClearTextButton="True"
                         Controls:TextBoxHelper.UseFloatingWatermark="True"
-                        Controls:TextBoxHelper.Watermark="Email (you@example.com)"
-                        Text="{Binding Source={StaticResource Settings}, Path=Default.Email}" />
+                        Controls:TextBoxHelper.Watermark="Email (you@example.com)">
+                        <Binding
+                            Mode="TwoWay"
+                            Path="Default.Email"
+                            Source="{StaticResource Settings}"
+                            UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <Validation:EmailValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox>
                     <TextBox
                         Margin="5,0,5,5"
                         Controls:TextBoxHelper.ClearTextButton="True"

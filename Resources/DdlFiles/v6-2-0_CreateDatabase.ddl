@@ -470,6 +470,7 @@ CREATE TABLE Hardware
 	 SerialNumber NVARCHAR (50) ,
 	 Role NVARCHAR (25),
 	 LifecycleStatus_ID INTEGER ,
+	 OS NVARCHAR (100),
 	 FOREIGN KEY (LifecycleStatus_ID) REFERENCES LifecycleStatuses(LifecycleStatus_ID),
 	 UNIQUE (Scan_IP, Host_Name, FQDN, NetBIOS) ON CONFLICT IGNORE
 	);
@@ -1193,6 +1194,7 @@ CREATE TABLE UniqueFindings
 	 Approval_Status NVARCHAR (25) NOT NULL, 
 	 Approval_Date DATE , 
 	 Approval_Expiration_Date DATE , 
+	 Approved_By NVARCHAR (50),
 	 Delta_Analysis_Required NVARCHAR (5) NOT NULL , 
 	 Finding_Type_ID INTEGER NOT NULL , 
 	 Finding_Source_File_ID INTEGER NOT NULL , 

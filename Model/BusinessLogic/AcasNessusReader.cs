@@ -148,6 +148,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     string operatingSystem = ObtainCurrentNodeValue(xmlReader);
                                     sqliteCommand.Parameters["Discovered_Software_Name"].Value = operatingSystem;
                                     sqliteCommand.Parameters["Displayed_Software_Name"].Value = operatingSystem;
+                                    sqliteCommand.Parameters["OS"].Value = operatingSystem;
                                     sqliteCommand.Parameters["Is_OS_Or_Firmware"].Value = "True";
                                     break;
                                 }
