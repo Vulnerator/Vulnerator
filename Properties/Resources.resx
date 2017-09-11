@@ -215,7 +215,7 @@
     <value>INSERT INTO HardwareGroups VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT Group_ID FROM Groups WHERE Group_Name = @Group_Name));</value>
   </data>
   <data name="MapHardwareToSoftware" xml:space="preserve">
-    <value>INSERT INTO SoftwareHardware VALUES ((SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP),@Install_Date  ,@ReportInAccreditation, @ApprovedForBaseline, @BaselineApprover);</value>
+    <value>INSERT INTO SoftwareHardware VALUES ((SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP),@Install_Date  ,(SELECT ReportInAccreditation_Global FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), (SELECT ApprovedForBaseline_Global FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), @BaselineApprover);</value>
   </data>
   <data name="MapIpToHardware" xml:space="preserve">
     <value>INSERT INTO HardwareIpAddresses VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name), (SELECT IP_Address_ID FROM IP_Addresses WHERE IP_Address = @IP_Address));</value>

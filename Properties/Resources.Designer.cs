@@ -235,7 +235,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO SoftwareHardware VALUES ((SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP),@Install_Date  ,@ReportInAccreditation, @ApprovedForBaseline, @BaselineApprover);.
+        ///   Looks up a localized string similar to INSERT INTO SoftwareHardware VALUES ((SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP),@Install_Date  ,(SELECT ReportInAccreditation_Global FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), (SELECT ApprovedForBaseline_Global FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), @BaselineApprover);.
         /// </summary>
         internal static string MapHardwareToSoftware {
             get {

@@ -62,6 +62,7 @@ namespace Vulnerator.ViewModel
         {
             databaseContext = new DatabaseContext();
             Hardwares = databaseContext.Hardwares.ToList();
+            Softwares = databaseContext.Softwares.ToList();
         }
     }
 }

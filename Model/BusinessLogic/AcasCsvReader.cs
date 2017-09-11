@@ -333,6 +333,9 @@ namespace Vulnerator.Model.BusinessLogic
                         }
                         if (!string.IsNullOrWhiteSpace(sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString()))
                         {
+                            sqliteCommand.Parameters["DADMS_ID"].Value = DBNull.Value;
+                            sqliteCommand.Parameters["ReportInAccreditation_Global"].Value = "False";
+                            sqliteCommand.Parameters["ApprovedForBaseline_Global"].Value = "False";
                             databaseInterface.InsertSoftware(sqliteCommand);
                             databaseInterface.MapHardwareToSoftware(sqliteCommand);
                         }
@@ -411,6 +414,9 @@ namespace Vulnerator.Model.BusinessLogic
                         }
                         if (!string.IsNullOrWhiteSpace(sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString()))
                         {
+                            sqliteCommand.Parameters["DADMS_ID"].Value = DBNull.Value;
+                            sqliteCommand.Parameters["ReportInAccreditation_Global"].Value = "False";
+                            sqliteCommand.Parameters["ApprovedForBaseline_Global"].Value = "False";
                             databaseInterface.InsertSoftware(sqliteCommand);
                             databaseInterface.MapHardwareToSoftware(sqliteCommand);
                         }
