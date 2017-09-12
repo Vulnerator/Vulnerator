@@ -16,7 +16,11 @@ namespace Vulnerator.Model.Entity
             Groups = new HashSet<Group>();
             Hardwares = new HashSet<Hardware>();
             Softwares = new HashSet<Software>();
+            Certifications = new HashSet<Certification>();
         }
+
+        [NotMapped]
+        public bool IsChecked { get; set; }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -45,7 +49,8 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<InformationSystemOwner> InformationSystemOwners { get; set; }
 
-        public virtual Certification Certification { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Certification> Certifications { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Accreditation> Accreditations { get; set; }

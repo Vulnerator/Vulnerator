@@ -44,16 +44,58 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private List<SoftwareHardware> _softwareHardwares;
-        public List<SoftwareHardware> SoftwareHardwares
+        private List<Contact> _contacts;
+        public List<Contact> Contacts
         {
-            get { return _softwareHardwares; }
+            get { return _contacts; }
             set
             {
-                if (_softwareHardwares != value)
+                if (_contacts != value)
                 {
-                    _softwareHardwares = value;
-                    RaisePropertyChanged("SoftwareHardwares");
+                    _contacts = value;
+                    RaisePropertyChanged("Contacts");
+                }
+            }
+        }
+
+        private List<Group> _groups;
+        public List<Group> Groups
+        {
+            get { return _groups; }
+            set
+            {
+                if (_groups != value)
+                {
+                    _groups = value;
+                    RaisePropertyChanged("Groups");
+                }
+            }
+        }
+
+        private List<Accreditation> _accreditations;
+        public List<Accreditation> Accreditations
+        {
+            get { return _accreditations; }
+            set
+            {
+                if (_accreditations != value)
+                {
+                    _accreditations = value;
+                    RaisePropertyChanged("Accreditations");
+                }
+            }
+        }
+
+        private List<PP> _pps;
+        public List<PP> PPS
+        {
+            get { return _pps; }
+            set
+            {
+                if (_pps != value)
+                {
+                    _pps = value;
+                    RaisePropertyChanged("PPS");
                 }
             }
         }
@@ -63,6 +105,10 @@ namespace Vulnerator.ViewModel
             databaseContext = new DatabaseContext();
             Hardwares = databaseContext.Hardwares.ToList();
             Softwares = databaseContext.Softwares.ToList();
+            Contacts = databaseContext.Contacts.ToList();
+            PPS = databaseContext.PPS.ToList();
+            Groups = databaseContext.Groups.ToList();
+            Accreditations = databaseContext.Accreditations.ToList();
         }
     }
 }

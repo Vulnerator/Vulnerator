@@ -37,9 +37,29 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <DockPanel Grid.Column="0" Margin="0,0,0,5">
-                        <Label DockPanel.Dock="Top" Style="{StaticResource TopLevelHeaderStyle}">
-                            <TextBlock Text="Hardware Assets" TextTrimming="CharacterEllipsis" />
-                        </Label>
+                        <Grid HorizontalAlignment="Stretch" DockPanel.Dock="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                <TextBlock Text="Hardware Assets" TextTrimming="CharacterEllipsis" />
+                            </Label>
+                            <Label
+                                Grid.Column="2"
+                                Margin="0,3"
+                                VerticalAlignment="Bottom">
+                                <TextBlock Text="Count:" TextTrimming="CharacterEllipsis" />
+                            </Label>
+                            <Label
+                                Grid.Column="3"
+                                Margin="0,3"
+                                VerticalAlignment="Bottom">
+                                <TextBlock Text="{Binding Hardwares.Count}" TextTrimming="CharacterEllipsis" />
+                            </Label>
+                        </Grid>
                         <DataGrid
                             AutoGenerateColumns="False"
                             BorderThickness="1"
@@ -437,15 +457,46 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <DockPanel Grid.Column="0" Margin="0,0,0,5">
-                        <Label DockPanel.Dock="Top" Style="{StaticResource TopLevelHeaderStyle}">
-                            <TextBlock Text="Software Enumeration" TextTrimming="CharacterEllipsis" />
-                        </Label>
+                        <Grid HorizontalAlignment="Stretch" DockPanel.Dock="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                <TextBlock Text="Installed Software" TextTrimming="CharacterEllipsis" />
+                            </Label>
+                            <Label
+                                Grid.Column="2"
+                                Margin="0,3"
+                                VerticalAlignment="Bottom">
+                                <TextBlock Text="Count:" TextTrimming="CharacterEllipsis" />
+                            </Label>
+                            <Label
+                                Grid.Column="3"
+                                Margin="0,3"
+                                VerticalAlignment="Bottom">
+                                <TextBlock Text="{Binding Softwares.Count}" TextTrimming="CharacterEllipsis" />
+                            </Label>
+                        </Grid>
                         <DataGrid
                             AutoGenerateColumns="False"
                             BorderThickness="1"
                             DockPanel.Dock="Top"
+                            HorizontalScrollBarVisibility="Disabled"
                             ItemsSource="{Binding Softwares}">
                             <DataGrid.Columns>
+                                <DataGridTemplateColumn Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox
+                                                Margin="5,0,0,0"
+                                                HorizontalAlignment="Center"
+                                                IsChecked="{Binding IsChecked}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTextColumn
                                     Width="*"
                                     Binding="{Binding Displayed_Software_Name}"
@@ -525,6 +576,14 @@
                                             Controls:TextBoxHelper.UseFloatingWatermark="True"
                                             Controls:TextBoxHelper.Watermark="DADMS LDA"
                                             Text="{Binding DADMS_LDA}" />
+                                        <CheckBox
+                                            Grid.Row="1"
+                                            Grid.Column="4"
+                                            Margin="5,0,5,5"
+                                            VerticalAlignment="Top"
+                                            Content="OS / Firmware"
+                                            Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                            IsChecked="{Binding Is_OS_Or_Firmware}" />
                                         <DataGrid
                                             Grid.Row="2"
                                             Grid.ColumnSpan="4"
@@ -534,7 +593,8 @@
                                             AutoGenerateColumns="False"
                                             CanUserAddRows="True"
                                             IsReadOnly="True"
-                                            ItemsSource="{Binding SoftwareHardwares}">
+                                            ItemsSource="{Binding SoftwareHardwares}"
+                                            Style="{StaticResource GreyBorderedDataGridStyle}">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn
                                                     Width="*"
@@ -681,6 +741,236 @@
                     </Expander>
                 </Grid>
             </TabItem>
+            <TabItem Header="PPS">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <DockPanel Margin="0,0,0,5">
+                        <Grid HorizontalAlignment="Stretch" DockPanel.Dock="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                <TextBlock Text="Ports, Protocols, &amp; Services" TextTrimming="CharacterEllipsis" />
+                            </Label>
+                            <Label
+                                Grid.Column="2"
+                                Margin="0,3"
+                                VerticalAlignment="Bottom">
+                                <TextBlock Text="Count:" TextTrimming="CharacterEllipsis" />
+                            </Label>
+                            <Label
+                                Grid.Column="3"
+                                Margin="0,3"
+                                VerticalAlignment="Bottom">
+                                <TextBlock Text="{Binding PPS.Count}" TextTrimming="CharacterEllipsis" />
+                            </Label>
+                        </Grid>
+                        <DataGrid
+                            AutoGenerateColumns="False"
+                            DockPanel.Dock="Top"
+                            HorizontalScrollBarVisibility="Disabled"
+                            IsReadOnly="True"
+                            ItemsSource="{Binding PPS}"
+                            Style="{StaticResource GreyBorderedDataGridStyle}"
+                            VerticalScrollBarVisibility="Auto">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox
+                                                Margin="5,0,0,0"
+                                                HorizontalAlignment="Center"
+                                                IsChecked="{Binding IsChecked}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Port}"
+                                    Header="Port"
+                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Protocol}"
+                                    Header="Protocol"
+                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Hardware_PPS.Count}"
+                                    Header="Occurences"
+                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}"
+                                    IsReadOnly="True" />
+                            </DataGrid.Columns>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <DataGrid
+                                        Height="200"
+                                        Margin="5,0,5,5"
+                                        AutoGenerateColumns="False"
+                                        IsReadOnly="True"
+                                        ItemsSource="{Binding Hardware_PPS}"
+                                        Style="{StaticResource GreyBorderedDataGridStyle}">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn
+                                                Width="*"
+                                                Binding="{Binding Hardware.Displayed_Host_Name}"
+                                                Header="Preferred Host Name"
+                                                HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
+                                            <DataGridTextColumn
+                                                Width="*"
+                                                Binding="{Binding Hardware.Scan_IP}"
+                                                Header="Last Scan IP"
+                                                HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
+                                            <DataGridTextColumn
+                                                Width="*"
+                                                Binding="{Binding Discovered_Service}"
+                                                Header="Discovered Service Name"
+                                                HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
+                                            <DataGridTextColumn
+                                                Width="*"
+                                                Binding="{Binding Display_Service}"
+                                                Header="Preferred Service Name"
+                                                HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
+                                            <DataGridTemplateColumn
+                                                Width="Auto"
+                                                Header="Report in Accreditation"
+                                                HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <IconPacks:PackIconMaterial
+                                                            HorizontalAlignment="Center"
+                                                            Kind="{Binding ReportInAccreditation, Converter={StaticResource CheckboxConverter}}"
+                                                            ToolTip="{Binding ReportInAccreditation}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
+                        </DataGrid>
+                    </DockPanel>
+                    <Expander
+                        Grid.Column="1"
+                        Background="{DynamicResource WindowBackgroundBrush}"
+                        BorderThickness="0"
+                        ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterial
+                                        Grid.Column="0"
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="FilterOutline">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource LabelTextBrush}"
+                                        Text="Filter"
+                                        TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                    <Expander
+                        Grid.Column="2"
+                        Background="{DynamicResource WindowBackgroundBrush}"
+                        BorderThickness="0"
+                        ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterial
+                                        Grid.Column="0"
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="CheckAll">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource LabelTextBrush}"
+                                        Text="Bulk Process"
+                                        TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                    <Expander
+                        Grid.Column="3"
+                        Background="{DynamicResource WindowBackgroundBrush}"
+                        BorderThickness="0"
+                        ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterialLight
+                                        Grid.Column="0"
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="CloudDownload">
+                                        <IconPacks:PackIconMaterialLight.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterialLight.LayoutTransform>
+                                    </IconPacks:PackIconMaterialLight>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource LabelTextBrush}"
+                                        Text="Reporting"
+                                        TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                </Grid>
+            </TabItem>
             <TabItem Header="Contacts">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -690,18 +980,198 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <DockPanel Grid.Column="0" Margin="0,0,0,5">
-                        <Label DockPanel.Dock="Top" Style="{StaticResource TopLevelHeaderStyle}">
-                            <TextBlock Text="Contacts" TextTrimming="CharacterEllipsis" />
-                        </Label>
+                        <Grid HorizontalAlignment="Stretch" DockPanel.Dock="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                <TextBlock Text="Contacts" TextTrimming="CharacterEllipsis" />
+                            </Label>
+                            <Label
+                                Grid.Column="2"
+                                Margin="0,3"
+                                VerticalAlignment="Bottom">
+                                <TextBlock Text="Count:" TextTrimming="CharacterEllipsis" />
+                            </Label>
+                            <Label
+                                Grid.Column="3"
+                                Margin="0,3"
+                                VerticalAlignment="Bottom">
+                                <TextBlock Text="{Binding Contacts.Count}" TextTrimming="CharacterEllipsis" />
+                            </Label>
+                        </Grid>
                         <DataGrid
-                            Margin="5,0,0,0"
+                            AutoGenerateColumns="False"
                             BorderThickness="1"
-                            DockPanel.Dock="Top">
+                            DockPanel.Dock="Top"
+                            HorizontalScrollBarVisibility="Disabled"
+                            ItemsSource="{Binding Contacts}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="*" Header="First Name" />
-                                <DataGridTextColumn Width="*" Header="Last Name" />
-                                <DataGridHyperlinkColumn Width="*" Header="Email" />
+                                <DataGridTemplateColumn Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox
+                                                Margin="5,0,0,0"
+                                                HorizontalAlignment="Center"
+                                                IsChecked="{Binding IsChecked}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding First_Name}"
+                                    Header="First Name"
+                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Last_Name}"
+                                    Header="Last Name"
+                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Email}"
+                                    Header="Email"
+                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Title.Title1}"
+                                    Header="Title"
+                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Organization.Organization1}"
+                                    Header="Organization"
+                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                             </DataGrid.Columns>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <DataGrid
+                                            Grid.ColumnSpan="4"
+                                            Height="200"
+                                            Margin="5,0,5,5"
+                                            VerticalAlignment="Top"
+                                            AutoGenerateColumns="False"
+                                            CanUserAddRows="True"
+                                            IsReadOnly="True"
+                                            ItemsSource="{Binding Hardwares}"
+                                            Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn
+                                                    Width="*"
+                                                    Binding="{Binding Displayed_Host_Name}"
+                                                    Header="Preferred Host Name"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn
+                                                    Width="*"
+                                                    Binding="{Binding Discovered_Host_Name}"
+                                                    Header="Discovered Host Name"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn
+                                                    Width="*"
+                                                    Binding="{Binding FQDN}"
+                                                    Header="FQDN"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn
+                                                    Width="*"
+                                                    Binding="{Binding NetBIOS}"
+                                                    Header="NetBIOS"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn
+                                                    Width="*"
+                                                    Binding="{Binding Scan_IP}"
+                                                    Header="Last Scan IP"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <DataGrid
+                                            Grid.Row="1"
+                                            Height="100"
+                                            Margin="5,0,5,5"
+                                            VerticalAlignment="Top"
+                                            CanUserAddRows="True"
+                                            ItemsSource="{Binding Softwares}"
+                                            Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn
+                                                    Width="*"
+                                                    Binding="{Binding Displayed_Software_Name}"
+                                                    Header="Associated Software"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn
+                                                    Width="Auto"
+                                                    Binding="{Binding Software_Version}"
+                                                    Header="Version"
+                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <DataGrid
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Height="100"
+                                            Margin="5,0,5,5"
+                                            VerticalAlignment="Top"
+                                            IsReadOnly="True"
+                                            ItemsSource="{Binding Groups}"
+                                            Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn
+                                                    Width="*"
+                                                    Binding="{Binding Group_Name}"
+                                                    Header="Associated groups"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <DataGrid
+                                            Grid.Row="1"
+                                            Grid.Column="2"
+                                            Height="100"
+                                            Margin="5,0,5,5"
+                                            VerticalAlignment="Top"
+                                            IsReadOnly="True"
+                                            ItemsSource="{Binding Accreditations}"
+                                            Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn
+                                                    Width="*"
+                                                    Binding="{Binding Accreditation_Name}"
+                                                    Header="Associated Accreditations"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <DataGrid
+                                            Grid.Row="1"
+                                            Grid.Column="3"
+                                            Height="100"
+                                            Margin="5,0,5,5"
+                                            VerticalAlignment="Top"
+                                            IsReadOnly="True"
+                                            ItemsSource="{Binding Certifications}"
+                                            Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn
+                                                    Width="*"
+                                                    Binding="{Binding Certification1}"
+                                                    Header="Associated Certifications"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
                         </DataGrid>
                     </DockPanel>
                     <Expander
@@ -826,15 +1296,77 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <DockPanel Grid.Column="0" Margin="0,0,0,5">
-                        <Label DockPanel.Dock="Top" Style="{StaticResource TopLevelHeaderStyle}">
-                            <TextBlock Text="User-Defined Projects" TextTrimming="CharacterEllipsis" />
-                        </Label>
-                        <DataGrid BorderThickness="1" DockPanel.Dock="Top">
+                        <Grid HorizontalAlignment="Stretch" DockPanel.Dock="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                <TextBlock Text="User-Defined Projects" TextTrimming="CharacterEllipsis" />
+                            </Label>
+                            <Label
+                                Grid.Column="2"
+                                Margin="0,3"
+                                VerticalAlignment="Bottom">
+                                <TextBlock Text="Count:" TextTrimming="CharacterEllipsis" />
+                            </Label>
+                            <Label
+                                Grid.Column="3"
+                                Margin="0,3"
+                                VerticalAlignment="Bottom">
+                                <TextBlock Text="{Binding Groups.Count}" TextTrimming="CharacterEllipsis" />
+                            </Label>
+                        </Grid>
+                        <DataGrid
+                            AutoGenerateColumns="False"
+                            BorderThickness="1"
+                            DockPanel.Dock="Top"
+                            ItemsSource="{Binding Groups}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="*" Header="Project Name" />
-                                <DataGridTextColumn Width="*" Header="Accreditation" />
-                                <DataGridTextColumn Width="*" Header="Asset Count" />
+                                <DataGridTemplateColumn Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox
+                                                Margin="5,0,0,0"
+                                                HorizontalAlignment="Center"
+                                                IsChecked="{Binding IsChecked}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Group_Name}"
+                                    Header="Project Name"
+                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Accreditation}"
+                                    Header="Accreditation"
+                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Hardwares.Count}"
+                                    Header="Asset Count"
+                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                             </DataGrid.Columns>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
                         </DataGrid>
                     </DockPanel>
                     <Expander
@@ -959,15 +1491,74 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <DockPanel Grid.Column="0" Margin="0,0,0,5">
-                        <Label DockPanel.Dock="Top" Style="{StaticResource TopLevelHeaderStyle}">
-                            <TextBlock Text="Accreditation Boundaries" TextTrimming="CharacterEllipsis" />
-                        </Label>
-                        <DataGrid BorderThickness="1" DockPanel.Dock="Top">
+                        <Grid HorizontalAlignment="Stretch" DockPanel.Dock="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                <TextBlock Text="Accreditation Boundaries" TextTrimming="CharacterEllipsis" />
+                            </Label>
+                            <Label
+                                Grid.Column="2"
+                                Margin="0,3"
+                                VerticalAlignment="Bottom">
+                                <TextBlock Text="Count:" TextTrimming="CharacterEllipsis" />
+                            </Label>
+                            <Label
+                                Grid.Column="3"
+                                Margin="0,3"
+                                VerticalAlignment="Bottom">
+                                <TextBlock Text="{Binding Accreditations.Count}" TextTrimming="CharacterEllipsis" />
+                            </Label>
+                        </Grid>
+                        <DataGrid
+                            AutoGenerateColumns="False"
+                            BorderThickness="1"
+                            DockPanel.Dock="Top"
+                            ItemsSource="{Binding Accreditations}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="*" Header="Name" />
-                                <DataGridTextColumn Width="*" Header="Acronym" />
-                                <DataGridTextColumn Width="*" Header="eMASS ID" />
+                                <DataGridTemplateColumn Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox
+                                                Margin="5,0,0,0"
+                                                HorizontalAlignment="Center"
+                                                IsChecked="{Binding IsChecked}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Header="Name"
+                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Header="Acronym"
+                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Header="eMASS ID"
+                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                             </DataGrid.Columns>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
                         </DataGrid>
                     </DockPanel>
                     <Expander

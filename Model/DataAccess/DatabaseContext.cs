@@ -236,6 +236,11 @@ namespace Vulnerator.Model.DataAccess
                 .Map(m => m.ToTable("HardwareContacts").MapLeftKey("Contact_ID").MapRightKey("Hardware_ID"));
 
             modelBuilder.Entity<Contact>()
+                .HasMany(e => e.Certifications)
+                .WithMany(e => e.Contacts)
+                .Map(m => m.ToTable("ContactsCertifications").MapLeftKey("Contact_ID").MapRightKey("Certification_ID"));
+
+            modelBuilder.Entity<Contact>()
                 .HasMany(e => e.Softwares)
                 .WithMany(e => e.Contacts)
                 .Map(m => m.ToTable("SoftwareContacts").MapLeftKey("Contact_ID").MapRightKey("Software_ID"));
