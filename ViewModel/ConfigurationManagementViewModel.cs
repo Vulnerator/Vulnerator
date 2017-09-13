@@ -14,8 +14,6 @@ namespace Vulnerator.ViewModel
 {
     public class ConfigurationManagementViewModel : ViewModelBase
     {
-        private DatabaseContext databaseContext;
-
         private List<Hardware> _hardwares;
         public List<Hardware> Hardwares
         {
@@ -102,13 +100,22 @@ namespace Vulnerator.ViewModel
 
         public ConfigurationManagementViewModel()
         {
-            databaseContext = new DatabaseContext();
-            Hardwares = databaseContext.Hardwares.ToList();
-            Softwares = databaseContext.Softwares.ToList();
-            Contacts = databaseContext.Contacts.ToList();
-            PPS = databaseContext.PPS.ToList();
-            Groups = databaseContext.Groups.ToList();
-            Accreditations = databaseContext.Accreditations.ToList();
+            using (DatabaseContext databaseContext = new DatabaseContext())
+            {
+                Hardwares = databaseContext.Hardwares
+                    .Include(h => h.SoftwareHardwares)
+                    .Include(h => h.IP_Addresses)
+                    .Include(h => h.MAC_Addresses)
+                    .Include(h => h.Groups)
+                    .Include(h => h.Contacts)
+                    .Include(h => h.Hardware_PPS)
+                    .AsNoTracking().ToList();
+                Softwares = databaseContext.Softwares.AsNoTracking().ToList();
+                Contacts = databaseContext.Contacts.AsNoTracking().ToList();
+                PPS = databaseContext.PPS.AsNoTracking().ToList();
+                Groups = databaseContext.Groups.AsNoTracking().ToList();
+                Accreditations = databaseContext.Accreditations.AsNoTracking().ToList();
+            }
         }
     }
 }
