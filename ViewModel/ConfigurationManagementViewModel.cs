@@ -108,7 +108,7 @@ namespace Vulnerator.ViewModel
                     .Include(h => h.MAC_Addresses)
                     .Include(h => h.Groups)
                     .Include(h => h.Contacts)
-                    .Include(h => h.Hardware_PPS)
+                    .Include(h => h.Hardware_PPS.Select(p => p.PP))
                     .AsNoTracking().ToList();
                 Softwares = databaseContext.Softwares.AsNoTracking().ToList();
                 Contacts = databaseContext.Contacts.AsNoTracking().ToList();
