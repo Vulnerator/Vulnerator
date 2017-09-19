@@ -110,6 +110,8 @@
                 <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
                 <Setter Property="BorderThickness" Value="1" />
                 <Setter Property="Controls:ControlsHelper.FocusBorderBrush" Value="{DynamicResource TextBoxFocusBorderBrush}" />
+                <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+                <Setter Property="AutoGenerateColumns" Value="False" />
             </Style>
             <Style
                 x:Key="greyListBoxStyle"
