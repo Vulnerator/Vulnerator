@@ -51,7 +51,6 @@ namespace Vulnerator.ViewModel
             SimpleIoc.Default.Register<SplashViewModel>();
             SimpleIoc.Default.Register<SettingsViewModel>();
             SimpleIoc.Default.Register<ConfigurationManagementViewModel>();
-            SimpleIoc.Default.Register<MitigationsNistMappingViewModel>();
         }
 
         public AboutViewModel About
@@ -83,9 +82,6 @@ namespace Vulnerator.ViewModel
 
         public ConfigurationManagementViewModel ConfigurationManagement
         { get { return ServiceLocator.Current.GetInstance<ConfigurationManagementViewModel>(); } }
-
-        public MitigationsNistMappingViewModel MitigationsNist
-        { get { return ServiceLocator.Current.GetInstance<MitigationsNistMappingViewModel>(); } }
 
         public static void Cleanup()
         { }
