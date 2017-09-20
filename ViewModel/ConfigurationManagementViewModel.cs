@@ -103,30 +103,17 @@ namespace Vulnerator.ViewModel
             using (DatabaseContext databaseContext = new DatabaseContext())
             {
                 Hardwares = databaseContext.Hardwares
-                    .Include(h => h.SoftwareHardwares.Select(s => s.Software))
+                    .Include(h => h.SoftwareHardwares)
                     .Include(h => h.IP_Addresses)
                     .Include(h => h.MAC_Addresses)
                     .Include(h => h.Groups)
                     .Include(h => h.Contacts)
                     .Include(h => h.Hardware_PPS.Select(p => p.PP))
                     .AsNoTracking().ToList();
-                Softwares = databaseContext.Softwares
-                    .Include(s => s.SoftwareHardwares.Select(h => h.Hardware))
-                    .AsNoTracking().ToList();
-                Contacts = databaseContext.Contacts
-                    .Include(c => c.Accreditations)
-                    .Include(c => c.Certifications)
-                    .Include(c => c.Groups)
-                    .Include(c => c.Organization)
-                    .Include(c => c.Softwares)
-                    .Include(c => c.Title)
-                    .AsNoTracking().ToList();
-                PPS = databaseContext.PPS
-                    .Include(p => p.Hardware_PPS.Select(h => h.Hardware))
-                    .AsNoTracking().ToList();
-                Groups = databaseContext.Groups
-                    .Include(g => g.Hardwares)
-                    .AsNoTracking().ToList();
+                Softwares = databaseContext.Softwares.AsNoTracking().ToList();
+                Contacts = databaseContext.Contacts.AsNoTracking().ToList();
+                PPS = databaseContext.PPS.AsNoTracking().ToList();
+                Groups = databaseContext.Groups.AsNoTracking().ToList();
                 Accreditations = databaseContext.Accreditations.AsNoTracking().ToList();
             }
         }
