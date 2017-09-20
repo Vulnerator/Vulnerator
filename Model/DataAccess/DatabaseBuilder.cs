@@ -13,7 +13,7 @@ namespace Vulnerator.Model.DataAccess
     {
         private Assembly assembly = Assembly.GetExecutingAssembly();
         public static string databaseConnection = string.Format(
-            @"Data Source = {0}; Version=3;datetimeformat=UnixEpoch;datetimekind=Utc;", 
+            @"Data Source = {0}; Version=3;datetimeformat=Ticks;", 
             Properties.Settings.Default.Database);
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         public static SQLiteConnection sqliteConnection = new SQLiteConnection(databaseConnection);
