@@ -10,6 +10,7 @@ namespace Vulnerator.ViewModel
     {
         ReleaseList,
         VersionInfo,
-        ConfigurationData
+        ConfigurationData,
+        DataContextChanged
     }
 }
