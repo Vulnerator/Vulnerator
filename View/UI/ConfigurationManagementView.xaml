@@ -27,7 +27,7 @@
     </UserControl.Resources>
 
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
-        <Controls:MetroAnimatedSingleRowTabControl Margin="10,0,5,0" Controls:TabControlHelper.Underlined="SelectedTabItem">
+        <Controls:MetroAnimatedSingleRowTabControl Margin="5,0" Controls:TabControlHelper.Underlined="SelectedTabItem">
             <TabItem Header="Hardware">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -1741,12 +1741,12 @@
                             </Label>
                         </Grid>
                         <DataGrid
-                            AutoGenerateColumns="False"
-                            BorderThickness="1"
+                            CanUserAddRows="True"
                             DockPanel.Dock="Top"
-                            ItemsSource="{Binding Groups}">
+                            ItemsSource="{Binding Groups}"
+                            Style="{StaticResource GreyBorderedDataGridStyle}">
                             <DataGrid.Columns>
-                                <DataGridTemplateColumn Width="Auto">
+                                <DataGridTemplateColumn x:Name="projectsCheckBoxColumn" Width="Auto">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <CheckBox
@@ -1760,24 +1760,63 @@
                                     Width="*"
                                     Binding="{Binding Group_Name}"
                                     Header="Project Name"
-                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}" TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBox}" TargetType="TextBox">
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Project Name" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn
                                     Width="*"
                                     Binding="{Binding Accreditation}"
-                                    Header="Accreditation"
-                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                    Header="Parent Accreditation"
+                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}" TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBox}" TargetType="TextBox">
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Parent Accreditation" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn
-                                    Width="*"
+                                    Width="Auto"
                                     Binding="{Binding Hardwares.Count}"
                                     Header="Asset Count"
-                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}" TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBox}" TargetType="TextBox">
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Port" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                             <DataGrid.RowDetailsTemplate>
                                 <DataTemplate>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="{Binding ElementName=projectsCheckBoxColumn, Path=ActualWidth}" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
@@ -1785,6 +1824,72 @@
                                             <RowDefinition />
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
+                                        <DataGrid
+                                            Grid.Column="1"
+                                            Height="200"
+                                            Margin="0,0,5,5"
+                                            CanUserAddRows="False"
+                                            Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn
+                                                    Width="*"
+                                                    Binding="{Binding}"
+                                                    Header="Associated Hardware"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}"
+                                                    IsReadOnly="True">
+                                                    <DataGridTextColumn.ElementStyle>
+                                                        <Style BasedOn="{StaticResource MetroTextBlock}" TargetType="TextBlock">
+                                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                                        </Style>
+                                                    </DataGridTextColumn.ElementStyle>
+                                                </DataGridTextColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <ComboBox
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Margin="0,0,5,5"
+                                            VerticalAlignment="Bottom"
+                                            Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                            Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                            Controls:TextBoxHelper.ClearTextButton="True"
+                                            Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                            Controls:TextBoxHelper.Watermark="Add Associated Hardware"
+                                            IsEditable="True" />
+                                        <DataGrid
+                                            Grid.Column="2"
+                                            Height="200"
+                                            Margin="5,0,5,5"
+                                            CanUserAddRows="False"
+                                            Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn
+                                                    Width="*"
+                                                    Binding="{Binding}"
+                                                    Header="Associated Contacts"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}"
+                                                    IsReadOnly="True">
+                                                    <DataGridTextColumn.ElementStyle>
+                                                        <Style BasedOn="{StaticResource MetroTextBlock}" TargetType="TextBlock">
+                                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                                        </Style>
+                                                    </DataGridTextColumn.ElementStyle>
+                                                </DataGridTextColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <ComboBox
+                                            Grid.Row="1"
+                                            Grid.Column="2"
+                                            Margin="5,0,5,5"
+                                            VerticalAlignment="Bottom"
+                                            Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                            Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                            Controls:TextBoxHelper.ClearTextButton="True"
+                                            Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                            Controls:TextBoxHelper.Watermark="Add Associated Contacts"
+                                            IsEditable="True" />
                                     </Grid>
                                 </DataTemplate>
                             </DataGrid.RowDetailsTemplate>
@@ -1936,12 +2041,12 @@
                             </Label>
                         </Grid>
                         <DataGrid
-                            AutoGenerateColumns="False"
-                            BorderThickness="1"
+                            CanUserAddRows="True"
                             DockPanel.Dock="Top"
-                            ItemsSource="{Binding Accreditations}">
+                            ItemsSource="{Binding Accreditations}"
+                            Style="{StaticResource GreyBorderedDataGridStyle}">
                             <DataGrid.Columns>
-                                <DataGridTemplateColumn Width="Auto">
+                                <DataGridTemplateColumn x:Name="accreditationCheckBoxColumn" Width="Auto">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <CheckBox
@@ -1954,20 +2059,60 @@
                                 <DataGridTextColumn
                                     Width="*"
                                     Header="Name"
-                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}" TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBox}" TargetType="TextBox">
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Project Name" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn
-                                    Width="*"
+                                    Width="Auto"
                                     Header="Acronym"
-                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}" TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBox}" TargetType="TextBox">
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Project Name" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn
-                                    Width="*"
+                                    Width="Auto"
                                     Header="eMASS ID"
-                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}" TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBox}" TargetType="TextBox">
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Project Name" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                             <DataGrid.RowDetailsTemplate>
                                 <DataTemplate>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="{Binding ElementName=accreditationCheckBoxColumn, Path=ActualWidth}" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
