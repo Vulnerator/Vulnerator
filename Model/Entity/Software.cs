@@ -17,9 +17,6 @@ namespace Vulnerator.Model.Entity
             Contacts = new HashSet<Contact>();
         }
 
-        [NotMapped]
-        public bool IsChecked { get; set; }
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long Software_ID { get; set; }

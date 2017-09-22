@@ -724,7 +724,8 @@
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Categorize" Style="{StaticResource CustomMetroTabItem}">
+            <TabItem Header="Categorize"
+                     Style="{StaticResource CustomMetroTabItem}">
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                               VerticalScrollBarVisibility="Auto">
                     <StackPanel>
@@ -975,7 +976,9 @@
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </StackPanel>
-                                <CheckBox Margin="0,0,5,5" Grid.Row="1" Grid.ColumnSpan="2">
+                                <CheckBox Grid.Row="1"
+                                          Grid.ColumnSpan="2"
+                                          Margin="0,0,5,5">
                                     <TextBlock Text="Data loss / breach from multiple sources creates an aggregation condition that heightens risk"
                                                TextWrapping="Wrap" />
                                 </CheckBox>
@@ -1160,10 +1163,10 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel>
-                        
-                        <DataGrid Margin="5,0"
-                                  Style="{StaticResource GreyBorderedDataGridStyle}"
-                                  MinHeight="500">
+
+                        <DataGrid MinHeight="500"
+                                  Margin="5,0"
+                                  Style="{StaticResource GreyBorderedDataGridStyle}">
                             <DataGrid.Columns>
                                 <DataGridCheckBoxColumn />
                                 <DataGridTextColumn Width="*">

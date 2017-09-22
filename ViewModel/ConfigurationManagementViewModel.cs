@@ -104,7 +104,7 @@ namespace Vulnerator.ViewModel
         {
             databaseContext = new DatabaseContext();
             Hardwares = databaseContext.Hardwares.ToList();
-            Softwares = databaseContext.Softwares.ToList();
+            //Softwares = databaseContext.Softwares.ToList();
             Contacts = databaseContext.Contacts.ToList();
             PPS = databaseContext.PPS.ToList();
             Groups = databaseContext.Groups.ToList();
