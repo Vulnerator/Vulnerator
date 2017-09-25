@@ -91,8 +91,8 @@
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                TargetType="TextBox">
-                                            <Setter Property="Margin" Value="0,5,5,5" />
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Preferred Host Name" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -110,9 +110,9 @@
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                TargetType="TextBox">
-                                            <Setter Property="Margin" Value="0,5,5,5" />
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="FQDN (Read Only)" />
                                             <Setter Property="IsReadOnly" Value="True" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -130,9 +130,9 @@
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                TargetType="TextBox">
-                                            <Setter Property="Margin" Value="0,5,5,5" />
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="NetBIOS (Read Only)" />
                                             <Setter Property="IsReadOnly" Value="True" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -150,9 +150,9 @@
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                TargetType="TextBox">
-                                            <Setter Property="Margin" Value="0,5,5,5" />
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Last Scan IP (Read Only)" />
                                             <Setter Property="IsReadOnly" Value="True" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -562,8 +562,8 @@
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                TargetType="TextBox">
-                                            <Setter Property="Margin" Value="0,5,5,5" />
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Preferred Software Name" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -575,9 +575,9 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBlock}"
                                                TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center" />
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
-                                            <Setter Property="HorizontalAlignment" Value="Center" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -892,9 +892,9 @@
                         </Grid>
                         <DataGrid AutoGenerateColumns="False"
                                   DockPanel.Dock="Top"
-                                  HorizontalScrollBarVisibility="Disabled"
                                   ItemsSource="{Binding PPS}"
                                   Style="{StaticResource GreyBorderedDataGridStyle}"
+                                  HorizontalScrollBarVisibility="Disabled"
                                   VerticalScrollBarVisibility="Auto">
                             <DataGrid.Columns>
                                 <DataGridTemplateColumn x:Name="ppsCheckBoxColumn"
@@ -914,16 +914,16 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBlock}"
                                                TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center" />
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
-                                            <Setter Property="HorizontalAlignment" Value="Center" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                TargetType="TextBox">
-                                            <Setter Property="Margin" Value="0,5,5,5" />
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Port" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -934,16 +934,16 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBlock}"
                                                TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center" />
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
-                                            <Setter Property="HorizontalAlignment" Value="Center" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                TargetType="TextBox">
-                                            <Setter Property="Margin" Value="0,5,5,5" />
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Protocol" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -954,16 +954,16 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBlock}"
                                                TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center" />
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
-                                            <Setter Property="HorizontalAlignment" Value="Center" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                TargetType="TextBox">
-                                            <Setter Property="Margin" Value="0,5,5,5" />
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Preferred Service Name" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1018,8 +1018,8 @@
                                                     <DataGridTextColumn.EditingElementStyle>
                                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                                TargetType="TextBox">
-                                                            <Setter Property="Margin" Value="0,5,5,5" />
                                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Preferred Service Name" />
+                                                            <Setter Property="Margin" Value="0,5,5,5" />
                                                         </Style>
                                                     </DataGridTextColumn.EditingElementStyle>
                                                 </DataGridTextColumn>
@@ -1255,8 +1255,8 @@
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                TargetType="TextBox">
-                                            <Setter Property="Margin" Value="0,5,5,5" />
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="First Name" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1274,8 +1274,8 @@
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                TargetType="TextBox">
-                                            <Setter Property="Margin" Value="0,5,5,5" />
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Last Name" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1293,8 +1293,8 @@
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                TargetType="TextBox">
-                                            <Setter Property="Margin" Value="0,5,5,5" />
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Email" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1312,8 +1312,8 @@
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                TargetType="TextBox">
-                                            <Setter Property="Margin" Value="0,5,5,5" />
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Title" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1331,8 +1331,8 @@
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                TargetType="TextBox">
-                                            <Setter Property="Margin" Value="0,5,5,5" />
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Organization" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1426,7 +1426,7 @@
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Width="*"
                                                                     Binding="{Binding Group_Name}"
-                                                                    Header="Associated groups"
+                                                                    Header="Associated Groups"
                                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                                             </DataGrid.Columns>
                                         </DataGrid>
@@ -1673,8 +1673,8 @@
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                TargetType="TextBox">
-                                            <Setter Property="Margin" Value="0,5,5,5" />
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Project Name" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1692,8 +1692,8 @@
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                TargetType="TextBox">
-                                            <Setter Property="Margin" Value="0,5,5,5" />
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Parent Accreditation" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1704,16 +1704,16 @@
                                     <DataGridTextColumn.ElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBlock}"
                                                TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center" />
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
-                                            <Setter Property="HorizontalAlignment" Value="Center" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                TargetType="TextBox">
-                                            <Setter Property="Margin" Value="0,5,5,5" />
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Port" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1964,8 +1964,8 @@
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                TargetType="TextBox">
-                                            <Setter Property="Margin" Value="0,5,5,5" />
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Project Name" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1982,8 +1982,8 @@
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                TargetType="TextBox">
-                                            <Setter Property="Margin" Value="0,5,5,5" />
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Project Name" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -2000,8 +2000,8 @@
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBox}"
                                                TargetType="TextBox">
-                                            <Setter Property="Margin" Value="0,5,5,5" />
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Project Name" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>

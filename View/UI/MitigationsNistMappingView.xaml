@@ -17,6 +17,7 @@
              HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch"
              d:DesignWidth="800"
+             DataContext="{Binding MitigationsNist, Source={StaticResource Locator}}"
              mc:Ignorable="d">
 
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
@@ -26,130 +27,312 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width=".5*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <DockPanel Grid.Column="0"
                                Margin="0,0,0,5">
                         <Label Content="Mitigations"
                                DockPanel.Dock="Top"
                                Style="{StaticResource TopLevelHeaderStyle}" />
-                        <DataGrid BorderThickness="1"
-                                  DockPanel.Dock="Top">
+                        <DataGrid CanUserAddRows="True"
+                                  CanUserDeleteRows="True"
+                                  DockPanel.Dock="Top"
+                                  ItemsSource="{Binding ProjectMitigations}"
+                                  Style="{StaticResource GreyBorderedDataGridStyle}">
                             <DataGrid.Columns>
+                                <DataGridTemplateColumn x:Name="projectCheckBoxColumn"
+                                                        Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Margin="5,0,0,0"
+                                                      HorizontalAlignment="Center"
+                                                      IsChecked="{Binding IsChecked}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTextColumn Width="*"
-                                                    Header="Vulnerability" />
+                                                    Header="Vulnerability ID" />
                                 <DataGridTextColumn Width="*"
-                                                    Header="Applicability" />
+                                                    Header="Raw Risk" />
                                 <DataGridTextColumn Width="*"
-                                                    Header="Expiration Date" />
+                                                    Header="Residual Risk" />
                                 <DataGridTextColumn Width="*"
-                                                    Header="Approval Status" />
+                                                    Header="Status" />
+                                <DataGridTextColumn Width="Auto"
+                                                    Header="Approved" />
                             </DataGrid.Columns>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="{Binding ElementName=projectCheckBoxColumn, Path=ActualWidth}" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <TextBox Grid.Column="1"
+                                                 Height="200"
+                                                 Margin="0,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                 Controls:TextBoxHelper.Watermark="Impact Description"
+                                                 AcceptsReturn="True"
+                                                 AcceptsTab="True"
+                                                 TextWrapping="Wrap"
+                                                 HorizontalScrollBarVisibility="Disabled"
+                                                 VerticalScrollBarVisibility="Auto" />
+                                        <TextBox Grid.Column="2"
+                                                 Height="200"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                 Controls:TextBoxHelper.Watermark="Predisposing Condition(s)"
+                                                 AcceptsReturn="True"
+                                                 AcceptsTab="True"
+                                                 TextWrapping="Wrap"
+                                                 HorizontalScrollBarVisibility="Disabled"
+                                                 VerticalScrollBarVisibility="Auto" />
+                                        <TextBox Grid.Column="3"
+                                                 Height="200"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                 Controls:TextBoxHelper.Watermark="Technical Mitigation(s)"
+                                                 AcceptsReturn="True"
+                                                 AcceptsTab="True"
+                                                 TextWrapping="Wrap"
+                                                 HorizontalScrollBarVisibility="Disabled"
+                                                 VerticalScrollBarVisibility="Auto" />
+                                        <TextBox Grid.Column="4"
+                                                 Height="200"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                 Controls:TextBoxHelper.Watermark="Proposed Mitigation(s)"
+                                                 AcceptsReturn="True"
+                                                 AcceptsTab="True"
+                                                 TextWrapping="Wrap"
+                                                 HorizontalScrollBarVisibility="Disabled"
+                                                 VerticalScrollBarVisibility="Auto" />
+                                        <ComboBox Grid.Row="1"
+                                                  Grid.Column="1"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                  Controls:TextBoxHelper.Watermark="Threat Relevance"
+                                                  IsEditable="True" />
+                                        <ComboBox Grid.Row="1"
+                                                  Grid.Column="2"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                  Controls:TextBoxHelper.Watermark="Severity / Pervasiveness"
+                                                  IsEditable="True" />
+                                        <TextBox Grid.Row="1"
+                                                 Grid.Column="3"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                 Controls:TextBoxHelper.Watermark="Likelihood (Calculated)"
+                                                 IsReadOnly="True" />
+                                        <ComboBox Grid.Row="1"
+                                                  Grid.Column="4"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                  Controls:TextBoxHelper.Watermark="Impact"
+                                                  IsEditable="True" />
+                                        <TextBox Grid.Row="2"
+                                                 Grid.Column="1"
+                                                 Margin="0,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                 Controls:TextBoxHelper.Watermark="Risk (Calculated)"
+                                                 IsReadOnly="True" />
+                                        <ComboBox Grid.Row="2"
+                                                  Grid.Column="2"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                  Controls:TextBoxHelper.Watermark="Residual Risk"
+                                                  IsEditable="True" />
+                                        <DatePicker Grid.Row="2"
+                                                    Grid.Column="3"
+                                                    Margin="5,0,5,5"
+                                                    VerticalAlignment="Bottom"
+                                                    Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                    Controls:TextBoxHelper.Watermark="Expiration Date" />
+                                        <Grid Grid.Row="2"
+                                              Grid.Column="4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox Margin="5,0,5,5"
+                                                     VerticalAlignment="Bottom"
+                                                     Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                     Controls:TextBoxHelper.Watermark="Approver"
+                                                     IsReadOnly="True" />
+                                            <CheckBox Grid.Column="1"
+                                                      Margin="5,0,5,5"
+                                                      VerticalAlignment="Center"
+                                                      Content="Approved"
+                                                      Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                      IsChecked="{Binding IsChecked}" />
+                                        </Grid>
+                                        <DataGrid Grid.Row="3"
+                                                  Grid.Column="1"
+                                                  Grid.ColumnSpan="2"
+                                                  Height="100"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Top"
+                                                  IsReadOnly="True"
+                                                  ItemsSource="{Binding Groups}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Group_Name}"
+                                                                    Header="Associated Groups / Accreditations"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <ComboBox Grid.Row="4"
+                                                  Grid.Column="1"
+                                                  Grid.ColumnSpan="2"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ClearTextButton="True"
+                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                  Controls:TextBoxHelper.Watermark="Add Group / Accreditation"
+                                                  IsEditable="True" />
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
                         </DataGrid>
                     </DockPanel>
-                    <DockPanel Grid.Column="1"
-                               Margin="5,0,0,5">
-                        <Label Content="Details"
-                               DockPanel.Dock="Top"
-                               Style="{StaticResource TopLevelHeaderStyle}" />
-                        <ScrollViewer VerticalAlignment="Stretch"
-                                      CanContentScroll="True"
-                                      DockPanel.Dock="Top"
-                                      HorizontalScrollBarVisibility="Disabled"
-                                      VerticalScrollBarVisibility="Auto">
-                            <StackPanel>
-                                <Label>
-                                    <TextBlock Text="Vulnerability ID"
+                    <Expander Grid.Column="1"
+                              Background="{DynamicResource WindowBackgroundBrush}"
+                              BorderThickness="0"
+                              ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                                                Margin="5"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                Kind="FilterOutline">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock Grid.Column="1"
+                                               Margin="5,0"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource LabelTextBrush}"
+                                               Text="Filter"
                                                TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <TextBox Margin="5,0,5,5"
-                                         Controls:TextBoxHelper.Watermark="Select an item" />
-
-                                <Label>
-                                    <TextBlock Text="Applicability"
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                    <Expander Grid.Column="2"
+                              Background="{DynamicResource WindowBackgroundBrush}"
+                              BorderThickness="0"
+                              ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                                                Margin="5"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                Kind="CheckAll">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock Grid.Column="1"
+                                               Margin="5,0"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource LabelTextBrush}"
+                                               Text="Bulk Process"
                                                TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid MinHeight="100"
-                                          Margin="5,0,5,5"
-                                          BorderThickness="1"
-                                          HeadersVisibility="None"
-                                          Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn Width="*" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <Label>
-                                    <TextBlock Text="Applicable Accreditation"
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                    <Expander Grid.Column="3"
+                              Background="{DynamicResource WindowBackgroundBrush}"
+                              BorderThickness="0"
+                              ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterialLight Grid.Column="0"
+                                                                     Margin="5"
+                                                                     HorizontalAlignment="Center"
+                                                                     VerticalAlignment="Center"
+                                                                     Kind="CloudDownload">
+                                        <IconPacks:PackIconMaterialLight.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterialLight.LayoutTransform>
+                                    </IconPacks:PackIconMaterialLight>
+                                    <TextBlock Grid.Column="1"
+                                               Margin="5,0"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource LabelTextBrush}"
+                                               Text="Reporting"
                                                TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid MinHeight="100"
-                                          Margin="5,0,5,5"
-                                          BorderThickness="1"
-                                          HeadersVisibility="None"
-                                          Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn Width="*" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <Label>
-                                    <TextBlock Text="Applicable Project"
-                                               TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid MinHeight="100"
-                                          Margin="5,0,5,5"
-                                          BorderThickness="1"
-                                          HeadersVisibility="None"
-                                          Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn Width="*" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <Label>
-                                    <TextBlock Text="Applicable Asset"
-                                               TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DataGrid MinHeight="100"
-                                          Margin="5,0,5,5"
-                                          BorderThickness="1"
-                                          HeadersVisibility="None"
-                                          Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn Width="*" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <Label>
-                                    <TextBlock Text="Statement"
-                                               TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <TextBox Height="Auto"
-                                         MaxHeight="200"
-                                         Margin="5,0,5,5"
-                                         Controls:TextBoxHelper.Watermark="Select an item"
-                                         ScrollViewer.CanContentScroll="True"
-                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                         TextWrapping="Wrap" />
-                                <Label>
-                                    <TextBlock Text="Expiration Date"
-                                               TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <DatePicker Margin="5,0,5,5" />
-                                <CheckBox Margin="5,0"
-                                          Content="Approved" />
-                            </StackPanel>
-                        </ScrollViewer>
-                    </DockPanel>
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
                 </Grid>
             </TabItem>
             <TabItem Header="Asset Mitigations">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width=".5*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <DockPanel Grid.Column="0"
                                Margin="0,0,0,5">
@@ -167,167 +350,288 @@
                                   DockPanel.Dock="Top">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="*"
-                                                    Header="Vuln. ID" />
-                                <DataGridTextColumn Width="*"
-                                                    Header="Raw Risk" />
+                                                    Header="Vulnerability ID" />
                                 <DataGridTextColumn Width="*"
                                                     Header="Affected Asset" />
                                 <DataGridTextColumn Width="*"
-                                                    Header="Accreditation" />
+                                                    Header="Raw Risk" />
+                                <DataGridTextColumn Width="*"
+                                                    Header="Residual Risk" />
+                                <DataGridTextColumn Width="*"
+                                                    Header="Status" />
+                                <DataGridTextColumn Width="Auto"
+                                                    Header="Approved" />
                             </DataGrid.Columns>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="{Binding ElementName=projectCheckBoxColumn, Path=ActualWidth}" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <TextBox Grid.Column="1"
+                                                 Height="200"
+                                                 Margin="0,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                 Controls:TextBoxHelper.Watermark="Impact Description"
+                                                 AcceptsReturn="True"
+                                                 AcceptsTab="True"
+                                                 TextWrapping="Wrap"
+                                                 HorizontalScrollBarVisibility="Disabled"
+                                                 VerticalScrollBarVisibility="Auto" />
+                                        <TextBox Grid.Column="2"
+                                                 Height="200"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                 Controls:TextBoxHelper.Watermark="Predisposing Condition(s)"
+                                                 AcceptsReturn="True"
+                                                 AcceptsTab="True"
+                                                 TextWrapping="Wrap"
+                                                 HorizontalScrollBarVisibility="Disabled"
+                                                 VerticalScrollBarVisibility="Auto" />
+                                        <TextBox Grid.Column="3"
+                                                 Height="200"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                 Controls:TextBoxHelper.Watermark="Technical Mitigation(s)"
+                                                 AcceptsReturn="True"
+                                                 AcceptsTab="True"
+                                                 TextWrapping="Wrap"
+                                                 HorizontalScrollBarVisibility="Disabled"
+                                                 VerticalScrollBarVisibility="Auto" />
+                                        <TextBox Grid.Column="4"
+                                                 Height="200"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                 Controls:TextBoxHelper.Watermark="Proposed Mitigation(s)"
+                                                 AcceptsReturn="True"
+                                                 AcceptsTab="True"
+                                                 TextWrapping="Wrap"
+                                                 HorizontalScrollBarVisibility="Disabled"
+                                                 VerticalScrollBarVisibility="Auto" />
+                                        <ComboBox Grid.Row="1"
+                                                  Grid.Column="1"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                  Controls:TextBoxHelper.Watermark="Threat Relevance"
+                                                  IsEditable="True" />
+                                        <ComboBox Grid.Row="1"
+                                                  Grid.Column="2"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                  Controls:TextBoxHelper.Watermark="Severity / Pervasiveness"
+                                                  IsEditable="True" />
+                                        <TextBox Grid.Row="1"
+                                                 Grid.Column="3"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                 Controls:TextBoxHelper.Watermark="Likelihood (Calculated)"
+                                                 IsReadOnly="True" />
+                                        <ComboBox Grid.Row="1"
+                                                  Grid.Column="4"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                  Controls:TextBoxHelper.Watermark="Impact"
+                                                  IsEditable="True" />
+                                        <TextBox Grid.Row="2"
+                                                 Grid.Column="1"
+                                                 Margin="0,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                 Controls:TextBoxHelper.Watermark="Risk (Calculated)"
+                                                 IsReadOnly="True" />
+                                        <ComboBox Grid.Row="2"
+                                                  Grid.Column="2"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                  Controls:TextBoxHelper.Watermark="Residual Risk"
+                                                  IsEditable="True" />
+                                        <DatePicker Grid.Row="2"
+                                                    Grid.Column="3"
+                                                    Margin="5,0,5,5"
+                                                    VerticalAlignment="Bottom"
+                                                    Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                    Controls:TextBoxHelper.Watermark="Expiration Date" />
+                                        <Grid Grid.Row="2"
+                                              Grid.Column="4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox Margin="5,0,5,5"
+                                                     VerticalAlignment="Bottom"
+                                                     Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                     Controls:TextBoxHelper.Watermark="Approver"
+                                                     IsReadOnly="True" />
+                                            <CheckBox Grid.Column="1"
+                                                      Margin="5,0,5,5"
+                                                      VerticalAlignment="Center"
+                                                      Content="Approved"
+                                                      Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                      IsChecked="{Binding IsChecked}" />
+                                        </Grid>
+                                        <DataGrid Grid.Row="3"
+                                                  Grid.Column="1"
+                                                  Grid.ColumnSpan="2"
+                                                  Height="100"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Top"
+                                                  IsReadOnly="True"
+                                                  ItemsSource="{Binding Groups}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Group_Name}"
+                                                                    Header="Associated Groups / Accreditations"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <ComboBox Grid.Row="4"
+                                                  Grid.Column="1"
+                                                  Grid.ColumnSpan="2"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ClearTextButton="True"
+                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                  Controls:TextBoxHelper.Watermark="Add Group / Accreditation"
+                                                  IsEditable="True" />
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
                         </DataGrid>
                     </DockPanel>
-                    <DockPanel Grid.Column="1"
-                               Margin="5,0,0,5">
-                        <Label Content="Information"
-                               DockPanel.Dock="Top"
-                               Style="{StaticResource TopLevelHeaderStyle}" />
-                        <ScrollViewer VerticalAlignment="Stretch"
-                                      CanContentScroll="True"
-                                      DockPanel.Dock="Top"
-                                      HorizontalScrollBarVisibility="Disabled"
-                                      VerticalScrollBarVisibility="Auto">
-                            <StackPanel Grid.Column="1">
-                                <Label Content="Vulnerability / Plugin ID" />
-                                <TextBox Margin="5,0,5,5"
-                                         Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label Content="STIG ID" />
-                                <TextBox Margin="5,0,5,5"
-                                         Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label Content="Rule ID" />
-                                <TextBox Margin="5,0,5,5"
-                                         Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label Content="Raw Risk" />
-                                <TextBox Margin="5,0,5,5"
-                                         Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label Content="Title" />
-                                <TextBox Height="Auto"
-                                         MaxHeight="200"
-                                         Margin="5,0,5,5"
-                                         Controls:TextBoxHelper.Watermark="Select an item"
-                                         ScrollViewer.CanContentScroll="True"
-                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                         TextWrapping="Wrap" />
-                                <Label Content="Description" />
-                                <TextBox Height="Auto"
-                                         MaxHeight="200"
-                                         Margin="5,0,5,5"
-                                         Controls:TextBoxHelper.Watermark="Select an item"
-                                         ScrollViewer.CanContentScroll="True"
-                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                         TextWrapping="Wrap" />
-                                <Label Content="Check Content" />
-                                <TextBox Height="Auto"
-                                         MaxHeight="200"
-                                         Margin="5,0,5,5"
-                                         Controls:TextBoxHelper.Watermark="Select an item"
-                                         ScrollViewer.CanContentScroll="True"
-                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                         TextWrapping="Wrap" />
-                                <Label Content="Fix Text" />
-                                <TextBox Height="Auto"
-                                         MaxHeight="200"
-                                         Margin="5,0,5,5"
-                                         Controls:TextBoxHelper.Watermark="Select an item"
-                                         ScrollViewer.CanContentScroll="True"
-                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                         TextWrapping="Wrap" />
-                                <Label Content="Finding Status" />
-                                <ComboBox Margin="5,0,5,5"
-                                          Controls:TextBoxHelper.Watermark="Select an item" />
+                    <Expander Grid.Column="1"
+                              Background="{DynamicResource WindowBackgroundBrush}"
+                              BorderThickness="0"
+                              ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0"
-                                           Content="CKL Finding Details" />
-                                    <CheckBox Grid.Column="1"
-                                              Margin="5,0"
-                                              Content="Mitigation" />
+                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                                                Margin="5"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                Kind="FilterOutline">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock Grid.Column="1"
+                                               Margin="5,0"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource LabelTextBrush}"
+                                               Text="Filter"
+                                               TextTrimming="CharacterEllipsis" />
                                 </Grid>
-                                <TextBox Grid.Column="0"
-                                         Height="Auto"
-                                         MaxHeight="200"
-                                         Margin="5,0,5,5"
-                                         Controls:TextBoxHelper.Watermark="Select an item"
-                                         ScrollViewer.CanContentScroll="True"
-                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                         TextWrapping="Wrap" />
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                    <Expander Grid.Column="2"
+                              Background="{DynamicResource WindowBackgroundBrush}"
+                              BorderThickness="0"
+                              ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0"
-                                           Content="Comments" />
-                                    <CheckBox Grid.Column="1"
-                                              Margin="5,0"
-                                              Content="Mitigation" />
+                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                                                Margin="5"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                Kind="CheckAll">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock Grid.Column="1"
+                                               Margin="5,0"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource LabelTextBrush}"
+                                               Text="Bulk Process"
+                                               TextTrimming="CharacterEllipsis" />
                                 </Grid>
-                                <TextBox Grid.Column="0"
-                                         Height="Auto"
-                                         MaxHeight="200"
-                                         Margin="5,0,5,5"
-                                         Controls:TextBoxHelper.Watermark="Select an item"
-                                         ScrollViewer.CanContentScroll="True"
-                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                         TextWrapping="Wrap" />
-                                <Label Content="Additional Technical Mitigation(s)" />
-                                <TextBox Grid.Column="0"
-                                         Height="Auto"
-                                         MaxHeight="200"
-                                         Margin="5,0,5,5"
-                                         Controls:TextBoxHelper.Watermark="Select an item"
-                                         ScrollViewer.CanContentScroll="True"
-                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                         TextWrapping="Wrap" />
-                                <Label Content="Proposed Mitigation(s)" />
-                                <TextBox Grid.Column="0"
-                                         Height="Auto"
-                                         MaxHeight="200"
-                                         Margin="5,0,5,5"
-                                         Controls:TextBoxHelper.Watermark="Select an item"
-                                         ScrollViewer.CanContentScroll="True"
-                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                         TextWrapping="Wrap" />
-                                <Label Content="Predisposing Conditions" />
-                                <TextBox Grid.Column="0"
-                                         Height="Auto"
-                                         MaxHeight="200"
-                                         Margin="5,0,5,5"
-                                         Controls:TextBoxHelper.Watermark="Select an item"
-                                         ScrollViewer.CanContentScroll="True"
-                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                         TextWrapping="Wrap" />
-                                <Label Content="Impact" />
-                                <ComboBox Margin="5,0,5,5"
-                                          Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label Content="Likelihood" />
-                                <ComboBox Margin="5,0,5,5"
-                                          Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label Content="Residual Risk" />
-                                <ComboBox Margin="5,0"
-                                          Controls:TextBoxHelper.Watermark="Select an item" />
-                            </StackPanel>
-                        </ScrollViewer>
-                    </DockPanel>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                    <Expander Grid.Column="3"
+                              Background="{DynamicResource WindowBackgroundBrush}"
+                              BorderThickness="0"
+                              ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterialLight Grid.Column="0"
+                                                                     Margin="5"
+                                                                     HorizontalAlignment="Center"
+                                                                     VerticalAlignment="Center"
+                                                                     Kind="CloudDownload">
+                                        <IconPacks:PackIconMaterialLight.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterialLight.LayoutTransform>
+                                    </IconPacks:PackIconMaterialLight>
+                                    <TextBlock Grid.Column="1"
+                                               Margin="5,0"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource LabelTextBrush}"
+                                               Text="Reporting"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
                 </Grid>
             </TabItem>
             <TabItem Header="Vulnerability Mapping">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width=".5*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <DockPanel Grid.Column="0"
                                Margin="0,0,0,5">
@@ -341,52 +645,114 @@
                                 <DataGridTextColumn Width="*"
                                                     Header="Vuln. ID" />
                                 <DataGridTextColumn Width="*"
-                                                    Header="NIST Control(s)" />
+                                                    Header="Approved" />
                                 <DataGridTemplateColumn Width="*"
-                                                        Header="C-I-A" />
+                                                        Header="C-I-A Mapping" />
                             </DataGrid.Columns>
                         </DataGrid>
                     </DockPanel>
-                    <DockPanel Grid.Column="1"
-                               Margin="5,0,0,5">
-                        <Label Content="Details"
-                               DockPanel.Dock="Top"
-                               Style="{StaticResource TopLevelHeaderStyle}" />
-                        <ScrollViewer VerticalAlignment="Stretch"
-                                      CanContentScroll="True"
-                                      DockPanel.Dock="Top"
-                                      HorizontalScrollBarVisibility="Disabled"
-                                      VerticalScrollBarVisibility="Auto">
-                            <StackPanel>
-                                <Label Content="Vulnerability ID" />
-                                <TextBox Margin="5,0,5,5"
-                                         Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label Content="NIST SP 800-53 Controls" />
-                                <DataGrid MinHeight="200"
-                                          MaxHeight="500"
-                                          Margin="5,0,5,5"
-                                          BorderThickness="1"
-                                          HeadersVisibility="None"
-                                          Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn Width="*" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <Label Content="C-I-A Assignment" />
-                                <DataGrid MinHeight="100"
-                                          Margin="5,0"
-                                          BorderThickness="1"
-                                          HeadersVisibility="None"
-                                          Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn Width="*" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </StackPanel>
-                        </ScrollViewer>
-                    </DockPanel>
+                    <Expander Grid.Column="1"
+                              Background="{DynamicResource WindowBackgroundBrush}"
+                              BorderThickness="0"
+                              ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                                                Margin="5"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                Kind="FilterOutline">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock Grid.Column="1"
+                                               Margin="5,0"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource LabelTextBrush}"
+                                               Text="Filter"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                    <Expander Grid.Column="2"
+                              Background="{DynamicResource WindowBackgroundBrush}"
+                              BorderThickness="0"
+                              ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                                                Margin="5"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                Kind="CheckAll">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock Grid.Column="1"
+                                               Margin="5,0"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource LabelTextBrush}"
+                                               Text="Bulk Process"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                    <Expander Grid.Column="3"
+                              Background="{DynamicResource WindowBackgroundBrush}"
+                              BorderThickness="0"
+                              ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterialLight Grid.Column="0"
+                                                                     Margin="5"
+                                                                     HorizontalAlignment="Center"
+                                                                     VerticalAlignment="Center"
+                                                                     Kind="CloudDownload">
+                                        <IconPacks:PackIconMaterialLight.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterialLight.LayoutTransform>
+                                    </IconPacks:PackIconMaterialLight>
+                                    <TextBlock Grid.Column="1"
+                                               Margin="5,0"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource LabelTextBrush}"
+                                               Text="Reporting"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
                 </Grid>
             </TabItem>
         </Controls:MetroAnimatedSingleRowTabControl>

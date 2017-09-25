@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -9,12 +10,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Entity;
+using Vulnerator.Model.Object;
 
 namespace Vulnerator.ViewModel
 {
     public class ConfigurationManagementViewModel : ViewModelBase
     {
         private DatabaseContext databaseContext;
+        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
         private List<Hardware> _hardwares;
         public List<Hardware> Hardwares
@@ -101,14 +104,23 @@ namespace Vulnerator.ViewModel
         }
 
         public ConfigurationManagementViewModel()
-        {
-            databaseContext = new DatabaseContext();
-            Hardwares = databaseContext.Hardwares.ToList();
-            //Softwares = databaseContext.Softwares.ToList();
-            Contacts = databaseContext.Contacts.ToList();
-            PPS = databaseContext.PPS.ToList();
-            Groups = databaseContext.Groups.ToList();
-            Accreditations = databaseContext.Accreditations.ToList();
+        { 
+            try
+            {
+                log.Info("Begin instantiation of ConfigurationManagementViewModel.");
+                databaseContext = new DatabaseContext();
+                Hardwares = databaseContext.Hardwares.ToList();
+                Softwares = databaseContext.Softwares.ToList();
+                Contacts = databaseContext.Contacts.ToList();
+                PPS = databaseContext.PPS.ToList();
+                Groups = databaseContext.Groups.ToList();
+                Accreditations = databaseContext.Accreditations.ToList();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to instantiate ConfigurationManagementViewModel."));
+                log.Debug("Exception details:", exception);
+            }
         }
     }
 }

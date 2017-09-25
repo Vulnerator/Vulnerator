@@ -484,6 +484,7 @@
     <Compile Include="ViewModel\ConfigurationManagementViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MessengerToken.cs" />
+    <Compile Include="ViewModel\MitigationsNistMappingViewModel.cs" />
     <Compile Include="ViewModel\NewsViewModel.cs" />
     <Compile Include="ViewModel\RmfViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
