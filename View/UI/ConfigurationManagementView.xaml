@@ -2028,28 +2028,28 @@
                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Accreditation Version"
                                                  IsReadOnly="True"
-                                                 Text="{Binding}" />
+                                                 Text="{Binding AccreditationVersion}" />
                                         <TextBox Grid.Column="2"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Confidentiality (Read Only)"
                                                  IsReadOnly="True"
-                                                 Text="{Binding}" />
+                                                 Text="{Binding Mode=OneWay}" />
                                         <TextBox Grid.Column="3"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Integrity (Read Only)"
                                                  IsReadOnly="True"
-                                                 Text="{Binding}" />
+                                                 Text="{Binding Mode=OneWay}" />
                                         <TextBox Grid.Column="4"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Availability (Read Only)"
                                                  IsReadOnly="True"
-                                                 Text="{Binding}" />
+                                                 Text="{Binding Mode=OneWay}" />
                                         <TextBox Grid.Row="1"
                                                  Grid.Column="1"
                                                  Margin="0,0,5,5"
@@ -2057,7 +2057,7 @@
                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Accreditation Type (Read Only)"
                                                  IsReadOnly="True"
-                                                 Text="{Binding}" />
+                                                 Text="{Binding Mode=OneWay}" />
                                         <TextBox Grid.Row="1"
                                                  Grid.Column="2"
                                                  Margin="5,0,5,5"
@@ -2065,7 +2065,7 @@
                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="RDT&amp;E Zone (Read Only)"
                                                  IsReadOnly="True"
-                                                 Text="{Binding}" />
+                                                 Text="{Binding Mode=OneWay}" />
                                         <TextBox Grid.Row="1"
                                                  Grid.Column="3"
                                                  Margin="5,0,5,5"
@@ -2073,7 +2073,7 @@
                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="CyberSafe Grade (Read Only)"
                                                  IsReadOnly="True"
-                                                 Text="{Binding}" />
+                                                 Text="{Binding Mode=OneWay}" />
                                         <CheckBox Grid.Row="1"
                                                   Grid.Column="4"
                                                   Margin="5,0,5,5"
@@ -2087,16 +2087,16 @@
                                                     VerticalAlignment="Bottom"
                                                     Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                     Controls:TextBoxHelper.Watermark="ATO Granted"
-                                                    Text="{Binding}" />
+                                                    Text="{Binding Accreditation_Acronym, Mode=OneWay}" />
                                         <DatePicker Grid.Row="2"
                                                     Grid.Column="2"
                                                     Margin="5,0,5,5"
                                                     VerticalAlignment="Bottom"
                                                     Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                    Controls:TextBoxHelper.Watermark="ATO Expiration (Read Only)"
-                                                    Text="{Binding}" />
+                                                    Controls:TextBoxHelper.Watermark="ATO Expiration"
+                                                    Text="{Binding Accreditation_Acronym, Mode=OneWay}" />
                                         <CheckBox Grid.Row="2"
-                                                  Grid.Column="4"
+                                                  Grid.Column="3"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Center"
                                                   Content="Has Foreign Nationals"

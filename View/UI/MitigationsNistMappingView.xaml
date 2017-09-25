@@ -22,73 +22,7 @@
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
         <Controls:MetroAnimatedSingleRowTabControl Margin="5,0,0,0"
                                                    Controls:TabControlHelper.Underlined="SelectedTabItem">
-            <TabItem Header="RMF Mapping">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width=".5*" />
-                    </Grid.ColumnDefinitions>
-                    <DockPanel Grid.Column="0"
-                               Margin="0,0,0,5">
-                        <Label Content="Vulnerabilities"
-                               DockPanel.Dock="Top"
-                               Style="{StaticResource TopLevelHeaderStyle}" />
-                        <DataGrid Grid.Column="0"
-                                  BorderThickness="1"
-                                  DockPanel.Dock="Top">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Width="*"
-                                                    Header="Vuln. ID" />
-                                <DataGridTextColumn Width="*"
-                                                    Header="NIST Control(s)" />
-                                <DataGridTemplateColumn Width="*"
-                                                        Header="C-I-A" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </DockPanel>
-                    <DockPanel Grid.Column="1"
-                               Margin="5,0,0,5">
-                        <Label Content="Details"
-                               DockPanel.Dock="Top"
-                               Style="{StaticResource TopLevelHeaderStyle}" />
-                        <ScrollViewer VerticalAlignment="Stretch"
-                                      CanContentScroll="True"
-                                      DockPanel.Dock="Top"
-                                      HorizontalScrollBarVisibility="Disabled"
-                                      VerticalScrollBarVisibility="Auto">
-                            <StackPanel>
-                                <Label Content="Vulnerability ID" />
-                                <TextBox Margin="5,0,5,5"
-                                         Controls:TextBoxHelper.Watermark="Select an item" />
-                                <Label Content="NIST SP 800-53 Controls" />
-                                <DataGrid MinHeight="200"
-                                          MaxHeight="500"
-                                          Margin="5,0,5,5"
-                                          BorderThickness="1"
-                                          HeadersVisibility="None"
-                                          Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn Width="*" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <Label Content="C-I-A Assignment" />
-                                <DataGrid MinHeight="100"
-                                          Margin="5,0"
-                                          BorderThickness="1"
-                                          HeadersVisibility="None"
-                                          Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridCheckBoxColumn />
-                                        <DataGridTextColumn Width="*" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </StackPanel>
-                        </ScrollViewer>
-                    </DockPanel>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Standard Mitigations">
+            <TabItem Header="Project Mitigations">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -130,6 +64,7 @@
                                 </Label>
                                 <TextBox Margin="5,0,5,5"
                                          Controls:TextBoxHelper.Watermark="Select an item" />
+
                                 <Label>
                                     <TextBlock Text="Applicability"
                                                TextTrimming="CharacterEllipsis" />
@@ -210,7 +145,7 @@
                     </DockPanel>
                 </Grid>
             </TabItem>
-            <TabItem Header="Finding Breakout">
+            <TabItem Header="Asset Mitigations">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -383,6 +318,72 @@
                                 <Label Content="Residual Risk" />
                                 <ComboBox Margin="5,0"
                                           Controls:TextBoxHelper.Watermark="Select an item" />
+                            </StackPanel>
+                        </ScrollViewer>
+                    </DockPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Vulnerability Mapping">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width=".5*" />
+                    </Grid.ColumnDefinitions>
+                    <DockPanel Grid.Column="0"
+                               Margin="0,0,0,5">
+                        <Label Content="Vulnerabilities"
+                               DockPanel.Dock="Top"
+                               Style="{StaticResource TopLevelHeaderStyle}" />
+                        <DataGrid Grid.Column="0"
+                                  BorderThickness="1"
+                                  DockPanel.Dock="Top">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="*"
+                                                    Header="Vuln. ID" />
+                                <DataGridTextColumn Width="*"
+                                                    Header="NIST Control(s)" />
+                                <DataGridTemplateColumn Width="*"
+                                                        Header="C-I-A" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                    <DockPanel Grid.Column="1"
+                               Margin="5,0,0,5">
+                        <Label Content="Details"
+                               DockPanel.Dock="Top"
+                               Style="{StaticResource TopLevelHeaderStyle}" />
+                        <ScrollViewer VerticalAlignment="Stretch"
+                                      CanContentScroll="True"
+                                      DockPanel.Dock="Top"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <Label Content="Vulnerability ID" />
+                                <TextBox Margin="5,0,5,5"
+                                         Controls:TextBoxHelper.Watermark="Select an item" />
+                                <Label Content="NIST SP 800-53 Controls" />
+                                <DataGrid MinHeight="200"
+                                          MaxHeight="500"
+                                          Margin="5,0,5,5"
+                                          BorderThickness="1"
+                                          HeadersVisibility="None"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridCheckBoxColumn />
+                                        <DataGridTextColumn Width="*" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <Label Content="C-I-A Assignment" />
+                                <DataGrid MinHeight="100"
+                                          Margin="5,0"
+                                          BorderThickness="1"
+                                          HeadersVisibility="None"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridCheckBoxColumn />
+                                        <DataGridTextColumn Width="*" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
                             </StackPanel>
                         </ScrollViewer>
                     </DockPanel>
