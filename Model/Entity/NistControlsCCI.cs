@@ -36,6 +36,9 @@ namespace Vulnerator.Model.Entity
         [StringLength(1000)]
         public string AssessmentProcedureText { get; set; }
 
+        [NotMapped]
+        public bool IsChecked { get; set; }
+
         public virtual CCI CCI { get; set; }
 
         public virtual NistControl NistControl { get; set; }

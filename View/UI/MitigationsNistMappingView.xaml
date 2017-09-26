@@ -20,6 +20,10 @@
              DataContext="{Binding MitigationsNist, Source={StaticResource Locator}}"
              mc:Ignorable="d">
 
+    <UserControl.Resources>
+        <Converters:BooleanToCheckboxConverter x:Key="CheckboxConverter" />
+    </UserControl.Resources>
+
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
         <Controls:MetroAnimatedSingleRowTabControl Margin="5,0,0,0"
                                                    Controls:TabControlHelper.Underlined="SelectedTabItem">
@@ -53,15 +57,88 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
                                 <DataGridTextColumn Width="*"
-                                                    Header="Vulnerability ID" />
+                                                    Header="Vulnerability ID"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Vulnerability ID" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="*"
-                                                    Header="Raw Risk" />
+                                                    Header="Raw Risk"
+                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Raw Risk" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="*"
-                                                    Header="Residual Risk" />
-                                <DataGridTextColumn Width="*"
-                                                    Header="Status" />
-                                <DataGridTextColumn Width="Auto"
-                                                    Header="Approved" />
+                                                    Header="Residual Risk"
+                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Residual Risk" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTemplateColumn Width="*"
+                                                        Header="Status"
+                                                        HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       TextWrapping="NoWrap" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                    <DataGridTemplateColumn.CellEditingTemplate>
+                                        <DataTemplate>
+                                            <ComboBox Margin="0,5,5,5"
+                                                      Controls:TextBoxHelper.Watermark="Status"
+                                                      IsEditable="True" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellEditingTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="Auto"
+                                                        Header="Approved"
+                                                        HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <IconPacks:PackIconMaterial HorizontalAlignment="Center"
+                                                                        Kind="{Binding ReportInAccreditation, Converter={StaticResource CheckboxConverter}}"
+                                                                        ToolTip="{Binding ReportInAccreditation}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
                             <DataGrid.RowDetailsTemplate>
                                 <DataTemplate>
@@ -340,33 +417,127 @@
                                DockPanel.Dock="Top"
                                Style="{StaticResource TopLevelHeaderStyle}" />
                         <DataGrid VerticalAlignment="Stretch"
-                                  BorderThickness="1"
-                                  CanUserAddRows="False"
-                                  CanUserDeleteRows="False"
-                                  CanUserReorderColumns="True"
-                                  CanUserResizeColumns="True"
-                                  CanUserResizeRows="False"
-                                  CanUserSortColumns="True"
-                                  DockPanel.Dock="Top">
+                                  DockPanel.Dock="Top"
+                                  ItemsSource="{Binding AssetMitigations}"
+                                  Style="{StaticResource GreyBorderedDataGridStyle}">
                             <DataGrid.Columns>
+                                <DataGridTemplateColumn x:Name="assetCheckBoxColumn"
+                                                        Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Margin="5,0,0,0"
+                                                      HorizontalAlignment="Center"
+                                                      IsChecked="{Binding IsChecked}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTextColumn Width="*"
-                                                    Header="Vulnerability ID" />
+                                                    Header="Vulnerability ID"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Vulnerability ID" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="*"
-                                                    Header="Affected Asset" />
+                                                    Header="Affected Asset"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Affected Asset" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="*"
-                                                    Header="Raw Risk" />
+                                                    Header="Raw Risk"
+                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Raw Risk" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="*"
-                                                    Header="Residual Risk" />
+                                                    Header="Residual Risk"
+                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Residual Risk" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="*"
-                                                    Header="Status" />
-                                <DataGridTextColumn Width="Auto"
-                                                    Header="Approved" />
+                                                    Header="Status"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Status" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTemplateColumn Width="Auto"
+                                                        Header="Approved"
+                                                        HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <IconPacks:PackIconMaterial HorizontalAlignment="Center"
+                                                                        Kind="{Binding ReportInAccreditation, Converter={StaticResource CheckboxConverter}}"
+                                                                        ToolTip="{Binding ReportInAccreditation}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
                             <DataGrid.RowDetailsTemplate>
                                 <DataTemplate>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="{Binding ElementName=projectCheckBoxColumn, Path=ActualWidth}" />
+                                            <ColumnDefinition Width="{Binding ElementName=assetCheckBoxColumn, Path=ActualWidth}" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
@@ -625,7 +796,7 @@
                     </Expander>
                 </Grid>
             </TabItem>
-            <TabItem Header="Vulnerability Mapping">
+            <TabItem Header="NIST Mapping">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -639,16 +810,150 @@
                                DockPanel.Dock="Top"
                                Style="{StaticResource TopLevelHeaderStyle}" />
                         <DataGrid Grid.Column="0"
-                                  BorderThickness="1"
-                                  DockPanel.Dock="Top">
+                                  DockPanel.Dock="Top"
+                                  ItemsSource="{Binding Vulnerabilities}"
+                                  Style="{StaticResource GreyBorderedDataGridStyle}">
                             <DataGrid.Columns>
+                                <DataGridTemplateColumn x:Name="nistMappingCheckBoxColumn"
+                                                        Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Margin="5,0,0,0"
+                                                      HorizontalAlignment="Center"
+                                                      IsChecked="{Binding IsChecked}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTextColumn Width="*"
-                                                    Header="Vuln. ID" />
+                                                    Header="Vulnerability ID"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Vulnerability ID" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="*"
-                                                    Header="Approved" />
-                                <DataGridTemplateColumn Width="*"
-                                                        Header="C-I-A Mapping" />
+                                                    Header="Approver"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Approver" />
+                                            <Setter Property="IsReadOnly" Value="True" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTemplateColumn Width="Auto"
+                                                        Header="Approved"
+                                                        HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Margin="5,0,0,0"
+                                                      HorizontalAlignment="Center"
+                                                      IsChecked="{Binding IsChecked}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="{Binding ElementName=nistMappingCheckBoxColumn, Path=ActualWidth}" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <DataGrid Grid.Column="1"
+                                                  Height="300"
+                                                  Margin="0,0,5,5"
+                                                  CanUserAddRows="False"
+                                                  DataContext="{Binding MitigationsNist, Source={StaticResource Locator}}"
+                                                  ItemsSource="{Binding NistControlsCcis}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTemplateColumn Width="Auto">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <CheckBox Margin="5,0,0,0"
+                                                                      HorizontalAlignment="Center"
+                                                                      IsChecked="{Binding IsChecked}" />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTextColumn Width="Auto"
+                                                                    Binding="{Binding DOD_AssessmentProcedureMapping}"
+                                                                    Header="DoD Assessment Procedure"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}"
+                                                                    IsReadOnly="True">
+                                                    <DataGridTextColumn.ElementStyle>
+                                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                                               TargetType="TextBlock">
+                                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                                        </Style>
+                                                    </DataGridTextColumn.ElementStyle>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn Width="Auto"
+                                                                    Binding="{Binding ControlIndicator}"
+                                                                    Header="Control Indicator"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}"
+                                                                    IsReadOnly="True">
+                                                    <DataGridTextColumn.ElementStyle>
+                                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                                               TargetType="TextBlock">
+                                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                                        </Style>
+                                                    </DataGridTextColumn.ElementStyle>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding ImplementationGuidance}"
+                                                                    Header="Implementation Guidance"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}"
+                                                                    IsReadOnly="True">
+                                                    <DataGridTextColumn.ElementStyle>
+                                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                                               TargetType="TextBlock">
+                                                            <Setter Property="TextTrimming" Value="None" />
+                                                            <Setter Property="TextWrapping" Value="Wrap" />
+                                                        </Style>
+                                                    </DataGridTextColumn.ElementStyle>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding AssessmentProcedureText}"
+                                                                    Header="Assessment Procedure Text"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}"
+                                                                    IsReadOnly="True">
+                                                    <DataGridTextColumn.ElementStyle>
+                                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                                               TargetType="TextBlock">
+                                                            <Setter Property="TextTrimming" Value="None" />
+                                                            <Setter Property="TextWrapping" Value="Wrap" />
+                                                        </Style>
+                                                    </DataGridTextColumn.ElementStyle>
+                                                </DataGridTextColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
                         </DataGrid>
                     </DockPanel>
                     <Expander Grid.Column="1"

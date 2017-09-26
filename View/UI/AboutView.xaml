@@ -18,15 +18,15 @@
              VerticalAlignment="Stretch"
              d:DesignHeight="800"
              d:DesignWidth="800"
-             DataContext="{Binding About,
-                                   Source={StaticResource Locator}}"
+             DataContext="{Binding About, Source={StaticResource Locator}}"
              mc:Ignorable="d">
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="5,0"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch">
@@ -55,83 +55,86 @@
                     <StackPanel Grid.Row="1"
                                 Grid.Column="1"
                                 Orientation="Horizontal">
-                        <Label Content="Version: " Style="{StaticResource SecondLevelHeaderStyle}" />
-                        <Label Content="{Binding ApplicationVersion}" Style="{StaticResource SecondLevelHeaderStyle}" />
+                        <Label Content="Version: "
+                               Style="{StaticResource SecondLevelHeaderStyle}" />
+                        <Label Content="{Binding ApplicationVersion}"
+                               Style="{StaticResource SecondLevelHeaderStyle}" />
                     </StackPanel>
-                    <Label Grid.Row="2" Grid.Column="1">
-                        <TextBlock Style="{StaticResource HyperlinkTextBlockStyle}"
+                    <Label Grid.Row="2"
+                           Grid.Column="1">
+                        <TextBlock x:Name="kcsUrlTextBox"
                                    Text="Maintained by Kuchta Creative Services, LLC"
-                                   TextWrapping="NoWrap">
-                            <TextBlock.InputBindings>
-                                <MouseBinding Command="{Binding AboutLinksCommand}"
-                                              CommandParameter="{Binding ElementName=tbKcs,
-                                                                         Path=Name}"
-                                              MouseAction="LeftClick" />
-                            </TextBlock.InputBindings>
-                        </TextBlock>
+                                   TextTrimming="CharacterEllipsis"
+                                   TextWrapping="NoWrap" />
                     </Label>
                 </Grid>
                 <Label Style="{StaticResource TopLevelHeaderStyle}">
-                    <TextBlock Text="Mission" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Text="Mission"
+                               TextTrimming="CharacterEllipsis" />
                 </Label>
-                <TextBlock Margin="5,0,5,5" TextWrapping="Wrap">
+                <TextBlock Margin="5,0,5,5"
+                           TextWrapping="Wrap">
                     To automate and streamline vulnerability continuous monitoring and RMF activities throughout the cybersecurity lifecycle of information systems
                 </TextBlock>
                 <Label Style="{StaticResource TopLevelHeaderStyle}">
-                    <TextBlock Text="Contributors" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Text="Contributors"
+                               TextTrimming="CharacterEllipsis" />
                 </Label>
-                <TextBlock Margin="5,0"
+                <TextBlock x:Name="emailAlexTextBox"
+                           Margin="5,0"
                            Style="{StaticResource HyperlinkTextBlockStyle}"
                            Text="Alex Kuchta - Redesign, ACAS Integration"
                            TextWrapping="NoWrap">
                     <TextBlock.InputBindings>
                         <MouseBinding Command="{Binding AboutLinksCommand}"
-                                      CommandParameter="{Binding ElementName=tbAlex,
-                                                                 Path=Name}"
+                                      CommandParameter="{Binding ElementName=emailAlexTextBox, Path=Name}"
                                       MouseAction="LeftClick" />
                     </TextBlock.InputBindings>
                 </TextBlock>
-                <TextBlock Margin="5,0"
+                <TextBlock x:Name="emailJeffvTextBox"
+                           Margin="5,0"
                            Style="{StaticResource HyperlinkTextBlockStyle}"
                            Text="Jeff Vanerwegen - WASSP, SCAP, CKL Integration"
                            TextWrapping="NoWrap">
                     <TextBlock.InputBindings>
                         <MouseBinding Command="{Binding AboutLinksCommand}"
-                                      CommandParameter="{Binding ElementName=tbJeffV,
-                                                                 Path=Name}"
+                                      CommandParameter="{Binding ElementName=emailJeffvTextBox, Path=Name}"
                                       MouseAction="LeftClick" />
                     </TextBlock.InputBindings>
                 </TextBlock>
-                <TextBlock Margin="5,0"
+                <TextBlock x:Name="emailRickTextBox"
+                           Margin="5,0"
                            Style="{StaticResource HyperlinkTextBlockStyle}"
                            Text="Rick Murphy - POA&amp;M Integration"
                            TextWrapping="NoWrap">
                     <TextBlock.InputBindings>
                         <MouseBinding Command="{Binding AboutLinksCommand}"
-                                      CommandParameter="{Binding ElementName=tbRick,
-                                                                 Path=Name}"
+                                      CommandParameter="{Binding ElementName=emailRickTextBox, Path=Name}"
                                       MouseAction="LeftClick" />
                     </TextBlock.InputBindings>
                 </TextBlock>
-                <TextBlock Margin="5,0"
+                <TextBlock x:Name="emailJeffpTextBox"
+                           Margin="5,0"
                            Style="{StaticResource HyperlinkTextBlockStyle}"
                            Text="Jeff Purcell - Creator"
                            TextWrapping="NoWrap">
                     <TextBlock.InputBindings>
                         <MouseBinding Command="{Binding AboutLinksCommand}"
-                                      CommandParameter="{Binding ElementName=tbJeffP,
-                                                                 Path=Name}"
+                                      CommandParameter="{Binding ElementName=emailJeffpTextBox, Path=Name}"
                                       MouseAction="LeftClick" />
                     </TextBlock.InputBindings>
                 </TextBlock>
             </StackPanel>
         </ScrollViewer>
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                      VerticalScrollBarVisibility="Auto" Grid.Column="1">
+        <ScrollViewer Grid.Column="1"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
             <StackPanel>
                 <Label Content="License"
                        Style="{StaticResource TopLevelHeaderStyle}" />
-                <TextBlock Text="{Binding License}" Margin="5,0" TextWrapping="Wrap" />
+                <TextBlock Margin="5,0"
+                           Text="{Binding License}"
+                           TextWrapping="Wrap" />
             </StackPanel>
         </ScrollViewer>
     </Grid>

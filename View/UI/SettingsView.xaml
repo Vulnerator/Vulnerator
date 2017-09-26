@@ -145,7 +145,7 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
                             Controls:TextBoxHelper.ClearTextButton="True"
-                            Controls:TextBoxHelper.Watermark="STIG Library"
+                            Controls:TextBoxHelper.Watermark="STIG Library or Single STIG (ZIP File)"
                             Text="{Binding StigLibraryLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <Button
                             Grid.Column="1"

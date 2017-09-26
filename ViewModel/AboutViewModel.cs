@@ -63,22 +63,22 @@ namespace Vulnerator.ViewModel
 
             switch (p)
             {
-                case "tbAlex":
+                case "emailAlexTextBox":
                     {
                         EmailAlex();
                         break;
                     }
-                case "tbJeffV":
+                case "emailJeffvTextBox":
                     {
                         EmailJeffV();
                         break;
                     }
-                case "tbRick":
+                case "emailRickTextBox":
                     {
                         EmailRick();
                         break;
                     }
-                case "tbJeffP":
+                case "emailJeffpTextBox":
                     {
                         EmailJeffP();
                         break;

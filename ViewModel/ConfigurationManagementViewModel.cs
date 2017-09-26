@@ -1,13 +1,8 @@
 ﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
 using log4net;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Entity;
 using Vulnerator.Model.Object;
