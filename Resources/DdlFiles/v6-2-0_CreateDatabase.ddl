@@ -977,7 +977,7 @@ CREATE TABLE Software
 	 Software_Acronym NVARCHAR (25) , 
 	 Software_Version NVARCHAR (25) , 
 	 Function NVARCHAR (500) , 
-	 DADMS_ID INTEGER , 
+	 DADMS_ID NVARCHAR (25) , 
 	 DADMS_Disposition NVARCHAR (25) , 
 	 DADMS_LDA DATE , 
 	 Has_Custom_Code NVARCHAR (5) , 

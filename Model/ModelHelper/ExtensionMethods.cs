@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Xml;
 
 namespace Vulnerator.Model.ModelHelper
 {
@@ -42,5 +43,12 @@ namespace Vulnerator.Model.ModelHelper
 
         public static string RemoveAlphaCharacters(this string _input)
         { return new string(_input.Where(x => !char.IsLetter(x) && !char.IsWhiteSpace(x)).ToArray()); }
+
+        public static string ObtainCurrentNodeValue(this XmlReader xmlReader)
+        {
+            xmlReader.Read();
+            string value = xmlReader.Value;
+            return value;
+        }
     }
 }

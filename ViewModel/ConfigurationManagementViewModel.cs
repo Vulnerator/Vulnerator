@@ -2,6 +2,7 @@
 using log4net;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Entity;
@@ -103,18 +104,45 @@ namespace Vulnerator.ViewModel
             try
             {
                 log.Info("Begin instantiation of ConfigurationManagementViewModel.");
-                databaseContext = new DatabaseContext();
-                Hardwares = databaseContext.Hardwares.ToList();
-                Softwares = databaseContext.Softwares.ToList();
-                Contacts = databaseContext.Contacts.ToList();
-                PPS = databaseContext.PPS.ToList();
-                Groups = databaseContext.Groups.ToList();
-                Accreditations = databaseContext.Accreditations.ToList();
+                PopulateGui();
             }
             catch (Exception exception)
             {
                 log.Error(string.Format("Unable to instantiate ConfigurationManagementViewModel."));
                 log.Debug("Exception details:", exception);
+            }
+        }
+
+        private void PopulateGui()
+        {
+            using (DatabaseContext databaseContext = new DatabaseContext())
+            {
+                Hardwares = databaseContext.Hardwares
+                    .Include(h => h.SoftwareHardwares.Select(s => s.Software))
+                    .Include(h => h.IP_Addresses)
+                    .Include(h => h.MAC_Addresses)
+                    .Include(h => h.Groups)
+                    .Include(h => h.Contacts)
+                    .Include(h => h.Hardware_PPS.Select(p => p.PP))
+                    .AsNoTracking().ToList();
+                Softwares = databaseContext.Softwares
+                                    .Include(s => s.SoftwareHardwares.Select(h => h.Hardware))
+                                    .AsNoTracking().ToList();
+                Contacts = databaseContext.Contacts
+                                    .Include(c => c.Accreditations)
+                                    .Include(c => c.Certifications)
+                                    .Include(c => c.Groups)
+                                    .Include(c => c.Organization)
+                                    .Include(c => c.Softwares)
+                                    .Include(c => c.Title)
+                                    .AsNoTracking().ToList();
+                PPS = databaseContext.PPS
+                                    .Include(p => p.Hardware_PPS.Select(h => h.Hardware))
+                                    .AsNoTracking().ToList();
+                Groups = databaseContext.Groups
+                                    .Include(g => g.Hardwares)
+                                    .AsNoTracking().ToList();
+                Accreditations = databaseContext.Accreditations.AsNoTracking().ToList();
             }
         }
     }

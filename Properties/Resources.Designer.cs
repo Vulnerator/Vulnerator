@@ -70,6 +70,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM VulnerabilitiesCCIs WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_vulnerability_Identifier) AND CCI_ID = (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI);.
+        /// </summary>
+        internal static string DeleteVulnerabilityCciMapping {
+            get {
+                return ResourceManager.GetString("DeleteVulnerabilityCciMapping", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO Data_Entry_Dates VALUES (NULL, @Entry_Date);.
         /// </summary>
         internal static string InsertDataEntryDate {
@@ -402,6 +411,15 @@ namespace Vulnerator.Properties {
         internal static string RegexCciSelector {
             get {
                 return ResourceManager.GetString("RegexCciSelector", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (?:\n){2,}(?:\t){2,}.
+        /// </summary>
+        internal static string RegexExcessiveNewLineAndTab {
+            get {
+                return ResourceManager.GetString("RegexExcessiveNewLineAndTab", resourceCulture);
             }
         }
         

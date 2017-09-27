@@ -38,7 +38,8 @@ namespace Vulnerator.Model.Entity
         [StringLength(500)]
         public string Function { get; set; }
 
-        //public long DADMS_ID { get; set; }
+        [StringLength(25)]
+        public string DADMS_ID { get; set; }
 
         [StringLength(25)]
         public string DADMS_Disposition { get; set; }

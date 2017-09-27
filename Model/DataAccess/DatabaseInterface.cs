@@ -398,6 +398,23 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public void DeleteVulnerabilityToCciMapping(SQLiteCommand sqliteCommand)
+        { 
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.DeleteVulnerabilityCciMapping;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to delete Vulnerability / CCI mapping \"{0} - {1}\".",
+                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString(),
+                    sqliteCommand.Parameters["CCI"].Value.ToString()));
+                log.Debug("Exception details:", exception);
+                throw exception;
+            }
+        }
+
         public void InsertScapScore(SQLiteCommand sqliteCommand)
         { 
             try

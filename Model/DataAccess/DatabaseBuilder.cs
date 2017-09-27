@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Xml;
 using Vulnerator.Model.Object;
+using Vulnerator.Model.ModelHelper;
 
 namespace Vulnerator.Model.DataAccess
 {
@@ -142,27 +144,27 @@ namespace Vulnerator.Model.DataAccess
                                         }
                                     case "Control-Name":
                                         {
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Name", ObtainCurrentNodeValue(xmlReader)));
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Name", xmlReader.ObtainCurrentNodeValue()));
                                             break;
                                         }
                                     case "Description":
                                         {
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Description", ObtainCurrentNodeValue(xmlReader)));
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Description", xmlReader.ObtainCurrentNodeValue()));
                                             break;
                                         }
                                     case "Threat-Vuln-Countermeasure":
                                         {
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Threat", ObtainCurrentNodeValue(xmlReader)));
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Threat", xmlReader.ObtainCurrentNodeValue()));
                                             break;
                                         }
                                     case "General-Implementation-Guidance":
                                         {
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Implementation", ObtainCurrentNodeValue(xmlReader)));
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Implementation", xmlReader.ObtainCurrentNodeValue()));
                                             break;
                                         }
                                     case "System-Specific-Guidance-Resources":
                                         {
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Resources", ObtainCurrentNodeValue(xmlReader)));
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Resources", xmlReader.ObtainCurrentNodeValue()));
                                             break;
                                         }
                                     default:
@@ -208,17 +210,17 @@ namespace Vulnerator.Model.DataAccess
                                         }
                                     case "status":
                                         {
-                                            cci.Status = ObtainCurrentNodeValue(xmlReader);
+                                            cci.Status = xmlReader.ObtainCurrentNodeValue();
                                             break;
                                         }
                                     case "definition":
                                         {
-                                            cci.Definition = ObtainCurrentNodeValue(xmlReader);
+                                            cci.Definition = xmlReader.ObtainCurrentNodeValue();
                                             break;
                                         }
                                     case "type":
                                         {
-                                            cci.Type = ObtainCurrentNodeValue(xmlReader);
+                                            cci.Type = xmlReader.ObtainCurrentNodeValue();
                                             break;
                                         }
                                     case "references":
@@ -302,17 +304,17 @@ namespace Vulnerator.Model.DataAccess
                                         }
                                     case "Title":
                                         {
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Title", ObtainCurrentNodeValue(xmlReader)));
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Title", xmlReader.ObtainCurrentNodeValue()));
                                             break;
                                         }
                                     case "Text":
                                         {
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Text", ObtainCurrentNodeValue(xmlReader)));
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Text", xmlReader.ObtainCurrentNodeValue()));
                                             break;
                                         }
                                     case "SupplementalGuidance":
                                         {
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter("SupplementalGuidance", ObtainCurrentNodeValue(xmlReader)));
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("SupplementalGuidance", xmlReader.ObtainCurrentNodeValue()));
                                             break;
                                         }
                                     case "Confidentiality":
@@ -460,12 +462,18 @@ namespace Vulnerator.Model.DataAccess
                                         }
                                     case "ImplementationGuidance":
                                         {
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter("ImplementationGuidance", ObtainCurrentNodeValue(xmlReader)));
+                                            string implementationGuidance = xmlReader.ObtainCurrentNodeValue();
+                                            Regex regex = new Regex(Properties.Resources.RegexExcessiveNewLineAndTab, RegexOptions.Singleline);
+                                            implementationGuidance = regex.Replace(implementationGuidance, Environment.NewLine + Environment.NewLine);
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("ImplementationGuidance", implementationGuidance));
                                             break;
                                         }
                                     case "AssessmentProcedures":
                                         {
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter("AP_Text", ObtainCurrentNodeValue(xmlReader)));
+                                            string ap = xmlReader.ObtainCurrentNodeValue();
+                                            Regex regex = new Regex(Properties.Resources.RegexExcessiveNewLineAndTab, RegexOptions.Singleline);
+                                            ap = regex.Replace(ap, Environment.NewLine + Environment.NewLine);
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("AP_Text", ap));
                                             break;
                                         }
                                     default:
@@ -527,7 +535,7 @@ namespace Vulnerator.Model.DataAccess
                                         }
                                     default:
                                         {
-                                            overlayApplicability.Add(xmlReader.Name.Replace("-", " "), ObtainCurrentNodeValue(xmlReader));
+                                            overlayApplicability.Add(xmlReader.Name.Replace("-", " "), xmlReader.ObtainCurrentNodeValue());
                                             break;
                                         }
                                 }
@@ -578,7 +586,7 @@ namespace Vulnerator.Model.DataAccess
                                         }
                                     case "Frequency":
                                         {
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Frequency", ObtainCurrentNodeValue(xmlReader)));
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("Frequency", xmlReader.ObtainCurrentNodeValue()));
                                             break;
                                         }
                                     default:
@@ -607,21 +615,6 @@ namespace Vulnerator.Model.DataAccess
             catch (Exception exception)
             {
                 log.Error("Unable to map NIST controls to monitoring frequencies.");
-                throw exception;
-            }
-        }
-
-        private string ObtainCurrentNodeValue(XmlReader xmlReader)
-        {
-            try
-            {
-                xmlReader.Read();
-                string value = xmlReader.Value;
-                return value;
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to obtain currently accessed node value.");
                 throw exception;
             }
         }
