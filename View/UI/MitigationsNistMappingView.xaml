@@ -825,7 +825,7 @@
                                         <DataTemplate>
                                             <CheckBox Margin="5,0,0,0"
                                                       HorizontalAlignment="Center"
-                                                      IsChecked="{Binding IsChecked}" />
+                                                      IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -914,7 +914,7 @@
                                                   CanUserAddRows="False"
                                                   DataContext="{Binding MitigationsNist, Source={StaticResource Locator}}"
                                                   ItemsSource="{Binding NistControlsCcis}"
-                                                  SelectedItem="{Binding SelectedNistControlsCci}"
+                                                  SelectedItem="{Binding SelectedNistControlsCci, Mode=TwoWay}"
                                                   Style="{StaticResource GreyBorderedDataGridStyle}">
                                             <DataGrid.Columns>
                                                 <DataGridTemplateColumn Width="Auto">
@@ -923,7 +923,7 @@
                                                             <CheckBox Margin="5,0,0,0"
                                                                       HorizontalAlignment="Center"
                                                                       Command="{Binding DataContext.UpdateVulnerabilityCciMappingCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
-                                                                      IsChecked="{Binding IsChecked}" />
+                                                                      IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                         </DataTemplate>
                                                     </DataGridTemplateColumn.CellTemplate>
                                                 </DataGridTemplateColumn>
@@ -1045,7 +1045,8 @@
                     <Expander Grid.Column="2"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
-                              ExpandDirection="Right">
+                              ExpandDirection="Right"
+                              IsExpanded="{Binding BulkProcessExpanded}">
                         <Expander.Header>
                             <Label Foreground="{DynamicResource LabelTextBrush}">
                                 <Label.LayoutTransform>
@@ -1075,6 +1076,76 @@
                                 </Grid>
                             </Label>
                         </Expander.Header>
+                        <Grid HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <DataGrid Margin="5,0,5,5"
+                                      ItemsSource="{Binding BulkNistControlsCcis}"
+                                      Style="{StaticResource GreyBorderedDataGridStyle}">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn x:Name="bulkNistCheckBoxColumn"
+                                                            Width="Auto">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox Margin="5,0,0,0"
+                                                          HorizontalAlignment="Center"
+                                                          IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Width="Auto"
+                                                        Binding="{Binding DOD_AssessmentProcedureMapping}"
+                                                        Header="DoD Assessment Procedure"
+                                                        HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}"
+                                                        IsReadOnly="True">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style BasedOn="{StaticResource MetroTextBlock}"
+                                                   TargetType="TextBlock">
+                                                <Setter Property="HorizontalAlignment" Value="Center" />
+                                                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                                <Setter Property="TextWrapping" Value="NoWrap" />
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Width="Auto"
+                                                        Binding="{Binding ControlIndicator}"
+                                                        Header="Control Indicator"
+                                                        HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}"
+                                                        IsReadOnly="True">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style BasedOn="{StaticResource MetroTextBlock}"
+                                                   TargetType="TextBlock">
+                                                <Setter Property="HorizontalAlignment" Value="Center" />
+                                                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                                <Setter Property="TextWrapping" Value="NoWrap" />
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Width="Auto"
+                                                        Binding="{Binding CCI.CCI1}"
+                                                        Header="Control Correlation Identifier"
+                                                        HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}"
+                                                        IsReadOnly="True">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style BasedOn="{StaticResource MetroTextBlock}"
+                                                   TargetType="TextBlock">
+                                                <Setter Property="HorizontalAlignment" Value="Center" />
+                                                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                                <Setter Property="TextWrapping" Value="NoWrap" />
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <Button Grid.Row="1"
+                                    Margin="5,0,5,5"
+                                    HorizontalAlignment="Right"
+                                    Command="{Binding BulkUpdatedVulnerabilityCciMappingCommand}"
+                                    Content="Apply" />
+                        </Grid>
                     </Expander>
                     <Expander Grid.Column="3"
                               Background="{DynamicResource WindowBackgroundBrush}"
