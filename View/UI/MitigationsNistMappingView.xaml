@@ -5,6 +5,7 @@
              xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
              xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:LiveCharts="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             xmlns:ViewHelper="clr-namespace:Vulnerator.View.ViewHelper"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:dat="clr-namespace:System.Windows.Data;assembly=PresentationFramework"
              xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
@@ -45,6 +46,7 @@
                                   CanUserDeleteRows="True"
                                   DockPanel.Dock="Top"
                                   ItemsSource="{Binding ProjectMitigations}"
+                                  SelectedItem="{Binding SelectedMitigationOrCondition}"
                                   Style="{StaticResource GreyBorderedDataGridStyle}">
                             <DataGrid.Columns>
                                 <DataGridTemplateColumn x:Name="projectCheckBoxColumn"
@@ -57,28 +59,33 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="*"
+                                                        Header="Vulnerability ID"
+                                                        HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock HorizontalAlignment="Center"
+                                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGridRow}}"
+                                                       Text="{Binding Vulnerability.Unique_Vulnerability_Identifier}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                    <DataGridTemplateColumn.CellEditingTemplate>
+                                        <DataTemplate>
+                                            <ViewHelper:CommandEnabledComboBox Command="{Binding DataContext.SetMitigationVulnerabilityCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
+                                                                               CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=SelectedItem}"
+                                                                               DisplayMemberPath="Unique_Vulnerability_Identifier"
+                                                                               ItemsSource="{Binding DataContext.Vulnerabilities, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
+                                                                               SelectedValue="{Binding Vulnerability.Unique_Vulnerability_Identifier}"
+                                                                               SelectedValuePath="Unique_Vulnerability_Identifier"
+                                                                               Style="{DynamicResource MetroComboBox}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellEditingTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTextColumn Width="*"
-                                                    Binding="{Binding ApplicableVulnerability, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                                    Header="Vulnerability ID"
-                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
-                                    <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
-                                               TargetType="TextBlock">
-                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-                                            <Setter Property="TextWrapping" Value="NoWrap" />
-                                        </Style>
-                                    </DataGridTextColumn.ElementStyle>
-                                    <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
-                                               TargetType="TextBox">
-                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Vulnerability ID" />
-                                            <Setter Property="Margin" Value="0,5,5,5" />
-                                        </Style>
-                                    </DataGridTextColumn.EditingElementStyle>
-                                </DataGridTextColumn>
-                                <DataGridTextColumn Width="*"
+                                                    Binding="{Binding Vulnerability.Raw_Risk}"
                                                     Header="Raw Risk"
-                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}"
+                                                    IsReadOnly="True">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBlock}"
                                                TargetType="TextBlock">
@@ -86,13 +93,6 @@
                                             <Setter Property="TextWrapping" Value="NoWrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
-                                    <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
-                                               TargetType="TextBox">
-                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Raw Risk" />
-                                            <Setter Property="Margin" Value="0,5,5,5" />
-                                        </Style>
-                                    </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Width="*"
                                                     Header="Residual Risk"
@@ -113,7 +113,7 @@
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTemplateColumn Width="*"
-                                                        Header="Status"
+                                                        Header="Mitigated Status"
                                                         HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -125,7 +125,7 @@
                                     <DataGridTemplateColumn.CellEditingTemplate>
                                         <DataTemplate>
                                             <ComboBox Margin="0,5,5,5"
-                                                      Controls:TextBoxHelper.Watermark="Status"
+                                                      Controls:TextBoxHelper.Watermark="Mitigated Status"
                                                       IsEditable="True" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellEditingTemplate>
@@ -203,55 +203,82 @@
                                                  TextWrapping="Wrap"
                                                  HorizontalScrollBarVisibility="Disabled"
                                                  VerticalScrollBarVisibility="Auto" />
-                                        <ComboBox Grid.Row="1"
+                                        <DataGrid Grid.Row="1"
+                                                  Grid.RowSpan="3"
                                                   Grid.Column="1"
+                                                  Grid.ColumnSpan="2"
                                                   Margin="0,0,5,5"
+                                                  VerticalAlignment="Stretch"
+                                                  IsReadOnly="True"
+                                                  ItemsSource="{Binding Groups}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Group_Name}"
+                                                                    Header="Associated Groups / Accreditations"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <ComboBox Grid.Row="1"
+                                                  Grid.Column="3"
+                                                  Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Threat Relevance"
                                                   IsEditable="True" />
                                         <ComboBox Grid.Row="1"
-                                                  Grid.Column="2"
+                                                  Grid.Column="4"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Severity / Pervasiveness"
                                                   IsEditable="True" />
-                                        <TextBox Grid.Row="1"
+                                        <TextBox Grid.Row="2"
                                                  Grid.Column="3"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Likelihood (Calculated)"
                                                  IsReadOnly="True" />
-                                        <ComboBox Grid.Row="1"
+                                        <ComboBox Grid.Row="2"
                                                   Grid.Column="4"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Impact"
                                                   IsEditable="True" />
-                                        <TextBox Grid.Row="2"
-                                                 Grid.Column="1"
-                                                 Margin="0,0,5,5"
+                                        <TextBox Grid.Row="3"
+                                                 Grid.Column="3"
+                                                 Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Risk (Calculated)"
                                                  IsReadOnly="True" />
-                                        <ComboBox Grid.Row="2"
-                                                  Grid.Column="2"
+                                        <ComboBox Grid.Row="3"
+                                                  Grid.Column="4"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Residual Risk"
                                                   IsEditable="True" />
-                                        <DatePicker Grid.Row="2"
+                                        <ComboBox Grid.Row="4"
+                                                  Grid.Column="1"
+                                                  Grid.ColumnSpan="2"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ClearTextButton="True"
+                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                  Controls:TextBoxHelper.Watermark="Add Group / Accreditation"
+                                                  IsEditable="True" />
+                                        <DatePicker Grid.Row="4"
                                                     Grid.Column="3"
                                                     Margin="5,0,5,5"
                                                     VerticalAlignment="Bottom"
                                                     Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                     Controls:TextBoxHelper.Watermark="Expiration Date" />
-                                        <Grid Grid.Row="2"
+                                        <Grid Grid.Row="4"
                                               Grid.Column="4">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition />
@@ -269,33 +296,6 @@
                                                       Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                       IsChecked="{Binding IsChecked}" />
                                         </Grid>
-                                        <DataGrid Grid.Row="3"
-                                                  Grid.Column="1"
-                                                  Grid.ColumnSpan="2"
-                                                  Height="100"
-                                                  Margin="0,0,5,5"
-                                                  VerticalAlignment="Top"
-                                                  IsReadOnly="True"
-                                                  ItemsSource="{Binding Groups}"
-                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
-                                            <DataGrid.Columns>
-                                                <DataGridTextColumn Width="*"
-                                                                    Binding="{Binding Group_Name}"
-                                                                    Header="Associated Groups / Accreditations"
-                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
-                                            </DataGrid.Columns>
-                                        </DataGrid>
-                                        <ComboBox Grid.Row="4"
-                                                  Grid.Column="1"
-                                                  Grid.ColumnSpan="2"
-                                                  Margin="0,0,5,5"
-                                                  VerticalAlignment="Bottom"
-                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
-                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
-                                                  Controls:TextBoxHelper.ClearTextButton="True"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                  Controls:TextBoxHelper.Watermark="Add Group / Accreditation"
-                                                  IsEditable="True" />
                                     </Grid>
                                 </DataTemplate>
                             </DataGrid.RowDetailsTemplate>
@@ -405,7 +405,7 @@
                     </Expander>
                 </Grid>
             </TabItem>
-            <TabItem Header="Asset Mitigations">
+            <!--<TabItem Header="Asset Mitigations">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -797,7 +797,7 @@
                         </Expander.Header>
                     </Expander>
                 </Grid>
-            </TabItem>
+            </TabItem>-->
             <TabItem Header="NIST Mapping">
                 <Grid>
                     <Grid.ColumnDefinitions>

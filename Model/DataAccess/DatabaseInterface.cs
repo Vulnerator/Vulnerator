@@ -415,6 +415,20 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public void InsertMitigationOrCondition(SQLiteCommand sqliteCommand)
+        { 
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.InsertMitigationOrCondition;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert a new mitigation."));
+                throw exception;
+            }
+        }
+
         public void InsertScapScore(SQLiteCommand sqliteCommand)
         { 
             try

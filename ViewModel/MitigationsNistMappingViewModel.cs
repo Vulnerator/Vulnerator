@@ -33,20 +33,6 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private List<MitigationsOrCondition> _assetMitigations { get; set; }
-        public List<MitigationsOrCondition> AssetMitigations
-        {
-            get { return _assetMitigations; }
-            set
-            {
-                if (_assetMitigations != value)
-                {
-                    _assetMitigations = value;
-                    RaisePropertyChanged("AssetMitigations");
-                }
-            }
-        }
-
         private List<Vulnerability> _vulnerabilities { get; set; }
         public List<Vulnerability> Vulnerabilities
         {
@@ -117,6 +103,20 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private MitigationsOrCondition _selectedMitigationOrCondition { get; set; }
+        public MitigationsOrCondition SelectedMitigationOrCondition
+        {
+            get { return _selectedMitigationOrCondition; }
+            set
+            {
+                if (_selectedMitigationOrCondition != value)
+                {
+                    _selectedMitigationOrCondition = value;
+                    RaisePropertyChanged("SelectedMitigationOrCondition");
+                }
+            }
+        }
+
         private bool _bulkProcessExpanded { get; set; }
         public bool BulkProcessExpanded
         {
@@ -151,12 +151,8 @@ namespace Vulnerator.ViewModel
             using (databaseContext = new DatabaseContext())
             {
                 ProjectMitigations = databaseContext.MitigationsOrConditions
-                    .Where(m => m.Groups.Count > 0)
                     .Include(m => m.Groups)
-                    .AsNoTracking().ToList();
-                AssetMitigations = databaseContext.MitigationsOrConditions
-                    .Where(m => m.Hardwares.Count > 0)
-                    .Include(m => m.Groups)
+                    .Include(m => m.Vulnerability)
                     .AsNoTracking().ToList();
                 Vulnerabilities = databaseContext.Vulnerabilities
                     .Include(v => v.CCIs.Select(c => c.NistControlsCCIs))
@@ -259,6 +255,33 @@ namespace Vulnerator.ViewModel
             catch (Exception exception)
             {
                 log.Error(string.Format("Unable to bulk process vulnerability to CCI mapping."));
+                log.Debug("Exception details:", exception);
+            }
+        }
+
+        public RelayCommand<object> SetMitigationVulnerabilityCommand
+        { get { return new RelayCommand<object>((p) => SetMitigationVulnerability(p)); } }
+
+        private void SetMitigationVulnerability(object parameter)
+        { 
+            try
+            {
+                if (SelectedMitigationOrCondition.Vulnerability != null)
+                { SelectedMitigationOrCondition.Vulnerability = null; }
+                Vulnerability vulnerability = parameter as Vulnerability;
+                if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
+                { DatabaseBuilder.sqliteConnection.Open(); }
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_ID", vulnerability.Vulnerability_ID));
+                    databaseInterface.InsertMitigationOrCondition(sqliteCommand);
+                }
+                DatabaseBuilder.sqliteConnection.Close();
+                SelectedMitigationOrCondition.Vulnerability = Vulnerabilities.FirstOrDefault(v => v == vulnerability);
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to set a vulnerablity for the selected mitigation."));
                 log.Debug("Exception details:", exception);
             }
         }

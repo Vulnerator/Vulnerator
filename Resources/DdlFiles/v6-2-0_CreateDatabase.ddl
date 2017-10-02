@@ -667,10 +667,9 @@ CREATE TABLE MissionAreas
 CREATE TABLE MitigationsOrConditions 
 	(
 	 MitigationOrCondition_ID INTEGER PRIMARY KEY , 
-	 ApplicableVulnerability NVARCHAR (25) NOT NULL,
-	 MitigationText NVARCHAR (2000) NOT NULL , 
-	 MitigationType NVARCHAR (25) NOT NULL , 
-	 IsGlobal NVARCHAR (5) NOT NULL 
+	 Vulnerability_ID INTEGER NOT NULL,
+	 MitigationText NVARCHAR (2000) , 
+	 FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID)
 	);
 CREATE TABLE NavigationTransportationSystems 
 	(

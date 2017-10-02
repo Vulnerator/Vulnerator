@@ -95,7 +95,7 @@ namespace Vulnerator
 
             string logPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             string logFile = logPath + @"\Vulnerator_v6_StartupErrorLog.txt";
-            string _exception = exception.ToString();
+            string _exception = error.ToString();
 
             if (!Directory.Exists(logPath))
             { Directory.CreateDirectory(logPath); }
@@ -106,7 +106,7 @@ namespace Vulnerator
                 using (StreamWriter sw = new StreamWriter(fs))
                 {
                     sw.WriteLine(DateTime.Now);
-                    sw.WriteLine(exception);
+                    sw.WriteLine(error);
                     sw.WriteLine(Environment.NewLine);
                     sw.Close();
                 }
