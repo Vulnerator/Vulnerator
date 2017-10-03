@@ -17,7 +17,6 @@ namespace Vulnerator.Model.Entity
             ScapScores = new HashSet<ScapScore>();
             SoftwareHardwares = new HashSet<SoftwareHardware>();
             UniqueFindings = new HashSet<UniqueFinding>();
-            MitigationsOrConditions = new HashSet<MitigationsOrCondition>();
             Contacts = new HashSet<Contact>();
             EnumeratedWindowsGroups = new HashSet<EnumeratedWindowsGroup>();
             Groups = new HashSet<Group>();
@@ -92,9 +91,6 @@ namespace Vulnerator.Model.Entity
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UniqueFinding> UniqueFindings { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MitigationsOrCondition> MitigationsOrConditions { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Contact> Contacts { get; set; }

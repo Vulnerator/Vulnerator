@@ -139,7 +139,7 @@
     <value>INSERT INTO MAC_Addresses VALUES (NULL, @MAC_Address);</value>
   </data>
   <data name="InsertMitigationOrCondition" xml:space="preserve">
-    <value>INSERT INTO MitigationsOrConditions VALUES (NULL, @Vulnerability_ID, NULL);</value>
+    <value>INSERT INTO MitigationsOrConditions VALUES (NULL, @Vulnerability_ID, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'False', NULL);</value>
   </data>
   <data name="InsertPPS" xml:space="preserve">
     <value>INSERT INTO PPS VALUES (NULL, @Port, @Protocol);</value>

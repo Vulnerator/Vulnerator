@@ -405,11 +405,6 @@ namespace Vulnerator.Model.DataAccess
                 .WithMany(e => e.MissionAreas)
                 .Map(m => m.ToTable("InformationTypesMissionAreas").MapLeftKey("MissionArea_ID").MapRightKey("InformationType_ID"));
 
-            modelBuilder.Entity<MitigationsOrCondition>()
-                .HasMany(e => e.Hardwares)
-                .WithMany(e => e.MitigationsOrConditions)
-                .Map(m => m.ToTable("Hardware_MitigationsOrConditions").MapLeftKey("MitigationOrCondition_ID").MapRightKey("Hardware_ID"));
-
             modelBuilder.Entity<NetworkConnectionRule>()
                 .HasMany(e => e.StepOneQuestionnaires)
                 .WithMany(e => e.NetworkConnectionRules)

@@ -668,7 +668,20 @@ CREATE TABLE MitigationsOrConditions
 	(
 	 MitigationOrCondition_ID INTEGER PRIMARY KEY , 
 	 Vulnerability_ID INTEGER NOT NULL,
-	 MitigationText NVARCHAR (2000) , 
+	 Impact_Description NVARCHAR (2000) , 
+	 Predisposing_Conditions NVARCHAR (2000) ,
+	 Technical_Mitigation NVARCHAR (2000) ,
+	 Proposed_Mitigation NVARCHAR (2000) ,
+	 Threat_Relevance NVARCHAR (10) ,
+	 Severity_Pervasiveness NVARCHAR (10) ,
+	 Likelihood NVARCHAR (10) ,
+	 Impact NVARCHAR (10) ,
+	 Risk NVARCHAR (10) ,
+	 Residual_Risk NVARCHAR (10) ,
+	 Mitigated_Status NVARCHAR (25) ,
+	 Expiration_Date DATE ,
+	 IsApproved NVARCHAR (5) ,
+	 Approver NVARCHAR (100) ,
 	 FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID)
 	);
 CREATE TABLE NavigationTransportationSystems 

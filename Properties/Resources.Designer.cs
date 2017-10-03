@@ -124,7 +124,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO MitigationsOrConditions VALUES (NULL, @Vulnerability_ID, NULL);.
+        ///   Looks up a localized string similar to INSERT INTO MitigationsOrConditions VALUES (NULL, @Vulnerability_ID, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &apos;False&apos;, NULL);.
         /// </summary>
         internal static string InsertMitigationOrCondition {
             get {
