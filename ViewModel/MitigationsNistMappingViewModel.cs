@@ -4,9 +4,11 @@ using GalaSoft.MvvmLight.Messaging;
 using log4net;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Data.SQLite;
 using System.Linq;
+using Vulnerator.Helper;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Entity;
 using Vulnerator.Model.Object;
@@ -19,8 +21,8 @@ namespace Vulnerator.ViewModel
         private DatabaseInterface databaseInterface;
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
-        private List<MitigationsOrCondition> _projectMitigations { get; set; }
-        public List<MitigationsOrCondition> ProjectMitigations
+        private ObservableCollection<MitigationsOrCondition> _projectMitigations { get; set; }
+        public ObservableCollection<MitigationsOrCondition> ProjectMitigations
         {
             get { return _projectMitigations; }
             set
@@ -33,8 +35,8 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private List<Vulnerability> _vulnerabilities { get; set; }
-        public List<Vulnerability> Vulnerabilities
+        private ObservableCollection<Vulnerability> _vulnerabilities { get; set; }
+        public ObservableCollection<Vulnerability> Vulnerabilities
         {
             get { return _vulnerabilities; }
             set
@@ -103,8 +105,8 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private MitigationsOrCondition _selectedMitigationOrCondition { get; set; }
-        public MitigationsOrCondition SelectedMitigationOrCondition
+        private object _selectedMitigationOrCondition { get; set; }
+        public object SelectedMitigationOrCondition
         {
             get { return _selectedMitigationOrCondition; }
             set
@@ -148,21 +150,31 @@ namespace Vulnerator.ViewModel
 
         private void PopulateGui()
         {
-            using (databaseContext = new DatabaseContext())
+            try
             {
-                ProjectMitigations = databaseContext.MitigationsOrConditions
-                    .Include(m => m.Groups)
-                    .Include(m => m.Vulnerability)
-                    .AsNoTracking().ToList();
-                Vulnerabilities = databaseContext.Vulnerabilities
-                    .Include(v => v.CCIs.Select(c => c.NistControlsCCIs))
-                    .AsNoTracking().ToList();
-                NistControlsCcis = databaseContext.NistControlsCCIs
-                    .Include(n => n.CCI)
-                    .AsNoTracking().ToList();
-                BulkNistControlsCcis = databaseContext.NistControlsCCIs
-                    .Include(n => n.CCI)
-                    .AsNoTracking().ToList();
+                using (databaseContext = new DatabaseContext())
+                {
+                    ProjectMitigations = databaseContext.MitigationsOrConditions
+                        .Include(m => m.Groups)
+                        .Include(m => m.Vulnerability)
+                        .AsNoTracking()
+                        .ToObservableCollection();
+                    Vulnerabilities = databaseContext.Vulnerabilities
+                        .Include(v => v.CCIs.Select(c => c.NistControlsCCIs))
+                        .AsNoTracking()
+                        .ToObservableCollection();
+                    NistControlsCcis = databaseContext.NistControlsCCIs
+                        .Include(n => n.CCI)
+                        .AsNoTracking().ToList();
+                    BulkNistControlsCcis = databaseContext.NistControlsCCIs
+                        .Include(n => n.CCI)
+                        .AsNoTracking().ToList();
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to populate MitigationsNistMappingView lists."));
+                throw exception;
             }
         }
 
@@ -266,8 +278,7 @@ namespace Vulnerator.ViewModel
         { 
             try
             {
-                if (SelectedMitigationOrCondition.Vulnerability != null)
-                { SelectedMitigationOrCondition.Vulnerability = null; }
+                MitigationsOrCondition mitigation = SelectedMitigationOrCondition as MitigationsOrCondition;
                 Vulnerability vulnerability = parameter as Vulnerability;
                 if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
                 { DatabaseBuilder.sqliteConnection.Open(); }
@@ -275,9 +286,13 @@ namespace Vulnerator.ViewModel
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_ID", vulnerability.Vulnerability_ID));
                     databaseInterface.InsertMitigationOrCondition(sqliteCommand);
+                    int mitigationId = databaseInterface.SelectLastInsertRowId(sqliteCommand);
+                    mitigation.MitigationOrCondition_ID = mitigationId;
+                    mitigation.Vulnerability = vulnerability;
+                    ProjectMitigations.Add(mitigation);
+                    SelectedMitigationOrCondition = ProjectMitigations.FirstOrDefault(p => p.MitigationOrCondition_ID == mitigationId);
                 }
                 DatabaseBuilder.sqliteConnection.Close();
-                SelectedMitigationOrCondition.Vulnerability = Vulnerabilities.FirstOrDefault(v => v == vulnerability);
             }
             catch (Exception exception)
             {

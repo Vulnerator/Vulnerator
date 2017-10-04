@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Vulnerator.Model.DataAccess;
-using Vulnerator.Model.ModelHelper;
+using Vulnerator.Helper;
 using Vulnerator.Model.Object;
 
 namespace Vulnerator.Model.BusinessLogic

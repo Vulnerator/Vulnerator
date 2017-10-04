@@ -6,8 +6,8 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Vulnerator.Helper;
 using Vulnerator.Model.Object;
-using Vulnerator.Model.ModelHelper;
 
 namespace Vulnerator.Model.DataAccess
 {

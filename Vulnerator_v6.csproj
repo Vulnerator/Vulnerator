@@ -468,8 +468,8 @@
     <Compile Include="Model\BusinessLogic\CklReader.cs" />
     <Compile Include="Model\BusinessLogic\DiacapToRmf.cs" />
     <Compile Include="Model\Object\DiscrepancyItem.cs" />
-    <Compile Include="Model\ModelHelper\ExtensionMethods.cs" />
-    <Compile Include="Model\ModelHelper\FileNameNoPathConverter.cs" />
+    <Compile Include="Helper\ExtensionMethods.cs" />
+    <Compile Include="Helper\FileNameNoPathConverter.cs" />
     <Compile Include="Model\BusinessLogic\FprReader.cs" />
     <Compile Include="Model\Object\FprVulnerability.cs" />
     <Compile Include="Model\Object\GitHubActions.cs" />

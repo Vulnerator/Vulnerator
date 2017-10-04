@@ -5,7 +5,7 @@ using log4net.Layout;
 using log4net.Repository.Hierarchy;
 using log4net.Util;
 using System.Diagnostics;
-using Vulnerator.Model.ModelHelper;
+using Vulnerator.Helper;
 
 namespace Vulnerator.Model.Object
 {

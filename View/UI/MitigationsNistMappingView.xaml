@@ -24,6 +24,7 @@
     <UserControl.Resources>
         <Converters:BooleanToCheckboxConverter x:Key="CheckboxConverter" />
         <Converters:MaxLengthToRemainingCharactersConverter x:Key="RemainingCharactersConverter" />
+        <Converters:MitigationsSelectedItemConverter x:Key="SelectedMitigationConverter" />
     </UserControl.Resources>
 
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
@@ -66,16 +67,17 @@
                                         <DataTemplate>
                                             <TextBlock HorizontalAlignment="Center"
                                                        Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGridRow}}"
-                                                       Text="{Binding Vulnerability.Unique_Vulnerability_Identifier}" />
+                                                       Text="{Binding Vulnerability.Unique_Vulnerability_Identifier, diag:PresentationTraceSources.TraceLevel=High}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                     <DataGridTemplateColumn.CellEditingTemplate>
                                         <DataTemplate>
-                                            <ViewHelper:CommandEnabledComboBox Command="{Binding DataContext.SetMitigationVulnerabilityCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
-                                                                               CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=SelectedItem}"
+                                            <ViewHelper:CommandEnabledComboBox Command="{Binding DataContext.SetMitigationVulnerabilityCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                                               CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Self}}"
                                                                                DisplayMemberPath="Unique_Vulnerability_Identifier"
-                                                                               ItemsSource="{Binding DataContext.Vulnerabilities, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
-                                                                               SelectedValue="{Binding Vulnerability.Unique_Vulnerability_Identifier}"
+                                                                               ItemsSource="{Binding Path=DataContext.Vulnerabilities, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, diag:PresentationTraceSources.TraceLevel=High}"
+                                                                               SelectedItem="{Binding Vulnerability, Mode=TwoWay, diag:PresentationTraceSources.TraceLevel=High}"
+                                                                               SelectedValue="{Binding Vulnerability.Unique_Vulnerability_Identifier, diag:PresentationTraceSources.TraceLevel=High}"
                                                                                SelectedValuePath="Unique_Vulnerability_Identifier"
                                                                                Style="{DynamicResource MetroComboBox}" />
                                         </DataTemplate>
@@ -95,6 +97,7 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Width="*"
+                                                    Binding="{Binding Residual_Risk}"
                                                     Header="Residual Risk"
                                                     HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>

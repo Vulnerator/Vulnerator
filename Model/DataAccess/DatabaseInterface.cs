@@ -691,6 +691,20 @@ namespace Vulnerator.Model.DataAccess
             { DatabaseBuilder.sqliteConnection.Close(); }
         }
 
+        public int SelectLastInsertRowId(SQLiteCommand sqliteCommand)
+        { 
+            try
+            {
+                sqliteCommand.CommandText = "SELECT last_insert_rowid();";
+                return int.Parse(sqliteCommand.ExecuteScalar().ToString());
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to select the last inserted Row ID."));
+                throw exception;
+            }
+        }
+
         private string ReadDdl(string ddlResourceFile)
         {
             try

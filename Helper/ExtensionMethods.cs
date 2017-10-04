@@ -1,8 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Xml;
 
-namespace Vulnerator.Model.ModelHelper
+namespace Vulnerator.Helper
 {
     public static class ExtensionMethods
     {
@@ -49,6 +52,13 @@ namespace Vulnerator.Model.ModelHelper
             xmlReader.Read();
             string value = xmlReader.Value;
             return value;
+        }
+
+        public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
+        {
+            if (source == null)
+            { throw new ArgumentNullException("source"); }
+            return new ObservableCollection<T>(source);
         }
     }
 }

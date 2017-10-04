@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
-using Vulnerator.Model.ModelHelper;
+using Vulnerator.Helper;
 using Vulnerator.Model.Object;
 using Vulnerator.Model.DataAccess;
 

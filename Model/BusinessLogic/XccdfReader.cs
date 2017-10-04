@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Schema;
 using Vulnerator.Model.DataAccess;
-using Vulnerator.Model.ModelHelper;
+using Vulnerator.Helper;
 using Vulnerator.Model.Object;
 using Vulnerator.ViewModel;
 

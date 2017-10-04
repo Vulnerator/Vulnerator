@@ -9,10 +9,9 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using log4net;
 using System.Xml;
+using Vulnerator.Helper;
 using Vulnerator.Model.DataAccess;
-using Vulnerator.Model.ModelHelper;
 using Vulnerator.Model.Object;
-
 namespace Vulnerator.Model.BusinessLogic
 {
     /// <summary>

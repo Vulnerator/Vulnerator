@@ -540,6 +540,11 @@ namespace Vulnerator.Model.DataAccess
                 .WithRequired(e => e.Vulnerability)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<Vulnerability>()
+                .HasMany(e => e.MitigationsOrConditions)
+                .WithRequired(e => e.Vulnerability)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<VulnerabilityReference>()
                 .HasMany(e => e.Vulnerabilities)
                 .WithMany(e => e.VulnerabilityReferences)

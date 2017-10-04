@@ -2,7 +2,7 @@
 using log4net.Core;
 using System.IO;
 
-namespace Vulnerator.Model.ModelHelper
+namespace Vulnerator.Helper
 {
     public class FileNameNoPathConverter : PatternLayoutConverter
     {
