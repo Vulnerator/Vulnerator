@@ -5,6 +5,8 @@ using log4net;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Data.Entity;
 using System.Data.SQLite;
 using System.Linq;
@@ -105,20 +107,6 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private object _selectedMitigationOrCondition { get; set; }
-        public object SelectedMitigationOrCondition
-        {
-            get { return _selectedMitigationOrCondition; }
-            set
-            {
-                if (_selectedMitigationOrCondition != value)
-                {
-                    _selectedMitigationOrCondition = value;
-                    RaisePropertyChanged("SelectedMitigationOrCondition");
-                }
-            }
-        }
-
         private bool _bulkProcessExpanded { get; set; }
         public bool BulkProcessExpanded
         {
@@ -140,6 +128,7 @@ namespace Vulnerator.ViewModel
                 log.Info("Begin instantiation of MitigationsNistMappingViewModel.");
                 databaseInterface = new DatabaseInterface();
                 PopulateGui();
+                ProjectMitigations.CollectionChanged += ProjectMitigations_CollectionChanged;
             }
             catch (Exception exception)
             {
@@ -159,6 +148,8 @@ namespace Vulnerator.ViewModel
                         .Include(m => m.Vulnerability)
                         .AsNoTracking()
                         .ToObservableCollection();
+                    foreach (MitigationsOrCondition mitigation in ProjectMitigations)
+                    { mitigation.PropertyChanged += MitigationsOrCondition_PropertyChanged; }
                     Vulnerabilities = databaseContext.Vulnerabilities
                         .Include(v => v.CCIs.Select(c => c.NistControlsCCIs))
                         .AsNoTracking()
@@ -175,6 +166,47 @@ namespace Vulnerator.ViewModel
             {
                 log.Error(string.Format("Unable to populate MitigationsNistMappingView lists."));
                 throw exception;
+            }
+        }
+
+        private void ProjectMitigations_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        { 
+            try
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (MitigationsOrCondition mitigation in e.NewItems)
+                    { mitigation.PropertyChanged += MitigationsOrCondition_PropertyChanged; }
+                }
+                if (e.OldItems != null)
+                {
+                    foreach (MitigationsOrCondition mitigation in e.OldItems)
+                    { mitigation.PropertyChanged -= MitigationsOrCondition_PropertyChanged; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to implement CollectionChanged on Project Mitigations list"));
+                log.Debug("Exception details:", exception);
+            }
+        }
+
+        private void MitigationsOrCondition_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        { 
+            try
+            {
+                MitigationsOrCondition mitigation = sender as MitigationsOrCondition;
+                int mitigationId = (int)mitigation.MitigationOrCondition_ID;
+                switch (e.PropertyName)
+                {
+                    default:
+                        { break; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to handle mitigation change."));
+                log.Debug("Exception details:", exception);
             }
         }
 
@@ -267,36 +299,6 @@ namespace Vulnerator.ViewModel
             catch (Exception exception)
             {
                 log.Error(string.Format("Unable to bulk process vulnerability to CCI mapping."));
-                log.Debug("Exception details:", exception);
-            }
-        }
-
-        public RelayCommand<object> SetMitigationVulnerabilityCommand
-        { get { return new RelayCommand<object>((p) => SetMitigationVulnerability(p)); } }
-
-        private void SetMitigationVulnerability(object parameter)
-        { 
-            try
-            {
-                MitigationsOrCondition mitigation = SelectedMitigationOrCondition as MitigationsOrCondition;
-                Vulnerability vulnerability = parameter as Vulnerability;
-                if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
-                { DatabaseBuilder.sqliteConnection.Open(); }
-                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
-                {
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_ID", vulnerability.Vulnerability_ID));
-                    databaseInterface.InsertMitigationOrCondition(sqliteCommand);
-                    int mitigationId = databaseInterface.SelectLastInsertRowId(sqliteCommand);
-                    mitigation.MitigationOrCondition_ID = mitigationId;
-                    mitigation.Vulnerability = vulnerability;
-                    ProjectMitigations.Add(mitigation);
-                    SelectedMitigationOrCondition = ProjectMitigations.FirstOrDefault(p => p.MitigationOrCondition_ID == mitigationId);
-                }
-                DatabaseBuilder.sqliteConnection.Close();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to set a vulnerablity for the selected mitigation."));
                 log.Debug("Exception details:", exception);
             }
         }

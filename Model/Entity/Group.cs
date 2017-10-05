@@ -4,9 +4,10 @@ namespace Vulnerator.Model.Entity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.ComponentModel;
     using System.Data.Entity.Spatial;
 
-    public partial class Group
+    public partial class Group : INotifyPropertyChanged
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Group()
@@ -15,6 +16,8 @@ namespace Vulnerator.Model.Entity
             Contacts = new HashSet<Contact>();
             Hardwares = new HashSet<Hardware>();
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

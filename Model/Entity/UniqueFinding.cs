@@ -1,13 +1,14 @@
 namespace Vulnerator.Model.Entity
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
+    using System.ComponentModel;
 
-    public partial class UniqueFinding
+    public partial class UniqueFinding : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [NotMapped]
         public bool IsChecked { get; set; }
 

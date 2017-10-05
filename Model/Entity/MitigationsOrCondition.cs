@@ -4,15 +4,15 @@ namespace Vulnerator.Model.Entity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
+    using System.ComponentModel;
 
-    public partial class MitigationsOrCondition
+    public partial class MitigationsOrCondition : INotifyPropertyChanged
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public MitigationsOrCondition()
-        {
-            Groups = new HashSet<Group>();
-        }
+        { Groups = new HashSet<Group>(); }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
