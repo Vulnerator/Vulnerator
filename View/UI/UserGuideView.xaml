@@ -15,16 +15,17 @@
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:v="clr-namespace:Vulnerator.View"
              xmlns:vm="clr-namespace:Vulnerator.ViewModel"
+             xmlns:wpf="clr-namespace:Markdig.Wpf;assembly=Markdig.Wpf"
              HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch"
              d:DesignHeight="800"
              d:DesignWidth="800"
-             DataContext="{Binding UserGuide,
-                                   Source={StaticResource Locator}}"
+             DataContext="{Binding UserGuide, Source={StaticResource Locator}}"
              mc:Ignorable="d">
     <UserControl.Resources>
         <Converters:HtmlToFlowDocumentConverter x:Key="HtmlToFlowDocumentConverter" />
-        <ViewHelpers:AutoRefreshCollectionViewSource x:Key="UserGuideCollectionViewSource" Source="{Binding UserGuidePages}">
+        <ViewHelpers:AutoRefreshCollectionViewSource x:Key="UserGuideCollectionViewSource"
+                                                     Source="{Binding UserGuidePages}">
             <ViewHelpers:AutoRefreshCollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="PageNumber" />
             </ViewHelpers:AutoRefreshCollectionViewSource.SortDescriptions>
@@ -74,7 +75,8 @@
                           HorizontalScrollBarVisibility="Disabled"
                           VerticalScrollBarVisibility="Auto">
                 <StackPanel>
-                    <Label Content="Contents" Style="{StaticResource TopLevelHeaderStyle}" />
+                    <Label Content="Contents"
+                           Style="{StaticResource TopLevelHeaderStyle}" />
                     <ListView x:Name="userGuidePagesListView"
                               BorderThickness="0"
                               DisplayMemberPath="Title"
@@ -86,18 +88,29 @@
                 </StackPanel>
             </ScrollViewer>
         </Expander>
-        <FlowDocumentReader Grid.Column="1"
+        <!--<FlowDocumentReader Grid.Column="1"
                             Margin="5"
                             VerticalAlignment="Stretch"
                             HorizontalContentAlignment="Left"
                             BorderBrush="{DynamicResource AccentColorBrush}"
                             BorderThickness="1"
-                            Document="{Binding ElementName=userGuidePagesListView,
-                                               Path=SelectedItem.Contents,
-                                               Converter={StaticResource HtmlToFlowDocumentConverter}}"
+                            Document="{Binding ElementName=userGuidePagesListView, Path=SelectedItem.Contents, Converter={StaticResource HtmlToFlowDocumentConverter}}"
                             ScrollViewer.CanContentScroll="True"
                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                             ScrollViewer.VerticalScrollBarVisibility="Auto"
-                            ViewingMode="Scroll" />
+                            ViewingMode="Scroll" />-->
+        <Border Grid.Column="1"
+                Margin="5"
+                BorderBrush="{DynamicResource AccentColorBrush}"
+                BorderThickness="1">
+            <wpf:MarkdownViewer Grid.Column="1"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Markdown="{Binding ElementName=userGuidePagesListView, Path=SelectedItem.Contents}"
+                                Pipeline="{Binding MarkdownPipeline}"
+                                ScrollViewer.CanContentScroll="True"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        </Border>
     </Grid>
 </UserControl>

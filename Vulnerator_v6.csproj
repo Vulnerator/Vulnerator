@@ -145,6 +145,10 @@
       <HintPath>packages\Markdig.SyntaxHighlighting.1.1.2\lib\portable45-net45+win8+wp8+wpa81\Markdig.SyntaxHighlighting.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Markdig.Wpf, Version=0.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Markdig.Wpf.0.2.1\lib\net45\Markdig.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Exchange.WebServices, Version=15.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Exchange.WebServices.2.2\lib\40\Microsoft.Exchange.WebServices.dll</HintPath>
       <Private>True</Private>

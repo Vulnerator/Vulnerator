@@ -1,6 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,7 @@ using System.ComponentModel;
 using System.Data.Entity;
 using System.Data.SQLite;
 using System.Linq;
+using System.Reflection;
 using Vulnerator.Helper;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Entity;
@@ -24,6 +24,7 @@ namespace Vulnerator.ViewModel
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
         private ObservableCollection<MitigationsOrCondition> _projectMitigations { get; set; }
+
         public ObservableCollection<MitigationsOrCondition> ProjectMitigations
         {
             get { return _projectMitigations; }
@@ -38,6 +39,7 @@ namespace Vulnerator.ViewModel
         }
 
         private ObservableCollection<Vulnerability> _vulnerabilities { get; set; }
+
         public ObservableCollection<Vulnerability> Vulnerabilities
         {
             get { return _vulnerabilities; }
@@ -52,6 +54,7 @@ namespace Vulnerator.ViewModel
         }
 
         private List<NistControlsCCI> _nistControlsCcis { get; set; }
+
         public List<NistControlsCCI> NistControlsCcis
         {
             get { return _nistControlsCcis; }
@@ -66,6 +69,7 @@ namespace Vulnerator.ViewModel
         }
 
         private List<NistControlsCCI> _bulkNistControlsCcis { get; set; }
+
         public List<NistControlsCCI> BulkNistControlsCcis
         {
             get { return _bulkNistControlsCcis; }
@@ -80,6 +84,7 @@ namespace Vulnerator.ViewModel
         }
 
         private Vulnerability _selectedVulnerability { get; set; }
+
         public Vulnerability SelectedVulnerability
         {
             get { return _selectedVulnerability; }
@@ -94,6 +99,7 @@ namespace Vulnerator.ViewModel
         }
 
         private NistControlsCCI _selectedNistControlsCci { get; set; }
+
         public NistControlsCCI SelectedNistControlsCci
         {
             get { return _selectedNistControlsCci; }
@@ -108,6 +114,7 @@ namespace Vulnerator.ViewModel
         }
 
         private bool _bulkProcessExpanded { get; set; }
+
         public bool BulkProcessExpanded
         {
             get { return _bulkProcessExpanded; }
@@ -128,7 +135,9 @@ namespace Vulnerator.ViewModel
                 log.Info("Begin instantiation of MitigationsNistMappingViewModel.");
                 databaseInterface = new DatabaseInterface();
                 PopulateGui();
-                ProjectMitigations.CollectionChanged += ProjectMitigations_CollectionChanged;
+                ProjectMitigations.CollectionChanged += MitigationsOrConditions_CollectionChanged;
+                Vulnerabilities.CollectionChanged += Vulnerabilities_CollectionChanged;
+                SetPropertyChanged();
             }
             catch (Exception exception)
             {
@@ -148,8 +157,6 @@ namespace Vulnerator.ViewModel
                         .Include(m => m.Vulnerability)
                         .AsNoTracking()
                         .ToObservableCollection();
-                    foreach (MitigationsOrCondition mitigation in ProjectMitigations)
-                    { mitigation.PropertyChanged += MitigationsOrCondition_PropertyChanged; }
                     Vulnerabilities = databaseContext.Vulnerabilities
                         .Include(v => v.CCIs.Select(c => c.NistControlsCCIs))
                         .AsNoTracking()
@@ -169,44 +176,21 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private void ProjectMitigations_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        { 
+        private void SetPropertyChanged()
+        {
             try
             {
-                if (e.NewItems != null)
-                {
-                    foreach (MitigationsOrCondition mitigation in e.NewItems)
-                    { mitigation.PropertyChanged += MitigationsOrCondition_PropertyChanged; }
-                }
-                if (e.OldItems != null)
-                {
-                    foreach (MitigationsOrCondition mitigation in e.OldItems)
-                    { mitigation.PropertyChanged -= MitigationsOrCondition_PropertyChanged; }
-                }
+                foreach (MitigationsOrCondition mitigation in ProjectMitigations)
+                { mitigation.PropertyChanged += MitigationsOrCondition_PropertyChanged; }
+                foreach (Vulnerability vulnerability in Vulnerabilities)
+                { vulnerability.PropertyChanged += Vulnerability_PropertyChanged; }
+                foreach (NistControlsCCI nistControlsCci in NistControlsCcis)
+                { nistControlsCci.PropertyChanged += NistControlsCCI_PropertyChanged; }
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to implement CollectionChanged on Project Mitigations list"));
-                log.Debug("Exception details:", exception);
-            }
-        }
-
-        private void MitigationsOrCondition_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        { 
-            try
-            {
-                MitigationsOrCondition mitigation = sender as MitigationsOrCondition;
-                int mitigationId = (int)mitigation.MitigationOrCondition_ID;
-                switch (e.PropertyName)
-                {
-                    default:
-                        { break; }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to handle mitigation change."));
-                log.Debug("Exception details:", exception);
+                log.Error(string.Format("Unable to set PropertyChanged for existing items in lists."));
+                throw exception;
             }
         }
 
@@ -236,7 +220,7 @@ namespace Vulnerator.ViewModel
         { get { return new RelayCommand<object>((p) => UpdateVulnerabilityCciMapping(p)); } }
 
         private void UpdateVulnerabilityCciMapping(object parameter)
-        { 
+        {
             try
             {
                 if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
@@ -245,7 +229,7 @@ namespace Vulnerator.ViewModel
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("Unique_Vulnerability_Identifier", SelectedVulnerability.Unique_Vulnerability_Identifier));
                     sqliteCommand.Parameters.Add(new SQLiteParameter("CCI", SelectedNistControlsCci.CCI.CCI1));
-                    
+
                     if (SelectedNistControlsCci.IsChecked)
                     { databaseInterface.MapVulnerabilityToCci(sqliteCommand); }
                     else
@@ -300,6 +284,190 @@ namespace Vulnerator.ViewModel
             {
                 log.Error(string.Format("Unable to bulk process vulnerability to CCI mapping."));
                 log.Debug("Exception details:", exception);
+            }
+        }
+
+        public void MitigationsOrConditions_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            try
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (MitigationsOrCondition mitigation in e.NewItems)
+                    { mitigation.PropertyChanged += MitigationsOrCondition_PropertyChanged; }
+                }
+                if (e.OldItems != null)
+                {
+                    foreach (MitigationsOrCondition mitigation in e.OldItems)
+                    { mitigation.PropertyChanged -= MitigationsOrCondition_PropertyChanged; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to implement CollectionChanged on Mitigations list."));
+                log.Debug("Exception details:", exception);
+            }
+        }
+
+        public void MitigationsOrCondition_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            try
+            {
+                MitigationsOrCondition mitigation = sender as MitigationsOrCondition;
+                if (!DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
+                { DatabaseBuilder.sqliteConnection.Open(); }
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    if (mitigation.Vulnerability == null)
+                    { return; }
+                    sqliteCommand.Parameters["MitigationOrCondition_ID"].Value = mitigation.MitigationOrCondition_ID;
+                    sqliteCommand.Parameters["Vulnerability_ID"].Value = mitigation.Vulnerability.Vulnerability_ID;
+                    if (mitigation.Impact_Description != null)
+                    { sqliteCommand.Parameters["Impact_Description"].Value = mitigation.Impact_Description; }
+                    if (mitigation.Predisposing_Conditions != null)
+                    { sqliteCommand.Parameters["Predisposing_Conditions"].Value = mitigation.Predisposing_Conditions; }
+                    if (mitigation.Technical_Mitigation != null)
+                    { sqliteCommand.Parameters["Technical_Mitigation"].Value = mitigation.Technical_Mitigation; }
+                    sqliteCommand.Parameters["Proposed_Mitigation"].Value = mitigation.Proposed_Mitigation;
+                    if (mitigation.Threat_Relevance != null)
+                    { sqliteCommand.Parameters["Threat_Relevance"].Value = mitigation.Threat_Relevance; }
+                    sqliteCommand.Parameters["Severity_Pervasiveness"].Value = mitigation.Severity_Pervasiveness;
+                    sqliteCommand.Parameters["Likelihood"].Value = mitigation.Likelihood;
+                    sqliteCommand.Parameters["Impact"].Value = mitigation.Impact;
+                    sqliteCommand.Parameters["Risk"].Value = mitigation.Risk;
+                    sqliteCommand.Parameters["Residual_Risk"].Value = mitigation.Residual_Risk;
+                    sqliteCommand.Parameters["Mitigated_Status"].Value = mitigation.Mitigated_Status;
+                    sqliteCommand.Parameters["Expiration_Date"].Value = mitigation.Expiration_Date;
+                    sqliteCommand.Parameters["IsApproved"].Value = mitigation.IsApproved;
+                    sqliteCommand.Parameters["Approver"].Value = mitigation.Approver;
+                    if (mitigation.MitigationOrCondition_ID == 0)
+                    {
+                        databaseInterface.InsertMitigationOrCondition(sqliteCommand);
+                        mitigation.MitigationOrCondition_ID = databaseInterface.SelectLastInsertRowId(sqliteCommand);
+                        return;
+                    }
+                    databaseInterface.UpdateMitigationOrConditionVulnerability(sqliteCommand);
+                }
+                    
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to handle mitigation change event."));
+                log.Debug("Exception details:", exception);
+            }
+            finally
+            { DatabaseBuilder.sqliteConnection.Close(); }
+        }
+
+        public void NistControlsCCIs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            try
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (NistControlsCCI control in e.NewItems)
+                    { control.PropertyChanged += NistControlsCCI_PropertyChanged; }
+                }
+                if (e.OldItems != null)
+                {
+                    foreach (NistControlsCCI control in e.OldItems)
+                    { control.PropertyChanged -= NistControlsCCI_PropertyChanged; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format(""));
+                log.Debug("Exception details:", exception);
+            }
+        }
+
+        public void NistControlsCCI_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            try
+            {
+                NistControlsCCI control = sender as NistControlsCCI;
+                int cciId = (int)control.CCI_ID;
+                int nistControlId = (int)control.NIST_Control_ID;
+                switch (e.PropertyName)
+                {
+                    default:
+                        { break; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format(""));
+                log.Debug("Exception details:", exception);
+            }
+        }
+
+        public void Vulnerabilities_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            try
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (Vulnerability vulnerability in e.NewItems)
+                    { vulnerability.PropertyChanged += Vulnerability_PropertyChanged; }
+                }
+                if (e.OldItems != null)
+                {
+                    foreach (Vulnerability vulnerability in e.OldItems)
+                    { vulnerability.PropertyChanged -= Vulnerability_PropertyChanged; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to implement CollectionChanged on Vulnerability list."));
+                log.Debug("Exception details:", exception);
+            }
+        }
+
+        public void Vulnerability_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            try
+            {
+                Vulnerability vulnerability = sender as Vulnerability;
+                int vulnerabilityId = (int)vulnerability.Vulnerability_ID;
+                switch (e.PropertyName)
+                {
+                    default:
+                        { break; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to handle vulnerability change event."));
+                log.Debug("Exception details:", exception);
+            }
+        }
+
+        private void SetInitialSqliteParameters(object sender, SQLiteCommand sqliteCommand)
+        { 
+            try
+            {
+                switch (sender.GetType().ToString())
+                {
+                    case "MitigationsOrCondition":
+                        {
+                            string[] parameters = new string[]
+                            {
+                                "MitigationOrCondition_ID", "Vulnerability_ID", "Impact_Description", "Predisposing_Conditions", "Technical_Mitigation", "Proposed_Mitigation",
+                                "Threat_Relevance", "Severity_Pervasiveness", "Likelihood", "Impact", "Risk", "Residual_Risk", "Mitigated_Status", "Expiration_Date", "IsApproved",
+                                "Approver"
+                            };
+                            foreach (string parameter in parameters)
+                            { sqliteCommand.Parameters.Add(new SQLiteParameter(parameter, DBNull.Value)); }
+                            break;
+                        }
+                    default:
+                        { break; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to set initial SQLite Command Parameters."));
+                throw exception;
             }
         }
     }

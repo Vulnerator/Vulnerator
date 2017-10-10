@@ -190,6 +190,7 @@
                                                  Controls:TextBoxHelper.Watermark="Technical Mitigation(s)"
                                                  AcceptsReturn="True"
                                                  AcceptsTab="True"
+                                                 Text="{Binding Technical_Mitigation, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                                  TextWrapping="Wrap"
                                                  HorizontalScrollBarVisibility="Disabled"
                                                  VerticalScrollBarVisibility="Auto" />

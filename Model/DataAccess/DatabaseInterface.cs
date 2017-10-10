@@ -13,122 +13,98 @@ namespace Vulnerator.Model.DataAccess
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
-        public void InsertDataEntryDate(SQLiteCommand sqliteCommand)
-        { 
+        public void CreateVulnerabilityRelatedIndices()
+        {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.InsertDataEntryDate;
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Entry_Date", DateTime.Now.ToShortDateString()));
+                if (!DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
+                { DatabaseBuilder.sqliteConnection.Open(); }
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.CommandText = "PRAGMA user_version";
+                    int latestVersion = int.Parse(sqliteCommand.ExecuteScalar().ToString());
+                    for (int i = 0; i <= latestVersion; i++)
+                    {
+                        switch (i)
+                        {
+                            case 0:
+                                {
+                                    sqliteCommand.CommandText = ReadDdl("Vulnerator.Resources.DdlFiles.v6-2-0_CreateVulnerabilityRelatedIndices.ddl");
+                                    break;
+                                }
+                            default:
+                                { break; }
+                        }
+                        if (sqliteCommand.CommandText.Equals(string.Empty))
+                        { return; }
+                        sqliteCommand.ExecuteNonQuery();
+                        sqliteCommand.CommandText = string.Empty;
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to create vulnerability related indices."));
+                throw exception;
+            }
+            finally
+            { DatabaseBuilder.sqliteConnection.Close(); }
+        }
+
+        public void DeleteVulnerabilityToCciMapping(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.DeleteVulnerabilityCciMapping;
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert a new Data Entry Date"));
+                log.Error(string.Format("Unable to delete Vulnerability / CCI mapping \"{0} - {1}\".",
+                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString(),
+                    sqliteCommand.Parameters["CCI"].Value.ToString()));
+                log.Debug("Exception details:", exception);
                 throw exception;
             }
         }
 
-        public void InsertGroup(SQLiteCommand sqliteCommand, Object.File file)
+        public void DropVulnerabilityRelatedIndices()
         {
             try
             {
-                string groupName;
-                if (!string.IsNullOrWhiteSpace(file.FileSystemName))
-                { groupName = file.FileSystemName; }
-                else
-                { groupName = "All"; }
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Group_Name", groupName));
-                sqliteCommand.CommandText = Properties.Resources.InsertGroup;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to insert group \"{0}\" into database.", file.FileSystemName));
-                throw exception;
-            }
-        }
-        
-        public void InsertParsedFile(SQLiteCommand sqliteCommand, Object.File file)
-        {
-            try
-            {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Source_File_Name", file.FileName));
-                sqliteCommand.CommandText = Properties.Resources.InsertUniqueFindingSource;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to insert unique finding source file \"{0}\".", file.FileName));
-                throw exception;
-            }
-        }
+                if (!DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
+                { DatabaseBuilder.sqliteConnection.Open(); }
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.CommandText = "PRAGMA user_version";
+                    int latestVersion = int.Parse(sqliteCommand.ExecuteScalar().ToString());
+                    for (int i = 0; i <= latestVersion; i++)
+                    {
+                        switch (i)
+                        {
+                            case 0:
+                                {
+                                    sqliteCommand.CommandText = ReadDdl("Vulnerator.Resources.DdlFiles.v6-2-0_DropVulnerabilityRelatedIndices.ddl");
+                                    break;
 
-        public void InsertHardware(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Is_Virtual_Server", "False"));
-                sqliteCommand.CommandText = Properties.Resources.InsertHardware;
-                sqliteCommand.ExecuteNonQuery();
+                                }
+                            default:
+                                { break; }
+                        }
+                        if (sqliteCommand.CommandText.Equals(string.Empty))
+                        { return; }
+                        sqliteCommand.ExecuteNonQuery();
+                        sqliteCommand.CommandText = string.Empty;
+                    }
+                }
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert host \"{0}\".", sqliteCommand.Parameters["IP_Address"].Value.ToString()));
+                log.Error(string.Format("Unable to drop vulnerability related indices."));
                 throw exception;
             }
-        }
-
-        public void MapHardwareToGroup(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                sqliteCommand.CommandText = Properties.Resources.MapHardwareToGroup;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to map \"{0}\" to \"{1}\".",
-                    sqliteCommand.Parameters["Host_Name"].Value.ToString(),
-                    sqliteCommand.Parameters["Group_Name"].Value.ToString()));
-                throw exception;
-            }
-        }
-
-        public void InsertSoftware(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                if (sqliteCommand.Parameters["Finding_Type"].Value.ToString().Equals("Fortify"))
-                { sqliteCommand.Parameters["Has_Custom_Code"].Value = "True"; }
-                else
-                { sqliteCommand.Parameters["Has_Custom_Code"].Value = "False"; }
-                sqliteCommand.CommandText = Properties.Resources.InsertSoftware;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to insert software \"{0}\" into table.", sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString()));
-                throw exception;
-            }
-        }
-
-        public void MapHardwareToSoftware(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                sqliteCommand.CommandText = Properties.Resources.MapHardwareToSoftware;
-                sqliteCommand.Parameters.Add(new SQLiteParameter("ReportInAccreditation", "False"));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("ApprovedForBaseline", "False"));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("BaselineApprover", DBNull.Value));
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to map software \"{0}\" to \"{1}\".",
-                    sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString(),
-                    sqliteCommand.Parameters["Host_Name"].Value.ToString()));
-                throw exception;
-            }
+            finally
+            { DatabaseBuilder.sqliteConnection.Close(); }
         }
 
         public void InsertAndMapIpAddress(SQLiteCommand sqliteCommand)
@@ -164,114 +140,6 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public void InsertVulnerabilitySource(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                sqliteCommand.CommandText = Properties.Resources.InsertVulnerabilitySource;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to insert vulnerability source \"{0}\".", sqliteCommand.Parameters["Source_Name"].Value.ToString()));
-                throw exception;
-            }
-        }
-
-        public void UpdateVulnerabilitySource(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                switch (sqliteCommand.Parameters["Finding_Type"].Value.ToString())
-                {
-                    case "ACAS":
-                        {
-                            sqliteCommand.CommandText = Properties.Resources.UpdateVulnerabilitySourceFromAcas;
-                            sqliteCommand.ExecuteNonQuery();
-                            sqliteCommand.CommandText = Properties.Resources.DeleteAcasVulnerabilitiesMappedToUnknownVersion;
-                            sqliteCommand.ExecuteNonQuery();
-                            return;
-                        }
-                    case "CKL":
-                        {
-                            if (VulnerabilitySourceUpdateRequired(sqliteCommand))
-                            {
-                                sqliteCommand.CommandText = Properties.Resources.UpdateVulnerabilitySource;
-                                sqliteCommand.ExecuteNonQuery();
-                            }
-                            return;
-                        }
-                    default:
-                        { break; }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to update vulnerability source \"{0}\".", sqliteCommand.Parameters["Source_Name"].Value.ToString()));
-                throw exception;
-            }
-        }
-
-        public void InsertVulnerability(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                sqliteCommand.CommandText = Properties.Resources.InsertVulnerability;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to insert vulnerability \"{0}\".", sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
-                throw exception;
-            }
-        }
-
-        public void UpdateVulnerability(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                if (VulnerabilityUpdateRequired(sqliteCommand))
-                {
-                    sqliteCommand.CommandText = Properties.Resources.UpdateVulnerability;
-                    sqliteCommand.ExecuteNonQuery();
-                    sqliteCommand.CommandText = Properties.Resources.UpdateDeltaAnalysisFlag;
-                    sqliteCommand.ExecuteNonQuery();
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to insert vulnerability \"{0}\".", sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
-                throw exception;
-            }
-        }
-
-        private void MapVulnerbailityToIAControl(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to vulnerability to IA Control.");
-                log.Debug("Exception details: " + exception);
-            }
-        }
-
-        public void MapVulnerabilityToSource(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                sqliteCommand.CommandText = Properties.Resources.MapVulnerabilityToSource;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to map vulnerability \"{0}\" to source \"{1}\"."));
-                log.Debug("Exception details: " + exception);
-            }
-        }
-
         public void InsertAndMapPort(SQLiteCommand sqliteCommand)
         {
             try
@@ -286,55 +154,6 @@ namespace Vulnerator.Model.DataAccess
                 log.Error(string.Format("Unable to insert or map port \"{0} {1}\".",
                     sqliteCommand.Parameters["Protocol"].Value.ToString(),
                     sqliteCommand.Parameters["Port"].Value.ToString()));
-                throw exception;
-            }
-        }
-
-        public void InsertUniqueFinding(SQLiteCommand sqliteCommand)
-        { 
-            try
-            {
-                sqliteCommand.CommandText = Properties.Resources.InsertUniqueFinding;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to generate a new unique finding for \"{0}\", \"{1}\", \"{2}\".",
-                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString(),
-                    sqliteCommand.Parameters["Host_Name"].Value.ToString(),
-                    sqliteCommand.Parameters["Scan_IP"].Value.ToString()));
-                throw exception;
-            }
-        }
-
-        public void UpdateUniqueFinding(SQLiteCommand sqliteCommand)
-        { 
-            try
-            {
-                switch (sqliteCommand.Parameters["Finding_Type"].Value.ToString())
-                {
-                    case "ACAS":
-                        {
-                            sqliteCommand.CommandText = Properties.Resources.UpdateUniqueFindingFromAcas;
-                            sqliteCommand.ExecuteNonQuery();
-                            break;
-                        }
-                    case "CKL":
-                        {
-                            sqliteCommand.CommandText = Properties.Resources.UpdateUniqueFindingFromCkl;
-                            sqliteCommand.ExecuteNonQuery();
-                            break;
-                        }
-                    default:
-                        { break; }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to update the unique finding for \"{0}\", \"{1}\", \"{2}\".",
-                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString(),
-                    sqliteCommand.Parameters["Host_Name"].Value.ToString(),
-                    sqliteCommand.Parameters["Scan_IP"].Value.ToString()));
                 throw exception;
             }
         }
@@ -382,8 +201,261 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public void MapVulnerabilityToCci(SQLiteCommand sqliteCommand)
+        public void InsertDataEntryDate(SQLiteCommand sqliteCommand)
         { 
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.InsertDataEntryDate;
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Entry_Date", DateTime.Now.ToShortDateString()));
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert a new Data Entry Date"));
+                throw exception;
+            }
+        }
+
+        public void InsertGroup(SQLiteCommand sqliteCommand, Object.File file)
+        {
+            try
+            {
+                string groupName;
+                if (!string.IsNullOrWhiteSpace(file.FileSystemName))
+                { groupName = file.FileSystemName; }
+                else
+                { groupName = "All"; }
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Group_Name", groupName));
+                sqliteCommand.CommandText = Properties.Resources.InsertGroup;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert group \"{0}\" into database.", file.FileSystemName));
+                throw exception;
+            }
+        }
+
+        public void InsertHardware(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Is_Virtual_Server", "False"));
+                sqliteCommand.CommandText = Properties.Resources.InsertHardware;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert host \"{0}\".", sqliteCommand.Parameters["IP_Address"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        public void InsertMitigationOrCondition(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.InsertMitigationOrCondition;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert a new mitigation."));
+                throw exception;
+            }
+        }
+
+        public void InsertParameterPlaceholders(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                string[] parameters = new string[]
+                {
+                    // CCI Table
+                    "CCI",
+                    // Groups Table
+                    "Group_ID", "Group_Name", "Is_Accreditation", "Accreditation_ID", "Organization_ID",
+                    // FindingTypes Table
+                    "Finding_Type",
+                    // Hardware Table
+                    "Hardware_ID", "Host_Name", "FQDN", "NetBIOS", "Is_Virtual_Server", "NIAP_Level", "Manufacturer", "ModelNumber", "OS",
+                    "Is_IA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID", "Scan_IP", "Found_21745", "Found_26917", "Displayed_Host_Name",
+                    // IP_Addresses Table
+                    "IP_Address_ID", "IP_Address",
+                    // MAC_Addresses Table
+                    "MAC_Address_ID", "MAC_Address",
+                    // PPS Table
+                    "PPS_ID", "Port", "Protocol", "Discovered_Service", "Display_Service",
+                    // Software Table
+                    "Software_ID", "Discovered_Software_Name", "Displayed_Software_Name", "Software_Acronym", "Software_Version",
+                    "Function", "Install_Date", "DADMS_ID", "DADMS_Disposition", "DADMS_LDA", "Has_Custom_Code", "IaOrIa_Enabled",
+                    "Is_OS_Or_Firmware", "FAM_Accepted", "Externally_Authorized", "ReportInAccreditation_Global",
+                    "ApprovedForBaseline_Global", "BaselineApprover_Global", "Instance",
+                    // UniqueFindings Table
+                    "Unique_Finding_ID", "Instance_Identifier", "Tool_Generated_Output", "Comments", "Finding_Details", "Technical_Mitigation",
+                    "Proposed_Mitigation", "Predisposing_Conditions", "Impact", "Likelihood", "Severity", "Risk", "Residual_Risk",
+                    "First_Discovered", "Last_Observed", "Approval_Status", "Approval_Date", "Approval_Expiration_Date", "Approved_By",
+                    "Delta_Analysis_Required", "Finding_Type_ID", "Finding_Source_ID", "Status", "Vulnerability_ID", "Hardware_ID",
+                    "Severity_Override", "Severity_Override_Justification", "Technology_Area", "Web_DB_Site", "Web_DB_Instance",
+                    "Classification", "CVSS_Environmental_Score", "CVSS_Environmental_Vector",
+                    // UniqueFindingSourceFiles Table
+                    "Finding_Source_File_ID", "Finding_Source_File_Name", 
+                    // Vulnerabilities Table
+                    "Vulnerability_ID", "Unique_Vulnerability_Identifier", "Vulnerability_Group_ID", "Vulnerability_Group_Title",
+                    "Secondary_Vulnerability_Identifier", "VulnerabilityFamilyOrClass", "Vulnerability_Version", "Vulnerability_Release",
+                    "Vulnerability_Title", "Vulnerability_Description", "Risk_Statement", "Fix_Text", "Published_Date", "Modified_Date",
+                    "Fix_Published_Date", "Raw_Risk", "CVSS_Base_Score", "CVSS_Base_Vector", "CVSS_Temporal_Score", "CVSS_Temporal_Vector",
+                    "Check_Content", "False_Positives", "False_Negatives", "Documentable", "Mitigations", "Mitigation_Control",
+                    "Potential_Impacts", "Third_Party_Tools", "Security_Override_Guidance", "Overflow", "Severity_Override_Guidance",
+                    // VulnerabilityReferences Table
+                    "Reference_ID", "Reference", "Reference_Type",
+                    // VulnerabilitySources Table
+                    "Vulnerability_Source_ID", "Source_Name", "Source_Secondary_Identifier", "Vulnerability_Source_File_Name",
+                    "Source_Description", "Source_Version", "Source_Release",
+                    // ScapScores Table
+                    "Score", "Scan_Date"
+                };
+                foreach (string parameter in parameters)
+                { sqliteCommand.Parameters.Add(new SQLiteParameter(parameter, string.Empty)); }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert SQLiteParameter placeholders into SQLiteCommand"));
+                throw exception;
+            }
+        }
+
+        public void InsertParsedFile(SQLiteCommand sqliteCommand, Object.File file)
+        {
+            try
+            {
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Source_File_Name", file.FileName));
+                sqliteCommand.CommandText = Properties.Resources.InsertUniqueFindingSource;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert unique finding source file \"{0}\".", file.FileName));
+                throw exception;
+            }
+        }
+
+        public void InsertScapScore(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.InsertScapScore;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert SCAP score for \"{0}\" - \"{1}\".",
+                    sqliteCommand.Parameters["Host_Name"].Value.ToString(),
+                    sqliteCommand.Parameters["Source_Name"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        public void InsertSoftware(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                if (sqliteCommand.Parameters["Finding_Type"].Value.ToString().Equals("Fortify"))
+                { sqliteCommand.Parameters["Has_Custom_Code"].Value = "True"; }
+                else
+                { sqliteCommand.Parameters["Has_Custom_Code"].Value = "False"; }
+                sqliteCommand.CommandText = Properties.Resources.InsertSoftware;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert software \"{0}\" into table.", sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        public void InsertUniqueFinding(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.InsertUniqueFinding;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to generate a new unique finding for \"{0}\", \"{1}\", \"{2}\".",
+                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString(),
+                    sqliteCommand.Parameters["Host_Name"].Value.ToString(),
+                    sqliteCommand.Parameters["Scan_IP"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        public void InsertVulnerability(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.InsertVulnerability;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert vulnerability \"{0}\".", sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        public void InsertVulnerabilitySource(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.InsertVulnerabilitySource;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert vulnerability source \"{0}\".", sqliteCommand.Parameters["Source_Name"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        public void MapHardwareToGroup(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.MapHardwareToGroup;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to map \"{0}\" to \"{1}\".",
+                    sqliteCommand.Parameters["Host_Name"].Value.ToString(),
+                    sqliteCommand.Parameters["Group_Name"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        public void MapHardwareToSoftware(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.MapHardwareToSoftware;
+                sqliteCommand.Parameters.Add(new SQLiteParameter("ReportInAccreditation", "False"));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("ApprovedForBaseline", "False"));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("BaselineApprover", DBNull.Value));
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to map software \"{0}\" to \"{1}\".",
+                    sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString(),
+                    sqliteCommand.Parameters["Host_Name"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        public void MapVulnerabilityToCci(SQLiteCommand sqliteCommand)
+        {
             try
             {
                 sqliteCommand.CommandText = Properties.Resources.MapVulnerabilityToCci;
@@ -398,49 +470,177 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public void DeleteVulnerabilityToCciMapping(SQLiteCommand sqliteCommand)
-        { 
+        public void MapVulnerabilityToSource(SQLiteCommand sqliteCommand)
+        {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteVulnerabilityCciMapping;
+                sqliteCommand.CommandText = Properties.Resources.MapVulnerabilityToSource;
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to delete Vulnerability / CCI mapping \"{0} - {1}\".",
+                log.Error(string.Format("Unable to map vulnerability \"{0}\" to source \"{1}\"."));
+                log.Debug("Exception details: " + exception);
+            }
+        }
+
+        public int SelectLastInsertRowId(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = "SELECT last_insert_rowid();";
+                return int.Parse(sqliteCommand.ExecuteScalar().ToString());
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to select the last inserted Row ID."));
+                throw exception;
+            }
+        }
+
+        public void SetCredentialedScanStatus(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.SetCredentialedScanStatus;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to set the credentialed scan status for \"{0}\".",
+                    sqliteCommand.Parameters["Scan-IP"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        public void UpdateMitigationOrConditionVulnerability(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.UpdateMitigationOrCondition;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("unable to update MitigationOrCondition's associated vulnerability."));
+                throw exception;
+            }
+        }
+
+        public void UpdateUniqueFinding(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                switch (sqliteCommand.Parameters["Finding_Type"].Value.ToString())
+                {
+                    case "ACAS":
+                        {
+                            sqliteCommand.CommandText = Properties.Resources.UpdateUniqueFindingFromAcas;
+                            sqliteCommand.ExecuteNonQuery();
+                            break;
+                        }
+                    case "CKL":
+                        {
+                            sqliteCommand.CommandText = Properties.Resources.UpdateUniqueFindingFromCkl;
+                            sqliteCommand.ExecuteNonQuery();
+                            break;
+                        }
+                    default:
+                        { break; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to update the unique finding for \"{0}\", \"{1}\", \"{2}\".",
                     sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString(),
-                    sqliteCommand.Parameters["CCI"].Value.ToString()));
-                log.Debug("Exception details:", exception);
-                throw exception;
-            }
-        }
-
-        public void InsertMitigationOrCondition(SQLiteCommand sqliteCommand)
-        { 
-            try
-            {
-                sqliteCommand.CommandText = Properties.Resources.InsertMitigationOrCondition;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to insert a new mitigation."));
-                throw exception;
-            }
-        }
-
-        public void InsertScapScore(SQLiteCommand sqliteCommand)
-        { 
-            try
-            {
-                sqliteCommand.CommandText = Properties.Resources.InsertScapScore;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to insert SCAP score for \"{0}\" - \"{1}\".", 
                     sqliteCommand.Parameters["Host_Name"].Value.ToString(),
-                    sqliteCommand.Parameters["Source_Name"].Value.ToString()));
+                    sqliteCommand.Parameters["Scan_IP"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        public void UpdateVulnerability(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                if (VulnerabilityUpdateRequired(sqliteCommand))
+                {
+                    sqliteCommand.CommandText = Properties.Resources.UpdateVulnerability;
+                    sqliteCommand.ExecuteNonQuery();
+                    sqliteCommand.CommandText = Properties.Resources.UpdateDeltaAnalysisFlag;
+                    sqliteCommand.ExecuteNonQuery();
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert vulnerability \"{0}\".", sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        public void UpdateVulnerabilitySource(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                switch (sqliteCommand.Parameters["Finding_Type"].Value.ToString())
+                {
+                    case "ACAS":
+                        {
+                            sqliteCommand.CommandText = Properties.Resources.UpdateVulnerabilitySourceFromAcas;
+                            sqliteCommand.ExecuteNonQuery();
+                            sqliteCommand.CommandText = Properties.Resources.DeleteAcasVulnerabilitiesMappedToUnknownVersion;
+                            sqliteCommand.ExecuteNonQuery();
+                            return;
+                        }
+                    case "CKL":
+                        {
+                            if (VulnerabilitySourceUpdateRequired(sqliteCommand))
+                            {
+                                sqliteCommand.CommandText = Properties.Resources.UpdateVulnerabilitySource;
+                                sqliteCommand.ExecuteNonQuery();
+                            }
+                            return;
+                        }
+                    default:
+                        { break; }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to update vulnerability source \"{0}\".", sqliteCommand.Parameters["Source_Name"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        private void MapVulnerbailityToIAControl(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to vulnerability to IA Control.");
+                log.Debug("Exception details: " + exception);
+            }
+        }
+
+        private string ReadDdl(string ddlResourceFile)
+        {
+            try
+            {
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                string ddlText = string.Empty;
+                using (Stream stream = assembly.GetManifestResourceStream(ddlResourceFile))
+                {
+                    using (StreamReader streamReader = new StreamReader(stream))
+                    { ddlText = streamReader.ReadToEnd(); }
+                }
+                return ddlText;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to read DDL Resource File.");
                 throw exception;
             }
         }
@@ -535,192 +735,6 @@ namespace Vulnerator.Model.DataAccess
             {
                 log.Error(string.Format("Unable to determine if an update is required for vulnerability \"{0}\".", 
                     sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
-                throw exception;
-            }
-        }
-
-        public void InsertParameterPlaceholders(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                string[] parameters = new string[]
-                {
-                    // CCI Table
-                    "CCI",
-                    // Groups Table
-                    "Group_ID", "Group_Name", "Is_Accreditation", "Accreditation_ID", "Organization_ID",
-                    // FindingTypes Table
-                    "Finding_Type",
-                    // Hardware Table
-                    "Hardware_ID", "Host_Name", "FQDN", "NetBIOS", "Is_Virtual_Server", "NIAP_Level", "Manufacturer", "ModelNumber", "OS",
-                    "Is_IA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID", "Scan_IP", "Found_21745", "Found_26917", "Displayed_Host_Name",
-                    // IP_Addresses Table
-                    "IP_Address_ID", "IP_Address",
-                    // MAC_Addresses Table
-                    "MAC_Address_ID", "MAC_Address",
-                    // PPS Table
-                    "PPS_ID", "Port", "Protocol", "Discovered_Service", "Display_Service",
-                    // Software Table
-                    "Software_ID", "Discovered_Software_Name", "Displayed_Software_Name", "Software_Acronym", "Software_Version",
-                    "Function", "Install_Date", "DADMS_ID", "DADMS_Disposition", "DADMS_LDA", "Has_Custom_Code", "IaOrIa_Enabled",
-                    "Is_OS_Or_Firmware", "FAM_Accepted", "Externally_Authorized", "ReportInAccreditation_Global",
-                    "ApprovedForBaseline_Global", "BaselineApprover_Global", "Instance",
-                    // UniqueFindings Table
-                    "Unique_Finding_ID", "Instance_Identifier", "Tool_Generated_Output", "Comments", "Finding_Details", "Technical_Mitigation",
-                    "Proposed_Mitigation", "Predisposing_Conditions", "Impact", "Likelihood", "Severity", "Risk", "Residual_Risk",
-                    "First_Discovered", "Last_Observed", "Approval_Status", "Approval_Date", "Approval_Expiration_Date", "Approved_By",
-                    "Delta_Analysis_Required", "Finding_Type_ID", "Finding_Source_ID", "Status", "Vulnerability_ID", "Hardware_ID",
-                    "Severity_Override", "Severity_Override_Justification", "Technology_Area", "Web_DB_Site", "Web_DB_Instance",
-                    "Classification", "CVSS_Environmental_Score", "CVSS_Environmental_Vector",
-                    // UniqueFindingSourceFiles Table
-                    "Finding_Source_File_ID", "Finding_Source_File_Name", 
-                    // Vulnerabilities Table
-                    "Vulnerability_ID", "Unique_Vulnerability_Identifier", "Vulnerability_Group_ID", "Vulnerability_Group_Title",
-                    "Secondary_Vulnerability_Identifier", "VulnerabilityFamilyOrClass", "Vulnerability_Version", "Vulnerability_Release",
-                    "Vulnerability_Title", "Vulnerability_Description", "Risk_Statement", "Fix_Text", "Published_Date", "Modified_Date",
-                    "Fix_Published_Date", "Raw_Risk", "CVSS_Base_Score", "CVSS_Base_Vector", "CVSS_Temporal_Score", "CVSS_Temporal_Vector",
-                    "Check_Content", "False_Positives", "False_Negatives", "Documentable", "Mitigations", "Mitigation_Control",
-                    "Potential_Impacts", "Third_Party_Tools", "Security_Override_Guidance", "Overflow", "Severity_Override_Guidance",
-                    // VulnerabilityReferences Table
-                    "Reference_ID", "Reference", "Reference_Type",
-                    // VulnerabilitySources Table
-                    "Vulnerability_Source_ID", "Source_Name", "Source_Secondary_Identifier", "Vulnerability_Source_File_Name",
-                    "Source_Description", "Source_Version", "Source_Release",
-                    // ScapScores Table
-                    "Score", "Scan_Date"
-                };
-                foreach (string parameter in parameters)
-                { sqliteCommand.Parameters.Add(new SQLiteParameter(parameter, string.Empty)); }
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to insert SQLiteParameter placeholders into SQLiteCommand"));
-                throw exception;
-            }
-        }
-
-        public void SetCredentialedScanStatus(SQLiteCommand sqliteCommand)
-        { 
-            try
-            {
-                sqliteCommand.CommandText = Properties.Resources.SetCredentialedScanStatus;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to set the credentialed scan status for \"{0}\".", 
-                    sqliteCommand.Parameters["Scan-IP"].Value.ToString()));
-                throw exception;
-            }
-        }
-
-        public void DropVulnerabilityRelatedIndices()
-        { 
-            try
-            {
-                if (!DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
-                { DatabaseBuilder.sqliteConnection.Open(); }
-                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
-                {
-                    sqliteCommand.CommandText = "PRAGMA user_version";
-                    int latestVersion = int.Parse(sqliteCommand.ExecuteScalar().ToString());
-                    for (int i = 0; i <= latestVersion; i++)
-                    {
-                        switch (i)
-                        {
-                            case 0:
-                                {
-                                    sqliteCommand.CommandText = ReadDdl("Vulnerator.Resources.DdlFiles.v6-2-0_DropVulnerabilityRelatedIndices.ddl");
-                                    break;
-
-                                }
-                            default:
-                                { break; }
-                        }
-                        if (sqliteCommand.CommandText.Equals(string.Empty))
-                        { return; }
-                        sqliteCommand.ExecuteNonQuery();
-                        sqliteCommand.CommandText = string.Empty;
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to drop vulnerability related indices."));
-                throw exception;
-            }
-            finally
-            { DatabaseBuilder.sqliteConnection.Close(); }
-        }
-
-        public void CreateVulnerabilityRelatedIndices()
-        {
-            try
-            {
-                if (!DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
-                { DatabaseBuilder.sqliteConnection.Open(); }
-                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
-                {
-                    sqliteCommand.CommandText = "PRAGMA user_version";
-                    int latestVersion = int.Parse(sqliteCommand.ExecuteScalar().ToString());
-                    for (int i = 0; i <= latestVersion; i++)
-                    {
-                        switch (i)
-                        {
-                            case 0:
-                                {
-                                    sqliteCommand.CommandText = ReadDdl("Vulnerator.Resources.DdlFiles.v6-2-0_CreateVulnerabilityRelatedIndices.ddl");
-                                    break;
-                                }
-                            default:
-                                { break; }
-                        }
-                        if (sqliteCommand.CommandText.Equals(string.Empty))
-                        { return; }
-                        sqliteCommand.ExecuteNonQuery();
-                        sqliteCommand.CommandText = string.Empty;
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to create vulnerability related indices."));
-                throw exception;
-            }
-            finally
-            { DatabaseBuilder.sqliteConnection.Close(); }
-        }
-
-        public int SelectLastInsertRowId(SQLiteCommand sqliteCommand)
-        { 
-            try
-            {
-                sqliteCommand.CommandText = "SELECT last_insert_rowid();";
-                return int.Parse(sqliteCommand.ExecuteScalar().ToString());
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to select the last inserted Row ID."));
-                throw exception;
-            }
-        }
-
-        private string ReadDdl(string ddlResourceFile)
-        {
-            try
-            {
-                Assembly assembly = Assembly.GetExecutingAssembly();
-                string ddlText = string.Empty;
-                using (Stream stream = assembly.GetManifestResourceStream(ddlResourceFile))
-                {
-                    using (StreamReader streamReader = new StreamReader(stream))
-                    { ddlText = streamReader.ReadToEnd(); }
-                }
-                return ddlText;
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to read DDL Resource File.");
                 throw exception;
             }
         }

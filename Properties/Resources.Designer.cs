@@ -124,7 +124,24 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO MitigationsOrConditions VALUES (NULL, @Vulnerability_ID, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &apos;False&apos;, NULL);.
+        ///   Looks up a localized string similar to INSERT INTO MitigationsOrConditions 
+        ///VALUES (
+        ///	NULL, 
+        ///	@Vulnerability_ID, 
+        ///	@Impact_Description, 
+        ///	@Predisposing_Conditions, 
+        ///	@Technical_Mitigation, 
+        ///	@Proposed_Mitigation, 
+        ///	@Threat_Relevance, 
+        ///	@Severity_Pervasiveness, 
+        ///	@Likelihood, 
+        ///	@Impact, 
+        ///	@Risk, 
+        ///	@Residual_Risk, 
+        ///	@Mitigated_Status, 
+        ///	@Expiration_Date, 
+        ///	@IsApproved, 
+        ///	@Approver);.
         /// </summary>
         internal static string InsertMitigationOrCondition {
             get {
@@ -566,6 +583,29 @@ namespace Vulnerator.Properties {
         internal static string UpdateDeltaAnalysisFlag {
             get {
                 return ResourceManager.GetString("UpdateDeltaAnalysisFlag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE MitigationsOrConditions 
+        ///SET 
+        ///	Vulnerability_ID = @Vulnerability_ID, 
+        ///	Impact_Description = @Impact_Description,
+        ///	Predisposing_Conditions = @Predisposing_Conditions,
+        ///	Technical_Mitigation = @Technical_Mitigation,
+        ///	Proposed_Mitigation = @Proposed_Mitigation,
+        ///	Threat_Relevance = @Threat_Relevance,
+        ///	Severity_Pervasiveness = @Severity_Pervasiveness,
+        ///	Likelihood = @Likelihood,
+        ///	Impact = @Impact,
+        ///	Risk = @Risk,
+        ///	Residual_Risk = @Residual_Risk,
+        ///	Mitigated_Status = @Mitigated_Status,
+        ///	Expiratio [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string UpdateMitigationOrCondition {
+            get {
+                return ResourceManager.GetString("UpdateMitigationOrCondition", resourceCulture);
             }
         }
         

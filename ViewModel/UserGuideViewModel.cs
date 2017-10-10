@@ -12,6 +12,12 @@ namespace Vulnerator.ViewModel
     public class UserGuideViewModel : ViewModelBase
     {
         private Assembly assembly = Assembly.GetExecutingAssembly();
+        public MarkdownPipeline MarkdownPipeline = new MarkdownPipelineBuilder()
+            .UseAdvancedExtensions()
+            .UseEmphasisExtras()
+            .UseAutoLinks()
+            .UseEmojiAndSmiley()
+            .Build();
 
         private List<UserGuidePage> _userGuidePages = new List<UserGuidePage>();
         public List<UserGuidePage> UserGuidePages
@@ -66,18 +72,20 @@ namespace Vulnerator.ViewModel
 
         private string GetPageContent(string resource)
         {
-            MarkdownPipeline pipeline = new MarkdownPipelineBuilder()
-                .UseAdvancedExtensions()
-                .UseEmphasisExtras()
-                .UseEmojiAndSmiley()
-                .Build();
-            string result = string.Empty;
+            //MarkdownPipeline pipeline = new MarkdownPipelineBuilder()
+            //    .UseAdvancedExtensions()
+            //    .UseEmphasisExtras()
+            //    .UseAutoLinks()
+            //    .UseEmojiAndSmiley()
+            //    .Build();
+            //string result = string.Empty;
             using (Stream stream = assembly.GetManifestResourceStream(resource))
             {
                 using (StreamReader streamReader = new StreamReader(stream))
                 {
-                    string pre = "<html><head><style>p,a,h1,h2,h3,h4,h5,h6,ol,ul,li,td,th,table,tr { font-family:\"Segoe UI\", \"Lucida Sans Unicode\", \"Verdana\", sans-serif; } table,th,td { border: 1px solid black; border-collapse: collapse; }</style></head><body>[body]</body></html>";
-                    return result = pre.Replace("[body]", Markdown.ToHtml(streamReader.ReadToEnd(), pipeline));
+                    //string pre = "<html><head><style>p,a,h1,h2,h3,h4,h5,h6,ol,ul,li,td,th,table,tr { font-family:\"Segoe UI\", \"Lucida Sans Unicode\", \"Verdana\", sans-serif; } table,th,td { border: 1px solid black; border-collapse: collapse; }</style></head><body>[body]</body></html>";
+                    //return result = pre.Replace("[body]", Markdown.ToHtml(streamReader.ReadToEnd(), pipeline));
+                    return streamReader.ReadToEnd();
                 }
             }
         }

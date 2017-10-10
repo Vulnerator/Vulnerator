@@ -139,7 +139,24 @@
     <value>INSERT INTO MAC_Addresses VALUES (NULL, @MAC_Address);</value>
   </data>
   <data name="InsertMitigationOrCondition" xml:space="preserve">
-    <value>INSERT INTO MitigationsOrConditions VALUES (NULL, @Vulnerability_ID, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'False', NULL);</value>
+    <value>INSERT INTO MitigationsOrConditions 
+VALUES (
+	NULL, 
+	@Vulnerability_ID, 
+	@Impact_Description, 
+	@Predisposing_Conditions, 
+	@Technical_Mitigation, 
+	@Proposed_Mitigation, 
+	@Threat_Relevance, 
+	@Severity_Pervasiveness, 
+	@Likelihood, 
+	@Impact, 
+	@Risk, 
+	@Residual_Risk, 
+	@Mitigated_Status, 
+	@Expiration_Date, 
+	@IsApproved, 
+	@Approver);</value>
   </data>
   <data name="InsertPPS" xml:space="preserve">
     <value>INSERT INTO PPS VALUES (NULL, @Port, @Protocol);</value>
@@ -364,6 +381,26 @@ ORDER BY Unique_Vulnerability_Identifier</value>
   </data>
   <data name="UpdateDeltaAnalysisFlag" xml:space="preserve">
     <value>UPDATE UniqueFindings SET Delta_Analysis_Required = 'True' WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier);</value>
+  </data>
+  <data name="UpdateMitigationOrCondition" xml:space="preserve">
+    <value>UPDATE MitigationsOrConditions 
+SET 
+	Vulnerability_ID = @Vulnerability_ID, 
+	Impact_Description = @Impact_Description,
+	Predisposing_Conditions = @Predisposing_Conditions,
+	Technical_Mitigation = @Technical_Mitigation,
+	Proposed_Mitigation = @Proposed_Mitigation,
+	Threat_Relevance = @Threat_Relevance,
+	Severity_Pervasiveness = @Severity_Pervasiveness,
+	Likelihood = @Likelihood,
+	Impact = @Impact,
+	Risk = @Risk,
+	Residual_Risk = @Residual_Risk,
+	Mitigated_Status = @Mitigated_Status,
+	Expiration_Date = @Expiration_Date,
+	IsApproved = @IsApproved,
+	Approver = @Approver
+WHERE MitigationOrCondition_ID = @MitigationOrCondition_ID;</value>
   </data>
   <data name="UpdateUniqueFindingFromAcas" xml:space="preserve">
     <value>UPDATE UniqueFindings SET Last_Observed = @Last_Observed, Status = @Status, Tool_Generated_Output = @Tool_Generated_Output WHERE Hardware_ID = (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP) AND Software_ID = (SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name) AND Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier) AND Last_Observed &lt; @Last_Observed;</value>
