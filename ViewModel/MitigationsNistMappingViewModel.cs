@@ -23,6 +23,8 @@ namespace Vulnerator.ViewModel
         private DatabaseContext databaseContext;
         private DatabaseInterface databaseInterface;
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
+        private List<Likelihood> Likehoods;
+        private List<Risk> Risks;
 
         private ObservableCollection<MitigationsOrCondition> _projectMitigations { get; set; }
 
@@ -35,6 +37,21 @@ namespace Vulnerator.ViewModel
                 {
                     _projectMitigations = value;
                     RaisePropertyChanged("ProjectMitigations");
+                }
+            }
+        }
+
+        private MitigationsOrCondition _selectedMitigationsOrCondition { get; set; }
+
+        public MitigationsOrCondition SelectedMitigationsOrCondition
+        {
+            get { return _selectedMitigationsOrCondition; }
+            set
+            {
+                if (_selectedMitigationsOrCondition != value)
+                {
+                    _selectedMitigationsOrCondition = value;
+                    RaisePropertyChanged("SelectedMitigationsOrCondition");
                 }
             }
         }
@@ -114,6 +131,51 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private List<string> _mitigationStatuses { get; set; }
+
+        public List<string> MitigationStatuses
+        {
+            get { return _mitigationStatuses; }
+            set
+            {
+                if (_mitigationStatuses != value)
+                {
+                    _mitigationStatuses = value;
+                    RaisePropertyChanged("MitigationStatuses");
+                }
+            }
+        }
+
+        private List<string> _rmfValues { get; set; }
+
+        public List<string> RmfValues
+        {
+            get { return _rmfValues; }
+            set
+            {
+                if (_rmfValues != value)
+                {
+                    _rmfValues = value;
+                    RaisePropertyChanged("RmfValues");
+                }
+            }
+        }
+
+        private List<Group> _groups { get; set; }
+
+        public List<Group> Groups
+        {
+            get { return _groups; }
+            set
+            {
+                if (_groups != value)
+                {
+                    _groups = value;
+                    RaisePropertyChanged("Groups");
+                }
+            }
+        }
+
         private bool _bulkProcessExpanded { get; set; }
 
         public bool BulkProcessExpanded
@@ -136,6 +198,8 @@ namespace Vulnerator.ViewModel
                 log.Info("Begin instantiation of MitigationsNistMappingViewModel.");
                 databaseInterface = new DatabaseInterface();
                 PopulateGui();
+                Likehoods = PopulateLikelihoodMatrix();
+                Risks = PopulateRiskMatrix();
                 Messenger.Default.Register<NotificationMessage<string>>(this, MessengerToken.ModelUpdated, (msg) => HandleModelUpdate(msg.Notification));
             }
             catch (Exception exception)
@@ -163,6 +227,8 @@ namespace Vulnerator.ViewModel
         {
             try
             {
+                MitigationStatuses = new List<string>() { "Ongoing", "Completed", "Not Reviewed", "Not Applicable" };
+                RmfValues = new List<string>() { "Very High", "High", "Moderate", "Low", "Very Low" };
                 using (databaseContext = new DatabaseContext())
                 {
                     ProjectMitigations = databaseContext.MitigationsOrConditions
@@ -180,6 +246,7 @@ namespace Vulnerator.ViewModel
                     BulkNistControlsCcis = databaseContext.NistControlsCCIs
                         .Include(n => n.CCI)
                         .AsNoTracking().ToList();
+                    Groups = databaseContext.Groups.AsNoTracking().ToList();
                 }
                 ProjectMitigations.CollectionChanged += MitigationsOrConditions_CollectionChanged;
                 Vulnerabilities.CollectionChanged += Vulnerabilities_CollectionChanged;
@@ -188,6 +255,87 @@ namespace Vulnerator.ViewModel
             catch (Exception exception)
             {
                 log.Error(string.Format("Unable to populate MitigationsNistMappingView lists."));
+                throw exception;
+            }
+        }
+
+        private List<Likelihood> PopulateLikelihoodMatrix()
+        { 
+            try
+            {
+                return new List<Likelihood>()
+                {
+                    new Likelihood() { Relevance = "Very High", SeverityOrPervasiveness = "Very Low", CalculatedLikelihood = "Very Low" },
+                    new Likelihood() { Relevance = "Very High", SeverityOrPervasiveness = "Low", CalculatedLikelihood = "Low" },
+                    new Likelihood() { Relevance = "Very High", SeverityOrPervasiveness = "Moderate", CalculatedLikelihood = "Moderate" },
+                    new Likelihood() { Relevance = "Very High", SeverityOrPervasiveness = "High", CalculatedLikelihood = "High" },
+                    new Likelihood() { Relevance = "Very High", SeverityOrPervasiveness = "Very High", CalculatedLikelihood = "Very High" },
+                    new Likelihood() { Relevance = "High", SeverityOrPervasiveness = "Very Low", CalculatedLikelihood = "Very Low" },
+                    new Likelihood() { Relevance = "High", SeverityOrPervasiveness = "Low", CalculatedLikelihood = "Low" },
+                    new Likelihood() { Relevance = "High", SeverityOrPervasiveness = "Moderate", CalculatedLikelihood = "Moderate" },
+                    new Likelihood() { Relevance = "High", SeverityOrPervasiveness = "High", CalculatedLikelihood = "High" },
+                    new Likelihood() { Relevance = "High", SeverityOrPervasiveness = "Very High", CalculatedLikelihood = "Very High" },
+                    new Likelihood() { Relevance = "Moderate", SeverityOrPervasiveness = "Very Low", CalculatedLikelihood = "Very Low" },
+                    new Likelihood() { Relevance = "Moderate", SeverityOrPervasiveness = "Low", CalculatedLikelihood = "Low" },
+                    new Likelihood() { Relevance = "Moderate", SeverityOrPervasiveness = "Moderate", CalculatedLikelihood = "Moderate" },
+                    new Likelihood() { Relevance = "Moderate", SeverityOrPervasiveness = "High", CalculatedLikelihood = "Moderate" },
+                    new Likelihood() { Relevance = "Moderate", SeverityOrPervasiveness = "Very High", CalculatedLikelihood = "High" },
+                    new Likelihood() { Relevance = "Low", SeverityOrPervasiveness = "Very Low", CalculatedLikelihood = "Very Low" },
+                    new Likelihood() { Relevance = "Low", SeverityOrPervasiveness = "Low", CalculatedLikelihood = "Low" },
+                    new Likelihood() { Relevance = "Low", SeverityOrPervasiveness = "Moderate", CalculatedLikelihood = "Low" },
+                    new Likelihood() { Relevance = "Low", SeverityOrPervasiveness = "High", CalculatedLikelihood = "Low" },
+                    new Likelihood() { Relevance = "Low", SeverityOrPervasiveness = "Very High", CalculatedLikelihood = "Moderate" },
+                    new Likelihood() { Relevance = "Very Low", SeverityOrPervasiveness = "Very Low", CalculatedLikelihood = "Very Low" },
+                    new Likelihood() { Relevance = "Very Low", SeverityOrPervasiveness = "Low", CalculatedLikelihood = "Very Low" },
+                    new Likelihood() { Relevance = "Very Low", SeverityOrPervasiveness = "Moderate", CalculatedLikelihood = "Low" },
+                    new Likelihood() { Relevance = "Very Low", SeverityOrPervasiveness = "High", CalculatedLikelihood = "Low" },
+                    new Likelihood() { Relevance = "Very Low", SeverityOrPervasiveness = "Very High", CalculatedLikelihood = "Low" }
+                };
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to populate Likelihood Matrix."));
+                throw exception;
+            }
+        }
+
+        private List<Risk> PopulateRiskMatrix()
+        { 
+            try
+            {
+                return new List<Risk>()
+                {
+                    new Risk() { Likelihood = "Very High", Impact = "Very Low", CalculatedRisk = "Very Low" },
+                    new Risk() { Likelihood = "Very High", Impact = "Low", CalculatedRisk = "Low" },
+                    new Risk() { Likelihood = "Very High", Impact = "Moderate", CalculatedRisk = "Moderate" },
+                    new Risk() { Likelihood = "Very High", Impact = "High", CalculatedRisk = "High" },
+                    new Risk() { Likelihood = "Very High", Impact = "Very High", CalculatedRisk = "Very High" },
+                    new Risk() { Likelihood = "High", Impact = "Very Low", CalculatedRisk = "Very Low" },
+                    new Risk() { Likelihood = "High", Impact = "Low", CalculatedRisk = "Low" },
+                    new Risk() { Likelihood = "High", Impact = "Moderate", CalculatedRisk = "Moderate" },
+                    new Risk() { Likelihood = "High", Impact = "High", CalculatedRisk = "High" },
+                    new Risk() { Likelihood = "High", Impact = "Very High", CalculatedRisk = "Very High" },
+                    new Risk() { Likelihood = "Moderate", Impact = "Very Low", CalculatedRisk = "Very Low" },
+                    new Risk() { Likelihood = "Moderate", Impact = "Low", CalculatedRisk = "Low" },
+                    new Risk() { Likelihood = "Moderate", Impact = "Moderate", CalculatedRisk = "Moderate" },
+                    new Risk() { Likelihood = "Moderate", Impact = "High", CalculatedRisk = "Moderate" },
+                    new Risk() { Likelihood = "Moderate", Impact = "Very High", CalculatedRisk = "High" },
+                    new Risk() { Likelihood = "Low", Impact = "Very Low", CalculatedRisk = "Very Low" },
+                    new Risk() { Likelihood = "Low", Impact = "Low", CalculatedRisk = "Low" },
+                    new Risk() { Likelihood = "Low", Impact = "Moderate", CalculatedRisk = "Low" },
+                    new Risk() { Likelihood = "Low", Impact = "High", CalculatedRisk = "Low" },
+                    new Risk() { Likelihood = "Low", Impact = "Very High", CalculatedRisk = "Moderate" },
+                    new Risk() { Likelihood = "Very Low", Impact = "Very Low", CalculatedRisk = "Very Low" },
+                    new Risk() { Likelihood = "Very Low", Impact = "Low", CalculatedRisk = "Very Low" },
+                    new Risk() { Likelihood = "Very Low", Impact = "Moderate", CalculatedRisk = "Low" },
+                    new Risk() { Likelihood = "Very Low", Impact = "High", CalculatedRisk = "Low" },
+                    new Risk() { Likelihood = "Very Low", Impact = "Very High", CalculatedRisk = "Low" }
+                };
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format(""));
+                log.Debug("Exception details:", exception);
                 throw exception;
             }
         }
@@ -334,44 +482,52 @@ namespace Vulnerator.ViewModel
                 { DatabaseBuilder.sqliteConnection.Open(); }
                 using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
-                    SetInitialSqliteParameters(mitigation, sqliteCommand);
-                    if (mitigation.Vulnerability == null)
+                    string[] ignorableProperties = new string[] { "Risk", "Likelihood", "MitigationOrCondition_ID", "Groups", "Approver" };
+                    if (mitigation.Vulnerability == null || ignorableProperties.Contains(e.PropertyName))
                     { return; }
+                    SetInitialSqliteParameters("MitigationsOrCondition", sqliteCommand);
                     sqliteCommand.Parameters["MitigationOrCondition_ID"].Value = mitigation.MitigationOrCondition_ID;
                     sqliteCommand.Parameters["Vulnerability_ID"].Value = mitigation.Vulnerability.Vulnerability_ID;
-                    if (mitigation.Impact_Description != null)
-                    { sqliteCommand.Parameters["Impact_Description"].Value = mitigation.Impact_Description; }
-                    if (mitigation.Predisposing_Conditions != null)
-                    { sqliteCommand.Parameters["Predisposing_Conditions"].Value = mitigation.Predisposing_Conditions; }
-                    if (mitigation.Technical_Mitigation != null)
-                    { sqliteCommand.Parameters["Technical_Mitigation"].Value = mitigation.Technical_Mitigation; }
+                    sqliteCommand.Parameters["Impact_Description"].Value = mitigation.Impact_Description;
+                    sqliteCommand.Parameters["Predisposing_Conditions"].Value = mitigation.Predisposing_Conditions;
+                    sqliteCommand.Parameters["Technical_Mitigation"].Value = mitigation.Technical_Mitigation;
                     sqliteCommand.Parameters["Proposed_Mitigation"].Value = mitigation.Proposed_Mitigation;
-                    if (mitigation.Threat_Relevance != null)
-                    { sqliteCommand.Parameters["Threat_Relevance"].Value = mitigation.Threat_Relevance; }
-                    if (mitigation.Severity_Pervasiveness != null)
-                    { sqliteCommand.Parameters["Severity_Pervasiveness"].Value = mitigation.Severity_Pervasiveness; }
-                    if (mitigation.Likelihood != null)
-                    { sqliteCommand.Parameters["Likelihood"].Value = mitigation.Likelihood; }
-                    if (mitigation.Impact != null)
-                    { sqliteCommand.Parameters["Impact"].Value = mitigation.Impact; }
-                    if (mitigation.Risk != null)
-                    { sqliteCommand.Parameters["Risk"].Value = mitigation.Risk; }
-                    if (mitigation.Residual_Risk != null)
-                    { sqliteCommand.Parameters["Residual_Risk"].Value = mitigation.Residual_Risk; }
-                    if (mitigation.Mitigated_Status != null)
-                    { sqliteCommand.Parameters["Mitigated_Status"].Value = mitigation.Mitigated_Status; }
-                    if (mitigation.Expiration_Date != null)
-                    { sqliteCommand.Parameters["Expiration_Date"].Value = mitigation.Expiration_Date; }
+                    sqliteCommand.Parameters["Threat_Relevance"].Value = mitigation.Threat_Relevance;
+                    sqliteCommand.Parameters["Severity_Pervasiveness"].Value = mitigation.Severity_Pervasiveness;
+                    sqliteCommand.Parameters["Impact"].Value = mitigation.Impact;
+                    sqliteCommand.Parameters["Residual_Risk"].Value = mitigation.Residual_Risk;
+                    sqliteCommand.Parameters["Mitigated_Status"].Value = mitigation.Mitigated_Status;
+                    sqliteCommand.Parameters["Expiration_Date"].Value = mitigation.Expiration_Date;
                     sqliteCommand.Parameters["IsApproved"].Value = mitigation.IsApproved ?? "False";
-                    if (mitigation.Threat_Relevance != null)
-                    { sqliteCommand.Parameters["Approver"].Value = mitigation.Approver; }
+                    if (e.PropertyName.Equals("IsApproved"))
+                    {
+                        if (mitigation.IsApproved.Equals("True"))
+                        { mitigation.Approver = Properties.Settings.Default.ActiveUser; }
+                        else
+                        { mitigation.Approver = null; }
+                    }
+                    sqliteCommand.Parameters["Approver"].Value = mitigation.Approver;
+                    if (!string.IsNullOrWhiteSpace(mitigation.Threat_Relevance) && !string.IsNullOrWhiteSpace(mitigation.Severity_Pervasiveness))
+                    {
+                        mitigation.Likelihood = Likehoods.FirstOrDefault(
+                            x => x.Relevance.Equals(mitigation.Threat_Relevance) && x.SeverityOrPervasiveness.Equals(mitigation.Severity_Pervasiveness))
+                            .CalculatedLikelihood;
+                        sqliteCommand.Parameters["Likelihood"].Value = mitigation.Likelihood;
+                    }
+                    if (!string.IsNullOrWhiteSpace(mitigation.Likelihood) && !string.IsNullOrWhiteSpace(mitigation.Impact))
+                    {
+                        mitigation.Risk = Risks.FirstOrDefault(
+                            x => x.Likelihood.Equals(mitigation.Likelihood) && x.Impact.Equals(mitigation.Impact))
+                            .CalculatedRisk;
+                        sqliteCommand.Parameters["Risk"].Value = mitigation.Risk;
+                    }
                     if (mitigation.MitigationOrCondition_ID == 0)
                     {
                         databaseInterface.InsertMitigationOrCondition(sqliteCommand);
                         mitigation.MitigationOrCondition_ID = databaseInterface.SelectLastInsertRowId(sqliteCommand);
                         return;
                     }
-                    databaseInterface.UpdateMitigationOrConditionVulnerability(sqliteCommand);
+                    databaseInterface.UpdateMitigationOrCondition(sqliteCommand);
                 }
                     
             }
@@ -467,13 +623,13 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private void SetInitialSqliteParameters(object sender, SQLiteCommand sqliteCommand)
+        private void SetInitialSqliteParameters(string sendingEntity, SQLiteCommand sqliteCommand)
         { 
             try
             {
-                switch (sender.GetType().ToString())
+                switch (sendingEntity)
                 {
-                    case "Vulnerator.Model.Entity.MitigationsOrCondition":
+                    case "MitigationsOrCondition":
                         {
                             string[] parameters = new string[]
                             {
@@ -494,6 +650,45 @@ namespace Vulnerator.ViewModel
                 log.Error(string.Format("Unable to set initial SQLite Command Parameters."));
                 throw exception;
             }
+        }
+
+        public RelayCommand<object> AddMitigationGroupCommand
+        { get { return new RelayCommand<object>((p) => AddMitigationGroup(p)); } }
+
+        private void AddMitigationGroup(object parameter)
+        { 
+            try
+            {
+                if (SelectedMitigationsOrCondition.MitigationOrCondition_ID == 0)
+                { return; }
+                string groupName = parameter as string;
+                if (!DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
+                { DatabaseBuilder.sqliteConnection.Open(); }
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    if (Groups.FirstOrDefault(x => x.Group_Name.Equals(groupName)) == null)
+                    {
+                        Group group = new Group() { Group_Name = groupName };
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("Group_Name", groupName));
+                        databaseInterface.InsertGroup(sqliteCommand);
+                        Groups.Add(group);
+                    }
+                    else
+                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Group_Name", groupName)); }
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("MitigationOrCondition_ID", SelectedMitigationsOrCondition.MitigationOrCondition_ID));
+                    databaseInterface.MapMitigationToGroup(sqliteCommand);
+                    ProjectMitigations.FirstOrDefault(
+                        x => x.MitigationOrCondition_ID == SelectedMitigationsOrCondition.MitigationOrCondition_ID)
+                        .Groups.Add(Groups.FirstOrDefault(g => g.Group_Name == groupName));
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to "));
+                log.Debug("Exception details:", exception);
+            }
+            finally
+            { DatabaseBuilder.sqliteConnection.Close(); }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Messaging;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -105,6 +106,7 @@ namespace Vulnerator.ViewModel
             {
                 log.Info("Begin instantiation of ConfigurationManagementViewModel.");
                 PopulateGui();
+                Messenger.Default.Register<NotificationMessage<string>>(this, MessengerToken.ModelUpdated, (msg) => HandleModelUpdate(msg.Notification));
             }
             catch (Exception exception)
             {
@@ -113,36 +115,58 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private void HandleModelUpdate(string modelUpdated)
+        {
+            try
+            {
+                if (modelUpdated.Equals("ConfigurationManagementModel") || modelUpdated.Equals("AllModels"))
+                { PopulateGui(); }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to update MitigationsNistViewModel."));
+                log.Debug("Exception details:", exception);
+            }
+        }
+
         private void PopulateGui()
         {
-            using (DatabaseContext databaseContext = new DatabaseContext())
+            try
             {
-                Hardwares = databaseContext.Hardwares
-                    .Include(h => h.SoftwareHardwares.Select(s => s.Software))
-                    .Include(h => h.IP_Addresses)
-                    .Include(h => h.MAC_Addresses)
-                    .Include(h => h.Groups)
-                    .Include(h => h.Contacts)
-                    .Include(h => h.Hardware_PPS.Select(p => p.PP))
-                    .AsNoTracking().ToList();
-                Softwares = databaseContext.Softwares
-                                    .Include(s => s.SoftwareHardwares.Select(h => h.Hardware))
-                                    .AsNoTracking().ToList();
-                Contacts = databaseContext.Contacts
-                                    .Include(c => c.Accreditations)
-                                    .Include(c => c.Certifications)
-                                    .Include(c => c.Groups)
-                                    .Include(c => c.Organization)
-                                    .Include(c => c.Softwares)
-                                    .Include(c => c.Title)
-                                    .AsNoTracking().ToList();
-                PPS = databaseContext.PPS
-                                    .Include(p => p.Hardware_PPS.Select(h => h.Hardware))
-                                    .AsNoTracking().ToList();
-                Groups = databaseContext.Groups
-                                    .Include(g => g.Hardwares)
-                                    .AsNoTracking().ToList();
-                Accreditations = databaseContext.Accreditations.AsNoTracking().ToList();
+                using (DatabaseContext databaseContext = new DatabaseContext())
+                {
+                    Hardwares = databaseContext.Hardwares
+                        .Include(h => h.SoftwareHardwares.Select(s => s.Software))
+                        .Include(h => h.IP_Addresses)
+                        .Include(h => h.MAC_Addresses)
+                        .Include(h => h.Groups)
+                        .Include(h => h.Contacts)
+                        .Include(h => h.Hardware_PPS.Select(p => p.PP))
+                        .AsNoTracking().ToList();
+                    Softwares = databaseContext.Softwares
+                                        .Include(s => s.SoftwareHardwares.Select(h => h.Hardware))
+                                        .AsNoTracking().ToList();
+                    Contacts = databaseContext.Contacts
+                                        .Include(c => c.Accreditations)
+                                        .Include(c => c.Certifications)
+                                        .Include(c => c.Groups)
+                                        .Include(c => c.Organization)
+                                        .Include(c => c.Softwares)
+                                        .Include(c => c.Title)
+                                        .AsNoTracking().ToList();
+                    PPS = databaseContext.PPS
+                                        .Include(p => p.Hardware_PPS.Select(h => h.Hardware))
+                                        .AsNoTracking().ToList();
+                    Groups = databaseContext.Groups
+                                        .Include(g => g.Hardwares)
+                                        .AsNoTracking().ToList();
+                    Accreditations = databaseContext.Accreditations.AsNoTracking().ToList();
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to populate ConfigurationManagementView"));
+                throw exception;
             }
         }
     }

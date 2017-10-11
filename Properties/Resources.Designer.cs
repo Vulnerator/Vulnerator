@@ -297,6 +297,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO Groups_MitigationsOrConditions VALUES (@MitigationOrCondition_ID, (SELECT Group_ID FROM Groups WHERE Group_Name = @Group_Name));.
+        /// </summary>
+        internal static string MapMitigationToGroup {
+            get {
+                return ResourceManager.GetString("MapMitigationToGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO Hardware_PPS (Hardware_ID, PPS_ID, Discovered_Service, Display_Service) VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT PPS_ID FROM PPS WHERE Port = @Port AND Protocol = @Protocol), @Discovered_Service, @Display_Service);.
         /// </summary>
         internal static string MapPortToHardware {

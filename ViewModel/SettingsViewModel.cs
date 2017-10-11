@@ -155,7 +155,10 @@ namespace Vulnerator.ViewModel
             saveFileDialog.Title = "Please provide a name for the SQLite file";
             saveFileDialog.CheckPathExists = true;
             if ((bool)saveFileDialog.ShowDialog())
-            { Messenger.Default.Send<string>(saveFileDialog.FileName); }
+            {
+                Messenger.Default.Send(saveFileDialog.FileName);
+                Messenger.Default.Send(new NotificationMessage<string>("ModelUpdate", "AllModels"), MessengerToken.ModelUpdated);
+            }
         }
 
         public RelayCommand SelectStigLibraryCommand

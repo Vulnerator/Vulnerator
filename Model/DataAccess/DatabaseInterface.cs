@@ -236,6 +236,20 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public void InsertGroup(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.InsertGroup;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert group into database."));
+                throw exception;
+            }
+        }
+
         public void InsertHardware(SQLiteCommand sqliteCommand)
         {
             try
@@ -419,6 +433,20 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public void MapMitigationToGroup(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.MapMitigationToGroup;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to map mitigation to group."));
+                throw exception;
+            }
+        }
+
         public void MapHardwareToGroup(SQLiteCommand sqliteCommand)
         {
             try
@@ -513,7 +541,7 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public void UpdateMitigationOrConditionVulnerability(SQLiteCommand sqliteCommand)
+        public void UpdateMitigationOrCondition(SQLiteCommand sqliteCommand)
         {
             try
             {
@@ -522,7 +550,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("unable to update MitigationOrCondition's associated vulnerability."));
+                log.Error(string.Format("Unable to update MitigationOrCondition."));
                 throw exception;
             }
         }

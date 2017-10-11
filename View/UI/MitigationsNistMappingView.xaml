@@ -48,7 +48,7 @@
                                   CanUserDeleteRows="True"
                                   DockPanel.Dock="Top"
                                   ItemsSource="{Binding ProjectMitigations}"
-                                  SelectedItem="{Binding SelectedMitigationOrCondition}"
+                                  SelectedItem="{Binding SelectedMitigationsOrCondition}"
                                   Style="{StaticResource GreyBorderedDataGridStyle}">
                             <DataGrid.Columns>
                                 <DataGridTemplateColumn x:Name="projectCheckBoxColumn"
@@ -83,7 +83,7 @@
                                 </DataGridTemplateColumn>
                                 <DataGridTextColumn Width="*"
                                                     Binding="{Binding Vulnerability.Raw_Risk}"
-                                                    Header="Raw Risk"
+                                                    Header="Vulnerability Raw Risk"
                                                     HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}"
                                                     IsReadOnly="True">
                                     <DataGridTextColumn.ElementStyle>
@@ -119,6 +119,7 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                       Text="{Binding Mitigated_Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        TextTrimming="CharacterEllipsis"
                                                        TextWrapping="NoWrap" />
                                         </DataTemplate>
@@ -127,7 +128,8 @@
                                         <DataTemplate>
                                             <ComboBox Margin="0,5,5,5"
                                                       Controls:TextBoxHelper.Watermark="Mitigated Status"
-                                                      IsEditable="True" />
+                                                      ItemsSource="{Binding Path=DataContext.MitigationStatuses, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                      SelectedItem="{Binding Mitigated_Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellEditingTemplate>
                                 </DataGridTemplateColumn>
@@ -137,8 +139,8 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <IconPacks:PackIconMaterial HorizontalAlignment="Center"
-                                                                        Kind="{Binding ReportInAccreditation, Converter={StaticResource CheckboxConverter}}"
-                                                                        ToolTip="{Binding ReportInAccreditation}" />
+                                                                        Kind="{Binding IsApproved, Converter={StaticResource CheckboxConverter}}"
+                                                                        ToolTip="{Binding IsApproved}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -168,6 +170,7 @@
                                                  Controls:TextBoxHelper.Watermark="Impact Description"
                                                  AcceptsReturn="True"
                                                  AcceptsTab="True"
+                                                 Text="{Binding Impact_Description, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                                  TextWrapping="Wrap"
                                                  HorizontalScrollBarVisibility="Disabled"
                                                  VerticalScrollBarVisibility="Auto" />
@@ -179,6 +182,7 @@
                                                  Controls:TextBoxHelper.Watermark="Predisposing Condition(s)"
                                                  AcceptsReturn="True"
                                                  AcceptsTab="True"
+                                                 Text="{Binding Predisposing_Conditions, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                                  TextWrapping="Wrap"
                                                  HorizontalScrollBarVisibility="Disabled"
                                                  VerticalScrollBarVisibility="Auto" />
@@ -202,6 +206,7 @@
                                                  Controls:TextBoxHelper.Watermark="Proposed Mitigation(s)"
                                                  AcceptsReturn="True"
                                                  AcceptsTab="True"
+                                                 Text="{Binding Proposed_Mitigation, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                                  TextWrapping="Wrap"
                                                  HorizontalScrollBarVisibility="Disabled"
                                                  VerticalScrollBarVisibility="Auto" />
@@ -227,59 +232,70 @@
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Threat Relevance"
-                                                  IsEditable="True" />
+                                                  ItemsSource="{Binding Path=DataContext.RmfValues, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                  SelectedItem="{Binding Threat_Relevance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <ComboBox Grid.Row="1"
                                                   Grid.Column="4"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Severity / Pervasiveness"
-                                                  IsEditable="True" />
+                                                  ItemsSource="{Binding Path=DataContext.RmfValues, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                  SelectedItem="{Binding Severity_Pervasiveness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <TextBox Grid.Row="2"
                                                  Grid.Column="3"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Likelihood (Calculated)"
-                                                 IsReadOnly="True" />
+                                                 IsReadOnly="True"
+                                                 Text="{Binding Likelihood, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <ComboBox Grid.Row="2"
                                                   Grid.Column="4"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Impact"
-                                                  IsEditable="True" />
+                                                  ItemsSource="{Binding Path=DataContext.RmfValues, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                  SelectedItem="{Binding Impact, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <TextBox Grid.Row="3"
                                                  Grid.Column="3"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Risk (Calculated)"
-                                                 IsReadOnly="True" />
+                                                 IsReadOnly="True"
+                                                 Text="{Binding Risk, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <ComboBox Grid.Row="3"
                                                   Grid.Column="4"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Residual Risk"
-                                                  IsEditable="True" />
+                                                  IsEditable="True"
+                                                  ItemsSource="{Binding Path=DataContext.RmfValues, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                  SelectedItem="{Binding Residual_Risk, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <ComboBox Grid.Row="4"
                                                   Grid.Column="1"
                                                   Grid.ColumnSpan="2"
                                                   Margin="0,0,5,5"
                                                   VerticalAlignment="Bottom"
-                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding Path=DataContext.AddMitigationGroupCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                  Controls:TextBoxHelper.ButtonCommandParameter="{Binding Path=Text, RelativeSource={RelativeSource Self}}"
                                                   Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
                                                   Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Add Group / Accreditation"
-                                                  IsEditable="True" />
+                                                  DisplayMemberPath="Group_Name"
+                                                  IsEditable="True"
+                                                  ItemsSource="{Binding Path=DataContext.Groups, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
                                         <DatePicker Grid.Row="4"
                                                     Grid.Column="3"
                                                     Margin="5,0,5,5"
                                                     VerticalAlignment="Bottom"
                                                     Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                    Controls:TextBoxHelper.Watermark="Expiration Date" />
+                                                    Controls:TextBoxHelper.Watermark="Expiration Date"
+                                                    Text="{Binding Expiration_Date, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                                         <Grid Grid.Row="4"
                                               Grid.Column="4">
                                             <Grid.ColumnDefinitions>
@@ -290,13 +306,14 @@
                                                      VerticalAlignment="Bottom"
                                                      Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                      Controls:TextBoxHelper.Watermark="Approver"
-                                                     IsReadOnly="True" />
+                                                     IsReadOnly="True"
+                                                     Text="{Binding Approver, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             <CheckBox Grid.Column="1"
                                                       Margin="5,0,5,5"
                                                       VerticalAlignment="Center"
                                                       Content="Approved"
                                                       Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
-                                                      IsChecked="{Binding IsChecked}" />
+                                                      IsChecked="{Binding IsApproved, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         </Grid>
                                     </Grid>
                                 </DataTemplate>
@@ -407,399 +424,6 @@
                     </Expander>
                 </Grid>
             </TabItem>
-            <!--<TabItem Header="Asset Mitigations">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <DockPanel Grid.Column="0"
-                               Margin="0,0,0,5">
-                        <Label Content="Ongoing Vulnerabilities"
-                               DockPanel.Dock="Top"
-                               Style="{StaticResource TopLevelHeaderStyle}" />
-                        <DataGrid VerticalAlignment="Stretch"
-                                  DockPanel.Dock="Top"
-                                  ItemsSource="{Binding AssetMitigations}"
-                                  Style="{StaticResource GreyBorderedDataGridStyle}">
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn x:Name="assetCheckBoxColumn"
-                                                        Width="Auto">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <CheckBox Margin="5,0,0,0"
-                                                      HorizontalAlignment="Center"
-                                                      IsChecked="{Binding IsChecked}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTextColumn Width="*"
-                                                    Header="Vulnerability ID"
-                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
-                                    <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
-                                               TargetType="TextBlock">
-                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-                                            <Setter Property="TextWrapping" Value="NoWrap" />
-                                        </Style>
-                                    </DataGridTextColumn.ElementStyle>
-                                    <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
-                                               TargetType="TextBox">
-                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Vulnerability ID" />
-                                            <Setter Property="Margin" Value="0,5,5,5" />
-                                        </Style>
-                                    </DataGridTextColumn.EditingElementStyle>
-                                </DataGridTextColumn>
-                                <DataGridTextColumn Width="*"
-                                                    Header="Affected Asset"
-                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
-                                    <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
-                                               TargetType="TextBlock">
-                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-                                            <Setter Property="TextWrapping" Value="NoWrap" />
-                                        </Style>
-                                    </DataGridTextColumn.ElementStyle>
-                                    <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
-                                               TargetType="TextBox">
-                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Affected Asset" />
-                                            <Setter Property="Margin" Value="0,5,5,5" />
-                                        </Style>
-                                    </DataGridTextColumn.EditingElementStyle>
-                                </DataGridTextColumn>
-                                <DataGridTextColumn Width="*"
-                                                    Header="Raw Risk"
-                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
-                                    <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
-                                               TargetType="TextBlock">
-                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-                                            <Setter Property="TextWrapping" Value="NoWrap" />
-                                        </Style>
-                                    </DataGridTextColumn.ElementStyle>
-                                    <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
-                                               TargetType="TextBox">
-                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Raw Risk" />
-                                            <Setter Property="Margin" Value="0,5,5,5" />
-                                        </Style>
-                                    </DataGridTextColumn.EditingElementStyle>
-                                </DataGridTextColumn>
-                                <DataGridTextColumn Width="*"
-                                                    Header="Residual Risk"
-                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
-                                    <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
-                                               TargetType="TextBlock">
-                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-                                            <Setter Property="TextWrapping" Value="NoWrap" />
-                                        </Style>
-                                    </DataGridTextColumn.ElementStyle>
-                                    <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
-                                               TargetType="TextBox">
-                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Residual Risk" />
-                                            <Setter Property="Margin" Value="0,5,5,5" />
-                                        </Style>
-                                    </DataGridTextColumn.EditingElementStyle>
-                                </DataGridTextColumn>
-                                <DataGridTextColumn Width="*"
-                                                    Header="Status"
-                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
-                                    <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
-                                               TargetType="TextBlock">
-                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-                                            <Setter Property="TextWrapping" Value="NoWrap" />
-                                        </Style>
-                                    </DataGridTextColumn.ElementStyle>
-                                    <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
-                                               TargetType="TextBox">
-                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Status" />
-                                            <Setter Property="Margin" Value="0,5,5,5" />
-                                        </Style>
-                                    </DataGridTextColumn.EditingElementStyle>
-                                </DataGridTextColumn>
-                                <DataGridTemplateColumn Width="Auto"
-                                                        Header="Approved"
-                                                        HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <IconPacks:PackIconMaterial HorizontalAlignment="Center"
-                                                                        Kind="{Binding ReportInAccreditation, Converter={StaticResource CheckboxConverter}}"
-                                                                        ToolTip="{Binding ReportInAccreditation}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                            <DataGrid.RowDetailsTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="{Binding ElementName=assetCheckBoxColumn, Path=ActualWidth}" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                        </Grid.RowDefinitions>
-                                        <TextBox Grid.Column="1"
-                                                 Height="200"
-                                                 Margin="0,0,5,5"
-                                                 VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                 Controls:TextBoxHelper.Watermark="Impact Description"
-                                                 AcceptsReturn="True"
-                                                 AcceptsTab="True"
-                                                 TextWrapping="Wrap"
-                                                 HorizontalScrollBarVisibility="Disabled"
-                                                 VerticalScrollBarVisibility="Auto" />
-                                        <TextBox Grid.Column="2"
-                                                 Height="200"
-                                                 Margin="5,0,5,5"
-                                                 VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                 Controls:TextBoxHelper.Watermark="Predisposing Condition(s)"
-                                                 AcceptsReturn="True"
-                                                 AcceptsTab="True"
-                                                 TextWrapping="Wrap"
-                                                 HorizontalScrollBarVisibility="Disabled"
-                                                 VerticalScrollBarVisibility="Auto" />
-                                        <TextBox Grid.Column="3"
-                                                 Height="200"
-                                                 Margin="5,0,5,5"
-                                                 VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                 Controls:TextBoxHelper.Watermark="Technical Mitigation(s)"
-                                                 AcceptsReturn="True"
-                                                 AcceptsTab="True"
-                                                 TextWrapping="Wrap"
-                                                 HorizontalScrollBarVisibility="Disabled"
-                                                 VerticalScrollBarVisibility="Auto" />
-                                        <TextBox Grid.Column="4"
-                                                 Height="200"
-                                                 Margin="5,0,5,5"
-                                                 VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                 Controls:TextBoxHelper.Watermark="Proposed Mitigation(s)"
-                                                 AcceptsReturn="True"
-                                                 AcceptsTab="True"
-                                                 TextWrapping="Wrap"
-                                                 HorizontalScrollBarVisibility="Disabled"
-                                                 VerticalScrollBarVisibility="Auto" />
-                                        <ComboBox Grid.Row="1"
-                                                  Grid.Column="1"
-                                                  Margin="0,0,5,5"
-                                                  VerticalAlignment="Bottom"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                  Controls:TextBoxHelper.Watermark="Threat Relevance"
-                                                  IsEditable="True" />
-                                        <ComboBox Grid.Row="1"
-                                                  Grid.Column="2"
-                                                  Margin="5,0,5,5"
-                                                  VerticalAlignment="Bottom"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                  Controls:TextBoxHelper.Watermark="Severity / Pervasiveness"
-                                                  IsEditable="True" />
-                                        <TextBox Grid.Row="1"
-                                                 Grid.Column="3"
-                                                 Margin="5,0,5,5"
-                                                 VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                 Controls:TextBoxHelper.Watermark="Likelihood (Calculated)"
-                                                 IsReadOnly="True" />
-                                        <ComboBox Grid.Row="1"
-                                                  Grid.Column="4"
-                                                  Margin="5,0,5,5"
-                                                  VerticalAlignment="Bottom"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                  Controls:TextBoxHelper.Watermark="Impact"
-                                                  IsEditable="True" />
-                                        <TextBox Grid.Row="2"
-                                                 Grid.Column="1"
-                                                 Margin="0,0,5,5"
-                                                 VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                 Controls:TextBoxHelper.Watermark="Risk (Calculated)"
-                                                 IsReadOnly="True" />
-                                        <ComboBox Grid.Row="2"
-                                                  Grid.Column="2"
-                                                  Margin="5,0,5,5"
-                                                  VerticalAlignment="Bottom"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                  Controls:TextBoxHelper.Watermark="Residual Risk"
-                                                  IsEditable="True" />
-                                        <DatePicker Grid.Row="2"
-                                                    Grid.Column="3"
-                                                    Margin="5,0,5,5"
-                                                    VerticalAlignment="Bottom"
-                                                    Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                    Controls:TextBoxHelper.Watermark="Expiration Date" />
-                                        <Grid Grid.Row="2"
-                                              Grid.Column="4">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition />
-                                                <ColumnDefinition />
-                                            </Grid.ColumnDefinitions>
-                                            <TextBox Margin="5,0,5,5"
-                                                     VerticalAlignment="Bottom"
-                                                     Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                     Controls:TextBoxHelper.Watermark="Approver"
-                                                     IsReadOnly="True" />
-                                            <CheckBox Grid.Column="1"
-                                                      Margin="5,0,5,5"
-                                                      VerticalAlignment="Center"
-                                                      Content="Approved"
-                                                      Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
-                                                      IsChecked="{Binding IsChecked}" />
-                                        </Grid>
-                                        <DataGrid Grid.Row="3"
-                                                  Grid.Column="1"
-                                                  Grid.ColumnSpan="2"
-                                                  Height="100"
-                                                  Margin="0,0,5,5"
-                                                  VerticalAlignment="Top"
-                                                  IsReadOnly="True"
-                                                  ItemsSource="{Binding Groups}"
-                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
-                                            <DataGrid.Columns>
-                                                <DataGridTextColumn Width="*"
-                                                                    Binding="{Binding Group_Name}"
-                                                                    Header="Associated Groups / Accreditations"
-                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
-                                            </DataGrid.Columns>
-                                        </DataGrid>
-                                        <ComboBox Grid.Row="4"
-                                                  Grid.Column="1"
-                                                  Grid.ColumnSpan="2"
-                                                  Margin="0,0,5,5"
-                                                  VerticalAlignment="Bottom"
-                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
-                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
-                                                  Controls:TextBoxHelper.ClearTextButton="True"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                  Controls:TextBoxHelper.Watermark="Add Group / Accreditation"
-                                                  IsEditable="True" />
-                                    </Grid>
-                                </DataTemplate>
-                            </DataGrid.RowDetailsTemplate>
-                        </DataGrid>
-                    </DockPanel>
-                    <Expander Grid.Column="1"
-                              Background="{DynamicResource WindowBackgroundBrush}"
-                              BorderThickness="0"
-                              ExpandDirection="Right">
-                        <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelTextBrush}">
-                                <Label.LayoutTransform>
-                                    <RotateTransform Angle="90" />
-                                </Label.LayoutTransform>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterial Grid.Column="0"
-                                                                Margin="5"
-                                                                HorizontalAlignment="Center"
-                                                                VerticalAlignment="Center"
-                                                                Kind="FilterOutline">
-                                        <IconPacks:PackIconMaterial.LayoutTransform>
-                                            <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterial.LayoutTransform>
-                                    </IconPacks:PackIconMaterial>
-                                    <TextBlock Grid.Column="1"
-                                               Margin="5,0"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Center"
-                                               Foreground="{DynamicResource LabelTextBrush}"
-                                               Text="Filter"
-                                               TextTrimming="CharacterEllipsis" />
-                                </Grid>
-                            </Label>
-                        </Expander.Header>
-                    </Expander>
-                    <Expander Grid.Column="2"
-                              Background="{DynamicResource WindowBackgroundBrush}"
-                              BorderThickness="0"
-                              ExpandDirection="Right">
-                        <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelTextBrush}">
-                                <Label.LayoutTransform>
-                                    <RotateTransform Angle="90" />
-                                </Label.LayoutTransform>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterial Grid.Column="0"
-                                                                Margin="5"
-                                                                HorizontalAlignment="Center"
-                                                                VerticalAlignment="Center"
-                                                                Kind="CheckAll">
-                                        <IconPacks:PackIconMaterial.LayoutTransform>
-                                            <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterial.LayoutTransform>
-                                    </IconPacks:PackIconMaterial>
-                                    <TextBlock Grid.Column="1"
-                                               Margin="5,0"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Center"
-                                               Foreground="{DynamicResource LabelTextBrush}"
-                                               Text="Bulk Process"
-                                               TextTrimming="CharacterEllipsis" />
-                                </Grid>
-                            </Label>
-                        </Expander.Header>
-                    </Expander>
-                    <Expander Grid.Column="3"
-                              Background="{DynamicResource WindowBackgroundBrush}"
-                              BorderThickness="0"
-                              ExpandDirection="Right">
-                        <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelTextBrush}">
-                                <Label.LayoutTransform>
-                                    <RotateTransform Angle="90" />
-                                </Label.LayoutTransform>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterialLight Grid.Column="0"
-                                                                     Margin="5"
-                                                                     HorizontalAlignment="Center"
-                                                                     VerticalAlignment="Center"
-                                                                     Kind="CloudDownload">
-                                        <IconPacks:PackIconMaterialLight.LayoutTransform>
-                                            <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterialLight.LayoutTransform>
-                                    </IconPacks:PackIconMaterialLight>
-                                    <TextBlock Grid.Column="1"
-                                               Margin="5,0"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Center"
-                                               Foreground="{DynamicResource LabelTextBrush}"
-                                               Text="Reporting"
-                                               TextTrimming="CharacterEllipsis" />
-                                </Grid>
-                            </Label>
-                        </Expander.Header>
-                    </Expander>
-                </Grid>
-            </TabItem>-->
             <TabItem Header="NIST Mapping">
                 <Grid>
                     <Grid.ColumnDefinitions>

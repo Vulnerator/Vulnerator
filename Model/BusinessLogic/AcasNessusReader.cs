@@ -26,8 +26,8 @@ namespace Vulnerator.Model.BusinessLogic
         private string ipAddress = string.Empty;
         private string acasVersion = string.Empty;
         private string acasRelease = string.Empty;
-        private string firstDiscovered = DateTime.Now.ToShortDateString();
-        private string lastObserved = DateTime.Now.ToShortDateString();
+        private DateTime firstDiscovered = DateTime.Now.Date;
+        private DateTime lastObserved = DateTime.Now.Date;
         private string dateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
         private bool found21745 = false;
         private bool found26917 = false;
@@ -178,7 +178,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     DateTime scanEndTime;
                                     if (DateTime.TryParseExact(ObtainCurrentNodeValue(xmlReader).Replace("  ", " "), dateTimeFormat, System.Globalization.CultureInfo.InvariantCulture,
                                         System.Globalization.DateTimeStyles.None, out scanEndTime))
-                                    { firstDiscovered = lastObserved = scanEndTime.ToShortDateString(); }
+                                    { firstDiscovered = lastObserved = scanEndTime.Date; }
                                     break;
                                 }
                             default:
