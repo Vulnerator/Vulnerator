@@ -11,6 +11,7 @@ namespace Vulnerator.ViewModel
         ReleaseList,
         VersionInfo,
         ConfigurationData,
-        DataContextChanged
+        DataContextChanged,
+        ModelUpdated
     }
 }

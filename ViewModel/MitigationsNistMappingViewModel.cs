@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -135,13 +136,25 @@ namespace Vulnerator.ViewModel
                 log.Info("Begin instantiation of MitigationsNistMappingViewModel.");
                 databaseInterface = new DatabaseInterface();
                 PopulateGui();
-                ProjectMitigations.CollectionChanged += MitigationsOrConditions_CollectionChanged;
-                Vulnerabilities.CollectionChanged += Vulnerabilities_CollectionChanged;
-                SetPropertyChanged();
+                Messenger.Default.Register<NotificationMessage<string>>(this, MessengerToken.ModelUpdated, (msg) => HandleModelUpdate(msg.Notification));
             }
             catch (Exception exception)
             {
                 log.Error(string.Format("Unable to instantiate MitigationsNistMappingViewModel."));
+                log.Debug("Exception details:", exception);
+            }
+        }
+
+        private void HandleModelUpdate(string modelUpdated)
+        { 
+            try
+            {
+                if (modelUpdated.Equals("MitigationsModel") || modelUpdated.Equals("AllModels"))
+                { PopulateGui(); }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to update MitigationsNistViewModel."));
                 log.Debug("Exception details:", exception);
             }
         }
@@ -168,6 +181,9 @@ namespace Vulnerator.ViewModel
                         .Include(n => n.CCI)
                         .AsNoTracking().ToList();
                 }
+                ProjectMitigations.CollectionChanged += MitigationsOrConditions_CollectionChanged;
+                Vulnerabilities.CollectionChanged += Vulnerabilities_CollectionChanged;
+                SetPropertyChanged();
             }
             catch (Exception exception)
             {
@@ -318,6 +334,7 @@ namespace Vulnerator.ViewModel
                 { DatabaseBuilder.sqliteConnection.Open(); }
                 using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
+                    SetInitialSqliteParameters(mitigation, sqliteCommand);
                     if (mitigation.Vulnerability == null)
                     { return; }
                     sqliteCommand.Parameters["MitigationOrCondition_ID"].Value = mitigation.MitigationOrCondition_ID;
@@ -331,15 +348,23 @@ namespace Vulnerator.ViewModel
                     sqliteCommand.Parameters["Proposed_Mitigation"].Value = mitigation.Proposed_Mitigation;
                     if (mitigation.Threat_Relevance != null)
                     { sqliteCommand.Parameters["Threat_Relevance"].Value = mitigation.Threat_Relevance; }
-                    sqliteCommand.Parameters["Severity_Pervasiveness"].Value = mitigation.Severity_Pervasiveness;
-                    sqliteCommand.Parameters["Likelihood"].Value = mitigation.Likelihood;
-                    sqliteCommand.Parameters["Impact"].Value = mitigation.Impact;
-                    sqliteCommand.Parameters["Risk"].Value = mitigation.Risk;
-                    sqliteCommand.Parameters["Residual_Risk"].Value = mitigation.Residual_Risk;
-                    sqliteCommand.Parameters["Mitigated_Status"].Value = mitigation.Mitigated_Status;
-                    sqliteCommand.Parameters["Expiration_Date"].Value = mitigation.Expiration_Date;
-                    sqliteCommand.Parameters["IsApproved"].Value = mitigation.IsApproved;
-                    sqliteCommand.Parameters["Approver"].Value = mitigation.Approver;
+                    if (mitigation.Severity_Pervasiveness != null)
+                    { sqliteCommand.Parameters["Severity_Pervasiveness"].Value = mitigation.Severity_Pervasiveness; }
+                    if (mitigation.Likelihood != null)
+                    { sqliteCommand.Parameters["Likelihood"].Value = mitigation.Likelihood; }
+                    if (mitigation.Impact != null)
+                    { sqliteCommand.Parameters["Impact"].Value = mitigation.Impact; }
+                    if (mitigation.Risk != null)
+                    { sqliteCommand.Parameters["Risk"].Value = mitigation.Risk; }
+                    if (mitigation.Residual_Risk != null)
+                    { sqliteCommand.Parameters["Residual_Risk"].Value = mitigation.Residual_Risk; }
+                    if (mitigation.Mitigated_Status != null)
+                    { sqliteCommand.Parameters["Mitigated_Status"].Value = mitigation.Mitigated_Status; }
+                    if (mitigation.Expiration_Date != null)
+                    { sqliteCommand.Parameters["Expiration_Date"].Value = mitigation.Expiration_Date; }
+                    sqliteCommand.Parameters["IsApproved"].Value = mitigation.IsApproved ?? "False";
+                    if (mitigation.Threat_Relevance != null)
+                    { sqliteCommand.Parameters["Approver"].Value = mitigation.Approver; }
                     if (mitigation.MitigationOrCondition_ID == 0)
                     {
                         databaseInterface.InsertMitigationOrCondition(sqliteCommand);
@@ -448,7 +473,7 @@ namespace Vulnerator.ViewModel
             {
                 switch (sender.GetType().ToString())
                 {
-                    case "MitigationsOrCondition":
+                    case "Vulnerator.Model.Entity.MitigationsOrCondition":
                         {
                             string[] parameters = new string[]
                             {
