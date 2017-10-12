@@ -1,6 +1,7 @@
 namespace Vulnerator.Model.Entity
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -11,16 +12,16 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Hardware()
         {
-            Hardware_PPS = new HashSet<Hardware_PPS>();
-            HardwareLocations = new HashSet<HardwareLocation>();
-            ScapScores = new HashSet<ScapScore>();
-            SoftwareHardwares = new HashSet<SoftwareHardware>();
-            UniqueFindings = new HashSet<UniqueFinding>();
-            Contacts = new HashSet<Contact>();
-            EnumeratedWindowsGroups = new HashSet<EnumeratedWindowsGroup>();
-            Groups = new HashSet<Group>();
-            IP_Addresses = new HashSet<IP_Addresses>();
-            MAC_Addresses = new HashSet<MAC_Addresses>();
+            Hardware_PPS = new ObservableCollection<Hardware_PPS>();
+            HardwareLocations = new ObservableCollection<HardwareLocation>();
+            ScapScores = new ObservableCollection<ScapScore>();
+            SoftwareHardwares = new ObservableCollection<SoftwareHardware>();
+            UniqueFindings = new ObservableCollection<UniqueFinding>();
+            Contacts = new ObservableCollection<Contact>();
+            EnumeratedWindowsGroups = new ObservableCollection<EnumeratedWindowsGroup>();
+            Groups = new ObservableCollection<Group>();
+            IP_Addresses = new ObservableCollection<IP_Addresses>();
+            MAC_Addresses = new ObservableCollection<MAC_Addresses>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

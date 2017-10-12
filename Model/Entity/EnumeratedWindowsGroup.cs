@@ -1,18 +1,17 @@
 namespace Vulnerator.Model.Entity
 {
-    using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     public partial class EnumeratedWindowsGroup
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EnumeratedWindowsGroup()
         {
-            EnumeratedWindowsUsers = new HashSet<EnumeratedWindowsUser>();
-            Hardwares = new HashSet<Hardware>();
+            EnumeratedWindowsUsers = new ObservableCollection<EnumeratedWindowsUser>();
+            Hardwares = new ObservableCollection<Hardware>();
         }
 
         [Key]

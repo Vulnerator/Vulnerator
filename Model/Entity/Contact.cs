@@ -1,22 +1,21 @@
 namespace Vulnerator.Model.Entity
 {
-    using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     public partial class Contact
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Contact()
         {
-            InformationSystemOwners = new HashSet<InformationSystemOwner>();
-            Accreditations = new HashSet<Accreditation>();
-            Groups = new HashSet<Group>();
-            Hardwares = new HashSet<Hardware>();
-            Softwares = new HashSet<Software>();
-            Certifications = new HashSet<Certification>();
+            InformationSystemOwners = new ObservableCollection<InformationSystemOwner>();
+            Accreditations = new ObservableCollection<Accreditation>();
+            Groups = new ObservableCollection<Group>();
+            Hardwares = new ObservableCollection<Hardware>();
+            Softwares = new ObservableCollection<Software>();
+            Certifications = new ObservableCollection<Certification>();
         }
 
         [NotMapped]

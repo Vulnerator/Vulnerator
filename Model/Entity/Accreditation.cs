@@ -1,23 +1,22 @@
 namespace Vulnerator.Model.Entity
 {
-    using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     public partial class Accreditation
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Accreditation()
         {
-            AccreditationsNistControls = new HashSet<AccreditationsNistControl>();
-            AccreditationsWaivers = new HashSet<AccreditationsWaiver>();
-            IATA_Standards = new HashSet<IATA_Standards>();
-            ConnectedSystems = new HashSet<ConnectedSystem>();
-            Connections = new HashSet<Connection>();
-            Contacts = new HashSet<Contact>();
-            Overlays = new HashSet<Overlay>();
+            AccreditationsNistControls = new ObservableCollection<AccreditationsNistControl>();
+            AccreditationsWaivers = new ObservableCollection<AccreditationsWaiver>();
+            IATA_Standards = new ObservableCollection<IATA_Standards>();
+            ConnectedSystems = new ObservableCollection<ConnectedSystem>();
+            Connections = new ObservableCollection<Connection>();
+            Contacts = new ObservableCollection<Contact>();
+            Overlays = new ObservableCollection<Overlay>();
         }
 
         [Key]

@@ -1,18 +1,17 @@
 namespace Vulnerator.Model.Entity
 {
-    using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     public partial class IntegrityLevel
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public IntegrityLevel()
         {
-            Accreditations = new HashSet<Accreditation>();
-            NistControlsIntegrityLevels = new HashSet<NistControlsIntegrityLevel>();
+            Accreditations = new ObservableCollection<Accreditation>();
+            NistControlsIntegrityLevels = new ObservableCollection<NistControlsIntegrityLevel>();
         }
 
         [Key]

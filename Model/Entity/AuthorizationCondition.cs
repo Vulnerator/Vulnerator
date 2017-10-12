@@ -2,17 +2,15 @@ namespace Vulnerator.Model.Entity
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     public partial class AuthorizationCondition
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AuthorizationCondition()
-        {
-            AuthorizationInformations = new HashSet<AuthorizationInformation>();
-        }
+        { AuthorizationInformations = new ObservableCollection<AuthorizationInformation>(); }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

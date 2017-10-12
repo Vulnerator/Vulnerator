@@ -2,17 +2,15 @@ namespace Vulnerator.Model.Entity
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     public partial class ATC_IATC_PendingItems
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ATC_IATC_PendingItems()
-        {
-            ATC_IATC = new HashSet<ATC_IATC>();
-        }
+        { ATC_IATC = new ObservableCollection<ATC_IATC>(); }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

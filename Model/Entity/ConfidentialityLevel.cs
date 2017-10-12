@@ -1,18 +1,17 @@
 namespace Vulnerator.Model.Entity
 {
-    using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     public partial class ConfidentialityLevel
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ConfidentialityLevel()
         {
-            Accreditations = new HashSet<Accreditation>();
-            NistControlsConfidentialityLevels = new HashSet<NistControlsConfidentialityLevel>();
+            Accreditations = new ObservableCollection<Accreditation>();
+            NistControlsConfidentialityLevels = new ObservableCollection<NistControlsConfidentialityLevel>();
         }
 
         [Key]

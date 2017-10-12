@@ -25,6 +25,7 @@ namespace Vulnerator.ViewModel
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private List<Likelihood> Likehoods;
         private List<Risk> Risks;
+        private bool keepConnectionAlive = true;
 
         private ObservableCollection<MitigationsOrCondition> _projectMitigations { get; set; }
 
@@ -482,23 +483,6 @@ namespace Vulnerator.ViewModel
                 { DatabaseBuilder.sqliteConnection.Open(); }
                 using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
-                    string[] ignorableProperties = new string[] { "Risk", "Likelihood", "MitigationOrCondition_ID", "Groups", "Approver" };
-                    if (mitigation.Vulnerability == null || ignorableProperties.Contains(e.PropertyName))
-                    { return; }
-                    SetInitialSqliteParameters("MitigationsOrCondition", sqliteCommand);
-                    sqliteCommand.Parameters["MitigationOrCondition_ID"].Value = mitigation.MitigationOrCondition_ID;
-                    sqliteCommand.Parameters["Vulnerability_ID"].Value = mitigation.Vulnerability.Vulnerability_ID;
-                    sqliteCommand.Parameters["Impact_Description"].Value = mitigation.Impact_Description;
-                    sqliteCommand.Parameters["Predisposing_Conditions"].Value = mitigation.Predisposing_Conditions;
-                    sqliteCommand.Parameters["Technical_Mitigation"].Value = mitigation.Technical_Mitigation;
-                    sqliteCommand.Parameters["Proposed_Mitigation"].Value = mitigation.Proposed_Mitigation;
-                    sqliteCommand.Parameters["Threat_Relevance"].Value = mitigation.Threat_Relevance;
-                    sqliteCommand.Parameters["Severity_Pervasiveness"].Value = mitigation.Severity_Pervasiveness;
-                    sqliteCommand.Parameters["Impact"].Value = mitigation.Impact;
-                    sqliteCommand.Parameters["Residual_Risk"].Value = mitigation.Residual_Risk;
-                    sqliteCommand.Parameters["Mitigated_Status"].Value = mitigation.Mitigated_Status;
-                    sqliteCommand.Parameters["Expiration_Date"].Value = mitigation.Expiration_Date;
-                    sqliteCommand.Parameters["IsApproved"].Value = mitigation.IsApproved ?? "False";
                     if (e.PropertyName.Equals("IsApproved"))
                     {
                         if (mitigation.IsApproved.Equals("True"))
@@ -506,7 +490,6 @@ namespace Vulnerator.ViewModel
                         else
                         { mitigation.Approver = null; }
                     }
-                    sqliteCommand.Parameters["Approver"].Value = mitigation.Approver;
                     if (!string.IsNullOrWhiteSpace(mitigation.Threat_Relevance) && !string.IsNullOrWhiteSpace(mitigation.Severity_Pervasiveness))
                     {
                         mitigation.Likelihood = Likehoods.FirstOrDefault(
@@ -521,6 +504,27 @@ namespace Vulnerator.ViewModel
                             .CalculatedRisk;
                         sqliteCommand.Parameters["Risk"].Value = mitigation.Risk;
                     }
+                    string[] ignorableProperties = new string[] { "Risk", "Likelihood", "MitigationOrCondition_ID", "Groups", "Approver" };
+                    if (mitigation.Vulnerability == null || ignorableProperties.Contains(e.PropertyName))
+                    {
+                        keepConnectionAlive = false;
+                        return;
+                    }
+                    SetInitialSqliteParameters("MitigationsOrCondition", sqliteCommand);
+                    sqliteCommand.Parameters["MitigationOrCondition_ID"].Value = mitigation.MitigationOrCondition_ID;
+                    sqliteCommand.Parameters["Vulnerability_ID"].Value = mitigation.Vulnerability.Vulnerability_ID;
+                    sqliteCommand.Parameters["Impact_Description"].Value = mitigation.Impact_Description;
+                    sqliteCommand.Parameters["Predisposing_Conditions"].Value = mitigation.Predisposing_Conditions;
+                    sqliteCommand.Parameters["Technical_Mitigation"].Value = mitigation.Technical_Mitigation;
+                    sqliteCommand.Parameters["Proposed_Mitigation"].Value = mitigation.Proposed_Mitigation;
+                    sqliteCommand.Parameters["Threat_Relevance"].Value = mitigation.Threat_Relevance;
+                    sqliteCommand.Parameters["Severity_Pervasiveness"].Value = mitigation.Severity_Pervasiveness;
+                    sqliteCommand.Parameters["Impact"].Value = mitigation.Impact;
+                    sqliteCommand.Parameters["Residual_Risk"].Value = mitigation.Residual_Risk;
+                    sqliteCommand.Parameters["Mitigated_Status"].Value = mitigation.Mitigated_Status;
+                    sqliteCommand.Parameters["Expiration_Date"].Value = mitigation.Expiration_Date;
+                    sqliteCommand.Parameters["IsApproved"].Value = mitigation.IsApproved ?? "False";
+                    sqliteCommand.Parameters["Approver"].Value = mitigation.Approver;
                     if (mitigation.MitigationOrCondition_ID == 0)
                     {
                         databaseInterface.InsertMitigationOrCondition(sqliteCommand);
@@ -537,7 +541,13 @@ namespace Vulnerator.ViewModel
                 log.Debug("Exception details:", exception);
             }
             finally
-            { DatabaseBuilder.sqliteConnection.Close(); }
+            {
+                if (!keepConnectionAlive)
+                {
+                    DatabaseBuilder.sqliteConnection.Close();
+                    keepConnectionAlive = true;
+                }
+            }
         }
 
         public void NistControlsCCIs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
