@@ -68,7 +68,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\chart.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Vulnerator.App</StartupObject>
@@ -756,6 +757,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".github\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\vulneratorlogodraft.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

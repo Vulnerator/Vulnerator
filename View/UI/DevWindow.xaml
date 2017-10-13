@@ -27,7 +27,7 @@
                       BorderThickness="1"
                       DataContext="{Binding Main, Source={StaticResource Locator}}"
                       GlowBrush="{DynamicResource AccentColorBrush}"
-                      Icon="/Vulnerator;component/Resources/chart.ico"
+                      Icon="/Vulnerator;component/Resources/vulneratorlogodraft.ico"
                       KeyboardNavigation.TabNavigation="Continue"
                       WindowCloseButtonStyle="{DynamicResource CustomCloseWindowButtonStyle}"
                       ResizeMode="CanResize"
