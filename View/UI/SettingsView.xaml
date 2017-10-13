@@ -41,7 +41,7 @@
                     <Controls:MetroHeader Margin="5,0,5,5">
                         <Controls:MetroHeader.HeaderTemplate>
                             <DataTemplate>
-                                <TextBlock FontSize="12"
+                                <TextBlock FontSize="10"
                                            Text="Active User" />
                             </DataTemplate>
                         </Controls:MetroHeader.HeaderTemplate>
@@ -52,7 +52,7 @@
                     <Controls:MetroHeader Margin="5,0,5,5">
                         <Controls:MetroHeader.HeaderTemplate>
                             <DataTemplate>
-                                <TextBlock FontSize="12"
+                                <TextBlock FontSize="10"
                                            Text="Name" />
                             </DataTemplate>
                         </Controls:MetroHeader.HeaderTemplate>
@@ -63,7 +63,7 @@
                     <Controls:MetroHeader Margin="5,0,5,5">
                         <Controls:MetroHeader.HeaderTemplate>
                             <DataTemplate>
-                                <TextBlock FontSize="12"
+                                <TextBlock FontSize="10"
                                            Text="Phone Number" />
                             </DataTemplate>
                         </Controls:MetroHeader.HeaderTemplate>
@@ -82,7 +82,7 @@
                     <Controls:MetroHeader Margin="5,0,5,5">
                         <Controls:MetroHeader.HeaderTemplate>
                             <DataTemplate>
-                                <TextBlock FontSize="12"
+                                <TextBlock FontSize="10"
                                            Text="Email" />
                             </DataTemplate>
                         </Controls:MetroHeader.HeaderTemplate>
@@ -101,7 +101,7 @@
                     <Controls:MetroHeader Margin="5,0,5,5">
                         <Controls:MetroHeader.HeaderTemplate>
                             <DataTemplate>
-                                <TextBlock FontSize="12"
+                                <TextBlock FontSize="10"
                                            Text="Organization" />
                             </DataTemplate>
                         </Controls:MetroHeader.HeaderTemplate>
