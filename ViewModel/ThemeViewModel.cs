@@ -26,6 +26,7 @@ namespace Vulnerator.ViewModel
 
         public ThemeViewModel()
         {
+            ThemeManager.AddAppTheme("PowerShellDark", new Uri("pack://application:,,,/Vulnerator;component/View/Theme/PowerShellDark.xaml"));
             SetTheme(Properties.Settings.Default["Theme"].ToString());
             SetAccent(Properties.Settings.Default["Accent"].ToString());
         }
