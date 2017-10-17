@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Markdig;
 using Vulnerator.Model.Object;
 using System;
 using log4net;
@@ -12,6 +13,14 @@ namespace Vulnerator.ViewModel
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private GitHubActions githubActions = new GitHubActions();
+        public MarkdownPipeline MarkdownPipeline = new MarkdownPipelineBuilder()
+            .UseAdvancedExtensions()
+            .UseEmphasisExtras()
+            .UseAutoLinks()
+            .UseEmojiAndSmiley()
+            .UseTaskLists()
+            .Build();
+
         private AsyncObservableCollection<Issue> _issueList;
         public AsyncObservableCollection<Issue> IssueList
         {

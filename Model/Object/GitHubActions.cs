@@ -23,7 +23,7 @@ namespace Vulnerator.Model.Object
                     {
                         Issue issue = new Issue();
                         issue.Title = issues[i].Title;
-                        issue.Body = ParseMarkdown(issues[i].Body);
+                        issue.Body = issues[i].Body;
                         issue.Number = issues[i].Number;
                         issue.HtmlUrl = issues[i].HtmlUrl;
                         if (issues[i].Milestone != null)
@@ -73,7 +73,7 @@ namespace Vulnerator.Model.Object
                         else
                         { release.TagName = "No Tag Name Assigned"; }
                         release.HtmlUrl = releases[i].HtmlUrl;
-                        release.Body = ParseMarkdown(releases[i].Body);
+                        release.Body = releases[i].Body;
                         release.CreatedAt = releases[i].CreatedAt.Date.ToLongDateString();
                         release.Downloads = releases[i].Assets[0].DownloadCount;
                         releaseList.Add(release);
@@ -87,18 +87,6 @@ namespace Vulnerator.Model.Object
                 log.Error("Unable to retrieve GitHub Vulnerator release listing.");
                 log.Debug("Exception details: " + exception);
             }
-        }
-
-        private string ParseMarkdown(string markdown)
-        {
-            MarkdownPipeline pipeline = new MarkdownPipelineBuilder()
-                .UseAdvancedExtensions()
-                .UseEmphasisExtras()
-                .UseEmojiAndSmiley()
-                .Build();
-            string result = string.Empty;
-            string pre = "<html><head><style>p,a,h1,h2,h3,h4,h5,h6,ol,ul,li,td,th,table,tr { font-family:\"Segoe UI\", \"Lucida Sans Unicode\", \"Verdana\", sans-serif; } table,th,td { border: 1px solid black; border-collapse: collapse; }</style></head><body>[body]</body></html>";
-            return result = pre.Replace("[body]", Markdown.ToHtml(markdown, pipeline));
         }
 
         public async Task<Release> GetLatestGitHubRelease()

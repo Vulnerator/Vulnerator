@@ -14,12 +14,18 @@
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:v="clr-namespace:Vulnerator.View"
              xmlns:vm="clr-namespace:Vulnerator.ViewModel"
+             xmlns:wpf="clr-namespace:Markdig.Wpf;assembly=Markdig.Wpf"
              HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch"
              d:DesignHeight="800"
              d:DesignWidth="800"
              DataContext="{Binding News, Source={StaticResource Locator}}"
              mc:Ignorable="d">
+
+    <FrameworkElement.CommandBindings>
+        <CommandBinding Command="{x:Static wpf:Commands.Hyperlink}"
+                        Executed="OpenHyperlink" />
+    </FrameworkElement.CommandBindings>
 
     <UserControl.Resources>
         <Converters:HtmlToFlowDocumentConverter x:Key="HtmlToFlowDocumentConverter" />
@@ -157,17 +163,18 @@
                                 </StackPanel>
                             </Label>
                         </Grid>
-                        <FlowDocumentReader Grid.Row="2"
-                                            Margin="5"
-                                            VerticalAlignment="Stretch"
-                                            HorizontalContentAlignment="Left"
-                                            BorderBrush="{DynamicResource AccentColorBrush}"
-                                            BorderThickness="1"
-                                            Document="{Binding ElementName=issueListBox, Path=SelectedItem.Body, Converter={StaticResource HtmlToFlowDocumentConverter}}"
-                                            ScrollViewer.CanContentScroll="True"
-                                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                            ViewingMode="Scroll" />
+                        <Border Grid.Row="2"
+                                Margin="5"
+                                BorderBrush="{DynamicResource AccentColorBrush}"
+                                BorderThickness="1">
+                            <wpf:MarkdownViewer VerticalAlignment="Stretch"
+                                                HorizontalContentAlignment="Left"
+                                                Markdown="{Binding ElementName=issueListBox, Path=SelectedItem.Body}"
+                                                Pipeline="{Binding MarkdownPipeline}"
+                                                ScrollViewer.CanContentScroll="True"
+                                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                        </Border>
                     </Grid>
                 </Grid>
             </TabItem>
@@ -300,17 +307,18 @@
                                 </StackPanel>
                             </Label>
                         </Grid>
-                        <FlowDocumentReader Grid.Row="2"
-                                            Margin="5"
-                                            VerticalAlignment="Stretch"
-                                            HorizontalContentAlignment="Left"
-                                            BorderBrush="{DynamicResource AccentColorBrush}"
-                                            BorderThickness="1"
-                                            Document="{Binding ElementName=releaseListBox, Path=SelectedItem.Body, Converter={StaticResource HtmlToFlowDocumentConverter}}"
-                                            ScrollViewer.CanContentScroll="True"
-                                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                            ViewingMode="Scroll" />
+                        <Border Grid.Row="2"
+                                Margin="5"
+                                BorderBrush="{DynamicResource AccentColorBrush}"
+                                BorderThickness="1">
+                            <wpf:MarkdownViewer VerticalAlignment="Stretch"
+                                                HorizontalContentAlignment="Left"
+                                                Markdown="{Binding ElementName=releaseListBox, Path=SelectedItem.Body}"
+                                                Pipeline="{Binding MarkdownPipeline}"
+                                                ScrollViewer.CanContentScroll="True"
+                                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                        </Border>
                     </Grid>
                 </Grid>
             </TabItem>

@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using System.Diagnostics;
 
 namespace Vulnerator.View.UI
 {
@@ -10,6 +11,11 @@ namespace Vulnerator.View.UI
         public NewsView()
         {
             InitializeComponent();
+        }
+
+        private void OpenHyperlink(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+        {
+            Process.Start(e.Parameter.ToString());
         }
     }
 }

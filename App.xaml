@@ -9,6 +9,7 @@
              xmlns:local="clr-namespace:Vulnerator.View.UI"
              xmlns:viewHelper="clr-namespace:Vulnerator.View.ViewHelper"
              xmlns:vm="clr-namespace:Vulnerator.ViewModel"
+             xmlns:wpf="clr-namespace:Markdig.Wpf;assembly=Markdig.Wpf"
              d1p1:Ignorable="d"
              ShutdownMode="OnExplicitShutdown"
              Startup="Application_Startup">
@@ -610,6 +611,66 @@
                 <Setter Property="Controls:ControlsHelper.ContentCharacterCasing" Value="Normal" />
                 <Setter Property="HorizontalContentAlignment" Value="Left" />
                 <Setter Property="TextBlock.TextTrimming" Value="CharacterEllipsis" />
+            </Style>
+
+            <Style x:Key="{x:Static wpf:Styles.CodeBlockStyleKey}"
+                   TargetType="{x:Type Paragraph}">
+                <Setter Property="FontFamily" Value="Consolas, Lucida Sans Typewriter, Courier New" />
+                <Setter Property="FontSize" Value="12" />
+            </Style>
+            <Style x:Key="{x:Static wpf:Styles.CodeStyleKey}"
+                   TargetType="{x:Type Run}">
+                <Setter Property="FontFamily" Value="Consolas, Lucida Sans Typewriter, Courier New" />
+                <Setter Property="FontSize" Value="12" />
+            </Style>
+            <Style x:Key="{x:Static wpf:Styles.Heading1StyleKey}"
+                   TargetType="{x:Type Paragraph}">
+                <Setter Property="FontSize" Value="42" />
+            </Style>
+            <Style x:Key="{x:Static wpf:Styles.Heading2StyleKey}"
+                   TargetType="{x:Type Paragraph}">
+                <Setter Property="FontSize" Value="36" />
+            </Style>
+            <Style x:Key="{x:Static wpf:Styles.Heading3StyleKey}"
+                   TargetType="{x:Type Paragraph}">
+                <Setter Property="FontSize" Value="30" />
+            </Style>
+            <Style x:Key="{x:Static wpf:Styles.Heading4StyleKey}"
+                   TargetType="{x:Type Paragraph}">
+                <Setter Property="FontSize" Value="24" />
+            </Style>
+            <Style x:Key="{x:Static wpf:Styles.Heading5StyleKey}"
+                   TargetType="{x:Type Paragraph}">
+                <Setter Property="FontSize" Value="20" />
+            </Style>
+            <Style x:Key="{x:Static wpf:Styles.Heading6StyleKey}"
+                   TargetType="{x:Type Paragraph}">
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+            <Style x:Key="{x:Static wpf:Styles.QuoteBlockStyleKey}"
+                   TargetType="{x:Type Section}">
+                <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+                <Setter Property="BorderThickness" Value="4,0,0,0" />
+                <Setter Property="Padding" Value="16,0,0,0" />
+            </Style>
+            <Style x:Key="{x:Static wpf:Styles.TableStyleKey}"
+                   TargetType="{x:Type Table}">
+                <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+                <Setter Property="BorderThickness" Value="0,0,1,1" />
+                <Setter Property="CellSpacing" Value="0" />
+            </Style>
+            <Style x:Key="{x:Static wpf:Styles.TableCellStyleKey}"
+                   TargetType="{x:Type TableCell}">
+                <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+                <Setter Property="BorderThickness" Value="1,1,0,0" />
+            </Style>
+            <Style x:Key="{x:Static wpf:Styles.TaskListStyleKey}"
+                   BasedOn="{StaticResource MetroCheckBox}"
+                   TargetType="{x:Type CheckBox}" />
+            <Style x:Key="{x:Static wpf:Styles.ThematicBreakStyleKey}"
+                   TargetType="{x:Type Line}">
+                <Setter Property="Stretch" Value="Fill" />
+                <Setter Property="Stroke" Value="{DynamicResource TextBoxBorderBrush}" />
             </Style>
 
         </ResourceDictionary>

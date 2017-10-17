@@ -22,8 +22,11 @@
              d:DesignWidth="800"
              DataContext="{Binding UserGuide, Source={StaticResource Locator}}"
              mc:Ignorable="d">
+    <FrameworkElement.CommandBindings>
+        <CommandBinding Command="{x:Static wpf:Commands.Hyperlink}"
+                        Executed="OpenHyperlink" />
+    </FrameworkElement.CommandBindings>
     <UserControl.Resources>
-        <Converters:HtmlToFlowDocumentConverter x:Key="HtmlToFlowDocumentConverter" />
         <ViewHelpers:AutoRefreshCollectionViewSource x:Key="UserGuideCollectionViewSource"
                                                      Source="{Binding UserGuidePages}">
             <ViewHelpers:AutoRefreshCollectionViewSource.SortDescriptions>
@@ -88,17 +91,6 @@
                 </StackPanel>
             </ScrollViewer>
         </Expander>
-        <!--<FlowDocumentReader Grid.Column="1"
-                            Margin="5"
-                            VerticalAlignment="Stretch"
-                            HorizontalContentAlignment="Left"
-                            BorderBrush="{DynamicResource AccentColorBrush}"
-                            BorderThickness="1"
-                            Document="{Binding ElementName=userGuidePagesListView, Path=SelectedItem.Contents, Converter={StaticResource HtmlToFlowDocumentConverter}}"
-                            ScrollViewer.CanContentScroll="True"
-                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                            ViewingMode="Scroll" />-->
         <Border Grid.Column="1"
                 Margin="5"
                 BorderBrush="{DynamicResource AccentColorBrush}"
