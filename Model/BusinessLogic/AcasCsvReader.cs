@@ -65,7 +65,7 @@ namespace Vulnerator.Model.BusinessLogic
 
                             while (csvReader.Read())
                             {
-                                if (csvReader.Row == 1)
+                                if (csvReader.Context.Row == 1)
                                 {
                                     string missingHeader = CheckForCsvHeaders(csvReader);
                                     if (!string.IsNullOrWhiteSpace(missingHeader))
@@ -235,7 +235,7 @@ namespace Vulnerator.Model.BusinessLogic
                 csvReader.ReadHeader();
                 foreach (string headerName in headersToVerify)
                 {
-                    if (!csvReader.FieldHeaders.Contains(headerName))
+                    if (!csvReader.Context.HeaderRecord.Contains(headerName))
                     { return headerName; }
                 }
 

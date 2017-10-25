@@ -34,7 +34,7 @@ namespace Vulnerator.Model.Object
                         foreach (Octokit.Label label in issues[i].Labels)
                         {
                             Label issueLabel = new Label();
-                            issueLabel.Color = label.Color;
+                            issueLabel.Color = "#" + label.Color;
                             issueLabel.Name = label.Name;
                             issue.Labels.Add(issueLabel);
                         }

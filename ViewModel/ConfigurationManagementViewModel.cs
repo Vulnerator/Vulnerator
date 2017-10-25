@@ -15,6 +15,8 @@ namespace Vulnerator.ViewModel
     {
         private DatabaseContext databaseContext;
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
+        private List<VulnerabilitySource> vSource;
+        private List<Vulnerability> vulns;
 
         private List<Hardware> _hardwares;
         public List<Hardware> Hardwares
@@ -161,6 +163,7 @@ namespace Vulnerator.ViewModel
                                         .Include(g => g.Hardwares)
                                         .AsNoTracking().ToList();
                     Accreditations = databaseContext.Accreditations.AsNoTracking().ToList();
+                    var test = databaseContext.Vulnerabilities.Where(v => v.UniqueFindings.Any(u => u.Hardware_ID == 1)).ToList();
                 }
             }
             catch (Exception exception)

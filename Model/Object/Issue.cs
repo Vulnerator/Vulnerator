@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Vulnerator.Model.Object
 {
@@ -10,12 +11,18 @@ namespace Vulnerator.Model.Object
         public string HtmlUrl { get; set; }
         public string Milestone { get; set; }
         public int Comments { get; set; }
-        public List<Label> Labels = new List<Label>();
+        public ObservableCollection<Label> Labels { get; set; }
+
+        public Issue()
+        { Labels = new ObservableCollection<Label>(); }
     }
 
     public class Label
     {
         public string Color { get; set; }
         public string Name { get; set; }
+
+        public Label()
+        { }
     }
 }

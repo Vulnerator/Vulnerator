@@ -40,7 +40,8 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Expander Background="{DynamicResource WindowBackgroundBrush}"
+                    <Expander Margin="0,5"
+                              Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
                               ExpandDirection="Right"
                               IsExpanded="False">
@@ -163,18 +164,53 @@
                                 </StackPanel>
                             </Label>
                         </Grid>
-                        <Border Grid.Row="2"
-                                Margin="5"
-                                BorderBrush="{DynamicResource AccentColorBrush}"
-                                BorderThickness="1">
-                            <wpf:MarkdownViewer VerticalAlignment="Stretch"
-                                                HorizontalContentAlignment="Left"
-                                                Markdown="{Binding ElementName=issueListBox, Path=SelectedItem.Body}"
-                                                Pipeline="{Binding MarkdownPipeline}"
-                                                ScrollViewer.CanContentScroll="True"
-                                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                                ScrollViewer.VerticalScrollBarVisibility="Auto" />
-                        </Border>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width=".25*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Margin="5,0,5,5"
+                                    BorderBrush="{DynamicResource TextBoxBorderBrush}"
+                                    BorderThickness="1">
+                                <wpf:MarkdownViewer VerticalAlignment="Stretch"
+                                                    HorizontalContentAlignment="Left"
+                                                    Markdown="{Binding ElementName=issueListBox, Path=SelectedItem.Body}"
+                                                    Pipeline="{Binding MarkdownPipeline}"
+                                                    ScrollViewer.CanContentScroll="True"
+                                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                    ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                            </Border>
+                            <ListView Grid.Column="1"
+                                      Margin="0,0,5,5"
+                                      BorderBrush="{DynamicResource TextBoxBorderBrush}"
+                                      BorderThickness="1"
+                                      ItemsSource="{Binding ElementName=issueListBox, Path=SelectedItem.Labels}"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="Control">
+                                        <Setter Property="Focusable" Value="False" />
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <Rectangle Width="5"
+                                                       VerticalAlignment="Stretch"
+                                                       Fill="{Binding Color}" />
+                                            <TextBlock Grid.Column="1"
+                                                       Margin="5,0,0,0"
+                                                       Text="{Binding Name}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       TextWrapping="NoWrap" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
                     </Grid>
                 </Grid>
             </TabItem>
@@ -184,7 +220,8 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Expander Background="{DynamicResource WindowBackgroundBrush}"
+                    <Expander Margin="0,5"
+                              Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
                               ExpandDirection="Right"
                               IsExpanded="False">
@@ -309,7 +346,7 @@
                         </Grid>
                         <Border Grid.Row="2"
                                 Margin="5"
-                                BorderBrush="{DynamicResource AccentColorBrush}"
+                                BorderBrush="{DynamicResource TextBoxBorderBrush}"
                                 BorderThickness="1">
                             <wpf:MarkdownViewer VerticalAlignment="Stretch"
                                                 HorizontalContentAlignment="Left"
