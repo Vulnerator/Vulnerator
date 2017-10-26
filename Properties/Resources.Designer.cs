@@ -441,7 +441,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to \d*.
+        ///   Looks up a localized string similar to (?:CCI-\d*).
         /// </summary>
         internal static string RegexCciSelector {
             get {
@@ -459,7 +459,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$.
+        ///   Looks up a localized string similar to (?:(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]){1,3}.
         /// </summary>
         internal static string RegexIPv4 {
             get {
@@ -477,7 +477,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2}).
+        ///   Looks up a localized string similar to (?:[0-9A-Fa-f]{1,2}[:-]){5}(?:[0-9A-Fa-f]{2}).
         /// </summary>
         internal static string RegexMAC {
             get {

@@ -3,13 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml;
 using Vulnerator.Helper;
-using Vulnerator.Model.Object;
 using Vulnerator.Model.DataAccess;
+using Vulnerator.Model.Object;
 
 namespace Vulnerator.Model.BusinessLogic
 {
@@ -20,7 +18,8 @@ namespace Vulnerator.Model.BusinessLogic
         private string[] persistentParameters = new string[] {
             "Group_Name", "Finding_Source_File_Name", "Source_Name", "Source_Version", "Source_Release", "Scan_IP", "Host_Name", "Finding_Type"
         };
-        string ccis = string.Empty;
+        List<string> ccis = new List<string>();
+
 
         public string ReadAnsibleFile(File file)
         { 
@@ -131,7 +130,10 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case 2:
                                 {
-                                    PrepareIpAndMacAddress(sqliteCommand, match.ToString(), "MAC_Addresses");
+                                    string mac = match.ToString();
+                                    if (mac.StartsWith("0:"))
+                                    { mac = mac.Insert(0, "0"); }
+                                    PrepareIpAndMacAddress(sqliteCommand, mac, "MAC_Addresses");
                                     break;
                                 }
                             default:
@@ -212,27 +214,27 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "title":
                                 {
-                                    sqliteCommand.Parameters["Vulnerability_Title"].Value = Regex.Replace(ObtainCurrentNodeValue(xmlReader), @"\s+", " ").Trim();
+                                    sqliteCommand.Parameters["Vulnerability_Title"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(), @"\s+", " ").Trim();
                                     break;
                                 }
                             case "discussion":
                                 {
-                                    sqliteCommand.Parameters["Vulnerability_Description"].Value = Regex.Replace(ObtainCurrentNodeValue(xmlReader), @"\s+", " ").Trim();
+                                    sqliteCommand.Parameters["Vulnerability_Description"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(), @"\s+", " ").Trim();
                                     break;
                                 }
                             case "check_content":
                                 {
-                                    sqliteCommand.Parameters["Check_Content"].Value = Regex.Replace(ObtainCurrentNodeValue(xmlReader), @"\s+", " ").Trim();
+                                    sqliteCommand.Parameters["Check_Content"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(), @"\s+", " ").Trim();
                                     break;
                                 }
                             case "fix_text":
                                 {
-                                    sqliteCommand.Parameters["Fix_Text"].Value = Regex.Replace(ObtainCurrentNodeValue(xmlReader), @"\s+", " ").Trim();
+                                    sqliteCommand.Parameters["Fix_Text"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(), @"\s+", " ").Trim();
                                     break;
                                 }
                             case "procedure":
                                 {
-                                    sqliteCommand.Parameters["Tool_Generated_Output"].Value = Regex.Replace(ObtainCurrentNodeValue(xmlReader), @"\s+", " ").Trim();
+                                    sqliteCommand.Parameters["Tool_Generated_Output"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(), @"\s+", " ").Trim();
                                     break;
                                 }
                             case "output":
@@ -244,23 +246,24 @@ namespace Vulnerator.Model.BusinessLogic
                                         Environment.NewLine,
                                         "Output:",
                                         Environment.NewLine,
-                                        Regex.Replace(ObtainCurrentNodeValue(xmlReader), @"\s+", " ").Trim()
+                                        Regex.Replace(xmlReader.ObtainCurrentNodeValue(), @"\s+", " ").Trim()
                                         );
                                     break;
                                 }
                             case "comments":
                                 {
-                                    sqliteCommand.Parameters["Comments"].Value = Regex.Replace(ObtainCurrentNodeValue(xmlReader), @"\s+", " ").Trim();
+                                    sqliteCommand.Parameters["Comments"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(), @"\s+", " ").Trim();
                                     break;
                                 }
                             case "status":
                                 {
-                                    sqliteCommand.Parameters["Status"].Value = Regex.Replace(ObtainCurrentNodeValue(xmlReader), @"\s+", " ").Trim();
+                                    sqliteCommand.Parameters["Status"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(), @"\s+", " ").Trim();
                                     break;
                                 }
-                            case "CCI":
+                            case "cci":
                                 {
-                                    ccis = Regex.Replace(ObtainCurrentNodeValue(xmlReader), @"\s+", " ").Trim();
+                                    Regex regex = new Regex(Properties.Resources.RegexCciSelector);
+                                    ccis.Add(regex.Match(xmlReader.ObtainCurrentNodeValue()).ToString());
                                     break;
                                 }
                             default:
@@ -272,10 +275,11 @@ namespace Vulnerator.Model.BusinessLogic
                         databaseInterface.InsertVulnerability(sqliteCommand);
                         databaseInterface.MapVulnerabilityToSource(sqliteCommand);
                         databaseInterface.InsertUniqueFinding(sqliteCommand);
-                        Regex regex = new Regex(Properties.Resources.RegexCciSelector);
-                        foreach (Match match in regex.Matches(ccis))
+                        foreach (string cci in ccis)
                         {
-                            sqliteCommand.Parameters["CCI"].Value = match.ToString().Replace("CCI-", string.Empty);
+                            sqliteCommand.Parameters["CCI"].Value = cci.Replace("CCI-", string.Empty).Trim();
+                            if (string.IsNullOrWhiteSpace(sqliteCommand.Parameters["CCI"].Value.ToString()))
+                            { continue; }
                             databaseInterface.MapVulnerabilityToCci(sqliteCommand);
                         }
                         foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
@@ -283,7 +287,7 @@ namespace Vulnerator.Model.BusinessLogic
                             if (!persistentParameters.Contains(parameter.ParameterName))
                             { parameter.Value = string.Empty; }
                         }
-                        ccis = string.Empty;
+                        ccis.Clear();
                         return;
                     } 
                 }
@@ -311,23 +315,6 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 log.Error("Unable to generate XmlReaderSettings.");
-                throw exception;
-            }
-        }
-
-        private string ObtainCurrentNodeValue(XmlReader xmlReader)
-        {
-            try
-            {
-                xmlReader.Read();
-                string value = xmlReader.Value;
-                value = value.Replace("&gt", ">");
-                value = value.Replace("&lt", "<");
-                return value;
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to obtain currently accessed node value.");
                 throw exception;
             }
         }

@@ -163,7 +163,11 @@ namespace Vulnerator.ViewModel
                                         .Include(g => g.Hardwares)
                                         .AsNoTracking().ToList();
                     Accreditations = databaseContext.Accreditations.AsNoTracking().ToList();
-                    var test = databaseContext.Vulnerabilities.Where(v => v.UniqueFindings.Any(u => u.Hardware_ID == 1)).ToList();
+                    //var test = databaseContext.UniqueFindings
+                    //    .Where(u => u.Hardware_ID == 2)
+                    //    .Include(u => u.Vulnerability)
+                    //    .AsNoTracking()
+                    //    .ToList();
                 }
             }
             catch (Exception exception)
