@@ -544,6 +544,14 @@ CREATE TABLE HardwareLocation
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
 	 FOREIGN KEY (Location_ID) REFERENCES Locations(Location_ID)
 	);
+CREATE TABLE Hardware_VulnerabilitySources
+	(
+	 Hardware_ID INTEGER NOT NULL,
+	 Vulnerability_Source_ID INTEGER NOT NULL,
+	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
+	 FOREIGN KEY (Vulnerability_Source_ID) REFERENCES VulnerabilitySources(Vulnerability_Source_ID),
+	 UNIQUE (Hardware_ID, Vulnerability_Source_ID) ON CONFLICT IGNORE
+	);
 CREATE TABLE IA_Controls
 	(
 	  IA_Control_ID INTEGER PRIMARY KEY ,
@@ -1335,7 +1343,7 @@ CREATE TABLE VulnerabilitySources
 	 Source_Description NVARCHAR (2000) ,
 	 Source_Version NVARCHAR (25) NOT NULL, 
 	 Source_Release NVARCHAR (25) NOT NULL, 
-	 UNIQUE (Source_Name, Source_Version, Source_Release) ON CONFLICT IGNORE
+	 UNIQUE (Source_Name) ON CONFLICT IGNORE
 	);
 CREATE TABLE Waivers 
 	(

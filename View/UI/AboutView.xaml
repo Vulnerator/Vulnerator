@@ -47,7 +47,7 @@
                            Margin="5,0,5,5"
                            HorizontalAlignment="Stretch"
                            VerticalAlignment="Stretch"
-                           Source="pack://application:,,,/Resources/chart.ico" />
+                           Source="pack://application:,,,/Resources/vulneratorlogodraft.ico" />
                     <Label Grid.Row="0"
                            Grid.Column="1"
                            Content="Vulnerator"

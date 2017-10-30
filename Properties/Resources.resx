@@ -240,6 +240,9 @@ VALUES (
   <data name="MapHardwareToSoftware" xml:space="preserve">
     <value>INSERT INTO SoftwareHardware VALUES ((SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP),@Install_Date  ,(SELECT ReportInAccreditation_Global FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), (SELECT ApprovedForBaseline_Global FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), @BaselineApprover);</value>
   </data>
+  <data name="MapHardwareToVulnerabilitySource" xml:space="preserve">
+    <value>INSERT INTO Hardware_VulnerabilitySources VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS),(SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name));</value>
+  </data>
   <data name="MapIpToHardware" xml:space="preserve">
     <value>INSERT INTO HardwareIpAddresses VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name), (SELECT IP_Address_ID FROM IP_Addresses WHERE IP_Address = @IP_Address));</value>
   </data>
@@ -262,7 +265,7 @@ VALUES (
     <value>INSERT OR REPLACE INTO Vulnerabilities_IA_Controls VALUES (@Vulnerablity_ID, (SELECT IA_Control_ID FROM IA_Controls WHERE IA_Control_Number = @IA_Control));</value>
   </data>
   <data name="MapVulnerabilityToSource" xml:space="preserve">
-    <value>INSERT INTO Vulnerabilities_VulnerabilitySources VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier), (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release));</value>
+    <value>INSERT INTO Vulnerabilities_VulnerabilitySources VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier), (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name));</value>
   </data>
   <data name="RegexAcasDebianSoftwareName" xml:space="preserve">
     <value>(?&lt;=(?:\w{2})\s{2})(?:\w+(?:-?\.?\+*)*)+</value>
@@ -335,6 +338,26 @@ LEFT JOIN CCIs ON VulnerabilitiesCCIs.CCI_ID = CCIs.CCI_ID
 WHERE Source_Name LIKE @Operating_System
 GROUP BY Unique_Vulnerability_Identifier
 ORDER BY Vulnerability_Group_ID</value>
+  </data>
+  <data name="SelectCklCreationData" xml:space="preserve">
+    <value>SELECT 
+    Hardware.Role,
+    Hardware.Displayed_Host_Name,
+    Hardware.FQDN,
+    GROUP_CONCAT(DISTINCT IP_Address) AS IpAddresses,
+    GROUP_CONCAT(DISTINCT MAC_Address) AS MacAddresses
+FROM UniqueFindings
+LEFT JOIN Hardware ON UniqueFindings.Hardware_ID = Hardware.Hardware_ID
+LEFT JOIN HardwareIpAddresses ON Hardware.Hardware_ID = HardwareIpAddresses.Hardware_ID
+LEFT JOIN IP_Addresses ON HardwareIpAddresses.IP_Address_ID = IP_Addresses.IP_Address_ID
+LEFT JOIN HardwareMacAddresses ON Hardware.Hardware_ID = HardwareMacAddresses.Hardware_ID
+LEFT JOIN MAC_Addresses ON HardwareMacAddresses.MAC_Address_ID = MAC_Addresses.MAC_Address_ID
+LEFT JOIN Vulnerabilities ON UniqueFindings.Vulnerability_ID = Vulnerabilities.Vulnerability_ID
+LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
+LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID
+LEFT JOIN Hardware_VulnerabilitySources ON VulnerabilitySources.Vulnerability_Source_ID = Hardware_VulnerabilitySources.Vulnerability_Source_ID
+WHERE VulnerabilitySources.Vulnerability_Source_ID = 330 AND UniqueFindings.Hardware_ID = 2
+GROUP BY UniqueFindings.Vulnerability_ID;</value>
   </data>
   <data name="SelectGroupedPoamVulnerabilities" xml:space="preserve">
     <value>SELECT

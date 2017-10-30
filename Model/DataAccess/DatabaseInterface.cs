@@ -482,6 +482,20 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public void MapHardwareToVulnerabilitySource(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.MapHardwareToVulnerabilitySource;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to map hardware to source."));
+                log.Debug("Exception details: " + exception);
+            }
+        }
+
         public void MapVulnerabilityToCci(SQLiteCommand sqliteCommand)
         {
             try

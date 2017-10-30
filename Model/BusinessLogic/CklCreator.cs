@@ -8,5 +8,6 @@ namespace Vulnerator.Model.BusinessLogic
 {
     public class CklCreator
     {
+        
     }
 }

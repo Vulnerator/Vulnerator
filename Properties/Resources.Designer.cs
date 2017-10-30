@@ -279,6 +279,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO Hardware_VulnerabilitySources VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS),(SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name));.
+        /// </summary>
+        internal static string MapHardwareToVulnerabilitySource {
+            get {
+                return ResourceManager.GetString("MapHardwareToVulnerabilitySource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO HardwareIpAddresses VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name), (SELECT IP_Address_ID FROM IP_Addresses WHERE IP_Address = @IP_Address));.
         /// </summary>
         internal static string MapIpToHardware {
@@ -342,7 +351,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Vulnerabilities_VulnerabilitySources VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier), (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release));.
+        ///   Looks up a localized string similar to INSERT INTO Vulnerabilities_VulnerabilitySources VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier), (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name));.
         /// </summary>
         internal static string MapVulnerabilityToSource {
             get {
@@ -522,6 +531,25 @@ namespace Vulnerator.Properties {
         internal static string SelectAnsibleTowerData {
             get {
                 return ResourceManager.GetString("SelectAnsibleTowerData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT 
+        ///    Hardware.Role,
+        ///    Hardware.Displayed_Host_Name,
+        ///    Hardware.FQDN,
+        ///    GROUP_CONCAT(DISTINCT IP_Address) AS IpAddresses,
+        ///    GROUP_CONCAT(DISTINCT MAC_Address) AS MacAddresses
+        ///FROM UniqueFindings
+        ///LEFT JOIN Hardware ON UniqueFindings.Hardware_ID = Hardware.Hardware_ID
+        ///LEFT JOIN HardwareIpAddresses ON Hardware.Hardware_ID = HardwareIpAddresses.Hardware_ID
+        ///LEFT JOIN IP_Addresses ON HardwareIpAddresses.IP_Address_ID = IP_Addresses.IP_Address_ID
+        ///LEFT JOIN HardwareMacAddresses ON Hardware.H [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SelectCklCreationData {
+            get {
+                return ResourceManager.GetString("SelectCklCreationData", resourceCulture);
             }
         }
         
