@@ -65,6 +65,7 @@
                         </Grid>
                         <DataGrid DockPanel.Dock="Top"
                                   ItemsSource="{Binding Hardwares}"
+                                  SelectedItem="{Binding SelectedHardware}"
                                   Style="{StaticResource GreyBorderedDataGridStyle}">
                             <DataGrid.Columns>
                                 <DataGridTemplateColumn x:Name="hardwareCheckBoxColumn"
@@ -353,7 +354,7 @@
                                         </DataGrid>
                                         <DataGrid Grid.Row="4"
                                                   Grid.Column="1"
-                                                  Grid.ColumnSpan="4"
+                                                  Grid.ColumnSpan="2"
                                                   Height="200"
                                                   Margin="0,0,5,5"
                                                   VerticalAlignment="Top"
@@ -380,6 +381,37 @@
                                                             <IconPacks:PackIconMaterial HorizontalAlignment="Center"
                                                                                         Kind="{Binding Software.Is_OS_Or_Firmware, Converter={StaticResource CheckboxConverter}}"
                                                                                         ToolTip="{Binding Software.Is_OS_Or_Firmware}" />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <DataGrid Grid.Row="4"
+                                                  Grid.Column="3"
+                                                  Grid.ColumnSpan="2"
+                                                  Height="200"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Top"
+                                                  CanUserAddRows="False"
+                                                  CanUserDeleteRows="False"
+                                                  IsReadOnly="True"
+                                                  ItemsSource="{Binding VulnerabilitySources}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Source_Name}"
+                                                                    Header="Associated STIGs"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTemplateColumn Width="Auto">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <Button Margin="5"
+                                                                    Command="{Binding DataContext.GenerateCklCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=SelectedItem}">
+                                                                <IconPacks:PackIconMaterial Width="12"
+                                                                                            Height="12"
+                                                                                            Kind="Export" />
+                                                            </Button>
                                                         </DataTemplate>
                                                     </DataGridTemplateColumn.CellTemplate>
                                                 </DataGridTemplateColumn>

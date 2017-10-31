@@ -339,26 +339,6 @@ WHERE Source_Name LIKE @Operating_System
 GROUP BY Unique_Vulnerability_Identifier
 ORDER BY Vulnerability_Group_ID</value>
   </data>
-  <data name="SelectCklCreationData" xml:space="preserve">
-    <value>SELECT 
-    Hardware.Role,
-    Hardware.Displayed_Host_Name,
-    Hardware.FQDN,
-    GROUP_CONCAT(DISTINCT IP_Address) AS IpAddresses,
-    GROUP_CONCAT(DISTINCT MAC_Address) AS MacAddresses
-FROM UniqueFindings
-LEFT JOIN Hardware ON UniqueFindings.Hardware_ID = Hardware.Hardware_ID
-LEFT JOIN HardwareIpAddresses ON Hardware.Hardware_ID = HardwareIpAddresses.Hardware_ID
-LEFT JOIN IP_Addresses ON HardwareIpAddresses.IP_Address_ID = IP_Addresses.IP_Address_ID
-LEFT JOIN HardwareMacAddresses ON Hardware.Hardware_ID = HardwareMacAddresses.Hardware_ID
-LEFT JOIN MAC_Addresses ON HardwareMacAddresses.MAC_Address_ID = MAC_Addresses.MAC_Address_ID
-LEFT JOIN Vulnerabilities ON UniqueFindings.Vulnerability_ID = Vulnerabilities.Vulnerability_ID
-LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
-LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID
-LEFT JOIN Hardware_VulnerabilitySources ON VulnerabilitySources.Vulnerability_Source_ID = Hardware_VulnerabilitySources.Vulnerability_Source_ID
-WHERE VulnerabilitySources.Vulnerability_Source_ID = 330 AND UniqueFindings.Hardware_ID = 2
-GROUP BY UniqueFindings.Vulnerability_ID;</value>
-  </data>
   <data name="SelectGroupedPoamVulnerabilities" xml:space="preserve">
     <value>SELECT
     Unique_Vulnerability_Identifier,
@@ -392,6 +372,62 @@ LEFT JOIN VulnerabilityReferences ON Vulnerabilities_VulnerabilityReferences.Ref
 WHERE Finding_Type = 'Fortify'
 GROUP BY Status, Unique_Vulnerability_Identifier, Source_Version, Source_Release
 ORDER BY Unique_Vulnerability_Identifier</value>
+  </data>
+  <data name="SelectHardwareCklCreationData" xml:space="preserve">
+    <value>SELECT 
+    Hardware.Role,
+    Hardware.Displayed_Host_Name,
+    Hardware.FQDN,
+    GROUP_CONCAT(DISTINCT IP_Address) AS IpAddresses,
+    GROUP_CONCAT(DISTINCT MAC_Address) AS MacAddresses,
+    UniqueFindings.Classification,
+    UniqueFindings.Technology_Area,
+    UniqueFindings.Web_DB_Site,
+    UniqueFindings.Web_DB_Instance,
+    VulnerabilitySources.Source_Name,
+    VulnerabilitySources.Source_Version,
+    VulnerabilitySources.Source_Release,
+    VulnerabilitySources.Source_Secondary_Identifier,
+    VulnerabilitySources.Source_Description,
+    VulnerabilitySources.Vulnerability_Source_File_Name,
+    Vulnerabilities.Vulnerability_Group_ID,
+    Vulnerabilities.Raw_Risk,
+    Vulnerabilities.Vulnerability_Group_Title,
+    Vulnerabilities.Unique_Vulnerability_Identifier,
+    Vulnerabilities.Vulnerability_Version,
+    Vulnerabilities.Vulnerability_Title,
+    Vulnerabilities.Vulnerability_Description,
+    Vulnerabilities.Check_Content,
+    Vulnerabilities.Fix_Text,
+    Vulnerabilities.False_Positives,
+    Vulnerabilities.False_Negatives,
+    Vulnerabilities.Documentable,
+    Vulnerabilities.Mitigations,
+    Vulnerabilities.Potential_Impacts,
+    Vulnerabilities.Third_Party_Tools,
+    Vulnerabilities.Mitigation_Control,
+    Vulnerabilities.Security_Override_Guidance,
+    GROUP_CONCAT(DISTINCT CCI) AS CCIs,
+    UniqueFindings.Status,
+    UniqueFindings.Finding_Details,
+    UniqueFindings.Comments,
+    UniqueFindings.Severity_Override,
+    UniqueFindings.Severity_Override_Justification,
+    UniqueFindings.Tool_Generated_Output
+FROM UniqueFindings
+LEFT JOIN Hardware ON UniqueFindings.Hardware_ID = Hardware.Hardware_ID
+LEFT JOIN HardwareIpAddresses ON Hardware.Hardware_ID = HardwareIpAddresses.Hardware_ID
+LEFT JOIN IP_Addresses ON HardwareIpAddresses.IP_Address_ID = IP_Addresses.IP_Address_ID
+LEFT JOIN HardwareMacAddresses ON Hardware.Hardware_ID = HardwareMacAddresses.Hardware_ID
+LEFT JOIN MAC_Addresses ON HardwareMacAddresses.MAC_Address_ID = MAC_Addresses.MAC_Address_ID
+LEFT JOIN Vulnerabilities ON UniqueFindings.Vulnerability_ID = Vulnerabilities.Vulnerability_ID
+LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
+LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID
+LEFT JOIN Hardware_VulnerabilitySources ON VulnerabilitySources.Vulnerability_Source_ID = Hardware_VulnerabilitySources.Vulnerability_Source_ID
+LEFT JOIN VulnerabilitiesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesCCIs.Vulnerability_ID
+LEFT JOIN CCIs ON VulnerabilitiesCCIs.CCI_ID = CCIs.CCI_ID
+WHERE VulnerabilitySources.Vulnerability_Source_ID = 330 AND UniqueFindings.Hardware_ID = 5
+GROUP BY UniqueFindings.Vulnerability_ID;</value>
   </data>
   <data name="SelectIndexes" xml:space="preserve">
     <value>SELECT name FROM sqlite_master WHERE type == 'index';</value>

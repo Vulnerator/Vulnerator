@@ -340,10 +340,15 @@ namespace Vulnerator.Model.DataAccess
                 .WithRequired(e => e.Hardware)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<Hardware>()
+                .HasMany(e => e.VulnerabilitySources)
+                .WithMany(e => e.Hardwares)
+                .Map(m => m.ToTable("Hardware_VulnerabilitySources").MapLeftKey("Hardware_ID").MapRightKey("Vulnerability_Source_ID"));
+
             modelBuilder.Entity<IA_Controls>()
                 .HasMany(e => e.Vulnerabilities)
                 .WithMany(e => e.IA_Controls)
-                .Map(m => m.ToTable("Vulnerabilities_IA_Controls").MapLeftKey("IA_Control_ID").MapRightKey("Vulnerability_ID"));
+                .Map(m => m.ToTable("Vulnerabilities_IA_Controls").MapLeftKey("IA_Control_ID").MapRightKey("Vulnerability_Source_ID"));
 
             modelBuilder.Entity<IATA_Standards>()
                 .HasMany(e => e.Accreditations)

@@ -1,10 +1,15 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using log4net;
+using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.Entity;
 using System.Linq;
+using Vulnerator.Model.BusinessLogic;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Entity;
 using Vulnerator.Model.Object;
@@ -15,8 +20,9 @@ namespace Vulnerator.ViewModel
     {
         private DatabaseContext databaseContext;
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
-        private List<VulnerabilitySource> vSource;
-        private List<Vulnerability> vulns;
+        private BackgroundWorker backgroundWorker;
+        private VulnerabilitySource vulnerabilitySource;
+        private string saveDirectory = string.Empty;
 
         private List<Hardware> _hardwares;
         public List<Hardware> Hardwares
@@ -102,6 +108,20 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private Hardware _selectedHardware;
+        public Hardware SelectedHardware
+        {
+            get { return _selectedHardware; }
+            set
+            {
+                if (_selectedHardware != value)
+                {
+                    _selectedHardware = value;
+                    RaisePropertyChanged("SelectedHardware");
+                }
+            }
+        }
+
         public ConfigurationManagementViewModel()
         { 
             try
@@ -144,6 +164,7 @@ namespace Vulnerator.ViewModel
                         .Include(h => h.Groups)
                         .Include(h => h.Contacts)
                         .Include(h => h.Hardware_PPS.Select(p => p.PP))
+                        .Include(h => h.VulnerabilitySources)
                         .AsNoTracking().ToList();
                     Softwares = databaseContext.Softwares
                                         .Include(s => s.SoftwareHardwares.Select(h => h.Hardware))
@@ -163,16 +184,54 @@ namespace Vulnerator.ViewModel
                                         .Include(g => g.Hardwares)
                                         .AsNoTracking().ToList();
                     Accreditations = databaseContext.Accreditations.AsNoTracking().ToList();
-                    //var test = databaseContext.UniqueFindings
-                    //    .Where(u => u.Hardware_ID == 2)
-                    //    .Include(u => u.Vulnerability)
-                    //    .AsNoTracking()
-                    //    .ToList();
                 }
             }
             catch (Exception exception)
             {
                 log.Error(string.Format("Unable to populate ConfigurationManagementView"));
+                throw exception;
+            }
+        }
+
+        public RelayCommand<object> GenerateCklCommand
+        { get { return new RelayCommand<object>(p => GenerateCkl(p)); } }
+
+        private void GenerateCkl(object param)
+        { 
+            try
+            {
+                CommonOpenFileDialog commonOpenFileDialog = new CommonOpenFileDialog();
+                commonOpenFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                commonOpenFileDialog.IsFolderPicker = true;
+                if (commonOpenFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
+                {
+                    vulnerabilitySource = param as VulnerabilitySource;
+                    saveDirectory = commonOpenFileDialog.FileName;
+                    backgroundWorker = new BackgroundWorker();
+                    backgroundWorker.DoWork += generateCklBackgroundWorker_DoWork;
+                    backgroundWorker.RunWorkerAsync();
+                    backgroundWorker.Dispose();
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to create CKL file."));
+                log.Debug("Exception details:", exception);
+            }
+        }
+
+        private void generateCklBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        { 
+            try
+            {
+                CklCreator cklCreator = new CklCreator();
+                cklCreator.CreateCklFromHardware(SelectedHardware, vulnerabilitySource, saveDirectory);
+                vulnerabilitySource = null;
+                saveDirectory = string.Empty;
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to generate CKL file background worker."));
                 throw exception;
             }
         }

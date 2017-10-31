@@ -685,6 +685,7 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 string comment = string.Empty;
                 DateTime timestamp = new DateTime();
+                string username = string.Empty;
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -693,7 +694,12 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "ns2:Content":
                                 {
-                                    comment = ObtainCurrentNodeValue(xmlReader);
+                                    comment = xmlReader.ObtainCurrentNodeValue();
+                                    break;
+                                }
+                            case "ns2:Username":
+                                {
+                                    username = xmlReader.ObtainCurrentNodeValue();
                                     break;
                                 }
                             case "ns2:Timestamp":
@@ -709,7 +715,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         string keyCheck;
                         if (!commentsDictionary.TryGetValue(timestamp, out keyCheck))
-                        { commentsDictionary.Add(timestamp, comment); }
+                        { commentsDictionary.Add(timestamp, string.Format("{0}: {1}", username, comment)); }
                         comment = string.Empty;
                         timestamp = new DateTime();
                     }

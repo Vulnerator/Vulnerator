@@ -535,25 +535,6 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT 
-        ///    Hardware.Role,
-        ///    Hardware.Displayed_Host_Name,
-        ///    Hardware.FQDN,
-        ///    GROUP_CONCAT(DISTINCT IP_Address) AS IpAddresses,
-        ///    GROUP_CONCAT(DISTINCT MAC_Address) AS MacAddresses
-        ///FROM UniqueFindings
-        ///LEFT JOIN Hardware ON UniqueFindings.Hardware_ID = Hardware.Hardware_ID
-        ///LEFT JOIN HardwareIpAddresses ON Hardware.Hardware_ID = HardwareIpAddresses.Hardware_ID
-        ///LEFT JOIN IP_Addresses ON HardwareIpAddresses.IP_Address_ID = IP_Addresses.IP_Address_ID
-        ///LEFT JOIN HardwareMacAddresses ON Hardware.H [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string SelectCklCreationData {
-            get {
-                return ResourceManager.GetString("SelectCklCreationData", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to SELECT
         ///    Unique_Vulnerability_Identifier,
         ///    Vulnerability_Version,
@@ -575,6 +556,28 @@ namespace Vulnerator.Properties {
         internal static string SelectGroupedPoamVulnerabilities {
             get {
                 return ResourceManager.GetString("SelectGroupedPoamVulnerabilities", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT 
+        ///    Hardware.Role,
+        ///    Hardware.Displayed_Host_Name,
+        ///    Hardware.FQDN,
+        ///    GROUP_CONCAT(DISTINCT IP_Address) AS IpAddresses,
+        ///    GROUP_CONCAT(DISTINCT MAC_Address) AS MacAddresses,
+        ///    UniqueFindings.Classification,
+        ///    UniqueFindings.Technology_Area,
+        ///    UniqueFindings.Web_DB_Site,
+        ///    UniqueFindings.Web_DB_Instance,
+        ///    VulnerabilitySources.Source_Name,
+        ///    VulnerabilitySources.Source_Version,
+        ///    VulnerabilitySources.Source_Release,
+        ///    VulnerabilitySources.Source_Secondary_Identifi [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SelectHardwareCklCreationData {
+            get {
+                return ResourceManager.GetString("SelectHardwareCklCreationData", resourceCulture);
             }
         }
         

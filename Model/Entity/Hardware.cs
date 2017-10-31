@@ -22,6 +22,7 @@ namespace Vulnerator.Model.Entity
             Groups = new ObservableCollection<Group>();
             IP_Addresses = new ObservableCollection<IP_Addresses>();
             MAC_Addresses = new ObservableCollection<MAC_Addresses>();
+            VulnerabilitySources = new ObservableCollection<VulnerabilitySource>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -108,5 +109,8 @@ namespace Vulnerator.Model.Entity
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MAC_Addresses> MAC_Addresses { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<VulnerabilitySource> VulnerabilitySources { get; set; }
     }
 }
