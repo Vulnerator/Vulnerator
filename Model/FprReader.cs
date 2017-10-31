@@ -829,6 +829,7 @@ namespace Vulnerator.Model
             {
                 string comment = string.Empty;
                 DateTime timestamp = new DateTime();
+                string username = string.Empty;
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -845,6 +846,11 @@ namespace Vulnerator.Model
                                     timestamp = DateTime.Parse(ObtainCurrentNodeValue(xmlReader));
                                     break;
                                 }
+                            case "ns2:Username":
+                                {
+                                    username = ObtainCurrentNodeValue(xmlReader);
+                                    break;
+                                }
                             default:
                                 { break; }
                         }
@@ -853,7 +859,10 @@ namespace Vulnerator.Model
                     {
                         string keyCheck;
                         if (!commentsDictionary.TryGetValue(timestamp, out keyCheck))
-                        { commentsDictionary.Add(timestamp, comment); }
+                        {
+                            comment = username + ": " + comment;
+                            commentsDictionary.Add(timestamp, comment);
+                        }
                         comment = string.Empty;
                         timestamp = new DateTime();
                     }
@@ -885,7 +894,11 @@ namespace Vulnerator.Model
                     {
                         List<KeyValuePair<DateTime, string>> orderedComments = commentsDictionary.OrderByDescending(x => x.Key).ToList();
                         comment = "Analysis Value:" + Environment.NewLine + analysisValue;
-                        comment = comment + Environment.NewLine + Environment.NewLine + "User Comments:" + Environment.NewLine + orderedComments[0].Value;
+                        comment = comment + Environment.NewLine + Environment.NewLine + "User Comments:";
+                        foreach(var c in orderedComments)
+                        {
+                            comment = comment + Environment.NewLine + "[" + c.Key.ToString("dd-MMM-yyyy HH:mm") + "] " + c.Value;
+                        }
                     }
                     sqliteCommand.Parameters.Add(new SQLiteParameter("Comments", comment));
                     sqliteCommand.CommandText = "UPDATE UniqueFinding SET Comments = @Comments, " +
