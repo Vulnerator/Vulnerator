@@ -54,6 +54,23 @@ namespace Vulnerator.Helper
             return value;
         }
 
+        public static string ToSeverity(this string rawRisk)
+        {
+            switch (rawRisk)
+            {
+                case "I":
+                    { return "high"; }
+                case "II":
+                    { return "medium"; }
+                case "III":
+                    { return "low"; }
+                case "IV":
+                    { return "informational"; }
+                default:
+                    { return "Unknown"; }
+            }
+        }
+
         public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
         {
             if (source == null)

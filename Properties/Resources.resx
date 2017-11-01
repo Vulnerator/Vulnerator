@@ -393,7 +393,7 @@ ORDER BY Unique_Vulnerability_Identifier</value>
     Vulnerabilities.Vulnerability_Group_ID,
     Vulnerabilities.Raw_Risk,
     Vulnerabilities.Vulnerability_Group_Title,
-    Vulnerabilities.Unique_Vulnerability_Identifier,
+    Vulnerabilities.Unique_Vulnerability_Identifier, Vulnerabilities.Secondary_Vulnerability_Identifier,
     Vulnerabilities.Vulnerability_Version,
     Vulnerabilities.Vulnerability_Title,
     Vulnerabilities.Vulnerability_Description,
@@ -426,7 +426,7 @@ LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerabi
 LEFT JOIN Hardware_VulnerabilitySources ON VulnerabilitySources.Vulnerability_Source_ID = Hardware_VulnerabilitySources.Vulnerability_Source_ID
 LEFT JOIN VulnerabilitiesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesCCIs.Vulnerability_ID
 LEFT JOIN CCIs ON VulnerabilitiesCCIs.CCI_ID = CCIs.CCI_ID
-WHERE VulnerabilitySources.Vulnerability_Source_ID = 330 AND UniqueFindings.Hardware_ID = 5
+WHERE VulnerabilitySources.Vulnerability_Source_ID = @Vulnerability_Source_ID AND UniqueFindings.Hardware_ID = @Hardware_ID
 GROUP BY UniqueFindings.Vulnerability_ID;</value>
   </data>
   <data name="SelectIndexes" xml:space="preserve">

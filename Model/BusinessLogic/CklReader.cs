@@ -309,6 +309,7 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             databaseInterface.UpdateVulnerabilitySource(sqliteCommand);
                             databaseInterface.InsertVulnerabilitySource(sqliteCommand);
+                            databaseInterface.MapHardwareToVulnerabilitySource(sqliteCommand);
                             return;
                         }
                     }
@@ -699,7 +700,11 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 bool isSRG = sourceName.Contains("SRG") || sourceName.Contains("Security Requirement") ? true : false;
                 string value = sourceName;
-                string[] replaceArray = new string[] { "STIG", "Security", "Technical", "Implementation", "Guide", "(", ")", "Requirements", "Technologies", "SRG", "  " };
+                string[] replaceArray = new string[]
+                {
+                    "STIG", "Security", "SECURITY", "Technical", "TECHNICAL", "Implementation", "IMPLEMENTATION",
+                    "Guide", "GUIDE", "(", ")", "Requirements", "REQUIREMENTS", "SRG", "  "
+                };
                 foreach (string item in replaceArray)
                 {
                     if (item.Equals("  "))
