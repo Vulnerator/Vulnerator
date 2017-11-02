@@ -188,7 +188,7 @@ namespace Vulnerator.Model.BusinessLogic
                             case "cdf:title":
                                 {
                                     string sourceName = ObtainCurrentNodeValue(xmlReader).Replace('_', ' ');
-                                    sourceName = SanitizeSourceName(sourceName);
+                                    sourceName = sourceName.ToSanitizedSource();
                                     sqliteCommand.Parameters["Source_Name"].Value = sourceName;
                                     break;
                                 }
@@ -283,7 +283,7 @@ namespace Vulnerator.Model.BusinessLogic
                 }
                 sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = rule;
                 sqliteCommand.Parameters["Vulnerability_Version"].Value = ruleVersion;
-                sqliteCommand.Parameters["Raw_Risk"].Value = ConvertSeverityToRawRisk(xmlReader.GetAttribute("severity"));
+                sqliteCommand.Parameters["Raw_Risk"].Value = xmlReader.GetAttribute("severity").ToRawRisk();
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -557,7 +557,7 @@ namespace Vulnerator.Model.BusinessLogic
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement() && xmlReader.Name.Equals("cdf:result"))
-                    { sqliteCommand.Parameters["Status"].Value = ConvertXccdfResultToStatus(ObtainCurrentNodeValue(xmlReader)); }
+                    { sqliteCommand.Parameters["Status"].Value = ObtainCurrentNodeValue(xmlReader).ToVulneratorStatus(); }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("cdf:rule-result"))
                     {
                         PrepareUniqueFinding(sqliteCommand);
@@ -671,95 +671,6 @@ namespace Vulnerator.Model.BusinessLogic
 
         #endregion
 
-        #region Data Manipulation Functions
-
-        private string ConvertSeverityToRawRisk(string severity)
-        {
-            try
-            {
-                switch (severity)
-                {
-                    case "high":
-                        { return "I"; }
-                    case "medium":
-                        { return "II"; }
-                    case "low":
-                        { return "III"; }
-                    case "unknown":
-                        { return "Unknown"; }
-                    default:
-                        { return "Unknown"; }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to convert severity to raw risk.");
-                throw exception;
-            }
-        }
-
-        private string ConvertSeverityToImpact(string severity)
-        {
-            try
-            {
-                switch (severity)
-                {
-                    case "high":
-                        { return "High"; }
-                    case "medium":
-                        { return "Medium"; }
-                    case "low":
-                        { return "Low"; }
-                    case "unknown":
-                        { return "Unknown"; }
-                    default:
-                        { return "Unknown"; }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to convert severity to impact.");
-                throw exception;
-            }
-        } 
-
-        private string ConvertXccdfResultToStatus(string xccdfResult)
-        {
-            try
-            {
-                switch (xccdfResult)
-                {
-                    case "pass":
-                        return "Completed";
-                    case "fail":
-                        return "Ongoing";
-                    case "error":
-                        return "Error";
-                    case "unknown":
-                        return "Not Reviewed";
-                    case "notapplicable":
-                        return "Not Applicable";
-                    case "notchecked":
-                        return "Not Reviewed";
-                    case "notselected":
-                        return "Not Reviewed";
-                    case "informational":
-                        return "Informational";
-                    case "fixed":
-                        return "Completed";
-                    default:
-                        return "Not Reviewed";
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to convert XCCDF test result to status.");
-                throw exception;
-            }
-        }
-
-        #endregion
-
         private Stream GenerateStreamFromString(string streamString)
         {
             try
@@ -814,37 +725,6 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 log.Error("Unable to obtain currently accessed node value.");
                 throw exception;
-            }
-        }
-
-        private string SanitizeSourceName(string sourceName)
-        {
-            try
-            {
-                bool isSRG = sourceName.Contains("SRG") || sourceName.Contains("Security Requirement") ? true : false;
-                string value = sourceName;
-                string[] replaceArray = new string[] { "STIG", "Security", "Technical", "Implementation", "Guide", "(", ")", "Requirements", "Technologies", "SRG", "  " };
-                foreach (string item in replaceArray)
-                {
-                    if (item.Equals("  "))
-                    { value = value.Replace(item, " "); }
-                    else
-                    { value = value.Replace(item, ""); }
-                }
-                value = value.Trim();
-                if (!isSRG)
-                {
-                    value = string.Format("{0} Security Technical Implementation Guide", value);
-                    return value;
-                }
-                value = string.Format("{0} Security Requirements Guide", value);
-                return value;
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to sanitize source name \"{0}\".", sourceName));
-                log.Debug("Exception details:", exception);
-                return sourceName;
             }
         }
     }

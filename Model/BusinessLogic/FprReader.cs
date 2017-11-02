@@ -142,7 +142,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     }
                                 case "BuildID":
                                     {
-                                        softwareName = ObtainCurrentNodeValue(xmlReader);
+                                        softwareName = xmlReader.ObtainCurrentNodeValue(false);
                                         break;
                                     }
                                 case "Vulnerability":
@@ -157,7 +157,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     }
                                 case "EngineVersion":
                                     {
-                                        version = ObtainCurrentNodeValue(xmlReader);
+                                        version = xmlReader.ObtainCurrentNodeValue(false);
                                         break;
                                     }
                                 default:
@@ -188,27 +188,27 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "ClassID":
                                 {
-                                    fprVulnerability.ClassId = ObtainCurrentNodeValue(xmlReader);
+                                    fprVulnerability.ClassId = xmlReader.ObtainCurrentNodeValue(false);
                                     break;
                                 }
                             case "Kingdom":
                                 {
-                                    fprVulnerability.Kingdom = ObtainCurrentNodeValue(xmlReader);
+                                    fprVulnerability.Kingdom = xmlReader.ObtainCurrentNodeValue(false);
                                     break;
                                 }
                             case "Type":
                                 {
-                                    fprVulnerability.Type = ObtainCurrentNodeValue(xmlReader);
+                                    fprVulnerability.Type = xmlReader.ObtainCurrentNodeValue(false);
                                     break;
                                 }
                             case "Subtype":
                                 {
-                                    fprVulnerability.SubType = ObtainCurrentNodeValue(xmlReader);
+                                    fprVulnerability.SubType = xmlReader.ObtainCurrentNodeValue(false);
                                     break;
                                 }
                             case "InstanceID":
                                 {
-                                    fprVulnerability.InstanceId = ObtainCurrentNodeValue(xmlReader);
+                                    fprVulnerability.InstanceId = xmlReader.ObtainCurrentNodeValue(false);
                                     break;
                                 }
                             case "Def":
@@ -263,19 +263,19 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "Abstract":
                                 {
-                                    abstractNode = ObtainCurrentNodeValue(xmlReader);
+                                    abstractNode = xmlReader.ObtainCurrentNodeValue(false);
                                     abstractOutput = SanitizeAndParseAbstract(abstractNode);
                                     break;
                                 }
                             case "Explanation":
                                 {
-                                    explanationNode = ObtainCurrentNodeValue(xmlReader);
+                                    explanationNode = xmlReader.ObtainCurrentNodeValue(false);
                                     explanationNode = SanitizeAndParseExplanation(explanationNode);
                                     break;
                                 }
                             case "Recommendations":
                                 {
-                                    recommendationsNode = ObtainCurrentNodeValue(xmlReader);
+                                    recommendationsNode = xmlReader.ObtainCurrentNodeValue(false);
                                     recommendationsNode = SanitizeAndParseRecommendations(recommendationsNode);
                                     break;
                                 }
@@ -358,12 +358,12 @@ namespace Vulnerator.Model.BusinessLogic
                             {
                                 case "Paragraph":
                                     {
-                                        output = ObtainCurrentNodeValue(xmlReader);
+                                        output = xmlReader.ObtainCurrentNodeValue(false);
                                         break;
                                     }
                                 case "AltParagraph":
                                     {
-                                        riskStatement = ObtainCurrentNodeValue(xmlReader);
+                                        riskStatement = xmlReader.ObtainCurrentNodeValue(false);
                                         break;
                                     }
                                 default:
@@ -580,23 +580,6 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private string RawRiskToImpactConverter(string rawRisk)
-        {
-            switch (rawRisk)
-            {
-                case "I":
-                    { return "High"; }
-                case "II":
-                    { return "Medium"; }
-                case "III":
-                    { return "Low"; }
-                case "IV":
-                    { return "Informational"; }
-                default:
-                    { return "Unknown"; }
-            }
-        }
-
         private void ParseAuditXmlWithXmlReader(ZipArchiveEntry zipArchiveEntry)
         {
             try
@@ -633,7 +616,7 @@ namespace Vulnerator.Model.BusinessLogic
                             FprVulnerability fprVulnerability = fprVulnerabilityList.FirstOrDefault(x => x.InstanceId.Equals(instanceId));
                             if (fprVulnerability != null)
                             {
-                                fprVulnerability.Status = ConvertAnalysisValue(analysisValue);
+                                fprVulnerability.Status = analysisValue.ToVulneratorStatus();
                                 if (commentsDictionary.Count > 0)
                                 {
                                     commentsDictionary.OrderByDescending(x => x.Key);
@@ -694,17 +677,17 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "ns2:Content":
                                 {
-                                    comment = xmlReader.ObtainCurrentNodeValue();
+                                    comment = xmlReader.ObtainCurrentNodeValue(false);
                                     break;
                                 }
                             case "ns2:Username":
                                 {
-                                    username = xmlReader.ObtainCurrentNodeValue();
+                                    username = xmlReader.ObtainCurrentNodeValue(false);
                                     break;
                                 }
                             case "ns2:Timestamp":
                                 {
-                                    timestamp = DateTime.Parse(ObtainCurrentNodeValue(xmlReader));
+                                    timestamp = DateTime.Parse(xmlReader.ObtainCurrentNodeValue(false));
                                     break;
                                 }
                             default:
@@ -745,49 +728,6 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 log.Error("Unable to generate XmlReaderSettings.");
-                throw exception;
-            }
-        }
-
-        private string ObtainCurrentNodeValue(XmlReader xmlReader)
-        {
-            try
-            {
-                xmlReader.Read();
-                return xmlReader.Value;
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to obtain currently accessed node value.");
-                throw exception;
-            }
-        }
-
-        private string ConvertAnalysisValue(string analysisValue)
-        {
-            try
-            {
-                switch (analysisValue)
-                {
-                    case "Not an Issue":
-                        { return "Completed"; }
-                    case "Not a Finding":
-                        { return "Completed"; }
-                    case "Reliability Issue":
-                        { return "Ongoing"; }
-                    case "Bad Practice":
-                        { return "Ongoing"; }
-                    case "Suspicious":
-                        { return "Ongoing"; }
-                    case "Exploitable":
-                        { return "Ongoing"; }
-                    default:
-                        { return analysisValue; }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to convert analysis value.");
                 throw exception;
             }
         }

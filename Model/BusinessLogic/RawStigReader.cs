@@ -7,6 +7,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Vulnerator.Helper;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Object;
 
@@ -90,19 +91,19 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "title":
                                 {
-                                    string sourceName = ObtainCurrentNodeValue(xmlReader).Replace('_', ' ');
-                                    sourceName = SanitizeSourceName(sourceName);
+                                    string sourceName = xmlReader.ObtainCurrentNodeValue(false).Replace('_', ' ');
+                                    sourceName = sourceName.ToSanitizedSource();
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Name", sourceName));
                                     break;
                                 }
                             case "description":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Description", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Description", xmlReader.ObtainCurrentNodeValue(false)));
                                     break;
                                 }
                             case "plain-text":
                                 {
-                                    string release = ObtainCurrentNodeValue(xmlReader);
+                                    string release = xmlReader.ObtainCurrentNodeValue(false);
                                     if (release.Contains(" "))
                                     {
                                         Regex regex = new Regex(Properties.Resources.RegexRawStigRelease);
@@ -114,7 +115,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "version":
                                 {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Version", ObtainCurrentNodeValue(xmlReader)));
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Version", xmlReader.ObtainCurrentNodeValue(false)));
                                     break;
                                 }
                             case "Profile":
@@ -149,7 +150,7 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "title":
                                 {
-                                    sqliteCommand.Parameters["Vulnerability_Group_Title"].Value = ObtainCurrentNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["Vulnerability_Group_Title"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                     break;
                                 }
                             case "Rule":
@@ -205,7 +206,7 @@ namespace Vulnerator.Model.BusinessLogic
                 }
                 sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = rule;
                 sqliteCommand.Parameters["Vulnerability_Version"].Value = ruleVersion;
-                sqliteCommand.Parameters["Raw_Risk"].Value = ConvertSeverityToRawRisk(xmlReader.GetAttribute("severity"));
+                sqliteCommand.Parameters["Raw_Risk"].Value = xmlReader.GetAttribute("severity").ToRawRisk();
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -214,12 +215,12 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "version":
                                 {
-                                    sqliteCommand.Parameters["Secondary_Vulnerability_Identifier"].Value = ObtainCurrentNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["Secondary_Vulnerability_Identifier"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                     break;
                                 }
                             case "title":
                                 {
-                                    sqliteCommand.Parameters["Vulnerability_Title"].Value = ObtainCurrentNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["Vulnerability_Title"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                     break;
                                 }
                             case "description":
@@ -229,23 +230,23 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "dc:identifier":
                                 {
-                                    sqliteCommand.Parameters["Overflow"].Value = ObtainCurrentNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["Overflow"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                     break;
                                 }
                             case "ident":
                                 {
                                     if (xmlReader.GetAttribute("system").Equals("http://iase.disa.mil/cci"))
-                                    { ccis.Add(ObtainCurrentNodeValue(xmlReader).Replace("CCI-", string.Empty)); }
+                                    { ccis.Add(xmlReader.ObtainCurrentNodeValue(false).Replace("CCI-", string.Empty)); }
                                     break;
                                 }
                             case "fixtext":
                                 {
-                                    sqliteCommand.Parameters["Fix_Text"].Value = ObtainCurrentNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["Fix_Text"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                     break;
                                 }
                             case "check-content":
                                 {
-                                    sqliteCommand.Parameters["Check_Content"].Value = ObtainCurrentNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["Check_Content"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                     break;
                                 }
                             default:
@@ -279,57 +280,57 @@ namespace Vulnerator.Model.BusinessLogic
                             {
                                 case "VulnDiscussion":
                                     {
-                                        sqliteCommand.Parameters["Vulnerability_Description"].Value = ObtainCurrentNodeValue(xmlReader);
+                                        sqliteCommand.Parameters["Vulnerability_Description"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                         break;
                                     }
                                 case "FalsePositives":
                                     {
-                                        sqliteCommand.Parameters["False_Positives"].Value = ObtainCurrentNodeValue(xmlReader);
+                                        sqliteCommand.Parameters["False_Positives"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                         break;
                                     }
                                 case "FalseNegatives":
                                     {
-                                        sqliteCommand.Parameters["False_Negatives"].Value = ObtainCurrentNodeValue(xmlReader);
+                                        sqliteCommand.Parameters["False_Negatives"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                         break;
                                     }
                                 case "Documentable":
                                     {
-                                        sqliteCommand.Parameters["Documentable"].Value = ObtainCurrentNodeValue(xmlReader);
+                                        sqliteCommand.Parameters["Documentable"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                         break;
                                     }
                                 case "Mitigations":
                                     {
-                                        sqliteCommand.Parameters["Mitigations"].Value = ObtainCurrentNodeValue(xmlReader);
+                                        sqliteCommand.Parameters["Mitigations"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                         break;
                                     }
                                 case "SeverityOverrideGuidance":
                                     {
-                                        sqliteCommand.Parameters["Severity_Override_Guidance"].Value = ObtainCurrentNodeValue(xmlReader);
+                                        sqliteCommand.Parameters["Severity_Override_Guidance"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                         break;
                                     }
                                 case "PotentialImpacts":
                                     {
-                                        sqliteCommand.Parameters["Potential_Impacts"].Value = ObtainCurrentNodeValue(xmlReader);
+                                        sqliteCommand.Parameters["Potential_Impacts"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                         break;
                                     }
                                 case "ThirdPartyTools":
                                     {
-                                        sqliteCommand.Parameters["Third_Party_Tools"].Value = ObtainCurrentNodeValue(xmlReader);
+                                        sqliteCommand.Parameters["Third_Party_Tools"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                         break;
                                     }
                                 case "MitigationControl":
                                     {
-                                        sqliteCommand.Parameters["Mitigation_Control"].Value = ObtainCurrentNodeValue(xmlReader);
+                                        sqliteCommand.Parameters["Mitigation_Control"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                         break;
                                     }
                                 case "Responsibility":
                                     {
-                                        responsibilities.Add(ObtainCurrentNodeValue(xmlReader));
+                                        responsibilities.Add(xmlReader.ObtainCurrentNodeValue(false));
                                         break;
                                     }
                                 case "IAControls":
                                     {
-                                        iaControls.Add(ObtainCurrentNodeValue(xmlReader));
+                                        iaControls.Add(xmlReader.ObtainCurrentNodeValue(false));
                                         break;
                                     }
                                 default:
@@ -366,21 +367,6 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private string ObtainCurrentNodeValue(XmlReader xmlReader)
-        {
-            try
-            {
-                xmlReader.Read();
-                string value = xmlReader.Value;
-                return value;
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to obtain currently accessed node value.");
-                throw exception;
-            }
-        }
-
         private string ObtainRuleDescriptionNodeValue(XmlReader xmlReader)
         {
             try
@@ -398,66 +384,6 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 log.Error("Unable to obtain currently accessed node value.");
                 throw exception;
-            }
-        }
-
-        private string ConvertSeverityToRawRisk(string severity)
-        {
-            try
-            {
-                switch (severity)
-                {
-                    case "high":
-                        { return "I"; }
-                    case "medium":
-                        { return "II"; }
-                    case "low":
-                        { return "III"; }
-                    case "unknown":
-                        { return "unknown"; }
-                    default:
-                        { return "unknown"; }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to convert impact to raw risk.");
-                throw exception;
-            }
-        }
-
-        private string SanitizeSourceName(string sourceName)
-        {
-            try
-            {
-                bool isSRG = sourceName.Contains("SRG") || sourceName.Contains("Security Requirement") ? true : false;
-                string value = sourceName;
-                string[] replaceArray = new string[] 
-                {
-                    "STIG", "Security", "SECURITY", "Technical", "TECHNICAL", "Implementation", "IMPLEMENTATION",
-                    "Guide", "GUIDE", "(", ")", "Requirements", "REQUIREMENTS", "SRG", "  "
-                };
-                foreach (string item in replaceArray)
-                {
-                    if (item.Equals("  "))
-                    { value = value.Replace(item, " "); }
-                    else
-                    { value = value.Replace(item, ""); }
-                }
-                value = value.Trim();
-                if (!isSRG)
-                {
-                    value = string.Format("{0} Security Technical Implementation Guide", value);
-                    return value;
-                }
-                value = string.Format("{0} Security Requirements Guide", value);
-                return value;
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to sanitize source name \"{0}\".", sourceName));
-                log.Debug("Exception details:", exception);
-                return sourceName;
             }
         }
 

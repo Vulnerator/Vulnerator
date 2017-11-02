@@ -175,7 +175,7 @@ namespace Vulnerator.Model.BusinessLogic
         { 
             try
             {
-                sqliteCommand.Parameters["Source_Name"].Value = SanitizeSourceName(xmlReader.GetAttribute("name"));
+                sqliteCommand.Parameters["Source_Name"].Value = xmlReader.GetAttribute("name").ToSanitizedSource();
                 sqliteCommand.Parameters["Source_Version"].Value = xmlReader.GetAttribute("version");
                 sqliteCommand.Parameters["Source_Release"].Value = xmlReader.GetAttribute("release");
                 databaseInterface.UpdateVulnerabilitySource(sqliteCommand);
@@ -216,27 +216,27 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "title":
                                 {
-                                    sqliteCommand.Parameters["Vulnerability_Title"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(), @"\s+", " ").Trim();
+                                    sqliteCommand.Parameters["Vulnerability_Title"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(true), @"\s+", " ").Trim();
                                     break;
                                 }
                             case "discussion":
                                 {
-                                    sqliteCommand.Parameters["Vulnerability_Description"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(), @"\s+", " ").Trim();
+                                    sqliteCommand.Parameters["Vulnerability_Description"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(true), @"\s+", " ").Trim();
                                     break;
                                 }
                             case "check_content":
                                 {
-                                    sqliteCommand.Parameters["Check_Content"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(), @"\s+", " ").Trim();
+                                    sqliteCommand.Parameters["Check_Content"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(true), @"\s+", " ").Trim();
                                     break;
                                 }
                             case "fix_text":
                                 {
-                                    sqliteCommand.Parameters["Fix_Text"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(), @"\s+", " ").Trim();
+                                    sqliteCommand.Parameters["Fix_Text"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(true), @"\s+", " ").Trim();
                                     break;
                                 }
                             case "procedure":
                                 {
-                                    sqliteCommand.Parameters["Tool_Generated_Output"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(), @"\s+", " ").Trim();
+                                    sqliteCommand.Parameters["Tool_Generated_Output"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(true), @"\s+", " ").Trim();
                                     break;
                                 }
                             case "output":
@@ -248,24 +248,26 @@ namespace Vulnerator.Model.BusinessLogic
                                         Environment.NewLine,
                                         "Output:",
                                         Environment.NewLine,
-                                        Regex.Replace(xmlReader.ObtainCurrentNodeValue(), @"\s+", " ").Trim()
+                                        Regex.Replace(xmlReader.ObtainCurrentNodeValue(true), @"\s+", " ").Trim()
                                         );
                                     break;
                                 }
                             case "comments":
                                 {
-                                    sqliteCommand.Parameters["Comments"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(), @"\s+", " ").Trim();
+                                    sqliteCommand.Parameters["Comments"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(true), @"\s+", " ").Trim();
                                     break;
                                 }
                             case "status":
                                 {
-                                    sqliteCommand.Parameters["Status"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(), @"\s+", " ").Trim();
+                                    sqliteCommand.Parameters["Status"].Value = Regex.Replace(xmlReader.ObtainCurrentNodeValue(true), @"\s+", " ")
+                                        .Trim()
+                                        .ToVulneratorStatus();
                                     break;
                                 }
                             case "cci":
                                 {
                                     Regex regex = new Regex(Properties.Resources.RegexCciSelector);
-                                    ccis.Add(regex.Match(xmlReader.ObtainCurrentNodeValue()).ToString());
+                                    ccis.Add(regex.Match(xmlReader.ObtainCurrentNodeValue(true)).ToString());
                                     break;
                                 }
                             default:
@@ -320,41 +322,6 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 log.Error("Unable to generate XmlReaderSettings.");
                 throw exception;
-            }
-        }
-
-        private string SanitizeSourceName(string sourceName)
-        {
-            try
-            {
-                bool isSRG = sourceName.Contains("SRG") || sourceName.Contains("Security Requirement") ? true : false;
-                string value = sourceName;
-                string[] replaceArray = new string[]
-                {
-                    "STIG", "Security", "SECURITY", "Technical", "TECHNICAL", "Implementation", "IMPLEMENTATION",
-                    "Guide", "GUIDE", "(", ")", "Requirements", "REQUIREMENTS", "SRG", "  "
-                };
-                foreach (string item in replaceArray)
-                {
-                    if (item.Equals("  "))
-                    { value = value.Replace(item, " "); }
-                    else
-                    { value = value.Replace(item, ""); }
-                }
-                value = value.Trim();
-                if (!isSRG)
-                {
-                    value = string.Format("{0} Security Technical Implementation Guide", value);
-                    return value;
-                }
-                value = string.Format("{0} Security Requirements Guide", value);
-                return value;
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to sanitize source name \"{0}\".", sourceName));
-                log.Debug("Exception details:", exception);
-                return sourceName;
             }
         }
     }

@@ -175,7 +175,7 @@ namespace Vulnerator.Model.BusinessLogic
                 WriteStigDataNode(xmlWriter, "TargetKey", string.Empty);
                 foreach (string cci in sqliteDataReader["CCIs"].ToString().Split(',').ToArray())
                 { WriteStigDataNode(xmlWriter, "CCI_REF", cci); }
-                xmlWriter.WriteElementString("STATUS", sqliteDataReader["Status"].ToString());
+                xmlWriter.WriteElementString("STATUS", sqliteDataReader["Status"].ToString().ToCklStatus());
                 string toolGenerated;
                 if (string.IsNullOrWhiteSpace(sqliteDataReader["Tool_Generated_Output"].ToString()))
                 { toolGenerated = string.Empty; }

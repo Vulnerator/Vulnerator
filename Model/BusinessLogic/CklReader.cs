@@ -116,12 +116,12 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "ROLE":
                                 {
-                                    sqliteCommand.Parameters["Role"].Value = ObtainCurrentNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["Role"].Value = xmlReader.ObtainCurrentNodeValue(true);
                                     break;
                                 }
                             case "HOST_NAME":
                                 {
-                                    string hostName = ObtainCurrentNodeValue(xmlReader);
+                                    string hostName = xmlReader.ObtainCurrentNodeValue(true);
                                     if (!string.IsNullOrWhiteSpace(hostName) && !hostName.Equals("HOST NAME"))
                                     {
                                         sqliteCommand.Parameters["Host_Name"].Value = hostName;
@@ -131,32 +131,32 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "HOST_IP":
                                 {
-                                    ip = ObtainCurrentNodeValue(xmlReader);
+                                    ip = xmlReader.ObtainCurrentNodeValue(true);
                                     break;
                                 }
                             case "HOST_MAC":
                                 {
-                                    mac = ObtainCurrentNodeValue(xmlReader);
+                                    mac = xmlReader.ObtainCurrentNodeValue(true);
                                     break;
                                 }
                             case "HOST_FQDN":
                                 {
-                                    sqliteCommand.Parameters["FQDN"].Value = ObtainCurrentNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["FQDN"].Value = xmlReader.ObtainCurrentNodeValue(true);
                                     break;
                                 }
                             case "TECH_AREA":
                                 {
-                                    techArea = ObtainCurrentNodeValue(xmlReader);
+                                    techArea = xmlReader.ObtainCurrentNodeValue(true);
                                     break;
                                 }
                             case "WEB_DB_SITE":
                                 {
-                                    webDbSite = ObtainCurrentNodeValue(xmlReader);
+                                    webDbSite = xmlReader.ObtainCurrentNodeValue(true);
                                     break;
                                 }
                             case "WEB_DB_INSTANCE":
                                 {
-                                    webDbInstance = ObtainCurrentNodeValue(xmlReader);
+                                    webDbInstance = xmlReader.ObtainCurrentNodeValue(true);
                                     break;
                                 }
                             default:
@@ -251,8 +251,8 @@ namespace Vulnerator.Model.BusinessLogic
                 xmlReader.Read();
                 if (xmlReader.Name.Equals("STIG_TITLE"))
                 {
-                    string sourceName = ObtainCurrentNodeValue(xmlReader).Replace('_', ' ');
-                    sourceName = SanitizeSourceName(sourceName);
+                    string sourceName = xmlReader.ObtainCurrentNodeValue(true).Replace('_', ' ');
+                    sourceName = sourceName.ToSanitizedSource();
                     sqliteCommand.Parameters["Source_Name"].Value = sourceName;
                     databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                 }
@@ -268,7 +268,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 case "title":
                                     {
                                         string sourceName = ObtainStigInfoSubNodeValue(xmlReader).Replace('_', ' ');
-                                        sourceName = SanitizeSourceName(sourceName);
+                                        sourceName = sourceName.ToSanitizedSource();
                                         sqliteCommand.Parameters["Source_Name"].Value = sourceName;
                                         break;
                                     }
@@ -340,7 +340,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "Severity":
                                 {
-                                    sqliteCommand.Parameters["Raw_Risk"].Value = ConvertSeverityToRawRisk(ObtainAttributeDataNodeValue(xmlReader));
+                                    sqliteCommand.Parameters["Raw_Risk"].Value = ObtainAttributeDataNodeValue(xmlReader).ToRawRisk();
                                     break;
                                 }
                             case "Group_Title":
@@ -483,7 +483,7 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 xmlReader.Read();
-                sqliteCommand.Parameters["Status"].Value = MakeStatusUseable(xmlReader.Value);
+                sqliteCommand.Parameters["Status"].Value = xmlReader.Value.ToVulneratorStatus();
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -492,7 +492,7 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "FINDING_DETAILS":
                                 {
-                                    string nodeValue = ObtainCurrentNodeValue(xmlReader);
+                                    string nodeValue = xmlReader.ObtainCurrentNodeValue(true);
                                     if (nodeValue.Contains("<cdf:"))
                                     {
                                         sqliteCommand.Parameters["Tool_Generated_Output"].Value = nodeValue;
@@ -507,17 +507,17 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "COMMENTS":
                                 {
-                                    sqliteCommand.Parameters["Comments"].Value = ObtainCurrentNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["Comments"].Value = xmlReader.ObtainCurrentNodeValue(true);
                                     break;
                                 }
                             case "SEVERITY_OVERRIDE":
                                 {
-                                    sqliteCommand.Parameters["Severity_Override"].Value = ObtainCurrentNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["Severity_Override"].Value = xmlReader.ObtainCurrentNodeValue(true);
                                     break;
                                 }
                             case "SEVERITY_JUSTIFICATION":
                                 {
-                                    sqliteCommand.Parameters["Severity_Override_Justification"].Value = ObtainCurrentNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["Severity_Override_Justification"].Value = xmlReader.ObtainCurrentNodeValue(true);
                                     break;
                                 }
                             default:
@@ -627,108 +627,6 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private string ObtainCurrentNodeValue(XmlReader xmlReader)
-        {
-            try
-            {
-                xmlReader.Read();
-                string value = xmlReader.Value;
-                value = value.Replace("&gt", ">");
-                value = value.Replace("&lt", "<");
-                return value;
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to obtain currently accessed node value.");
-                throw exception;
-            }
-        }
-
-        private string ConvertSeverityToRawRisk(string severity)
-        {
-            try
-            {
-                switch (severity)
-                {
-                    case "high":
-                        { return "I"; }
-                    case "medium":
-                        { return "II"; }
-                    case "low":
-                        { return "III"; }
-                    case "unknown":
-                        { return "?"; }
-                    default:
-                        { return "?"; }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to convert severity \"{0}\" to raw risk.", severity));
-                throw exception;
-            }
-        }
-
-        private string MakeStatusUseable(string status)
-        {
-            try
-            {
-                switch (status)
-                {
-                    case "NotAFinding":
-                        { return "Completed"; }
-                    case "Not_Reviewed":
-                        { return "Not Reviewed"; }
-                    case "Open":
-                        { return "Ongoing"; }
-                    case "Not_Applicable":
-                        { return "Not Applicable"; }
-                    default:
-                        { return status; }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to parse status to a usable state.");
-                throw exception;
-            }
-        }
-
-        private string SanitizeSourceName(string sourceName)
-        {
-            try
-            {
-                bool isSRG = sourceName.Contains("SRG") || sourceName.Contains("Security Requirement") ? true : false;
-                string value = sourceName;
-                string[] replaceArray = new string[]
-                {
-                    "STIG", "Security", "SECURITY", "Technical", "TECHNICAL", "Implementation", "IMPLEMENTATION",
-                    "Guide", "GUIDE", "(", ")", "Requirements", "REQUIREMENTS", "SRG", "  "
-                };
-                foreach (string item in replaceArray)
-                {
-                    if (item.Equals("  "))
-                    { value = value.Replace(item, " "); }
-                    else
-                    { value = value.Replace(item, ""); }
-                }
-                value = value.Trim();
-                if (!isSRG)
-                {
-                    value = string.Format("{0} Security Technical Implementation Guide", value);
-                    return value;
-                }
-                value = string.Format("{0} Security Requirements Guide", value);
-                return value;
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to sanitize source name \"{0}\".", sourceName));
-                log.Debug("Exception details:", exception);
-                return sourceName;
-            }
-        }
-
         private void ClearGlobals()
         {
             stigInfo = string.Empty;
@@ -755,17 +653,17 @@ namespace Vulnerator.Model.BusinessLogic
                             {
                                 case "HOST_NAME":
                                     {
-                                        file.SetFileHostName(ObtainCurrentNodeValue(xmlReader));
+                                        file.SetFileHostName(xmlReader.ObtainCurrentNodeValue(true));
                                         break;
                                     }
                                 case "HOST_IP":
                                     {
-                                        file.SetFileIpAddress(ObtainCurrentNodeValue(xmlReader));
+                                        file.SetFileIpAddress(xmlReader.ObtainCurrentNodeValue(true));
                                         break;
                                     }
                                 case "HOST_MAC":
                                     {
-                                        file.SetFileMacAddress(ObtainCurrentNodeValue(xmlReader));
+                                        file.SetFileMacAddress(xmlReader.ObtainCurrentNodeValue(true));
                                         break;
                                     }
                                 default:

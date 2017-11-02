@@ -107,12 +107,12 @@ namespace Vulnerator.Model.BusinessLogic
                                                     }
                                                 case "TestRes":
                                                     {
-                                                        sqliteCommand.Parameters["Status"].Value = ConvertTestResultToStatus(ObtainItemValue(xmlReader));
+                                                        sqliteCommand.Parameters["Status"].Value = ObtainItemValue(xmlReader).ToVulneratorStatus();
                                                         break;
                                                     }
                                                 case "VulnInfo":
                                                     {
-                                                        sqliteCommand.Parameters["Raw_Risk"].Value = ConvertImpactToRawRisk(ObtainItemValue(xmlReader));
+                                                        sqliteCommand.Parameters["Raw_Risk"].Value = ObtainItemValue(xmlReader).ToRawRisk();
                                                         break;
                                                     }
                                                 case "RecInfo":
@@ -165,56 +165,6 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 log.Error("Unable to obtain node value.");
-                throw exception;
-            }
-        }
-        
-        private string ConvertTestResultToStatus(string testResult)
-        {
-            try
-            {
-                switch (testResult)
-                {
-                    case "\nFail\n":
-                        { return "Ongoing"; }
-                    case "\nPass\n":
-                        { return "Completed"; }
-                    case "\nUnknown\n":
-                        { return "Not Reviewed"; }
-                    case "\nManual Review\n":
-                        { return "Not Reviewed"; }
-                    default:
-                        { return "Not Reviewed"; }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to convert test result to status.");
-                throw exception;
-            }
-        }
-
-        private string ConvertImpactToRawRisk(string impact)
-        {
-            try
-            {
-                switch (impact)
-                {
-                    case "\nHigh\n":
-                        { return "I"; }
-                    case "\nMedium\n":
-                        { return "II"; }
-                    case "\nLow\n":
-                        { return "III"; }
-                    case "\nInformational\n":
-                        { return "IV"; }
-                    default:
-                        { return "Undetermined"; }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to convert impact to raw risk.");
                 throw exception;
             }
         }

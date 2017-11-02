@@ -80,8 +80,8 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "date":
                                 {
-                                    sqliteCommand.Parameters["First_Discovered"].Value = ObtainXmlReaderValue(xmlReader);
-                                    sqliteCommand.Parameters["Last_Observed"].Value = ObtainXmlReaderValue(xmlReader);
+                                    sqliteCommand.Parameters["First_Discovered"].Value = xmlReader.ObtainCurrentNodeValue(false);
+                                    sqliteCommand.Parameters["Last_Observed"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                     break;
                                 }
                             case "host":
@@ -98,17 +98,17 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "check":
                                 {
-                                    sqliteCommand.Parameters["Vulnerability_Title"].Value = ObtainXmlReaderValue(xmlReader);
+                                    sqliteCommand.Parameters["Vulnerability_Title"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                     break;
                                 }
                             case "description":
                                 {
-                                    sqliteCommand.Parameters["Vulnerability_Description"].Value = ObtainXmlReaderValue(xmlReader);
+                                    sqliteCommand.Parameters["Vulnerability_Description"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                     break;
                                 }
                             case "vulnerability":
                                 {
-                                    sqliteCommand.Parameters["Raw_Risk"].Value = ConvertImpactToRawRisk(ObtainXmlReaderValue(xmlReader));
+                                    sqliteCommand.Parameters["Raw_Risk"].Value = xmlReader.ObtainCurrentNodeValue(false).ToRawRisk();
                                     break;
                                 }
                             case "control":
@@ -126,12 +126,12 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "result":
                                 {
-                                    sqliteCommand.Parameters["Status"].Value = ConvertTestResultToStatus(ObtainXmlReaderValue(xmlReader));
+                                    sqliteCommand.Parameters["Status"].Value = xmlReader.ObtainCurrentNodeValue(false).ToVulneratorStatus();
                                     break;
                                 }
                             case "recommendation":
                                 {
-                                    sqliteCommand.Parameters["Fix_Text"].Value = ObtainXmlReaderValue(xmlReader);
+                                    sqliteCommand.Parameters["Fix_Text"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                     break;
                                 }
                             default:
@@ -152,181 +152,6 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 log.Error("Unable to parse vulnerability information.");
-                throw exception;
-            }
-        }
-
-        private string ObtainXmlReaderValue(XmlReader xmlReader)
-        {
-            try
-            {
-                xmlReader.Read();
-                return xmlReader.Value;
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to obtain node value.");
-                throw exception;
-            }
-        }
-
-        private string ConvertImpactToRawRisk(string impact)
-        {
-            try
-            {
-                switch (impact)
-                {
-                    case "High":
-                        { return "I"; }
-                    case "Medium":
-                        { return "II"; }
-                    case "Low":
-                        { return "III"; }
-                    case "Informational":
-                        { return "IV"; }
-                    default:
-                        { return "Undetermined"; }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to convert impact to raw risk.");
-                throw exception;
-            }
-        }
-
-        private string ConvertTestResultToStatus(string testResult)
-        {
-            try
-            {
-                switch (testResult)
-                {
-                    case "Fail":
-                        { return "Ongoing"; }
-                    case "Pass":
-                        { return "Completed"; }
-                    case "Unknown":
-                        { return "Not Reviewed"; }
-                    case "Manual Review":
-                        { return "Not Reviewed"; }
-                    default:
-                        { return "Not Reviewed"; }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to convert test result to status.");
-                throw exception;
-            }
-        }
-
-        private string SetSqliteCommandText(string tableName)
-        {
-            try
-            {
-                switch (tableName)
-                {
-                    case "Groups":
-                        { return "INSERT INTO Groups VALUES (NULL, @GroupName);"; }
-                    case "VulnerabilitySources":
-                        { return "INSERT INTO VulnerabilitySources VALUES (NULL, @Source, '', '');"; }
-                    case "Assets":
-                        {
-                            return "INSERT INTO Assets (AssetIdToReport, GroupIndex) VALUES (@AssetIdToReport, " +
-                                  "(SELECT GroupIndex FROM Groups WHERE GroupName = @GroupName));";
-                        }
-                    case "FileNames":
-                        { return "INSERT INTO FileNames VALUES (NULL, @FileName);"; }
-                    case "ScapScores":
-                        {
-                            return "INSERT INTO ScapScores VALUES (@ScapScore, " +
-                                "(SELECT AssetIndex FROM Assets WHERE AssetIdToReport = @AssetIdToReport), " +
-                                "(SELECT SourceIndex FROM VulnerabilitySources WHERE Source = @Source));";
-                        }
-                    case "Vulnerability":
-                        {
-                            return "INSERT INTO Vulnerability (VulnId, VulnTitle, Description, RawRisk, " +
-                                "Impact) VALUES (@VulnId, @VulnTitle, @Description, @RawRisk, @Impact);";
-                        }
-                    case "UniqueFinding":
-                        {
-                            return "INSERT INTO UniqueFinding (FindingTypeIndex, SourceIndex, StatusIndex, " +
-                                "FileNameIndex, VulnerabilityIndex, AssetIndex) VALUES (" +
-                                "(SELECT FindingTypeIndex FROM FindingTypes WHERE FindingType = @FindingType), " +
-                                "(SELECT SourceIndex FROM VulnerabilitySources WHERE Source = @Source), " +
-                                "(SELECT StatusIndex FROM FindingStatuses WHERE Status = @Status), " +
-                                "(SELECT FileNameIndex FROM FileNames WHERE FileName = @FileName), " +
-                                "(SELECT VulnerabilityIndex FROM Vulnerability WHERE VulnId = @VulnId), " +
-                                "(SELECT AssetIndex FROM Assets WHERE AssetIdToReport = @AssetIdToReport));";
-                        }
-                    default:
-                        { break; }
-                }
-                return "";
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to set SQLite command text.");
-                throw exception;
-            }
-        }
-
-        private void InsertVulnerabilityCommand(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                sqliteCommand.CommandText = SetSqliteCommandText("Vulnerability");
-                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
-                {
-                    if (parameter.ParameterName.Equals("NistControl"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(84, "@NistControl, "); }
-                    if (parameter.ParameterName.Equals("IaControl"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(84, "@IaControl, "); }
-                    if (parameter.ParameterName.Equals("FixText"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(84, "@FixText, "); }
-                }
-                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
-                {
-                    if (parameter.ParameterName.Equals("NistControl"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, "NistControl, "); }
-                    if (parameter.ParameterName.Equals("IaControl"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, "IaControl, "); }
-                    if (parameter.ParameterName.Equals("FixText"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(27, "FixText, "); }
-                }
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to create insert vulnerability command.");
-                throw exception;
-            }
-        }
-
-        private void InsertAssetCommand(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                sqliteCommand.CommandText = SetSqliteCommandText("Assets");
-                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
-                {
-                    if (parameter.ParameterName.Equals("HostName"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(57, "@HostName, "); }
-                    if (parameter.ParameterName.Equals("IpAddress"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(57, "@IpAddress, "); }
-                }
-                foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
-                {
-                    if (parameter.ParameterName.Equals("HostName"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(20, "HostName, "); }
-                    if (parameter.ParameterName.Equals("IpAddress"))
-                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(20, "IpAddress, "); }
-                }
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to create insert asset command.");
                 throw exception;
             }
         }
