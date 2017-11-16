@@ -206,8 +206,8 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = rule.Trim();
                 sqliteCommand.Parameters["Vulnerability_Version"].Value = ruleRelease.Trim();
                 sqliteCommand.Parameters["Raw_Risk"].Value = xmlReader.GetAttribute("raw_risk");
-                sqliteCommand.Parameters["First_Discovered"].Value = xmlReader.GetAttribute("datetime");
-                sqliteCommand.Parameters["Last_Observed"].Value = xmlReader.GetAttribute("datetime");
+                sqliteCommand.Parameters["First_Discovered"].Value = DateTime.Parse(xmlReader.GetAttribute("datetime"));
+                sqliteCommand.Parameters["Last_Observed"].Value = DateTime.Parse(xmlReader.GetAttribute("datetime"));
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())

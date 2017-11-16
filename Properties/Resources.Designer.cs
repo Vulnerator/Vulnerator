@@ -19,7 +19,7 @@ namespace Vulnerator.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -66,6 +66,15 @@ namespace Vulnerator.Properties {
         internal static string DeleteAcasVulnerabilitiesMappedToUnknownVersion {
             get {
                 return ResourceManager.GetString("DeleteAcasVulnerabilitiesMappedToUnknownVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Version = @Vulnerability_Version;.
+        /// </summary>
+        internal static string DeleteVulnerability {
+            get {
+                return ResourceManager.GetString("DeleteVulnerability", resourceCulture);
             }
         }
         
@@ -587,6 +596,18 @@ namespace Vulnerator.Properties {
         internal static string SelectIndexes {
             get {
                 return ResourceManager.GetString("SelectIndexes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT 
+        ///    Unique_Vulnerability_Identifier, 
+        ///    Vulnerability_Version 
+        ///FROM Vulnerabilities;.
+        /// </summary>
+        internal static string SelectVulnerabilityIdentifiersAndVersions {
+            get {
+                return ResourceManager.GetString("SelectVulnerabilityIdentifiersAndVersions", resourceCulture);
             }
         }
         

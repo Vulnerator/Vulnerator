@@ -25,6 +25,7 @@ namespace Vulnerator.Model.BusinessLogic
         private string[] persistentParameters = new string[] {
             "Vulnerability_Source_File_Name", "Source_Description", "Source_Secondary_Identifier", "Source_Name", "Source_Version", "Source_Release", "Host_Name", "Scan_IP"
         };
+        private List<Tuple<string, string>> ingestedStigVulnerabilities = new List<Tuple<string, string>>(); //Item1 == rule, Item2 == ruleVersion
 
         public void ReadRawStig(ZipArchiveEntry rawStig)
         {
@@ -65,6 +66,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             }
                         }
+                        DeleteRemovedChecks(sqliteCommand);
                     }
                     sqliteTransaction.Commit();
                 }
@@ -120,8 +122,8 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "Profile":
                                 {
-                                    databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                                     databaseInterface.UpdateVulnerabilitySource(sqliteCommand);
+                                    databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                                     return;
                                 }
                             default:
@@ -207,6 +209,7 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = rule;
                 sqliteCommand.Parameters["Vulnerability_Version"].Value = ruleVersion;
                 sqliteCommand.Parameters["Raw_Risk"].Value = xmlReader.GetAttribute("severity").ToRawRisk();
+                ingestedStigVulnerabilities.Add(new Tuple<string, string>(rule, ruleVersion));
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -401,6 +404,37 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 log.Error("Unable to generate a Stream from the provided string.");
+                throw exception;
+            }
+        }
+
+        private void DeleteRemovedChecks(SQLiteCommand sqliteCommand)
+        { 
+            try
+            {
+                SQLiteCommand clonedCommand = sqliteCommand.Clone() as SQLiteCommand;
+                clonedCommand.CommandText = Properties.Resources.SelectVulnerabilityIdentifiersAndVersions;
+                using (SQLiteDataReader sqliteDataReader = clonedCommand.ExecuteReader())
+                {
+                    if (!sqliteDataReader.HasRows)
+                    { return; }
+                    while (sqliteDataReader.Read())
+                    {
+                        string rule = sqliteDataReader["Unique_Vulnerability_Identifier"].ToString();
+                        string ruleVersion = sqliteDataReader["Vulnerability_Version"].ToString();
+                        if (ingestedStigVulnerabilities.Count(x => x.Item1.Equals(rule) && x.Item2.Equals(ruleVersion)) > 0)
+                        {
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("Unique_Vulnerability_Identifier", rule));
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Version", ruleVersion));
+                            databaseInterface.DeleteVulnerability(sqliteCommand);
+                            sqliteCommand.Parameters.Clear();
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to delete removed checks from database."));
                 throw exception;
             }
         }

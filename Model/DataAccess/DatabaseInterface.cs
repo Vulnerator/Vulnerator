@@ -68,6 +68,22 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public void DeleteVulnerability(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.DeleteVulnerability;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to delete Vulnerability \"{0}\".",
+                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
+                log.Debug("Exception details:", exception);
+                throw exception;
+            }
+        }
+
         public void DropVulnerabilityRelatedIndices()
         {
             try

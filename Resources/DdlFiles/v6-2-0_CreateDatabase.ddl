@@ -1343,7 +1343,7 @@ CREATE TABLE VulnerabilitySources
 	 Source_Description NVARCHAR (2000) ,
 	 Source_Version NVARCHAR (25) NOT NULL, 
 	 Source_Release NVARCHAR (25) NOT NULL, 
-	 UNIQUE (Source_Name) ON CONFLICT IGNORE
+	 UNIQUE (Source_Name, Source_Version, Source_Release) ON CONFLICT IGNORE
 	);
 CREATE TABLE Waivers 
 	(

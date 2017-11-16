@@ -120,6 +120,9 @@
   <data name="DeleteAcasVulnerabilitiesMappedToUnknownVersion" xml:space="preserve">
     <value>DELETE FROM Vulnerabilities_VulnerabilitySources WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Version = 'Version Unknown');</value>
   </data>
+  <data name="DeleteVulnerability" xml:space="preserve">
+    <value>DELETE FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Version = @Vulnerability_Version;</value>
+  </data>
   <data name="DeleteVulnerabilityCciMapping" xml:space="preserve">
     <value>DELETE FROM VulnerabilitiesCCIs WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_vulnerability_Identifier) AND CCI_ID = (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI);</value>
   </data>
@@ -431,6 +434,12 @@ GROUP BY UniqueFindings.Vulnerability_ID;</value>
   </data>
   <data name="SelectIndexes" xml:space="preserve">
     <value>SELECT name FROM sqlite_master WHERE type == 'index';</value>
+  </data>
+  <data name="SelectVulnerabilityIdentifiersAndVersions" xml:space="preserve">
+    <value>SELECT 
+    Unique_Vulnerability_Identifier, 
+    Vulnerability_Version 
+FROM Vulnerabilities;</value>
   </data>
   <data name="SelectVulnerabilitySourceVersionAndRelease" xml:space="preserve">
     <value>SELECT Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Name = @Source_Name;</value>
