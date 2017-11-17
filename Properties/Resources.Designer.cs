@@ -603,7 +603,13 @@ namespace Vulnerator.Properties {
         ///   Looks up a localized string similar to SELECT 
         ///    Unique_Vulnerability_Identifier, 
         ///    Vulnerability_Version 
-        ///FROM Vulnerabilities;.
+        ///FROM Vulnerabilities 
+        ///LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
+        ///LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID
+        ///WHERE 
+        ///    Source_Name = @Source_Name 
+        ///AND Source_Version = @Source_Version 
+        ///AND Source_Release = @Source_Release;.
         /// </summary>
         internal static string SelectVulnerabilityIdentifiersAndVersions {
             get {

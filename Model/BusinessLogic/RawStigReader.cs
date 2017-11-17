@@ -23,7 +23,7 @@ namespace Vulnerator.Model.BusinessLogic
         private List<string> responsibilities = new List<string>();
         private Dictionary<string, string> replaceDictionary = PopulateReplaceDictionary();
         private string[] persistentParameters = new string[] {
-            "Vulnerability_Source_File_Name", "Source_Description", "Source_Secondary_Identifier", "Source_Name", "Source_Version", "Source_Release", "Host_Name", "Scan_IP"
+            "Vulnerability_Source_File_Name", "Source_Description", "Source_Secondary_Identifier", "Source_Name", "Source_Version", "Source_Release", "Host_Name", "Scan_IP", "Finding_Type"
         };
         private List<Tuple<string, string>> ingestedStigVulnerabilities = new List<Tuple<string, string>>(); //Item1 == rule, Item2 == ruleVersion
 
@@ -39,6 +39,7 @@ namespace Vulnerator.Model.BusinessLogic
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
+                        sqliteCommand.Parameters["Finding_Type"].Value = "CKL";
                         using (XmlReader xmlReader = XmlReader.Create(rawStig.Open(), GenerateXmlReaderSettings()))
                         {
                             while (xmlReader.Read() && sourceUpdated)
@@ -422,7 +423,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         string rule = sqliteDataReader["Unique_Vulnerability_Identifier"].ToString();
                         string ruleVersion = sqliteDataReader["Vulnerability_Version"].ToString();
-                        if (ingestedStigVulnerabilities.Count(x => x.Item1.Equals(rule) && x.Item2.Equals(ruleVersion)) > 0)
+                        if (ingestedStigVulnerabilities.Count(x => x.Item1.Equals(rule) && x.Item2.Equals(ruleVersion)) == 0)
                         {
                             sqliteCommand.Parameters.Add(new SQLiteParameter("Unique_Vulnerability_Identifier", rule));
                             sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Version", ruleVersion));
