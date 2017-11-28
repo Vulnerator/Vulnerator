@@ -174,6 +174,7 @@
                                             <RowDefinition />
                                             <RowDefinition />
                                             <RowDefinition />
+                                            <RowDefinition />
                                         </Grid.RowDefinitions>
                                         <TextBox Grid.Column="1"
                                                  Margin="0,0,5,5"
@@ -353,11 +354,11 @@
                                             </DataGrid.Columns>
                                         </DataGrid>
                                         <DataGrid Grid.Row="4"
+                                                  Grid.RowSpan="2"
                                                   Grid.Column="1"
                                                   Grid.ColumnSpan="2"
-                                                  Height="200"
                                                   Margin="0,0,5,5"
-                                                  VerticalAlignment="Top"
+                                                  VerticalAlignment="Stretch"
                                                   CanUserAddRows="False"
                                                   CanUserDeleteRows="False"
                                                   IsReadOnly="True"
@@ -390,7 +391,7 @@
                                                   Grid.Column="3"
                                                   Grid.ColumnSpan="2"
                                                   Height="200"
-                                                  Margin="0,0,5,5"
+                                                  Margin="5,0,5,5"
                                                   VerticalAlignment="Top"
                                                   CanUserAddRows="False"
                                                   CanUserDeleteRows="False"
@@ -417,6 +418,18 @@
                                                 </DataGridTemplateColumn>
                                             </DataGrid.Columns>
                                         </DataGrid>
+                                        <ComboBox Grid.Row="5"
+                                                  Grid.Column="3"
+                                                  Grid.ColumnSpan="2"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ClearTextButton="True"
+                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                  Controls:TextBoxHelper.Watermark="Add Associated Checklist"
+                                                  ItemsSource="{Binding Path=DataContext.VulnerabilitySources, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                  DisplayMemberPath="Source_Name"/>
                                     </Grid>
                                 </DataTemplate>
                             </DataGrid.RowDetailsTemplate>
