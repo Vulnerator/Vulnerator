@@ -63,7 +63,7 @@ namespace Vulnerator.ViewModel
             try
             {
                 ThemeManager.AddAppTheme("PowerShellDark", new Uri("pack://application:,,,/Vulnerator;component/View/Theme/PowerShellDark.xaml"));
-                ThemeManager.AddAppTheme("Matrix", new Uri("pack://application:,,,/Vulnerator;component/View/Theme/Matrix.xaml"));
+                ThemeManager.AddAppTheme("BlackAndWhite", new Uri("pack://application:,,,/Vulnerator;component/View/Theme/BlackAndWhite.xaml"));
                 Themes = PopulateAvailableThemes();
                 SetTheme(Properties.Settings.Default["Theme"].ToString());
                 SetAccent(Properties.Settings.Default["Accent"].ToString());
@@ -100,9 +100,9 @@ namespace Vulnerator.ViewModel
                                 displayName = "PowerShell Dark";
                                 break;
                             }
-                        case "Matrix":
+                        case "BlackAndWhite":
                             {
-                                displayName = "Matrix";
+                                displayName = "Black & White";
                                 break;
                             }
                         default:

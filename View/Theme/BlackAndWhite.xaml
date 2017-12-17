@@ -5,7 +5,7 @@
                     xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     mc:Ignorable="options">
 
-    <Color x:Key="BlackColor">#FF75FA00</Color>
+    <Color x:Key="BlackColor">#FFFFFFFF</Color>
     <Color x:Key="WhiteColor">#FF000000</Color>
 
     <Color x:Key="Gray1">#FFF9F9F9</Color>
