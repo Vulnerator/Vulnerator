@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Vulnerator.View.ViewHelper
 {
@@ -29,6 +30,18 @@ namespace Vulnerator.View.ViewHelper
         { return (string)d.GetValue(FloatingWatermarkProperty); }
 
         public static void SetFloatingWatermark(DependencyObject d, string value)
+        { d.SetValue(FloatingWatermarkProperty, value); }
+
+        public static readonly DependencyProperty FloatingWatermarkForegroundProperty = DependencyProperty.RegisterAttached(
+              "FloatingWatermarkForeground",
+              typeof(SolidColorBrush),
+              typeof(DependencyProperties),
+              new PropertyMetadata(new SolidColorBrush(Color.FromRgb(153, 153, 153))));
+
+        public static SolidColorBrush GetFloatingWatermarkForeground(DependencyObject d)
+        { return (SolidColorBrush)d.GetValue(FloatingWatermarkProperty); }
+
+        public static void SetFloatingWatermarkForeground(DependencyObject d, SolidColorBrush value)
         { d.SetValue(FloatingWatermarkProperty, value); }
     }
 }

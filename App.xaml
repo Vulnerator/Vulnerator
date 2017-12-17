@@ -745,6 +745,7 @@
                                                 Grid.Row="0"
                                                 Margin="0"
                                                 HorizontalAlignment="Left"
+                                                vh:DependencyProperties.FloatingWatermarkForeground="{TemplateBinding vh:DependencyProperties.FloatingWatermarkForeground}"
                                                 Style="{DynamicResource FloatingMessageContainerStyle}"
                                                 Visibility="Hidden">
                                     <ContentControl.Width>
@@ -760,7 +761,7 @@
                                     <TextBlock x:Name="PART_FloatingMessage"
                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                               Foreground="{TemplateBinding Foreground}"
+                                               Foreground="{TemplateBinding vh:DependencyProperties.FloatingWatermarkForeground}"
                                                Style="{DynamicResource MetroAutoCollapsingTextBlock}"
                                                Text="{TemplateBinding vh:DependencyProperties.FloatingWatermark}"
                                                TextAlignment="{TemplateBinding Controls:TextBoxHelper.WatermarkAlignment}"
@@ -900,7 +901,7 @@
                                 </Trigger>
                                 <Trigger Property="IsFocused" Value="True">
                                     <Setter TargetName="Base" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.FocusBorderBrush)}" />
-                                    <Setter TargetName="PART_FloatingMessage" Property="Foreground" Value="{DynamicResource AccentColorBrush}" />
+                                    <!--<Setter TargetName="PART_FloatingMessage" Property="Foreground" Value="{DynamicResource AccentColorBrush}" />-->
                                     <Setter TargetName="PART_FloatingMessage" Property="Opacity" Value="1" />
                                 </Trigger>
                                 <Trigger SourceName="PART_ClearText" Property="IsMouseOver" Value="True">
@@ -970,6 +971,8 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
+                <Setter Property="vh:DependencyProperties.FloatingWatermark" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:TextBoxHelper.Watermark)}" />
+                <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource Self}, Path=Foreground}" />
             </Style>
 
             <Storyboard x:Key="CustomHideFloatingMessageStoryboard"
