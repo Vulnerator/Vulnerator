@@ -511,6 +511,8 @@
     <Compile Include="View\Converter\BooleanToIconConverter.cs" />
     <Compile Include="View\Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="View\Converter\DebugDataBindingConverter.cs" />
+    <Compile Include="View\Converter\MarkupConverter.cs" />
+    <Compile Include="View\Converter\MathConverter.cs" />
     <Compile Include="View\Converter\MitigationsSelectedItemConverter.cs" />
     <Compile Include="View\Converter\FileTypeToVisibilityConverter.cs" />
     <Compile Include="View\Converter\HtmlToFlowDocumentConverter.cs" />
@@ -577,7 +579,7 @@
       <DependentUpon>NoInternetApplication.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Validation\PhoneNumberValidationRule.cs" />
-    <Compile Include="View\ViewHelper\TextBlockExtensions.cs" />
+    <Compile Include="View\ViewHelper\DependencyProperties.cs" />
     <Page Include="Resources\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
