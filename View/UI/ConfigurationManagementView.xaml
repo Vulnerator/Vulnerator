@@ -13,6 +13,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:v="clr-namespace:Vulnerator.View"
+             xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
              xmlns:vm="clr-namespace:Vulnerator.ViewModel"
              HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch"
@@ -90,10 +91,11 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Preferred Host Name" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -109,7 +111,7 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="FQDN (Read Only)" />
                                             <Setter Property="IsReadOnly" Value="True" />
@@ -129,7 +131,7 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="NetBIOS (Read Only)" />
                                             <Setter Property="IsReadOnly" Value="True" />
@@ -149,11 +151,12 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Last Scan IP (Read Only)" />
                                             <Setter Property="IsReadOnly" Value="True" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -428,8 +431,8 @@
                                                   Controls:TextBoxHelper.ClearTextButton="True"
                                                   Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Checklist"
-                                                  ItemsSource="{Binding Path=DataContext.VulnerabilitySources, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                                                  DisplayMemberPath="Source_Name"/>
+                                                  DisplayMemberPath="Source_Name"
+                                                  ItemsSource="{Binding Path=DataContext.VulnerabilitySources, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
                                     </Grid>
                                 </DataTemplate>
                             </DataGrid.RowDetailsTemplate>
