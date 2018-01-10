@@ -29,8 +29,8 @@
                       GlowBrush="{DynamicResource AccentColorBrush}"
                       Icon="/Vulnerator;component/Resources/vulneratorlogodraft.ico"
                       KeyboardNavigation.TabNavigation="Continue"
-                      WindowCloseButtonStyle="{DynamicResource CustomCloseWindowButtonStyle}"
                       ResizeMode="CanResize"
+                      WindowCloseButtonStyle="{DynamicResource CustomCloseWindowButtonStyle}"
                       mc:Ignorable="d">
 
     <!--  Window Icon Template  -->
@@ -123,13 +123,13 @@
                                     Foreground="{DynamicResource LabelTextBrush}"
                                     ItemTemplate="{StaticResource HamburgerMenuItem}"
                                     OptionsItemTemplate="{StaticResource HamburgerMenuItem}"
-                                    VerticalScrollBarOnLeftSide="True"
-                                    SelectedIndex="0">
+                                    SelectedIndex="0"
+                                    VerticalScrollBarOnLeftSide="True">
                 <Controls:HamburgerMenu.HamburgerMenuHeaderTemplate>
                     <DataTemplate>
                         <TextBlock Grid.Column="1"
-                                   VerticalAlignment="Center"
                                    HorizontalAlignment="Left"
+                                   VerticalAlignment="Center"
                                    FontSize="16"
                                    Foreground="White"
                                    Text="Navigation" />
@@ -138,7 +138,7 @@
                 <Controls:HamburgerMenu.ItemsSource>
                     <Controls:HamburgerMenuItemCollection>
                         <Controls:HamburgerMenuIconItem Label="Vulnerability Management"
-                                                           Tag="{StaticResource vulnerabilityManagementView}">
+                                                        Tag="{StaticResource vulnerabilityManagementView}">
                             <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconMaterial HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
@@ -147,7 +147,7 @@
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                         <Controls:HamburgerMenuIconItem Label="Mitigations &amp; NIST Mapping"
-                                                           Tag="{StaticResource mitigationsNistMappingView}">
+                                                        Tag="{StaticResource mitigationsNistMappingView}">
                             <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconModern HorizontalAlignment="Center"
                                                           VerticalAlignment="Center"
@@ -165,7 +165,7 @@
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                         <Controls:HamburgerMenuIconItem Label="Configuration Management"
-                                                           Tag="{StaticResource configurationManagementView}">
+                                                        Tag="{StaticResource configurationManagementView}">
                             <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconMaterial HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
@@ -174,7 +174,7 @@
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                         <Controls:HamburgerMenuIconItem Label="News"
-                                                           Tag="{StaticResource newsView}">
+                                                        Tag="{StaticResource newsView}">
                             <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconFontAwesome HorizontalAlignment="Center"
                                                                VerticalAlignment="Center"
@@ -187,7 +187,7 @@
                 <Controls:HamburgerMenu.OptionsItemsSource>
                     <Controls:HamburgerMenuItemCollection>
                         <Controls:HamburgerMenuIconItem Label="User Guide"
-                                                           Tag="{StaticResource userGuideView}">
+                                                        Tag="{StaticResource userGuideView}">
                             <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconOcticons HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
@@ -196,7 +196,7 @@
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                         <Controls:HamburgerMenuIconItem Label="Settings"
-                                                           Tag="{StaticResource settingsView}">
+                                                        Tag="{StaticResource settingsView}">
                             <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconMaterial HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
@@ -205,7 +205,7 @@
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                         <Controls:HamburgerMenuIconItem Label="Theme"
-                                                           Tag="{StaticResource themeView}">
+                                                        Tag="{StaticResource themeView}">
                             <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconFontAwesome HorizontalAlignment="Center"
                                                                VerticalAlignment="Center"
@@ -214,7 +214,7 @@
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                         <Controls:HamburgerMenuIconItem Label="About"
-                                                           Tag="{StaticResource aboutView}">
+                                                        Tag="{StaticResource aboutView}">
                             <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconMaterial HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
