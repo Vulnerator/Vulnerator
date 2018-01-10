@@ -14,6 +14,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:v="clr-namespace:Vulnerator.View"
+             xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
              xmlns:vm="clr-namespace:Vulnerator.ViewModel"
              HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch"
@@ -38,78 +39,53 @@
                         <TextBlock Text="User Information"
                                    TextTrimming="CharacterEllipsis" />
                     </Label>
-                    <Controls:MetroHeader Margin="5,0,5,5">
-                        <Controls:MetroHeader.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock FontSize="10"
-                                           Text="Active User" />
-                            </DataTemplate>
-                        </Controls:MetroHeader.HeaderTemplate>
-                        <TextBox Controls:TextBoxHelper.Watermark="(Read Only)"
-                                 IsReadOnly="True"
-                                 Text="{Binding Source={StaticResource Settings}, Path=Default.ActiveUser}" />
-                    </Controls:MetroHeader>
-                    <Controls:MetroHeader Margin="5,0,5,5">
-                        <Controls:MetroHeader.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock FontSize="10"
-                                           Text="Name" />
-                            </DataTemplate>
-                        </Controls:MetroHeader.HeaderTemplate>
-                        <TextBox Controls:TextBoxHelper.ClearTextButton="True"
-                                 Controls:TextBoxHelper.Watermark="First &amp; Last"
-                                 Text="{Binding Source={StaticResource Settings}, Path=Default.Name}" />
-                    </Controls:MetroHeader>
-                    <Controls:MetroHeader Margin="5,0,5,5">
-                        <Controls:MetroHeader.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock FontSize="10"
-                                           Text="Phone Number" />
-                            </DataTemplate>
-                        </Controls:MetroHeader.HeaderTemplate>
-                        <TextBox Controls:TextBoxHelper.ClearTextButton="True"
-                                 Controls:TextBoxHelper.Watermark="Digits Only (e.g. 0123456789)">
-                            <Binding Mode="TwoWay"
-                                     Source="{StaticResource Settings}"
-                                     UpdateSourceTrigger="PropertyChanged"
-                                     Path="Default.Phone">
-                                <Binding.ValidationRules>
-                                    <Validation:PhoneNumberValidationRule />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox>
-                    </Controls:MetroHeader>
-                    <Controls:MetroHeader Margin="5,0,5,5">
-                        <Controls:MetroHeader.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock FontSize="10"
-                                           Text="Email" />
-                            </DataTemplate>
-                        </Controls:MetroHeader.HeaderTemplate>
-                        <TextBox Controls:TextBoxHelper.ClearTextButton="True"
-                                 Controls:TextBoxHelper.Watermark="you@example.com">
-                            <Binding Mode="TwoWay"
-                                     Source="{StaticResource Settings}"
-                                     UpdateSourceTrigger="PropertyChanged"
-                                     Path="Default.Email">
-                                <Binding.ValidationRules>
-                                    <Validation:EmailValidationRule />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox>
-                    </Controls:MetroHeader>
-                    <Controls:MetroHeader Margin="5,0,5,5">
-                        <Controls:MetroHeader.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock FontSize="10"
-                                           Text="Organization" />
-                            </DataTemplate>
-                        </Controls:MetroHeader.HeaderTemplate>
-                        <TextBox Controls:TextBoxHelper.ClearTextButton="True"
-                                 Controls:TextBoxHelper.Watermark="NAVAIR"
-                                 Text="{Binding Source={StaticResource Settings}, Path=Default.Organization}" />
-                    </Controls:MetroHeader>
+                    <TextBox Margin="5,0,5,5"
+                             Controls:TextBoxHelper.Watermark="Active User(Read Only)"
+                             vh:DependencyProperties.FloatingWatermark="Active User (Read Only)"
+                             IsReadOnly="True"
+                             Style="{StaticResource HeaderedTextBoxStyle}"
+                             Text="{Binding Source={StaticResource Settings}, Path=Default.ActiveUser}" />
+                    <TextBox Margin="5,0,5,5"
+                             Controls:TextBoxHelper.ClearTextButton="True"
+                             Controls:TextBoxHelper.Watermark="Name (First &amp; Last)"
+                             vh:DependencyProperties.FloatingWatermark="Name"
+                             Style="{StaticResource HeaderedTextBoxStyle}"
+                             Text="{Binding Source={StaticResource Settings}, Path=Default.Name}" />
+                    <TextBox Margin="5,0,5,5"
+                             Controls:TextBoxHelper.ClearTextButton="True"
+                             Controls:TextBoxHelper.Watermark="Phone Number (Digits Only - e.g. 0123456789)"
+                             vh:DependencyProperties.FloatingWatermark="Phone Number"
+                             Style="{StaticResource HeaderedTextBoxStyle}">
+                        <Binding Mode="TwoWay"
+                                 Source="{StaticResource Settings}"
+                                 UpdateSourceTrigger="PropertyChanged"
+                                 Path="Default.Phone">
+                            <Binding.ValidationRules>
+                                <Validation:PhoneNumberValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox>
 
+                    <TextBox Margin="5,0,5,5"
+                             Controls:TextBoxHelper.ClearTextButton="True"
+                             Controls:TextBoxHelper.Watermark="eMASS Email (you@example.com)"
+                             vh:DependencyProperties.FloatingWatermark="eMASS Email"
+                             Style="{StaticResource HeaderedTextBoxStyle}">
+                        <Binding Mode="TwoWay"
+                                 Source="{StaticResource Settings}"
+                                 UpdateSourceTrigger="PropertyChanged"
+                                 Path="Default.Email">
+                            <Binding.ValidationRules>
+                                <Validation:EmailValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox>
+                    <TextBox Margin="5,0,5,5"
+                             Controls:TextBoxHelper.ClearTextButton="True"
+                             Controls:TextBoxHelper.Watermark="Organization (e.g. NAVAIR)"
+                             vh:DependencyProperties.FloatingWatermark="Organization"
+                             Style="{StaticResource HeaderedTextBoxStyle}"
+                             Text="{Binding Source={StaticResource Settings}, Path=Default.Organization}" />
                     <Label Grid.Column="0"
                            Style="{StaticResource SecondLevelHeaderStyle}">
                         <TextBlock Text="Database File"

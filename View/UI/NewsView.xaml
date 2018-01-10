@@ -81,7 +81,6 @@
                     <Grid Grid.Column="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0"
@@ -101,75 +100,157 @@
                                            TextWrapping="Wrap" />
                             </Label>
                         </Grid>
-                        <Grid Grid.Row="1"
-                              Margin="5,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition />
-                                <ColumnDefinition />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0"
-                                   Style="{StaticResource SecondLevelHeaderStyle}">
-                                <StackPanel Orientation="Horizontal">
-                                    <IconPacks:PackIconMaterial Margin="0,0,5,0"
-                                                                VerticalAlignment="Center"
-                                                                Kind="Pound"
-                                                                ToolTip="Issue Number" />
-                                    <TextBlock VerticalAlignment="Center"
-                                               Text="{Binding ElementName=issueListBox, Path=SelectedItem.Number}"
-                                               TextTrimming="CharacterEllipsis" />
-                                </StackPanel>
-                            </Label>
-                            <Label Grid.Column="1"
-                                   Style="{StaticResource SecondLevelHeaderStyle}">
-                                <StackPanel Orientation="Horizontal">
-                                    <IconPacks:PackIconMaterial Margin="0,0,5,0"
-                                                                VerticalAlignment="Center"
-                                                                Kind="CommentMultipleOutline"
-                                                                ToolTip="Comments" />
-                                    <TextBlock VerticalAlignment="Center"
-                                               Text="{Binding ElementName=issueListBox, Path=SelectedItem.Comments}"
-                                               TextTrimming="CharacterEllipsis" />
-                                </StackPanel>
-                            </Label>
-                            <Label Grid.Column="2"
-                                   Style="{StaticResource SecondLevelHeaderStyle}">
-                                <StackPanel Orientation="Horizontal">
-                                    <IconPacks:PackIconOcticons Margin="0,0,5,0"
-                                                                VerticalAlignment="Center"
-                                                                Kind="Milestone"
-                                                                ToolTip="Milestone" />
-                                    <TextBlock VerticalAlignment="Center"
-                                               Text="{Binding ElementName=issueListBox, Path=SelectedItem.Milestone}"
-                                               TextTrimming="CharacterEllipsis" />
-                                </StackPanel>
-                            </Label>
-                            <Label Grid.Column="3"
-                                   Style="{StaticResource SecondLevelHeaderStyle}">
-                                <StackPanel Orientation="Horizontal">
-                                    <IconPacks:PackIconOcticons Margin="0,0,5,0"
-                                                                VerticalAlignment="Center"
-                                                                Kind="Browser" />
-                                    <TextBlock HorizontalAlignment="Stretch"
-                                               Style="{StaticResource HyperlinkTextBlockStyle}"
-                                               Text="View on GitHub"
-                                               TextWrapping="Wrap">
-                                        <TextBlock.InputBindings>
-                                            <MouseBinding Command="{Binding GitHubLinksCommand}"
-                                                          CommandParameter="{Binding ElementName=issueListBox, Path=SelectedItem.HtmlUrl}"
-                                                          MouseAction="LeftClick" />
-                                        </TextBlock.InputBindings>
-                                    </TextBlock>
-                                </StackPanel>
-                            </Label>
-                        </Grid>
-                        <Grid Grid.Row="2">
+                        <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition Width=".25*" />
                             </Grid.ColumnDefinitions>
-                            <Border Margin="5,0,5,5"
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid Margin="5,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0"
+                                       Style="{StaticResource ThirdLevelHeaderStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <IconPacks:PackIconMaterial Margin="0,0,5,0"
+                                                                    VerticalAlignment="Center"
+                                                                    Kind="Pound"
+                                                                    ToolTip="Issue Number" />
+                                        <TextBlock VerticalAlignment="Center"
+                                                   Text="{Binding ElementName=issueListBox, Path=SelectedItem.Number}"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                </Label>
+                                <Label Grid.Column="1"
+                                       Style="{StaticResource ThirdLevelHeaderStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <IconPacks:PackIconMaterial Margin="0,0,5,0"
+                                                                    VerticalAlignment="Center"
+                                                                    Kind="CommentMultipleOutline"
+                                                                    ToolTip="Comments" />
+                                        <TextBlock VerticalAlignment="Center"
+                                                   Text="{Binding ElementName=issueListBox, Path=SelectedItem.Comments}"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                </Label>
+                                <Label Grid.Column="2"
+                                       Style="{StaticResource ThirdLevelHeaderStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <IconPacks:PackIconOcticons Margin="0,0,5,0"
+                                                                    VerticalAlignment="Center"
+                                                                    Kind="Milestone"
+                                                                    ToolTip="Milestone" />
+                                        <TextBlock VerticalAlignment="Center"
+                                                   Text="{Binding ElementName=issueListBox, Path=SelectedItem.Milestone}"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                </Label>
+                                <Label Grid.Column="3"
+                                       Style="{StaticResource ThirdLevelHeaderStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <IconPacks:PackIconOcticons Margin="0,0,5,0"
+                                                                    VerticalAlignment="Center"
+                                                                    Kind="Browser" />
+                                        <TextBlock HorizontalAlignment="Stretch"
+                                                   Style="{StaticResource HyperlinkTextBlockStyle}"
+                                                   Text="View on GitHub"
+                                                   TextWrapping="Wrap">
+                                            <TextBlock.InputBindings>
+                                                <MouseBinding Command="{Binding GitHubLinksCommand}"
+                                                              CommandParameter="{Binding ElementName=issueListBox, Path=SelectedItem.HtmlUrl}"
+                                                              MouseAction="LeftClick" />
+                                            </TextBlock.InputBindings>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Label>
+                            </Grid>
+                            <Grid Grid.RowSpan="2"
+                                  Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Label Style="{StaticResource ThirdLevelHeaderStyle}">
+                                    <TextBlock Text="Assigned Labels"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                                <ListView Grid.Row="1"
+                                          Margin="0,0,5,5"
+                                          BorderBrush="{DynamicResource TextBoxBorderBrush}"
+                                          BorderThickness="1"
+                                          ItemsSource="{Binding ElementName=issueListBox, Path=SelectedItem.Labels}"
+                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="Control">
+                                            <Setter Property="Focusable" Value="False" />
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Rectangle Width="5"
+                                                           VerticalAlignment="Stretch"
+                                                           Fill="{Binding Color}" />
+                                                <TextBlock Grid.Column="1"
+                                                           Margin="5,0,0,0"
+                                                           Text="{Binding Name}"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           TextWrapping="NoWrap" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                                <Label Grid.Row="2"
+                                       Style="{StaticResource ThirdLevelHeaderStyle}">
+                                    <TextBlock Text="Label Categories"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                                <ListView Grid.Row="3"
+                                          Margin="0,0,5,5"
+                                          BorderBrush="{DynamicResource TextBoxBorderBrush}"
+                                          BorderThickness="1"
+                                          ItemsSource="{Binding IssueLabelCategoryList}"
+                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="Control">
+                                            <Setter Property="Focusable" Value="False" />
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Rectangle Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}"
+                                                           VerticalAlignment="Stretch"
+                                                           Fill="{Binding Color}" />
+                                                <TextBlock Grid.Column="1"
+                                                           Margin="5,0,0,0"
+                                                           Text="{Binding Category}"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           TextWrapping="NoWrap" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </Grid>
+                            <Border Grid.Row="1"
+                                    Margin="5,0,5,5"
                                     BorderBrush="{DynamicResource TextBoxBorderBrush}"
                                     BorderThickness="1">
                                 <wpf:MarkdownViewer VerticalAlignment="Stretch"
@@ -180,36 +261,6 @@
                                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
                             </Border>
-                            <ListView Grid.Column="1"
-                                      Margin="0,0,5,5"
-                                      BorderBrush="{DynamicResource TextBoxBorderBrush}"
-                                      BorderThickness="1"
-                                      ItemsSource="{Binding ElementName=issueListBox, Path=SelectedItem.Labels}"
-                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                                <ListView.ItemContainerStyle>
-                                    <Style TargetType="Control">
-                                        <Setter Property="Focusable" Value="False" />
-                                    </Style>
-                                </ListView.ItemContainerStyle>
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Margin="2">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition />
-                                            </Grid.ColumnDefinitions>
-                                            <Rectangle Width="5"
-                                                       VerticalAlignment="Stretch"
-                                                       Fill="{Binding Color}" />
-                                            <TextBlock Grid.Column="1"
-                                                       Margin="5,0,0,0"
-                                                       Text="{Binding Name}"
-                                                       TextTrimming="CharacterEllipsis"
-                                                       TextWrapping="NoWrap" />
-                                        </Grid>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -290,7 +341,7 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0"
-                                   Style="{StaticResource SecondLevelHeaderStyle}">
+                                   Style="{StaticResource ThirdLevelHeaderStyle}">
                                 <StackPanel Orientation="Horizontal">
                                     <IconPacks:PackIconOcticons Margin="0,0,5,0"
                                                                 VerticalAlignment="Center"
@@ -302,7 +353,7 @@
                                 </StackPanel>
                             </Label>
                             <Label Grid.Column="1"
-                                   Style="{StaticResource SecondLevelHeaderStyle}">
+                                   Style="{StaticResource ThirdLevelHeaderStyle}">
                                 <StackPanel Orientation="Horizontal">
                                     <IconPacks:PackIconOcticons Margin="0,0,5,0"
                                                                 VerticalAlignment="Center"
@@ -314,7 +365,7 @@
                                 </StackPanel>
                             </Label>
                             <Label Grid.Column="2"
-                                   Style="{StaticResource SecondLevelHeaderStyle}">
+                                   Style="{StaticResource ThirdLevelHeaderStyle}">
                                 <StackPanel Orientation="Horizontal">
                                     <IconPacks:PackIconOcticons Margin="0,0,5,0"
                                                                 VerticalAlignment="Center"
@@ -326,7 +377,7 @@
                                 </StackPanel>
                             </Label>
                             <Label Grid.Column="3"
-                                   Style="{StaticResource SecondLevelHeaderStyle}">
+                                   Style="{StaticResource ThirdLevelHeaderStyle}">
                                 <StackPanel Orientation="Horizontal">
                                     <IconPacks:PackIconOcticons Margin="0,0,5,0"
                                                                 VerticalAlignment="Center"

@@ -21,6 +21,8 @@ namespace Vulnerator.Model.Object
                     var issues = await githubClient.Issue.GetAllForRepository("Vulnerator", "Vulnerator");
                     for (int i = 0; i < issues.Count; i++)
                     {
+                        if (issues[i].HtmlUrl.Contains(@"/pull/"))
+                        { continue; }
                         Issue issue = new Issue();
                         issue.Title = issues[i].Title;
                         issue.Body = issues[i].Body;
@@ -29,7 +31,7 @@ namespace Vulnerator.Model.Object
                         if (issues[i].Milestone != null)
                         { issue.Milestone = issues[i].Milestone.Title; }
                         else
-                        { issue.Milestone = @"No Milestone Assigned"; }
+                        { issue.Milestone = @"N/A"; }
                         issue.Comments = issues[i].Comments;
                         foreach (Octokit.Label label in issues[i].Labels)
                         {

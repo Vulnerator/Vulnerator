@@ -94,6 +94,20 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private List<VulnerabilitySource> _vulnerabilitySources;
+        public List<VulnerabilitySource> VulnerabilitySources
+        {
+            get { return _vulnerabilitySources; }
+            set
+            {
+                if (_vulnerabilitySources != value)
+                {
+                    _vulnerabilitySources = value;
+                    RaisePropertyChanged("VulnerabilitySources");
+                }
+            }
+        }
+
         private List<PP> _pps;
         public List<PP> PPS
         {
@@ -108,8 +122,8 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private Hardware _selectedHardware;
-        public Hardware SelectedHardware
+        private object _selectedHardware;
+        public object SelectedHardware
         {
             get { return _selectedHardware; }
             set
@@ -167,23 +181,24 @@ namespace Vulnerator.ViewModel
                         .Include(h => h.VulnerabilitySources)
                         .AsNoTracking().ToList();
                     Softwares = databaseContext.Softwares
-                                        .Include(s => s.SoftwareHardwares.Select(h => h.Hardware))
-                                        .AsNoTracking().ToList();
+                        .Include(s => s.SoftwareHardwares.Select(h => h.Hardware))
+                        .AsNoTracking().ToList();
                     Contacts = databaseContext.Contacts
-                                        .Include(c => c.Accreditations)
-                                        .Include(c => c.Certifications)
-                                        .Include(c => c.Groups)
-                                        .Include(c => c.Organization)
-                                        .Include(c => c.Softwares)
-                                        .Include(c => c.Title)
-                                        .AsNoTracking().ToList();
+                        .Include(c => c.Accreditations)
+                        .Include(c => c.Certifications)
+                        .Include(c => c.Groups)
+                        .Include(c => c.Organization)
+                        .Include(c => c.Softwares)
+                        .Include(c => c.Title)
+                        .AsNoTracking().ToList();
                     PPS = databaseContext.PPS
-                                        .Include(p => p.Hardware_PPS.Select(h => h.Hardware))
-                                        .AsNoTracking().ToList();
+                        .Include(p => p.Hardware_PPS.Select(h => h.Hardware))
+                        .AsNoTracking().ToList();
                     Groups = databaseContext.Groups
-                                        .Include(g => g.Hardwares)
-                                        .AsNoTracking().ToList();
+                        .Include(g => g.Hardwares)
+                        .AsNoTracking().ToList();
                     Accreditations = databaseContext.Accreditations.AsNoTracking().ToList();
+                    VulnerabilitySources = databaseContext.VulnerabilitySources.AsNoTracking().ToList();
                 }
             }
             catch (Exception exception)
@@ -224,8 +239,9 @@ namespace Vulnerator.ViewModel
         { 
             try
             {
+                Hardware hardware = SelectedHardware as Hardware;
                 CklCreator cklCreator = new CklCreator();
-                cklCreator.CreateCklFromHardware(SelectedHardware, vulnerabilitySource, saveDirectory);
+                cklCreator.CreateCklFromHardware(hardware, vulnerabilitySource, saveDirectory);
                 vulnerabilitySource = null;
                 saveDirectory = string.Empty;
             }

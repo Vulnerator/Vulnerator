@@ -48,10 +48,27 @@ namespace Vulnerator.ViewModel
                 }
             }
         }
+
+        private AsyncObservableCollection<IssueLabelCategory> _issueLabelCategoryList;
+        public AsyncObservableCollection<IssueLabelCategory> IssueLabelCategoryList
+        {
+            get { return _issueLabelCategoryList; }
+            set
+            {
+                if (_issueLabelCategoryList != value)
+                {
+                    _issueLabelCategoryList = value;
+                    RaisePropertyChanged("IssueLabelCategoryList");
+                }
+            }
+        }
+
         public NewsViewModel()
         {
             IssueList = new AsyncObservableCollection<Issue>();
             ReleaseList = new AsyncObservableCollection<Release>();
+            IssueLabelCategoryList = new AsyncObservableCollection<IssueLabelCategory>();
+            PopulateLabelCategoryList();
             githubActions.GetGitHubIssues(IssueList);
             githubActions.GetGitHubReleases(ReleaseList);
         }
@@ -121,6 +138,15 @@ namespace Vulnerator.ViewModel
             string[] url = p.Split('"');
             string clean = url[1];
             return clean;
+        }
+
+        private void PopulateLabelCategoryList()
+        {
+            string[] categoryNames = new string[] { "Issue Type", "Status", "Close Description", "Developer Related", "Level of Effort" };
+            string[] categoryColors = new string[] { "#1d76db", "#d4c5f9", "#0e8a16", "#b3f442", "#ff8a05" };
+
+            for (int i = 0; i < categoryNames.Length; i++)
+            { IssueLabelCategoryList.Add(new IssueLabelCategory() { Category = categoryNames[i], Color = categoryColors[i] }); }
         }
     }
 }
