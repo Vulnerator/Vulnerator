@@ -469,6 +469,7 @@
     <Compile Include="Model\Object\AssetOverviewLineItem.cs" />
     <Compile Include="Model\Object\Cci.cs" />
     <Compile Include="Model\Object\File.cs" />
+    <Compile Include="Model\Object\IssueLabelCategory.cs" />
     <Compile Include="Model\Object\Likelihood.cs" />
     <Compile Include="Model\Object\Risk.cs" />
     <Compile Include="Model\Object\UserGuidePage.cs" />
@@ -512,6 +513,8 @@
     <Compile Include="View\Converter\BooleanToIconConverter.cs" />
     <Compile Include="View\Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="View\Converter\DebugDataBindingConverter.cs" />
+    <Compile Include="View\Converter\MarkupConverter.cs" />
+    <Compile Include="View\Converter\MathConverter.cs" />
     <Compile Include="View\Converter\MitigationsSelectedItemConverter.cs" />
     <Compile Include="View\Converter\FileTypeToVisibilityConverter.cs" />
     <Compile Include="View\Converter\HtmlToFlowDocumentConverter.cs" />
@@ -555,6 +558,7 @@
     <Compile Include="View\ViewHelper\CommandEnabledComboBox.cs" />
     <Compile Include="View\Converter\EmailPersonnelLabelJoiner.cs" />
     <Compile Include="View\Converter\EmailTextLabelStringJoiner.cs" />
+    <Compile Include="View\ViewHelper\DependencyProperties.cs" />
     <Compile Include="View\ViewHelper\MyXmlDataProvider.cs" />
     <Compile Include="Model\BusinessLogic\WasspReader.cs" />
     <Compile Include="Model\BusinessLogic\XccdfReader.cs" />
@@ -578,7 +582,6 @@
       <DependentUpon>NoInternetApplication.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Validation\PhoneNumberValidationRule.cs" />
-    <Compile Include="View\ViewHelper\TextBlockExtensions.cs" />
     <Page Include="Resources\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -587,9 +590,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\Theme\Matrix.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="View\Theme\BlackAndWhite.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Theme\PowerShellDark.xaml">
       <SubType>Designer</SubType>
