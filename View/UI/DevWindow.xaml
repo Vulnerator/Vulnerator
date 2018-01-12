@@ -124,7 +124,8 @@
                                     ItemTemplate="{StaticResource HamburgerMenuItem}"
                                     OptionsItemTemplate="{StaticResource HamburgerMenuItem}"
                                     SelectedIndex="0"
-                                    VerticalScrollBarOnLeftSide="True">
+                                    VerticalScrollBarOnLeftSide="True"
+                                    Style="{StaticResource HamburgerMenuCreatorsStyle}">
                 <Controls:HamburgerMenu.HamburgerMenuHeaderTemplate>
                     <DataTemplate>
                         <TextBlock Grid.Column="1"
