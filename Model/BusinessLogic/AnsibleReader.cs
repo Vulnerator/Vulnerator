@@ -248,7 +248,7 @@ namespace Vulnerator.Model.BusinessLogic
                                         Environment.NewLine,
                                         "Output:",
                                         Environment.NewLine,
-                                        Regex.Replace(xmlReader.ObtainCurrentNodeValue(true), @"\s+", " ").Trim()
+                                        xmlReader.ObtainCurrentNodeValue(true).Trim()
                                         );
                                     break;
                                 }
