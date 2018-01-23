@@ -30,6 +30,7 @@
                       Icon="/Vulnerator;component/Resources/vulneratorlogodraft.ico"
                       KeyboardNavigation.TabNavigation="Continue"
                       ResizeMode="CanResize"
+                      Style="{DynamicResource CustomCleanWindowStyleKey}"
                       WindowCloseButtonStyle="{DynamicResource CustomCloseWindowButtonStyle}"
                       mc:Ignorable="d">
 
@@ -37,12 +38,12 @@
     <Controls:MetroWindow.IconTemplate>
         <DataTemplate>
             <Border Width="48">
-                <IconPacks:PackIconModern Width="{TemplateBinding Width}"
-                                          Height="{TemplateBinding Height}"
-                                          Margin="4"
-                                          HorizontalAlignment="Center"
-                                          Foreground="{DynamicResource IdealForegroundColorBrush}"
-                                          Kind="GraphBar" />
+                <IconPacks:PackIconMaterialLight Width="{TemplateBinding Width}"
+                                                 Height="{TemplateBinding Height}"
+                                                 Margin="4"
+                                                 HorizontalAlignment="Center"
+                                                 Foreground="{DynamicResource BlackBrush}"
+                                                 Kind="ChartHistogram" />
             </Border>
         </DataTemplate>
     </Controls:MetroWindow.IconTemplate>
@@ -58,26 +59,31 @@
                            FontSize="{DynamicResource WindowTitleFontSize}"
                            Text="{TemplateBinding Content}"
                            TextTrimming="CharacterEllipsis" />
-                <Controls:WindowCommands ShowLastSeparator="False">
+                <Controls:WindowCommands Foreground="{DynamicResource BlackBrush}"
+                                         ShowLastSeparator="False">
                     <Button x:Name="projectButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
                             Content="{IconPacks:PackIconOcticons Bookmark}"
+                            Foreground="{DynamicResource BlackBrush}"
                             ToolTip="GitHub Project Page" />
                     <Button x:Name="githubButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
                             Content="{IconPacks:PackIconOcticons Octoface}"
+                            Foreground="{DynamicResource BlackBrush}"
                             ToolTip="GitHub Repository" />
                     <Button x:Name="wikiButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
                             Content="{IconPacks:PackIconOcticons Book}"
+                            Foreground="{DynamicResource BlackBrush}"
                             ToolTip="Wiki" />
                     <Button x:Name="issueButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
                             Content="{IconPacks:PackIconOcticons IssueOpened}"
+                            Foreground="{DynamicResource BlackBrush}"
                             ToolTip="Issues" />
                 </Controls:WindowCommands>
             </StackPanel>
@@ -124,8 +130,8 @@
                                     ItemTemplate="{StaticResource HamburgerMenuItem}"
                                     OptionsItemTemplate="{StaticResource HamburgerMenuItem}"
                                     SelectedIndex="0"
-                                    VerticalScrollBarOnLeftSide="True"
-                                    Style="{StaticResource HamburgerMenuCreatorsStyle}">
+                                    Style="{StaticResource HamburgerMenuCreatorsStyle}"
+                                    VerticalScrollBarOnLeftSide="True">
                 <Controls:HamburgerMenu.HamburgerMenuHeaderTemplate>
                     <DataTemplate>
                         <TextBlock Grid.Column="1"

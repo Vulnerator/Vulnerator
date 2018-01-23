@@ -1030,6 +1030,15 @@
                 <Setter Property="ShowSelectionIndicator" Value="True" />
             </Style>
 
+            <Style x:Key="CustomCleanWindowStyleKey"
+                   TargetType="{x:Type Controls:MetroWindow}">
+                <Setter Property="NonActiveWindowTitleBrush" Value="{DynamicResource TransparentWhiteBrush}" />
+                <Setter Property="OverrideDefaultWindowCommandsBrush" Value="{DynamicResource BlackBrush}" />
+                <Setter Property="TitleAlignment" Value="Left" />
+                <Setter Property="TitleForeground" Value="{DynamicResource BlackBrush}" />
+                <Setter Property="WindowTitleBrush" Value="{DynamicResource TransparentWhiteBrush}" />
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
