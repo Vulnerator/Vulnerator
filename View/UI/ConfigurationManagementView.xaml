@@ -116,6 +116,7 @@
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="FQDN (Read Only)" />
                                             <Setter Property="IsReadOnly" Value="True" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -136,6 +137,7 @@
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="NetBIOS (Read Only)" />
                                             <Setter Property="IsReadOnly" Value="True" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -181,31 +183,31 @@
                                         </Grid.RowDefinitions>
                                         <TextBox Grid.Column="1"
                                                  Margin="0,0,5,5"
-                                                 VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Discovered Host Name (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Host_Name}" />
                                         <TextBox Grid.Column="2"
                                                  Margin="5,0,5,5"
-                                                 VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Last Scan Date (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="" />
                                         <TextBox Grid.Column="3"
                                                  Margin="5,0,5,5"
-                                                 VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Uncredentialed - 21745 (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Found_21745}" />
                                         <TextBox Grid.Column="4"
                                                  Margin="5,0,5,5"
-                                                 VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Uncredentialed - 26917 (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Found_26917}" />
                                         <DataGrid Grid.Row="1"
                                                   Grid.Column="1"
@@ -284,7 +286,6 @@
                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
                                                  Controls:TextBoxHelper.ClearTextButton="True"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Add IP Address" />
                                         <TextBox Grid.Row="2"
                                                  Grid.Column="2"
@@ -293,7 +294,6 @@
                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
                                                  Controls:TextBoxHelper.ClearTextButton="True"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Add MAC Address" />
                                         <ComboBox Grid.Row="2"
                                                   Grid.Column="3"
@@ -302,9 +302,9 @@
                                                   Controls:TextBoxHelper.ButtonCommand="{Binding}"
                                                   Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Group"
-                                                  IsEditable="True" />
+                                                  IsEditable="True"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
                                         <ComboBox Grid.Row="2"
                                                   Grid.Column="4"
                                                   Margin="5,0,5,5"
@@ -312,7 +312,6 @@
                                                   Controls:TextBoxHelper.ButtonCommand="{Binding}"
                                                   Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Contact"
                                                   IsEditable="True" />
                                         <DataGrid Grid.Row="3"
@@ -432,7 +431,8 @@
                                                   Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Checklist"
                                                   DisplayMemberPath="Source_Name"
-                                                  ItemsSource="{Binding Path=DataContext.VulnerabilitySources, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                  ItemsSource="{Binding Path=DataContext.VulnerabilitySources, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
                                     </Grid>
                                 </DataTemplate>
                             </DataGrid.RowDetailsTemplate>
@@ -443,7 +443,7 @@
                             </i:Interaction.Triggers>
                         </DataGrid>
                     </DockPanel>
-                    <Expander Grid.Column="1"
+                    <!--<Expander Grid.Column="1"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
                               ExpandDirection="Right">
@@ -544,7 +544,7 @@
                                 </Grid>
                             </Label>
                         </Expander.Header>
-                    </Expander>
+                    </Expander>-->
                 </Grid>
             </TabItem>
             <TabItem Header="Software">

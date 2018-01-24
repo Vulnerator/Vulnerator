@@ -161,7 +161,8 @@
                                         <TextBlock HorizontalAlignment="Stretch"
                                                    Style="{StaticResource HyperlinkTextBlockStyle}"
                                                    Text="View on GitHub"
-                                                   TextWrapping="Wrap">
+                                                   TextWrapping="Wrap"
+                                                   ToolTip="{Binding ElementName=issueListBox, Path=SelectedItem.HtmlUrl}">
                                             <TextBlock.InputBindings>
                                                 <MouseBinding Command="{Binding GitHubLinksCommand}"
                                                               CommandParameter="{Binding ElementName=issueListBox, Path=SelectedItem.HtmlUrl}"
@@ -385,7 +386,8 @@
                                     <TextBlock HorizontalAlignment="Stretch"
                                                Style="{StaticResource HyperlinkTextBlockStyle}"
                                                Text="View on GitHub"
-                                               TextWrapping="Wrap">
+                                               TextWrapping="Wrap"
+                                               ToolTip="{Binding ElementName=releaseListBox, Path=SelectedItem.HtmlUrl}">
                                         <TextBlock.InputBindings>
                                             <MouseBinding Command="{Binding GitHubLinksCommand}"
                                                           CommandParameter="{Binding ElementName=releaseListBox, Path=SelectedItem.HtmlUrl}"

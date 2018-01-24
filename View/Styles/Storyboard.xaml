@@ -1,0 +1,36 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Vulnerator.View.Styles"
+                    xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
+
+    <Storyboard x:Key="CustomHideFloatingMessageStoryboard"
+                po:Freeze="True">
+        <DoubleAnimation EasingFunction="{StaticResource ExpoEaseInOut}"
+                         Storyboard.TargetName="PART_FloatingMessageContainer"
+                         Storyboard.TargetProperty="Opacity"
+                         From="1"
+                         To="0"
+                         Duration="0:0:.2" />
+        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_FloatingMessageContainer"
+                                       Storyboard.TargetProperty="(UIElement.Visibility)">
+            <DiscreteObjectKeyFrame KeyTime="0:0:.2"
+                                    Value="{x:Static Visibility.Hidden}" />
+        </ObjectAnimationUsingKeyFrames>
+    </Storyboard>
+
+    <Storyboard x:Key="CustomShowFloatingMessageStoryboard"
+                po:Freeze="True">
+        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_FloatingMessageContainer"
+                                       Storyboard.TargetProperty="(UIElement.Visibility)">
+            <DiscreteObjectKeyFrame KeyTime="0"
+                                    Value="{x:Static Visibility.Visible}" />
+        </ObjectAnimationUsingKeyFrames>
+        <DoubleAnimation EasingFunction="{StaticResource ExpoEaseInOut}"
+                         Storyboard.TargetName="PART_FloatingMessageContainer"
+                         Storyboard.TargetProperty="Opacity"
+                         From="0"
+                         To="1"
+                         Duration="0:0:.2" />
+    </Storyboard>
+
+</ResourceDictionary>
