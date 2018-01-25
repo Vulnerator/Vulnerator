@@ -29,7 +29,8 @@
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
         <Controls:MetroAnimatedSingleRowTabControl Margin="5,0"
                                                    Controls:TabControlHelper.Underlined="SelectedTabItem">
-            <TabItem Header="Hardware">
+            <TabItem Header="Hardware"
+                     Style="{StaticResource CustomMetroTabItem}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -286,7 +287,10 @@
                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
                                                  Controls:TextBoxHelper.ClearTextButton="True"
-                                                 Controls:TextBoxHelper.Watermark="Add IP Address" />
+                                                 Controls:TextBoxHelper.Watermark="Add IP Address"
+                                                 vh:DependencyProperties.FloatingWatermark="IP Address"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}" />
                                         <TextBox Grid.Row="2"
                                                  Grid.Column="2"
                                                  Margin="5,0,5,5"
@@ -294,7 +298,10 @@
                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
                                                  Controls:TextBoxHelper.ClearTextButton="True"
-                                                 Controls:TextBoxHelper.Watermark="Add MAC Address" />
+                                                 Controls:TextBoxHelper.Watermark="Add MAC Address"
+                                                 vh:DependencyProperties.FloatingWatermark="MAC Address"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}" />
                                         <ComboBox Grid.Row="2"
                                                   Grid.Column="3"
                                                   Margin="5,0,5,5"
@@ -303,6 +310,8 @@
                                                   Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Group"
+                                                  vh:DependencyProperties.FloatingWatermark="Group"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   IsEditable="True"
                                                   Style="{StaticResource HeaderedComboBoxStyle}" />
                                         <ComboBox Grid.Row="2"
@@ -313,11 +322,14 @@
                                                   Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Contact"
-                                                  IsEditable="True" />
+                                                  vh:DependencyProperties.FloatingWatermark="Contact"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsEditable="True"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
                                         <DataGrid Grid.Row="3"
                                                   Grid.Column="1"
                                                   Grid.ColumnSpan="4"
-                                                  Height="200"
+                                                  Height="100"
                                                   Margin="0,0,5,5"
                                                   VerticalAlignment="Top"
                                                   CanUserAddRows="False"
@@ -356,9 +368,9 @@
                                             </DataGrid.Columns>
                                         </DataGrid>
                                         <DataGrid Grid.Row="4"
-                                                  Grid.RowSpan="2"
                                                   Grid.Column="1"
                                                   Grid.ColumnSpan="2"
+                                                  Height="100"
                                                   Margin="0,0,5,5"
                                                   VerticalAlignment="Stretch"
                                                   CanUserAddRows="False"
@@ -392,7 +404,7 @@
                                         <DataGrid Grid.Row="4"
                                                   Grid.Column="3"
                                                   Grid.ColumnSpan="2"
-                                                  Height="200"
+                                                  Height="100"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Top"
                                                   CanUserAddRows="False"
@@ -421,6 +433,20 @@
                                             </DataGrid.Columns>
                                         </DataGrid>
                                         <ComboBox Grid.Row="5"
+                                                  Grid.Column="1"
+                                                  Grid.ColumnSpan="2"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ClearTextButton="True"
+                                                  Controls:TextBoxHelper.Watermark="Add Associated Software"
+                                                  vh:DependencyProperties.FloatingWatermark="Software"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  DisplayMemberPath="Displayed_Software_Name"
+                                                  ItemsSource="{Binding Path=DataContext.Softwares, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
+                                        <ComboBox Grid.Row="5"
                                                   Grid.Column="3"
                                                   Grid.ColumnSpan="2"
                                                   Margin="5,0,5,5"
@@ -428,8 +454,9 @@
                                                   Controls:TextBoxHelper.ButtonCommand="{Binding}"
                                                   Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Checklist"
+                                                  vh:DependencyProperties.FloatingWatermark="Checklist"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   DisplayMemberPath="Source_Name"
                                                   ItemsSource="{Binding Path=DataContext.VulnerabilitySources, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                                   Style="{StaticResource HeaderedComboBoxStyle}" />
@@ -547,7 +574,8 @@
                     </Expander>-->
                 </Grid>
             </TabItem>
-            <TabItem Header="Software">
+            <TabItem Header="Software"
+                     Style="{StaticResource CustomMetroTabItem}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -608,10 +636,11 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Preferred Software Name" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -651,50 +680,56 @@
                                         <TextBox Grid.Column="1"
                                                  Margin="0,0,5,5"
                                                  VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Discovered Software Name (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Discovered_Software_Name}" />
                                         <TextBox Grid.Column="2"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Acronym"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Software_Acronym}" />
                                         <TextBox Grid.Column="3"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
                                                  Controls:TextBoxHelper.ClearTextButton="True"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Software Function"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Function}" />
                                         <TextBox Grid.Column="4"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
                                                  Controls:TextBoxHelper.ClearTextButton="True"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Software Instance"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Instance}" />
                                         <TextBox Grid.Row="1"
                                                  Grid.Column="1"
                                                  Margin="0,0,5,5"
                                                  VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="DADMS ID"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding DADMS_ID}" />
                                         <TextBox Grid.Row="1"
                                                  Grid.Column="2"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="DADMS Disposition"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding DADMS_Disposition}" />
                                         <DatePicker Grid.Row="1"
                                                     Grid.Column="3"
                                                     Margin="5,0,5,5"
                                                     VerticalAlignment="Bottom"
                                                     Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                    Controls:TextBoxHelper.Watermark="DADMS LDA"
+                                                    Controls:TextBoxHelper.Watermark="DADMS Last Date Approved (LDA)"
                                                     Text="{Binding DADMS_LDA}" />
                                         <CheckBox Grid.Row="1"
                                                   Grid.Column="4"
@@ -706,7 +741,7 @@
                                         <DataGrid Grid.Row="2"
                                                   Grid.Column="1"
                                                   Grid.ColumnSpan="4"
-                                                  Height="200"
+                                                  Height="100"
                                                   Margin="0,0,5,5"
                                                   VerticalAlignment="Top"
                                                   IsReadOnly="True"
@@ -742,65 +777,68 @@
                                                   Controls:TextBoxHelper.ButtonCommand="{Binding}"
                                                   Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Hardware"
-                                                  IsEditable="True" />
+                                                  vh:DependencyProperties.FloatingWatermark="Hardware"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsEditable="True"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
                                         <CheckBox Grid.Row="3"
                                                   Grid.Column="2"
                                                   Margin="5,0,5,5"
-                                                  VerticalAlignment="Center"
+                                                  VerticalAlignment="Bottom"
                                                   Content="Has Custom Code"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   IsChecked="{Binding Has_Custom_Code}" />
                                         <CheckBox Grid.Row="3"
                                                   Grid.Column="3"
                                                   Margin="5,0,5,5"
-                                                  VerticalAlignment="Center"
+                                                  VerticalAlignment="Bottom"
                                                   Content="IA / IA Enabled"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   IsChecked="{Binding IaOrIa_Enabled}" />
                                         <CheckBox Grid.Row="3"
                                                   Grid.Column="4"
                                                   Margin="5,0,5,5"
-                                                  VerticalAlignment="Center"
+                                                  VerticalAlignment="Bottom"
                                                   Content="Approved for Baseline (Global)"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   IsChecked="{Binding ApprovedForBaseline_Global}" />
                                         <CheckBox Grid.Row="4"
                                                   Grid.Column="1"
                                                   Margin="5,0,5,5"
-                                                  VerticalAlignment="Center"
+                                                  VerticalAlignment="Bottom"
                                                   Content="Is OS / Firmware"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   IsChecked="{Binding Is_OS_Or_Firmware}" />
                                         <CheckBox Grid.Row="4"
                                                   Grid.Column="2"
                                                   Margin="5,0,5,5"
-                                                  VerticalAlignment="Center"
+                                                  VerticalAlignment="Bottom"
                                                   Content="Externally Authorized"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   IsChecked="{Binding Externally_Authorized}" />
                                         <CheckBox Grid.Row="4"
                                                   Grid.Column="3"
                                                   Margin="5,0,5,5"
-                                                  VerticalAlignment="Center"
-                                                  Content="Report in Accreditation (Global)"
+                                                  VerticalAlignment="Bottom"
+                                                  Content="Report in Accreditation"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   IsChecked="{Binding ReportInAccreditation_Global}" />
                                         <TextBox Grid.Row="4"
                                                  Grid.Column="4"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                 Controls:TextBoxHelper.Watermark="Gloabl Baseline Approver (Read Only)"
+                                                 Controls:TextBoxHelper.Watermark="Global Baseline Approver (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding BaselineApprover_Global}" />
                                     </Grid>
                                 </DataTemplate>
                             </DataGrid.RowDetailsTemplate>
                         </DataGrid>
                     </DockPanel>
-                    <Expander Grid.Column="1"
+                    <!--<Expander Grid.Column="1"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
                               ExpandDirection="Right">
@@ -901,10 +939,11 @@
                                 </Grid>
                             </Label>
                         </Expander.Header>
-                    </Expander>
+                    </Expander>-->
                 </Grid>
             </TabItem>
-            <TabItem Header="PPS">
+            <TabItem Header="PPS"
+                     Style="{StaticResource CustomMetroTabItem}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -1136,7 +1175,7 @@
                             </DataGrid.RowDetailsTemplate>
                         </DataGrid>
                     </DockPanel>
-                    <Expander Grid.Column="1"
+                    <!--<Expander Grid.Column="1"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
                               ExpandDirection="Right">
@@ -1237,10 +1276,11 @@
                                 </Grid>
                             </Label>
                         </Expander.Header>
-                    </Expander>
+                    </Expander>-->
                 </Grid>
             </TabItem>
-            <TabItem Header="Contacts">
+            <TabItem Header="Contacts"
+                     Style="{StaticResource CustomMetroTabItem}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -1553,7 +1593,7 @@
                             </DataGrid.RowDetailsTemplate>
                         </DataGrid>
                     </DockPanel>
-                    <Expander Grid.Column="1"
+                    <!--<Expander Grid.Column="1"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
                               ExpandDirection="Right">
@@ -1654,10 +1694,11 @@
                                 </Grid>
                             </Label>
                         </Expander.Header>
-                    </Expander>
+                    </Expander>-->
                 </Grid>
             </TabItem>
-            <TabItem Header="Projects">
+            <TabItem Header="Projects"
+                     Style="{StaticResource CustomMetroTabItem}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -1845,7 +1886,7 @@
                             </DataGrid.RowDetailsTemplate>
                         </DataGrid>
                     </DockPanel>
-                    <Expander Grid.Column="1"
+                    <!--<Expander Grid.Column="1"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
                               ExpandDirection="Right">
@@ -1946,10 +1987,11 @@
                                 </Grid>
                             </Label>
                         </Expander.Header>
-                    </Expander>
+                    </Expander>-->
                 </Grid>
             </TabItem>
-            <TabItem Header="Accreditations">
+            <TabItem Header="Accreditations"
+                     Style="{StaticResource CustomMetroTabItem}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -2162,7 +2204,7 @@
                             </DataGrid.RowDetailsTemplate>
                         </DataGrid>
                     </DockPanel>
-                    <Expander Grid.Column="1"
+                    <!--<Expander Grid.Column="1"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
                               ExpandDirection="Right">
@@ -2263,7 +2305,7 @@
                                 </Grid>
                             </Label>
                         </Expander.Header>
-                    </Expander>
+                    </Expander>-->
                 </Grid>
             </TabItem>
         </Controls:MetroAnimatedSingleRowTabControl>

@@ -179,9 +179,11 @@ namespace Vulnerator.ViewModel
                         .Include(h => h.Contacts)
                         .Include(h => h.Hardware_PPS.Select(p => p.PP))
                         .Include(h => h.VulnerabilitySources)
+                        .OrderBy(h => h.Displayed_Host_Name)
                         .AsNoTracking().ToList();
                     Softwares = databaseContext.Softwares
                         .Include(s => s.SoftwareHardwares.Select(h => h.Hardware))
+                        .OrderBy(s => s.Displayed_Software_Name)
                         .AsNoTracking().ToList();
                     Contacts = databaseContext.Contacts
                         .Include(c => c.Accreditations)
@@ -198,7 +200,10 @@ namespace Vulnerator.ViewModel
                         .Include(g => g.Hardwares)
                         .AsNoTracking().ToList();
                     Accreditations = databaseContext.Accreditations.AsNoTracking().ToList();
-                    VulnerabilitySources = databaseContext.VulnerabilitySources.AsNoTracking().ToList();
+                    VulnerabilitySources = databaseContext.VulnerabilitySources
+                        .Where(vs => !vs.Source_Name.Contains("Nessus"))
+                        .OrderBy(vs => vs.Source_Name)
+                        .AsNoTracking().ToList();
                 }
             }
             catch (Exception exception)

@@ -285,6 +285,7 @@
                         </Grid.RowDefinitions>
                         <ContentControl x:Name="PART_FloatingMessageContainer"
                                         Grid.Row="0"
+                                        Margin="0"
                                         HorizontalAlignment="Left"
                                         vh:DependencyProperties.FloatingWatermarkForeground="{TemplateBinding vh:DependencyProperties.FloatingWatermarkForeground}"
                                         Style="{DynamicResource FloatingMessageContainerStyle}"
@@ -300,7 +301,7 @@
                                 </MultiBinding>
                             </ContentControl.Width>
                             <TextBlock x:Name="PART_FloatingMessage"
-                                       Margin="2,2,0,0"
+                                       Margin="0"
                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                        Foreground="{TemplateBinding vh:DependencyProperties.FloatingWatermarkForeground}"
@@ -560,7 +561,7 @@
                                 <Condition Binding="{Binding Path=IsVisible, RelativeSource={RelativeSource Self}}" Value="True" />
                                 <Condition Binding="{Binding Path=(Controls:TextBoxHelper.UseFloatingWatermark), RelativeSource={RelativeSource Self}}" Value="True" />
                                 <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsEditable}" Value="True" />
-                                <Condition Binding="{Binding Path=(Controls:TextBoxHelper.HasText)}" SourceName="PART_TextBox" Value="True" />
+                                <Condition Binding="{Binding Path=(Controls:TextBoxHelper.HasText), ElementName=PART_EditableTextBox}" Value="True" />
                             </MultiDataTrigger.Conditions>
                             <MultiDataTrigger.EnterActions>
                                 <BeginStoryboard Storyboard="{StaticResource CustomShowFloatingMessageStoryboard}" />

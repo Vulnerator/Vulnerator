@@ -74,6 +74,7 @@
     <Style x:Key="{x:Static wpf:Styles.TaskListStyleKey}"
            BasedOn="{StaticResource MetroCheckBox}"
            TargetType="{x:Type CheckBox}" />
+
     <Style x:Key="{x:Static wpf:Styles.ThematicBreakStyleKey}"
            TargetType="{x:Type Line}">
         <Setter Property="Stretch" Value="Fill" />

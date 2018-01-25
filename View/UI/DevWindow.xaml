@@ -138,7 +138,7 @@
                                    HorizontalAlignment="Left"
                                    VerticalAlignment="Center"
                                    FontSize="16"
-                                   Foreground="White"
+                                   Foreground="{DynamicResource LabelTextBrush}"
                                    Text="Navigation" />
                     </DataTemplate>
                 </Controls:HamburgerMenu.HamburgerMenuHeaderTemplate>

@@ -222,6 +222,7 @@ namespace Vulnerator.ViewModel
                     guiFeedback.SetFields("Awaiting user input", "Collapsed", true);
                     Properties.Settings.Default.StigLibraryIngestDate = DateTime.Now.ToLongDateString();
                     Messenger.Default.Send(guiFeedback);
+                    Messenger.Default.Send(new NotificationMessage<string>("ModelUpdate", "AllModels"), MessengerToken.ModelUpdated);
                     StigLibraryLocation = string.Empty;
                     ProgressVisibility = "Collapsed";
                     IngestionSuccessVisibility = "Visible";
