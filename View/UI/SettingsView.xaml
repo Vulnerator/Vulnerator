@@ -106,12 +106,12 @@
                         <Button Grid.Column="1"
                                 Margin="5,0,5,5"
                                 Command="{Binding BrowseForDatabaseCommand}"
-                                Content="{IconPacks:PackIconModern Kind=PageSearch}"
+                                Content="{IconPacks:Modern Kind=PageSearch}"
                                 ToolTip="Search" />
                         <Button Grid.Column="2"
                                 Margin="5,0,5,5"
                                 Command="{Binding CreateDatabaseCommand}"
-                                Content="{IconPacks:PackIconModern Kind=PageNew}"
+                                Content="{IconPacks:Modern Kind=PageNew}"
                                 ToolTip="Create" />
                     </Grid>
                     <Grid Grid.Column="0">
@@ -153,12 +153,12 @@
                         <Button Grid.Column="1"
                                 Margin="5,0,5,5"
                                 Command="{Binding SelectStigLibraryCommand}"
-                                Content="{IconPacks:PackIconModern Kind=PageSearch}"
+                                Content="{IconPacks:Modern Kind=PageSearch}"
                                 ToolTip="Search" />
                         <Button Grid.Column="2"
                                 Margin="5,0,5,5"
                                 Command="{Binding IngestStigLibraryCommand}"
-                                Content="{IconPacks:PackIconModern Kind=PageUpload}"
+                                Content="{IconPacks:Modern Kind=PageUpload}"
                                 ToolTip="Upload" />
                     </Grid>
                     <!--<Label Grid.Column="0" Style="{StaticResource SecondLevelHeaderStyle}">
@@ -373,11 +373,11 @@
                         </Label>
                         <Button Grid.Column="2"
                                 Margin="5,0,5,5"
-                                Content="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                Content="{IconPacks:Material Kind=PlusBoxOutline}"
                                 ToolTip="Add Overlay" />
                         <Button Grid.Column="3"
                                 Margin="5,0,5,5"
-                                Content="{IconPacks:PackIconMaterial Kind=MinusBoxOutline}"
+                                Content="{IconPacks:Material Kind=MinusBoxOutline}"
                                 ToolTip="Remove Overlay(s)" />
                     </Grid>
                     <DataGrid MinHeight="100"
@@ -408,11 +408,11 @@
                                  Controls:TextBoxHelper.Watermark="Enter a new organization name" />
                         <Button Grid.Column="1"
                                 Margin="5,0,5,5"
-                                Content="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                Content="{IconPacks:Material Kind=PlusBoxOutline}"
                                 ToolTip="Add Organization" />
                         <Button Grid.Column="2"
                                 Margin="5,0,5,5"
-                                Content="{IconPacks:PackIconMaterial Kind=MinusBoxOutline}"
+                                Content="{IconPacks:Material Kind=MinusBoxOutline}"
                                 ToolTip="Remove Organization(s)" />
                     </Grid>
                     <DataGrid MinHeight="100"

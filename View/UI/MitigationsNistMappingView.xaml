@@ -32,7 +32,8 @@
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
         <Controls:MetroAnimatedSingleRowTabControl Margin="5,0,0,0"
                                                    Controls:TabControlHelper.Underlined="SelectedTabItem">
-            <TabItem Header="Project Mitigations">
+            <TabItem Header="Project Mitigations"
+                     Style="{StaticResource CustomMetroTabItem}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -169,10 +170,10 @@
                                                  VerticalAlignment="Bottom"
                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Impact Description"
-                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  AcceptsReturn="True"
                                                  AcceptsTab="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Impact_Description, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                                  TextWrapping="Wrap"
                                                  HorizontalScrollBarVisibility="Disabled"
@@ -183,10 +184,10 @@
                                                  VerticalAlignment="Bottom"
                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Predisposing Condition(s)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  AcceptsReturn="True"
                                                  AcceptsTab="True"
                                                  Style="{StaticResource HeaderedTextBoxStyle}"
-                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  Text="{Binding Predisposing_Conditions, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                                  TextWrapping="Wrap"
                                                  HorizontalScrollBarVisibility="Disabled"
@@ -288,7 +289,7 @@
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.ButtonCommand="{Binding Path=DataContext.AddMitigationGroupCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                                   Controls:TextBoxHelper.ButtonCommandParameter="{Binding Path=Text, RelativeSource={RelativeSource Self}}"
-                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
                                                   Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Add Group / Accreditation"
@@ -430,7 +431,8 @@
                     </Expander>
                 </Grid>
             </TabItem>
-            <TabItem Header="NIST Mapping">
+            <TabItem Header="NIST Mapping"
+                     Style="{StaticResource CustomMetroTabItem}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />

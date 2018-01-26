@@ -13,13 +13,13 @@
                       BorderBrush="{DynamicResource AccentColorBrush}"
                       DataContext="{Binding Splash, Source={StaticResource Locator}}"
                       GlowBrush="{DynamicResource AccentColorBrush}"
+                      Icon="/Vulnerator;component/Resources/chart.ico"
                       ResizeMode="NoResize"
                       ShowCloseButton="False"
-                      ShowMinButton="False"
                       ShowMaxRestoreButton="False"
-                      WindowStartupLocation="CenterScreen"
-                      Icon="/Vulnerator;component/Resources/chart.ico"
+                      ShowMinButton="False"
                       SizeToContent="WidthAndHeight"
+                      WindowStartupLocation="CenterScreen"
                       mc:Ignorable="d">
 
     <!--  Window Icon Template  -->
@@ -87,7 +87,7 @@
                            Fill="{DynamicResource AccentColorBrush}"
                            ToolTip="All support files will be installed into the Vulnerator folder (minimal footprint)">
                     <Rectangle.OpacityMask>
-                        <VisualBrush Visual="{IconPacks:PackIconOcticons Kind=Info}" />
+                        <VisualBrush Visual="{IconPacks:Octicons Kind=Info}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </StackPanel>
@@ -106,7 +106,7 @@
                            Fill="{DynamicResource AccentColorBrush}"
                            ToolTip="Log files will be generated in the LocalData folder, and the user (you) gets to decide where the application database goes (perfect for sharing)">
                     <Rectangle.OpacityMask>
-                        <VisualBrush Visual="{IconPacks:PackIconOcticons Kind=Info}" />
+                        <VisualBrush Visual="{IconPacks:Octicons Kind=Info}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </StackPanel>
@@ -117,28 +117,32 @@
             <TextBlock Text="Application Database Location"
                        TextTrimming="CharacterEllipsis" />
         </Label>
-        <Grid Visibility="{Binding IsChecked, ElementName=persistant, Converter={StaticResource BooleanToVisibilityConverter}}" MaxWidth="300">
+        <Grid MaxWidth="300"
+              Visibility="{Binding IsChecked, ElementName=persistant, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Border BorderBrush="{DynamicResource TextBoxBorderBrush}"
-                    BorderThickness="1"
-                    Margin="5,0,0,5">
+            <Border Margin="5,0,0,5"
+                    BorderBrush="{DynamicResource TextBoxBorderBrush}"
+                    BorderThickness="1">
                 <TextBlock Padding="3"
-                           Text="{Binding DatabasePath}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip="{Binding DatabasePath}" />
+                           VerticalAlignment="Center"
+                           Text="{Binding DatabasePath}"
+                           TextTrimming="CharacterEllipsis"
+                           ToolTip="{Binding DatabasePath}" />
             </Border>
             <Button Grid.Column="1"
                     Margin="5,0,5,5"
-                    ToolTip="Select"
-                    Content="{IconPacks:PackIconModern Kind=PageSearch}"
-                    Command="{Binding BrowseForDatabaseCommand}" />
+                    Command="{Binding BrowseForDatabaseCommand}"
+                    Content="{IconPacks:Modern Kind=PageSearch}"
+                    ToolTip="Select" />
             <Button Grid.Column="2"
                     Margin="0,0,5,5"
-                    ToolTip="Create"
-                    Content="{IconPacks:PackIconModern Kind=PageNew}"
-                    Command="{Binding CreateDatabaseCommand}" />
+                    Command="{Binding CreateDatabaseCommand}"
+                    Content="{IconPacks:Modern Kind=PageNew}"
+                    ToolTip="Create" />
         </Grid>
         <Button Margin="5,0,5,5"
                 HorizontalAlignment="Center"
@@ -154,8 +158,8 @@
         </Button>
         <TextBox MaxWidth="300"
                  Margin="5,0,5,5"
-                 Style="{StaticResource ErrorTextBox}"
                  Background="LightPink"
+                 Style="{StaticResource ErrorTextBox}"
                  Text="{Binding ErrorText}"
                  TextAlignment="Center"
                  TextWrapping="Wrap"

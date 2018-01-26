@@ -28,7 +28,7 @@
         <Controls:MetroAnimatedSingleRowTabControl Margin="5"
                                                    Controls:TabControlHelper.Underlined="SelectedTabItem"
                                                    TabStripPlacement="Left">
-            <TabItem Style="{StaticResource CustomMetroTabItem}">
+            <TabItem Style="{StaticResource CustomVerticalMetroTabItem}">
                 <TabItem.Header>
                     <ComboBox Controls:TextBoxHelper.Watermark="Select an Accreditation"
                               IsEnabled="True" />
@@ -725,7 +725,7 @@
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="Categorize"
-                     Style="{StaticResource CustomMetroTabItem}">
+                     Style="{StaticResource CustomVerticalMetroTabItem}">
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                               VerticalScrollBarVisibility="Auto">
                     <StackPanel>
@@ -850,7 +850,7 @@
                                                                                            Height="14"
                                                                                            Margin="5,0"
                                                                                            VerticalAlignment="Center"
-                                                                                           Kind="QuestionCircleOutline" />
+                                                                                           Kind="QuestionCircleRegular" />
                                                         </Canvas>
                                                     </Grid>
                                                 </DataGridTextColumn.Header>
@@ -884,7 +884,7 @@
                                                                                            Height="14"
                                                                                            Margin="5,0"
                                                                                            VerticalAlignment="Center"
-                                                                                           Kind="QuestionCircleOutline" />
+                                                                                           Kind="QuestionCircleRegular" />
                                                         </Canvas>
                                                     </Grid>
                                                 </DataGridTextColumn.Header>
@@ -934,7 +934,7 @@
                                                                                            Height="14"
                                                                                            Margin="5,0"
                                                                                            VerticalAlignment="Center"
-                                                                                           Kind="QuestionCircleOutline" />
+                                                                                           Kind="QuestionCircleRegular" />
                                                         </Canvas>
                                                     </Grid>
                                                 </DataGridTextColumn.Header>
@@ -968,7 +968,7 @@
                                                                                            Height="14"
                                                                                            Margin="5,0"
                                                                                            VerticalAlignment="Center"
-                                                                                           Kind="QuestionCircleOutline" />
+                                                                                           Kind="QuestionCircleRegular" />
                                                         </Canvas>
                                                     </Grid>
                                                 </DataGridTextColumn.Header>
@@ -1156,7 +1156,7 @@
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="Select"
-                     Style="{StaticResource CustomMetroTabItem}">
+                     Style="{StaticResource CustomVerticalMetroTabItem}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -1318,7 +1318,7 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Implement"
-                     Style="{StaticResource CustomMetroTabItem}">
+                     Style="{StaticResource CustomVerticalMetroTabItem}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -1407,7 +1407,7 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Assess"
-                     Style="{StaticResource CustomMetroTabItem}">
+                     Style="{StaticResource CustomVerticalMetroTabItem}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <Expander Margin="5,0,5,5"
@@ -1516,9 +1516,9 @@
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="Authorize"
-                     Style="{StaticResource CustomMetroTabItem}" />
+                     Style="{StaticResource CustomVerticalMetroTabItem}" />
             <TabItem Header="Monitor"
-                     Style="{StaticResource CustomMetroTabItem}" />
+                     Style="{StaticResource CustomVerticalMetroTabItem}" />
         </Controls:MetroAnimatedSingleRowTabControl>
     </Grid>
 </UserControl>

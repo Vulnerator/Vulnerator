@@ -34,7 +34,8 @@
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
         <Controls:MetroAnimatedSingleRowTabControl Margin="5,0,0,0"
                                                    Controls:TabControlHelper.Underlined="SelectedTabItem">
-            <TabItem Header="Issues">
+            <TabItem Header="Issues"
+                     Style="{StaticResource CustomMetroTabItem}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -161,7 +162,7 @@
                                         <TextBlock HorizontalAlignment="Stretch"
                                                    Style="{StaticResource HyperlinkTextBlockStyle}"
                                                    Text="View on GitHub"
-                                                   TextWrapping="Wrap"
+                                                   TextTrimming="CharacterEllipsis"
                                                    ToolTip="{Binding ElementName=issueListBox, Path=SelectedItem.HtmlUrl}">
                                             <TextBlock.InputBindings>
                                                 <MouseBinding Command="{Binding GitHubLinksCommand}"
@@ -266,7 +267,8 @@
                     </Grid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Releases">
+            <TabItem Header="Releases"
+                     Style="{StaticResource CustomMetroTabItem}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -386,7 +388,7 @@
                                     <TextBlock HorizontalAlignment="Stretch"
                                                Style="{StaticResource HyperlinkTextBlockStyle}"
                                                Text="View on GitHub"
-                                               TextWrapping="Wrap"
+                                               TextTrimming="CharacterEllipsis"
                                                ToolTip="{Binding ElementName=releaseListBox, Path=SelectedItem.HtmlUrl}">
                                         <TextBlock.InputBindings>
                                             <MouseBinding Command="{Binding GitHubLinksCommand}"

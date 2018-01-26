@@ -285,7 +285,7 @@
                                                  Margin="0,0,5,5"
                                                  VerticalAlignment="Bottom"
                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
-                                                 Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                 Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
                                                  Controls:TextBoxHelper.ClearTextButton="True"
                                                  Controls:TextBoxHelper.Watermark="Add IP Address"
                                                  vh:DependencyProperties.FloatingWatermark="IP Address"
@@ -296,7 +296,7 @@
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
-                                                 Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                 Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
                                                  Controls:TextBoxHelper.ClearTextButton="True"
                                                  Controls:TextBoxHelper.Watermark="Add MAC Address"
                                                  vh:DependencyProperties.FloatingWatermark="MAC Address"
@@ -307,7 +307,7 @@
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.ButtonCommand="{Binding}"
-                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Group"
                                                   vh:DependencyProperties.FloatingWatermark="Group"
@@ -319,7 +319,7 @@
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.ButtonCommand="{Binding}"
-                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Contact"
                                                   vh:DependencyProperties.FloatingWatermark="Contact"
@@ -438,7 +438,7 @@
                                                   Margin="0,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.ButtonCommand="{Binding}"
-                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Software"
                                                   vh:DependencyProperties.FloatingWatermark="Software"
@@ -452,7 +452,7 @@
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.ButtonCommand="{Binding}"
-                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Checklist"
                                                   vh:DependencyProperties.FloatingWatermark="Checklist"
@@ -484,15 +484,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                    <IconPacks:Material Grid.Column="0"
                                                                 Margin="5"
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
                                                                 Kind="FilterOutline">
-                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                        <IconPacks:Material.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterial.LayoutTransform>
-                                    </IconPacks:PackIconMaterial>
+                                        </IconPacks:Material.LayoutTransform>
+                                    </IconPacks:Material>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
@@ -518,15 +518,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                    <IconPacks:Material Grid.Column="0"
                                                                 Margin="5"
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
                                                                 Kind="CheckAll">
-                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                        <IconPacks:Material.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterial.LayoutTransform>
-                                    </IconPacks:PackIconMaterial>
+                                        </IconPacks:Material.LayoutTransform>
+                                    </IconPacks:Material>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
@@ -552,15 +552,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterialLight Grid.Column="0"
+                                    <IconPacks:MaterialLight Grid.Column="0"
                                                                      Margin="5"
                                                                      HorizontalAlignment="Center"
                                                                      VerticalAlignment="Center"
                                                                      Kind="CloudDownload">
-                                        <IconPacks:PackIconMaterialLight.LayoutTransform>
+                                        <IconPacks:MaterialLight.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterialLight.LayoutTransform>
-                                    </IconPacks:PackIconMaterialLight>
+                                        </IconPacks:MaterialLight.LayoutTransform>
+                                    </IconPacks:MaterialLight>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
@@ -728,13 +728,18 @@
                                                     Grid.Column="3"
                                                     Margin="5,0,5,5"
                                                     VerticalAlignment="Bottom"
+                                                    Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=CloseBoxOutline}"
+                                                    Controls:TextBoxHelper.ClearTextButton="True"
                                                     Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                     Controls:TextBoxHelper.Watermark="DADMS Last Date Approved (LDA)"
+                                                    vh:DependencyProperties.FloatingWatermark="DADMS LDA"
+                                                    vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                    Style="{StaticResource HeaderedDatePickerStyle}"
                                                     Text="{Binding DADMS_LDA}" />
                                         <CheckBox Grid.Row="1"
                                                   Grid.Column="4"
                                                   Margin="5,0,5,5"
-                                                  VerticalAlignment="Center"
+                                                  VerticalAlignment="Bottom"
                                                   Content="FAM Accepted"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   IsChecked="{Binding FAM_Accepted}" />
@@ -775,7 +780,7 @@
                                                   Margin="0,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.ButtonCommand="{Binding}"
-                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Hardware"
                                                   vh:DependencyProperties.FloatingWatermark="Hardware"
@@ -852,15 +857,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                    <IconPacks:Material Grid.Column="0"
                                                                 Margin="5"
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
                                                                 Kind="FilterOutline">
-                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                        <IconPacks:Material.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterial.LayoutTransform>
-                                    </IconPacks:PackIconMaterial>
+                                        </IconPacks:Material.LayoutTransform>
+                                    </IconPacks:Material>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
@@ -886,15 +891,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                    <IconPacks:Material Grid.Column="0"
                                                                 Margin="5"
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
                                                                 Kind="CheckAll">
-                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                        <IconPacks:Material.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterial.LayoutTransform>
-                                    </IconPacks:PackIconMaterial>
+                                        </IconPacks:Material.LayoutTransform>
+                                    </IconPacks:Material>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
@@ -920,15 +925,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterialLight Grid.Column="0"
+                                    <IconPacks:MaterialLight Grid.Column="0"
                                                                      Margin="5"
                                                                      HorizontalAlignment="Center"
                                                                      VerticalAlignment="Center"
                                                                      Kind="CloudDownload">
-                                        <IconPacks:PackIconMaterialLight.LayoutTransform>
+                                        <IconPacks:MaterialLight.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterialLight.LayoutTransform>
-                                    </IconPacks:PackIconMaterialLight>
+                                        </IconPacks:MaterialLight.LayoutTransform>
+                                    </IconPacks:MaterialLight>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
@@ -1007,10 +1012,11 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Port" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1027,10 +1033,11 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Protocol" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1047,10 +1054,11 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Preferred Service Name" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1128,45 +1136,50 @@
                                                   Margin="0,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.ButtonCommand="{Binding}"
-                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
                                                   Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Hardware"
-                                                  IsEditable="True" />
+                                                  vh:DependencyProperties.FloatingWatermark="Hardware"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsEditable="True"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
                                         <TextBox Grid.Row="1"
                                                  Grid.Column="2"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
                                                  Controls:TextBoxHelper.ClearTextButton="True"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Data Flow Direction"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Hardware_PPS.Direction}" />
                                         <CheckBox Grid.Row="1"
                                                   Grid.Column="3"
                                                   Margin="5,0,5,5"
-                                                  VerticalAlignment="Center"
-                                                  Content="Report in Accreditation (Global)"
+                                                  VerticalAlignment="Bottom"
+                                                  Content="Report in Accreditation"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   IsChecked="{Binding ReportInAccreditation_Global}" />
                                         <TextBox Grid.Row="2"
                                                  Grid.Column="1"
                                                  Margin="0,0,5,5"
                                                  VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Boundary Crossed"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Hardware_PPS.BoundaryCrossed}" />
                                         <TextBox Grid.Row="2"
                                                  Grid.Column="2"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
                                                  Controls:TextBoxHelper.ClearTextButton="True"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Classification"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Hardware_PPS.Classification}" />
                                         <CheckBox Grid.Row="2"
                                                   Grid.Column="3"
                                                   Margin="5,0,5,5"
-                                                  VerticalAlignment="Center"
+                                                  VerticalAlignment="Bottom"
                                                   Content="DoD Compliant"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   IsChecked="{Binding Hardware_PPS.DoD_Compliant}" />
@@ -1189,15 +1202,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                    <IconPacks:Material Grid.Column="0"
                                                                 Margin="5"
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
                                                                 Kind="FilterOutline">
-                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                        <IconPacks:Material.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterial.LayoutTransform>
-                                    </IconPacks:PackIconMaterial>
+                                        </IconPacks:Material.LayoutTransform>
+                                    </IconPacks:Material>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
@@ -1223,15 +1236,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                    <IconPacks:Material Grid.Column="0"
                                                                 Margin="5"
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
                                                                 Kind="CheckAll">
-                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                        <IconPacks:Material.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterial.LayoutTransform>
-                                    </IconPacks:PackIconMaterial>
+                                        </IconPacks:Material.LayoutTransform>
+                                    </IconPacks:Material>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
@@ -1257,15 +1270,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterialLight Grid.Column="0"
+                                    <IconPacks:MaterialLight Grid.Column="0"
                                                                      Margin="5"
                                                                      HorizontalAlignment="Center"
                                                                      VerticalAlignment="Center"
                                                                      Kind="CloudDownload">
-                                        <IconPacks:PackIconMaterialLight.LayoutTransform>
+                                        <IconPacks:MaterialLight.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterialLight.LayoutTransform>
-                                    </IconPacks:PackIconMaterialLight>
+                                        </IconPacks:MaterialLight.LayoutTransform>
+                                    </IconPacks:MaterialLight>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
@@ -1341,10 +1354,11 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="First Name" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1360,10 +1374,11 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Last Name" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1379,10 +1394,11 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Email" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1398,10 +1414,11 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Title" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1417,10 +1434,11 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Organization" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1479,11 +1497,13 @@
                                                   Margin="0,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.ButtonCommand="{Binding}"
-                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Hardware"
-                                                  IsEditable="True" />
+                                                  vh:DependencyProperties.FloatingWatermark="Hardware"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsEditable="True"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
                                         <DataGrid Grid.Row="2"
                                                   Grid.Column="1"
                                                   Height="100"
@@ -1553,41 +1573,49 @@
                                                   Margin="0,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.ButtonCommand="{Binding}"
-                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Software"
-                                                  IsEditable="True" />
+                                                  vh:DependencyProperties.FloatingWatermark="Software"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsEditable="True"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
                                         <ComboBox Grid.Row="3"
                                                   Grid.Column="2"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.ButtonCommand="{Binding}"
-                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Group"
-                                                  IsEditable="True" />
+                                                  vh:DependencyProperties.FloatingWatermark="Group"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsEditable="True"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
                                         <ComboBox Grid.Row="3"
                                                   Grid.Column="3"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.ButtonCommand="{Binding}"
-                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Accreditation"
-                                                  IsEditable="True" />
+                                                  vh:DependencyProperties.FloatingWatermark="Accreditation"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsEditable="True"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
                                         <ComboBox Grid.Row="3"
                                                   Grid.Column="4"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.ButtonCommand="{Binding}"
-                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Certification"
-                                                  IsEditable="True" />
+                                                  vh:DependencyProperties.FloatingWatermark="Certification"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsEditable="True"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
                                     </Grid>
                                 </DataTemplate>
                             </DataGrid.RowDetailsTemplate>
@@ -1607,15 +1635,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                    <IconPacks:Material Grid.Column="0"
                                                                 Margin="5"
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
                                                                 Kind="FilterOutline">
-                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                        <IconPacks:Material.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterial.LayoutTransform>
-                                    </IconPacks:PackIconMaterial>
+                                        </IconPacks:Material.LayoutTransform>
+                                    </IconPacks:Material>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
@@ -1641,15 +1669,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                    <IconPacks:Material Grid.Column="0"
                                                                 Margin="5"
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
                                                                 Kind="CheckAll">
-                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                        <IconPacks:Material.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterial.LayoutTransform>
-                                    </IconPacks:PackIconMaterial>
+                                        </IconPacks:Material.LayoutTransform>
+                                    </IconPacks:Material>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
@@ -1675,15 +1703,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterialLight Grid.Column="0"
+                                    <IconPacks:MaterialLight Grid.Column="0"
                                                                      Margin="5"
                                                                      HorizontalAlignment="Center"
                                                                      VerticalAlignment="Center"
                                                                      Kind="CloudDownload">
-                                        <IconPacks:PackIconMaterialLight.LayoutTransform>
+                                        <IconPacks:MaterialLight.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterialLight.LayoutTransform>
-                                    </IconPacks:PackIconMaterialLight>
+                                        </IconPacks:MaterialLight.LayoutTransform>
+                                    </IconPacks:MaterialLight>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
@@ -1760,10 +1788,11 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Project Name" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1779,10 +1808,11 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Parent Accreditation" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -1798,13 +1828,6 @@
                                             <Setter Property="TextWrapping" Value="NoWrap" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
-                                    <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
-                                               TargetType="TextBox">
-                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Port" />
-                                            <Setter Property="Margin" Value="0,5,5,5" />
-                                        </Style>
-                                    </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                             <DataGrid.RowDetailsTemplate>
@@ -1866,21 +1889,25 @@
                                                   Margin="0,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.ButtonCommand="{Binding}"
-                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Hardware"
-                                                  IsEditable="True" />
+                                                  vh:DependencyProperties.FloatingWatermark="Hardware"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsEditable="True"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
                                         <ComboBox Grid.Row="1"
                                                   Grid.Column="2"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.ButtonCommand="{Binding}"
-                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:PackIconMaterial Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                  Controls:TextBoxHelper.Watermark="Add Associated Contacts"
-                                                  IsEditable="True" />
+                                                  Controls:TextBoxHelper.Watermark="Add Associated Contact"
+                                                  vh:DependencyProperties.FloatingWatermark="Contact"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsEditable="True"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
                                     </Grid>
                                 </DataTemplate>
                             </DataGrid.RowDetailsTemplate>
@@ -1900,15 +1927,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                    <IconPacks:Material Grid.Column="0"
                                                                 Margin="5"
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
                                                                 Kind="FilterOutline">
-                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                        <IconPacks:Material.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterial.LayoutTransform>
-                                    </IconPacks:PackIconMaterial>
+                                        </IconPacks:Material.LayoutTransform>
+                                    </IconPacks:Material>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
@@ -1934,15 +1961,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                    <IconPacks:Material Grid.Column="0"
                                                                 Margin="5"
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
                                                                 Kind="CheckAll">
-                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                        <IconPacks:Material.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterial.LayoutTransform>
-                                    </IconPacks:PackIconMaterial>
+                                        </IconPacks:Material.LayoutTransform>
+                                    </IconPacks:Material>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
@@ -1968,15 +1995,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterialLight Grid.Column="0"
+                                    <IconPacks:MaterialLight Grid.Column="0"
                                                                      Margin="5"
                                                                      HorizontalAlignment="Center"
                                                                      VerticalAlignment="Center"
                                                                      Kind="CloudDownload">
-                                        <IconPacks:PackIconMaterialLight.LayoutTransform>
+                                        <IconPacks:MaterialLight.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterialLight.LayoutTransform>
-                                    </IconPacks:PackIconMaterialLight>
+                                        </IconPacks:MaterialLight.LayoutTransform>
+                                    </IconPacks:MaterialLight>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
@@ -2052,10 +2079,11 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Project Name" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -2070,10 +2098,11 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Project Name" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -2088,10 +2117,11 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Project Name" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -2115,59 +2145,66 @@
                                         <TextBox Grid.Column="1"
                                                  Margin="0,0,5,5"
                                                  VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Accreditation Version"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding AccreditationVersion}" />
                                         <TextBox Grid.Column="2"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Confidentiality (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Mode=OneWay}" />
                                         <TextBox Grid.Column="3"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Integrity (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Mode=OneWay}" />
                                         <TextBox Grid.Column="4"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Availability (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Mode=OneWay}" />
                                         <TextBox Grid.Row="1"
                                                  Grid.Column="1"
                                                  Margin="0,0,5,5"
                                                  VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Accreditation Type (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Mode=OneWay}" />
                                         <TextBox Grid.Row="1"
                                                  Grid.Column="2"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="RDT&amp;E Zone (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Mode=OneWay}" />
                                         <TextBox Grid.Row="1"
                                                  Grid.Column="3"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="CyberSafe Grade (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Mode=OneWay}" />
                                         <CheckBox Grid.Row="1"
                                                   Grid.Column="4"
                                                   Margin="5,0,5,5"
-                                                  VerticalAlignment="Center"
+                                                  VerticalAlignment="Bottom"
                                                   Content="Platform System"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   IsChecked="{Binding IsChecked}" />
@@ -2175,27 +2212,29 @@
                                                     Grid.Column="1"
                                                     Margin="0,0,5,5"
                                                     VerticalAlignment="Bottom"
-                                                    Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                     Controls:TextBoxHelper.Watermark="ATO Granted"
+                                                    vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                    Style="{StaticResource HeaderedDatePickerStyle}"
                                                     Text="{Binding Accreditation_Acronym, Mode=OneWay}" />
                                         <DatePicker Grid.Row="2"
                                                     Grid.Column="2"
                                                     Margin="5,0,5,5"
                                                     VerticalAlignment="Bottom"
-                                                    Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                     Controls:TextBoxHelper.Watermark="ATO Expiration"
+                                                    vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                    Style="{StaticResource HeaderedDatePickerStyle}"
                                                     Text="{Binding Accreditation_Acronym, Mode=OneWay}" />
                                         <CheckBox Grid.Row="2"
                                                   Grid.Column="3"
                                                   Margin="5,0,5,5"
-                                                  VerticalAlignment="Center"
+                                                  VerticalAlignment="Bottom"
                                                   Content="Has Foreign Nationals"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   IsChecked="{Binding IsChecked}" />
                                         <CheckBox Grid.Row="2"
                                                   Grid.Column="4"
                                                   Margin="5,0,5,5"
-                                                  VerticalAlignment="Center"
+                                                  VerticalAlignment="Bottom"
                                                   Content="FISCAM System"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   IsChecked="{Binding IsChecked}" />
@@ -2218,15 +2257,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                    <IconPacks:Material Grid.Column="0"
                                                                 Margin="5"
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
                                                                 Kind="FilterOutline">
-                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                        <IconPacks:Material.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterial.LayoutTransform>
-                                    </IconPacks:PackIconMaterial>
+                                        </IconPacks:Material.LayoutTransform>
+                                    </IconPacks:Material>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
@@ -2252,15 +2291,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                    <IconPacks:Material Grid.Column="0"
                                                                 Margin="5"
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
                                                                 Kind="CheckAll">
-                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                        <IconPacks:Material.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterial.LayoutTransform>
-                                    </IconPacks:PackIconMaterial>
+                                        </IconPacks:Material.LayoutTransform>
+                                    </IconPacks:Material>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
@@ -2286,15 +2325,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconMaterialLight Grid.Column="0"
+                                    <IconPacks:MaterialLight Grid.Column="0"
                                                                      Margin="5"
                                                                      HorizontalAlignment="Center"
                                                                      VerticalAlignment="Center"
                                                                      Kind="CloudDownload">
-                                        <IconPacks:PackIconMaterialLight.LayoutTransform>
+                                        <IconPacks:MaterialLight.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconMaterialLight.LayoutTransform>
-                                    </IconPacks:PackIconMaterialLight>
+                                        </IconPacks:MaterialLight.LayoutTransform>
+                                    </IconPacks:MaterialLight>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"

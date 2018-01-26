@@ -59,7 +59,7 @@
                                                        Margin="5"
                                                        HorizontalAlignment="Center"
                                                        VerticalAlignment="Center"
-                                                       Kind="BookmarkOutline">
+                                                       Kind="BookmarkRegular">
                             <IconPacks:PackIconFontAwesome.LayoutTransform>
                                 <RotateTransform Angle="-90" />
                             </IconPacks:PackIconFontAwesome.LayoutTransform>

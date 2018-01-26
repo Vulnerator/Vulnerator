@@ -64,25 +64,25 @@
                     <Button x:Name="projectButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
-                            Content="{IconPacks:PackIconOcticons Bookmark}"
+                            Content="{IconPacks:Octicons Bookmark}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="GitHub Project Page" />
                     <Button x:Name="githubButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
-                            Content="{IconPacks:PackIconOcticons Octoface}"
+                            Content="{IconPacks:Octicons Octoface}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="GitHub Repository" />
                     <Button x:Name="wikiButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
-                            Content="{IconPacks:PackIconOcticons Book}"
+                            Content="{IconPacks:Octicons Book}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="Wiki" />
                     <Button x:Name="issueButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
-                            Content="{IconPacks:PackIconOcticons IssueOpened}"
+                            Content="{IconPacks:Octicons IssueOpened}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="Issues" />
                 </Controls:WindowCommands>
@@ -183,10 +183,10 @@
                         <Controls:HamburgerMenuIconItem Label="News"
                                                         Tag="{StaticResource newsView}">
                             <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconFontAwesome HorizontalAlignment="Center"
-                                                               VerticalAlignment="Center"
-                                                               Kind="NewspaperOutline"
-                                                               ToolTip="News" />
+                                <IconPacks:PackIconModern HorizontalAlignment="Center"
+                                                          VerticalAlignment="Center"
+                                                          Kind="Newspaper"
+                                                          ToolTip="News" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                     </Controls:HamburgerMenuItemCollection>
@@ -216,7 +216,7 @@
                             <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconFontAwesome HorizontalAlignment="Center"
                                                                VerticalAlignment="Center"
-                                                               Kind="PaintBrush"
+                                                               Kind="PaintBrushSolid"
                                                                ToolTip="Theme" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
@@ -297,7 +297,7 @@
                     <Button Margin="0,0,3,0"
                             Command="{Binding GetLatestVersionCommand}"
                             CommandParameter="{Binding Release.HtmlUrl}"
-                            Content="{IconPacks:PackIconOcticons DesktopDownload}"
+                            Content="{IconPacks:Octicons DesktopDownload}"
                             ToolTip="Download Now"
                             Visibility="{Binding NewVersionVisibility}" />
                 </StatusBarItem>
