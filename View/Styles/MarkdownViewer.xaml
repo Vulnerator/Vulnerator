@@ -23,31 +23,37 @@
 
     <Style x:Key="{x:Static wpf:Styles.Heading1StyleKey}"
            TargetType="{x:Type Paragraph}">
+        <Setter Property="FontFamily" Value="Segoe UI Light" />
         <Setter Property="FontSize" Value="42" />
     </Style>
 
     <Style x:Key="{x:Static wpf:Styles.Heading2StyleKey}"
            TargetType="{x:Type Paragraph}">
+        <Setter Property="FontFamily" Value="Segoe UI Light" />
         <Setter Property="FontSize" Value="36" />
     </Style>
 
     <Style x:Key="{x:Static wpf:Styles.Heading3StyleKey}"
            TargetType="{x:Type Paragraph}">
+        <Setter Property="FontFamily" Value="Segoe UI Light" />
         <Setter Property="FontSize" Value="30" />
     </Style>
 
     <Style x:Key="{x:Static wpf:Styles.Heading4StyleKey}"
            TargetType="{x:Type Paragraph}">
+        <Setter Property="FontFamily" Value="Segoe UI Light" />
         <Setter Property="FontSize" Value="24" />
     </Style>
 
     <Style x:Key="{x:Static wpf:Styles.Heading5StyleKey}"
            TargetType="{x:Type Paragraph}">
+        <Setter Property="FontFamily" Value="Segoe UI Light" />
         <Setter Property="FontSize" Value="20" />
     </Style>
 
     <Style x:Key="{x:Static wpf:Styles.Heading6StyleKey}"
            TargetType="{x:Type Paragraph}">
+        <Setter Property="FontFamily" Value="Segoe UI Light" />
         <Setter Property="FontSize" Value="18" />
     </Style>
 
