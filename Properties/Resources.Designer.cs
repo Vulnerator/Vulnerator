@@ -19,7 +19,7 @@ namespace Vulnerator.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -632,6 +632,20 @@ namespace Vulnerator.Properties {
         internal static string SelectVulnerabilityVersionAndRelease {
             get {
                 return ResourceManager.GetString("SelectVulnerabilityVersionAndRelease", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
+        ///    Vulnerabilities.Vulnerability_ID
+        ///FROM Vulnerabilities
+        ///LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
+        ///LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID
+        ///WHERE VulnerabilitySources.Vulnerability_Source_ID = @Vulnerability_Source_ID;.
+        /// </summary>
+        internal static string SelectVunerabilityIndexes {
+            get {
+                return ResourceManager.GetString("SelectVunerabilityIndexes", resourceCulture);
             }
         }
         

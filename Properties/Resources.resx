@@ -453,6 +453,14 @@ AND Source_Release = @Source_Release;</value>
   <data name="SelectVulnerabilityVersionAndRelease" xml:space="preserve">
     <value>SELECT Vulnerability_Version, Vulnerability_Release FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;</value>
   </data>
+  <data name="SelectVunerabilityIndexes" xml:space="preserve">
+    <value>SELECT
+    Vulnerabilities.Vulnerability_ID
+FROM Vulnerabilities
+LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
+LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID
+WHERE VulnerabilitySources.Vulnerability_Source_ID = @Vulnerability_Source_ID;</value>
+  </data>
   <data name="SetCredentialedScanStatus" xml:space="preserve">
     <value>UPDATE Hardware SET Found_21745 = @Found_21745, Found_26917 = @Found_26917 WHERE Scan_IP = @Scan_IP AND Host_Name=@Host_Name;</value>
   </data>
