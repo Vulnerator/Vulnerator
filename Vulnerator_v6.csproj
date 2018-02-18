@@ -356,6 +356,7 @@
     <Compile Include="Model\BusinessLogic\AnsibleTowerBuilder.cs" />
     <Compile Include="Model\BusinessLogic\CklCreator.cs" />
     <Compile Include="Model\BusinessLogic\RawStigReader.cs" />
+    <Compile Include="Model\BusinessLogic\StigAssociator.cs" />
     <Compile Include="Model\DataAccess\DatabaseBuilder.cs" />
     <Compile Include="Model\DataAccess\DatabaseContext.cs" />
     <Compile Include="Model\DataAccess\DatabaseInterface.cs" />
