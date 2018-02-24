@@ -13,6 +13,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:v="clr-namespace:Vulnerator.View"
+             xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
              xmlns:vm="clr-namespace:Vulnerator.ViewModel"
              HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch"
@@ -50,8 +51,8 @@
                                 <TextBox Grid.Column="0"
                                          Grid.ColumnSpan="2"
                                          Margin="0,0,0,5"
-                                         Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                         Controls:TextBoxHelper.Watermark="System Name" />
+                                         Controls:TextBoxHelper.Watermark="System Name"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />
@@ -60,16 +61,16 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBox Grid.Column="0"
                                              Margin="0,0,5,5"
-                                             Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                             Controls:TextBoxHelper.Watermark="System Acronym" />
+                                             Controls:TextBoxHelper.Watermark="System Acronym"
+                                             Style="{StaticResource HeaderedTextBoxStyle}" />
                                     <TextBox Grid.Column="1"
                                              Margin="0,0,5,5"
-                                             Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                             Controls:TextBoxHelper.Watermark="System Version/Release" />
+                                             Controls:TextBoxHelper.Watermark="System Version/Release"
+                                             Style="{StaticResource HeaderedTextBoxStyle}" />
                                     <TextBox Grid.Column="2"
                                              Margin="0,0,0,5"
-                                             Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                             Controls:TextBoxHelper.Watermark="System eMASS ID" />
+                                             Controls:TextBoxHelper.Watermark="System eMASS ID"
+                                             Style="{StaticResource HeaderedTextBoxStyle}" />
                                 </Grid>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -78,11 +79,13 @@
                                     </Grid.ColumnDefinitions>
                                     <ComboBox Margin="0,0,5,5"
                                               Controls:TextBoxHelper.Watermark="System Registration Type"
-                                              IsEditable="True" />
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <ComboBox Grid.Column="1"
                                               Margin="0,0,0,5"
                                               Controls:TextBoxHelper.Watermark="System Type"
-                                              IsEditable="True" />
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                 </Grid>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -92,15 +95,17 @@
                                     <ComboBox Grid.Column="0"
                                               Margin="0,0,5,5"
                                               Controls:TextBoxHelper.Watermark="DITPR ID"
-                                              IsEditable="True" />
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <ComboBox Grid.Column="1"
                                               Margin="0,0,0,5"
                                               Controls:TextBoxHelper.Watermark="DoD IT Registration Number"
-                                              IsEditable="True" />
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                 </Grid>
                                 <TextBox Margin="0,0,0,5"
-                                         Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                         Controls:TextBoxHelper.Watermark="DVS Site" />
+                                         Controls:TextBoxHelper.Watermark="DVS Site"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
                             </StackPanel>
                         </Expander>
                         <Expander Margin="5,0,5,5"
@@ -123,26 +128,26 @@
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
                                 <ComboBox Margin="0,0,5,5"
-                                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                                           Controls:TextBoxHelper.Watermark="Logical Access Control"
-                                          IsEditable="True" />
+                                          IsEditable="True"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
                                 <ComboBox Grid.Column="1"
                                           Margin="0,0,0,5"
-                                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                                           Controls:TextBoxHelper.Watermark="Physical Access Control"
-                                          IsEditable="True" />
+                                          IsEditable="True"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
                                 <ComboBox Grid.Row="1"
                                           Grid.Column="0"
                                           Margin="0,0,5,5"
-                                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                                           Controls:TextBoxHelper.Watermark="Network Connection Antivirus Scan Periodicity"
-                                          IsEditable="True" />
+                                          IsEditable="True"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
                                 <ComboBox Grid.Row="1"
                                           Grid.Column="1"
                                           Margin="0,0,0,5"
-                                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                                           Controls:TextBoxHelper.Watermark="DoDIN Connection Periodicity"
-                                          IsEditable="True" />
+                                          IsEditable="True"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
                             </Grid>
                         </Expander>
                         <Expander Margin="5,0,5,5"
@@ -161,12 +166,12 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <TextBox Margin="0,0,5,5"
-                                         Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                         Controls:TextBoxHelper.Watermark="PPSM Registration Number" />
+                                         Controls:TextBoxHelper.Watermark="PPSM Registration Number"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
                                 <DatePicker Grid.Column="1"
                                             Margin="0,0,0,5"
-                                            Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                            Controls:TextBoxHelper.Watermark="PPSM Registration Date" />
+                                            Controls:TextBoxHelper.Watermark="PPSM Registration Date"
+                                            Style="{StaticResource HeaderedDatePickerStyle}" />
                             </Grid>
                         </Expander>
                         <Expander Margin="5,0,5,5"
@@ -217,7 +222,8 @@
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <CheckBox x:Name="typeAccreditationCheckBox"
-                                              Margin="0,5,5,10">
+                                              Margin="0,5,5,6"
+                                              VerticalAlignment="Bottom">
                                         <TextBlock Text="Type Authorization"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>
@@ -225,7 +231,8 @@
                                              Grid.ColumnSpan="2"
                                              Margin="0,0,0,5"
                                              Controls:TextBoxHelper.Watermark="Type Authorization Installation Name / Owning Organization"
-                                             IsEnabled="{Binding ElementName=typeAccreditationCheckBox, Path=IsChecked}" />
+                                             IsEnabled="{Binding ElementName=typeAccreditationCheckBox, Path=IsChecked}"
+                                             Style="{StaticResource HeaderedTextBoxStyle}" />
                                 </Grid>
                                 <DataGrid MinHeight="100"
                                           Margin="0,0,0,5"
@@ -367,40 +374,41 @@
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <ComboBox Margin="0,0,5,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                              Controls:TextBoxHelper.Watermark="Security Plan Approval Status" />
+                                              Controls:TextBoxHelper.Watermark="Security Plan Approval Status"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <DatePicker Grid.Column="1"
                                                 Margin="0,0,0,5"
-                                                Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                Controls:TextBoxHelper.Watermark="Security Plan Approval Date" />
+                                                Controls:TextBoxHelper.Watermark="Security Plan Approval Date"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
                                     <ComboBox Grid.Row="1"
                                               Margin="0,0,5,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                              Controls:TextBoxHelper.Watermark="Authorization Status" />
+                                              Controls:TextBoxHelper.Watermark="Authorization Status"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <DatePicker Grid.Row="1"
                                                 Grid.Column="1"
                                                 Margin="0,0,0,5"
-                                                Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                Controls:TextBoxHelper.Watermark="Authorization Date" />
+                                                Controls:TextBoxHelper.Watermark="Authorization Date"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
                                     <CheckBox Grid.Row="2"
-                                              Margin="0,5,5,10">
+                                              Margin="0,5,5,6"
+                                              VerticalAlignment="Bottom">
                                         <TextBlock Text="Has Authorization Documentation"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>
                                     <DatePicker Grid.Row="2"
                                                 Grid.Column="1"
                                                 Margin="0,0,0,5"
-                                                Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                Controls:TextBoxHelper.Watermark="Authorization Termination Date" />
+                                                Controls:TextBoxHelper.Watermark="Authorization Termination Date"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
                                     <ComboBox Grid.Row="3"
                                               Margin="0,0,5,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                              Controls:TextBoxHelper.Watermark="RMF Activity" />
+                                              Controls:TextBoxHelper.Watermark="RMF Activity"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <DatePicker Grid.Row="3"
                                                 Grid.Column="1"
                                                 Margin="0,0,0,5"
-                                                Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                Controls:TextBoxHelper.Watermark="Assessment Completion Date" />
+                                                Controls:TextBoxHelper.Watermark="Assessment Completion Date"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
                                 </Grid>
                                 <DataGrid MinHeight="100"
                                           Margin="0,0,0,5"
@@ -451,46 +459,49 @@
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <CheckBox Grid.Row="0"
-                                              Margin="0,5,5,10">
+                                              Margin="0,5,5,6">
                                         <TextBlock Text="FISMA Reportable"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>
                                     <CheckBox Grid.Row="0"
                                               Grid.Column="1"
-                                              Margin="0,5,0,10">
+                                              Margin="0,5,0,6">
                                         <TextBlock Text="ERS Reportable"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>
                                     <CheckBox Grid.Row="1"
-                                              Margin="0,5,5,10">
+                                              Margin="0,5,5,6"
+                                              VerticalAlignment="Bottom">
                                         <TextBlock Text="Security Review Completed"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>
                                     <DatePicker Grid.Row="1"
                                                 Grid.Column="1"
                                                 Margin="0,0,0,5"
-                                                Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                Controls:TextBoxHelper.Watermark="Security Review Date" />
+                                                Controls:TextBoxHelper.Watermark="Security Review Date"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
                                     <CheckBox Grid.Row="2"
-                                              Margin="0,5,5,10">
+                                              Margin="0,5,5,6"
+                                              VerticalAlignment="Bottom">
                                         <TextBlock Text="Privacy Impact Assessment (PIA) Required"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>
                                     <DatePicker Grid.Row="2"
                                                 Grid.Column="1"
                                                 Margin="0,0,0,5"
-                                                Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                Controls:TextBoxHelper.Watermark="PIA Completion Date" />
+                                                Controls:TextBoxHelper.Watermark="PIA Completion Date"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
                                     <CheckBox Grid.Row="3"
-                                              Margin="0,5,5,10">
+                                              Margin="0,5,5,6"
+                                              VerticalAlignment="Bottom">
                                         <TextBlock Text="eAuthentication Risk Assessent (ERA) Required"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>
                                     <DatePicker Grid.Row="3"
                                                 Grid.Column="1"
                                                 Margin="0,0,0,5"
-                                                Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                Controls:TextBoxHelper.Watermark="ERA Completion Date" />
+                                                Controls:TextBoxHelper.Watermark="ERA Completion Date"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
                                 </Grid>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -500,13 +511,13 @@
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <CheckBox Grid.ColumnSpan="2"
-                                              Margin="0,5,5,10">
+                                              Margin="0,15,5,6">
                                         <TextBlock Text="Contingency Plan Required"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>
                                     <CheckBox x:Name="contingencyPlanTestedCheckBox"
                                               Grid.Column="2"
-                                              Margin="0,5,5,10">
+                                              Margin="0,15,5,6">
                                         <TextBlock Text="Contingency Plan Tested"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>
@@ -540,38 +551,38 @@
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <ComboBox Margin="0,0,5,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                              Controls:TextBoxHelper.Watermark="Mission Criticality" />
+                                              Controls:TextBoxHelper.Watermark="Mission Criticality"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <ComboBox Grid.Column="1"
                                               Margin="0,0,0,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                              Controls:TextBoxHelper.Watermark="Governing Mission Area" />
+                                              Controls:TextBoxHelper.Watermark="Governing Mission Area"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <TextBox Grid.Row="1"
                                              Grid.ColumnSpan="2"
                                              Margin="0,0,0,5"
-                                             Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                             Controls:TextBoxHelper.Watermark="Owning DoD Component" />
+                                             Controls:TextBoxHelper.Watermark="Owning DoD Component"
+                                             Style="{StaticResource HeaderedTextBoxStyle}" />
                                     <ComboBox Grid.Row="2"
                                               Margin="0,0,5,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                              Controls:TextBoxHelper.Watermark="Acquisition Category" />
+                                              Controls:TextBoxHelper.Watermark="Acquisition Category"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <ComboBox Grid.Row="2"
                                               Grid.Column="1"
                                               Margin="0,0,0,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                              Controls:TextBoxHelper.Watermark="Software Category" />
+                                              Controls:TextBoxHelper.Watermark="Software Category"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                 </Grid>
                                 <ComboBox Margin="0,0,0,5"
-                                          Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                          Controls:TextBoxHelper.Watermark="System Lifecycle / Acquisition Phase" />
+                                          Controls:TextBoxHelper.Watermark="System Lifecycle / Acquisition Phase"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
                                 <ComboBox Margin="0,0,0,5"
-                                          Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                          Controls:TextBoxHelper.Watermark="System Ownership &amp; Control" />
-                                <TextBox MaxHeight="100"
+                                          Controls:TextBoxHelper.Watermark="System Ownership &amp; Control"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <TextBox Height="100"
                                          Margin="0,0,0,5"
-                                         Controls:TextBoxHelper.UseFloatingWatermark="True"
                                          Controls:TextBoxHelper.Watermark="Additional Information"
-                                         AcceptsReturn="True" />
+                                         AcceptsReturn="True"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
                             </StackPanel>
                         </Expander>
                         <Expander Margin="5,0,5,5"
@@ -689,16 +700,16 @@
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <DatePicker Margin="0,0,5,5"
-                                                Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                Controls:TextBoxHelper.Watermark="ATC / IATC Granted Date" />
+                                                Controls:TextBoxHelper.Watermark="ATC / IATC Granted Date"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
                                     <DatePicker Grid.Column="1"
                                                 Margin="0,0,5,5"
-                                                Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                Controls:TextBoxHelper.Watermark="ATC / IATC Expiration Date" />
+                                                Controls:TextBoxHelper.Watermark="ATC / IATC Expiration Date"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
                                     <DatePicker Grid.Column="2"
                                                 Margin="0,0,0,5"
-                                                Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                                Controls:TextBoxHelper.Watermark="CND Service Provider" />
+                                                Controls:TextBoxHelper.Watermark="CND Service Provider"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
                                 </Grid>
                                 <DataGrid MinHeight="100"
                                           Style="{StaticResource GreyBorderedDataGridStyle}">
@@ -746,51 +757,51 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0">
                                     <ComboBox Margin="0,0,5,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
                                               Controls:TextBoxHelper.Watermark="Program Manager (PM)"
-                                              IsEditable="True" />
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <ComboBox Margin="0,0,5,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
                                               Controls:TextBoxHelper.Watermark="Information System Security Manager (ISSM)"
-                                              IsEditable="True" />
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <ComboBox Margin="0,0,5,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
                                               Controls:TextBoxHelper.Watermark="Information System Security Engineer (ISSE)"
-                                              IsEditable="True" />
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <ComboBox Margin="0,0,5,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
                                               Controls:TextBoxHelper.Watermark="(Functional/Navy) Authorizing Official ([F/N]AO)"
-                                              IsEditable="True" />
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <ComboBox Margin="0,0,5,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
                                               Controls:TextBoxHelper.Watermark="(Functional) Security Control Assessor ([F]SCA)"
-                                              IsEditable="True" />
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <ComboBox Margin="0,0,5,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
                                               Controls:TextBoxHelper.Watermark="Validator"
-                                              IsEditable="True" />
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                 </StackPanel>
                                 <StackPanel Grid.Column="1">
                                     <ComboBox Margin="0,0,0,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
                                               Controls:TextBoxHelper.Watermark="Information System Owner (ISO)"
-                                              IsEditable="True" />
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <ComboBox Margin="0,0,0,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
                                               Controls:TextBoxHelper.Watermark="User Representative"
-                                              IsEditable="True" />
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <ComboBox Margin="0,0,0,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
                                               Controls:TextBoxHelper.Watermark="Package Submitting Office (PSO) Representative"
-                                              IsEditable="True" />
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <ComboBox Margin="0,0,0,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
                                               Controls:TextBoxHelper.Watermark="(F/N)AO CSA"
-                                              IsEditable="True" />
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <ComboBox Margin="0,0,0,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
                                               Controls:TextBoxHelper.Watermark="(F)SCA Liaison"
-                                              IsEditable="True" />
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                 </StackPanel>
                             </Grid>
                         </Expander>
@@ -815,14 +826,14 @@
                                 </Grid.RowDefinitions>
                                 <StackPanel Grid.Column="0">
                                     <ComboBox Margin="0,0,5,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
                                               Controls:TextBoxHelper.Watermark="System Classification"
-                                              IsEditable="True" />
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <ComboBox x:Name="releasabilityComboBox"
                                               Margin="0,0,5,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
                                               Controls:TextBoxHelper.Watermark="Information Releasability"
-                                              IsEditable="True" />
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <DataGrid Grid.Row="0"
                                               Grid.Column="1"
                                               MinHeight="100"
@@ -894,11 +905,11 @@
                                 </StackPanel>
                                 <StackPanel Grid.Column="1">
                                     <ComboBox Margin="0,0,0,5"
-                                              Controls:TextBoxHelper.UseFloatingWatermark="True"
                                               Controls:TextBoxHelper.Watermark="Information Classification"
-                                              IsEditable="True" />
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <CheckBox x:Name="clearanceRequirementCheckBox"
-                                              Margin="0,5,0,10">
+                                              Margin="0,16,0,10">
                                         <TextBlock Text="Clearance requirements vary by role"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>

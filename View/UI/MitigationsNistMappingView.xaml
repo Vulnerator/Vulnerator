@@ -79,7 +79,7 @@
                                                       ItemsSource="{Binding Path=DataContext.Vulnerabilities, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                                       SelectedItem="{Binding Vulnerability, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                       SelectedValuePath="Unique_Vulnerability_Identifier"
-                                                      Style="{DynamicResource MetroComboBox}" />
+                                                      Style="{StaticResource HeaderedComboBoxStyle}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellEditingTemplate>
                                 </DataGridTemplateColumn>
@@ -108,10 +108,11 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Residual Risk" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -130,8 +131,10 @@
                                         <DataTemplate>
                                             <ComboBox Margin="0,5,5,5"
                                                       Controls:TextBoxHelper.Watermark="Mitigated Status"
+                                                      vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                       ItemsSource="{Binding Path=DataContext.MitigationStatuses, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                                                      SelectedItem="{Binding Mitigated_Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                      SelectedItem="{Binding Mitigated_Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                      Style="{StaticResource HeaderedComboBoxStyle}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellEditingTemplate>
                                 </DataGridTemplateColumn>
@@ -167,8 +170,6 @@
                                         <TextBox Grid.Column="1"
                                                  Height="200"
                                                  Margin="0,0,5,5"
-                                                 VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Impact Description"
                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  AcceptsReturn="True"
@@ -181,8 +182,6 @@
                                         <TextBox Grid.Column="2"
                                                  Height="200"
                                                  Margin="5,0,5,5"
-                                                 VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Predisposing Condition(s)"
                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  AcceptsReturn="True"
@@ -196,8 +195,8 @@
                                                  Height="200"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Technical Mitigation(s)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  AcceptsReturn="True"
                                                  AcceptsTab="True"
                                                  Style="{StaticResource HeaderedTextBoxStyle}"
@@ -209,10 +208,11 @@
                                                  Height="200"
                                                  Margin="5,0,5,5"
                                                  VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Proposed Mitigation(s)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  AcceptsReturn="True"
                                                  AcceptsTab="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Proposed_Mitigation, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                                  TextWrapping="Wrap"
                                                  HorizontalScrollBarVisibility="Disabled"
@@ -236,72 +236,72 @@
                                         <ComboBox Grid.Row="1"
                                                   Grid.Column="3"
                                                   Margin="5,0,5,5"
-                                                  VerticalAlignment="Bottom"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Threat Relevance"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   ItemsSource="{Binding Path=DataContext.RmfValues, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                                                  SelectedItem="{Binding Threat_Relevance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                  SelectedItem="{Binding Threat_Relevance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
                                         <ComboBox Grid.Row="1"
                                                   Grid.Column="4"
                                                   Margin="5,0,5,5"
-                                                  VerticalAlignment="Bottom"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Severity / Pervasiveness"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   ItemsSource="{Binding Path=DataContext.RmfValues, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                                                  SelectedItem="{Binding Severity_Pervasiveness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                  SelectedItem="{Binding Severity_Pervasiveness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
                                         <TextBox Grid.Row="2"
                                                  Grid.Column="3"
                                                  Margin="5,0,5,5"
-                                                 VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Likelihood (Calculated)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Likelihood, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <ComboBox Grid.Row="2"
                                                   Grid.Column="4"
                                                   Margin="5,0,5,5"
-                                                  VerticalAlignment="Bottom"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Impact"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   ItemsSource="{Binding Path=DataContext.RmfValues, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                                                  SelectedItem="{Binding Impact, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                  SelectedItem="{Binding Impact, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
                                         <TextBox Grid.Row="3"
                                                  Grid.Column="3"
                                                  Margin="5,0,5,5"
-                                                 VerticalAlignment="Bottom"
-                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                  Controls:TextBoxHelper.Watermark="Risk (Calculated)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
                                                  Text="{Binding Risk, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <ComboBox Grid.Row="3"
                                                   Grid.Column="4"
                                                   Margin="5,0,5,5"
-                                                  VerticalAlignment="Bottom"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Residual Risk"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   IsEditable="True"
                                                   ItemsSource="{Binding Path=DataContext.RmfValues, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                                                  SelectedItem="{Binding Residual_Risk, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                  SelectedItem="{Binding Residual_Risk, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
                                         <ComboBox Grid.Row="4"
                                                   Grid.Column="1"
                                                   Grid.ColumnSpan="2"
                                                   Margin="0,0,5,5"
-                                                  VerticalAlignment="Bottom"
                                                   Controls:TextBoxHelper.ButtonCommand="{Binding Path=DataContext.AddMitigationGroupCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                                   Controls:TextBoxHelper.ButtonCommandParameter="{Binding Path=Text, RelativeSource={RelativeSource Self}}"
                                                   Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
-                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                   Controls:TextBoxHelper.Watermark="Add Group / Accreditation"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   DisplayMemberPath="Group_Name"
                                                   IsEditable="True"
-                                                  ItemsSource="{Binding Path=DataContext.Groups, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                  ItemsSource="{Binding Path=DataContext.Groups, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
                                         <DatePicker Grid.Row="4"
                                                     Grid.Column="3"
                                                     Margin="5,0,5,5"
-                                                    VerticalAlignment="Bottom"
-                                                    Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                     Controls:TextBoxHelper.Watermark="Expiration Date"
+                                                    vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                    Style="{StaticResource HeaderedDatePickerStyle}"
                                                     Text="{Binding Expiration_Date, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                                         <Grid Grid.Row="4"
                                               Grid.Column="4">
@@ -310,10 +310,10 @@
                                                 <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
                                             <TextBox Margin="5,0,5,5"
-                                                     VerticalAlignment="Bottom"
-                                                     Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                      Controls:TextBoxHelper.Watermark="Approver"
+                                                     vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                      IsReadOnly="True"
+                                                     Style="{StaticResource HeaderedTextBoxStyle}"
                                                      Text="{Binding Approver, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             <CheckBox Grid.Column="1"
                                                       Margin="5,0,5,5"
@@ -327,7 +327,7 @@
                             </DataGrid.RowDetailsTemplate>
                         </DataGrid>
                     </DockPanel>
-                    <Expander Grid.Column="1"
+                    <!--<Expander Grid.Column="1"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
                               ExpandDirection="Right">
@@ -428,7 +428,7 @@
                                 </Grid>
                             </Label>
                         </Expander.Header>
-                    </Expander>
+                    </Expander>-->
                 </Grid>
             </TabItem>
             <TabItem Header="NIST Mapping"
@@ -515,11 +515,12 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
                                                TargetType="TextBox">
                                             <Setter Property="Controls:TextBoxHelper.Watermark" Value="Approver" />
                                             <Setter Property="IsReadOnly" Value="True" />
                                             <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
                                         </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
@@ -642,7 +643,7 @@
                             </i:Interaction.Triggers>
                         </DataGrid>
                     </DockPanel>
-                    <Expander Grid.Column="1"
+                    <!--<Expander Grid.Column="1"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
                               ExpandDirection="Right">
@@ -814,7 +815,7 @@
                                 </Grid>
                             </Label>
                         </Expander.Header>
-                    </Expander>
+                    </Expander>-->
                 </Grid>
             </TabItem>
         </Controls:MetroAnimatedSingleRowTabControl>

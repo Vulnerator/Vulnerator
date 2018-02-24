@@ -13,23 +13,28 @@
                       BorderBrush="{DynamicResource AccentColorBrush}"
                       DataContext="{Binding Splash, Source={StaticResource Locator}}"
                       GlowBrush="{DynamicResource AccentColorBrush}"
-                      Icon="/Vulnerator;component/Resources/chart.ico"
+                      Icon="/Vulnerator;component/Resources/vulneratorlogodraft.ico"
                       ResizeMode="NoResize"
                       ShowCloseButton="False"
                       ShowMaxRestoreButton="False"
                       ShowMinButton="False"
                       SizeToContent="WidthAndHeight"
                       WindowStartupLocation="CenterScreen"
+                      Style="{DynamicResource CustomCleanWindowStyleKey}"
+                      WindowCloseButtonStyle="{DynamicResource CustomCloseWindowButtonStyle}"
                       mc:Ignorable="d">
 
     <!--  Window Icon Template  -->
     <Controls:MetroWindow.IconTemplate>
         <DataTemplate>
-            <IconPacks:PackIconModern Width="{TemplateBinding Width}"
-                                      Height="{TemplateBinding Height}"
-                                      Margin="4"
-                                      Foreground="{DynamicResource IdealForegroundColorBrush}"
-                                      Kind="GraphBar" />
+            <Border Width="48">
+                <IconPacks:PackIconMaterialLight Width="{TemplateBinding Width}"
+                                                 Height="{TemplateBinding Height}"
+                                                 Margin="4"
+                                                 HorizontalAlignment="Center"
+                                                 Foreground="{DynamicResource BlackBrush}"
+                                                 Kind="ChartHistogram" />
+            </Border>
         </DataTemplate>
     </Controls:MetroWindow.IconTemplate>
 
