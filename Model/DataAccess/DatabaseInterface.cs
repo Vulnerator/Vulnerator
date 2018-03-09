@@ -670,7 +670,22 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        private void MapVulnerbailityToIAControl(SQLiteCommand sqliteCommand)
+        public void UpdateRequiredReportSelected(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.UpdateRequiredReportIsSelected;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to update the \"Is_Report_Selected\" field for Report ID {0}", 
+                    sqliteCommand.Parameters["Is_Report_Selected"].Value.ToString()));
+                log.Debug("Exception details:", exception);
+            }
+        }
+
+        private void MapVulnerabilityToIAControl(SQLiteCommand sqliteCommand)
         {
             try
             {

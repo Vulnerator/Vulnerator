@@ -17,16 +17,20 @@ namespace Vulnerator.Model.Entity
         public string Report_Name { get; set; }
 
         [Required]
-        [StringLength(25)]
-        public string Report_Bound_Property { get; set; }
-
-        [Required]
         [StringLength(10)]
         public string Report_Type { get; set; }
 
         [Required]
         [StringLength(50)]
         public string Report_Category_ID { get; set; }
+
+        [Required]
+        [StringLength(5)]
+        public string Is_Report_Enabled { get; set; }
+
+        [Required]
+        [StringLength(5)]
+        public string Is_Report_Selected { get; set; }
 
         public virtual ReportCategory ReportCategory { get; set; }
     }
