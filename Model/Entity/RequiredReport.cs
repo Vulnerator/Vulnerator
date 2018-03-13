@@ -14,7 +14,7 @@ namespace Vulnerator.Model.Entity
 
         [Required]
         [StringLength(50)]
-        public string Report_Name { get; set; }
+        public string Displayed_Report_Name { get; set; }
 
         [Required]
         [StringLength(10)]
