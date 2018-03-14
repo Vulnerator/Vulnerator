@@ -1393,7 +1393,7 @@ CREATE TABLE RequiredReports
 	 Report_Type NVARCHAR (10) NOT NULL ,
 	 Is_Report_Enabled NVARCHAR (5) NOT NULL,
 	 Is_Report_Selected NVARCHAR (5) NOT NULL,
-	 Report_Category_ID NVARCHAR (50) NOT NULL ,
+	 Report_Category_ID INTEGER NOT NULL ,
 	 FOREIGN KEY (Report_Category_ID) REFERENCES ReportCategories(Report_Category_ID)
 	);
 CREATE TABLE ReportCategories
@@ -1442,6 +1442,6 @@ INSERT INTO RequiredReports VALUES (NULL, "POA&M / RAR", "Excel", "True", "True"
 INSERT INTO RequiredReports VALUES (NULL, "SCAP & STIG Discrepancies", "Excel", "True", "True", (SELECT Report_Category_ID FROM ReportCategories WHERE Report_Category_Name = "Vulnerability Management"));
 INSERT INTO RequiredReports VALUES (NULL, "Vulnerability Deep Dive (By Finding Type)", "Excel", "True", "True", (SELECT Report_Category_ID FROM ReportCategories WHERE Report_Category_Name = "Vulnerability Management"));
 INSERT INTO RequiredReports VALUES (NULL, "Test Plan", "Excel", "True", "True", (SELECT Report_Category_ID FROM ReportCategories WHERE Report_Category_Name = "Vulnerability Management"));
-INSERT INTO RequiredReports VALUES (NULL, "OS Breakdown", "Excel", "False", "False", (SELECT Report_Category_ID FROM ReportCategories WHERE Report_Category_Name = "Vulnerability Management"));
-INSERT INTO RequiredReports VALUES (NULL, "User Breakdown", "Excel", "False", "False", (SELECT Report_Category_ID FROM ReportCategories WHERE Report_Category_Name = "Vulnerability Management"));
+INSERT INTO RequiredReports VALUES (NULL, "OS Breakdown", "Excel", "False", "False", (SELECT Report_Category_ID FROM ReportCategories WHERE Report_Category_Name = "Configuration Management"));
+INSERT INTO RequiredReports VALUES (NULL, "User Breakdown", "Excel", "False", "False", (SELECT Report_Category_ID FROM ReportCategories WHERE Report_Category_Name = "Configuration Management"));
 INSERT INTO RequiredReports VALUES (NULL, "PDF Summary", "PDF", "False", "False", (SELECT Report_Category_ID FROM ReportCategories WHERE Report_Category_Name = "Vulnerability Management"));

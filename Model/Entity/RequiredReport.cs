@@ -21,8 +21,7 @@ namespace Vulnerator.Model.Entity
         public string Report_Type { get; set; }
 
         [Required]
-        [StringLength(50)]
-        public string Report_Category_ID { get; set; }
+        public long Report_Category_ID { get; set; }
 
         [Required]
         [StringLength(5)]
