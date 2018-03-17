@@ -447,6 +447,11 @@ WHERE
 AND Source_Version = @Source_Version 
 AND Source_Release = @Source_Release;</value>
   </data>
+  <data name="SelectVulnerabilityIdsBySource" xml:space="preserve">
+    <value>SELECT Vulnerability_ID
+FROM Vulnerabilities_VulnerabilitySources
+WHERE Vulnerability_Source_ID = @Vulnerability_Source_ID;</value>
+  </data>
   <data name="SelectVulnerabilitySourceVersionAndRelease" xml:space="preserve">
     <value>SELECT Source_Version, Source_Release FROM VulnerabilitySources WHERE Source_Name = @Source_Name;</value>
   </data>

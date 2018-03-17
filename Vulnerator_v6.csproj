@@ -128,9 +128,8 @@
     <Reference Include="MahApps.Metro, Version=1.7.0.2, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\MahApps.Metro.1.7.0-pullrequest3193-0002\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
-    <Reference Include="MahApps.Metro.IconPacks, Version=2.0.0.31, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\MahApps.Metro.IconPacks.2.0.0\lib\net45\MahApps.Metro.IconPacks.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="MahApps.Metro.IconPacks, Version=2.1.0.15, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\MahApps.Metro.IconPacks.2.1.0\lib\net45\MahApps.Metro.IconPacks.dll</HintPath>
     </Reference>
     <Reference Include="Markdig, Version=0.14.9.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Markdig.0.14.9\lib\net40\Markdig.dll</HintPath>
@@ -355,7 +354,7 @@
     <Compile Include="Model\BusinessLogic\AnsibleTowerBuilder.cs" />
     <Compile Include="Model\BusinessLogic\CklCreator.cs" />
     <Compile Include="Model\BusinessLogic\RawStigReader.cs" />
-    <Compile Include="Model\BusinessLogic\StigAssociator.cs" />
+    <Compile Include="Model\BusinessLogic\AssociateStig.cs" />
     <Compile Include="Model\DataAccess\DatabaseBuilder.cs" />
     <Compile Include="Model\DataAccess\DatabaseContext.cs" />
     <Compile Include="Model\DataAccess\DatabaseInterface.cs" />

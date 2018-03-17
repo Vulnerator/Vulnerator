@@ -538,7 +538,7 @@ namespace Vulnerator.Model.DataAccess
             catch (Exception exception)
             {
                 log.Error(string.Format("Unable to map vulnerability \"{0}\" to source \"{1}\"."));
-                log.Debug("Exception details: " + exception);
+                throw exception;
             }
         }
 
@@ -552,6 +552,29 @@ namespace Vulnerator.Model.DataAccess
             catch (Exception exception)
             {
                 log.Error(string.Format("Unable to select the last inserted Row ID."));
+                throw exception;
+            }
+        }
+
+        public List<int> SelectVulnerabilityIdsBySource(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                List<int> vulnerabilityIds = new List<int>();
+                sqliteCommand.CommandText = Properties.Resources.SelectVulnerabilityIdsBySource;
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                {
+                    if (sqliteDataReader.HasRows)
+                    {
+                        while (sqliteDataReader.Read())
+                        { vulnerabilityIds.Add(int.Parse(sqliteDataReader["Vulnerability_ID"].ToString())); }
+                    }
+                }
+                return vulnerabilityIds;
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to generate "));
                 throw exception;
             }
         }
