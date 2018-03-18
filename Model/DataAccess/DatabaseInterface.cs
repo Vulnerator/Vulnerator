@@ -355,7 +355,7 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public void InsertParsedFile(SQLiteCommand sqliteCommand, Object.File file)
+        public void InsertParsedFileSource(SQLiteCommand sqliteCommand, Object.File file)
         {
             try
             {
@@ -366,6 +366,20 @@ namespace Vulnerator.Model.DataAccess
             catch (Exception exception)
             {
                 log.Error(string.Format("Unable to insert unique finding source file \"{0}\".", file.FileName));
+                throw exception;
+            }
+        }
+
+        public void InsertParsedFileSource(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.InsertUniqueFindingSource;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to insert unique finding source file \"{0}\".", sqliteCommand.Parameters["Finding_Source_File_Name"].Value.ToString()));
                 throw exception;
             }
         }
@@ -556,18 +570,18 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public List<int> SelectVulnerabilityIdsBySource(SQLiteCommand sqliteCommand)
+        public List<string> SelectUniqueVulnerabilityIdentifiersBySource(SQLiteCommand sqliteCommand)
         {
             try
             {
-                List<int> vulnerabilityIds = new List<int>();
-                sqliteCommand.CommandText = Properties.Resources.SelectVulnerabilityIdsBySource;
+                List<string> vulnerabilityIds = new List<string>();
+                sqliteCommand.CommandText = Properties.Resources.SelectUniqueVulnerabilityIdentiferBySource;
                 using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
                     if (sqliteDataReader.HasRows)
                     {
                         while (sqliteDataReader.Read())
-                        { vulnerabilityIds.Add(int.Parse(sqliteDataReader["Vulnerability_ID"].ToString())); }
+                        { vulnerabilityIds.Add(sqliteDataReader["Unique_Vulnerability_Identifier"].ToString()); }
                     }
                 }
                 return vulnerabilityIds;
@@ -575,6 +589,54 @@ namespace Vulnerator.Model.DataAccess
             catch (Exception exception)
             {
                 log.Error(string.Format("Unable to generate "));
+                throw exception;
+            }
+        }
+
+        public void SelectVulnerabilitySourceName(SQLiteCommand sqliteCommand)
+        { 
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.SelectVulnerabilitySourceName;
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                {
+                    if (sqliteDataReader.HasRows)
+                    {
+                        while (sqliteDataReader.Read())
+                        { sqliteCommand.Parameters["Source_Name"].Value = sqliteDataReader["Source_Name"].ToString(); }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to retrieve the vulnerability source name for vulnerability source {0}",
+                    sqliteCommand.Parameters["Vulnerability_Source_ID"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        public void SelectHardware(SQLiteCommand sqliteCommand)
+        { 
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.SelectHardware;
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                {
+                    if (sqliteDataReader.HasRows)
+                    {
+                        while (sqliteDataReader.Read())
+                        {
+                            sqliteCommand.Parameters["Host_Name"].Value = sqliteDataReader["Host_Name"].ToString();
+                            sqliteCommand.Parameters["FQDN"].Value = sqliteDataReader["FQDN"].ToString();
+                            sqliteCommand.Parameters["NetBIOS"].Value = sqliteDataReader["NetBIOS"].ToString();
+                            sqliteCommand.Parameters["Scan_IP"].Value = sqliteDataReader["Scan_IP"].ToString();
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format(""));
                 throw exception;
             }
         }

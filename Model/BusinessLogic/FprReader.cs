@@ -59,7 +59,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         InsertParameterPlaceholders(sqliteCommand);
                         databaseInterface.InsertGroup(sqliteCommand, file);
-                        databaseInterface.InsertParsedFile(sqliteCommand, file);
+                        databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         using (Stream stream = System.IO.File.OpenRead(file.FilePath))
                         {
                             using (ZipArchive zipArchive = new ZipArchive(stream, ZipArchiveMode.Read))

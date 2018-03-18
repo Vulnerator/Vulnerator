@@ -85,7 +85,7 @@ namespace Vulnerator.Model.BusinessLogic
                         databaseInterface.InsertGroup(sqliteCommand, file);
                         sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "XCCDF"));
                         sqliteCommand.Parameters.Add(new SQLiteParameter("FileName", fileNameWithoutPath));
-                        databaseInterface.InsertParsedFile(sqliteCommand, file);
+                        databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         using (XmlReader xmlReader = XmlReader.Create(file.FilePath, xmlReaderSettings))
                         {
                             while (xmlReader.Read())

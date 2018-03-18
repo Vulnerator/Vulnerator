@@ -136,6 +136,20 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private VulnerabilitySource _selectedVulnerabilitySource;
+        public VulnerabilitySource SelectedVulnerabilitySource
+        {
+            get { return _selectedVulnerabilitySource; }
+            set
+            {
+                if (_selectedVulnerabilitySource != value)
+                {
+                    _selectedVulnerabilitySource = value;
+                    RaisePropertyChanged("SelectedVulnerabilitySource");
+                }
+            }
+        }
+
         public ConfigurationManagementViewModel()
         { 
             try
@@ -253,7 +267,44 @@ namespace Vulnerator.ViewModel
             catch (Exception exception)
             {
                 log.Error(string.Format("Unable to generate CKL file background worker."));
-                throw exception;
+                log.Debug("Exception details:", exception);
+            }
+        }
+
+        public RelayCommand AssociateStigToHardwareCommand
+        { get { return new RelayCommand(AssociateStigToHardware); } }
+
+        private void AssociateStigToHardware()
+        { 
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += associateStigToHardwareBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerAsync();
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to generate background worker for AssociateStigToHardware"));
+                log.Debug("Exception details:", exception);
+            }
+        }
+
+        private void associateStigToHardwareBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        { 
+            try
+            {
+                Hardware hardware = SelectedHardware as Hardware;
+                int hardwareId = int.Parse(hardware.Hardware_ID.ToString());
+                int vulnerabilitySourceId = int.Parse(SelectedVulnerabilitySource.Vulnerability_Source_ID.ToString());
+                AssociateStig associateStig = new AssociateStig();
+                associateStig.ToHardware(vulnerabilitySourceId, hardwareId);
+                Messenger.Default.Send(new NotificationMessage<string>("ModelUpdate", "AllModels"), MessengerToken.ModelUpdated);
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to associate STIG to Hardware"));
+                log.Debug("Exception details:", exception);
             }
         }
     }

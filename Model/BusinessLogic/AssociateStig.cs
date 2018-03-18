@@ -26,22 +26,33 @@ namespace Vulnerator.Model.BusinessLogic
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
+                        PrepareUniqueFinding(sqliteCommand);
                         sqliteCommand.Parameters["Hardware_ID"].Value = hardwareId;
                         sqliteCommand.Parameters["Vulnerability_Source_ID"].Value = vulnerabilitySourceId;
-                        List<int> vulnerabilityIds = databaseInterface.SelectVulnerabilityIdsBySource(sqliteCommand);
-                        foreach (int vulnerabilityId in vulnerabilityIds)
+                        List<string> vulnerabilities = databaseInterface.SelectUniqueVulnerabilityIdentifiersBySource(sqliteCommand);
+                        databaseInterface.SelectHardware(sqliteCommand);
+                        databaseInterface.InsertParsedFileSource(sqliteCommand);
+                        databaseInterface.SelectVulnerabilitySourceName(sqliteCommand);
+                        databaseInterface.MapHardwareToVulnerabilitySource(sqliteCommand);
+                        foreach (string vulnerability in vulnerabilities)
                         {
-                            sqliteCommand.Parameters["Vulnerability_ID"].Value = vulnerabilityId;
+                            sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = vulnerability;
                             databaseInterface.UpdateUniqueFinding(sqliteCommand);
                             databaseInterface.InsertUniqueFinding(sqliteCommand);
                         }
                     }
+                    sqliteTransaction.Commit();
                 }
             }
             catch (Exception exception)
             {
                 log.Error(string.Format("Unable to associate STIG to hardware asset"));
                 throw exception;
+            }
+            finally
+            {
+                if (!DatabaseBuilder.sqliteConnection.State.Equals("Closed"))
+                { DatabaseBuilder.sqliteConnection.Close(); }
             }
         }
 
@@ -56,13 +67,11 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["First_Discovered"].Value = DateTime.Now.ToShortDateString();
                 sqliteCommand.Parameters["Classification"].Value = "Unclassified";
                 sqliteCommand.Parameters["Finding_Type"].Value = "CKL";
-                databaseInterface.UpdateUniqueFinding(sqliteCommand);
-                databaseInterface.InsertUniqueFinding(sqliteCommand);
+                sqliteCommand.Parameters["Finding_Source_File_Name"].Value = string.Format("Vulnerator Associated - {0}", DateTime.Now.ToShortDateString());
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to create a uniqueFinding record for plugin \"{0}\".",
-                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
+                log.Error(string.Format("Unable to prepare the SQLiteCommand to insert a new unique finding."));
                 throw exception;
             }
         }

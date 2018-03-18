@@ -570,6 +570,21 @@ namespace Vulnerator.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT 
+        ///    Host_Name,
+        ///    FQDN,
+        ///    NetBIOS,
+        ///    Scan_IP
+        ///FROM Hardware
+        ///WHERE Hardware_ID = @Hardware_ID;.
+        /// </summary>
+        internal static string SelectHardware {
+            get {
+                return ResourceManager.GetString("SelectHardware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT 
         ///    Hardware.Role,
         ///    Hardware.Displayed_Host_Name,
         ///    Hardware.FQDN,
@@ -600,6 +615,18 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT Unique_Vulnerability_Identifier
+        ///FROM Vulnerabilities
+        ///LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
+        ///WHERE Vulnerability_Source_ID = @Vulnerability_Source_ID;.
+        /// </summary>
+        internal static string SelectUniqueVulnerabilityIdentiferBySource {
+            get {
+                return ResourceManager.GetString("SelectUniqueVulnerabilityIdentiferBySource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT 
         ///    Unique_Vulnerability_Identifier, 
         ///    Vulnerability_Version 
@@ -618,13 +645,13 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT Vulnerability_ID
-        ///FROM Vulnerabilities_VulnerabilitySources
+        ///   Looks up a localized string similar to SELECT Source_Name
+        ///FROM VulnerabilitySources
         ///WHERE Vulnerability_Source_ID = @Vulnerability_Source_ID;.
         /// </summary>
-        internal static string SelectVulnerabilityIdsBySource {
+        internal static string SelectVulnerabilitySourceName {
             get {
-                return ResourceManager.GetString("SelectVulnerabilityIdsBySource", resourceCulture);
+                return ResourceManager.GetString("SelectVulnerabilitySourceName", resourceCulture);
             }
         }
         

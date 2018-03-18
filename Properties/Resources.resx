@@ -376,6 +376,15 @@ WHERE Finding_Type = 'Fortify'
 GROUP BY Status, Unique_Vulnerability_Identifier, Source_Version, Source_Release
 ORDER BY Unique_Vulnerability_Identifier</value>
   </data>
+  <data name="SelectHardware" xml:space="preserve">
+    <value>SELECT 
+    Host_Name,
+    FQDN,
+    NetBIOS,
+    Scan_IP
+FROM Hardware
+WHERE Hardware_ID = @Hardware_ID;</value>
+  </data>
   <data name="SelectHardwareCklCreationData" xml:space="preserve">
     <value>SELECT 
     Hardware.Role,
@@ -435,6 +444,12 @@ GROUP BY UniqueFindings.Vulnerability_ID;</value>
   <data name="SelectIndexes" xml:space="preserve">
     <value>SELECT name FROM sqlite_master WHERE type == 'index';</value>
   </data>
+  <data name="SelectUniqueVulnerabilityIdentiferBySource" xml:space="preserve">
+    <value>SELECT Unique_Vulnerability_Identifier
+FROM Vulnerabilities
+LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
+WHERE Vulnerability_Source_ID = @Vulnerability_Source_ID;</value>
+  </data>
   <data name="SelectVulnerabilityIdentifiersAndVersions" xml:space="preserve">
     <value>SELECT 
     Unique_Vulnerability_Identifier, 
@@ -447,9 +462,9 @@ WHERE
 AND Source_Version = @Source_Version 
 AND Source_Release = @Source_Release;</value>
   </data>
-  <data name="SelectVulnerabilityIdsBySource" xml:space="preserve">
-    <value>SELECT Vulnerability_ID
-FROM Vulnerabilities_VulnerabilitySources
+  <data name="SelectVulnerabilitySourceName" xml:space="preserve">
+    <value>SELECT Source_Name
+FROM VulnerabilitySources
 WHERE Vulnerability_Source_ID = @Vulnerability_Source_ID;</value>
   </data>
   <data name="SelectVulnerabilitySourceVersionAndRelease" xml:space="preserve">

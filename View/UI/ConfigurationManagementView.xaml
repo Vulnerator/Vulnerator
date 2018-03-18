@@ -451,7 +451,7 @@
                                                   Grid.ColumnSpan="2"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
-                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding Path=DataContext.AssociateStigToHardwareCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                                   Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
                                                   Controls:TextBoxHelper.ClearTextButton="True"
                                                   Controls:TextBoxHelper.Watermark="Add Associated Checklist"
@@ -459,6 +459,7 @@
                                                   vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                   DisplayMemberPath="Source_Name"
                                                   ItemsSource="{Binding Path=DataContext.VulnerabilitySources, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                  SelectedItem="{Binding Path=DataContext.SelectedVulnerabilitySource, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                   Style="{StaticResource HeaderedComboBoxStyle}" />
                                     </Grid>
                                 </DataTemplate>

@@ -56,7 +56,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         databaseInterface.InsertGroup(sqliteCommand, file);
-                        databaseInterface.InsertParsedFile(sqliteCommand, file);
+                        databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         sqliteCommand.Parameters["Finding_Type"].Value = "ACAS";
                         using (TextReader textReader = System.IO.File.OpenText(file.FilePath))
                         {

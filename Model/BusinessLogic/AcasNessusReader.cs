@@ -79,7 +79,7 @@ namespace Vulnerator.Model.BusinessLogic
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters["Finding_Type"].Value = "ACAS";
                         databaseInterface.InsertGroup(sqliteCommand, file);
-                        databaseInterface.InsertParsedFile(sqliteCommand, file);
+                        databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
                         using (XmlReader xmlReader = XmlReader.Create(file.FilePath, xmlReaderSettings))
                         {
