@@ -13,6 +13,7 @@ using Vulnerator.Model.BusinessLogic;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Entity;
 using Vulnerator.Model.Object;
+using Vulnerator.ViewModel.ViewModelHelper;
 
 namespace Vulnerator.ViewModel
 {
@@ -251,6 +252,12 @@ namespace Vulnerator.ViewModel
             {
                 log.Error(string.Format("Unable to create CKL file."));
                 log.Debug("Exception details:", exception);
+                GuiFeedback guiFeedback = new GuiFeedback();
+                guiFeedback.SetFields(
+                   "Unable to generate the selected CKL for the select asset",
+                   "Collapsed",
+                   true);
+                Messenger.Default.Send(guiFeedback);
             }
         }
 
@@ -258,11 +265,17 @@ namespace Vulnerator.ViewModel
         { 
             try
             {
+                GuiFeedback guiFeedback = new GuiFeedback();
                 Hardware hardware = SelectedHardware as Hardware;
                 CklCreator cklCreator = new CklCreator();
                 cklCreator.CreateCklFromHardware(hardware, vulnerabilitySource, saveDirectory);
                 vulnerabilitySource = null;
                 saveDirectory = string.Empty;
+                guiFeedback.SetFields(
+                    string.Format("{0} CKL created for {1}", vulnerabilitySource.Source_Name, hardware.Displayed_Host_Name), 
+                    "Collapsed", 
+                    true);
+                Messenger.Default.Send(guiFeedback);
             }
             catch (Exception exception)
             {
