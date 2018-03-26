@@ -111,6 +111,8 @@ namespace Vulnerator.Helper
         public static string ObtainCurrentNodeValue(this XmlReader xmlReader, bool sanitizeBrackets)
         {
             string value = string.Empty;
+            if (xmlReader.IsEmptyElement)
+            { return value; }
             XmlReader subTreeXmlReader = xmlReader.ReadSubtree();
             while (subTreeXmlReader.Read())
             { value = string.Concat(value, xmlReader.Value); }
