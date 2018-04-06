@@ -261,6 +261,16 @@ namespace Vulnerator.ViewModel
                         VisitIssues();
                         break;
                     }
+                case "gitterButton":
+                    {
+                        VisitGitter();
+                        break;
+                    }
+                case "slackButton":
+                    {
+                        VisitSlack();
+                        break;
+                    }
                 default:
                     { break; }
             }
@@ -311,6 +321,35 @@ namespace Vulnerator.ViewModel
         private void VisitIssues()
         {
             string goTo = "https://github.com/Vulnerator/Vulnerator/issues";
+            try
+            { Process.Start(GetDefaultBrowserPath(), goTo); }
+            catch (Exception exception)
+            {
+                log.Error("Unable to launch link; no internet application exists.");
+                NoInternetApplication internetWarning = new NoInternetApplication();
+                internetWarning.ShowDialog();
+                return;
+            }
+        }
+
+        private void VisitGitter()
+        {
+            string goTo = "https://gitter.im/Vulnerator/Vulnerator";
+            try
+            { Process.Start(GetDefaultBrowserPath(), goTo); }
+            catch (Exception exception)
+            {
+                log.Error("Unable to launch link; no internet application exists.");
+                NoInternetApplication internetWarning = new NoInternetApplication();
+                internetWarning.ShowDialog();
+                return;
+            }
+        }
+
+        private void VisitSlack()
+        {
+            // Slack Invite Link, which allows new users to sign up - does not expire
+            string goTo = "https://join.slack.com/t/vulnerator-chat/shared_invite/enQtMzQxMzc2MTE0NTI4LWQ1MTVmOGRmZjU4M2UzODU4ZDBhZDk1NGNlY2ZmMjgxNGEzNjUxMmE4OTkwNjQ3NTBhYzU3NmQ2OGI4YjViYzM";
             try
             { Process.Start(GetDefaultBrowserPath(), goTo); }
             catch (Exception exception)

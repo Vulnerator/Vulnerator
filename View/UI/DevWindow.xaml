@@ -85,6 +85,18 @@
                             Content="{IconPacks:Octicons IssueOpened}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="Issues" />
+                    <Button x:Name="gitterButton"
+                            Command="{Binding AboutLinksCommand}"
+                            CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
+                            Content="{IconPacks:FontAwesome GitterBrands}"
+                            Foreground="{DynamicResource BlackBrush}"
+                            ToolTip="Gitter Chat" />
+                    <Button x:Name="slackButton"
+                            Command="{Binding AboutLinksCommand}"
+                            CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
+                            Content="{IconPacks:FontAwesome SlackBrands}"
+                            Foreground="{DynamicResource BlackBrush}"
+                            ToolTip="Slack Workspace (Chat)" />
                 </Controls:WindowCommands>
             </StackPanel>
         </DataTemplate>
