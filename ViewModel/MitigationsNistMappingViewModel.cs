@@ -42,9 +42,9 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private MitigationsOrCondition _selectedMitigationsOrCondition { get; set; }
+        private object _selectedMitigationsOrCondition { get; set; }
 
-        public MitigationsOrCondition SelectedMitigationsOrCondition
+        public object SelectedMitigationsOrCondition
         {
             get { return _selectedMitigationsOrCondition; }
             set
@@ -669,7 +669,8 @@ namespace Vulnerator.ViewModel
         { 
             try
             {
-                if (SelectedMitigationsOrCondition.MitigationOrCondition_ID == 0)
+                MitigationsOrCondition mitigation = SelectedMitigationsOrCondition as MitigationsOrCondition;
+                if (mitigation.MitigationOrCondition_ID == 0)
                 { return; }
                 string groupName = parameter as string;
                 if (!DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
@@ -685,10 +686,10 @@ namespace Vulnerator.ViewModel
                     }
                     else
                     { sqliteCommand.Parameters.Add(new SQLiteParameter("Group_Name", groupName)); }
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("MitigationOrCondition_ID", SelectedMitigationsOrCondition.MitigationOrCondition_ID));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("MitigationOrCondition_ID", mitigation.MitigationOrCondition_ID));
                     databaseInterface.MapMitigationToGroup(sqliteCommand);
                     ProjectMitigations.FirstOrDefault(
-                        x => x.MitigationOrCondition_ID == SelectedMitigationsOrCondition.MitigationOrCondition_ID)
+                        x => x.MitigationOrCondition_ID == mitigation.MitigationOrCondition_ID)
                         .Groups.Add(Groups.FirstOrDefault(g => g.Group_Name == groupName));
                 }
             }

@@ -123,6 +123,34 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private List<IP_Addresses> _ipAddresses;
+        public List<IP_Addresses> IpAddresses
+        {
+            get { return _ipAddresses; }
+            set
+            {
+                if (_ipAddresses != value)
+                {
+                    _ipAddresses = value;
+                    RaisePropertyChanged("IpAddresses");
+                }
+            }
+        }
+
+        private List<MAC_Addresses> _macAddresses;
+        public List<MAC_Addresses> MacAddresses
+        {
+            get { return _macAddresses; }
+            set
+            {
+                if (_macAddresses != value)
+                {
+                    _macAddresses = value;
+                    RaisePropertyChanged("MacAddresses");
+                }
+            }
+        }
+
         private object _selectedHardware;
         public object SelectedHardware
         {
@@ -219,6 +247,14 @@ namespace Vulnerator.ViewModel
                         .Where(vs => !vs.Source_Name.Contains("Nessus"))
                         .OrderBy(vs => vs.Source_Name)
                         .AsNoTracking().ToList();
+                    IpAddresses = databaseContext.IP_Addresses
+                        .OrderBy(i => i.IP_Address)
+                        .AsNoTracking()
+                        .ToList();
+                    MacAddresses = databaseContext.MAC_Addresses
+                        .OrderBy(m => m.MAC_Address)
+                        .AsNoTracking()
+                        .ToList();
                 }
             }
             catch (Exception exception)

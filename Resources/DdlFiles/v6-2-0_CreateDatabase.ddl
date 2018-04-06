@@ -436,7 +436,11 @@ CREATE TABLE Groups
 	 Group_Name NVARCHAR (50) NOT NULL UNIQUE ON CONFLICT IGNORE, 
 	 Is_Accreditation NVARCHAR (5) NOT NULL , 
 	 Accreditation_ID INTEGER , 
-	 Organization_ID INTEGER 
+	 Organization_ID INTEGER ,
+	 Parent_Group_ID INTEGER,
+	 FOREIGN KEY (Accreditation_ID) REFERENCES Accreditations(Accreditation_ID) ,
+	 FOREIGN KEY (Organization_ID) REFERENCES Organizations(Organization_ID) ,
+	 FOREIGN KEY (Parent_Group_ID) REFERENCES Groups(Group_ID)
 	);
 CREATE TABLE Groups_MitigationsOrConditions 
 	(
@@ -1401,7 +1405,7 @@ CREATE TABLE ReportCategories
 	 Report_Category_ID INTEGER PRIMARY KEY,
 	 Report_Category_Name NVARCHAR (25) NOT NULL
 	);
-INSERT INTO Groups VALUES (NULL, 'All', 'False', NULL, NULL);
+INSERT INTO Groups VALUES (NULL, 'All', 'False', NULL, NULL, NULL);
 INSERT INTO FindingTypes VALUES (NULL, 'ACAS');
 INSERT INTO FindingTypes VALUES (NULL, 'Ansible');
 INSERT INTO FindingTypes VALUES (NULL, 'Fortify');
