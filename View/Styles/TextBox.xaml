@@ -12,6 +12,9 @@
         <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/Storyboard.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <Converters:RemainingCharactersConverter x:Key="RemainingCharactersConverter" />
+
     <Style x:Key="TrimmingTextboxStyle"
            BasedOn="{StaticResource MetroTextBox}"
            TargetType="TextBox">
@@ -338,45 +341,72 @@
                                 Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.DisabledVisualElementVisibility), Mode=OneWay}" />
                         <ContentControl x:Name="PART_FloatingMessageContainer"
                                         Grid.Row="0"
+                                        Width="{TemplateBinding Width}"
                                         Margin="0"
-                                        HorizontalAlignment="Left"
+                                        HorizontalAlignment="Stretch"
                                         vh:DependencyProperties.FloatingWatermarkForeground="{TemplateBinding vh:DependencyProperties.FloatingWatermarkForeground}"
                                         Style="{DynamicResource FloatingMessageContainerStyle}"
                                         Visibility="Hidden">
-                            <ContentControl.Width>
-                                <MultiBinding Converter="{Converters:MathMultiplyConverter}">
-                                    <Binding Mode="OneWay"
-                                             ElementName="PART_FloatingMessage"
-                                             Path="ActualWidth" />
-                                    <Binding Mode="OneWay"
-                                             ElementName="PART_FloatingMessageContainer"
-                                             Path="Opacity" />
-                                </MultiBinding>
-                            </ContentControl.Width>
-                            <TextBlock x:Name="PART_FloatingMessage"
-                                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                       Foreground="{TemplateBinding vh:DependencyProperties.FloatingWatermarkForeground}"
-                                       Opacity="1"
-                                       Style="{DynamicResource MetroAutoCollapsingTextBlock}"
-                                       Text="{TemplateBinding vh:DependencyProperties.FloatingWatermark}"
-                                       TextAlignment="{TemplateBinding Controls:TextBoxHelper.WatermarkAlignment}"
-                                       TextTrimming="{TemplateBinding Controls:TextBoxHelper.WatermarkTrimming}">
-                                <TextBlock.RenderTransform>
-                                    <TranslateTransform x:Name="FloatingMessageTransform">
-                                        <TranslateTransform.Y>
-                                            <MultiBinding Converter="{Converters:MathSubtractConverter}">
-                                                <Binding Mode="OneWay"
-                                                         ElementName="PART_FloatingMessage"
-                                                         Path="ActualHeight" />
-                                                <Binding Mode="OneWay"
-                                                         ElementName="PART_FloatingMessageContainer"
-                                                         Path="ActualHeight" />
-                                            </MultiBinding>
-                                        </TranslateTransform.Y>
-                                    </TranslateTransform>
-                                </TextBlock.RenderTransform>
-                            </TextBlock>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="PART_FloatingMessage"
+                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                           Foreground="{TemplateBinding vh:DependencyProperties.FloatingWatermarkForeground}"
+                                           Opacity="1"
+                                           Style="{DynamicResource MetroAutoCollapsingTextBlock}"
+                                           Text="{TemplateBinding vh:DependencyProperties.FloatingWatermark}"
+                                           TextAlignment="{TemplateBinding Controls:TextBoxHelper.WatermarkAlignment}"
+                                           TextTrimming="{TemplateBinding Controls:TextBoxHelper.WatermarkTrimming}">
+                                    <TextBlock.RenderTransform>
+                                        <TranslateTransform x:Name="FloatingMessageTransform">
+                                            <TranslateTransform.Y>
+                                                <MultiBinding Converter="{Converters:MathSubtractConverter}">
+                                                    <Binding Mode="OneWay"
+                                                             ElementName="PART_FloatingMessage"
+                                                             Path="ActualHeight" />
+                                                    <Binding Mode="OneWay"
+                                                             ElementName="PART_FloatingMessageContainer"
+                                                             Path="ActualHeight" />
+                                                </MultiBinding>
+                                            </TranslateTransform.Y>
+                                        </TranslateTransform>
+                                    </TextBlock.RenderTransform>
+                                </TextBlock>
+                                <TextBlock x:Name="PART_CharacterCounter"
+                                           Grid.Column="1"
+                                           HorizontalAlignment="Right"
+                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                           Foreground="{TemplateBinding vh:DependencyProperties.FloatingWatermarkForeground}"
+                                           Opacity="1"
+                                           Style="{DynamicResource MetroAutoCollapsingTextBlock}"
+                                           TextAlignment="Right"
+                                           Visibility="Hidden">
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource RemainingCharactersConverter}">
+                                            <Binding Path="MaxLength" RelativeSource="{RelativeSource TemplatedParent}" />
+                                            <Binding Path="Text.Length" RelativeSource="{RelativeSource TemplatedParent}" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                    <TextBlock.RenderTransform>
+                                        <TranslateTransform x:Name="CharacterCountTransform">
+                                            <TranslateTransform.Y>
+                                                <MultiBinding Converter="{Converters:MathSubtractConverter}">
+                                                    <Binding Mode="OneWay"
+                                                             ElementName="PART_CharacterCounter"
+                                                             Path="ActualHeight" />
+                                                    <Binding Mode="OneWay"
+                                                             ElementName="PART_CharacterCountContainer"
+                                                             Path="ActualHeight" />
+                                                </MultiBinding>
+                                            </TranslateTransform.Y>
+                                        </TranslateTransform>
+                                    </TextBlock.RenderTransform>
+                                </TextBlock>
+                            </Grid>
                         </ContentControl>
                         <AdornerDecorator x:Name="PART_WaitingForDataEffectAdornerDecorator"
                                           Grid.Row="1"
@@ -408,22 +438,6 @@
                                 <RowDefinition x:Name="ButtonRow"
                                                Height="*" />
                             </Grid.RowDefinitions>
-                            <Button x:Name="PART_ClearText"
-                                    Grid.Row="0"
-                                    Grid.RowSpan="2"
-                                    Grid.Column="1"
-                                    Width="{TemplateBinding Controls:TextBoxHelper.ButtonWidth}"
-                                    Controls:TextBoxHelper.IsClearTextButtonBehaviorEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:TextBoxHelper.ClearTextButton), Mode=OneWay}"
-                                    Content="{TemplateBinding Controls:TextBoxHelper.ButtonContent}"
-                                    ContentTemplate="{TemplateBinding Controls:TextBoxHelper.ButtonContentTemplate}"
-                                    Focusable="False"
-                                    FontFamily="{TemplateBinding Controls:TextBoxHelper.ButtonFontFamily}"
-                                    FontSize="{TemplateBinding Controls:TextBoxHelper.ButtonFontSize}"
-                                    Foreground="{TemplateBinding Foreground}"
-                                    IsTabStop="False"
-                                    Style="{DynamicResource ChromelessButtonStyle}"
-                                    Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:TextBoxHelper.ClearTextButton), Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
-
                             <ScrollViewer x:Name="PART_ContentHost"
                                           Grid.Row="1"
                                           Grid.Column="0"
@@ -446,6 +460,20 @@
                                        TextTrimming="{TemplateBinding Controls:TextBoxHelper.WatermarkTrimming}"
                                        TextWrapping="{TemplateBinding Controls:TextBoxHelper.WatermarkWrapping}"
                                        Visibility="Collapsed" />
+                            <Button x:Name="PART_ClearText"
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Width="{TemplateBinding Controls:TextBoxHelper.ButtonWidth}"
+                                    Controls:TextBoxHelper.IsClearTextButtonBehaviorEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:TextBoxHelper.ClearTextButton), Mode=OneWay}"
+                                    Content="{TemplateBinding Controls:TextBoxHelper.ButtonContent}"
+                                    ContentTemplate="{TemplateBinding Controls:TextBoxHelper.ButtonContentTemplate}"
+                                    Focusable="False"
+                                    FontFamily="{TemplateBinding Controls:TextBoxHelper.ButtonFontFamily}"
+                                    FontSize="{TemplateBinding Controls:TextBoxHelper.ButtonFontSize}"
+                                    Foreground="{TemplateBinding Foreground}"
+                                    IsTabStop="False"
+                                    Style="{DynamicResource ChromelessButtonStyle}"
+                                    Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:TextBoxHelper.ClearTextButton), Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         </Grid>
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -462,6 +490,20 @@
                                      Value="">
                             <Setter TargetName="PART_Message" Property="Visibility" Value="Visible" />
                         </DataTrigger>
+
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Path=IsVisible, RelativeSource={RelativeSource Self}}" Value="True" />
+                                <Condition Binding="{Binding Path=(vh:DependencyProperties.ShowCharacterCount), RelativeSource={RelativeSource Self}}" Value="True" />
+                                <Condition Binding="{Binding Path=(Controls:TextBoxHelper.HasText), RelativeSource={RelativeSource Self}}" Value="True" />
+                            </MultiDataTrigger.Conditions>
+                            <MultiDataTrigger.EnterActions>
+                                <BeginStoryboard Storyboard="{DynamicResource ShowCharacterCountStoryboard}" />
+                            </MultiDataTrigger.EnterActions>
+                            <MultiDataTrigger.ExitActions>
+                                <BeginStoryboard Storyboard="{DynamicResource HideCharcterCountStoryboard}" />
+                            </MultiDataTrigger.ExitActions>
+                        </MultiDataTrigger>
 
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>

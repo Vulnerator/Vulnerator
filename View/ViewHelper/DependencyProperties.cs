@@ -43,5 +43,17 @@ namespace Vulnerator.View.ViewHelper
 
         public static void SetFloatingWatermarkForeground(DependencyObject d, SolidColorBrush value)
         { d.SetValue(FloatingWatermarkProperty, value); }
+
+        public static readonly DependencyProperty ShowCharacterCountProperty = DependencyProperty.RegisterAttached(
+            "ShowCharacterCount",
+            typeof(bool),
+            typeof(DependencyProperties),
+            new FrameworkPropertyMetadata(false));
+
+        public static bool GetShowCharacterCount(DependencyObject d)
+        { return (bool)d.GetValue(ShowCharacterCountProperty); }
+
+        public static void SetShowCharacterCount(DependencyObject d, bool value)
+        { d.SetValue(ShowCharacterCountProperty, value); }
     }
 }

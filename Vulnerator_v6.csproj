@@ -519,6 +519,7 @@
     <Compile Include="View\Converter\ImportButtonTextAppendingConverter.cs" />
     <Compile Include="View\Converter\InverseBooleanConverter.cs" />
     <Compile Include="View\Converter\MaxLengthToRemainingCharactersConverter.cs" />
+    <Compile Include="View\Converter\RemainingCharactersConverter.cs" />
     <Compile Include="View\Converter\SelectedItemToContentConverter.cs" />
     <Compile Include="View\UI\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>

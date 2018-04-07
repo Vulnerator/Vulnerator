@@ -33,4 +33,34 @@
                          Duration="0:0:.2" />
     </Storyboard>
 
+    <Storyboard x:Key="HideCharcterCountStoryboard"
+                po:Freeze="True">
+        <DoubleAnimation EasingFunction="{StaticResource ExpoEaseInOut}"
+                         Storyboard.TargetName="PART_CharacterCounter"
+                         Storyboard.TargetProperty="Opacity"
+                         From="1"
+                         To="0"
+                         Duration="0:0:.2" />
+        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_CharacterCounter"
+                                       Storyboard.TargetProperty="(UIElement.Visibility)">
+            <DiscreteObjectKeyFrame KeyTime="0:0:.2"
+                                    Value="{x:Static Visibility.Hidden}" />
+        </ObjectAnimationUsingKeyFrames>
+    </Storyboard>
+
+    <Storyboard x:Key="ShowCharacterCountStoryboard"
+                po:Freeze="True">
+        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_CharacterCounter"
+                                       Storyboard.TargetProperty="(UIElement.Visibility)">
+            <DiscreteObjectKeyFrame KeyTime="0"
+                                    Value="{x:Static Visibility.Visible}" />
+        </ObjectAnimationUsingKeyFrames>
+        <DoubleAnimation EasingFunction="{StaticResource ExpoEaseInOut}"
+                         Storyboard.TargetName="PART_CharacterCounter"
+                         Storyboard.TargetProperty="Opacity"
+                         From="0"
+                         To="1"
+                         Duration="0:0:.2" />
+    </Storyboard>
+
 </ResourceDictionary>

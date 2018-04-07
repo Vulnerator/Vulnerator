@@ -360,7 +360,189 @@
                                 </Grid>
                             </Label>
                         </Expander.Header>
-                        <StackPanel />
+                        <ScrollViewer Width="400"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="Add Mitigation(s)"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                                <Grid>
+                                    <DataGrid Height="200"
+                                              Margin="0,0,0,5"
+                                              HorizontalAlignment="Stretch"
+                                              CanUserAddRows="False"
+                                              CanUserDeleteRows="False"
+                                              ItemsSource="{Binding Groups}"
+                                              Style="{StaticResource GreyBorderedDataGridStyle}"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              VerticalScrollBarVisibility="Auto">
+                                        <DataGrid.Columns>
+                                            <DataGridTemplateColumn>
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox Margin="5,0,0,0"
+                                                                  IsChecked="{Binding IsChecked}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTextColumn Width="*"
+                                                                Binding="{Binding Group_Name}"
+                                                                Header="Project / Accreditation"
+                                                                HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
+                                            <DataGridTemplateColumn Width="Auto"
+                                                                    Header="Is Accreditation"
+                                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}"
+                                                                    SortMemberPath="Is_Accreditation">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <IconPacks:PackIconMaterial HorizontalAlignment="Center"
+                                                                                    Kind="{Binding Is_Accreditation, Converter={StaticResource CheckboxConverter}}"
+                                                                                    ToolTip="{Binding Is_Accreditation}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Grid>
+                                <Grid>
+                                    <DataGrid Height="200"
+                                              Margin="0,5"
+                                              HorizontalAlignment="Stretch"
+                                              CanUserAddRows="False"
+                                              CanUserDeleteRows="False"
+                                              ItemsSource="{Binding Vulnerabilities}"
+                                              Style="{StaticResource GreyBorderedDataGridStyle}"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              VerticalScrollBarVisibility="Auto">
+                                        <DataGrid.Columns>
+                                            <DataGridTemplateColumn>
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox Margin="5,0,0,0"
+                                                                  IsChecked="{Binding IsChecked}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTextColumn Width="Auto"
+                                                                Binding="{Binding Unique_Vulnerability_Identifier}"
+                                                                Header="Vulnerability ID"
+                                                                HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
+                                            <DataGridTextColumn Width="Auto"
+                                                                Binding="{Binding Vulnerability_Group_ID}"
+                                                                Header="Group ID"
+                                                                HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
+                                            <DataGridTemplateColumn Width="*"
+                                                                    MaxWidth="250"
+                                                                    Header="Title"
+                                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Vulnerability_Title}"
+                                                                   TextWrapping="Wrap" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTextColumn Width="Auto"
+                                                                Binding="{Binding Raw_Risk}"
+                                                                Header="Raw Risk"
+                                                                HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Grid>
+                                <ComboBox Margin="0,0,0,5"
+                                          Controls:TextBoxHelper.Watermark="Mitigated Status"
+                                          ItemsSource="{Binding MitigationStatuses}"
+                                          SelectedItem="{Binding MitigatedStatus}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <TextBox Height="200"
+                                         Margin="0,0,0,5"
+                                         Controls:TextBoxHelper.Watermark="Impact Description&#x0a;(Max 2000 Characters)"
+                                         vh:DependencyProperties.FloatingWatermark="Impact Description"
+                                         vh:DependencyProperties.ShowCharacterCount="True"
+                                         AcceptsReturn="True"
+                                         AcceptsTab="True"
+                                         MaxLength="2000"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding ImpactDescription, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         TextWrapping="Wrap"
+                                         HorizontalScrollBarVisibility="Disabled"
+                                         VerticalScrollBarVisibility="Auto" />
+                                <TextBox Height="200"
+                                         Margin="0,0,0,5"
+                                         Controls:TextBoxHelper.Watermark="Predisposing Condition(s)&#x0a;(Max 2000 Characters)"
+                                         vh:DependencyProperties.FloatingWatermark="Predisposing Condition(s)"
+                                         vh:DependencyProperties.ShowCharacterCount="True"
+                                         AcceptsReturn="True"
+                                         AcceptsTab="True"
+                                         MaxLength="2000"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding PredisposingConditions, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         TextWrapping="Wrap"
+                                         HorizontalScrollBarVisibility="Disabled"
+                                         VerticalScrollBarVisibility="Auto" />
+                                <TextBox Height="200"
+                                         Margin="0,0,0,5"
+                                         Controls:TextBoxHelper.Watermark="Technical Mitigation(s)&#x0a;(Max 2000 Characters)"
+                                         vh:DependencyProperties.FloatingWatermark="Technical Mitigation(s)"
+                                         vh:DependencyProperties.ShowCharacterCount="True"
+                                         AcceptsReturn="True"
+                                         AcceptsTab="True"
+                                         MaxLength="2000"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding TechnicalMitigations, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         TextWrapping="Wrap"
+                                         HorizontalScrollBarVisibility="Disabled"
+                                         VerticalScrollBarVisibility="Auto" />
+                                <TextBox Height="200"
+                                         Margin="0,0,0,5"
+                                         Controls:TextBoxHelper.Watermark="Proposed Mitigation(s)&#x0a;(Max 2000 Characters)"
+                                         vh:DependencyProperties.FloatingWatermark="Proposed Mitigation(s)"
+                                         vh:DependencyProperties.ShowCharacterCount="True"
+                                         AcceptsReturn="True"
+                                         AcceptsTab="True"
+                                         MaxLength="2000"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding ProposedMitigations, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         TextWrapping="Wrap"
+                                         HorizontalScrollBarVisibility="Disabled"
+                                         VerticalScrollBarVisibility="Auto" />
+                                <ComboBox Margin="0,0,0,5"
+                                          Controls:TextBoxHelper.Watermark="Threat Relevance"
+                                          ItemsSource="{Binding RmfValues}"
+                                          SelectedItem="{Binding ThreatRelevance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <ComboBox Margin="0,0,0,5"
+                                          Controls:TextBoxHelper.Watermark="Severity / Pervasiveness"
+                                          ItemsSource="{Binding RmfValues}"
+                                          SelectedItem="{Binding SeverityPervasiveness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <TextBox Margin="0,0,0,5"
+                                         Controls:TextBoxHelper.Watermark="Likelihood (Calculated)"
+                                         IsReadOnly="True"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding Likelihood, Mode=OneWay}" />
+                                <ComboBox Margin="0,0,0,5"
+                                          Controls:TextBoxHelper.Watermark="Impact"
+                                          ItemsSource="{Binding RmfValues}"
+                                          SelectedItem="{Binding Impact, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <TextBox Margin="0,0,0,5"
+                                         Controls:TextBoxHelper.Watermark="Risk (Calculated)"
+                                         IsReadOnly="True"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding Risk, Mode=OneWay}" />
+                                <ComboBox Margin="0,0,0,5"
+                                          Controls:TextBoxHelper.Watermark="Residual Risk"
+                                          ItemsSource="{Binding RmfValues}"
+                                          SelectedItem="{Binding ResidualRisk, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <Button Margin="0,5"
+                                        HorizontalAlignment="Center"
+                                        Content="Add Mitigations" />
+                            </StackPanel>
+                        </ScrollViewer>
                     </Expander>
                     <!--<Expander Grid.Column="1"
                               Background="{DynamicResource WindowBackgroundBrush}"

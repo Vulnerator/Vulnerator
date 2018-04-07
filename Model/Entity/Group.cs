@@ -36,6 +36,9 @@ namespace Vulnerator.Model.Entity
 
         public long? Parent_Group_ID { get; set; }
 
+        [NotMapped]
+        public bool IsChecked { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MitigationsOrCondition> MitigationsOrConditions { get; set; }
 

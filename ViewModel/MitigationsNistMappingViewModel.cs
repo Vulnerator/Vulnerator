@@ -177,6 +177,171 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private string _impactDescription { get; set; }
+
+        public string ImpactDescription
+        {
+            get { return _impactDescription; }
+            set
+            {
+                if (_impactDescription != value)
+                {
+                    _impactDescription = value;
+                    RaisePropertyChanged("ImpactDescription");
+                }
+            }
+        }
+
+        private string _predisposingConditions { get; set; }
+
+        public string PredisposingConditions
+        {
+            get { return _predisposingConditions; }
+            set
+            {
+                if (_predisposingConditions != value)
+                {
+                    _predisposingConditions = value;
+                    RaisePropertyChanged("PredisposingConditions");
+                }
+            }
+        }
+
+        private string _technicalMitigations { get; set; }
+
+        public string TechnicalMitigations
+        {
+            get { return _technicalMitigations; }
+            set
+            {
+                if (_technicalMitigations != value)
+                {
+                    _technicalMitigations = value;
+                    RaisePropertyChanged("TechnicalMitigations");
+                }
+            }
+        }
+
+        private string _proposedMitigations { get; set; }
+
+        public string ProposedMitigations
+        {
+            get { return _proposedMitigations; }
+            set
+            {
+                if (_proposedMitigations != value)
+                {
+                    _proposedMitigations = value;
+                    RaisePropertyChanged("ProposedMitigations");
+                }
+            }
+        }
+
+        private string _mitigatedStatus { get; set; }
+
+        public string MitigatedStatus
+        {
+            get { return _mitigatedStatus; }
+            set
+            {
+                if (_mitigatedStatus != value)
+                {
+                    _mitigatedStatus = value;
+                    RaisePropertyChanged("MitigatedStatus");
+                }
+            }
+        }
+
+        private string _threatRelevance { get; set; }
+
+        public string ThreatRelevance
+        {
+            get { return _threatRelevance; }
+            set
+            {
+                if (_threatRelevance != value)
+                {
+                    _threatRelevance = value;
+                    RaisePropertyChanged("ThreatRelevance");
+                }
+            }
+        }
+
+        private string _severityPervasiveness { get; set; }
+
+        public string SeverityPervasiveness
+        {
+            get { return _severityPervasiveness; }
+            set
+            {
+                if (_severityPervasiveness != value)
+                {
+                    _severityPervasiveness = value;
+                    RaisePropertyChanged("SeverityPervasiveness");
+                }
+            }
+        }
+
+        private string _likelihood { get; set; }
+
+        public string Likelihood
+        {
+            get { return _likelihood; }
+            set
+            {
+                if (_likelihood != value)
+                {
+                    _likelihood = value;
+                    RaisePropertyChanged("Likelihood");
+                }
+            }
+        }
+
+        private string _impact { get; set; }
+
+        public string Impact
+        {
+            get { return _impact; }
+            set
+            {
+                if (_impact != value)
+                {
+                    _impact = value;
+                    RaisePropertyChanged("Impact");
+                }
+            }
+        }
+
+        private string _risk { get; set; }
+
+        public string Risk
+        {
+            get { return _risk; }
+            set
+            {
+                if (_risk != value)
+                {
+                    _risk = value;
+                    RaisePropertyChanged("Risk");
+                }
+            }
+        }
+
+        private string _residualRisk { get; set; }
+
+        public string ResidualRisk
+        {
+            get { return _residualRisk; }
+            set
+            {
+                if (_residualRisk != value)
+                {
+                    _residualRisk = value;
+                    RaisePropertyChanged("ResidualRisk");
+                }
+            }
+        }
+
         private bool _bulkProcessExpanded { get; set; }
 
         public bool BulkProcessExpanded
