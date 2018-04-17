@@ -866,5 +866,21 @@ namespace Vulnerator.ViewModel
             finally
             { DatabaseBuilder.sqliteConnection.Close(); }
         }
+
+        public RelayCommand AddMitigationCommand
+        { get { return new RelayCommand(AddMitigation); } }
+
+        private void AddMitigation()
+        { 
+            try
+            {
+
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format(""));
+                log.Debug(string.Format("Exception Details: {0}", exception));
+            }
+        }
     }
 }
