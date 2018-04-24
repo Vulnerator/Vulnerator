@@ -77,11 +77,7 @@ namespace Vulnerator.ViewModel
             using (Stream stream = assembly.GetManifestResourceStream(resource))
             {
                 using (StreamReader streamReader = new StreamReader(stream))
-                {
-                    string content = streamReader.ReadToEnd();
-                    content = content.Replace(@"(Images/", @"(Resources/UserGuide/Images/");
-                    return content;
-                }
+                { return streamReader.ReadToEnd().Replace(@"(Images/", @"(Resources/UserGuide/Images/"); }
             }
         }
 
