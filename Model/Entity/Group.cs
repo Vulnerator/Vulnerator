@@ -34,7 +34,8 @@ namespace Vulnerator.Model.Entity
 
         public long? Organization_ID { get; set; }
 
-        public long? Parent_Group_ID { get; set; }
+        [Required]
+        public long Group_Tier { get; set; }
 
         [NotMapped]
         public bool IsChecked { get; set; }

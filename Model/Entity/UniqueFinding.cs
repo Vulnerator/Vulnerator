@@ -28,44 +28,9 @@ namespace Vulnerator.Model.Entity
         [StringLength(2147483647)]
         public string Finding_Details { get; set; }
 
-        [StringLength(2000)]
-        public string Technical_Mitigation { get; set; }
-
-        [StringLength(2000)]
-        public string Proposed_Mitigation { get; set; }
-
-        [StringLength(2000)]
-        public string Predisposing_Conditions { get; set; }
-
-        [StringLength(25)]
-        public string Impact { get; set; }
-
-        [StringLength(25)]
-        public string Likelihood { get; set; }
-
-        [StringLength(25)]
-        public string Severity { get; set; }
-
-        [StringLength(25)]
-        public string Risk { get; set; }
-
-        [StringLength(25)]
-        public string Residual_Risk { get; set; }
-
         public DateTime First_Discovered { get; set; }
 
         public DateTime Last_Observed { get; set; }
-
-        [Required]
-        [StringLength(25)]
-        public string Approval_Status { get; set; }
-
-        public DateTime? Approval_Date { get; set; }
-
-        public DateTime? Approval_Expiration_Date { get; set; }
-
-        [StringLength(50)]
-        public string Approved_By { get; set; }
 
         [Required]
         [StringLength(5)]
@@ -74,6 +39,8 @@ namespace Vulnerator.Model.Entity
         public long Finding_Type_ID { get; set; }
 
         public long Finding_Source_File_ID { get; set; }
+
+        public long MitigationOrCondition_ID { get; set; }
 
         [Required]
         [StringLength(25)]

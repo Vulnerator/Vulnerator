@@ -81,8 +81,6 @@ namespace Vulnerator.Model.BusinessLogic
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", file.FileSystemName));
-                        databaseInterface.InsertGroup(sqliteCommand, file);
                         sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "XCCDF"));
                         sqliteCommand.Parameters.Add(new SQLiteParameter("FileName", fileNameWithoutPath));
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);

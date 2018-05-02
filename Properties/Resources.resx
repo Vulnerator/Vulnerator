@@ -130,7 +130,7 @@
     <value>INSERT INTO Data_Entry_Dates VALUES (NULL, @Entry_Date);</value>
   </data>
   <data name="InsertGroup" xml:space="preserve">
-    <value>INSERT INTO Groups VALUES (NULL, @Group_Name, 'False', NULL, NULL);</value>
+    <value>INSERT INTO Groups VALUES (NULL, @Group_Name, @Group_Tier, 'False', NULL, NULL);</value>
   </data>
   <data name="InsertHardware" xml:space="preserve">
     <value>INSERT INTO Hardware VALUES (NULL,@Displayed_Host_Name, @Host_Name,@FQDN,@NetBIOS,@Scan_IP, @Found_21745, @Found_26917,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,(SELECT LifecycleStatus_ID FROM LifecycleStatuses WHERE LifecycleStatus = 'Uncategorized'), @OS);</value>

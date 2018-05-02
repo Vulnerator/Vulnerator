@@ -893,7 +893,7 @@
                                 </Grid>
                             </Label>
                         </Expander.Header>
-                    </Expander>
+                    </Expander>-->
                     <Expander Grid.Column="2"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
@@ -999,7 +999,7 @@
                                     Content="Apply" />
                         </Grid>
                     </Expander>
-                    <Expander Grid.Column="3"
+                    <!--<Expander Grid.Column="3"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
                               ExpandDirection="Right">
@@ -1037,5 +1037,4 @@
             </TabItem>
         </Controls:MetroAnimatedSingleRowTabControl>
     </Grid>
-
 </UserControl>

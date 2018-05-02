@@ -232,26 +232,6 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public void InsertGroup(SQLiteCommand sqliteCommand, Object.File file)
-        {
-            try
-            {
-                string groupName;
-                if (!string.IsNullOrWhiteSpace(file.FileSystemName))
-                { groupName = file.FileSystemName; }
-                else
-                { groupName = "All"; }
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Group_Name", groupName));
-                sqliteCommand.CommandText = Properties.Resources.InsertGroup;
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to insert group \"{0}\" into database.", file.FileSystemName));
-                throw exception;
-            }
-        }
-
         public void InsertGroup(SQLiteCommand sqliteCommand)
         {
             try

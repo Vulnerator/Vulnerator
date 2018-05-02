@@ -434,13 +434,17 @@ CREATE TABLE Groups
 	(
 	 Group_ID INTEGER PRIMARY KEY , 
 	 Group_Name NVARCHAR (50) NOT NULL UNIQUE ON CONFLICT IGNORE, 
+	 Group_Tier INTEGER NOT NULL ,
 	 Is_Accreditation NVARCHAR (5) NOT NULL , 
 	 Accreditation_ID INTEGER , 
 	 Organization_ID INTEGER ,
-	 Parent_Group_ID INTEGER,
 	 FOREIGN KEY (Accreditation_ID) REFERENCES Accreditations(Accreditation_ID) ,
 	 FOREIGN KEY (Organization_ID) REFERENCES Organizations(Organization_ID) ,
-	 FOREIGN KEY (Parent_Group_ID) REFERENCES Groups(Group_ID)
+	 FOREIGN KEY (Group_Tier) REFERENCES GroupTiers(Group_Tier)
+	);
+CREATE TABLE GroupTiers
+	(
+		Group_Tier INTEGER NOT NULL PRIMARY KEY
 	);
 CREATE TABLE Groups_MitigationsOrConditions 
 	(
@@ -679,7 +683,7 @@ CREATE TABLE MissionAreas
 CREATE TABLE MitigationsOrConditions 
 	(
 	 MitigationOrCondition_ID INTEGER PRIMARY KEY , 
-	 Vulnerability_ID INTEGER NOT NULL,
+	 Vulnerability_ID INTEGER ,
 	 Impact_Description NVARCHAR (2000) , 
 	 Predisposing_Conditions NVARCHAR (2000) ,
 	 Technical_Mitigation NVARCHAR (2000) ,
@@ -691,6 +695,8 @@ CREATE TABLE MitigationsOrConditions
 	 Risk NVARCHAR (10) ,
 	 Residual_Risk NVARCHAR (10) ,
 	 Mitigated_Status NVARCHAR (25) ,
+	 Estimated_Completion_Date DATE ,
+	 Approval_Date DATE ,
 	 Expiration_Date DATE ,
 	 IsApproved NVARCHAR (5) ,
 	 Approver NVARCHAR (100) ,
@@ -1204,21 +1210,9 @@ CREATE TABLE UniqueFindings
 	 Instance_Identifier NVARCHAR(50) ,
 	 Tool_Generated_Output NVARCHAR , 
 	 Comments NVARCHAR , 
-	 Finding_Details NVARCHAR , 
-	 Technical_Mitigation NVARCHAR (2000) , 
-	 Proposed_Mitigation NVARCHAR (2000) , 
-	 Predisposing_Conditions NVARCHAR (2000) , 
-	 Impact NVARCHAR (25) , 
-	 Likelihood NVARCHAR (25) , 
-	 Severity NVARCHAR (25) , 
-	 Risk NVARCHAR (25) , 
-	 Residual_Risk NVARCHAR (25) , 
+	 Finding_Details NVARCHAR ,  
 	 First_Discovered DATE NOT NULL, 
 	 Last_Observed DATE NOT NULL, 
-	 Approval_Status NVARCHAR (25) NOT NULL, 
-	 Approval_Date DATE , 
-	 Approval_Expiration_Date DATE , 
-	 Approved_By NVARCHAR (50),
 	 Delta_Analysis_Required NVARCHAR (5) NOT NULL , 
 	 Finding_Type_ID INTEGER NOT NULL , 
 	 Finding_Source_File_ID INTEGER NOT NULL , 
@@ -1234,10 +1228,12 @@ CREATE TABLE UniqueFindings
 	 Classification NVARCHAR (25),
 	 CVSS_Environmental_Score NVARCHAR (5) ,
 	 CVSS_Environmental_Vector NVARCHAR (25) ,
+	 MitigationOrCondition_ID INTEGER ,
 	 FOREIGN KEY (Finding_Type_ID) REFERENCES FindingTypes(Finding_Type_ID),
 	 FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
 	 FOREIGN KEY (Finding_Source_File_ID) REFERENCES UniqueFindingsSourceFiles(Finding_Source_File_ID),
+	 FOREIGN KEY (MitigationOrCondition_ID) REFERENCES MitigationsOrConditions(MitigationOrCondition_ID) ,
 	 UNIQUE (Instance_Identifier, Hardware_ID, Software_ID, Vulnerability_ID) ON CONFLICT IGNORE
 	);
 CREATE TABLE UniqueFindingsSourceFiles 
@@ -1405,7 +1401,17 @@ CREATE TABLE ReportCategories
 	 Report_Category_ID INTEGER PRIMARY KEY,
 	 Report_Category_Name NVARCHAR (25) NOT NULL
 	);
-INSERT INTO Groups VALUES (NULL, 'All', 'False', NULL, NULL, NULL);
+INSERT INTO GroupTiers VALUES (1);
+INSERT INTO GroupTiers VALUES (2);
+INSERT INTO GroupTiers VALUES (3);
+INSERT INTO GroupTiers VALUES (4);
+INSERT INTO GroupTiers VALUES (5);
+INSERT INTO GroupTiers VALUES (6);
+INSERT INTO GroupTiers VALUES (7);
+INSERT INTO GroupTiers VALUES (8);
+INSERT INTO GroupTiers VALUES (9);
+INSERT INTO GroupTiers VALUES (10);
+INSERT INTO Groups VALUES (NULL, 'All', 1, 'False', NULL, NULL);
 INSERT INTO FindingTypes VALUES (NULL, 'ACAS');
 INSERT INTO FindingTypes VALUES (NULL, 'Ansible');
 INSERT INTO FindingTypes VALUES (NULL, 'Fortify');

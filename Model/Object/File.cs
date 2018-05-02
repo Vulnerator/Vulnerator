@@ -32,20 +32,6 @@ namespace Vulnerator.Model.Object
             }
         }
 
-        private string _fileSystemName;
-        public string FileSystemName
-        {
-            get { return _fileSystemName; }
-            set
-            {
-                if (_fileSystemName != value)
-                {
-                    _fileSystemName = value;
-                    RaisePropertyChanged("FileSystemName");
-                }
-            }
-        }
-
         private string _status;
         public string Status
         {
@@ -131,11 +117,10 @@ namespace Vulnerator.Model.Object
         }
 
 
-        public File(string fileName, string fileType, string status, string fileSystemName, string filePath, string hostNameProvided)
+        public File(string fileName, string fileType, string status, string filePath, string hostNameProvided)
         {
             _fileName = fileName;
             _fileType = fileType;
-            _fileSystemName = fileSystemName;
             _status = status;
             _filePath = filePath;
             _identifiersProvided = hostNameProvided;

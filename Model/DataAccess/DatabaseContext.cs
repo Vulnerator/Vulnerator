@@ -46,6 +46,7 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<FISMA> FISMAs { get; set; }
         public virtual DbSet<GoverningPolicy> GoverningPolicies { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
+        public virtual DbSet<GroupTier> GroupTiers { get; set; }
         public virtual DbSet<Hardware> Hardwares { get; set; }
         public virtual DbSet<Hardware_PPS> Hardware_PPS { get; set; }
         public virtual DbSet<IA_Controls> IA_Controls { get; set; }

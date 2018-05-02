@@ -399,6 +399,7 @@
     <Compile Include="Model\Entity\FISMA.cs" />
     <Compile Include="Model\Entity\GoverningPolicy.cs" />
     <Compile Include="Model\Entity\Group.cs" />
+    <Compile Include="Model\Entity\GroupTier.cs" />
     <Compile Include="Model\Entity\Hardware.cs" />
     <Compile Include="Model\Entity\HardwareLocation.cs" />
     <Compile Include="Model\Entity\Hardware_PPS.cs" />

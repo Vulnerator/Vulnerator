@@ -39,7 +39,6 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters["Finding_Type"].Value = "CKL";
-                        databaseInterface.InsertGroup(sqliteCommand, file);
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         using (XmlReader xmlReader = XmlReader.Create(file.FilePath, GenerateXmlReaderSettings()))
                         {
