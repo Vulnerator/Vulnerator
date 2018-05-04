@@ -101,7 +101,7 @@
                                 SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                         <Grid x:Name="PART_InnerGrid"
                               Grid.Row="1"
-                              Margin="2">
+                              Margin="1,3">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition x:Name="ButtonColumn"
@@ -130,6 +130,7 @@
                             <DatePickerTextBox x:Name="PART_TextBox"
                                                Grid.Row="1"
                                                Grid.Column="0"
+                                               Margin="0,1"
                                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                                Controls:TextBoxHelper.Watermark="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:TextBoxHelper.Watermark), Mode=OneWay}"

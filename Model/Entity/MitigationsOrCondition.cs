@@ -54,6 +54,9 @@ namespace Vulnerator.Model.Entity
         [StringLength(10)]
         public string Residual_Risk { get; set; }
 
+        [StringLength(10)]
+        public string Residual_Risk_After_Proposed { get; set; }
+
         [StringLength(25)]
         public string Mitigated_Status { get; set; }
 

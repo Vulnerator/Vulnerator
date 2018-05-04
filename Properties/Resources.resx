@@ -156,7 +156,10 @@ VALUES (
 	@Impact, 
 	@Risk, 
 	@Residual_Risk, 
+	@Residual_Risk_After_Proposed,
 	@Mitigated_Status, 
+	@Estimated_Completion_Date,
+	@Approval_Date,
 	@Expiration_Date, 
 	@IsApproved, 
 	@Approver);</value>

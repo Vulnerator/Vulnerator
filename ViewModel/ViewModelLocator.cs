@@ -13,7 +13,8 @@
 */
 
 using GalaSoft.MvvmLight.Ioc;
-using Microsoft.Practices.ServiceLocation;
+using GalaSoft.MvvmLight.Views;
+//using Microsoft.Practices.ServiceLocation;
 
 namespace Vulnerator.ViewModel
 {
@@ -28,19 +29,6 @@ namespace Vulnerator.ViewModel
         /// </summary>
         public ViewModelLocator()
         {
-            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
-
-            ////if (ViewModelBase.IsInDesignModeStatic)
-            ////{
-            ////    // Create design time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DesignDataService>();
-            ////}
-            ////else
-            ////{
-            ////    // Create run time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DataService>();
-            ////}
-
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<VulnerabilityViewModel>();
             SimpleIoc.Default.Register<UserGuideViewModel>();
@@ -55,37 +43,37 @@ namespace Vulnerator.ViewModel
         }
 
         public AboutViewModel About
-        { get { return ServiceLocator.Current.GetInstance<AboutViewModel>(); } }
+        { get { return SimpleIoc.Default.GetInstance<AboutViewModel>(); } }
 
         public MainViewModel Main
-        { get { return ServiceLocator.Current.GetInstance<MainViewModel>(); } }
+        { get { return SimpleIoc.Default.GetInstance<MainViewModel>(); } }
 
         public NewsViewModel News
-        { get { return ServiceLocator.Current.GetInstance<NewsViewModel>(); } }
+        { get { return SimpleIoc.Default.GetInstance<NewsViewModel>(); } }
 
         public RmfViewModel Rmf
-        { get { return ServiceLocator.Current.GetInstance<RmfViewModel>(); } }
+        { get { return SimpleIoc.Default.GetInstance<RmfViewModel>(); } }
 
         public SettingsViewModel Settings
-        { get { return ServiceLocator.Current.GetInstance<SettingsViewModel>(); } }
+        { get { return SimpleIoc.Default.GetInstance<SettingsViewModel>(); } }
 
         public SplashViewModel Splash
-        { get { return ServiceLocator.Current.GetInstance<SplashViewModel>(); } }
+        { get { return SimpleIoc.Default.GetInstance<SplashViewModel>(); } }
 
         public ThemeViewModel Theme
-        { get { return ServiceLocator.Current.GetInstance<ThemeViewModel>(); } }
+        { get { return SimpleIoc.Default.GetInstance<ThemeViewModel>(); } }
 
         public UserGuideViewModel UserGuide
-        { get { return ServiceLocator.Current.GetInstance<UserGuideViewModel>(); } }
+        { get { return SimpleIoc.Default.GetInstance<UserGuideViewModel>(); } }
 
         public VulnerabilityViewModel Vulnerability
-        { get { return ServiceLocator.Current.GetInstance<VulnerabilityViewModel>(); } }
+        { get { return SimpleIoc.Default.GetInstance<VulnerabilityViewModel>(); } }
 
         public ConfigurationManagementViewModel ConfigurationManagement
-        { get { return ServiceLocator.Current.GetInstance<ConfigurationManagementViewModel>(); } }
+        { get { return SimpleIoc.Default.GetInstance<ConfigurationManagementViewModel>(); } }
 
         public MitigationsNistMappingViewModel MitigationsNist
-        { get { return ServiceLocator.Current.GetInstance<MitigationsNistMappingViewModel>(); } }
+        { get { return SimpleIoc.Default.GetInstance<MitigationsNistMappingViewModel>(); } }
 
         public static void Cleanup()
         { }
