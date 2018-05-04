@@ -430,8 +430,24 @@
                                                                     HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBlock Text="{Binding Unique_Vulnerability_Identifier}"
-                                                                   ToolTip="{Binding Vulnerability_Title}" />
+                                                        <TextBlock Text="{Binding Unique_Vulnerability_Identifier}">
+                                                            <TextBlock.ToolTip>
+                                                                <StackPanel MaxWidth="250">
+                                                                    <Label Content="Title"
+                                                                           Style="{StaticResource ThirdLevelHeaderStyle}" />
+                                                                    <TextBlock Text="{Binding Vulnerability_Title}"
+                                                                               TextWrapping="Wrap"
+                                                                               Margin="5,0,0,0"/>
+                                                                    <Label Content="Source(s)"
+                                                                           Style="{StaticResource ThirdLevelHeaderStyle}" />
+                                                                    <ListView Margin="5,0,0,0"
+                                                                              BorderThickness="0"
+                                                                              IsEnabled="False"
+                                                                              ItemsSource="{Binding VulnerabilitySources}"
+                                                                              DisplayMemberPath="Source_Name" />
+                                                                </StackPanel>
+                                                            </TextBlock.ToolTip>
+                                                        </TextBlock>
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>

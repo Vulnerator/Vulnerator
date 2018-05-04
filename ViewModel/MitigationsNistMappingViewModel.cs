@@ -434,6 +434,7 @@ namespace Vulnerator.ViewModel
                         .ToObservableCollection();
                     Vulnerabilities = databaseContext.Vulnerabilities
                         .Include(v => v.CCIs.Select(c => c.NistControlsCCIs))
+                        .Include(v => v.VulnerabilitySources)
                         .AsNoTracking()
                         .ToObservableCollection();
                     NistControlsCcis = databaseContext.NistControlsCCIs
