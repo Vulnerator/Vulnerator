@@ -425,25 +425,20 @@
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
-                                            <DataGridTextColumn Width="Auto"
-                                                                Binding="{Binding Unique_Vulnerability_Identifier}"
-                                                                Header="Vulnerability ID"
-                                                                HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
-                                            <DataGridTextColumn Width="Auto"
-                                                                Binding="{Binding Vulnerability_Group_ID}"
-                                                                Header="Group ID"
-                                                                HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
                                             <DataGridTemplateColumn Width="*"
-                                                                    MaxWidth="250"
-                                                                    Header="Title"
+                                                                    Header="Vulnerability ID"
                                                                     HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBlock Text="{Binding Vulnerability_Title}"
-                                                                   TextWrapping="Wrap" />
+                                                        <TextBlock Text="{Binding Unique_Vulnerability_Identifier}"
+                                                                   ToolTip="{Binding Vulnerability_Title}" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
+                                            <DataGridTextColumn Width="*"
+                                                                Binding="{Binding Vulnerability_Group_ID}"
+                                                                Header="Group ID"
+                                                                HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
                                             <DataGridTextColumn Width="Auto"
                                                                 Binding="{Binding Raw_Risk}"
                                                                 Header="Raw Risk"
