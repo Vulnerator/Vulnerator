@@ -325,7 +325,7 @@
                                              Duration="0:0:0.2" />
                         </Storyboard>
                     </ControlTemplate.Resources>
-                    <Grid Margin="2">
+                    <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
@@ -387,8 +387,10 @@
                                            Visibility="Hidden">
                                     <TextBlock.Text>
                                         <MultiBinding Converter="{StaticResource RemainingCharactersConverter}">
-                                            <Binding Path="MaxLength" RelativeSource="{RelativeSource TemplatedParent}" />
-                                            <Binding Path="Text.Length" RelativeSource="{RelativeSource TemplatedParent}" />
+                                            <Binding Path="MaxLength"
+                                                     RelativeSource="{RelativeSource TemplatedParent}" />
+                                            <Binding Path="Text.Length"
+                                                     RelativeSource="{RelativeSource TemplatedParent}" />
                                         </MultiBinding>
                                     </TextBlock.Text>
                                     <TextBlock.RenderTransform>
@@ -449,7 +451,7 @@
                             <TextBlock x:Name="PART_Message"
                                        Grid.Row="1"
                                        Grid.Column="0"
-                                       Margin="6,2,6,2"
+                                       Margin="6,3,6,3"
                                        Padding="{TemplateBinding Padding}"
                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"

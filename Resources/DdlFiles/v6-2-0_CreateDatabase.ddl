@@ -694,6 +694,7 @@ CREATE TABLE MitigationsOrConditions
 	 Impact NVARCHAR (10) ,
 	 Risk NVARCHAR (10) ,
 	 Residual_Risk NVARCHAR (10) ,
+	 Residual_Risk_After_Proposed NVARCHAR (10) ,
 	 Mitigated_Status NVARCHAR (25) ,
 	 Estimated_Completion_Date DATE ,
 	 Approval_Date DATE ,

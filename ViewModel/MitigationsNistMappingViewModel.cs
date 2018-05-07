@@ -342,6 +342,36 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private string _residualRiskAfterProposed { get; set; }
+
+        public string ResidualRiskAfterProposed
+        {
+            get { return _residualRiskAfterProposed; }
+            set
+            {
+                if (_residualRiskAfterProposed != value)
+                {
+                    _residualRiskAfterProposed = value;
+                    RaisePropertyChanged("ResidualRiskAfterProposed");
+                }
+            }
+        }
+
+        private string _estimatedCompletionDate { get; set; }
+
+        public string EstimatedCompletionDate
+        {
+            get { return _estimatedCompletionDate; }
+            set
+            {
+                if (_estimatedCompletionDate != value)
+                {
+                    _estimatedCompletionDate = value;
+                    RaisePropertyChanged("EstimatedCompletionDate");
+                }
+            }
+        }
+
         private bool _bulkProcessExpanded { get; set; }
 
         public bool BulkProcessExpanded
@@ -404,6 +434,7 @@ namespace Vulnerator.ViewModel
                         .ToObservableCollection();
                     Vulnerabilities = databaseContext.Vulnerabilities
                         .Include(v => v.CCIs.Select(c => c.NistControlsCCIs))
+                        .Include(v => v.VulnerabilitySources)
                         .AsNoTracking()
                         .ToObservableCollection();
                     NistControlsCcis = databaseContext.NistControlsCCIs
@@ -810,7 +841,7 @@ namespace Vulnerator.ViewModel
                             {
                                 "MitigationOrCondition_ID", "Vulnerability_ID", "Impact_Description", "Predisposing_Conditions", "Technical_Mitigation", "Proposed_Mitigation",
                                 "Threat_Relevance", "Severity_Pervasiveness", "Likelihood", "Impact", "Risk", "Residual_Risk", "Mitigated_Status", "Expiration_Date", "IsApproved",
-                                "Approver"
+                                "Approver", "Residual_Risk_After_Proposed", "Estimated_Completion_Date", "Approval_Date"
                             };
                             foreach (string parameter in parameters)
                             { sqliteCommand.Parameters.Add(new SQLiteParameter(parameter, DBNull.Value)); }
@@ -827,44 +858,44 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        public RelayCommand<object> AddMitigationGroupCommand
-        { get { return new RelayCommand<object>((p) => AddMitigationGroup(p)); } }
+        public RelayCommand CalculateLikelihoodCommand
+        { get { return new RelayCommand(CalculateLikelihood); } }
 
-        private void AddMitigationGroup(object parameter)
-        { 
+        private void CalculateLikelihood()
+        {
             try
             {
-                MitigationsOrCondition mitigation = SelectedMitigationsOrCondition as MitigationsOrCondition;
-                if (mitigation.MitigationOrCondition_ID == 0)
+                if (string.IsNullOrWhiteSpace(ThreatRelevance) || string.IsNullOrWhiteSpace(SeverityPervasiveness))
                 { return; }
-                string groupName = parameter as string;
-                if (!DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
-                { DatabaseBuilder.sqliteConnection.Open(); }
-                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
-                {
-                    if (Groups.FirstOrDefault(x => x.Group_Name.Equals(groupName)) == null)
-                    {
-                        Group group = new Group() { Group_Name = groupName };
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("Group_Name", groupName));
-                        databaseInterface.InsertGroup(sqliteCommand);
-                        Groups.Add(group);
-                    }
-                    else
-                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Group_Name", groupName)); }
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("MitigationOrCondition_ID", mitigation.MitigationOrCondition_ID));
-                    databaseInterface.MapMitigationToGroup(sqliteCommand);
-                    ProjectMitigations.FirstOrDefault(
-                        x => x.MitigationOrCondition_ID == mitigation.MitigationOrCondition_ID)
-                        .Groups.Add(Groups.FirstOrDefault(g => g.Group_Name == groupName));
-                }
+                Likelihood = Likehoods.FirstOrDefault(x => x.Relevance.Equals(ThreatRelevance) && x.SeverityOrPervasiveness.Equals(SeverityPervasiveness)).CalculatedLikelihood;
+                if (!string.IsNullOrWhiteSpace(Impact))
+                { CalculateRisk(); }
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to "));
-                log.Debug("Exception details:", exception);
+                log.Error(string.Format("Unable to calculate likelihood."));
+                log.Debug(string.Format("Exception Details: {0}", exception));
+                throw exception;
             }
-            finally
-            { DatabaseBuilder.sqliteConnection.Close(); }
+        }
+
+        public RelayCommand CalculateRiskCommand
+        { get { return new RelayCommand(CalculateRisk); } }
+
+        private void CalculateRisk()
+        { 
+            try
+            {
+                if (string.IsNullOrWhiteSpace(Likelihood) || string.IsNullOrWhiteSpace(Impact))
+                { return; }
+                Risk = Risks.FirstOrDefault(x => x.Likelihood.Equals(Likelihood) && x.Impact.Equals(Impact)).CalculatedRisk;
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to calculate risk."));
+                log.Debug(string.Format("Exception Details: {0}", exception));
+                throw exception;
+            }
         }
 
         public RelayCommand AddMitigationCommand

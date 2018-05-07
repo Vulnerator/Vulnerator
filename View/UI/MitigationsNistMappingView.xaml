@@ -46,8 +46,8 @@
                         <Label Content="Mitigations"
                                DockPanel.Dock="Top"
                                Style="{StaticResource TopLevelHeaderStyle}" />
-                        <DataGrid CanUserAddRows="True"
-                                  CanUserDeleteRows="True"
+                        <DataGrid CanUserAddRows="False"
+                                  CanUserDeleteRows="False"
                                   DockPanel.Dock="Top"
                                   ItemsSource="{Binding ProjectMitigations}"
                                   SelectedItem="{Binding SelectedMitigationsOrCondition}"
@@ -425,25 +425,36 @@
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
-                                            <DataGridTextColumn Width="Auto"
-                                                                Binding="{Binding Unique_Vulnerability_Identifier}"
-                                                                Header="Vulnerability ID"
-                                                                HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
-                                            <DataGridTextColumn Width="Auto"
-                                                                Binding="{Binding Vulnerability_Group_ID}"
-                                                                Header="Group ID"
-                                                                HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
                                             <DataGridTemplateColumn Width="*"
-                                                                    MaxWidth="250"
-                                                                    Header="Title"
+                                                                    Header="Vulnerability ID"
                                                                     HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBlock Text="{Binding Vulnerability_Title}"
-                                                                   TextWrapping="Wrap" />
+                                                        <TextBlock Text="{Binding Unique_Vulnerability_Identifier}">
+                                                            <TextBlock.ToolTip>
+                                                                <StackPanel MaxWidth="250">
+                                                                    <Label Content="Title"
+                                                                           Style="{StaticResource ThirdLevelHeaderStyle}" />
+                                                                    <TextBlock Text="{Binding Vulnerability_Title}"
+                                                                               TextWrapping="Wrap"
+                                                                               Margin="5,0,0,0"/>
+                                                                    <Label Content="Source(s)"
+                                                                           Style="{StaticResource ThirdLevelHeaderStyle}" />
+                                                                    <ListView Margin="5,0,0,0"
+                                                                              BorderThickness="0"
+                                                                              IsEnabled="False"
+                                                                              ItemsSource="{Binding VulnerabilitySources}"
+                                                                              DisplayMemberPath="Source_Name" />
+                                                                </StackPanel>
+                                                            </TextBlock.ToolTip>
+                                                        </TextBlock>
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
+                                            <DataGridTextColumn Width="*"
+                                                                Binding="{Binding Vulnerability_Group_ID}"
+                                                                Header="Group ID"
+                                                                HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
                                             <DataGridTextColumn Width="Auto"
                                                                 Binding="{Binding Raw_Risk}"
                                                                 Header="Raw Risk"
@@ -495,6 +506,43 @@
                                          TextWrapping="Wrap"
                                          HorizontalScrollBarVisibility="Disabled"
                                          VerticalScrollBarVisibility="Auto" />
+                                <DatePicker Margin="0,0,0,5"
+                                            Controls:TextBoxHelper.Watermark="Estimated Completion Date"
+                                            Style="{StaticResource HeaderedDatePickerStyle}"
+                                            Text="{Binding EstimatedCompletionDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <vh:CommandEnabledComboBox Margin="0,0,0,5"
+                                                           Controls:TextBoxHelper.Watermark="Threat Relevance"
+                                                           Command="{Binding CalculateLikelihoodCommand}"
+                                                           ItemsSource="{Binding RmfValues}"
+                                                           SelectedItem="{Binding ThreatRelevance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                           Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <vh:CommandEnabledComboBox Margin="0,0,0,5"
+                                                           Controls:TextBoxHelper.Watermark="Severity / Pervasiveness"
+                                                           Command="{Binding CalculateLikelihoodCommand}"
+                                                           ItemsSource="{Binding RmfValues}"
+                                                           SelectedItem="{Binding SeverityPervasiveness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                           Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <TextBox Margin="0,0,0,5"
+                                         Controls:TextBoxHelper.Watermark="Likelihood (Calculated)"
+                                         IsReadOnly="True"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding Likelihood, Mode=OneWay}" />
+                                <vh:CommandEnabledComboBox Margin="0,0,0,5"
+                                                           Controls:TextBoxHelper.Watermark="Impact"
+                                                           Command="{Binding CalculateRiskCommand}"
+                                                           ItemsSource="{Binding RmfValues}"
+                                                           SelectedItem="{Binding Impact, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                           Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <TextBox Margin="0,0,0,5"
+                                         Controls:TextBoxHelper.Watermark="Risk (Calculated)"
+                                         IsReadOnly="True"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding Risk, Mode=OneWay}" />
+                                <ComboBox Margin="0,0,0,5"
+                                          Controls:TextBoxHelper.Watermark="Residual Risk"
+                                          ItemsSource="{Binding RmfValues}"
+                                          SelectedItem="{Binding ResidualRisk, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
                                 <TextBox Height="200"
                                          Margin="0,0,0,5"
                                          Controls:TextBoxHelper.Watermark="Proposed Mitigation(s)&#x0a;(Max 2000 Characters)"
@@ -509,37 +557,13 @@
                                          HorizontalScrollBarVisibility="Disabled"
                                          VerticalScrollBarVisibility="Auto" />
                                 <ComboBox Margin="0,0,0,5"
-                                          Controls:TextBoxHelper.Watermark="Threat Relevance"
+                                          Controls:TextBoxHelper.Watermark="Residual Risk After Proposed Mitigation(s)"
                                           ItemsSource="{Binding RmfValues}"
-                                          SelectedItem="{Binding ThreatRelevance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                          Style="{StaticResource HeaderedComboBoxStyle}" />
-                                <ComboBox Margin="0,0,0,5"
-                                          Controls:TextBoxHelper.Watermark="Severity / Pervasiveness"
-                                          ItemsSource="{Binding RmfValues}"
-                                          SelectedItem="{Binding SeverityPervasiveness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                          Style="{StaticResource HeaderedComboBoxStyle}" />
-                                <TextBox Margin="0,0,0,5"
-                                         Controls:TextBoxHelper.Watermark="Likelihood (Calculated)"
-                                         IsReadOnly="True"
-                                         Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding Likelihood, Mode=OneWay}" />
-                                <ComboBox Margin="0,0,0,5"
-                                          Controls:TextBoxHelper.Watermark="Impact"
-                                          ItemsSource="{Binding RmfValues}"
-                                          SelectedItem="{Binding Impact, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                          Style="{StaticResource HeaderedComboBoxStyle}" />
-                                <TextBox Margin="0,0,0,5"
-                                         Controls:TextBoxHelper.Watermark="Risk (Calculated)"
-                                         IsReadOnly="True"
-                                         Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding Risk, Mode=OneWay}" />
-                                <ComboBox Margin="0,0,0,5"
-                                          Controls:TextBoxHelper.Watermark="Residual Risk"
-                                          ItemsSource="{Binding RmfValues}"
-                                          SelectedItem="{Binding ResidualRisk, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          SelectedItem="{Binding ResidualRiskAfterProposed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                           Style="{StaticResource HeaderedComboBoxStyle}" />
                                 <Button Margin="0,5"
                                         HorizontalAlignment="Center"
+                                        Command="{Binding AddMitigationCommand}"
                                         Content="Add Mitigations" />
                             </StackPanel>
                         </ScrollViewer>
