@@ -484,6 +484,61 @@ WHERE VulnerabilitySources.Vulnerability_Source_ID = @Vulnerability_Source_ID;</
   <data name="SetCredentialedScanStatus" xml:space="preserve">
     <value>UPDATE Hardware SET Found_21745 = @Found_21745, Found_26917 = @Found_26917 WHERE Scan_IP = @Scan_IP AND Host_Name=@Host_Name;</value>
   </data>
+  <data name="TempStorage" xml:space="preserve">
+    <value>SELECT 
+    Hardware.Role,
+    Hardware.Displayed_Host_Name,
+    Hardware.FQDN,
+    GROUP_CONCAT(DISTINCT IP_Address) AS IpAddresses,
+    GROUP_CONCAT(DISTINCT MAC_Address) AS MacAddresses,
+    UniqueFindings.Classification,
+    UniqueFindings.Technology_Area,
+    UniqueFindings.Web_DB_Site,
+    UniqueFindings.Web_DB_Instance,
+    VulnerabilitySources.Source_Name,
+    VulnerabilitySources.Source_Version,
+    VulnerabilitySources.Source_Release,
+    VulnerabilitySources.Source_Secondary_Identifier,
+    VulnerabilitySources.Source_Description,
+    VulnerabilitySources.Vulnerability_Source_File_Name,
+    Vulnerabilities.Vulnerability_Group_ID,
+    Vulnerabilities.Raw_Risk,
+    Vulnerabilities.Vulnerability_Group_Title,
+    Vulnerabilities.Unique_Vulnerability_Identifier, Vulnerabilities.Secondary_Vulnerability_Identifier,
+    Vulnerabilities.Vulnerability_Version,
+    Vulnerabilities.Vulnerability_Title,
+    Vulnerabilities.Vulnerability_Description,
+    Vulnerabilities.Check_Content,
+    Vulnerabilities.Fix_Text,
+    Vulnerabilities.False_Positives,
+    Vulnerabilities.False_Negatives,
+    Vulnerabilities.Documentable,
+    Vulnerabilities.Mitigations,
+    Vulnerabilities.Potential_Impacts,
+    Vulnerabilities.Third_Party_Tools,
+    Vulnerabilities.Mitigation_Control,
+    Vulnerabilities.Security_Override_Guidance,
+    GROUP_CONCAT(DISTINCT CCI) AS CCIs,
+    UniqueFindings.Status,
+    UniqueFindings.Finding_Details,
+    UniqueFindings.Comments,
+    UniqueFindings.Severity_Override,
+    UniqueFindings.Severity_Override_Justification,
+    UniqueFindings.Tool_Generated_Output
+FROM VulnerabilitySources
+LEFT JOIN Vulnerabilities_VulnerabilitySources ON VulnerabilitySources.Vulnerability_Source_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID
+LEFT JOIN Vulnerabilities ON Vulnerabilities_VulnerabilitySources.Vulnerability_ID = Vulnerabilities.Vulnerability_ID
+LEFT JOIN UniqueFindings ON Vulnerabilities.Vulnerability_ID = UniqueFindings.Vulnerability_ID
+LEFT JOIN Hardware ON UniqueFindings.Hardware_ID = Hardware.Hardware_ID
+LEFT JOIN HardwareIpAddresses ON Hardware.Hardware_ID = HardwareIpAddresses.Hardware_ID
+LEFT JOIN IP_Addresses ON HardwareIpAddresses.IP_Address_ID = IP_Addresses.IP_Address_ID
+LEFT JOIN HardwareMacAddresses ON Hardware.Hardware_ID = HardwareMacAddresses.Hardware_ID
+LEFT JOIN MAC_Addresses ON HardwareMacAddresses.MAC_Address_ID = MAC_Addresses.MAC_Address_ID
+LEFT JOIN VulnerabilitiesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesCCIs.Vulnerability_ID
+LEFT JOIN CCIs ON VulnerabilitiesCCIs.CCI_ID = CCIs.CCI_ID
+WHERE VulnerabilitySources.Vulnerability_Source_ID = 337
+GROUP BY Vulnerabilities.Vulnerability_ID;</value>
+  </data>
   <data name="UpdateDeltaAnalysisFlag" xml:space="preserve">
     <value>UPDATE UniqueFindings SET Delta_Analysis_Required = 'True' WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier);</value>
   </data>

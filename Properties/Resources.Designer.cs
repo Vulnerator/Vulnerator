@@ -697,6 +697,28 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT 
+        ///    Hardware.Role,
+        ///    Hardware.Displayed_Host_Name,
+        ///    Hardware.FQDN,
+        ///    GROUP_CONCAT(DISTINCT IP_Address) AS IpAddresses,
+        ///    GROUP_CONCAT(DISTINCT MAC_Address) AS MacAddresses,
+        ///    UniqueFindings.Classification,
+        ///    UniqueFindings.Technology_Area,
+        ///    UniqueFindings.Web_DB_Site,
+        ///    UniqueFindings.Web_DB_Instance,
+        ///    VulnerabilitySources.Source_Name,
+        ///    VulnerabilitySources.Source_Version,
+        ///    VulnerabilitySources.Source_Release,
+        ///    VulnerabilitySources.Source_Secondary_Identifi [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string TempStorage {
+            get {
+                return ResourceManager.GetString("TempStorage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to UPDATE UniqueFindings SET Delta_Analysis_Required = &apos;True&apos; WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier);.
         /// </summary>
         internal static string UpdateDeltaAnalysisFlag {
