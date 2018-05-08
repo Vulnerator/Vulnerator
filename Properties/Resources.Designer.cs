@@ -214,21 +214,13 @@ namespace Vulnerator.Properties {
         ///	@Tool_Generated_Output, 
         ///	@Comments, 
         ///	@Finding_Details, 
-        ///	@Technical_Mitigation, 
-        ///	@Proposed_Mitigation, 
-        ///	@Predisposing_Conditions, 
-        ///	@Impact, 
-        ///	@Likelihood, 
-        ///	@Severity, 
-        ///	@Risk, 
-        ///	@Residual_Risk, 
         ///	@First_Discovered, 
         ///	@Last_Observed, 
-        ///	@Approval_Status, 
-        ///	@Approval_Date, @Approved_By,
-        ///	@Approval_Expiration_Date, 
         ///	@Delta_Analysis_Required, 
-        ///	(SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = @Finding_Typ [rest of string was truncated]&quot;;.
+        ///	(SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = @Finding_Type), 
+        ///	(SELECT Finding_Source_File_ID FROM UniqueFindingsSourceFiles WHERE Finding_Source_File_Name = @Finding_Source_File_Name), 
+        ///	@Status, 
+        ///	(SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier= @Uni [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InsertUniqueFinding {
             get {
@@ -588,6 +580,7 @@ namespace Vulnerator.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT 
+        ///    UniqueFindings.Hardware_ID,
         ///    Hardware.Role,
         ///    Hardware.Displayed_Host_Name,
         ///    Hardware.FQDN,
@@ -600,7 +593,7 @@ namespace Vulnerator.Properties {
         ///    VulnerabilitySources.Source_Name,
         ///    VulnerabilitySources.Source_Version,
         ///    VulnerabilitySources.Source_Release,
-        ///    VulnerabilitySources.Source_Secondary_Identifi [rest of string was truncated]&quot;;.
+        ///    Vulnerability [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SelectHardwareCklCreationData {
             get {

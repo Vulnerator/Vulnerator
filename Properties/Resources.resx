@@ -199,19 +199,8 @@ VALUES (
 	@Tool_Generated_Output, 
 	@Comments, 
 	@Finding_Details, 
-	@Technical_Mitigation, 
-	@Proposed_Mitigation, 
-	@Predisposing_Conditions, 
-	@Impact, 
-	@Likelihood, 
-	@Severity, 
-	@Risk, 
-	@Residual_Risk, 
 	@First_Discovered, 
 	@Last_Observed, 
-	@Approval_Status, 
-	@Approval_Date, @Approved_By,
-	@Approval_Expiration_Date, 
 	@Delta_Analysis_Required, 
 	(SELECT Finding_Type_ID FROM FindingTypes WHERE Finding_Type = @Finding_Type), 
 	(SELECT Finding_Source_File_ID FROM UniqueFindingsSourceFiles WHERE Finding_Source_File_Name = @Finding_Source_File_Name), 
@@ -226,7 +215,8 @@ VALUES (
 	@Web_DB_Instance, 
 	@Classification, 
 	@CVSS_Environmental_Score, 
-	@CVSS_Environmental_Vector);</value>
+	@CVSS_Environmental_Vector,
+	NULL);</value>
   </data>
   <data name="InsertUniqueFindingSource" xml:space="preserve">
     <value>INSERT INTO UniqueFindingsSourceFiles VALUES (NULL, @Finding_Source_File_Name);</value>
@@ -390,6 +380,7 @@ WHERE Hardware_ID = @Hardware_ID;</value>
   </data>
   <data name="SelectHardwareCklCreationData" xml:space="preserve">
     <value>SELECT 
+    UniqueFindings.Hardware_ID,
     Hardware.Role,
     Hardware.Displayed_Host_Name,
     Hardware.FQDN,
@@ -429,20 +420,19 @@ WHERE Hardware_ID = @Hardware_ID;</value>
     UniqueFindings.Severity_Override,
     UniqueFindings.Severity_Override_Justification,
     UniqueFindings.Tool_Generated_Output
-FROM UniqueFindings
+FROM VulnerabilitySources
+LEFT JOIN Vulnerabilities_VulnerabilitySources ON VulnerabilitySources.Vulnerability_Source_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID
+LEFT JOIN Vulnerabilities ON Vulnerabilities_VulnerabilitySources.Vulnerability_ID = Vulnerabilities.Vulnerability_ID
+LEFT JOIN UniqueFindings ON Vulnerabilities.Vulnerability_ID = UniqueFindings.Vulnerability_ID
 LEFT JOIN Hardware ON UniqueFindings.Hardware_ID = Hardware.Hardware_ID
 LEFT JOIN HardwareIpAddresses ON Hardware.Hardware_ID = HardwareIpAddresses.Hardware_ID
 LEFT JOIN IP_Addresses ON HardwareIpAddresses.IP_Address_ID = IP_Addresses.IP_Address_ID
 LEFT JOIN HardwareMacAddresses ON Hardware.Hardware_ID = HardwareMacAddresses.Hardware_ID
 LEFT JOIN MAC_Addresses ON HardwareMacAddresses.MAC_Address_ID = MAC_Addresses.MAC_Address_ID
-LEFT JOIN Vulnerabilities ON UniqueFindings.Vulnerability_ID = Vulnerabilities.Vulnerability_ID
-LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
-LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID
-LEFT JOIN Hardware_VulnerabilitySources ON VulnerabilitySources.Vulnerability_Source_ID = Hardware_VulnerabilitySources.Vulnerability_Source_ID
 LEFT JOIN VulnerabilitiesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesCCIs.Vulnerability_ID
 LEFT JOIN CCIs ON VulnerabilitiesCCIs.CCI_ID = CCIs.CCI_ID
-WHERE VulnerabilitySources.Vulnerability_Source_ID = @Vulnerability_Source_ID AND UniqueFindings.Hardware_ID = @Hardware_ID
-GROUP BY UniqueFindings.Vulnerability_ID;</value>
+WHERE VulnerabilitySources.Vulnerability_Source_ID = @Vulnerability_Source_ID AND (UniqueFindings.Hardware_ID IS NULL OR UniqueFindings.Hardware_ID = 1)
+GROUP BY Vulnerabilities.Vulnerability_ID;</value>
   </data>
   <data name="SelectIndexes" xml:space="preserve">
     <value>SELECT name FROM sqlite_master WHERE type == 'index';</value>
