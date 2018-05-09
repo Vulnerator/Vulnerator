@@ -817,6 +817,8 @@ namespace Vulnerator.Model.DataAccess
                             { releaseUpdated = true; }
                             if (versionUpdated || (versionSame && releaseUpdated))
                             { return true; }
+                            sqliteCommand.Parameters["Source_Version"].Value = sqliteDataReader["Source_Version"].ToString();
+                            sqliteCommand.Parameters["Source_Release"].Value = sqliteDataReader["Source_Release"].ToString();
                         }
                     }
                     return false;
@@ -864,6 +866,8 @@ namespace Vulnerator.Model.DataAccess
                             { releaseUpdated = true; }
                             if (versionUpdated || (versionSame && releaseUpdated))
                             { return true; }
+                            sqliteCommand.Parameters["Vulnerability_Version"].Value = sqliteDataReader["Vulnerability_Version"].ToString();
+                            sqliteCommand.Parameters["Vulnerability_Release"].Value = sqliteDataReader["Vulnerability_Release"].ToString();
                         }
                     }
                 }

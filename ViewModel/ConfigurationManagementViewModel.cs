@@ -305,13 +305,13 @@ namespace Vulnerator.ViewModel
                 Hardware hardware = SelectedHardware as Hardware;
                 CklCreator cklCreator = new CklCreator();
                 cklCreator.CreateCklFromHardware(hardware, vulnerabilitySource, saveDirectory);
-                vulnerabilitySource = null;
-                saveDirectory = string.Empty;
                 guiFeedback.SetFields(
                     string.Format("{0} CKL created for {1}", vulnerabilitySource.Source_Name, hardware.Displayed_Host_Name), 
                     "Collapsed", 
                     true);
                 Messenger.Default.Send(guiFeedback);
+                vulnerabilitySource = null;
+                saveDirectory = string.Empty;
             }
             catch (Exception exception)
             {
