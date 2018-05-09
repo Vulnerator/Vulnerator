@@ -40,7 +40,8 @@ namespace Vulnerator.Model.Entity
 
         public long Finding_Source_File_ID { get; set; }
 
-        public long MitigationOrCondition_ID { get; set; }
+        [Required]
+        public long? MitigationOrCondition_ID { get; set; }
 
         [Required]
         [StringLength(25)]
