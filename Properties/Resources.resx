@@ -431,7 +431,7 @@ LEFT JOIN HardwareMacAddresses ON Hardware.Hardware_ID = HardwareMacAddresses.Ha
 LEFT JOIN MAC_Addresses ON HardwareMacAddresses.MAC_Address_ID = MAC_Addresses.MAC_Address_ID
 LEFT JOIN VulnerabilitiesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesCCIs.Vulnerability_ID
 LEFT JOIN CCIs ON VulnerabilitiesCCIs.CCI_ID = CCIs.CCI_ID
-WHERE VulnerabilitySources.Vulnerability_Source_ID = @Vulnerability_Source_ID AND (UniqueFindings.Hardware_ID IS NULL OR UniqueFindings.Hardware_ID = 1)
+WHERE VulnerabilitySources.Vulnerability_Source_ID = @Vulnerability_Source_ID AND (UniqueFindings.Hardware_ID IS NULL OR UniqueFindings.Hardware_ID = @Hardware_ID)
 GROUP BY Vulnerabilities.Vulnerability_ID;</value>
   </data>
   <data name="SelectIndexes" xml:space="preserve">
