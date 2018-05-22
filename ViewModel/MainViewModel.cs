@@ -1,7 +1,9 @@
+using Enterwell.Clients.Wpf.Notifications;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using log4net;
+using MahApps.Metro;
 using Microsoft.Win32;
 using System;
 using System.ComponentModel;
@@ -134,6 +136,20 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private NotificationMessageManager _notificationMessageManager = new NotificationMessageManager();
+        public NotificationMessageManager NotificationMessageManager
+        {
+            get { return _notificationMessageManager; }
+            set
+            {
+                if (_notificationMessageManager != value)
+                {
+                    _notificationMessageManager = value;
+                    RaisePropertyChanged("NotificationMessageManager");
+                }
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
@@ -149,6 +165,15 @@ namespace Vulnerator.ViewModel
                 Properties.Settings.Default.ActiveUser = Environment.UserName;
                 Messenger.Default.Register<GuiFeedback>(this, (guiFeedback) => UpdateGui(guiFeedback));
                 Messenger.Default.Register<string>(this, (databaseLocation) => InstantiateNewDatabase(databaseLocation));
+                NotificationMessageManager.CreateMessage()
+                    .Accent("#1751C3")
+                    .Animates(true)
+                    .AnimationInDuration(0.75)
+                    .AnimationOutDuration(2)
+                    .HasBadge("Info")
+                    .HasMessage("Please ingest the latest STIG Compilation Library on the settings page.")
+                    .Dismiss().WithButton("Dismiss", button => { })
+                    .Queue();
             }
             catch (Exception exception)
             {
