@@ -174,6 +174,7 @@ namespace Vulnerator.ViewModel
                     .HasMessage("Please ingest the latest STIG Compilation Library on the settings page.")
                     .Dismiss().WithButton("Dismiss", button => { })
                     .Queue();
+                Console.WriteLine("Pause");
             }
             catch (Exception exception)
             {
