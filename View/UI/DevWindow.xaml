@@ -136,6 +136,9 @@
                 <RowDefinition Height="1*" />
                 <RowDefinition Height="38" />
             </Grid.RowDefinitions>
+            <Notifications:NotificationMessageContainer Background="{DynamicResource WindowBackgroundBrush}"
+                                                        Foreground="{DynamicResource LabelTextBrush}"
+                                                        Manager="{Binding NotificationMessageManager}" />
             <Controls:HamburgerMenu x:Name="hamburgerMenu"
                                     DisplayMode="CompactInline"
                                     Foreground="{DynamicResource LabelTextBrush}"
@@ -262,9 +265,6 @@
                     </DataTemplate>
                 </Controls:HamburgerMenu.ContentTemplate>
             </Controls:HamburgerMenu>
-            <Notifications:NotificationMessageContainer Background="{DynamicResource WindowBackgroundBrush}"
-                                                        Foreground="{DynamicResource LabelTextBrush}"
-                                                        Manager="{Binding NotificationMessageManager}" />
             <StatusBar Grid.Row="1"
                        Height="35"
                        VerticalAlignment="Top"

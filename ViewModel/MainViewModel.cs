@@ -39,6 +39,7 @@ namespace Vulnerator.ViewModel
         private DatabaseBuilder databaseBuilder;
         public Logger logger = new Logger();
         public static readonly ILog log = LogManager.GetLogger(typeof(Logger));
+        public INotificationMessageManager NotificationMessageManager { get; } = new NotificationMessageManager();
 
         public string ApplicationVersion
         {
@@ -136,20 +137,6 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private NotificationMessageManager _notificationMessageManager = new NotificationMessageManager();
-        public NotificationMessageManager NotificationMessageManager
-        {
-            get { return _notificationMessageManager; }
-            set
-            {
-                if (_notificationMessageManager != value)
-                {
-                    _notificationMessageManager = value;
-                    RaisePropertyChanged("NotificationMessageManager");
-                }
-            }
-        }
-
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
@@ -174,7 +161,6 @@ namespace Vulnerator.ViewModel
                     .HasMessage("Please ingest the latest STIG Compilation Library on the settings page.")
                     .Dismiss().WithButton("Dismiss", button => { })
                     .Queue();
-                Console.WriteLine("Pause");
             }
             catch (Exception exception)
             {
