@@ -147,7 +147,7 @@ namespace Vulnerator.ViewModel
             if (metroWindow != null)
             {
                 metroWindow.Close();
-                View.UI.DevWindow devWindow = new View.UI.DevWindow();
+                View.UI.MainWindow devWindow = new View.UI.MainWindow();
                 devWindow.Show();
             }
         }

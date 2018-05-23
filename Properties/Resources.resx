@@ -222,7 +222,7 @@ VALUES (
     <value>INSERT INTO UniqueFindingsSourceFiles VALUES (NULL, @Finding_Source_File_Name);</value>
   </data>
   <data name="InsertVulnerability" xml:space="preserve">
-    <value>INSERT INTO Vulnerabilities VALUES (NULL, @Unique_Vulnerability_Identifier, @Vulnerability_Group_ID, @Vulnerability_Group_Title, @Secondary_Vulnerability_Identifier, @VulnerabilityFamilyOrClass, @Vulnerability_Version, @Vulnerability_Release, @Vulnerability_Title, @Vulnerability_Description, @Risk_Statement, @Fix_Text, @Published_Date, @Modified_Date, @Fix_Published_Date, @Raw_Risk, @CVSS_Base_Score, @CVSS_Base_Vector, @CVSS_Temporal_Score, @CVSS_Temporal_Vector, @Check_Content, @False_Positives, @False_Negatives, @Documentable, @Mitigations, @Mitigation_Control, @Potential_Impacts, @Third_Party_Tools, @Security_Override_Guidance, @Overflow);</value>
+    <value>INSERT INTO Vulnerabilities VALUES (NULL, @Unique_Vulnerability_Identifier, @Vulnerability_Group_ID, @Vulnerability_Group_Title, @Secondary_Vulnerability_Identifier, @VulnerabilityFamilyOrClass, @Vulnerability_Version, @Vulnerability_Release, @Vulnerability_Title, @Vulnerability_Description, @Risk_Statement, @Fix_Text, @Published_Date, @Modified_Date, @Fix_Published_Date, @Raw_Risk, @CVSS_Base_Score, @CVSS_Base_Vector, @CVSS_Temporal_Score, @CVSS_Temporal_Vector, @Check_Content, @False_Positives, @False_Negatives, @Documentable, @Mitigations, @Mitigation_Control, @Potential_Impacts, @Third_Party_Tools, @Security_Override_Guidance, @Overflow, @Is_Active);</value>
   </data>
   <data name="InsertVulnerabilityReference" xml:space="preserve">
     <value>INSERT INTO VulnerabilityReferences VALUES (NULL, @Reference, @Reference_Type);</value>

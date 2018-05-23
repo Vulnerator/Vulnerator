@@ -38,7 +38,7 @@ namespace Vulnerator
             }
             else
             {
-                DevWindow mainWindow = new DevWindow();
+                MainWindow mainWindow = new MainWindow();
                 mainWindow.Show();
             }
         }

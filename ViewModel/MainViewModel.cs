@@ -9,6 +9,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
+using System.Windows;
 using Vulnerator.Model.BusinessLogic;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Object;
@@ -152,15 +153,6 @@ namespace Vulnerator.ViewModel
                 Properties.Settings.Default.ActiveUser = Environment.UserName;
                 Messenger.Default.Register<GuiFeedback>(this, (guiFeedback) => UpdateGui(guiFeedback));
                 Messenger.Default.Register<string>(this, (databaseLocation) => InstantiateNewDatabase(databaseLocation));
-                NotificationMessageManager.CreateMessage()
-                    .Accent("#1751C3")
-                    .Animates(true)
-                    .AnimationInDuration(0.75)
-                    .AnimationOutDuration(2)
-                    .HasBadge("Info")
-                    .HasMessage("Please ingest the latest STIG Compilation Library on the settings page.")
-                    .Dismiss().WithButton("Dismiss", button => { })
-                    .Queue();
             }
             catch (Exception exception)
             {
@@ -224,6 +216,35 @@ namespace Vulnerator.ViewModel
             {
                 log.Error("Unable to obtain version update information.");
                 throw exception;
+            }
+        }
+
+        public RelayCommand LaunchStigNotificationCommand
+        { get { return new RelayCommand(LaunchStigNotification); } }
+
+        private void LaunchStigNotification()
+        { 
+            try
+            {
+                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
+                var things = appStyle.Item1.Resources;
+                NotificationMessageManager.CreateMessage()
+                    .Accent(appStyle.Item2.Resources["AccentColorBrush"].ToString())
+                    .Background(appStyle.Item1.Resources["WindowBackgroundBrush"].ToString())
+                    .Foreground(appStyle.Item1.Resources["TextBrush"].ToString())
+                    .Animates(true)
+                    .AnimationInDuration(0.25)
+                    .AnimationOutDuration(0.25)
+                    .HasBadge("Info")
+                    .HasHeader("STIG Library")
+                    .HasMessage("Please ingest the latest STIG Compilation Library on the settings page.")
+                    .Dismiss().WithButton("Dismiss", button => { })
+                    .Queue();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to launch STIG library ingestion notification."));
+                log.Debug("Exception details:", exception);
             }
         }
 

@@ -466,8 +466,8 @@
     <Compile Include="View\UI\ConfigurationManagementView.xaml.cs">
       <DependentUpon>ConfigurationManagementView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UI\DevWindow.xaml.cs">
-      <DependentUpon>DevWindow.xaml</DependentUpon>
+    <Compile Include="View\UI\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UI\MitigationsNistMappingView.xaml.cs">
       <DependentUpon>MitigationsNistMappingView.xaml</DependentUpon>
@@ -564,6 +564,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\Styles\NotificationMessage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Styles\NotificationMessageContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Styles\Rectangle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -604,7 +612,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\UI\DevWindow.xaml">
+    <Page Include="View\UI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

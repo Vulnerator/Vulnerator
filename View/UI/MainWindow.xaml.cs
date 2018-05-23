@@ -6,11 +6,11 @@ using System.Windows;
 namespace Vulnerator.View.UI
 {
     /// <summary>
-    /// Interaction logic for DevWindow.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class DevWindow
+    public partial class MainWindow
     {
-        public DevWindow()
+        public MainWindow()
         {
             InitializeComponent();
         }

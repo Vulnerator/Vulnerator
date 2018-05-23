@@ -315,8 +315,8 @@ namespace Vulnerator.Model.DataAccess
                     "Secondary_Vulnerability_Identifier", "VulnerabilityFamilyOrClass", "Vulnerability_Version", "Vulnerability_Release",
                     "Vulnerability_Title", "Vulnerability_Description", "Risk_Statement", "Fix_Text", "Published_Date", "Modified_Date",
                     "Fix_Published_Date", "Raw_Risk", "CVSS_Base_Score", "CVSS_Base_Vector", "CVSS_Temporal_Score", "CVSS_Temporal_Vector",
-                    "Check_Content", "False_Positives", "False_Negatives", "Documentable", "Mitigations", "Mitigation_Control",
-                    "Potential_Impacts", "Third_Party_Tools", "Security_Override_Guidance", "Overflow", "Severity_Override_Guidance",
+                    "Check_Content", "False_Positives", "False_Negatives", "Documentable", "Mitigations", "Mitigation_Control", "Is_Active",
+                    "Potential_Impacts", "Third_Party_Tools", "Security_Override_Guidance", "Overflow", "Severity_Override_Guidance", "Overflow",
                     // VulnerabilityReferences Table
                     "Reference_ID", "Reference", "Reference_Type",
                     // VulnerabilitySources Table

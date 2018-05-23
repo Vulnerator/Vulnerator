@@ -1303,7 +1303,8 @@ CREATE TABLE Vulnerabilities
 	 Potential_Impacts NVARCHAR (2000),
 	 Third_Party_Tools NVARCHAR (500),
 	 Security_Override_Guidance NVARCHAR (2000) ,
-	 Overflow NVARCHAR (2000)
+	 Overflow NVARCHAR (2000),
+	 Is_Active NVARCHAR (5)
 	);
 CREATE TABLE Vulnerabilities_RoleResponsibilities
 	(
