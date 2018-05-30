@@ -153,6 +153,7 @@ namespace Vulnerator.ViewModel
                 Properties.Settings.Default.ActiveUser = Environment.UserName;
                 Messenger.Default.Register<GuiFeedback>(this, (guiFeedback) => UpdateGui(guiFeedback));
                 Messenger.Default.Register<string>(this, (databaseLocation) => InstantiateNewDatabase(databaseLocation));
+                Messenger.Default.Register<Notification>(this, (notification) => GenerateNotification(notification));
             }
             catch (Exception exception)
             {
@@ -216,35 +217,6 @@ namespace Vulnerator.ViewModel
             {
                 log.Error("Unable to obtain version update information.");
                 throw exception;
-            }
-        }
-
-        public RelayCommand LaunchStigNotificationCommand
-        { get { return new RelayCommand(LaunchStigNotification); } }
-
-        private void LaunchStigNotification()
-        { 
-            try
-            {
-                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
-                var things = appStyle.Item1.Resources;
-                NotificationMessageManager.CreateMessage()
-                    .Accent(appStyle.Item2.Resources["AccentColorBrush"].ToString())
-                    .Background(appStyle.Item1.Resources["WindowBackgroundBrush"].ToString())
-                    .Foreground(appStyle.Item1.Resources["TextBrush"].ToString())
-                    .Animates(true)
-                    .AnimationInDuration(0.25)
-                    .AnimationOutDuration(0.25)
-                    .HasBadge("Info")
-                    .HasHeader("STIG Library")
-                    .HasMessage("Please ingest the latest STIG Compilation Library on the settings page.")
-                    .Dismiss().WithButton("Dismiss", button => { })
-                    .Queue();
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to launch STIG library ingestion notification."));
-                log.Debug("Exception details:", exception);
             }
         }
 
@@ -391,6 +363,56 @@ namespace Vulnerator.ViewModel
                 NoInternetApplication internetWarning = new NoInternetApplication();
                 internetWarning.ShowDialog();
                 return;
+            }
+        }
+
+        public RelayCommand LaunchStigNotificationCommand
+        { get { return new RelayCommand(LaunchStigNotification); } }
+
+        private void LaunchStigNotification()
+        {
+            try
+            {
+                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
+                Notification notification = new Notification
+                {
+                    Accent = appStyle.Item2.Resources["AccentColorBrush"].ToString(),
+                    Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString(),
+                    Badge = "Info",
+                    Foreground = appStyle.Item1.Resources["TextBrush"].ToString(),
+                    Header = "STIG Library",
+                    Message = "Please ingest the latest STIG Compilation Library on the settings page."
+                };
+                GenerateNotification(notification);
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to launch STIG library ingestion notification."));
+                log.Debug("Exception details:", exception);
+            }
+        }
+
+        private void GenerateNotification( Notification notification)
+        { 
+            try
+            {
+                NotificationMessageManager.CreateMessage()
+                    .Accent(notification.Accent)
+                    .Background(notification.Background)
+                    .Foreground(notification.Foreground)
+                    .Animates(true)
+                    .AnimationInDuration(0.25)
+                    .AnimationOutDuration(0.25)
+                    .HasBadge(notification.Badge)
+                    .HasHeader(notification.Header)
+                    .HasMessage(notification.Message)
+                    .Dismiss().WithButton("Dismiss", button => { })
+                    .Queue();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to generate notification"));
+                throw exception;
             }
         }
 

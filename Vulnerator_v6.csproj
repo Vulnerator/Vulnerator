@@ -408,6 +408,7 @@
     <Compile Include="Model\Object\File.cs" />
     <Compile Include="Model\Object\IssueLabelCategory.cs" />
     <Compile Include="Model\Object\Likelihood.cs" />
+    <Compile Include="Model\Object\Notification.cs" />
     <Compile Include="Model\Object\Risk.cs" />
     <Compile Include="Model\Object\UserGuidePage.cs" />
     <Compile Include="Model\Object\VulnerabilityReference.cs" />

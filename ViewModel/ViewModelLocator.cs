@@ -13,7 +13,6 @@
 */
 
 using GalaSoft.MvvmLight.Ioc;
-using GalaSoft.MvvmLight.Views;
 //using Microsoft.Practices.ServiceLocation;
 
 namespace Vulnerator.ViewModel
