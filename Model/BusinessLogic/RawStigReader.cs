@@ -25,7 +25,6 @@ namespace Vulnerator.Model.BusinessLogic
         private string[] persistentParameters = new string[] {
             "Vulnerability_Source_File_Name", "Source_Description", "Source_Secondary_Identifier", "Source_Name", "Source_Version", "Source_Release", "Host_Name", "Scan_IP", "Finding_Type"
         };
-        private List<Tuple<string, string>> ingestedStigVulnerabilities = new List<Tuple<string, string>>(); //Item1 == rule, Item2 == ruleVersion
 
         public void ReadRawStig(ZipArchiveEntry rawStig)
         {
@@ -67,14 +66,15 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             }
                         }
-                        DeleteRemovedChecks(sqliteCommand);
+                        databaseInterface.DeleteRemovedVulnerabilities(sqliteCommand);
                     }
                     sqliteTransaction.Commit();
                 }
             }
             catch (Exception exception)
             {
-                log.Error("Unable to process STIG file.");
+                log.Error(string.Format("Unable to process STIG file \"{0}\".",
+                    rawStig.Name));
                 log.Debug("Exception details: " + exception);
             }
             finally
@@ -165,9 +165,34 @@ namespace Vulnerator.Model.BusinessLogic
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Group"))
                     {
-                        databaseInterface.UpdateVulnerability(sqliteCommand);
-                        databaseInterface.InsertVulnerability(sqliteCommand);
-                        databaseInterface.MapVulnerabilityToSource(sqliteCommand);
+                        switch (databaseInterface.CompareVulnerabilityVersions(sqliteCommand))
+                        {
+                            case "Record Not Found":
+                                {
+                                    databaseInterface.InsertVulnerability(sqliteCommand);
+                                    databaseInterface.MapVulnerabilityToSource(sqliteCommand);
+                                    break;
+                                }
+                            case "Ingested Version Is Newer":
+                                {
+                                    databaseInterface.UpdateVulnerability(sqliteCommand);
+                                    databaseInterface.UpdateDeltaAnalysisFlags(sqliteCommand);
+                                    break;
+                                }
+                            case "Existing Version Is Newer":
+                                {
+                                    databaseInterface.UpdateVulnerabilityModifiedDate(sqliteCommand);
+                                    sqliteCommand.Parameters["Delta_Analysis_Required"].Value = "True";
+                                    break;
+                                }
+                            case "Identical Versions":
+                                {
+                                    databaseInterface.UpdateVulnerabilityModifiedDate(sqliteCommand);
+                                    break;
+                                }
+                            default:
+                                { break; }
+                        }
                         if (ccis.Count > 0)
                         {
                             foreach (string cci in ccis)
@@ -207,10 +232,10 @@ namespace Vulnerator.Model.BusinessLogic
                     ruleVersion = rule.Split('r')[1];
                     rule = rule.Split('r')[0];
                 }
+                sqliteCommand.Parameters["Modified_Date"].Value = DateTime.Now.ToShortDateString();
                 sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = rule;
                 sqliteCommand.Parameters["Vulnerability_Version"].Value = ruleVersion;
                 sqliteCommand.Parameters["Raw_Risk"].Value = xmlReader.GetAttribute("severity").ToRawRisk();
-                ingestedStigVulnerabilities.Add(new Tuple<string, string>(rule, ruleVersion));
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -405,37 +430,6 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 log.Error("Unable to generate a Stream from the provided string.");
-                throw exception;
-            }
-        }
-
-        private void DeleteRemovedChecks(SQLiteCommand sqliteCommand)
-        { 
-            try
-            {
-                SQLiteCommand clonedCommand = sqliteCommand.Clone() as SQLiteCommand;
-                clonedCommand.CommandText = Properties.Resources.SelectVulnerabilityIdentifiersAndVersions;
-                using (SQLiteDataReader sqliteDataReader = clonedCommand.ExecuteReader())
-                {
-                    if (!sqliteDataReader.HasRows)
-                    { return; }
-                    while (sqliteDataReader.Read())
-                    {
-                        string rule = sqliteDataReader["Unique_Vulnerability_Identifier"].ToString();
-                        string ruleVersion = sqliteDataReader["Vulnerability_Version"].ToString();
-                        if (ingestedStigVulnerabilities.Count(x => x.Item1.Equals(rule) && x.Item2.Equals(ruleVersion)) == 0)
-                        {
-                            sqliteCommand.Parameters.Add(new SQLiteParameter("Unique_Vulnerability_Identifier", rule));
-                            sqliteCommand.Parameters.Add(new SQLiteParameter("Vulnerability_Version", ruleVersion));
-                            databaseInterface.DeleteVulnerability(sqliteCommand);
-                            sqliteCommand.Parameters.Clear();
-                        }
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to delete removed checks from database."));
                 throw exception;
             }
         }

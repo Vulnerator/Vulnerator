@@ -40,18 +40,21 @@
                                    TextTrimming="CharacterEllipsis" />
                     </Label>
                     <TextBox Margin="5,0,5,5"
+                             Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=CloseBoxOutline}"
                              Controls:TextBoxHelper.Watermark="Active User(Read Only)"
                              vh:DependencyProperties.FloatingWatermark="Active User (Read Only)"
                              IsReadOnly="True"
                              Style="{StaticResource HeaderedTextBoxStyle}"
                              Text="{Binding Source={StaticResource Settings}, Path=Default.ActiveUser}" />
                     <TextBox Margin="5,0,5,5"
+                             Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=CloseBoxOutline}"
                              Controls:TextBoxHelper.ClearTextButton="True"
                              Controls:TextBoxHelper.Watermark="Name (First &amp; Last)"
                              vh:DependencyProperties.FloatingWatermark="Name"
                              Style="{StaticResource HeaderedTextBoxStyle}"
                              Text="{Binding Source={StaticResource Settings}, Path=Default.Name}" />
                     <TextBox Margin="5,0,5,5"
+                             Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=CloseBoxOutline}"
                              Controls:TextBoxHelper.ClearTextButton="True"
                              Controls:TextBoxHelper.Watermark="Phone Number (Digits Only - e.g. 0123456789)"
                              vh:DependencyProperties.FloatingWatermark="Phone Number"
@@ -67,6 +70,7 @@
                     </TextBox>
 
                     <TextBox Margin="5,0,5,5"
+                             Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=CloseBoxOutline}"
                              Controls:TextBoxHelper.ClearTextButton="True"
                              Controls:TextBoxHelper.Watermark="eMASS Email (you@example.com)"
                              vh:DependencyProperties.FloatingWatermark="eMASS Email"
@@ -81,6 +85,7 @@
                         </Binding>
                     </TextBox>
                     <TextBox Margin="5,0,5,5"
+                             Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=CloseBoxOutline}"
                              Controls:TextBoxHelper.ClearTextButton="True"
                              Controls:TextBoxHelper.Watermark="Organization (e.g. NAVAIR)"
                              vh:DependencyProperties.FloatingWatermark="Organization"
@@ -147,6 +152,7 @@
                                  Margin="5,0,5,5"
                                  HorizontalAlignment="Stretch"
                                  VerticalAlignment="Center"
+                                 Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=CloseBoxOutline}"
                                  Controls:TextBoxHelper.ClearTextButton="True"
                                  Controls:TextBoxHelper.Watermark="STIG Library or Single STIG (ZIP File)"
                                  Text="{Binding StigLibraryLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />

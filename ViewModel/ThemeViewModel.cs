@@ -123,7 +123,6 @@ namespace Vulnerator.ViewModel
         {
             Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
             ThemeManager.ChangeAppStyle(Application.Current, appStyle.Item2, ThemeManager.GetAppTheme(theme));
-            //ThemeChecked = theme.Equals("BaseLight") ? false : true;
             SelectedTheme = Themes.FirstOrDefault(t => t.ActualName == theme);
         }
 

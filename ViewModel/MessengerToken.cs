@@ -12,6 +12,7 @@ namespace Vulnerator.ViewModel
         VersionInfo,
         ConfigurationData,
         DataContextChanged,
-        ModelUpdated
+        ModelUpdated,
+        Notification
     }
 }

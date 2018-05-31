@@ -121,7 +121,7 @@
     <value>DELETE FROM Vulnerabilities_VulnerabilitySources WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Version = 'Version Unknown');</value>
   </data>
   <data name="DeleteVulnerability" xml:space="preserve">
-    <value>DELETE FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Version = @Vulnerability_Version;</value>
+    <value>DELETE FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Modified_Date != @Modified_Date;</value>
   </data>
   <data name="DeleteVulnerabilityCciMapping" xml:space="preserve">
     <value>DELETE FROM VulnerabilitiesCCIs WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_vulnerability_Identifier) AND CCI_ID = (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI);</value>
@@ -598,6 +598,14 @@ AND
 	Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier) 
 AND 
 	Last_Observed &lt; @Last_Observed;</value>
+  </data>
+  <data name="UpdateVulnerabilityModifiedDate" xml:space="preserve">
+    <value>UPDATE
+    Vulnerabilities
+SET
+    Modified_Date = @Modified_Date
+WHERE
+    Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Version = @Vulnerability_Version AND Vulnerability_Release = @Vulnerability_Release)</value>
   </data>
   <data name="UpdateVulnerabilitySource" xml:space="preserve">
     <value>UPDATE 

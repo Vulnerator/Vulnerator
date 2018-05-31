@@ -1,4 +1,5 @@
 ﻿using log4net;
+using MahApps.Metro;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
@@ -11,6 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Windows;
 using Vulnerator.Model.BusinessLogic;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Object;
@@ -193,6 +195,7 @@ namespace Vulnerator.ViewModel
         {
             backgroundWorker = new BackgroundWorker();
             backgroundWorker.DoWork += ingestStigLibraryBackgroundWorker_DoWork;
+            backgroundWorker.RunWorkerCompleted += ingestStigLibraryBackgroundWorker_RunWorkerCompleted;
             backgroundWorker.RunWorkerAsync();
             backgroundWorker.Dispose();
         }
@@ -203,44 +206,62 @@ namespace Vulnerator.ViewModel
             {
                 if (string.IsNullOrWhiteSpace(StigLibraryLocation))
                 {
-                    ProgressVisibility = "Collapsed";
-                    IngestionErrorVisibility = "Collapsed";
-                    IngestionSuccessVisibility = "Collapsed";
-                    NoLibraryVisibility = "Visible";
+                    e.Result = "No Library";
                     return;
                 }
                 else
                 {
                     ProgressBarValue = 0;
                     ProgressVisibility = "Visible";
-                    NoLibraryVisibility = "Collapsed";
-                    IngestionErrorVisibility = "Collapsed";
-                    IngestionSuccessVisibility = "Collapsed";
                     databaseInterface.DropVulnerabilityRelatedIndices();
                     ParseZip(StigLibraryLocation);
                     databaseInterface.CreateVulnerabilityRelatedIndices();
-                    guiFeedback.SetFields("Awaiting user input", "Collapsed", true);
                     Properties.Settings.Default.StigLibraryIngestDate = DateTime.Now.ToLongDateString();
-                    Messenger.Default.Send(guiFeedback);
                     Messenger.Default.Send(new NotificationMessage<string>("ModelUpdate", "AllModels"), MessengerToken.ModelUpdated);
                     StigLibraryLocation = string.Empty;
-                    ProgressVisibility = "Collapsed";
-                    IngestionSuccessVisibility = "Visible";
-                    IngestionErrorVisibility = "Collapsed";
-                    NoLibraryVisibility = "Collapsed";
+                    e.Result = "Success";
                 }
             }
             catch (Exception exception)
+            { e.Result = exception; }
+        }
+
+        private void ingestStigLibraryBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Result != null && e.Result is Exception)
             {
-                guiFeedback.SetFields("Awaiting user input", "Collapsed", true);
-                Messenger.Default.Send(guiFeedback);
-                ProgressVisibility = "Collapsed";
-                IngestionErrorVisibility = "Visible";
-                IngestionSuccessVisibility = "Collapsed";
-                NoLibraryVisibility = "Collapsed";
+                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
+                Notification notification = new Notification
+                {
+                    Accent = "Red",
+                    Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString(),
+                    Badge = "Failure",
+                    Foreground = appStyle.Item1.Resources["TextBrush"].ToString(),
+                    Header = "STIG Library",
+                    Message = "STIG Library failed to ingest."
+                };
+                Messenger.Default.Send(notification);
+                Exception exception = e.Result as Exception;
                 log.Error("Unable to ingest STIG Library.");
                 log.Debug("Exception details: " + exception);
             }
+            else if (e.Result.ToString().Equals("Success"))
+            {
+                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
+                Notification notification = new Notification
+                {
+                    Accent = "Green",
+                    Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString(),
+                    Badge = "Success",
+                    Foreground = appStyle.Item1.Resources["TextBrush"].ToString(),
+                    Header = "STIG Library",
+                    Message = "STIG Library successfully ingested."
+                };
+                Messenger.Default.Send(notification);
+            }
+            guiFeedback.SetFields("Awaiting user input", "Collapsed", true);
+            Messenger.Default.Send(guiFeedback);
+            ProgressVisibility = "Collapsed";
         }
 
         private void ParseZip(string fileName)

@@ -87,6 +87,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             }
                         }
+                        databaseInterface.DeleteRemovedVulnerabilities(sqliteCommand);
                     }
                     sqliteTransaction.Commit();
                 }
@@ -326,6 +327,7 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
+                sqliteCommand.Parameters["Modified_Date"].Value = DateTime.Now.ToShortDateString();
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement() && xmlReader.Name.Equals("VULN_ATTRIBUTE"))
@@ -448,9 +450,34 @@ namespace Vulnerator.Model.BusinessLogic
                     }
                     else if (xmlReader.IsStartElement() && xmlReader.Name.Equals("STATUS"))
                     {
-                        databaseInterface.UpdateVulnerability(sqliteCommand);
-                        databaseInterface.InsertVulnerability(sqliteCommand);
-                        databaseInterface.MapVulnerabilityToSource(sqliteCommand);
+                        switch (databaseInterface.CompareVulnerabilityVersions(sqliteCommand))
+                        {
+                            case "Record Not Found":
+                                {
+                                    databaseInterface.InsertVulnerability(sqliteCommand);
+                                    databaseInterface.MapVulnerabilityToSource(sqliteCommand);
+                                    break;
+                                }
+                            case "Ingested Version Is Newer":
+                                {
+                                    databaseInterface.UpdateVulnerability(sqliteCommand);
+                                    databaseInterface.UpdateDeltaAnalysisFlags(sqliteCommand);
+                                    break;
+                                }
+                            case "Existing Version Is Newer":
+                                {
+                                    databaseInterface.UpdateVulnerabilityModifiedDate(sqliteCommand);
+                                    sqliteCommand.Parameters["Delta_Analysis_Required"].Value = "True";
+                                    break;
+                                }
+                            case "Identical Versions":
+                                {
+                                    databaseInterface.UpdateVulnerabilityModifiedDate(sqliteCommand);
+                                    break;
+                                }
+                            default:
+                                { break; }
+                        }
                         if (ccis.Count > 0)
                         {
                             foreach (string cci in ccis)
@@ -461,7 +488,7 @@ namespace Vulnerator.Model.BusinessLogic
                             }
                             ccis.Clear();
                         }
-                        ParseUniqueFindingData(sqliteCommand, xmlReader);
+                        
                         foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                         {
                             if (!persistentParameters.Contains(parameter.ParameterName))
@@ -546,7 +573,8 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["Web_DB_Site"].Value = webDbSite;
                 sqliteCommand.Parameters["Web_DB_Instance"].Value = webDbInstance;
                 sqliteCommand.Parameters["Last_Observed"].Value = DateTime.Now.ToShortDateString();
-                sqliteCommand.Parameters["Delta_Analysis_Required"].Value = "False";
+                if (string.IsNullOrWhiteSpace(sqliteCommand.Parameters["Delta_Analysis_Required"].Value.ToString()))
+                { sqliteCommand.Parameters["Delta_Analysis_Required"].Value = "False"; }
                 sqliteCommand.Parameters["Approval_Status"].Value = "Not Approved";
                 sqliteCommand.Parameters["First_Discovered"].Value = DateTime.Now.ToShortDateString();
                 sqliteCommand.Parameters["Classification"].Value = classification;
@@ -556,7 +584,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to create a uniqueFinding record for plugin \"{0}\".",
+                log.Error(string.Format("Unable to create a Unique Finding record for plugin \"{0}\".",
                     sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
                 throw exception;
             }

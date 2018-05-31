@@ -32,7 +32,6 @@
                       KeyboardNavigation.TabNavigation="Continue"
                       ResizeMode="CanResize"
                       Style="{DynamicResource CustomCleanWindowStyleKey}"
-                      WindowCloseButtonStyle="{DynamicResource CustomCloseWindowButtonStyle}"
                       mc:Ignorable="d">
 
     <!--  Window Icon Template  -->

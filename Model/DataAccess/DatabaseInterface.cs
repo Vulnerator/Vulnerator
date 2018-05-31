@@ -68,7 +68,7 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public void DeleteVulnerability(SQLiteCommand sqliteCommand)
+        public void DeleteRemovedVulnerabilities(SQLiteCommand sqliteCommand)
         {
             try
             {
@@ -686,17 +686,27 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                if (VulnerabilityUpdateRequired(sqliteCommand))
-                {
-                    sqliteCommand.CommandText = Properties.Resources.UpdateVulnerability;
-                    sqliteCommand.ExecuteNonQuery();
-                    sqliteCommand.CommandText = Properties.Resources.UpdateDeltaAnalysisFlag;
-                    sqliteCommand.ExecuteNonQuery();
-                }
+                sqliteCommand.CommandText = Properties.Resources.UpdateVulnerability;
+                sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
             {
                 log.Error(string.Format("Unable to insert vulnerability \"{0}\".", sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        public void UpdateDeltaAnalysisFlags(SQLiteCommand sqliteCommand)
+        { 
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.UpdateDeltaAnalysisFlag;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to update the delta analysis flag(s) for unique findings related to \"{0}\".",
+                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
                 throw exception;
             }
         }
@@ -832,13 +842,16 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        private bool VulnerabilityUpdateRequired(SQLiteCommand sqliteCommand)
+        public string CompareVulnerabilityVersions(SQLiteCommand sqliteCommand)
         { 
             try
             {
-                bool versionUpdated = false;
-                bool versionSame = false;
-                bool releaseUpdated = false;
+                bool versionsMatch = false;
+                bool releasesMatch = false;
+                bool ingestedVersionIsNewer = false;
+                bool ingestedReleaseIsNewer = false;
+                bool existingVersionIsNewer = false;
+                bool existingReleaseIsNewer = false;
                 sqliteCommand.CommandText = Properties.Resources.SelectVulnerabilityVersionAndRelease;
                 using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
@@ -847,7 +860,7 @@ namespace Vulnerator.Model.DataAccess
                         while (sqliteDataReader.Read())
                         {
                             if (string.IsNullOrWhiteSpace(sqliteDataReader["Vulnerability_Version"].ToString()))
-                            { return true; }
+                            { return "Record Not Found"; }
                             Regex regex = new Regex(@"\D");
                             int newVersion;
                             int newRelease;
@@ -859,23 +872,61 @@ namespace Vulnerator.Model.DataAccess
                             bool oldReleaseParsed = int.TryParse(regex.Replace(sqliteDataReader["Vulnerability_Release"].ToString(), string.Empty), out oldRelease);
                             if (newVersionParsed && oldVersionParsed)
                             {
-                                versionUpdated = (newVersion > oldVersion) ? true : false;
-                                versionSame = (newVersion == oldVersion) ? true : false;
+                                ingestedVersionIsNewer = (newVersion > oldVersion) ? true : false;
+                                existingVersionIsNewer = (newVersion < oldVersion) ? true : false;
+                                versionsMatch = (newVersion == oldVersion) ? true : false;
                             }
-                            if (newReleaseParsed && oldReleaseParsed && (newRelease > oldRelease))
-                            { releaseUpdated = true; }
-                            if (versionUpdated || (versionSame && releaseUpdated))
-                            { return true; }
-                            sqliteCommand.Parameters["Vulnerability_Version"].Value = sqliteDataReader["Vulnerability_Version"].ToString();
-                            sqliteCommand.Parameters["Vulnerability_Release"].Value = sqliteDataReader["Vulnerability_Release"].ToString();
+                            if (newReleaseParsed && oldReleaseParsed)
+                            {
+                                ingestedReleaseIsNewer = (newRelease > oldRelease) ? true : false;
+                                existingReleaseIsNewer = (newRelease < oldRelease) ? true : false;
+                                releasesMatch = (newRelease == oldRelease) ? true : false;
+                            }
+                            if (ingestedVersionIsNewer)
+                            { return "Ingested Version Is Newer"; }
+                            if (existingVersionIsNewer)
+                            {
+                                sqliteCommand.Parameters["Vulnerability_Version"].Value = sqliteDataReader["Vulnerability_Version"].ToString();
+                                sqliteCommand.Parameters["Vulnerability_Release"].Value = sqliteDataReader["Vulnerability_Release"].ToString();
+                                return "Existing Version Is Newer";
+                            }
+                            if (versionsMatch)
+                            {
+                                if (releasesMatch)
+                                { return "Identical Versions"; }
+                                if (ingestedReleaseIsNewer)
+                                { return "Ingested Version Is Newer"; }
+                                if (existingReleaseIsNewer)
+                                {
+                                    sqliteCommand.Parameters["Vulnerability_Version"].Value = sqliteDataReader["Vulnerability_Version"].ToString();
+                                    sqliteCommand.Parameters["Vulnerability_Release"].Value = sqliteDataReader["Vulnerability_Release"].ToString();
+                                    return "Existing Version Is Newer";
+                                }
+                            }
+                            
                         }
                     }
                 }
-                return false;
+                return "Record Not Found";
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to determine if an update is required for vulnerability \"{0}\".", 
+                log.Error(string.Format("Unable to compare vulnerability version information for \"{0}\" against current database information.", 
+                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
+                throw exception;
+            }
+        }
+
+        public void UpdateVulnerabilityModifiedDate(SQLiteCommand sqliteCommand)
+        { 
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.UpdateVulnerabilityModifiedDate;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(string.Format("Unable to update the Modified Date for \"{0}\".",
                     sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
                 throw exception;
             }

@@ -21,7 +21,6 @@
                       SizeToContent="WidthAndHeight"
                       WindowStartupLocation="CenterScreen"
                       Style="{DynamicResource CustomCleanWindowStyleKey}"
-                      WindowCloseButtonStyle="{DynamicResource CustomCloseWindowButtonStyle}"
                       mc:Ignorable="d">
 
     <!--  Window Icon Template  -->

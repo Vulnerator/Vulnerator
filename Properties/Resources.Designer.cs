@@ -70,7 +70,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Version = @Vulnerability_Version;.
+        ///   Looks up a localized string similar to DELETE FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Modified_Date != @Modified_Date;.
         /// </summary>
         internal static string DeleteVulnerability {
             get {
@@ -808,6 +808,20 @@ namespace Vulnerator.Properties {
         internal static string UpdateVulnerabilityFromAcas {
             get {
                 return ResourceManager.GetString("UpdateVulnerabilityFromAcas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE
+        ///    Vulnerabilities
+        ///SET
+        ///    Modified_Date = @Modified_Date
+        ///WHERE
+        ///    Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Version = @Vulnerability_Version AND Vulnerability_Release = @Vulnerability_Release).
+        /// </summary>
+        internal static string UpdateVulnerabilityModifiedDate {
+            get {
+                return ResourceManager.GetString("UpdateVulnerabilityModifiedDate", resourceCulture);
             }
         }
         
