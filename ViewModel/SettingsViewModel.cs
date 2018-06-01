@@ -227,41 +227,64 @@ namespace Vulnerator.ViewModel
         }
 
         private void ingestStigLibraryBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (e.Result != null && e.Result is Exception)
+        { 
+            try
             {
                 Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
-                Notification notification = new Notification
+                Notification notification = new Notification();
+                if (e.Result != null)
                 {
-                    Accent = "Red",
-                    Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString(),
-                    Badge = "Failure",
-                    Foreground = appStyle.Item1.Resources["TextBrush"].ToString(),
-                    Header = "STIG Library",
-                    Message = "STIG Library failed to ingest."
-                };
+                    if (e.Result is Exception)
+                    {
+                        notification.Accent = "Red";
+                        notification.Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString();
+                        notification.Badge = "Failure";
+                        notification.Foreground = appStyle.Item1.Resources["TextBrush"].ToString();
+                        notification.Header = "STIG Library";
+                        notification.Message = "STIG Library failed to ingest.";
+                        Exception exception = e.Result as Exception;
+                        log.Error("Unable to ingest STIG Library.");
+                        log.Debug("Exception details: " + exception);
+                    }
+                    else
+                    {
+                        switch (e.Result)
+                        {
+                            case "Success":
+                                {
+                                    notification.Accent = "Green";
+                                    notification.Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString();
+                                    notification.Badge = "Success";
+                                    notification.Foreground = appStyle.Item1.Resources["TextBrush"].ToString();
+                                    notification.Header = "STIG Library";
+                                    notification.Message = "STIG Library successfully ingested.";
+                                    break;
+                                }
+                            case "No Library":
+                                {
+                                    notification.Accent = "Orange";
+                                    notification.Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString();
+                                    notification.Badge = "Warning";
+                                    notification.Foreground = appStyle.Item1.Resources["TextBrush"].ToString();
+                                    notification.Header = "STIG Library";
+                                    notification.Message = "No STIG library file selected.";
+                                    break;
+                                }
+                            default:
+                                { break; }
+                        }
+                    }
+                }
                 Messenger.Default.Send(notification);
-                Exception exception = e.Result as Exception;
-                log.Error("Unable to ingest STIG Library.");
-                log.Debug("Exception details: " + exception);
+                guiFeedback.SetFields("Awaiting user input", "Collapsed", true);
+                Messenger.Default.Send(guiFeedback);
+                ProgressVisibility = "Collapsed";
             }
-            else if (e.Result.ToString().Equals("Success"))
+            catch (Exception exception)
             {
-                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
-                Notification notification = new Notification
-                {
-                    Accent = "Green",
-                    Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString(),
-                    Badge = "Success",
-                    Foreground = appStyle.Item1.Resources["TextBrush"].ToString(),
-                    Header = "STIG Library",
-                    Message = "STIG Library successfully ingested."
-                };
-                Messenger.Default.Send(notification);
+                log.Error(string.Format("Unable to handle STIG ingestion background worker completion events."));
+                log.Debug(string.Format("Exception details: {0}", exception));
             }
-            guiFeedback.SetFields("Awaiting user input", "Collapsed", true);
-            Messenger.Default.Send(guiFeedback);
-            ProgressVisibility = "Collapsed";
         }
 
         private void ParseZip(string fileName)
