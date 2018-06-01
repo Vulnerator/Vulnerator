@@ -248,7 +248,7 @@ namespace Vulnerator.ViewModel
                     }
                     else
                     {
-                        switch (e.Result)
+                        switch (e.Result.ToString())
                         {
                             case "Success":
                                 {

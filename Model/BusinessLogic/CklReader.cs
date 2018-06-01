@@ -478,6 +478,7 @@ namespace Vulnerator.Model.BusinessLogic
                             default:
                                 { break; }
                         }
+                        ParseUniqueFindingData(sqliteCommand, xmlReader);
                         if (ccis.Count > 0)
                         {
                             foreach (string cci in ccis)
