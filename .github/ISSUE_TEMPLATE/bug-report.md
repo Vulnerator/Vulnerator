@@ -1,13 +1,36 @@
+---
+name: Bug Report
+about: Report an issue with the application that prevents it from successfully executing
+  or causes erroneous results to be generated
+
+---
+
 #### Prerequisites
-_Before submitting a new issue, please ensure you have completed the following (replace the space in the box with an "x" to denote that it has been completed)_
+_Before submitting a new issue, please ensure you have completed the following (delete the space in the box and replace it with an "x" to denote that it has been completed)_
 
 - [ ] I have ensured that I am running the latest release
 - [ ] The issue is repeatable
 - [ ] The issue has not already been reported
-- [ ] The issue does not fit into one of the suggested categories (Assistance Request, Bug Report, or Feature Request)
+
 
 #### Description
-_Please provide a brief synopsis of the issue._
+_A clear and concise description of what the bug is._
+
+
+#### To Reproduce
+_How did you get Vulnerator to do that?_
+1. Go to '...'
+2. Click on '....'
+3. Scroll down to '....'
+4. See error
+
+
+#### Expected Outcome
+_What did you think was going to happen?_
+
+
+#### Actual Outcome
+_What really happened?_
 
 
 #### System Information
