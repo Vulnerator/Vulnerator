@@ -3,7 +3,10 @@
 	<h1>Vulnerator</h1>
 	<h2>Vulnerability Continuous Monitoring Made Easy</h2>
 		<a href="https://gitter.im/Vulnerator/Vulnerator">
-			<img src="https://img.shields.io/badge/Gitter-Join%20Chat-green.svg?style=flat-square">
+			<img src="https://img.shields.io/badge/Gitter-Join%20Chat-green.svg?style=flat-square&colorB=5523ed">
+		</a>
+        <a href="https://join.slack.com/t/vulnerator-chat/shared_invite/enQtMzQxMzc2MTE0NTI4LWQ1MTVmOGRmZjU4M2UzODU4ZDBhZDk1NGNlY2ZmMjgxNGEzNjUxMmE4OTkwNjQ3NTBhYzU3NmQ2OGI4YjViYzM">
+			<img src="https://img.shields.io/badge/Slack-Join%20Chat-green.svg?style=flat-square&colorB=5523ed">
 		</a>
 		<a href="https://github.com/Vulnerator/Vulnerator/releases/latest">
 			<img src="https://img.shields.io/github/release/Vulnerator/Vulnerator.svg?style=flat-square">
