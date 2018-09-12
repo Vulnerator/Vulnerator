@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Vulnerator.Model.BusinessLogic;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Object;
@@ -408,6 +409,19 @@ namespace Vulnerator.ViewModel
                     .HasHeader(notification.Header)
                     .HasMessage(notification.Message)
                     .Dismiss().WithButton("Dismiss", button => { })
+                    .WithAdditionalContent(ContentLocation.Bottom,
+                        new Border
+                        {
+                            BorderThickness = new Thickness(0,1,0,0),
+                            BorderBrush = ThemeManager.DetectAppStyle(Application.Current).Item1.Resources["TextBrush"] as SolidColorBrush,
+                            Child = new CheckBox
+                            {
+                                Margin = new Thickness(12,8,12,8),
+                                HorizontalAlignment = HorizontalAlignment.Left,
+                                Content = "Do not display this in the future."
+                            }
+                        }
+                    )
                     .Queue();
             }
             catch (Exception exception)

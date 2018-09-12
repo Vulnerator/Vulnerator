@@ -73,6 +73,12 @@
   <PropertyGroup>
     <StartupObject>Vulnerator.App</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ColorCode, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\ColorCode.Portable.1.0.3\lib\portable45-net45+win8+wp8+wpa81\ColorCode.dll</HintPath>
@@ -92,9 +98,8 @@
       <HintPath>packages\DocumentFormat.OpenXml.2.8.1\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Enterwell.Clients.Wpf.Notifications, Version=1.3.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Enterwell.Clients.Wpf.Notifications.1.3.1\lib\net451\Enterwell.Clients.Wpf.Notifications.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Enterwell.Clients.Wpf.Notifications, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Enterwell.Clients.Wpf.Notifications.1.4.0\lib\net451\Enterwell.Clients.Wpf.Notifications.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
