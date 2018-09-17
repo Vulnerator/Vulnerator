@@ -42,7 +42,7 @@ namespace Vulnerator.ViewModel
         private DatabaseBuilder databaseBuilder;
         public Logger logger = new Logger();
         public static readonly ILog log = LogManager.GetLogger(typeof(Logger));
-        public INotificationMessageManager NotificationMessageManager { get; } = new NotificationMessageManager();
+        public INotificationMessageManager NotificationMessageManager { get; set; } = new NotificationMessageManager();
 
         public string ApplicationVersion
         {
@@ -418,6 +418,7 @@ namespace Vulnerator.ViewModel
                             {
                                 Margin = new Thickness(12,8,12,8),
                                 HorizontalAlignment = HorizontalAlignment.Left,
+                                Foreground = ThemeManager.DetectAppStyle(Application.Current).Item1.Resources["TextBrush"] as SolidColorBrush,
                                 Content = "Do not display this in the future."
                             }
                         }
