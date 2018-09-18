@@ -413,7 +413,7 @@ namespace Vulnerator.ViewModel
                         new Border
                         {
                             BorderThickness = new Thickness(0,1,0,0),
-                            BorderBrush = ThemeManager.DetectAppStyle(Application.Current).Item1.Resources["TextBrush"] as SolidColorBrush,
+                            BorderBrush = ThemeManager.DetectAppStyle(Application.Current).Item1.Resources["GrayBrush7"] as SolidColorBrush,
                             Child = new CheckBox
                             {
                                 Margin = new Thickness(12,8,12,8),
