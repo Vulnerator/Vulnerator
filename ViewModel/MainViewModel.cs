@@ -34,15 +34,15 @@ namespace Vulnerator.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-        private GitHubActions githubActions;
-        private ConfigAlter configAlter;
-        private BackgroundWorker backgroundWorker;
         private Assembly assembly = Assembly.GetExecutingAssembly();
         private AsyncObservableCollection<Release> ReleaseList;
+        private BackgroundWorker backgroundWorker;
+        private ConfigAlter configAlter;
         private DatabaseBuilder databaseBuilder;
+        private GitHubActions githubActions;
+        public INotificationMessageManager NotificationMessageManager { get; set; } = new NotificationMessageManager();
         public Logger logger = new Logger();
         public static readonly ILog log = LogManager.GetLogger(typeof(Logger));
-        public INotificationMessageManager NotificationMessageManager { get; set; } = new NotificationMessageManager();
 
         public string ApplicationVersion
         {
@@ -383,7 +383,19 @@ namespace Vulnerator.ViewModel
                     Badge = "Info",
                     Foreground = appStyle.Item1.Resources["TextBrush"].ToString(),
                     Header = "STIG Library",
-                    Message = "Please ingest the latest STIG Compilation Library on the settings page."
+                    Message = "Please ingest the latest STIG Compilation Library on the settings page.",
+                    AdditionalContentBottom = new Border
+                    {
+                        BorderThickness = new Thickness(0, 1, 0, 0),
+                        BorderBrush = appStyle.Item1.Resources["GrayBrush7"] as SolidColorBrush,
+                        Child = new CheckBox
+                        {
+                            Margin = new Thickness(12, 8, 12, 8),
+                            HorizontalAlignment = HorizontalAlignment.Left,
+                            Foreground = appStyle.Item1.Resources["TextBrush"] as SolidColorBrush,
+                            Content = "Do not display this in the future."
+                        }
+                    }
                 };
                 GenerateNotification(notification);
             }
