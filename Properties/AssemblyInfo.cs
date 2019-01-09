@@ -8,7 +8,7 @@ using System.Windows;
 [assembly: AssemblyTitle("Vulnerator")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Thinking Compliance; NAVAIR")]
+[assembly: AssemblyCompany("Vulnerator")]
 [assembly: AssemblyProduct("Vulnerator")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
@@ -49,5 +49,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("6.1.9.*")]
-[assembly: AssemblyFileVersion("6.1.9")]
+[assembly: AssemblyVersion("6.2.0.*")]
+[assembly: AssemblyFileVersion("6.2.0")]

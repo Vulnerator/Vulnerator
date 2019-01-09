@@ -22,5 +22,521 @@ namespace Vulnerator.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("alpha1")]
+        public string VersionMetaData {
+            get {
+                return ((string)(this["VersionMetaData"]));
+            }
+            set {
+                this["VersionMetaData"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("BaseLight")]
+        public string Theme {
+            get {
+                return ((string)(this["Theme"]));
+            }
+            set {
+                this["Theme"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Cobalt")]
+        public string Accent {
+            get {
+                return ((string)(this["Accent"]));
+            }
+            set {
+                this["Accent"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Undefined")]
+        public string Environment {
+            get {
+                return ((string)(this["Environment"]));
+            }
+            set {
+                this["Environment"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Undefined")]
+        public string Database {
+            get {
+                return ((string)(this["Database"]));
+            }
+            set {
+                this["Database"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Undefined")]
+        public string LogPath {
+            get {
+                return ((string)(this["LogPath"]));
+            }
+            set {
+                this["LogPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Name {
+            get {
+                return ((string)(this["Name"]));
+            }
+            set {
+                this["Name"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Phone {
+            get {
+                return ((string)(this["Phone"]));
+            }
+            set {
+                this["Phone"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Email {
+            get {
+                return ((string)(this["Email"]));
+            }
+            set {
+                this["Email"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Organization {
+            get {
+                return ((string)(this["Organization"]));
+            }
+            set {
+                this["Organization"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("N/A")]
+        public string StigLibraryIngestDate {
+            get {
+                return ((string)(this["StigLibraryIngestDate"]));
+            }
+            set {
+                this["StigLibraryIngestDate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CklRequiresHostName {
+            get {
+                return ((bool)(this["CklRequiresHostName"]));
+            }
+            set {
+                this["CklRequiresHostName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CklRequiresIpAddress {
+            get {
+                return ((bool)(this["CklRequiresIpAddress"]));
+            }
+            set {
+                this["CklRequiresIpAddress"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CklrequiresMacAddress {
+            get {
+                return ((bool)(this["CklrequiresMacAddress"]));
+            }
+            set {
+                this["CklrequiresMacAddress"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DropIncompleteCklfiles {
+            get {
+                return ((bool)(this["DropIncompleteCklfiles"]));
+            }
+            set {
+                this["DropIncompleteCklfiles"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CaptureAcasPortInformation {
+            get {
+                return ((bool)(this["CaptureAcasPortInformation"]));
+            }
+            set {
+                this["CaptureAcasPortInformation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CaptureAcasReferenceInformation {
+            get {
+                return ((bool)(this["CaptureAcasReferenceInformation"]));
+            }
+            set {
+                this["CaptureAcasReferenceInformation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CaptureAcasEnumeratedSoftware {
+            get {
+                return ((bool)(this["CaptureAcasEnumeratedSoftware"]));
+            }
+            set {
+                this["CaptureAcasEnumeratedSoftware"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ReportPoamRar {
+            get {
+                return ((bool)(this["ReportPoamRar"]));
+            }
+            set {
+                this["ReportPoamRar"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ReportPdfExecutiveSummary {
+            get {
+                return ((bool)(this["ReportPdfExecutiveSummary"]));
+            }
+            set {
+                this["ReportPdfExecutiveSummary"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ReportExcelSummary {
+            get {
+                return ((bool)(this["ReportExcelSummary"]));
+            }
+            set {
+                this["ReportExcelSummary"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ReportOsBreakdown {
+            get {
+                return ((bool)(this["ReportOsBreakdown"]));
+            }
+            set {
+                this["ReportOsBreakdown"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ReportUserBreakdown {
+            get {
+                return ((bool)(this["ReportUserBreakdown"]));
+            }
+            set {
+                this["ReportUserBreakdown"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ReportTestPlan {
+            get {
+                return ((bool)(this["ReportTestPlan"]));
+            }
+            set {
+                this["ReportTestPlan"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ReportFindingTypeOverview {
+            get {
+                return ((bool)(this["ReportFindingTypeOverview"]));
+            }
+            set {
+                this["ReportFindingTypeOverview"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IncludeAcasInReports {
+            get {
+                return ((bool)(this["IncludeAcasInReports"]));
+            }
+            set {
+                this["IncludeAcasInReports"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IncludeCklInReports {
+            get {
+                return ((bool)(this["IncludeCklInReports"]));
+            }
+            set {
+                this["IncludeCklInReports"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IncludeScapInReports {
+            get {
+                return ((bool)(this["IncludeScapInReports"]));
+            }
+            set {
+                this["IncludeScapInReports"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IncludeFortifyInReports {
+            get {
+                return ((bool)(this["IncludeFortifyInReports"]));
+            }
+            set {
+                this["IncludeFortifyInReports"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IncludeWasspInReports {
+            get {
+                return ((bool)(this["IncludeWasspInReports"]));
+            }
+            set {
+                this["IncludeWasspInReports"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IncludeAnsibleInReports {
+            get {
+                return ((bool)(this["IncludeAnsibleInReports"]));
+            }
+            set {
+                this["IncludeAnsibleInReports"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool GroupPoamRar {
+            get {
+                return ((bool)(this["GroupPoamRar"]));
+            }
+            set {
+                this["GroupPoamRar"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UtilizeCklCommentsForMitigation {
+            get {
+                return ((bool)(this["UtilizeCklCommentsForMitigation"]));
+            }
+            set {
+                this["UtilizeCklCommentsForMitigation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UtilizeCklFindingDetailsForMitigation {
+            get {
+                return ((bool)(this["UtilizeCklFindingDetailsForMitigation"]));
+            }
+            set {
+                this["UtilizeCklFindingDetailsForMitigation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool OverwriteCklDataWithMitigation {
+            get {
+                return ((bool)(this["OverwriteCklDataWithMitigation"]));
+            }
+            set {
+                this["OverwriteCklDataWithMitigation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IncludeCatOneInReports {
+            get {
+                return ((bool)(this["IncludeCatOneInReports"]));
+            }
+            set {
+                this["IncludeCatOneInReports"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IncludeCatTwoInReports {
+            get {
+                return ((bool)(this["IncludeCatTwoInReports"]));
+            }
+            set {
+                this["IncludeCatTwoInReports"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IncludeCatThreeInReports {
+            get {
+                return ((bool)(this["IncludeCatThreeInReports"]));
+            }
+            set {
+                this["IncludeCatThreeInReports"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IncludeCatFourInReports {
+            get {
+                return ((bool)(this["IncludeCatFourInReports"]));
+            }
+            set {
+                this["IncludeCatFourInReports"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("CCI-\\d*")]
+        public string RegexCciDetection {
+            get {
+                return ((string)(this["RegexCciDetection"]));
+            }
+            set {
+                this["RegexCciDetection"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ReportScapStigDiscrepancies {
+            get {
+                return ((bool)(this["ReportScapStigDiscrepancies"]));
+            }
+            set {
+                this["ReportScapStigDiscrepancies"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ReportVulnerabilityDeepDive {
+            get {
+                return ((bool)(this["ReportVulnerabilityDeepDive"]));
+            }
+            set {
+                this["ReportVulnerabilityDeepDive"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ActiveUser {
+            get {
+                return ((string)(this["ActiveUser"]));
+            }
+            set {
+                this["ActiveUser"] = value;
+            }
+        }
     }
 }
