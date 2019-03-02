@@ -121,7 +121,10 @@
     <value>DELETE FROM Vulnerabilities_VulnerabilitySources WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Version = 'Version Unknown');</value>
   </data>
   <data name="DeleteVulnerability" xml:space="preserve">
-    <value>DELETE FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Modified_Date != @Modified_Date;</value>
+    <value>DELETE FROM 
+    Vulnerabilities
+WHERE 
+    Vulnerability_ID IS @Vulnerability_ID;</value>
   </data>
   <data name="DeleteVulnerabilityCciMapping" xml:space="preserve">
     <value>DELETE FROM VulnerabilitiesCCIs WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_vulnerability_Identifier) AND CCI_ID = (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI);</value>
@@ -311,6 +314,9 @@ VALUES (
   <data name="RegexRawStigRelease" xml:space="preserve">
     <value>(?&lt;=Release: )\d+(?=\s)</value>
   </data>
+  <data name="RegexStigDate" xml:space="preserve">
+    <value>\d{2}\s\D{3}\s\d{4}</value>
+  </data>
   <data name="RegexStigId" xml:space="preserve">
     <value>(?:(?:\w)+(?:-|\.|_)?)+</value>
   </data>
@@ -442,6 +448,18 @@ GROUP BY Vulnerabilities.Vulnerability_ID;</value>
 FROM Vulnerabilities
 LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
 WHERE Vulnerability_Source_ID = @Vulnerability_Source_ID;</value>
+  </data>
+  <data name="SelectVulnerabilitiesForDeletion" xml:space="preserve">
+    <value>SELECT
+    Vulnerabilities.Vulnerability_ID
+FROM
+    Vulnerabilities
+JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
+JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID
+WHERE 
+    Published_Date IS NOT @Published_Date
+AND
+    Source_Name IS @Source_Name</value>
   </data>
   <data name="SelectVulnerabilityIdentifiersAndVersions" xml:space="preserve">
     <value>SELECT 
@@ -586,6 +604,15 @@ AND
   <data name="UpdateVulnerability" xml:space="preserve">
     <value>UPDATE Vulnerabilities SET Vulnerability_Title=@Vulnerability_Title, Vulnerability_Description = @Vulnerability_Description, Risk_Statement = @Risk_Statement, Fix_Text = @Fix_Text, Modified_Date = @Modified_Date, Fix_Published_Date = @Fix_Published_Date, Raw_Risk = @Raw_Risk, Vulnerability_Version = @Vulnerability_Version, Vulnerability_Release = @Vulnerability_Release WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;</value>
   </data>
+  <data name="UpdateVulnerabilityDates" xml:space="preserve">
+    <value>UPDATE
+    Vulnerabilities
+SET
+    Modified_Date = @Modified_Date,
+    Published_Date = @Published_Date
+WHERE
+    Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Version = @Vulnerability_Version AND Vulnerability_Release = @Vulnerability_Release)</value>
+  </data>
   <data name="UpdateVulnerabilityFromAcas" xml:space="preserve">
     <value>UPDATE UniqueFindings SET 
 	Last_Observed = @Last_Observed, 
@@ -598,14 +625,6 @@ AND
 	Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier) 
 AND 
 	Last_Observed &lt; @Last_Observed;</value>
-  </data>
-  <data name="UpdateVulnerabilityModifiedDate" xml:space="preserve">
-    <value>UPDATE
-    Vulnerabilities
-SET
-    Modified_Date = @Modified_Date
-WHERE
-    Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Version = @Vulnerability_Version AND Vulnerability_Release = @Vulnerability_Release)</value>
   </data>
   <data name="UpdateVulnerabilitySource" xml:space="preserve">
     <value>UPDATE 

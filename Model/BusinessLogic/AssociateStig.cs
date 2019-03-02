@@ -67,7 +67,8 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["First_Discovered"].Value = DateTime.Now.ToShortDateString();
                 sqliteCommand.Parameters["Classification"].Value = "Unclassified";
                 sqliteCommand.Parameters["Finding_Type"].Value = "CKL";
-                sqliteCommand.Parameters["Finding_Source_File_Name"].Value = string.Format("Vulnerator Associated - {0}", DateTime.Now.ToShortDateString());
+                sqliteCommand.Parameters["Finding_Source_File_Name"].Value =
+                    $"Vulnerator Associated - {DateTime.Now.ToShortDateString()}";
             }
             catch (Exception exception)
             {

@@ -874,7 +874,7 @@ namespace Vulnerator.ViewModel
             catch (Exception exception)
             {
                 log.Error(string.Format("Unable to calculate likelihood."));
-                log.Debug(string.Format("Exception Details: {0}", exception));
+                log.Debug($"Exception Details: {exception}");
                 throw exception;
             }
         }
@@ -893,7 +893,7 @@ namespace Vulnerator.ViewModel
             catch (Exception exception)
             {
                 log.Error(string.Format("Unable to calculate risk."));
-                log.Debug(string.Format("Exception Details: {0}", exception));
+                log.Debug($"Exception Details: {exception}");
                 throw exception;
             }
         }
@@ -910,7 +910,7 @@ namespace Vulnerator.ViewModel
             catch (Exception exception)
             {
                 log.Error(string.Format(""));
-                log.Debug(string.Format("Exception Details: {0}", exception));
+                log.Debug($"Exception Details: {exception}");
             }
         }
     }

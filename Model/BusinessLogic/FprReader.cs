@@ -620,10 +620,8 @@ namespace Vulnerator.Model.BusinessLogic
                                 if (commentsDictionary.Count > 0)
                                 {
                                     commentsDictionary.OrderByDescending(x => x.Key);
-                                    fprVulnerability.Comments = string.Format("{0}:{1}{2}",
-                                        commentsDictionary.Last().Key.ToShortDateString(),
-                                        Environment.NewLine,
-                                        commentsDictionary.Last().Value);
+                                    fprVulnerability.Comments =
+                                        $"{commentsDictionary.Last().Key.ToShortDateString()}:{Environment.NewLine}{commentsDictionary.Last().Value}";
                                 }
                             }
                             commentsDictionary.Clear();
@@ -698,7 +696,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         string keyCheck;
                         if (!commentsDictionary.TryGetValue(timestamp, out keyCheck))
-                        { commentsDictionary.Add(timestamp, string.Format("{0}: {1}", username, comment)); }
+                        { commentsDictionary.Add(timestamp, $"{username}: {comment}"); }
                         comment = string.Empty;
                         timestamp = new DateTime();
                     }

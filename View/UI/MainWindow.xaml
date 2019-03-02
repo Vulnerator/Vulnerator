@@ -126,7 +126,7 @@
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding LaunchStigNotificationCommand}" />
+            <!-- <i:InvokeCommandAction Command="{Binding LaunchStigNotificationCommand}" /> -->
         </i:EventTrigger>
     </i:Interaction.Triggers>
 

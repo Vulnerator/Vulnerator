@@ -1,7 +1,9 @@
 ﻿using log4net;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SQLite;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -15,22 +17,24 @@ namespace Vulnerator.Model.BusinessLogic
 {
     public class RawStigReader
     {
-        DatabaseInterface databaseInterface = new DatabaseInterface();
+        readonly DatabaseInterface databaseInterface = new DatabaseInterface();
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private bool sourceUpdated = true;
         private List<string> iaControls = new List<string>();
-        private List<string> ccis = new List<string>();
+        private readonly List<string> ccis = new List<string>();
         private List<string> responsibilities = new List<string>();
-        private Dictionary<string, string> replaceDictionary = PopulateReplaceDictionary();
-        private string[] persistentParameters = new string[] {
-            "Vulnerability_Source_File_Name", "Source_Description", "Source_Secondary_Identifier", "Source_Name", "Source_Version", "Source_Release", "Host_Name", "Scan_IP", "Finding_Type"
+        private readonly Dictionary<string, string> replaceDictionary = PopulateReplaceDictionary();
+        private readonly string[] persistentParameters = new string[] {
+            "Vulnerability_Source_File_Name", "Source_Description", "Source_Secondary_Identifier", 
+            "Source_Name", "Source_Version", "Source_Release", "Host_Name", "Scan_IP", "Finding_Type",
+            "Published_Date"
         };
 
-        public void ReadRawStig(ZipArchiveEntry rawStig)
+        public string ReadRawStig(ZipArchiveEntry rawStig)
         {
             try
             {
-                log.Info(string.Format("Begin ingestion of raw STIG file {0}", rawStig.Name));
+                log.Info($"Begin ingestion of raw STIG file {rawStig.Name}");
                 if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
                 { DatabaseBuilder.sqliteConnection.Open(); }
                 using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
@@ -57,7 +61,7 @@ namespace Vulnerator.Model.BusinessLogic
                                             {
                                                 ReadGroupNode(sqliteCommand, xmlReader);
                                                 if (!sourceUpdated)
-                                                { return; }
+                                                { return "Parsed"; }
                                                 break;
                                             }
                                         default:
@@ -69,13 +73,14 @@ namespace Vulnerator.Model.BusinessLogic
                         databaseInterface.DeleteRemovedVulnerabilities(sqliteCommand);
                     }
                     sqliteTransaction.Commit();
+                    return "Parsed";
                 }
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to process STIG file \"{0}\".",
-                    rawStig.Name));
+                log.Error($"Unable to process STIG file \"{rawStig.Name}\".");
                 log.Debug("Exception details: " + exception);
+                return "Failed";
             }
             finally
             { DatabaseBuilder.sqliteConnection.Close(); }
@@ -88,48 +93,50 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["Source_Secondary_Identifier"].Value = xmlReader.GetAttribute("id");
                 while (xmlReader.Read())
                 {
-                    if (xmlReader.IsStartElement())
+                    if (!xmlReader.IsStartElement()) continue;
+                    switch (xmlReader.Name)
                     {
-                        switch (xmlReader.Name)
+                        case "title":
                         {
-                            case "title":
-                                {
-                                    string sourceName = xmlReader.ObtainCurrentNodeValue(false).Replace('_', ' ');
-                                    sourceName = sourceName.ToSanitizedSource();
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Name", sourceName));
-                                    break;
-                                }
-                            case "description":
-                                {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Description", xmlReader.ObtainCurrentNodeValue(false)));
-                                    break;
-                                }
-                            case "plain-text":
-                                {
-                                    string release = xmlReader.ObtainCurrentNodeValue(false);
-                                    if (release.Contains(" "))
-                                    {
-                                        Regex regex = new Regex(Properties.Resources.RegexRawStigRelease);
-                                        sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", regex.Match(release)));
-                                    }
-                                    else
-                                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", release)); }
-                                    break;
-                                }
-                            case "version":
-                                {
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Version", xmlReader.ObtainCurrentNodeValue(false)));
-                                    break;
-                                }
-                            case "Profile":
-                                {
-                                    databaseInterface.UpdateVulnerabilitySource(sqliteCommand);
-                                    databaseInterface.InsertVulnerabilitySource(sqliteCommand);
-                                    return;
-                                }
-                            default:
-                                { break; }
+                            string sourceName = xmlReader.ObtainCurrentNodeValue(false).Replace('_', ' ');
+                            sourceName = sourceName.ToSanitizedSource();
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Name", sourceName));
+                            break;
                         }
+                        case "description":
+                        {
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Description", xmlReader.ObtainCurrentNodeValue(false)));
+                            break;
+                        }
+                        case "plain-text":
+                        {
+                            string release = xmlReader.ObtainCurrentNodeValue(false);
+                            if (release.Contains(" "))
+                            {
+                                Regex regex = new Regex(Properties.Resources.RegexRawStigRelease);
+                                sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", regex.Match(release)));
+                                regex = new Regex(Properties.Resources.RegexStigDate);
+                                sqliteCommand.Parameters.Add(new SQLiteParameter("Published_Date", DateTime
+                                    .ParseExact(regex.Match(release).ToString(), "dd MMM yyyy", CultureInfo.InvariantCulture)
+                                    .ToShortDateString()));
+                            }
+                            else
+                            { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", release)); }
+                            break;
+                        }
+                        case "version":
+                        {
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Version", xmlReader.ObtainCurrentNodeValue(false)));
+                            break;
+                        }
+                        case "Profile":
+                        {
+                            databaseInterface.UpdateVulnerabilitySource(sqliteCommand);
+                            databaseInterface.InsertVulnerabilitySource(sqliteCommand);
+                            return;
+                        }
+                        default:
+                        { break; }
                     }
                 }
             }
@@ -181,13 +188,13 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "Existing Version Is Newer":
                                 {
-                                    databaseInterface.UpdateVulnerabilityModifiedDate(sqliteCommand);
+                                    databaseInterface.UpdateVulnerabilityDates(sqliteCommand);
                                     sqliteCommand.Parameters["Delta_Analysis_Required"].Value = "True";
                                     break;
                                 }
                             case "Identical Versions":
                                 {
-                                    databaseInterface.UpdateVulnerabilityModifiedDate(sqliteCommand);
+                                    databaseInterface.UpdateVulnerabilityDates(sqliteCommand);
                                     break;
                                 }
                             default:
@@ -380,11 +387,13 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
-                xmlReaderSettings.IgnoreWhitespace = true;
-                xmlReaderSettings.IgnoreComments = true;
-                xmlReaderSettings.ValidationType = ValidationType.Schema;
-                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessInlineSchema;
+                XmlReaderSettings xmlReaderSettings = new XmlReaderSettings
+                {
+                    IgnoreWhitespace = true,
+                    IgnoreComments = true,
+                    ValidationType = ValidationType.Schema,
+                    ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessInlineSchema
+                };
                 xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessSchemaLocation;
                 xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.AllowXmlAttributes;
                 return xmlReaderSettings;

@@ -25,7 +25,7 @@ namespace Vulnerator.Model.BusinessLogic
                 { DatabaseBuilder.sqliteConnection.Open(); }
                 using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Operating_System", string.Format("%{0}%", operatingSystem)));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Operating_System", $"%{operatingSystem}%"));
                     sqliteCommand.CommandText = Properties.Resources.SelectAnsibleTowerData;
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
@@ -33,17 +33,12 @@ namespace Vulnerator.Model.BusinessLogic
                         { return false; }
                         while (sqliteDataReader.Read())
                         {
-                            string fileName = string.Format(
-                                "{0}\\{1}.xml", 
-                                saveDirectory, 
-                                sqliteDataReader["Vulnerability_Group_ID"].ToString()
-                                );
+                            string fileName =
+                                $"{saveDirectory}\\{sqliteDataReader["Vulnerability_Group_ID"].ToString()}.xml";
                             using (XmlWriter xmlWriter = XmlWriter.Create(fileName, GenerateXmlWriterSettings()))
                             {
-                                string ruleId = string.Format(
-                                    "{0}r{1}_rule",
-                                    sqliteDataReader["Unique_Vulnerability_Identifier"].ToString(),
-                                    sqliteDataReader["Vulnerability_Version"].ToString());
+                                string ruleId =
+                                    $"{sqliteDataReader["Unique_Vulnerability_Identifier"].ToString()}r{sqliteDataReader["Vulnerability_Version"].ToString()}_rule";
                                 xmlWriter.WriteStartElement("finding");
                                 xmlWriter.WriteAttributeString("v_id", sqliteDataReader["Vulnerability_Group_ID"].ToString());
                                 xmlWriter.WriteAttributeString("rule_id", ruleId);
@@ -62,7 +57,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 foreach (Match match in regex.Matches(sqliteDataReader["CCIs"].ToString()))
                                 {
                                     if (!string.IsNullOrWhiteSpace(match.ToString()))
-                                    { xmlWriter.WriteElementString("cci", string.Format("CCI-{0}", match.ToString())); }
+                                    { xmlWriter.WriteElementString("cci", $"CCI-{match.ToString()}"); }
                                 }
                                 xmlWriter.WriteEndElement();
                                 xmlWriter.WriteEndElement();

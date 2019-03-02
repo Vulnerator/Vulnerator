@@ -60,9 +60,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to delete Vulnerability / CCI mapping \"{0} - {1}\".",
-                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString(),
-                    sqliteCommand.Parameters["CCI"].Value.ToString()));
+                log.Error(
+                    $"Unable to delete Vulnerability / CCI mapping \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()} - {sqliteCommand.Parameters["CCI"].Value.ToString()}\".");
                 log.Debug("Exception details:", exception);
                 throw exception;
             }
@@ -72,13 +71,27 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteVulnerability;
-                sqliteCommand.ExecuteNonQuery();
+                sqliteCommand.CommandText = Properties.Resources.SelectVulnerabilitiesForDeletion;
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                {
+                    if (!sqliteDataReader.HasRows)
+                    { return; }
+
+                    using (SQLiteCommand deleteVulnsCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                    {
+                        deleteVulnsCommand.CommandText = Properties.Resources.DeleteVulnerability;
+                        while (sqliteDataReader.Read())
+                        {
+                            deleteVulnsCommand.Parameters.Add(new SQLiteParameter("Vulnerability_ID",sqliteDataReader["Vulnerability_ID"].ToString()));
+                            deleteVulnsCommand.ExecuteNonQuery();
+                        }
+                    }
+                }
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to delete Vulnerability \"{0}\".",
-                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
+                log.Error(
+                    $"Unable to delete Vulnerability \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}\".");
                 log.Debug("Exception details:", exception);
                 throw exception;
             }
@@ -167,9 +180,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert or map port \"{0} {1}\".",
-                    sqliteCommand.Parameters["Protocol"].Value.ToString(),
-                    sqliteCommand.Parameters["Port"].Value.ToString()));
+                log.Error(
+                    $"Unable to insert or map port \"{sqliteCommand.Parameters["Protocol"].Value.ToString()} {sqliteCommand.Parameters["Port"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -256,7 +268,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert host \"{0}\".", sqliteCommand.Parameters["IP_Address"].Value.ToString()));
+                log.Error($"Unable to insert host \"{sqliteCommand.Parameters["IP_Address"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -345,7 +357,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert unique finding source file \"{0}\".", file.FileName));
+                log.Error($"Unable to insert unique finding source file \"{file.FileName}\".");
                 throw exception;
             }
         }
@@ -359,7 +371,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert unique finding source file \"{0}\".", sqliteCommand.Parameters["Finding_Source_File_Name"].Value.ToString()));
+                log.Error(
+                    $"Unable to insert unique finding source file \"{sqliteCommand.Parameters["Finding_Source_File_Name"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -373,9 +386,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert SCAP score for \"{0}\" - \"{1}\".",
-                    sqliteCommand.Parameters["Host_Name"].Value.ToString(),
-                    sqliteCommand.Parameters["Source_Name"].Value.ToString()));
+                log.Error(
+                    $"Unable to insert SCAP score for \"{sqliteCommand.Parameters["Host_Name"].Value.ToString()}\" - \"{sqliteCommand.Parameters["Source_Name"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -393,7 +405,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert software \"{0}\" into table.", sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString()));
+                log.Error(
+                    $"Unable to insert software \"{sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString()}\" into table.");
                 throw exception;
             }
         }
@@ -407,10 +420,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to generate a new unique finding for \"{0}\", \"{1}\", \"{2}\".",
-                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString(),
-                    sqliteCommand.Parameters["Host_Name"].Value.ToString(),
-                    sqliteCommand.Parameters["Scan_IP"].Value.ToString()));
+                log.Error(
+                    $"Unable to generate a new unique finding for \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\", \"{sqliteCommand.Parameters["Host_Name"].Value.ToString()}\", \"{sqliteCommand.Parameters["Scan_IP"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -424,7 +435,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert vulnerability \"{0}\".", sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
+                log.Error(
+                    $"Unable to insert vulnerability \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -438,7 +450,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert vulnerability source \"{0}\".", sqliteCommand.Parameters["Source_Name"].Value.ToString()));
+                log.Error(
+                    $"Unable to insert vulnerability source \"{sqliteCommand.Parameters["Source_Name"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -466,9 +479,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to map \"{0}\" to \"{1}\".",
-                    sqliteCommand.Parameters["Host_Name"].Value.ToString(),
-                    sqliteCommand.Parameters["Group_Name"].Value.ToString()));
+                log.Error(
+                    $"Unable to map \"{sqliteCommand.Parameters["Host_Name"].Value.ToString()}\" to \"{sqliteCommand.Parameters["Group_Name"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -485,9 +497,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to map software \"{0}\" to \"{1}\".",
-                    sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString(),
-                    sqliteCommand.Parameters["Host_Name"].Value.ToString()));
+                log.Error(
+                    $"Unable to map software \"{sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString()}\" to \"{sqliteCommand.Parameters["Host_Name"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -515,9 +526,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to map CCI \"{0}\" to vulnerability \"{1}\".",
-                    sqliteCommand.Parameters["CCI"].Value.ToString(),
-                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
+                log.Error(
+                    $"Unable to map CCI \"{sqliteCommand.Parameters["CCI"].Value.ToString()}\" to vulnerability \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -589,8 +599,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to retrieve the vulnerability source name for vulnerability source {0}",
-                    sqliteCommand.Parameters["Vulnerability_Source_ID"].Value.ToString()));
+                log.Error(
+                    $"Unable to retrieve the vulnerability source name for vulnerability source {sqliteCommand.Parameters["Vulnerability_Source_ID"].Value.ToString()}");
                 throw exception;
             }
         }
@@ -630,8 +640,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to set the credentialed scan status for \"{0}\".",
-                    sqliteCommand.Parameters["Scan-IP"].Value.ToString()));
+                log.Error(
+                    $"Unable to set the credentialed scan status for \"{sqliteCommand.Parameters["Scan-IP"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -674,10 +684,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to update the unique finding for \"{0}\", \"{1}\", \"{2}\".",
-                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString(),
-                    sqliteCommand.Parameters["Host_Name"].Value.ToString(),
-                    sqliteCommand.Parameters["Scan_IP"].Value.ToString()));
+                log.Error(
+                    $"Unable to update the unique finding for \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\", \"{sqliteCommand.Parameters["Host_Name"].Value.ToString()}\", \"{sqliteCommand.Parameters["Scan_IP"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -691,7 +699,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert vulnerability \"{0}\".", sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
+                log.Error(
+                    $"Unable to insert vulnerability \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -705,8 +714,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to update the delta analysis flag(s) for unique findings related to \"{0}\".",
-                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
+                log.Error(
+                    $"Unable to update the delta analysis flag(s) for unique findings related to \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -740,7 +749,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to update vulnerability source \"{0}\".", sqliteCommand.Parameters["Source_Name"].Value.ToString()));
+                log.Error(
+                    $"Unable to update vulnerability source \"{sqliteCommand.Parameters["Source_Name"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -754,8 +764,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to update the \"Is_Report_Selected\" field for Report ID {0}", 
-                    sqliteCommand.Parameters["Is_Report_Selected"].Value.ToString()));
+                log.Error(
+                    $"Unable to update the \"Is_Report_Selected\" field for Report ID {sqliteCommand.Parameters["Is_Report_Selected"].Value.ToString()}");
                 log.Debug("Exception details:", exception);
             }
         }
@@ -836,8 +846,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to determine if an update is required for vulnerability \"{0}\".",
-                    sqliteCommand.Parameters["Source_Name"].Value.ToString()));
+                log.Error(
+                    $"Unable to determine if an update is required for vulnerability \"{sqliteCommand.Parameters["Source_Name"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -855,79 +865,73 @@ namespace Vulnerator.Model.DataAccess
                 sqliteCommand.CommandText = Properties.Resources.SelectVulnerabilityVersionAndRelease;
                 using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
-                    if (sqliteDataReader.HasRows)
+                    if (!sqliteDataReader.HasRows) return "Record Not Found";
+                    while (sqliteDataReader.Read())
                     {
-                        while (sqliteDataReader.Read())
+                        if (string.IsNullOrWhiteSpace(sqliteDataReader["Vulnerability_Version"].ToString()))
+                        { return "Record Not Found"; }
+                        Regex regex = new Regex(@"\D");
+                        bool newVersionParsed = int.TryParse(regex.Replace(sqliteCommand.Parameters["Vulnerability_Version"].Value.ToString(), string.Empty), out int newVersion);
+                        bool newReleaseParsed = int.TryParse(regex.Replace(sqliteCommand.Parameters["Vulnerability_Release"].Value.ToString(), string.Empty), out int newRelease);
+                        bool oldVersionParsed = int.TryParse(regex.Replace(sqliteDataReader["Vulnerability_Version"].ToString(), string.Empty), out int oldVersion);
+                        bool oldReleaseParsed = int.TryParse(regex.Replace(sqliteDataReader["Vulnerability_Release"].ToString(), string.Empty), out int oldRelease);
+                        if (newVersionParsed && oldVersionParsed)
                         {
-                            if (string.IsNullOrWhiteSpace(sqliteDataReader["Vulnerability_Version"].ToString()))
-                            { return "Record Not Found"; }
-                            Regex regex = new Regex(@"\D");
-                            int newVersion;
-                            int newRelease;
-                            bool newVersionParsed = int.TryParse(regex.Replace(sqliteCommand.Parameters["Vulnerability_Version"].Value.ToString(), string.Empty), out newVersion);
-                            bool newReleaseParsed = int.TryParse(regex.Replace(sqliteCommand.Parameters["Vulnerability_Release"].Value.ToString(), string.Empty), out newRelease);
-                            int oldVersion;
-                            int oldRelease;
-                            bool oldVersionParsed = int.TryParse(regex.Replace(sqliteDataReader["Vulnerability_Version"].ToString(), string.Empty), out oldVersion);
-                            bool oldReleaseParsed = int.TryParse(regex.Replace(sqliteDataReader["Vulnerability_Release"].ToString(), string.Empty), out oldRelease);
-                            if (newVersionParsed && oldVersionParsed)
-                            {
-                                ingestedVersionIsNewer = (newVersion > oldVersion) ? true : false;
-                                existingVersionIsNewer = (newVersion < oldVersion) ? true : false;
-                                versionsMatch = (newVersion == oldVersion) ? true : false;
-                            }
-                            if (newReleaseParsed && oldReleaseParsed)
-                            {
-                                ingestedReleaseIsNewer = (newRelease > oldRelease) ? true : false;
-                                existingReleaseIsNewer = (newRelease < oldRelease) ? true : false;
-                                releasesMatch = (newRelease == oldRelease) ? true : false;
-                            }
-                            if (ingestedVersionIsNewer)
+                            ingestedVersionIsNewer = (newVersion > oldVersion);
+                            existingVersionIsNewer = (newVersion < oldVersion);
+                            versionsMatch = (newVersion == oldVersion);
+                        }
+                        if (newReleaseParsed && oldReleaseParsed)
+                        {
+                            ingestedReleaseIsNewer = (newRelease > oldRelease);
+                            existingReleaseIsNewer = (newRelease < oldRelease);
+                            releasesMatch = (newRelease == oldRelease);
+                        }
+                        if (ingestedVersionIsNewer)
+                        { return "Ingested Version Is Newer"; }
+                        if (existingVersionIsNewer)
+                        {
+                            sqliteCommand.Parameters["Vulnerability_Version"].Value = sqliteDataReader["Vulnerability_Version"].ToString();
+                            sqliteCommand.Parameters["Vulnerability_Release"].Value = sqliteDataReader["Vulnerability_Release"].ToString();
+                            return "Existing Version Is Newer";
+                        }
+                        if (versionsMatch)
+                        {
+                            if (releasesMatch || (!oldReleaseParsed && !newReleaseParsed))
+                            { return "Identical Versions"; }
+                            if (ingestedReleaseIsNewer)
                             { return "Ingested Version Is Newer"; }
-                            if (existingVersionIsNewer)
+                            if (existingReleaseIsNewer)
                             {
                                 sqliteCommand.Parameters["Vulnerability_Version"].Value = sqliteDataReader["Vulnerability_Version"].ToString();
                                 sqliteCommand.Parameters["Vulnerability_Release"].Value = sqliteDataReader["Vulnerability_Release"].ToString();
                                 return "Existing Version Is Newer";
                             }
-                            if (versionsMatch)
-                            {
-                                if (releasesMatch)
-                                { return "Identical Versions"; }
-                                if (ingestedReleaseIsNewer)
-                                { return "Ingested Version Is Newer"; }
-                                if (existingReleaseIsNewer)
-                                {
-                                    sqliteCommand.Parameters["Vulnerability_Version"].Value = sqliteDataReader["Vulnerability_Version"].ToString();
-                                    sqliteCommand.Parameters["Vulnerability_Release"].Value = sqliteDataReader["Vulnerability_Release"].ToString();
-                                    return "Existing Version Is Newer";
-                                }
-                            }
-                            
                         }
+                            
                     }
                 }
                 return "Record Not Found";
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to compare vulnerability version information for \"{0}\" against current database information.", 
-                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
+                log.Error(
+                    $"Unable to compare vulnerability version information for \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\" against current database information.");
                 throw exception;
             }
         }
 
-        public void UpdateVulnerabilityModifiedDate(SQLiteCommand sqliteCommand)
+        public void UpdateVulnerabilityDates(SQLiteCommand sqliteCommand)
         { 
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.UpdateVulnerabilityModifiedDate;
+                sqliteCommand.CommandText = Properties.Resources.UpdateVulnerabilityDates;
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to update the Modified Date for \"{0}\".",
-                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
+                log.Error(
+                    $"Unable to update the Modified Date for \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\".");
                 throw exception;
             }
         }

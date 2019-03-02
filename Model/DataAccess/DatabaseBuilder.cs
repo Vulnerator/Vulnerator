@@ -14,9 +14,8 @@ namespace Vulnerator.Model.DataAccess
     public class DatabaseBuilder
     {
         private Assembly assembly = Assembly.GetExecutingAssembly();
-        public static string databaseConnection = string.Format(
-            @"Data Source = {0}; Version=3;datetimeformat=Ticks;", 
-            Properties.Settings.Default.Database);
+        public static string databaseConnection =
+            $@"Data Source = {Properties.Settings.Default.Database}; Version=3;datetimeformat=Ticks;";
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         public static SQLiteConnection sqliteConnection = new SQLiteConnection(databaseConnection);
 

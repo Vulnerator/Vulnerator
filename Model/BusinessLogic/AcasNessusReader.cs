@@ -212,7 +212,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to parse host \"{0}\".", hostIp));
+                log.Error($"Unable to parse host \"{hostIp}\".");
                 throw exception;
             }
         }
@@ -405,7 +405,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to parse plugin \"{0}\".", pluginId));
+                log.Error($"Unable to parse plugin \"{pluginId}\".");
                 throw exception;
             }
         }
@@ -475,8 +475,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to parse Windows software (Plugin 20811) for \"{0}\".",
-                    sqliteCommand.Parameters["Scan_IP"].Value.ToString()));
+                log.Error(
+                    $"Unable to parse Windows software (Plugin 20811) for \"{sqliteCommand.Parameters["Scan_IP"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -566,8 +566,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to parse SSH software (Plugin 22869/29217) for \"{0}\".",
-                    sqliteCommand.Parameters["Scan_IP"].Value.ToString()));
+                log.Error(
+                    $"Unable to parse SSH software (Plugin 22869/29217) for \"{sqliteCommand.Parameters["Scan_IP"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -607,8 +607,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to parse the version information for plugin \"{0}\".",
-                    sqliteCommand.Parameters["Vulnerability_Version"].Value.ToString()));
+                log.Error(
+                    $"Unable to parse the version information for plugin \"{sqliteCommand.Parameters["Vulnerability_Version"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -633,10 +633,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert source \"{0} {1} {2}\".",
-                    sqliteCommand.Parameters["Source_Name"].Value.ToString(),
-                    sqliteCommand.Parameters["Source_Version"].Value.ToString(),
-                    sqliteCommand.Parameters["Source_Release"].Value.ToString()));
+                log.Error(
+                    $"Unable to insert source \"{sqliteCommand.Parameters["Source_Name"].Value.ToString()} {sqliteCommand.Parameters["Source_Version"].Value.ToString()} {sqliteCommand.Parameters["Source_Release"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -655,8 +653,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to create a uniqueFinding record for plugin \"{0}\".",
-                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
+                log.Error(
+                    $"Unable to create a uniqueFinding record for plugin \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -719,7 +717,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to convert \"{0}\" to a standardized raw risk.", riskFactor));
+                log.Error($"Unable to convert \"{riskFactor}\" to a standardized raw risk.");
                 throw exception;
             }
         }

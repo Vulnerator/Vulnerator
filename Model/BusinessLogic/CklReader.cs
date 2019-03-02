@@ -95,7 +95,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to process CKL file {0}.", file.FileName));
+                log.Error($"Unable to process CKL file {file.FileName}.");
                 log.Debug("Exception details:", exception);
                 return "Failed; See Log";
             }
@@ -240,7 +240,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert IP / MAC address \"{0}\" into database.", item));
+                log.Error($"Unable to insert IP / MAC address \"{item}\" into database.");
                 throw exception;
             }
         }
@@ -466,13 +466,13 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "Existing Version Is Newer":
                                 {
-                                    databaseInterface.UpdateVulnerabilityModifiedDate(sqliteCommand);
+                                    databaseInterface.UpdateVulnerabilityDates(sqliteCommand);
                                     sqliteCommand.Parameters["Delta_Analysis_Required"].Value = "True";
                                     break;
                                 }
                             case "Identical Versions":
                                 {
-                                    databaseInterface.UpdateVulnerabilityModifiedDate(sqliteCommand);
+                                    databaseInterface.UpdateVulnerabilityDates(sqliteCommand);
                                     break;
                                 }
                             default:
@@ -585,8 +585,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to create a Unique Finding record for plugin \"{0}\".",
-                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
+                log.Error(
+                    $"Unable to create a Unique Finding record for plugin \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -712,7 +712,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to verify host \"{0}\" - \"{1}\" exists.", file.FileHostName, file.FileIpAddress));
+                log.Error($"Unable to verify host \"{file.FileHostName}\" - \"{file.FileIpAddress}\" exists.");
                 log.Debug("Exception details:", exception);
                 return file;
             }

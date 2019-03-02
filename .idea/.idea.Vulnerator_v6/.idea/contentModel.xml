@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
+    <e p="C:\Users\amkuc\.Rider2018.2\config\extensions" t="IncludeRecursive" />
     <e p="C:\Users\amkuc\.Rider2018.2\system\extResources" t="IncludeRecursive" />
     <e p="C:\Users\amkuc\.Rider2018.2\system\resharper-host\Local\Transient\ReSharperHost\v182\SolutionCaches\_Vulnerator_v6.639477873.00" t="ExcludeRecursive" />
     <e p="C:\Users\amkuc\Source\Repos\Vulnerator" t="IncludeRecursive">
@@ -192,8 +193,6 @@
           <e p="v6-2-0_DropVulnerabilityRelatedIndices.ddl" t="Include" />
         </e>
         <e p="DiacapToRmf.xml" t="Include" />
-        <e p="Icons.xaml" t="Include" />
-        <e p="IconsNonShared.xaml" t="Include" />
         <e p="processwarning.ico" t="Include" />
         <e p="RawData" t="Include">
           <e p="IAControls_Mapping.xml" t="Include" />
