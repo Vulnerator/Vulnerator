@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace Vulnerator.Helper
 {
     public static class ExtensionMethods
     {
-        private static Dictionary<string, string> rawStatusDictionary = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> rawStatusDictionary = new Dictionary<string, string>
         {
             { "notafinding", "Completed" },
             { "not a finding", "Completed" },
@@ -37,7 +38,7 @@ namespace Vulnerator.Helper
             { "exploitable", "Ongoing" }
         };
 
-        private static Dictionary<string, string> vulneratorStatusDictionary = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> vulneratorStatusDictionary = new Dictionary<string, string>
         {
             { "completed", "NotAFinding" },
             { "not reviewed", "Not_Reviewed" },
@@ -47,7 +48,7 @@ namespace Vulnerator.Helper
             { "informational", "Not_Reviewed" }
         };
 
-        private static Dictionary<string, string> severityDictionary = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> severityDictionary = new Dictionary<string, string>
         {
             { "critical", "I" },
             { "high", "I" },
@@ -58,10 +59,10 @@ namespace Vulnerator.Helper
             { "\nhigh\n", "I" },
             { "\nmedium\n", "II" },
             { "\nlow\n", "III" },
-            { "\ninformational\n", "IV" },
+            { "\ninformational\n", "IV" }
         };
 
-        private static Dictionary<string, string> rawRiskDictionary = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> rawRiskDictionary = new Dictionary<string, string>
         {
             { "I", "high" },
             { "II", "medium" },
@@ -81,10 +82,7 @@ namespace Vulnerator.Helper
             catch (IOException ioException)
             { return true; }
             finally
-            {
-                if (textReader != null)
-                { textReader.Close(); }
-            }
+            { textReader?.Close(); }
             return false;
         }
 
@@ -98,12 +96,7 @@ namespace Vulnerator.Helper
         }
 
         public static bool IsTooLargeForExcelCell(this int _int)
-        {
-            if (_int > 32767)
-            { return true; }
-            else
-            { return false; }
-        }
+        { return _int > 32767; }
 
         public static string RemoveAlphaCharacters(this string _input)
         { return new string(_input.Where(x => !char.IsLetter(x) && !char.IsWhiteSpace(x)).ToArray()); }
@@ -117,84 +110,56 @@ namespace Vulnerator.Helper
             while (subTreeXmlReader.Read())
             { value = string.Concat(value, xmlReader.Value); }
             value = value.Replace("\n", Environment.NewLine);
-            if (sanitizeBrackets)
-            {
-                value = value.Replace("&gt", ">");
-                value = value.Replace("&lt", "<");
-            }
+            if (!sanitizeBrackets)
+            { return value; }
+            value = value.Replace("&gt", ">");
+            value = value.Replace("&lt", "<");
             return value;
         }
 
         public static string ToRawRisk(this string severity)
-        {
-            string rawRisk = string.Empty;
-            if (severityDictionary.TryGetValue(severity, out rawRisk))
-            { return rawRisk; }
-            return "?";
-        }
+        { return severityDictionary.TryGetValue(severity, out string rawRisk) ? rawRisk : "?"; }
 
         public static string ToSeverity(this string rawRisk)
-        {
-            string severity = string.Empty;
-            if (rawRiskDictionary.TryGetValue(rawRisk, out severity))
-            { return severity; }
-            return "unknown";
-        }
+        { return rawRiskDictionary.TryGetValue(rawRisk, out string severity) ? severity : "unknown"; }
 
         public static string ToImpact(this string rawRisk)
-        {
-            string impact = string.Empty;
-            if (rawRiskDictionary.TryGetValue(rawRisk, out impact))
-            { return impact; }
-            return "unknown";
-        }
+        { return rawRiskDictionary.TryGetValue(rawRisk, out string impact) ? impact : "unknown"; }
 
         public static string ToCklStatus(this string vulneratorStatus)
-        {
-            string cklStatus = string.Empty;
-            if (vulneratorStatusDictionary.TryGetValue(vulneratorStatus.ToLower(), out cklStatus))
-            { return cklStatus; }
-            return "Not_Reviewed";
-        }
+        { return vulneratorStatusDictionary.TryGetValue(vulneratorStatus.ToLower(), out string  cklStatus) ? cklStatus : "Not_Reviewed"; }
 
         public static string ToVulneratorStatus(this string rawStatus)
-        {
-            string sanitizedStatus = string.Empty;
-            if (rawStatusDictionary.TryGetValue(rawStatus.ToLower(), out sanitizedStatus))
-            { return sanitizedStatus; }
-            return rawStatus;
-        }
+        { return rawStatusDictionary.TryGetValue(rawStatus.ToLower(), out string sanitizedStatus) ? sanitizedStatus : rawStatus; }
 
         public static string ToSanitizedSource(this string _string)
         {
-            bool isSRG = _string.Contains("SRG") || _string.Contains("Security Requirement") ? true : false;
+            bool isSrg = _string.Contains("SRG") || _string.Contains("Security Requirement") ? true : false;
             string value = _string;
-            string[] replaceArray = new string[]
-            {
-                    "STIG", "Security", "SECURITY", "Technical", "TECHNICAL", "Implementation", "IMPLEMENTATION",
-                    "Guide", "GUIDE", "(", ")", "Requirements", "REQUIREMENTS", "SRG", "  "
+            Regex regex = new Regex(@"(?<!Application )((?:S|s)ecurity)");
+            
+            MatchCollection matches = regex.Matches(value);
+            foreach (Match match in matches)
+            { value = value.Remove(match.Index, match.Length); }
+            string[] replaceArray = {
+                "STIG", "SECURITY", "Technical", "TECHNICAL", "Implementation", "IMPLEMENTATION",
+                "Guide", "GUIDE", "(", ")", "Requirements", "REQUIREMENTS", "SRG", "  "
             };
-            foreach (string item in replaceArray)
-            {
-                if (item.Equals("  "))
-                { value = value.Replace(item, " "); }
-                else
-                { value = value.Replace(item, ""); }
-            }
+            value = replaceArray.Aggregate(value, (current, item) => current.Replace(item, item.Equals("  ") ? " " : ""));
             value = value.Trim();
-            if (!isSRG)
+            if (!isSrg)
             {
-                value = string.Format("{0} Security Technical Implementation Guide", value);
+                value = $"{value} Security Technical Implementation Guide";
                 return value;
             }
-            value = string.Format("{0} Security Requirements Guide", value);
+            value = $"{value} Security Requirements Guide";
             return value;
         }
 
         public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
         {
             if (source == null)
-            { throw new ArgumentNullException("source"); }
+            { throw new ArgumentNullException(nameof(source)); }
             return new ObservableCollection<T>(source);
         }
     }

@@ -406,7 +406,7 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private void GenerateNotification( Notification notification)
+        private void GenerateNotification(Notification notification)
         { 
             try
             {
@@ -421,20 +421,20 @@ namespace Vulnerator.ViewModel
                     .HasHeader(notification.Header)
                     .HasMessage(notification.Message)
                     .Dismiss().WithButton("Dismiss", button => { })
-                    .WithAdditionalContent(ContentLocation.Bottom,
-                        new Border
-                        {
-                            BorderThickness = new Thickness(0,1,0,0),
-                            BorderBrush = ThemeManager.DetectAppStyle(Application.Current).Item1.Resources["GrayBrush7"] as SolidColorBrush,
-                            Child = new CheckBox
-                            {
-                                Margin = new Thickness(12,8,12,8),
-                                HorizontalAlignment = HorizontalAlignment.Left,
-                                Foreground = ThemeManager.DetectAppStyle(Application.Current).Item1.Resources["TextBrush"] as SolidColorBrush,
-                                Content = "Do not display this in the future."
-                            }
-                        }
-                    )
+                    //.WithAdditionalContent(ContentLocation.Bottom,
+                    //    new Border
+                    //    {
+                    //        BorderThickness = new Thickness(0,1,0,0),
+                    //        BorderBrush = ThemeManager.DetectAppStyle(Application.Current).Item1.Resources["GrayBrush7"] as SolidColorBrush,
+                    //        Child = new CheckBox
+                    //        {
+                    //            Margin = new Thickness(12,8,12,8),
+                    //            HorizontalAlignment = HorizontalAlignment.Left,
+                    //            Foreground = ThemeManager.DetectAppStyle(Application.Current).Item1.Resources["TextBrush"] as SolidColorBrush,
+                    //            Content = "Do not display this in the future."
+                    //        }
+                    //    }
+                    //)
                     .Queue();
             }
             catch (Exception exception)

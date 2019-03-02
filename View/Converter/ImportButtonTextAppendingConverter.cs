@@ -7,7 +7,7 @@ namespace Vulnerator.View.Converter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            string finalValue = string.Format("Import {0}", value);
+            string finalValue = $"Import {value}";
             return finalValue;
         }
 

@@ -101,7 +101,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert Hardware \"{0}\".", sqliteCommand.Parameters["Host_Name"].Value.ToString()));
+                log.Error($"Unable to insert Hardware \"{sqliteCommand.Parameters["Host_Name"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -166,7 +166,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert IP / MAC address \"{0}\" into database.", item));
+                log.Error($"Unable to insert IP / MAC address \"{item}\" into database.");
                 throw exception;
             }
         }
@@ -241,15 +241,8 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "output":
                                 {
-                                    sqliteCommand.Parameters["Tool_Generated_Output"].Value = string.Format(
-                                        "{0}{1}{2}{3}{4}{5}",
-                                        sqliteCommand.Parameters["Tool_Generated_Output"].Value.ToString(),
-                                        Environment.NewLine,
-                                        Environment.NewLine,
-                                        "Output:",
-                                        Environment.NewLine,
-                                        xmlReader.ObtainCurrentNodeValue(true).Trim()
-                                        );
+                                    sqliteCommand.Parameters["Tool_Generated_Output"].Value =
+                                        $"{sqliteCommand.Parameters["Tool_Generated_Output"].Value.ToString()}{Environment.NewLine}{Environment.NewLine}{"Output:"}{Environment.NewLine}{xmlReader.ObtainCurrentNodeValue(true).Trim()}";
                                     break;
                                 }
                             case "comments":
@@ -300,8 +293,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to parse finding node for \"{0}\".", 
-                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()));
+                log.Error(
+                    $"Unable to parse finding node for \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\".");
                 throw exception;
             }  
         }

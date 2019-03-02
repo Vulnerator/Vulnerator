@@ -33,9 +33,8 @@ namespace Vulnerator.Model.BusinessLogic
                         string stigName = vulnerabilitySource.Source_Name
                                     .Replace(" ", string.Empty)
                                     .Replace("Security Technical Implentation Guide", "_STIG");
-                        string saveFile = string.Format("{0}\\U_{1}_v{2}_r{3}_{4}.ckl",
-                            saveDirectory, stigName, vulnerabilitySource.Source_Version,
-                            vulnerabilitySource.Source_Release, hardware.Displayed_Host_Name);
+                        string saveFile =
+                            $"{saveDirectory}\\U_{stigName}_v{vulnerabilitySource.Source_Version}_r{vulnerabilitySource.Source_Release}_{hardware.Displayed_Host_Name}.ckl";
                         using (XmlWriter xmlWriter = XmlWriter.Create(saveFile, GenerateXmlWriterSettings()))
                         {
                             xmlWriter.WriteStartDocument(true);
@@ -60,8 +59,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to generate a CKL for {0} - {1}.",
-                    hardware.Displayed_Host_Name, vulnerabilitySource.Source_Name));
+                log.Error(
+                    $"Unable to generate a CKL for {hardware.Displayed_Host_Name} - {vulnerabilitySource.Source_Name}.");
                 throw exception;
             }
             finally
@@ -146,9 +145,8 @@ namespace Vulnerator.Model.BusinessLogic
                 WriteStigDataNode(xmlWriter, "Vuln_Num", sqliteDataReader["Vulnerability_Group_ID"].ToString());
                 WriteStigDataNode(xmlWriter, "Severity", sqliteDataReader["Raw_Risk"].ToString().ToSeverity());
                 WriteStigDataNode(xmlWriter, "Group_Title", sqliteDataReader["Vulnerability_Group_Title"].ToString());
-                string ruleId = string.Format("{0}r{1}_rule", 
-                    sqliteDataReader["Unique_Vulnerability_Identifier"], 
-                    sqliteDataReader["Vulnerability_Version"].ToString());
+                string ruleId =
+                    $"{sqliteDataReader["Unique_Vulnerability_Identifier"]}r{sqliteDataReader["Vulnerability_Version"].ToString()}_rule";
                 WriteStigDataNode(xmlWriter, "Rule_ID", ruleId);
                 WriteStigDataNode(xmlWriter, "Rule_Ver", sqliteDataReader["Secondary_Vulnerability_Identifier"].ToString());
                 WriteStigDataNode(xmlWriter, "Rule_Title", sqliteDataReader["Vulnerability_Title"].ToString());
@@ -168,9 +166,8 @@ namespace Vulnerator.Model.BusinessLogic
                 WriteStigDataNode(xmlWriter, "Check_Content_Ref", string.Empty);
                 WriteStigDataNode(xmlWriter, "Weight", "10.0");
                 WriteStigDataNode(xmlWriter, "Class", sqliteDataReader["Classification"].ToString());
-                string stigRef = string.Format("{0} v{1} r{2}",
-                    sqliteDataReader["Source_Name"].ToString(), sqliteDataReader["Source_Version"].ToString(),
-                    sqliteDataReader["Source_Release"].ToString());
+                string stigRef =
+                    $"{sqliteDataReader["Source_Name"].ToString()} v{sqliteDataReader["Source_Version"].ToString()} r{sqliteDataReader["Source_Release"].ToString()}";
                 WriteStigDataNode(xmlWriter, "STIGRef", stigRef);
                 WriteStigDataNode(xmlWriter, "TargetKey", string.Empty);
                 foreach (string cci in sqliteDataReader["CCIs"].ToString().Split(',').ToArray())
@@ -181,17 +178,16 @@ namespace Vulnerator.Model.BusinessLogic
                 { toolGenerated = string.Empty; }
                 else
                 {
-                    toolGenerated = string.Format("Tool Generated Output:{0}{1}{2}",
-                      Environment.NewLine, sqliteDataReader["Tool_Generated_Output"].ToString(),
-                      Environment.NewLine + Environment.NewLine);
+                    toolGenerated =
+                        $"Tool Generated Output:{Environment.NewLine}{sqliteDataReader["Tool_Generated_Output"].ToString()}{Environment.NewLine + Environment.NewLine}";
                 }
                 string findingDetails;
                 if (string.IsNullOrWhiteSpace(sqliteDataReader["Finding_Details"].ToString()))
                 { findingDetails = string.Empty; }
                 else
                 {
-                    findingDetails = string.Format("Manual Finding Details:{0}{1}",
-                      Environment.NewLine, sqliteDataReader["Finding_Details"].ToString());
+                    findingDetails =
+                        $"Manual Finding Details:{Environment.NewLine}{sqliteDataReader["Finding_Details"].ToString()}";
                 }
                 xmlWriter.WriteElementString("FINDING_DETAILS", toolGenerated + findingDetails);
                 xmlWriter.WriteElementString("COMMENTS", sqliteDataReader["Comments"].ToString());

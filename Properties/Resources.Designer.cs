@@ -19,7 +19,7 @@ namespace Vulnerator.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -70,7 +70,10 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Modified_Date != @Modified_Date;.
+        ///   Looks up a localized string similar to DELETE FROM 
+        ///    Vulnerabilities
+        ///WHERE 
+        ///    Vulnerability_ID IS @Vulnerability_ID;.
         /// </summary>
         internal static string DeleteVulnerability {
             get {
@@ -508,6 +511,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to \d{2}\s\D{3}\s\d{4}.
+        /// </summary>
+        internal static string RegexStigDate {
+            get {
+                return ResourceManager.GetString("RegexStigDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to (?:(?:\w)+(?:-|\.|_)?)+.
         /// </summary>
         internal static string RegexStigId {
@@ -619,6 +631,24 @@ namespace Vulnerator.Properties {
         internal static string SelectUniqueVulnerabilityIdentiferBySource {
             get {
                 return ResourceManager.GetString("SelectUniqueVulnerabilityIdentiferBySource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
+        ///    Vulnerabilities.Vulnerability_ID
+        ///FROM
+        ///    Vulnerabilities
+        ///JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
+        ///JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID
+        ///WHERE 
+        ///    Published_Date IS NOT @Published_Date
+        ///AND
+        ///    Source_Name IS @Source_Name.
+        /// </summary>
+        internal static string SelectVulnerabilitiesForDeletion {
+            get {
+                return ResourceManager.GetString("SelectVulnerabilitiesForDeletion", resourceCulture);
             }
         }
         
@@ -795,6 +825,21 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UPDATE
+        ///    Vulnerabilities
+        ///SET
+        ///    Modified_Date = @Modified_Date,
+        ///    Published_Date = @Published_Date
+        ///WHERE
+        ///    Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Version = @Vulnerability_Version AND Vulnerability_Release = @Vulnerability_Release).
+        /// </summary>
+        internal static string UpdateVulnerabilityDates {
+            get {
+                return ResourceManager.GetString("UpdateVulnerabilityDates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to UPDATE UniqueFindings SET 
         ///	Last_Observed = @Last_Observed, 
         ///	Status = @Status, 
@@ -808,20 +853,6 @@ namespace Vulnerator.Properties {
         internal static string UpdateVulnerabilityFromAcas {
             get {
                 return ResourceManager.GetString("UpdateVulnerabilityFromAcas", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to UPDATE
-        ///    Vulnerabilities
-        ///SET
-        ///    Modified_Date = @Modified_Date
-        ///WHERE
-        ///    Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Version = @Vulnerability_Version AND Vulnerability_Release = @Vulnerability_Release).
-        /// </summary>
-        internal static string UpdateVulnerabilityModifiedDate {
-            get {
-                return ResourceManager.GetString("UpdateVulnerabilityModifiedDate", resourceCulture);
             }
         }
         

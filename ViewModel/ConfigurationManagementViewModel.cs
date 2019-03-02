@@ -306,7 +306,7 @@ namespace Vulnerator.ViewModel
                 CklCreator cklCreator = new CklCreator();
                 cklCreator.CreateCklFromHardware(hardware, vulnerabilitySource, saveDirectory);
                 guiFeedback.SetFields(
-                    string.Format("{0} CKL created for {1}", vulnerabilitySource.Source_Name, hardware.Displayed_Host_Name), 
+                    $"{vulnerabilitySource.Source_Name} CKL created for {hardware.Displayed_Host_Name}", 
                     "Collapsed", 
                     true);
                 Messenger.Default.Send(guiFeedback);

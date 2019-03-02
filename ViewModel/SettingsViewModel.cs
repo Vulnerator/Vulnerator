@@ -28,6 +28,8 @@ namespace Vulnerator.ViewModel
         private GuiFeedback guiFeedback = new GuiFeedback();
         private DatabaseInterface databaseInterface = new DatabaseInterface();
         string ansibleReportFolder = string.Empty;
+        int? stigFilesAttempted;
+        int? stigFilesParsed;
 
         private string stigLibraryLocation;
         public string StigLibraryLocation
@@ -140,7 +142,8 @@ namespace Vulnerator.ViewModel
             if ((bool)openFileDialog.ShowDialog())
             {
                 Properties.Settings.Default.Database = openFileDialog.FileName;
-                DatabaseBuilder.databaseConnection = string.Format(@"Data Source = {0}; Version=3;", Properties.Settings.Default.Database);
+                DatabaseBuilder.databaseConnection =
+                    $@"Data Source = {Properties.Settings.Default.Database}; Version=3;";
                 DatabaseBuilder.sqliteConnection = new System.Data.SQLite.SQLiteConnection(DatabaseBuilder.databaseConnection);
             }
         }
@@ -204,6 +207,7 @@ namespace Vulnerator.ViewModel
         {
             try
             {
+                stigFilesParsed = stigFilesAttempted = 0;
                 if (string.IsNullOrWhiteSpace(StigLibraryLocation))
                 {
                     e.Result = "No Library";
@@ -219,7 +223,12 @@ namespace Vulnerator.ViewModel
                     Properties.Settings.Default.StigLibraryIngestDate = DateTime.Now.ToLongDateString();
                     Messenger.Default.Send(new NotificationMessage<string>("ModelUpdate", "AllModels"), MessengerToken.ModelUpdated);
                     StigLibraryLocation = string.Empty;
-                    e.Result = "Success";
+                    if (stigFilesParsed == 0)
+                    { e.Result = "None"; }
+                    else if (stigFilesParsed < stigFilesAttempted)
+                    { e.Result = "Partial"; }
+                    else
+                    { e.Result = "Success"; }
                 }
             }
             catch (Exception exception)
@@ -236,12 +245,15 @@ namespace Vulnerator.ViewModel
                 {
                     if (e.Result is Exception)
                     {
-                        notification.Accent = "Red";
-                        notification.Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString();
-                        notification.Badge = "Failure";
-                        notification.Foreground = appStyle.Item1.Resources["TextBrush"].ToString();
-                        notification.Header = "STIG Library";
-                        notification.Message = "STIG Library failed to ingest.";
+                        notification = new Notification
+                        { 
+                            Accent = "Red",
+                            Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString(),
+                            Badge = "Failure",
+                            Foreground = appStyle.Item1.Resources["TextBrush"].ToString(),
+                            Header = "STIG Library",
+                            Message = "STIG Library failed to ingest."
+                        };
                         Exception exception = e.Result as Exception;
                         log.Error("Unable to ingest STIG Library.");
                         log.Debug("Exception details: " + exception);
@@ -252,22 +264,54 @@ namespace Vulnerator.ViewModel
                         {
                             case "Success":
                                 {
-                                    notification.Accent = "Green";
-                                    notification.Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString();
-                                    notification.Badge = "Success";
-                                    notification.Foreground = appStyle.Item1.Resources["TextBrush"].ToString();
-                                    notification.Header = "STIG Library";
-                                    notification.Message = "STIG Library successfully ingested.";
+                                    notification = new Notification
+                                    {
+                                        Accent = "Green",
+                                        Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString(),
+                                        Badge = "Success",
+                                        Foreground = appStyle.Item1.Resources["TextBrush"].ToString(),
+                                        Header = "STIG Library",
+                                        Message = "STIG Library successfully ingested."
+                                    };
                                     break;
                                 }
+                            case "Partial":
+                                {
+                                    notification = new Notification
+                                    {
+                                        Accent = "Orange",
+                                        Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString(),
+                                        Badge = "Warning",
+                                        Foreground = appStyle.Item1.Resources["TextBrush"].ToString(),
+                                        Header = "STIG Library",
+                                        Message = "STIG Library partially ingested; see log for errors."
+                                    };
+                                    break;
+                                }
+                            case "None":
+                            {
+                                notification = new Notification
+                                {
+                                    Accent = "Red",
+                                    Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString(),
+                                    Badge = "Error",
+                                    Foreground = appStyle.Item1.Resources["TextBrush"].ToString(),
+                                    Header = "STIG Library",
+                                    Message = "No STIGs ingested; see log for errors."
+                                };
+                                break;
+                            }
                             case "No Library":
                                 {
-                                    notification.Accent = "Orange";
-                                    notification.Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString();
-                                    notification.Badge = "Warning";
-                                    notification.Foreground = appStyle.Item1.Resources["TextBrush"].ToString();
-                                    notification.Header = "STIG Library";
-                                    notification.Message = "No STIG library file selected.";
+                                    notification = new Notification
+                                    {
+                                        Accent = "Orange",
+                                        Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString(),
+                                        Badge = "Warning",
+                                        Foreground = appStyle.Item1.Resources["TextBrush"].ToString(),
+                                        Header = "STIG Library",
+                                        Message = "No STIG library file selected."
+                                    };
                                     break;
                                 }
                             default:
@@ -279,11 +323,12 @@ namespace Vulnerator.ViewModel
                 guiFeedback.SetFields("Awaiting user input", "Collapsed", true);
                 Messenger.Default.Send(guiFeedback);
                 ProgressVisibility = "Collapsed";
+                stigFilesParsed = stigFilesAttempted = null;
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to handle STIG ingestion background worker completion events."));
-                log.Debug(string.Format("Exception details: {0}", exception));
+                log.Error("Unable to handle STIG ingestion background worker completion events.");
+                log.Debug($"Exception details: {exception}");
             }
         }
 
@@ -294,18 +339,7 @@ namespace Vulnerator.ViewModel
                 ProgressBarMax = zipArchive.Entries.Count();
                 foreach (ZipArchiveEntry entry in zipArchive.Entries)
                 {
-                    if (entry.Name.EndsWith("zip"))
-                    {
-                        if (!entry.Name.Contains("SCAP_1-1"))
-                        { ParseZip(entry); }
-                    }
-                    if (entry.Name.EndsWith("xml"))
-                    {
-                        guiFeedback.SetFields(string.Format("Ingesting {0}", entry.Name), "Visible", true);
-                        Messenger.Default.Send(guiFeedback);
-                        RawStigReader rawStigReader = new RawStigReader();
-                        rawStigReader.ReadRawStig(entry);
-                    }
+                    HandleZipArchiveEntry(entry);
                     ProgressBarValue++;
                 }
             }
@@ -318,21 +352,26 @@ namespace Vulnerator.ViewModel
                 using (ZipArchive zipArchive = new ZipArchive(stream, ZipArchiveMode.Read))
                 {
                     foreach (ZipArchiveEntry entry in zipArchive.Entries)
-                    {
-                        if (entry.Name.EndsWith("zip"))
-                        {
-                            if (!entry.Name.Contains("SCAP_1-1"))
-                            { ParseZip(entry); }
-                        }
-                        if (entry.Name.EndsWith("xml"))
-                        {
-                            guiFeedback.SetFields(string.Format("Ingesting {0}", entry.Name), "Visible", true);
-                            Messenger.Default.Send(guiFeedback);
-                            RawStigReader rawStigReader = new RawStigReader();
-                            rawStigReader.ReadRawStig(entry);
-                        }
-                    }
+                    { HandleZipArchiveEntry(entry); }
                 }
+            }
+        }
+
+        private void HandleZipArchiveEntry(ZipArchiveEntry zipArchiveEntry)
+        {
+            if (zipArchiveEntry.Name.EndsWith("zip"))
+            {
+                if (!zipArchiveEntry.Name.Contains("SCAP_1-1"))
+                { ParseZip(zipArchiveEntry); }
+            }
+            if (zipArchiveEntry.Name.EndsWith("xml"))
+            {
+                stigFilesAttempted++;
+                guiFeedback.SetFields($"Ingesting {zipArchiveEntry.Name}", "Visible", true);
+                Messenger.Default.Send(guiFeedback);
+                RawStigReader rawStigReader = new RawStigReader();
+                if (rawStigReader.ReadRawStig(zipArchiveEntry) == "Parsed")
+                { stigFilesParsed++; }
             }
         }
 
@@ -366,13 +405,13 @@ namespace Vulnerator.ViewModel
                 string[] operatingSystems = new string[] { "Red Hat Enterprise Linux 6", "Red Hat Enterprise Linux 7", "Solaris 10", "Solaris 11", "SUSE" };
                 foreach (string os in operatingSystems)
                 {
-                    string progressLabel = string.Format("Processing {0}", os);
+                    string progressLabel = $"Processing {os}";
                     guiFeedback.SetFields(progressLabel, "Visible", true);
                     Messenger.Default.Send(guiFeedback);
                     string tempOs = os;
                     if (os.Contains("Red Hat"))
                     { tempOs = "Red Hat"; }
-                    string saveFolder = string.Format("{0}\\{1}", ansibleReportFolder, tempOs.Replace(" ", ""));
+                    string saveFolder = $"{ansibleReportFolder}\\{tempOs.Replace(" ", "")}";
                     if (!Directory.Exists(saveFolder))
                     { Directory.CreateDirectory(saveFolder); }
                     AnsibleTowerBuilder ansibleTowerBuilder = new AnsibleTowerBuilder();
