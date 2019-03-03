@@ -118,6 +118,7 @@
         <local:AboutView x:Key="aboutView" />
         <local:ConfigurationManagementView x:Key="configurationManagementView" />
         <local:NewsView x:Key="newsView" />
+        <local:ReportingView x:Key="ReportingView" />
         <local:RmfView x:Key="rmfView" />
         <local:SettingsView x:Key="settingsView" />
         <local:ThemeView x:Key="themeView" />
@@ -168,6 +169,15 @@
                                 <IconPacks:PackIconMaterial HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
                                                             Kind="ChartLine" />
+                            </Controls:HamburgerMenuIconItem.Icon>
+                        </Controls:HamburgerMenuIconItem>
+                        <Controls:HamburgerMenuIconItem Label="Reporting"
+                                                        Tag="{StaticResource ReportingView}"
+                                                        ToolTip="Reporting">
+                            <Controls:HamburgerMenuIconItem.Icon>
+                                <IconPacks:PackIconMaterial HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            Kind="FileDownloadOutline" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                         <Controls:HamburgerMenuIconItem Label="Mitigations &amp; NIST Mapping"

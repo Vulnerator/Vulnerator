@@ -481,6 +481,9 @@
     <Compile Include="View\UI\NewsView.xaml.cs">
       <DependentUpon>NewsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\UI\ReportingView.xaml.cs">
+      <DependentUpon>ReportingView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\UI\RmfView.xaml.cs">
       <DependentUpon>RmfView.xaml</DependentUpon>
     </Compile>
@@ -635,6 +638,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\UI\NoInternetApplication.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UI\ReportingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
