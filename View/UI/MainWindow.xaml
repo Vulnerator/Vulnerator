@@ -114,7 +114,6 @@
                                        IsInitialLoadEnabled="True" />
         <Converters:SelectedItemToContentConverter x:Key="SelectedItemToContentConverter" />
         <local:VulnerabilityManagementView x:Key="vulnerabilityManagementView" />
-        <local:MitigationsNistMappingView x:Key="mitigationsNistMappingView" />
         <local:AboutView x:Key="aboutView" />
         <local:ConfigurationManagementView x:Key="configurationManagementView" />
         <local:NewsView x:Key="newsView" />
@@ -178,15 +177,6 @@
                                 <IconPacks:PackIconMaterial HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
                                                             Kind="FileDownloadOutline" />
-                            </Controls:HamburgerMenuIconItem.Icon>
-                        </Controls:HamburgerMenuIconItem>
-                        <Controls:HamburgerMenuIconItem Label="Mitigations &amp; NIST Mapping"
-                                                        Tag="{StaticResource mitigationsNistMappingView}"
-                                                        ToolTip="Mitigations &amp; NIST Mapping">
-                            <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconModern HorizontalAlignment="Center"
-                                                          VerticalAlignment="Center"
-                                                          Kind="ListCheck" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                         <Controls:HamburgerMenuIconItem Label="RMF"

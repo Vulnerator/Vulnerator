@@ -34,11 +34,11 @@ namespace Vulnerator.ViewModel
             SimpleIoc.Default.Register<AboutViewModel>();
             SimpleIoc.Default.Register<NewsViewModel>();
             SimpleIoc.Default.Register<ThemeViewModel>();
+            SimpleIoc.Default.Register<ReportingViewModel>();
             SimpleIoc.Default.Register<RmfViewModel>();
             SimpleIoc.Default.Register<SplashViewModel>();
             SimpleIoc.Default.Register<SettingsViewModel>();
             SimpleIoc.Default.Register<ConfigurationManagementViewModel>();
-            SimpleIoc.Default.Register<MitigationsNistMappingViewModel>();
         }
 
         public AboutViewModel About
@@ -49,6 +49,9 @@ namespace Vulnerator.ViewModel
 
         public NewsViewModel News
         { get { return SimpleIoc.Default.GetInstance<NewsViewModel>(); } }
+
+        public ReportingViewModel Reporting
+        { get { return SimpleIoc.Default.GetInstance<ReportingViewModel>(); } }
 
         public RmfViewModel Rmf
         { get { return SimpleIoc.Default.GetInstance<RmfViewModel>(); } }
@@ -70,9 +73,6 @@ namespace Vulnerator.ViewModel
 
         public ConfigurationManagementViewModel ConfigurationManagement
         { get { return SimpleIoc.Default.GetInstance<ConfigurationManagementViewModel>(); } }
-
-        public MitigationsNistMappingViewModel MitigationsNist
-        { get { return SimpleIoc.Default.GetInstance<MitigationsNistMappingViewModel>(); } }
 
         public static void Cleanup()
         { }

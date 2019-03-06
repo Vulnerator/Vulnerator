@@ -440,8 +440,8 @@
     <Compile Include="ViewModel\ConfigurationManagementViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MessengerToken.cs" />
-    <Compile Include="ViewModel\MitigationsNistMappingViewModel.cs" />
     <Compile Include="ViewModel\NewsViewModel.cs" />
+    <Compile Include="ViewModel\ReportingViewModel.cs" />
     <Compile Include="ViewModel\RmfViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\SplashViewModel.cs" />
@@ -474,9 +474,6 @@
     </Compile>
     <Compile Include="View\UI\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\UI\MitigationsNistMappingView.xaml.cs">
-      <DependentUpon>MitigationsNistMappingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UI\NewsView.xaml.cs">
       <DependentUpon>NewsView.xaml</DependentUpon>
@@ -625,10 +622,6 @@
     <Compile Include="ViewModel\BaseInpc.cs" />
     <Compile Include="ViewModel\DelegateCommand.cs" />
     <Compile Include="View\Converter\StringToBoolConverter.cs" />
-    <Page Include="View\UI\MitigationsNistMappingView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="View\UI\NewsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
