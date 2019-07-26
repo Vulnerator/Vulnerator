@@ -15,17 +15,140 @@
              xmlns:local="clr-namespace:Vulnerator.View.UI"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
              HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch"
              DataContext="{Binding Reporting, Source={StaticResource Locator}}"
              mc:Ignorable="d">
-    <Grid Background="{StaticResource WindowBackgroundBrush}">
+    <Grid Background="{DynamicResource WindowBackgroundBrush}">
         <Controls:MetroAnimatedSingleRowTabControl Margin="5"
                                                    Controls:TabControlHelper.Underlined="SelectedTabItem">
             <TabItem Header="Vulnerabilities"
-                     Style="{StaticResource CustomMetroTabItem}" />
+                     Style="{StaticResource CustomMetroTabItem}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <DataGrid Grid.Row="0"
+                              Grid.Column="0"
+                              Margin="0,5,5,0"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch"
+                              CanUserAddRows="False"
+                              CanUserReorderColumns="True"
+                              CanUserResizeColumns="True"
+                              ItemsSource="{Binding VulnerabilityReports}"
+                              Style="{StaticResource GreyBorderedDataGridStyle}"
+                              HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Auto">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Width="Auto">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox Margin="5,0,0,0"
+                                                  HorizontalAlignment="Center"
+                                                  Command="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Width="Auto"
+                                                    SortMemberPath="Displayed_Report_Name">
+                                <DataGridTemplateColumn.HeaderStyle>
+                                    <Style BasedOn="{StaticResource MetroDataGridColumnHeader}"
+                                           TargetType="{x:Type DataGridColumnHeader}">
+                                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                    </Style>
+                                </DataGridTemplateColumn.HeaderStyle>
+                                <DataGridTemplateColumn.Header>
+                                    <TextBlock HorizontalAlignment="Center"
+                                               Text="Report Name"
+                                               TextTrimming="CharacterEllipsis" />
+                                </DataGridTemplateColumn.Header>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Displayed_Report_Name}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   TextWrapping="NoWrap"
+                                                   ToolTip="{Binding Displayed_Report_Name}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Width="Auto"
+                                                    SortMemberPath="Report_Type">
+                                <DataGridTemplateColumn.HeaderStyle>
+                                    <Style BasedOn="{StaticResource MetroDataGridColumnHeader}"
+                                           TargetType="{x:Type DataGridColumnHeader}">
+                                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                    </Style>
+                                </DataGridTemplateColumn.HeaderStyle>
+                                <DataGridTemplateColumn.Header>
+                                    <TextBlock HorizontalAlignment="Center"
+                                               Text="Report Type"
+                                               TextTrimming="CharacterEllipsis" />
+                                </DataGridTemplateColumn.Header>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Report_Type}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   TextWrapping="NoWrap"
+                                                   ToolTip="{Binding Report_Type}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <ScrollViewer Grid.Row="0"
+                                  Grid.Column="1"
+                                  Margin="0,5,0,0"
+                                  VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <TextBox Controls:TextBoxHelper.Watermark="Selected Report Name"
+                                     vh:DependencyProperties.FloatingWatermark="Report Name (Read Only)"
+                                     IsReadOnly="True"
+                                     Style="{StaticResource HeaderedTextBoxStyle}" />
+                            <TextBox Controls:TextBoxHelper.Watermark="Selected Report Type"
+                                     vh:DependencyProperties.FloatingWatermark="Report Type (Read Only)"
+                                     IsReadOnly="True"
+                                     Style="{StaticResource HeaderedTextBoxStyle}" />
+                        </StackPanel>
+                    </ScrollViewer>
+                    <Button Grid.Row="1"
+                            Grid.Column="0"
+                            MinWidth="{Binding ElementName=DiscardReportChangesButton, Path=ActualWidth}"
+                            Margin="0,5,5,0"
+                            HorizontalAlignment="Left"
+                            Content="Launch Reports" />
+                    <Grid Grid.Row="1"
+                          Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="1"
+                                Width="Auto"
+                                MinWidth="{Binding ElementName=DiscardReportChangesButton, Path=ActualWidth}"
+                                Margin="0,5,2.5,0"
+                                HorizontalAlignment="Center"
+                                Content="Update Report" />
+                        <Button x:Name="DiscardReportChangesButton"
+                                Grid.Column="2"
+                                Width="Auto"
+                                Margin="2.5,5,0,0"
+                                HorizontalAlignment="Center"
+                                Content="Discard Changes" />
+                    </Grid>
+                </Grid>
+            </TabItem>
             <TabItem Header="Configuration Management"
-                     Style="{StaticResource CustomMetroTabItem}" />
+                     Style="{StaticResource CustomMetroTabItem}">
+                <Grid />
+            </TabItem>
         </Controls:MetroAnimatedSingleRowTabControl>
     </Grid>
 </UserControl>

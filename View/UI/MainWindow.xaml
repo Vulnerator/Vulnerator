@@ -179,7 +179,7 @@
                                                             Kind="FileDownloadOutline" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
-                        <Controls:HamburgerMenuIconItem Label="RMF"
+                        <!--<Controls:HamburgerMenuIconItem Label="RMF"
                                                         Tag="{StaticResource rmfView}"
                                                         ToolTip="RMF">
                             <Controls:HamburgerMenuIconItem.Icon>
@@ -187,7 +187,7 @@
                                                             VerticalAlignment="Center"
                                                             Kind="Certificate" />
                             </Controls:HamburgerMenuIconItem.Icon>
-                        </Controls:HamburgerMenuIconItem>
+                        </Controls:HamburgerMenuIconItem>-->
                         <Controls:HamburgerMenuIconItem Label="Configuration Management"
                                                         Tag="{StaticResource configurationManagementView}"
                                                         ToolTip="Configuration Management">
@@ -210,7 +210,7 @@
                 </Controls:HamburgerMenu.ItemsSource>
                 <Controls:HamburgerMenu.OptionsItemsSource>
                     <Controls:HamburgerMenuItemCollection>
-                        <Controls:HamburgerMenuIconItem Label="User Guide"
+                        <!--<Controls:HamburgerMenuIconItem Label="User Guide"
                                                         Tag="{StaticResource userGuideView}"
                                                         ToolTip="User Guide">
                             <Controls:HamburgerMenuIconItem.Icon>
@@ -218,7 +218,7 @@
                                                             VerticalAlignment="Center"
                                                             Kind="Book" />
                             </Controls:HamburgerMenuIconItem.Icon>
-                        </Controls:HamburgerMenuIconItem>
+                        </Controls:HamburgerMenuIconItem>-->
                         <Controls:HamburgerMenuIconItem Label="Settings"
                                                         Tag="{StaticResource settingsView}"
                                                         ToolTip="Settings">
