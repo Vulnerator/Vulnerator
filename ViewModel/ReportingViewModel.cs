@@ -45,6 +45,21 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private RequiredReport _selectedReport;
+
+        public RequiredReport SelectedReport
+        {
+            get { return _selectedReport; }
+            set
+            {
+                if (_selectedReport != value)
+                {
+                    _selectedReport = value;
+                    RaisePropertyChanged("SelectedReport");
+                }
+            }
+        }
+
         public ReportingViewModel()
         {
             try

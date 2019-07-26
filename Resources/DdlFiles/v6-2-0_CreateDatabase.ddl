@@ -34,7 +34,7 @@ CREATE TABLE Accreditations
 	 FOREIGN KEY (Integrity_ID) REFERENCES IntegrityLevels(Integrity_ID),
 	 FOREIGN KEY (Availability_ID) REFERENCES AvailabilityLevels(Availability_ID),
 	 FOREIGN KEY (SystemCategorization_ID) REFERENCES SystemCategorization(SystemCategorization_ID),
-	 FOREIGN KEY (ControlSelection_ID) REFERENCES ControlSelection(ControlSelection_ID) ,
+	 FOREIGN KEY (ControlSelection_ID) REFERENCES ControlSelection(ControlSelection_ID),
 	 FOREIGN KEY (StepOneQuestionnaire_ID) REFERENCES StepOneQuestionnaire(StepOneQuestionnaire_ID),
 	 FOREIGN KEY (SAP_ID) REFERENCES SAPs(SAP_ID),
 	 FOREIGN KEY (PIT_Determination_ID) REFERENCES PIT_Determination(PIT_Determination_ID)
@@ -1415,7 +1415,6 @@ INSERT INTO GroupTiers VALUES (9);
 INSERT INTO GroupTiers VALUES (10);
 INSERT INTO Groups VALUES (NULL, 'All', 1, 'False', NULL, NULL);
 INSERT INTO FindingTypes VALUES (NULL, 'ACAS');
-INSERT INTO FindingTypes VALUES (NULL, 'Ansible');
 INSERT INTO FindingTypes VALUES (NULL, 'Fortify');
 INSERT INTO FindingTypes VALUES (NULL, 'CKL');
 INSERT INTO FindingTypes VALUES (NULL, 'XCCDF');

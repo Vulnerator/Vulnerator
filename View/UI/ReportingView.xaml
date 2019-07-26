@@ -43,6 +43,7 @@
                               CanUserReorderColumns="True"
                               CanUserResizeColumns="True"
                               ItemsSource="{Binding VulnerabilityReports}"
+                              SelectedItem="{Binding SelectedReport}"
                               Style="{StaticResource GreyBorderedDataGridStyle}"
                               HorizontalScrollBarVisibility="Disabled"
                               VerticalScrollBarVisibility="Auto">
@@ -110,10 +111,17 @@
                             <TextBox Controls:TextBoxHelper.Watermark="Selected Report Name"
                                      vh:DependencyProperties.FloatingWatermark="Report Name (Read Only)"
                                      IsReadOnly="True"
+                                     Text="{Binding SelectedReport.Displayed_Report_Name}"
                                      Style="{StaticResource HeaderedTextBoxStyle}" />
                             <TextBox Controls:TextBoxHelper.Watermark="Selected Report Type"
                                      vh:DependencyProperties.FloatingWatermark="Report Type (Read Only)"
                                      IsReadOnly="True"
+                                     Text="{Binding SelectedReport.Report_Type}"
+                                     Style="{StaticResource HeaderedTextBoxStyle}" />
+                            <TextBox Controls:TextBoxHelper.Watermark="Selected Report Category"
+                                     vh:DependencyProperties.FloatingWatermark="Report Category (Read Only)"
+                                     IsReadOnly="True"
+                                     Text="{Binding SelectedReport.ReportCategory.Report_Category_Name}"
                                      Style="{StaticResource HeaderedTextBoxStyle}" />
                         </StackPanel>
                     </ScrollViewer>
