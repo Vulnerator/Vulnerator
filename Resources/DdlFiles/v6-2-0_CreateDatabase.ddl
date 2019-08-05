@@ -1403,6 +1403,22 @@ CREATE TABLE ReportCategories
 	 Report_Category_ID INTEGER PRIMARY KEY,
 	 Report_Category_Name NVARCHAR (25) NOT NULL
 	);
+CREATE TABLE ReportFindingTypes
+	(
+	 Required_Report_ID INTEGER NOT NULL,
+	 Finding_Type_ID INTEGER NOT NULL,
+	 FOREIGN KEY (Required_Report_ID) REFERENCES RequiredReports(Required_Report_ID),
+	 FOREIGN KEY (Finding_Type_ID) REFERENCES FindingTypes(Finding_Type_ID)
+	);
+CREATE TABLE ReportSeverities
+	(
+	 Required_Report_ID INTEGER NOT NULL,
+	 ReportCatI BOOLEAN NOT NULL,
+	 ReportCatII BOOLEAN NOT NULL,
+	 ReportCatIII BOOLEAN NOT NULL,
+	 ReportCatIV BOOLEAN NOT NULL,
+	 FOREIGN KEY (Required_Report_ID) REFERENCES RequiredReports(Required_Report_ID)
+	);
 INSERT INTO GroupTiers VALUES (1);
 INSERT INTO GroupTiers VALUES (2);
 INSERT INTO GroupTiers VALUES (3);
