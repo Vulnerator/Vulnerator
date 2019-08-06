@@ -113,6 +113,9 @@
     <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.4.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\MvvmLightLibsStd10.5.4.1\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
     </Reference>
+    <Reference Include="GridExtra.Wpf, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\GridExtra.0.4.0\lib\net45\GridExtra.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlToXamlConverter, Version=1.0.5727.24510, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\HtmlToXamlConverter.1.0.5727.24510\lib\net45\HtmlToXamlConverter.dll</HintPath>
       <Private>True</Private>

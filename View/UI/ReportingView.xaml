@@ -7,6 +7,7 @@
              xmlns:LiveCharts="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              xmlns:ViewHelper="clr-namespace:Vulnerator.View.ViewHelper"
              xmlns:ViewModel="clr-namespace:Vulnerator.ViewModel"
+             xmlns:GridExtra="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
              xmlns:WPFToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:dat="clr-namespace:System.Windows.Data;assembly=PresentationFramework"
@@ -107,23 +108,40 @@
                                   Grid.Column="1"
                                   Margin="0,5,0,0"
                                   VerticalScrollBarVisibility="Auto">
-                        <StackPanel>
-                            <TextBox Controls:TextBoxHelper.Watermark="Selected Report Name"
-                                     vh:DependencyProperties.FloatingWatermark="Report Name (Read Only)"
-                                     IsReadOnly="True"
-                                     Text="{Binding SelectedReport.Displayed_Report_Name}"
-                                     Style="{StaticResource HeaderedTextBoxStyle}" />
-                            <TextBox Controls:TextBoxHelper.Watermark="Selected Report Type"
-                                     vh:DependencyProperties.FloatingWatermark="Report Type (Read Only)"
-                                     IsReadOnly="True"
-                                     Text="{Binding SelectedReport.Report_Type}"
-                                     Style="{StaticResource HeaderedTextBoxStyle}" />
-                            <TextBox Controls:TextBoxHelper.Watermark="Selected Report Category"
-                                     vh:DependencyProperties.FloatingWatermark="Report Category (Read Only)"
-                                     IsReadOnly="True"
-                                     Text="{Binding SelectedReport.ReportCategory.Report_Category_Name}"
-                                     Style="{StaticResource HeaderedTextBoxStyle}" />
-                        </StackPanel>
+                        <Grid>
+                            <GridExtra:ResponsiveGrid>
+                                <Border GridExtra:ResponsiveGrid.XS="12"
+                                        GridExtra:ResponsiveGrid.SM="12"
+                                        GridExtra:ResponsiveGrid.MD="6"
+                                        GridExtra:ResponsiveGrid.LG="4">
+                                    <TextBox Controls:TextBoxHelper.Watermark="Selected Report Name"
+                                             vh:DependencyProperties.FloatingWatermark="Report Name (Read Only)"
+                                             IsReadOnly="True"
+                                             Text="{Binding SelectedReport.Displayed_Report_Name}"
+                                             Style="{StaticResource HeaderedTextBoxStyle}" />
+                                </Border>
+                                <Border GridExtra:ResponsiveGrid.XS="12"
+                                        GridExtra:ResponsiveGrid.SM="12"
+                                        GridExtra:ResponsiveGrid.MD="6"
+                                        GridExtra:ResponsiveGrid.LG="4">
+                                    <TextBox Controls:TextBoxHelper.Watermark="Selected Report Type"
+                                             vh:DependencyProperties.FloatingWatermark="Report Type (Read Only)"
+                                             IsReadOnly="True"
+                                             Text="{Binding SelectedReport.Report_Type}"
+                                             Style="{StaticResource HeaderedTextBoxStyle}" />
+                                </Border>
+                                <Border GridExtra:ResponsiveGrid.XS="12"
+                                        GridExtra:ResponsiveGrid.SM="12"
+                                        GridExtra:ResponsiveGrid.MD="6"
+                                        GridExtra:ResponsiveGrid.LG="4">
+                                    <TextBox Controls:TextBoxHelper.Watermark="Selected Report Category"
+                                             vh:DependencyProperties.FloatingWatermark="Report Category (Read Only)"
+                                             IsReadOnly="True"
+                                             Text="{Binding SelectedReport.ReportCategory.Report_Category_Name}"
+                                             Style="{StaticResource HeaderedTextBoxStyle}" />
+                                </Border>
+                            </GridExtra:ResponsiveGrid>
+                        </Grid>
                     </ScrollViewer>
                     <Button Grid.Row="1"
                             Grid.Column="0"
