@@ -1407,17 +1407,21 @@ CREATE TABLE ReportFindingTypes
 	(
 	 Required_Report_ID INTEGER NOT NULL,
 	 Finding_Type_ID INTEGER NOT NULL,
+	 UserName NVARCHAR (50) NOT NULL,
 	 FOREIGN KEY (Required_Report_ID) REFERENCES RequiredReports(Required_Report_ID),
-	 FOREIGN KEY (Finding_Type_ID) REFERENCES FindingTypes(Finding_Type_ID)
+	 FOREIGN KEY (Finding_Type_ID) REFERENCES FindingTypes(Finding_Type_ID),
+	 UNIQUE (Required_Report_ID, Finding_Type_ID, UserName) ON CONFLICT IGNORE
 	);
 CREATE TABLE ReportSeverities
 	(
 	 Required_Report_ID INTEGER NOT NULL,
+	 UserName NVARCHAR (50) NOT NULL,
 	 ReportCatI BOOLEAN NOT NULL,
 	 ReportCatII BOOLEAN NOT NULL,
 	 ReportCatIII BOOLEAN NOT NULL,
 	 ReportCatIV BOOLEAN NOT NULL,
-	 FOREIGN KEY (Required_Report_ID) REFERENCES RequiredReports(Required_Report_ID)
+	 FOREIGN KEY (Required_Report_ID) REFERENCES RequiredReports(Required_Report_ID),
+	 UNIQUE (Required_Report_ID, UserName) ON CONFLICT IGNORE
 	);
 INSERT INTO GroupTiers VALUES (1);
 INSERT INTO GroupTiers VALUES (2);
