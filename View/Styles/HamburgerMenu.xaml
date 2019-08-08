@@ -43,7 +43,7 @@
            TargetType="{x:Type Controls:HamburgerMenu}">
         <Setter Property="ItemContainerStyle" Value="{StaticResource HamburgerMenuCreatorsItemStyle}" />
         <Setter Property="OptionsItemContainerStyle" Value="{StaticResource HamburgerMenuCreatorsItemStyle}" />
-        <Setter Property="PaneBackground" Value="{DynamicResource WhiteBrush}" />
+        <Setter Property="PaneBackground" Value="{DynamicResource GrayBrush10}" />
         <Setter Property="PaneForeground" Value="{DynamicResource TextBrush}" />
         <Setter Property="ShowSelectionIndicator" Value="True" />
     </Style>

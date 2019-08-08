@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                     xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
+                    xmlns:GridExtra="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
                     xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     xmlns:local="clr-namespace:Vulnerator.View.Styles"
                     xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
@@ -17,6 +18,14 @@
         <Setter Property="FontSize" Value="12" />
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="Margin" Value="5" />
+    </Style>
+
+    <Style x:Key="ResponsiveGridThemeButtonStyle"
+           BasedOn="{StaticResource BlankButtonStyle}"
+           TargetType="{x:Type Button}">
+        <Setter Property="GridExtra:ResponsiveGrid.SM" Value="2" />
+        <Setter Property="GridExtra:ResponsiveGrid.XS" Value="3" />
+        <Setter Property="Margin" Value="0" />
     </Style>
 
     <Style x:Key="SplitButtonStyle"

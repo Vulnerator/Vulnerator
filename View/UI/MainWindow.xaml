@@ -27,21 +27,22 @@
                       BorderBrush="{DynamicResource AccentColorBrush}"
                       BorderThickness="1"
                       DataContext="{Binding Main, Source={StaticResource Locator}}"
-                      GlowBrush="{DynamicResource AccentColorBrush}"
                       Icon="/Vulnerator;component/Resources/vulneratorlogodraft.ico"
                       KeyboardNavigation.TabNavigation="Continue"
                       ResizeMode="CanResize"
                       Style="{DynamicResource CustomCleanWindowStyleKey}"
+                      TitlebarHeight="48"
                       mc:Ignorable="d">
 
     <!--  Window Icon Template  -->
     <Controls:MetroWindow.IconTemplate>
         <DataTemplate>
             <Border Width="48">
-                <IconPacks:PackIconMaterialLight Width="{TemplateBinding Width}"
-                                                 Height="{TemplateBinding Height}"
+                <IconPacks:PackIconMaterialLight Width="24"
+                                                 Height="24"
                                                  Margin="4"
                                                  HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center"
                                                  Foreground="{DynamicResource BlackBrush}"
                                                  Kind="ChartHistogram" />
             </Border>

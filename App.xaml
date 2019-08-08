@@ -31,6 +31,7 @@
                 <ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/Colors/material.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/Size/s.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/Weight/light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/Border.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/Button.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/ComboBox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/DataGrid.xaml" />
@@ -43,6 +44,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/NotificationMessage.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/NotificationMessageContainer.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/Rectangle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/StackPanel.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/TabItem.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/TextBlock.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/TextBox.xaml" />
