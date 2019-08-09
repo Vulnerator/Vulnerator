@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
-             xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:GridExtra="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
+             xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:LiveCharts="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              xmlns:ViewHelper="clr-namespace:Vulnerator.View.ViewHelper"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -204,217 +204,217 @@
                             </Button.ContentTemplate>
                         </Button>
                         <Button x:Name="taupe"
-                            Command="{Binding ChangeAccentCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
-                            Style="{StaticResource ResponsiveGridThemeButtonStyle}">
+                                Command="{Binding ChangeAccentCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
+                                Style="{StaticResource ResponsiveGridThemeButtonStyle}">
                             <Button.ContentTemplate>
                                 <DataTemplate>
                                     <StackPanel Width="Auto"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top">
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top">
                                         <Rectangle Fill="#FF87794E"
-                                               Style="{StaticResource ThemeSwatchStyle}"
-                                               ToolTip="Taupe" />
+                                                   Style="{StaticResource ThemeSwatchStyle}"
+                                                   ToolTip="Taupe" />
                                         <Label HorizontalAlignment="Center"
-                                           Content="Taupe" />
+                                               Content="Taupe" />
                                     </StackPanel>
                                 </DataTemplate>
                             </Button.ContentTemplate>
                         </Button>
                         <Button x:Name="olive"
-                            Command="{Binding ChangeAccentCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
-                            Style="{StaticResource ResponsiveGridThemeButtonStyle}">
+                                Command="{Binding ChangeAccentCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
+                                Style="{StaticResource ResponsiveGridThemeButtonStyle}">
                             <Button.ContentTemplate>
                                 <DataTemplate>
                                     <StackPanel Width="Auto"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top">
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top">
                                         <Rectangle Fill="#FF6D8764"
-                                               Style="{StaticResource ThemeSwatchStyle}"
-                                               ToolTip="Olive" />
+                                                   Style="{StaticResource ThemeSwatchStyle}"
+                                                   ToolTip="Olive" />
                                         <Label HorizontalAlignment="Center"
-                                           Content="Olive" />
+                                               Content="Olive" />
                                     </StackPanel>
                                 </DataTemplate>
                             </Button.ContentTemplate>
                         </Button>
                         <Button x:Name="lime"
-                            Command="{Binding ChangeAccentCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
-                            Style="{StaticResource ResponsiveGridThemeButtonStyle}">
+                                Command="{Binding ChangeAccentCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
+                                Style="{StaticResource ResponsiveGridThemeButtonStyle}">
                             <Button.ContentTemplate>
                                 <DataTemplate>
                                     <StackPanel Width="Auto"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top">
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top">
                                         <Rectangle Fill="#FFA4C400"
-                                               Style="{StaticResource ThemeSwatchStyle}"
-                                               ToolTip="Lime" />
+                                                   Style="{StaticResource ThemeSwatchStyle}"
+                                                   ToolTip="Lime" />
                                         <Label HorizontalAlignment="Center"
-                                           Content="Lime" />
+                                               Content="Lime" />
                                     </StackPanel>
                                 </DataTemplate>
                             </Button.ContentTemplate>
                         </Button>
                         <Button x:Name="green"
-                            Command="{Binding ChangeAccentCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
-                            Style="{StaticResource ResponsiveGridThemeButtonStyle}">
+                                Command="{Binding ChangeAccentCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
+                                Style="{StaticResource ResponsiveGridThemeButtonStyle}">
                             <Button.ContentTemplate>
                                 <DataTemplate>
                                     <StackPanel Width="Auto"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top">
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top">
                                         <Rectangle Fill="#FF60A917"
-                                               Style="{StaticResource ThemeSwatchStyle}"
-                                               ToolTip="Green" />
+                                                   Style="{StaticResource ThemeSwatchStyle}"
+                                                   ToolTip="Green" />
                                         <Label HorizontalAlignment="Center"
-                                           Content="Green" />
+                                               Content="Green" />
                                     </StackPanel>
                                 </DataTemplate>
                             </Button.ContentTemplate>
                         </Button>
                         <Button x:Name="emerald"
-                            Command="{Binding ChangeAccentCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
-                            Style="{StaticResource ResponsiveGridThemeButtonStyle}">
+                                Command="{Binding ChangeAccentCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
+                                Style="{StaticResource ResponsiveGridThemeButtonStyle}">
                             <Button.ContentTemplate>
                                 <DataTemplate>
                                     <StackPanel Width="Auto"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top">
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top">
                                         <Rectangle Fill="#FF008A00"
-                                               Style="{StaticResource ThemeSwatchStyle}"
-                                               ToolTip="Emerald" />
+                                                   Style="{StaticResource ThemeSwatchStyle}"
+                                                   ToolTip="Emerald" />
                                         <Label HorizontalAlignment="Center"
-                                           Content="Emerald" />
+                                               Content="Emerald" />
                                     </StackPanel>
                                 </DataTemplate>
                             </Button.ContentTemplate>
                         </Button>
                         <Button x:Name="teal"
-                            Command="{Binding ChangeAccentCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
-                            Style="{StaticResource ResponsiveGridThemeButtonStyle}">
+                                Command="{Binding ChangeAccentCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
+                                Style="{StaticResource ResponsiveGridThemeButtonStyle}">
                             <Button.ContentTemplate>
                                 <DataTemplate>
                                     <StackPanel Width="Auto"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top">
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top">
                                         <Rectangle Fill="#FF00ABA9"
-                                               Style="{StaticResource ThemeSwatchStyle}"
-                                               ToolTip="Teal" />
+                                                   Style="{StaticResource ThemeSwatchStyle}"
+                                                   ToolTip="Teal" />
                                         <Label HorizontalAlignment="Center"
-                                           Content="Teal" />
+                                               Content="Teal" />
                                     </StackPanel>
                                 </DataTemplate>
                             </Button.ContentTemplate>
                         </Button>
                         <Button x:Name="cyan"
-                            Command="{Binding ChangeAccentCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
-                            Style="{StaticResource ResponsiveGridThemeButtonStyle}">
+                                Command="{Binding ChangeAccentCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
+                                Style="{StaticResource ResponsiveGridThemeButtonStyle}">
                             <Button.ContentTemplate>
                                 <DataTemplate>
                                     <StackPanel Width="Auto"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top">
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top">
                                         <Rectangle Fill="#FF1BA1E2"
-                                               Style="{StaticResource ThemeSwatchStyle}"
-                                               ToolTip="Cyan" />
+                                                   Style="{StaticResource ThemeSwatchStyle}"
+                                                   ToolTip="Cyan" />
                                         <Label HorizontalAlignment="Center"
-                                           Content="Cyan" />
+                                               Content="Cyan" />
                                     </StackPanel>
                                 </DataTemplate>
                             </Button.ContentTemplate>
                         </Button>
                         <Button x:Name="steel"
-                            Command="{Binding ChangeAccentCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
-                            Style="{StaticResource ResponsiveGridThemeButtonStyle}">
+                                Command="{Binding ChangeAccentCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
+                                Style="{StaticResource ResponsiveGridThemeButtonStyle}">
                             <Button.ContentTemplate>
                                 <DataTemplate>
                                     <StackPanel Width="Auto"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top">
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top">
                                         <Rectangle Fill="#FF647687"
-                                               Style="{StaticResource ThemeSwatchStyle}"
-                                               ToolTip="Steel" />
+                                                   Style="{StaticResource ThemeSwatchStyle}"
+                                                   ToolTip="Steel" />
                                         <Label HorizontalAlignment="Center"
-                                           Content="Steel" />
+                                               Content="Steel" />
                                     </StackPanel>
                                 </DataTemplate>
                             </Button.ContentTemplate>
                         </Button>
                         <Button x:Name="cobalt"
-                            Command="{Binding ChangeAccentCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
-                            Style="{StaticResource ResponsiveGridThemeButtonStyle}">
+                                Command="{Binding ChangeAccentCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
+                                Style="{StaticResource ResponsiveGridThemeButtonStyle}">
                             <Button.ContentTemplate>
                                 <DataTemplate>
                                     <StackPanel Width="Auto"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top">
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top">
                                         <Rectangle Fill="#FF0050EF"
-                                               Style="{StaticResource ThemeSwatchStyle}"
-                                               ToolTip="Cobalt" />
+                                                   Style="{StaticResource ThemeSwatchStyle}"
+                                                   ToolTip="Cobalt" />
                                         <Label HorizontalAlignment="Center"
-                                           Content="Cobalt" />
+                                               Content="Cobalt" />
                                     </StackPanel>
                                 </DataTemplate>
                             </Button.ContentTemplate>
                         </Button>
                         <Button x:Name="indigo"
-                            Command="{Binding ChangeAccentCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
-                            Style="{StaticResource ResponsiveGridThemeButtonStyle}">
+                                Command="{Binding ChangeAccentCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
+                                Style="{StaticResource ResponsiveGridThemeButtonStyle}">
                             <Button.ContentTemplate>
                                 <DataTemplate>
                                     <StackPanel Width="Auto"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top">
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top">
                                         <Rectangle Fill="#FF6A00FF"
-                                               Style="{StaticResource ThemeSwatchStyle}"
-                                               ToolTip="Indigo" />
+                                                   Style="{StaticResource ThemeSwatchStyle}"
+                                                   ToolTip="Indigo" />
                                         <Label HorizontalAlignment="Center"
-                                           Content="Indigo" />
+                                               Content="Indigo" />
                                     </StackPanel>
                                 </DataTemplate>
                             </Button.ContentTemplate>
                         </Button>
                         <Button x:Name="violet"
-                            Command="{Binding ChangeAccentCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
-                            Style="{StaticResource ResponsiveGridThemeButtonStyle}">
+                                Command="{Binding ChangeAccentCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
+                                Style="{StaticResource ResponsiveGridThemeButtonStyle}">
                             <Button.ContentTemplate>
                                 <DataTemplate>
                                     <StackPanel Width="Auto"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top">
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top">
                                         <Rectangle Fill="#FFAA00FF"
-                                               Style="{StaticResource ThemeSwatchStyle}"
-                                               ToolTip="Violet" />
+                                                   Style="{StaticResource ThemeSwatchStyle}"
+                                                   ToolTip="Violet" />
                                         <Label HorizontalAlignment="Center"
-                                           Content="Violet" />
+                                               Content="Violet" />
                                     </StackPanel>
                                 </DataTemplate>
                             </Button.ContentTemplate>
                         </Button>
                         <Button x:Name="mauve"
-                            Command="{Binding ChangeAccentCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
-                            Style="{StaticResource ResponsiveGridThemeButtonStyle}">
+                                Command="{Binding ChangeAccentCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
+                                Style="{StaticResource ResponsiveGridThemeButtonStyle}">
                             <Button.ContentTemplate>
                                 <DataTemplate>
                                     <StackPanel Width="Auto"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top">
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top">
                                         <Rectangle Fill="#FF76608A"
-                                               Style="{StaticResource ThemeSwatchStyle}"
-                                               ToolTip="Mauve" />
+                                                   Style="{StaticResource ThemeSwatchStyle}"
+                                                   ToolTip="Mauve" />
                                         <Label HorizontalAlignment="Center"
-                                           Content="Mauve" />
+                                               Content="Mauve" />
                                     </StackPanel>
                                 </DataTemplate>
                             </Button.ContentTemplate>
@@ -426,43 +426,43 @@
                 <Grid>
                     <GridExtra:ResponsiveGrid>
                         <StackPanel Style="{StaticResource ResponsiveGridThemeStackPanelStyle}">
-                            <Rectangle Style="{StaticResource ThemeSwatchStyle}"
-                                       Fill="{DynamicResource HighlightBrush}"
+                            <Rectangle Fill="{DynamicResource HighlightBrush}"
+                                       Style="{StaticResource ThemeSwatchStyle}"
                                        ToolTip="Highlight Color" />
                             <Label HorizontalAlignment="Center"
                                    Content="Highlight Color" />
                         </StackPanel>
                         <StackPanel Style="{StaticResource ResponsiveGridThemeStackPanelStyle}">
-                            <Rectangle Style="{StaticResource ThemeSwatchStyle}"
-                                       Fill="{DynamicResource AccentBaseColorBrush}"
+                            <Rectangle Fill="{DynamicResource AccentBaseColorBrush}"
+                                       Style="{StaticResource ThemeSwatchStyle}"
                                        ToolTip="Accent Base Color" />
                             <Label HorizontalAlignment="Center"
                                    Content="Accent Base Color" />
                         </StackPanel>
                         <StackPanel Style="{StaticResource ResponsiveGridThemeStackPanelStyle}">
-                            <Rectangle Style="{StaticResource ThemeSwatchStyle}"
-                                       Fill="{DynamicResource AccentColorBrush}"
+                            <Rectangle Fill="{DynamicResource AccentColorBrush}"
+                                       Style="{StaticResource ThemeSwatchStyle}"
                                        ToolTip="Accent Color 1" />
                             <Label HorizontalAlignment="Center"
                                    Content="Accent Color 1" />
                         </StackPanel>
                         <StackPanel Style="{StaticResource ResponsiveGridThemeStackPanelStyle}">
-                            <Rectangle Style="{StaticResource ThemeSwatchStyle}"
-                                       Fill="{DynamicResource AccentColorBrush2}"
+                            <Rectangle Fill="{DynamicResource AccentColorBrush2}"
+                                       Style="{StaticResource ThemeSwatchStyle}"
                                        ToolTip="Accent Color 2" />
                             <Label HorizontalAlignment="Center"
                                    Content="Accent Color 2" />
                         </StackPanel>
                         <StackPanel Style="{StaticResource ResponsiveGridThemeStackPanelStyle}">
-                            <Rectangle Style="{StaticResource ThemeSwatchStyle}"
-                                       Fill="{DynamicResource AccentColorBrush3}"
+                            <Rectangle Fill="{DynamicResource AccentColorBrush3}"
+                                       Style="{StaticResource ThemeSwatchStyle}"
                                        ToolTip="Accent Color 3" />
                             <Label HorizontalAlignment="Center"
                                    Content="Accent Color 3" />
                         </StackPanel>
                         <StackPanel Style="{StaticResource ResponsiveGridThemeStackPanelStyle}">
-                            <Rectangle Style="{StaticResource ThemeSwatchStyle}"
-                                       Fill="{DynamicResource AccentColorBrush4}"
+                            <Rectangle Fill="{DynamicResource AccentColorBrush4}"
+                                       Style="{StaticResource ThemeSwatchStyle}"
                                        ToolTip="Accent Color 4" />
                             <Label HorizontalAlignment="Center"
                                    Content="Accent Color 4" />

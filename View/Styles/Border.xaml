@@ -5,18 +5,16 @@
 
     <Style x:Key="ResponsiveGridThemeBorderStyle"
            TargetType="{x:Type Border}">
-        <Setter Property="GridExtra:ResponsiveGrid.XS" Value="6" />
-        <Setter Property="GridExtra:ResponsiveGrid.SM" Value="4" />
-        <Setter Property="GridExtra:ResponsiveGrid.MD" Value="3" />
-        <Setter Property="GridExtra:ResponsiveGrid.LG" Value="2" />
-        <Setter Property="Margin" Value="5" />
+        <Setter Property="GridExtra:ResponsiveGrid.SM" Value="2" />
+        <Setter Property="GridExtra:ResponsiveGrid.XS" Value="3" />
+        <Setter Property="Margin" Value="0" />
     </Style>
 
     <Style x:Key="ResponsiveGridReportingBorderStyle"
            TargetType="{x:Type Border}">
-        <Setter Property="GridExtra:ResponsiveGrid.XS" Value="12" />
-        <Setter Property="GridExtra:ResponsiveGrid.MD" Value="6" />
         <Setter Property="GridExtra:ResponsiveGrid.LG" Value="4" />
+        <Setter Property="GridExtra:ResponsiveGrid.MD" Value="6" />
+        <Setter Property="GridExtra:ResponsiveGrid.XS" Value="12" />
         <Setter Property="Margin" Value="5,0" />
     </Style>
 

@@ -5,12 +5,12 @@
 
     <Style x:Key="ResponsiveGridThemeStackPanelStyle"
            TargetType="{x:Type StackPanel}">
-        <Setter Property="GridExtra:ResponsiveGrid.XS" Value="3" />
         <Setter Property="GridExtra:ResponsiveGrid.SM" Value="2" />
+        <Setter Property="GridExtra:ResponsiveGrid.XS" Value="3" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="Margin" Value="5" />
-        <Setter Property="Width" Value="Auto" />
-        <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Width" Value="Auto" />
     </Style>
 
 </ResourceDictionary>

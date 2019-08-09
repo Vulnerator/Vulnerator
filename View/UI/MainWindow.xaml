@@ -37,7 +37,8 @@
     <!--  Window Icon Template  -->
     <Controls:MetroWindow.IconTemplate>
         <DataTemplate>
-            <Border Width="48">
+            <Border Width="48"
+                    Background="{DynamicResource GrayBrush10}">
                 <IconPacks:PackIconMaterialLight Width="24"
                                                  Height="24"
                                                  Margin="4"
@@ -54,7 +55,7 @@
         <DataTemplate>
             <StackPanel HorizontalAlignment="Left"
                         Orientation="Horizontal">
-                <TextBlock Margin="5,0"
+                <TextBlock Margin="6,0,5,0"
                            VerticalAlignment="Center"
                            FontFamily="{DynamicResource HeaderFontFamily}"
                            FontSize="{DynamicResource WindowTitleFontSize}"
@@ -105,7 +106,7 @@
 
     <!--  Window Command Button Styling  -->
     <Controls:MetroWindow.WindowButtonCommands>
-        <Controls:WindowButtonCommands Template="{DynamicResource MahApps.Metro.Templates.WindowButtonCommands.Win10}" />
+        <Controls:WindowButtonCommands Template="{DynamicResource Vulnerator.Templates.WindowButtonCommands.Win10}" />
     </Controls:MetroWindow.WindowButtonCommands>
 
     <!--  Window-Level Resource Dictionary  -->
