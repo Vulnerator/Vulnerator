@@ -3,15 +3,15 @@ namespace Vulnerator.Model.Entity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    public partial class AccreditationsNistControl
+    public partial class GroupsCCIs
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long AccreditationsNistControls_ID { get; set; }
+        public long GroupsCCIs_ID { get; set; }
 
-        public long Accreditation_ID { get; set; }
+        public long Group_ID { get; set; }
 
-        public long NIST_Control_ID { get; set; }
+        public long CCI_ID { get; set; }
 
         [StringLength(5)]
         public string IsInherited { get; set; }
@@ -28,8 +28,8 @@ namespace Vulnerator.Model.Entity
         [StringLength(500)]
         public string ImplementationNotes { get; set; }
 
-        public virtual Accreditation Accreditation { get; set; }
+        public virtual Group Group { get; set; }
 
-        public virtual NistControl NistControl { get; set; }
+        public virtual CCI CCI { get; set; }
     }
 }

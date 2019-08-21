@@ -8,10 +8,10 @@ namespace Vulnerator.Model.Entity
     using System.Data.Entity.Spatial;
 
     [Table("PPS")]
-    public partial class PP : INotifyPropertyChanged
+    public partial class PPS : INotifyPropertyChanged
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public PP()
+        public PPS()
         {
             Hardware_PPS = new HashSet<Hardware_PPS>();
         }

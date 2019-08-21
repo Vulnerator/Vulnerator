@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace Vulnerator.Model.Entity
 {
     using System.Collections.Generic;
@@ -5,12 +7,14 @@ namespace Vulnerator.Model.Entity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    public partial class ConfidentialityLevel
+    public partial class ConfidentialityLevel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ConfidentialityLevel()
         {
-            Accreditations = new ObservableCollection<Accreditation>();
+            Groups = new ObservableCollection<Group>();
             NistControlsConfidentialityLevels = new ObservableCollection<NistControlsConfidentialityLevel>();
         }
 
@@ -23,7 +27,7 @@ namespace Vulnerator.Model.Entity
         public string Confidentiality_Level { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Accreditation> Accreditations { get; set; }
+        public virtual ICollection<Group> Groups { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<NistControlsConfidentialityLevel> NistControlsConfidentialityLevels { get; set; }

@@ -19,7 +19,7 @@ namespace Vulnerator.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -619,6 +619,33 @@ namespace Vulnerator.Properties {
         internal static string SelectIndexes {
             get {
                 return ResourceManager.GetString("SelectIndexes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
+        ///       Vulnerability_Title,
+        ///       Vulnerability_Description,
+        ///       Instance_Identifier,
+        ///       DOD_AssessmentProcedureMapping,
+        ///       Unique_Vulnerability_Identifier,
+        ///       Estimated_Completion_Date,
+        ///       Source_Name,
+        ///       Mitigated_Status,
+        ///       Raw_Risk,
+        ///       Displayed_Host_Name,
+        ///       Displayed_Software_Name,
+        ///       Comments,
+        ///       Finding_Details,
+        ///       Technical_Mitigation,
+        ///       Predisposing_Conditions,
+        ///       Severity_Pervasiveness,
+        ///       Threat_Relevance,
+        ///     [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SelectUngroupedVulnerabilities {
+            get {
+                return ResourceManager.GetString("SelectUngroupedVulnerabilities", resourceCulture);
             }
         }
         

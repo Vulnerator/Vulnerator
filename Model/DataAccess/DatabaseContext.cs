@@ -7,8 +7,7 @@ namespace Vulnerator.Model.DataAccess
     public class DatabaseContext : DbContext
     {
         public virtual DbSet<Accessibility> Accessibilities { get; set; }
-        public virtual DbSet<Accreditation> Accreditations { get; set; }
-        public virtual DbSet<AccreditationsNistControl> AccreditationsNistControls { get; set; }
+        public virtual DbSet<GroupsCCIs> AccreditationsNistControls { get; set; }
         public virtual DbSet<AdditionalTestConsideration> AdditionalTestConsiderations { get; set; }
         public virtual DbSet<ATC_IATC> ATC_IATC { get; set; }
         public virtual DbSet<ATC_IATC_PendingItems> ATC_IATC_PendingItems { get; set; }
@@ -46,7 +45,6 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<FISMA> FISMAs { get; set; }
         public virtual DbSet<GoverningPolicy> GoverningPolicies { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
-        public virtual DbSet<GroupTier> GroupTiers { get; set; }
         public virtual DbSet<Hardware> Hardwares { get; set; }
         public virtual DbSet<Hardware_PPS> Hardware_PPS { get; set; }
         public virtual DbSet<IA_Controls> IA_Controls { get; set; }
@@ -72,7 +70,7 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<Overlay> Overlays { get; set; }
         public virtual DbSet<Overview> Overviews { get; set; }
         public virtual DbSet<PIT_Determination> PIT_Determination { get; set; }
-        public virtual DbSet<PP> PPS { get; set; }
+        public virtual DbSet<PPS> PPS { get; set; }
         public virtual DbSet<RelatedDocument> RelatedDocuments { get; set; }
         public virtual DbSet<RelatedTesting> RelatedTestings { get; set; }
         public virtual DbSet<ReportCategory> ReportCategories { get; set; }
@@ -103,7 +101,7 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<WeaponsSystem> WeaponsSystems { get; set; }
         public virtual DbSet<WindowsDomainUserSetting> WindowsDomainUserSettings { get; set; }
         public virtual DbSet<WindowsLocalUserSetting> WindowsLocalUserSettings { get; set; }
-        public virtual DbSet<AccreditationsWaiver> AccreditationsWaivers { get; set; }
+        public virtual DbSet<GroupsWaivers> AccreditationsWaivers { get; set; }
         public virtual DbSet<HardwareLocation> HardwareLocations { get; set; }
         public virtual DbSet<InformationSystemOwner> InformationSystemOwners { get; set; }
         public virtual DbSet<NistControlsAvailabilityLevel> NistControlsAvailabilityLevels { get; set; }
@@ -126,24 +124,24 @@ namespace Vulnerator.Model.DataAccess
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Accreditation>()
+            modelBuilder.Entity<Group>()
                 .Property(e => e.CybersafeGrade)
                 .IsFixedLength()
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Accreditation>()
+            modelBuilder.Entity<Group>()
                 .Property(e => e.RDTE_Zone)
                 .IsFixedLength()
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Accreditation>()
-                .HasMany(e => e.AccreditationsNistControls)
-                .WithRequired(e => e.Accreditation)
+            modelBuilder.Entity<Group>()
+                .HasMany(e => e.GroupsCCIs)
+                .WithRequired(e => e.Group)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<Accreditation>()
-                .HasMany(e => e.AccreditationsWaivers)
-                .WithRequired(e => e.Accreditation)
+            modelBuilder.Entity<Group>()
+                .HasMany(e => e.GroupsWaivers)
+                .WithRequired(e => e.Group)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<AdditionalTestConsideration>()
@@ -162,7 +160,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(m => m.ToTable("AuthorizationInformation_AuthorizationConditions").MapLeftKey("AuthorizationCondition_ID").MapRightKey("AuthorizationInformation_ID"));
 
             modelBuilder.Entity<AvailabilityLevel>()
-                .HasMany(e => e.Accreditations)
+                .HasMany(e => e.Groups)
                 .WithRequired(e => e.AvailabilityLevel)
                 .WillCascadeOnDelete(false);
 
@@ -192,7 +190,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(m => m.ToTable("NistControlsCCPs").MapLeftKey("CCP_ID").MapRightKey("NIST_Control_ID"));
 
             modelBuilder.Entity<ConfidentialityLevel>()
-                .HasMany(e => e.Accreditations)
+                .HasMany(e => e.Groups)
                 .WithRequired(e => e.ConfidentialityLevel)
                 .WillCascadeOnDelete(false);
 
@@ -202,12 +200,12 @@ namespace Vulnerator.Model.DataAccess
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<ConnectedSystem>()
-                .HasMany(e => e.Accreditations)
+                .HasMany(e => e.Groups)
                 .WithMany(e => e.ConnectedSystems)
                 .Map(m => m.ToTable("AccreditationsConnectedSystems").MapLeftKey("ConnectedSystem_ID").MapRightKey("Accreditation_ID"));
 
             modelBuilder.Entity<Connection>()
-                .HasMany(e => e.Accreditations)
+                .HasMany(e => e.Groups)
                 .WithMany(e => e.Connections)
                 .Map(m => m.ToTable("AccreditationsConnections").MapLeftKey("Connection_ID").MapRightKey("Accreditation_ID"));
 
@@ -222,7 +220,7 @@ namespace Vulnerator.Model.DataAccess
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Contact>()
-                .HasMany(e => e.Accreditations)
+                .HasMany(e => e.Groups)
                 .WithMany(e => e.Contacts)
                 .Map(m => m.ToTable("AccreditationsContacts").MapLeftKey("Contact_ID").MapRightKey("Accreditation_ID"));
 
@@ -352,7 +350,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(m => m.ToTable("Vulnerabilities_IA_Controls").MapLeftKey("IA_Control_ID").MapRightKey("Vulnerability_Source_ID"));
 
             modelBuilder.Entity<IATA_Standards>()
-                .HasMany(e => e.Accreditations)
+                .HasMany(e => e.Groups)
                 .WithMany(e => e.IATA_Standards)
                 .Map(m => m.ToTable("Accreditations_IATA_Standards").MapLeftKey("IATA_Standard_ID").MapRightKey("Accreditation_ID"));
 
@@ -367,7 +365,7 @@ namespace Vulnerator.Model.DataAccess
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<IntegrityLevel>()
-                .HasMany(e => e.Accreditations)
+                .HasMany(e => e.Groups)
                 .WithRequired(e => e.IntegrityLevel)
                 .WillCascadeOnDelete(false);
 
@@ -416,9 +414,9 @@ namespace Vulnerator.Model.DataAccess
                 .WithMany(e => e.NetworkConnectionRules)
                 .Map(m => m.ToTable("StepOneQuestionnaireNetworkConnectionRules").MapLeftKey("NetworkConnectionRule_ID").MapRightKey("StepOneQuestionnaire_ID"));
 
-            modelBuilder.Entity<NistControl>()
-                .HasMany(e => e.AccreditationsNistControls)
-                .WithRequired(e => e.NistControl)
+            modelBuilder.Entity<CCI>()
+                .HasMany(e => e.GroupsCCIs)
+                .WithRequired(e => e.CCI)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<NistControl>()
@@ -457,7 +455,7 @@ namespace Vulnerator.Model.DataAccess
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Overlay>()
-                .HasMany(e => e.Accreditations)
+                .HasMany(e => e.Groups)
                 .WithMany(e => e.Overlays)
                 .Map(m => m.ToTable("AccreditationsOverlays").MapLeftKey("Overlay_ID").MapRightKey("Accreditation_ID"));
 
@@ -466,7 +464,7 @@ namespace Vulnerator.Model.DataAccess
                 .WithMany(e => e.Overlays)
                 .Map(m => m.ToTable("NistControlsOverlays").MapLeftKey("Overlay_ID").MapRightKey("NIST_Control_ID"));
 
-            modelBuilder.Entity<PP>()
+            modelBuilder.Entity<PPS>()
                 .HasMany(e => e.Hardware_PPS)
                 .WithRequired(e => e.PP)
                 .WillCascadeOnDelete(false);
@@ -497,12 +495,12 @@ namespace Vulnerator.Model.DataAccess
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<StepOneQuestionnaire>()
-                .HasMany(e => e.Accreditations)
+                .HasMany(e => e.Groups)
                 .WithRequired(e => e.StepOneQuestionnaire)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<SystemCategorization>()
-                .HasMany(e => e.Accreditations)
+                .HasMany(e => e.Groups)
                 .WithRequired(e => e.SystemCategorization)
                 .WillCascadeOnDelete(false);
 

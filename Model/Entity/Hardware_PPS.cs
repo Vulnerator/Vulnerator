@@ -43,6 +43,6 @@ namespace Vulnerator.Model.Entity
 
         public virtual Hardware Hardware { get; set; }
 
-        public virtual PP PP { get; set; }
+        public virtual PPS PP { get; set; }
     }
 }

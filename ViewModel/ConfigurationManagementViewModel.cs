@@ -81,20 +81,6 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private List<Accreditation> _accreditations;
-        public List<Accreditation> Accreditations
-        {
-            get { return _accreditations; }
-            set
-            {
-                if (_accreditations != value)
-                {
-                    _accreditations = value;
-                    RaisePropertyChanged("Accreditations");
-                }
-            }
-        }
-
         private List<VulnerabilitySource> _vulnerabilitySources;
         public List<VulnerabilitySource> VulnerabilitySources
         {
@@ -109,8 +95,8 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private List<PP> _pps;
-        public List<PP> PPS
+        private List<PPS> _pps;
+        public List<PPS> PPS
         {
             get { return _pps; }
             set
@@ -229,7 +215,7 @@ namespace Vulnerator.ViewModel
                         .OrderBy(s => s.Displayed_Software_Name)
                         .AsNoTracking().ToList();
                     Contacts = databaseContext.Contacts
-                        .Include(c => c.Accreditations)
+                        .Include(c => c.Groups)
                         .Include(c => c.Certifications)
                         .Include(c => c.Groups)
                         .Include(c => c.Organization)
@@ -242,7 +228,6 @@ namespace Vulnerator.ViewModel
                     Groups = databaseContext.Groups
                         .Include(g => g.Hardwares)
                         .AsNoTracking().ToList();
-                    Accreditations = databaseContext.Accreditations.AsNoTracking().ToList();
                     VulnerabilitySources = databaseContext.VulnerabilitySources
                         .Where(vs => !vs.Source_Name.Contains("Nessus"))
                         .OrderBy(vs => vs.Source_Name)

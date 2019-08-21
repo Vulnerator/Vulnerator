@@ -443,6 +443,43 @@ GROUP BY Vulnerabilities.Vulnerability_ID;</value>
   <data name="SelectIndexes" xml:space="preserve">
     <value>SELECT name FROM sqlite_master WHERE type == 'index';</value>
   </data>
+  <data name="SelectUngroupedVulnerabilities" xml:space="preserve">
+    <value>SELECT
+       Vulnerability_Title,
+       Vulnerability_Description,
+       Instance_Identifier,
+       DOD_AssessmentProcedureMapping,
+       Unique_Vulnerability_Identifier,
+       Estimated_Completion_Date,
+       Source_Name,
+       Mitigated_Status,
+       Raw_Risk,
+       Displayed_Host_Name,
+       Displayed_Software_Name,
+       Comments,
+       Finding_Details,
+       Technical_Mitigation,
+       Predisposing_Conditions,
+       Severity_Pervasiveness,
+       Threat_Relevance,
+       Risk_Statement,
+       Likelihood,
+       Impact,
+       Impact_Description,
+       Risk,
+       Proposed_Mitigation,
+       Residual_Risk_After_Proposed
+FROM UniqueFindings
+LEFT JOIN Vulnerabilities ON UniqueFindings.Vulnerability_ID = Vulnerabilities.Vulnerability_ID
+LEFT JOIN Hardware ON UniqueFindings.Hardware_ID = Hardware.Hardware_ID
+LEFT JOIN Software ON UniqueFindings.Software_ID = Software.Software_ID
+LEFT JOIN MitigationsOrConditions ON UniqueFindings.MitigationOrCondition_ID = MitigationsOrConditions.MitigationOrCondition_ID
+LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
+LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID
+LEFT JOIN VulnerabilitiesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesCCIs.Vulnerability_ID
+LEFT JOIN CCIs ON VulnerabilitiesCCIs.CCI_ID = CCIs.CCI_ID
+LEFT JOIN NistControlsCCIs ON CCIs.CCI_ID = NistControlsCCIs.CCI_ID</value>
+  </data>
   <data name="SelectUniqueVulnerabilityIdentiferBySource" xml:space="preserve">
     <value>SELECT Unique_Vulnerability_Identifier
 FROM Vulnerabilities

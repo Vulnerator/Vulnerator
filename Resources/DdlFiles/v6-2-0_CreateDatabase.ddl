@@ -9,93 +9,6 @@ CREATE TABLE Accessibility
 	 DodinConnectionPeriodicity NVARCHAR (25) NOT NULL,
 	 FOREIGN KEY (Accessibility_ID) REFERENCES StepOneQuestionnaire(Accessibility_ID)
 	);
-CREATE TABLE Accreditations 
-	(
-	 Accreditation_ID INTEGER PRIMARY KEY , 
-	 Accreditation_Name NVARCHAR (100) NOT NULL , 
-	 Accreditation_Acronym NVARCHAR (25) NOT NULL , 
-	 Accreditation_eMASS_ID NVARCHAR (25) NOT NULL , 
-	 IsPlatform NVARCHAR (5) , 
-	 Confidentiality_ID INTEGER NOT NULL , 
-	 Integrity_ID INTEGER NOT NULL , 
-	 Availability_ID INTEGER NOT NULL , 
-	 SystemCategorization_ID INTEGER NOT NULL , 
-	 AccreditationVersion NVARCHAR (25) ,  
-	 CybersafeGrade CHAR (1) , 
-	 FISCAM_Applies NVARCHAR (5) , 
-	 ControlSelection_ID INTEGER , 
-	 HasForeignNationals NVARCHAR (5) , 
-	 SystemType NVARCHAR (25) , 
-	 RDTE_Zone CHAR (1) , 
-	 StepOneQuestionnaire_ID INTEGER NOT NULL , 
-	 SAP_ID INTEGER , 
-	 PIT_Determination_ID INTEGER,
-	 FOREIGN KEY (Confidentiality_ID) REFERENCES ConfidentialityLevels(Confidentiality_ID),
-	 FOREIGN KEY (Integrity_ID) REFERENCES IntegrityLevels(Integrity_ID),
-	 FOREIGN KEY (Availability_ID) REFERENCES AvailabilityLevels(Availability_ID),
-	 FOREIGN KEY (SystemCategorization_ID) REFERENCES SystemCategorization(SystemCategorization_ID),
-	 FOREIGN KEY (ControlSelection_ID) REFERENCES ControlSelection(ControlSelection_ID),
-	 FOREIGN KEY (StepOneQuestionnaire_ID) REFERENCES StepOneQuestionnaire(StepOneQuestionnaire_ID),
-	 FOREIGN KEY (SAP_ID) REFERENCES SAPs(SAP_ID),
-	 FOREIGN KEY (PIT_Determination_ID) REFERENCES PIT_Determination(PIT_Determination_ID)
-	);
-CREATE TABLE Accreditations_IATA_Standards 
-	(
-	 Accreditation_ID INTEGER NOT NULL , 
-	 IATA_Standard_ID INTEGER NOT NULL,
-	 FOREIGN KEY (Accreditation_ID) REFERENCES Accreditations(Accreditation_ID),
-	 FOREIGN KEY (IATA_Standard_ID) REFERENCES IATA_Standards(IATA_Standard_ID) 
-	);
-CREATE TABLE AccreditationsConnectedSystems 
-	(
-	 Accreditation_ID INTEGER NOT NULL , 
-	 ConnectedSystem_ID INTEGER NOT NULL,
-	 FOREIGN KEY (Accreditation_ID) REFERENCES Accreditations(Accreditation_ID),
-	 FOREIGN KEY (ConnectedSystem_ID) REFERENCES ConnectedSystems(ConnectedSystem_ID) 
-	);
-CREATE TABLE AccreditationsConnections 
-	(
-	 Accreditation_ID INTEGER NOT NULL , 
-	 Connection_ID INTEGER NOT NULL,
-	 FOREIGN KEY (Accreditation_ID) REFERENCES Accreditations(Accreditation_ID),
-	 FOREIGN KEY (Connection_ID) REFERENCES Connections(Connection_ID)
-	);
-CREATE TABLE AccreditationsContacts 
-	(
-	 Accreditation_ID INTEGER NOT NULL , 
-	 Contact_ID INTEGER NOT NULL,
-	 FOREIGN KEY (Accreditation_ID) REFERENCES Accreditations(Accreditation_ID),
-	 FOREIGN KEY (Contact_ID) REFERENCES Contacts(Contact_ID) 
-	);
-CREATE TABLE AccreditationsNistControls 
-	(
-	 AccreditationsNistControls_ID INTEGER PRIMARY KEY, 
-	 Accreditation_ID INTEGER NOT NULL , 
-	 NIST_Control_ID INTEGER NOT NULL , 
-	 IsInherited NVARCHAR (5) , 
-	 InheritedFrom NVARCHAR (50) , 
-	 Inheritable NVARCHAR (5) , 
-	 ImplementationStatus NVARCHAR (25) , 
-	 ImplementationNotes NVARCHAR (500) ,
-	 FOREIGN KEY (Accreditation_ID) REFERENCES Accreditations(Accreditation_ID),
-	 FOREIGN KEY (NIST_Control_ID) REFERENCES NistControls(NIST_Control_ID)
-	);
-CREATE TABLE AccreditationsOverlays 
-	(
-	 Accreditation_ID INTEGER NOT NULL , 
-	 Overlay_ID INTEGER NOT NULL ,
-	 FOREIGN KEY (Accreditation_ID) REFERENCES Accreditations(Accreditation_ID),
-	 FOREIGN KEY (Overlay_ID) REFERENCES Overlays(Overlay_ID)
-	);
-CREATE TABLE AccreditationsWaivers 
-	(
-	 Accreditation_ID INTEGER NOT NULL , 
-	 Waiver_ID INTEGER NOT NULL , 
-	 WaiverGrantedDate DATE NOT NULL , 
-	 WaiverExpirationDate DATE NOT NULL ,
-	 FOREIGN KEY (Accreditation_ID) REFERENCES Accreditations(Accreditation_ID),
-	 FOREIGN KEY (Waiver_ID) REFERENCES Waivers(Waiver_ID)
-	);
 CREATE TABLE AdditionalTestConsiderations 
 	(
 	 Consideration_ID INTEGER PRIMARY KEY, 
@@ -433,18 +346,88 @@ CREATE TABLE GoverningPolicies
 CREATE TABLE Groups 
 	(
 	 Group_ID INTEGER PRIMARY KEY , 
-	 Group_Name NVARCHAR (50) NOT NULL UNIQUE ON CONFLICT IGNORE, 
-	 Group_Tier INTEGER NOT NULL ,
-	 Is_Accreditation NVARCHAR (5) NOT NULL , 
-	 Accreditation_ID INTEGER , 
+	 Name NVARCHAR (50) NOT NULL UNIQUE ON CONFLICT IGNORE, 
+	 Acronym NVARCHAR (25) , 
+	 Group_Tier INTEGER NOT NULL,
+	 Is_Accreditation NVARCHAR (5) ,
+	 Accreditation_eMASS_ID NVARCHAR (25) , 
+	 IsPlatform NVARCHAR (5) , 
 	 Organization_ID INTEGER ,
+	 Confidentiality_ID INTEGER , 
+	 Integrity_ID INTEGER , 
+	 Availability_ID INTEGER , 
+	 SystemCategorization_ID INTEGER , 
+	 AccreditationVersion NVARCHAR (25) ,  
+	 CybersafeGrade CHAR (1) , 
+	 FISCAM_Applies NVARCHAR (5) , 
+	 ControlSelection_ID INTEGER , 
+	 HasForeignNationals NVARCHAR (5) , 
+	 SystemType NVARCHAR (25) , 
+	 RDTE_Zone CHAR (1) , 
+	 StepOneQuestionnaire_ID INTEGER , 
+	 SAP_ID INTEGER , 
+	 PIT_Determination_ID INTEGER,
+	 FOREIGN KEY (Confidentiality_ID) REFERENCES ConfidentialityLevels(Confidentiality_ID),
+	 FOREIGN KEY (Integrity_ID) REFERENCES IntegrityLevels(Integrity_ID),
+	 FOREIGN KEY (Availability_ID) REFERENCES AvailabilityLevels(Availability_ID),
+	 FOREIGN KEY (SystemCategorization_ID) REFERENCES SystemCategorization(SystemCategorization_ID),
+	 FOREIGN KEY (ControlSelection_ID) REFERENCES ControlSelection(ControlSelection_ID),
+	 FOREIGN KEY (StepOneQuestionnaire_ID) REFERENCES StepOneQuestionnaire(StepOneQuestionnaire_ID),
+	 FOREIGN KEY (SAP_ID) REFERENCES SAPs(SAP_ID),
+	 FOREIGN KEY (PIT_Determination_ID) REFERENCES PIT_Determination(PIT_Determination_ID),
 	 FOREIGN KEY (Accreditation_ID) REFERENCES Accreditations(Accreditation_ID) ,
-	 FOREIGN KEY (Organization_ID) REFERENCES Organizations(Organization_ID) ,
-	 FOREIGN KEY (Group_Tier) REFERENCES GroupTiers(Group_Tier)
+	 FOREIGN KEY (Organization_ID) REFERENCES Organizations(Organization_ID) 
 	);
-CREATE TABLE GroupTiers
+CREATE TABLE Groups_IATA_Standards 
 	(
-		Group_Tier INTEGER NOT NULL PRIMARY KEY
+	 Group_ID INTEGER NOT NULL , 
+	 IATA_Standard_ID INTEGER NOT NULL,
+	 FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
+	 FOREIGN KEY (IATA_Standard_ID) REFERENCES IATA_Standards(IATA_Standard_ID) 
+	);
+CREATE TABLE GroupsConnectedSystems 
+	(
+	 Group_ID INTEGER NOT NULL , 
+	 ConnectedSystem_ID INTEGER NOT NULL,
+	 FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
+	 FOREIGN KEY (ConnectedSystem_ID) REFERENCES ConnectedSystems(ConnectedSystem_ID) 
+	);
+CREATE TABLE GroupsConnections 
+	(
+	 Group_ID INTEGER NOT NULL , 
+	 Connection_ID INTEGER NOT NULL,
+	 FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
+	 FOREIGN KEY (Connection_ID) REFERENCES Connections(Connection_ID)
+	);
+CREATE TABLE GroupsCCIs 
+	(
+	 GroupsCCIs_ID INTEGER PRIMARY KEY, 
+	 Group_ID INTEGER NOT NULL , 
+	 CCI_ID INTEGER NOT NULL , 
+	 IsInherited NVARCHAR (5) , 
+	 InheritedFrom NVARCHAR (50) , 
+	 Inheritable NVARCHAR (5) , 
+	 ImplementationStatus NVARCHAR (25) , 
+	 ImplementationNotes NVARCHAR (500) ,
+	 UNIQUE (Group_ID, CCI_ID) ON CONFLICT IGNORE,
+	 FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
+	 FOREIGN KEY (CCI_ID) REFERENCES CCIs(CCI_ID)
+	);
+CREATE TABLE GroupsOverlays 
+	(
+	 Group_ID INTEGER NOT NULL , 
+	 Overlay_ID INTEGER NOT NULL ,
+	 FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
+	 FOREIGN KEY (Overlay_ID) REFERENCES Overlays(Overlay_ID)
+	);
+CREATE TABLE GroupsWaivers 
+	(
+	 Group_ID INTEGER NOT NULL , 
+	 Waiver_ID INTEGER NOT NULL , 
+	 WaiverGrantedDate DATE NOT NULL , 
+	 WaiverExpirationDate DATE NOT NULL ,
+	 FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
+	 FOREIGN KEY (Waiver_ID) REFERENCES Waivers(Waiver_ID)
 	);
 CREATE TABLE Groups_MitigationsOrConditions 
 	(
@@ -1233,6 +1216,7 @@ CREATE TABLE UniqueFindings
 	 FOREIGN KEY (Finding_Type_ID) REFERENCES FindingTypes(Finding_Type_ID),
 	 FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
+	 FOREIGN KEY (Software_ID) REFERENCES Software(Software_ID),
 	 FOREIGN KEY (Finding_Source_File_ID) REFERENCES UniqueFindingsSourceFiles(Finding_Source_File_ID),
 	 FOREIGN KEY (MitigationOrCondition_ID) REFERENCES MitigationsOrConditions(MitigationOrCondition_ID) ,
 	 UNIQUE (Instance_Identifier, Hardware_ID, Software_ID, Vulnerability_ID) ON CONFLICT IGNORE

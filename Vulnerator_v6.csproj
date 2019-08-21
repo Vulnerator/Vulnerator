@@ -308,9 +308,8 @@
     <Compile Include="Model\DataAccess\DatabaseContext.cs" />
     <Compile Include="Model\DataAccess\DatabaseInterface.cs" />
     <Compile Include="Model\Entity\Accessibility.cs" />
-    <Compile Include="Model\Entity\Accreditation.cs" />
-    <Compile Include="Model\Entity\AccreditationsNistControl.cs" />
-    <Compile Include="Model\Entity\AccreditationsWaiver.cs" />
+    <Compile Include="Model\Entity\GroupsCCIs.cs" />
+    <Compile Include="Model\Entity\GroupsWaivers.cs" />
     <Compile Include="Model\Entity\AdditionalTestConsideration.cs" />
     <Compile Include="Model\Entity\ATC_IATC.cs" />
     <Compile Include="Model\Entity\ATC_IATC_PendingItems.cs" />
@@ -348,7 +347,6 @@
     <Compile Include="Model\Entity\FISMA.cs" />
     <Compile Include="Model\Entity\GoverningPolicy.cs" />
     <Compile Include="Model\Entity\Group.cs" />
-    <Compile Include="Model\Entity\GroupTier.cs" />
     <Compile Include="Model\Entity\Hardware.cs" />
     <Compile Include="Model\Entity\HardwareLocation.cs" />
     <Compile Include="Model\Entity\Hardware_PPS.cs" />
@@ -381,7 +379,7 @@
     <Compile Include="Model\Entity\Overlay.cs" />
     <Compile Include="Model\Entity\Overview.cs" />
     <Compile Include="Model\Entity\PIT_Determination.cs" />
-    <Compile Include="Model\Entity\PP.cs" />
+    <Compile Include="Model\Entity\PPS.cs" />
     <Compile Include="Model\Entity\RelatedDocument.cs" />
     <Compile Include="Model\Entity\RelatedTesting.cs" />
     <Compile Include="Model\Entity\ReportCategory.cs" />

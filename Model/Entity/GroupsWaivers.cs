@@ -4,12 +4,12 @@ namespace Vulnerator.Model.Entity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    public partial class AccreditationsWaiver
+    public partial class GroupsWaivers
     {
         [Key]
         [Column(Order = 0)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long Accreditation_ID { get; set; }
+        public long Group_ID { get; set; }
 
         [Key]
         [Column(Order = 1)]
@@ -24,7 +24,7 @@ namespace Vulnerator.Model.Entity
         [Column(Order = 3)]
         public DateTime WaiverExpirationDate { get; set; }
 
-        public virtual Accreditation Accreditation { get; set; }
+        public virtual Group Group { get; set; }
 
         public virtual Waiver Waiver { get; set; }
     }
