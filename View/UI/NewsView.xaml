@@ -56,15 +56,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconOcticons Grid.Column="0"
-                                                                Margin="5"
-                                                                HorizontalAlignment="Center"
-                                                                VerticalAlignment="Center"
-                                                                Kind="IssueOpened">
-                                        <IconPacks:PackIconOcticons.LayoutTransform>
+                                    <IconPacks:PackIconFontAwesomeLight Grid.Column="0"
+                                                                        Margin="5"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        Kind="ExclamationCircle">
+                                        <IconPacks:PackIconFontAwesomeLight.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconOcticons.LayoutTransform>
-                                    </IconPacks:PackIconOcticons>
+                                        </IconPacks:PackIconFontAwesomeLight.LayoutTransform>
+                                    </IconPacks:PackIconFontAwesomeLight>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
@@ -120,10 +120,10 @@
                                 <Label Grid.Column="0"
                                        Style="{StaticResource ThirdLevelHeaderStyle}">
                                     <StackPanel Orientation="Horizontal">
-                                        <IconPacks:PackIconMaterial Margin="0,0,5,0"
-                                                                    VerticalAlignment="Center"
-                                                                    Kind="Pound"
-                                                                    ToolTip="Issue Number" />
+                                        <IconPacks:PackIconFontAwesomeLight Margin="0,0,5,0"
+                                                                            VerticalAlignment="Center"
+                                                                            Kind="Hashtag"
+                                                                            ToolTip="Issue Number" />
                                         <TextBlock VerticalAlignment="Center"
                                                    Text="{Binding ElementName=issueListBox, Path=SelectedItem.Number}"
                                                    TextTrimming="CharacterEllipsis" />
@@ -132,10 +132,10 @@
                                 <Label Grid.Column="1"
                                        Style="{StaticResource ThirdLevelHeaderStyle}">
                                     <StackPanel Orientation="Horizontal">
-                                        <IconPacks:PackIconMaterial Margin="0,0,5,0"
-                                                                    VerticalAlignment="Center"
-                                                                    Kind="CommentMultipleOutline"
-                                                                    ToolTip="Comments" />
+                                        <IconPacks:PackIconFontAwesomeLight Margin="0,0,5,0"
+                                                                            VerticalAlignment="Center"
+                                                                            Kind="CommentsAlt"
+                                                                            ToolTip="Comments" />
                                         <TextBlock VerticalAlignment="Center"
                                                    Text="{Binding ElementName=issueListBox, Path=SelectedItem.Comments}"
                                                    TextTrimming="CharacterEllipsis" />
@@ -144,10 +144,10 @@
                                 <Label Grid.Column="2"
                                        Style="{StaticResource ThirdLevelHeaderStyle}">
                                     <StackPanel Orientation="Horizontal">
-                                        <IconPacks:PackIconOcticons Margin="0,0,5,0"
-                                                                    VerticalAlignment="Center"
-                                                                    Kind="Milestone"
-                                                                    ToolTip="Milestone" />
+                                        <IconPacks:PackIconFontAwesomeLight Margin="0,0,5,0"
+                                                                            VerticalAlignment="Center"
+                                                                            Kind="MapSigns"
+                                                                            ToolTip="Milestone" />
                                         <TextBlock VerticalAlignment="Center"
                                                    Text="{Binding ElementName=issueListBox, Path=SelectedItem.Milestone}"
                                                    TextTrimming="CharacterEllipsis" />
@@ -156,9 +156,9 @@
                                 <Label Grid.Column="3"
                                        Style="{StaticResource ThirdLevelHeaderStyle}">
                                     <StackPanel Orientation="Horizontal">
-                                        <IconPacks:PackIconOcticons Margin="0,0,5,0"
-                                                                    VerticalAlignment="Center"
-                                                                    Kind="Browser" />
+                                        <IconPacks:PackIconFontAwesomeLight Margin="0,0,5,0"
+                                                                            VerticalAlignment="Center"
+                                                                            Kind="Browser" />
                                         <TextBlock HorizontalAlignment="Stretch"
                                                    Style="{StaticResource HyperlinkTextBlockStyle}"
                                                    Text="View on GitHub"
@@ -289,15 +289,15 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconOcticons Grid.Column="0"
-                                                                Margin="5"
-                                                                HorizontalAlignment="Center"
-                                                                VerticalAlignment="Center"
-                                                                Kind="Tag">
-                                        <IconPacks:PackIconOcticons.LayoutTransform>
+                                    <IconPacks:PackIconFontAwesomeLight Grid.Column="0"
+                                                                        Margin="5"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        Kind="Tag">
+                                        <IconPacks:PackIconFontAwesomeLight.LayoutTransform>
                                             <RotateTransform Angle="-90" />
-                                        </IconPacks:PackIconOcticons.LayoutTransform>
-                                    </IconPacks:PackIconOcticons>
+                                        </IconPacks:PackIconFontAwesomeLight.LayoutTransform>
+                                    </IconPacks:PackIconFontAwesomeLight>
                                     <TextBlock Grid.Column="1"
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
@@ -346,10 +346,10 @@
                             <Label Grid.Column="0"
                                    Style="{StaticResource ThirdLevelHeaderStyle}">
                                 <StackPanel Orientation="Horizontal">
-                                    <IconPacks:PackIconOcticons Margin="0,0,5,0"
-                                                                VerticalAlignment="Center"
-                                                                Kind="Tag"
-                                                                ToolTip="Tag" />
+                                    <IconPacks:PackIconFontAwesomeLight Margin="0,0,5,0"
+                                                                        VerticalAlignment="Center"
+                                                                        Kind="Tag"
+                                                                        ToolTip="Tag" />
                                     <TextBlock VerticalAlignment="Center"
                                                Text="{Binding ElementName=releaseListBox, Path=SelectedItem.TagName}"
                                                TextTrimming="CharacterEllipsis" />
@@ -358,10 +358,10 @@
                             <Label Grid.Column="1"
                                    Style="{StaticResource ThirdLevelHeaderStyle}">
                                 <StackPanel Orientation="Horizontal">
-                                    <IconPacks:PackIconOcticons Margin="0,0,5,0"
-                                                                VerticalAlignment="Center"
-                                                                Kind="Calendar"
-                                                                ToolTip="Release Date" />
+                                    <IconPacks:PackIconFontAwesomeLight Margin="0,0,5,0"
+                                                                        VerticalAlignment="Center"
+                                                                        Kind="CalendarAlt"
+                                                                        ToolTip="Release Date" />
                                     <TextBlock VerticalAlignment="Center"
                                                Text="{Binding ElementName=releaseListBox, Path=SelectedItem.CreatedAt}"
                                                TextTrimming="CharacterEllipsis" />
@@ -370,10 +370,10 @@
                             <Label Grid.Column="2"
                                    Style="{StaticResource ThirdLevelHeaderStyle}">
                                 <StackPanel Orientation="Horizontal">
-                                    <IconPacks:PackIconOcticons Margin="0,0,5,0"
-                                                                VerticalAlignment="Center"
-                                                                Kind="DesktopDownload"
-                                                                ToolTip="Download Count" />
+                                    <IconPacks:PackIconFontAwesomeLight Margin="0,0,5,0"
+                                                                        VerticalAlignment="Center"
+                                                                        Kind="Download"
+                                                                        ToolTip="Download Count" />
                                     <TextBlock VerticalAlignment="Center"
                                                Text="{Binding ElementName=releaseListBox, Path=SelectedItem.Downloads}"
                                                TextTrimming="CharacterEllipsis" />
@@ -382,9 +382,9 @@
                             <Label Grid.Column="3"
                                    Style="{StaticResource ThirdLevelHeaderStyle}">
                                 <StackPanel Orientation="Horizontal">
-                                    <IconPacks:PackIconOcticons Margin="0,0,5,0"
-                                                                VerticalAlignment="Center"
-                                                                Kind="Browser" />
+                                    <IconPacks:PackIconFontAwesomeLight Margin="0,0,5,0"
+                                                                        VerticalAlignment="Center"
+                                                                        Kind="Browser" />
                                     <TextBlock HorizontalAlignment="Stretch"
                                                Style="{StaticResource HyperlinkTextBlockStyle}"
                                                Text="View on GitHub"

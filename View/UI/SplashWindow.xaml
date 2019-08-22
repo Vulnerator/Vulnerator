@@ -19,20 +19,20 @@
                       ShowMaxRestoreButton="False"
                       ShowMinButton="False"
                       SizeToContent="WidthAndHeight"
-                      WindowStartupLocation="CenterScreen"
                       Style="{DynamicResource CustomCleanWindowStyleKey}"
+                      WindowStartupLocation="CenterScreen"
                       mc:Ignorable="d">
 
     <!--  Window Icon Template  -->
     <Controls:MetroWindow.IconTemplate>
         <DataTemplate>
             <Border Width="48">
-                <IconPacks:PackIconMaterialLight Width="{TemplateBinding Width}"
-                                                 Height="{TemplateBinding Height}"
-                                                 Margin="4"
-                                                 HorizontalAlignment="Center"
-                                                 Foreground="{DynamicResource BlackBrush}"
-                                                 Kind="ChartHistogram" />
+                <IconPacks:PackIconFontAwesomeLight Width="{TemplateBinding Width}"
+                                                    Height="{TemplateBinding Height}"
+                                                    Margin="4"
+                                                    HorizontalAlignment="Center"
+                                                    Foreground="{DynamicResource BlackBrush}"
+                                                    Kind="Analytics" />
             </Border>
         </DataTemplate>
     </Controls:MetroWindow.IconTemplate>
@@ -91,7 +91,7 @@
                            Fill="{DynamicResource AccentColorBrush}"
                            ToolTip="All support files will be installed into the Vulnerator folder (minimal footprint)">
                     <Rectangle.OpacityMask>
-                        <VisualBrush Visual="{IconPacks:Octicons Kind=Info}" />
+                        <VisualBrush Visual="{IconPacks:FontAwesomeLight Kind=InfoCircle}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </StackPanel>
@@ -110,7 +110,7 @@
                            Fill="{DynamicResource AccentColorBrush}"
                            ToolTip="Log files will be generated in the LocalData folder, and the user (you) gets to decide where the application database goes (perfect for sharing)">
                     <Rectangle.OpacityMask>
-                        <VisualBrush Visual="{IconPacks:Octicons Kind=Info}" />
+                        <VisualBrush Visual="{IconPacks:FontAwesomeLight Kind=InfoCircle}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </StackPanel>
@@ -140,12 +140,12 @@
             <Button Grid.Column="1"
                     Margin="5,0,5,5"
                     Command="{Binding BrowseForDatabaseCommand}"
-                    Content="{IconPacks:Modern Kind=PageSearch}"
+                    Content="{IconPacks:FontAwesomeLight Kind=FileSearch}"
                     ToolTip="Select" />
             <Button Grid.Column="2"
                     Margin="0,0,5,5"
                     Command="{Binding CreateDatabaseCommand}"
-                    Content="{IconPacks:Modern Kind=PageNew}"
+                    Content="{IconPacks:FontAwesomeLight Kind=FilePlus}"
                     ToolTip="Create" />
         </Grid>
         <Button Margin="5,0,5,5"
@@ -154,10 +154,10 @@
                 CommandParameter="{Binding ElementName=splashWindow}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Launch" />
-                <IconPacks:PackIconMaterial Height="12"
-                                            Margin="2,0,0,0"
-                                            VerticalAlignment="Center"
-                                            Kind="LoginVariant" />
+                <IconPacks:PackIconFontAwesomeLight Height="12"
+                                                    Margin="2,0,0,0"
+                                                    VerticalAlignment="Center"
+                                                    Kind="SignInAlt" />
             </StackPanel>
         </Button>
         <TextBox MaxWidth="300"

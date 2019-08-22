@@ -47,14 +47,14 @@
                              Style="{StaticResource HeaderedTextBoxStyle}"
                              Text="{Binding Source={StaticResource Settings}, Path=Default.ActiveUser}" />
                     <TextBox Margin="5,0,5,5"
-                             Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=CloseBoxOutline}"
+                             Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=TimesSquare}"
                              Controls:TextBoxHelper.ClearTextButton="True"
                              Controls:TextBoxHelper.Watermark="Name (First &amp; Last)"
                              vh:DependencyProperties.FloatingWatermark="Name"
                              Style="{StaticResource HeaderedTextBoxStyle}"
                              Text="{Binding Source={StaticResource Settings}, Path=Default.Name}" />
                     <TextBox Margin="5,0,5,5"
-                             Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=CloseBoxOutline}"
+                             Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=TimesSquare}"
                              Controls:TextBoxHelper.ClearTextButton="True"
                              Controls:TextBoxHelper.Watermark="Phone Number (Digits Only - e.g. 0123456789)"
                              vh:DependencyProperties.FloatingWatermark="Phone Number"
@@ -70,7 +70,7 @@
                     </TextBox>
 
                     <TextBox Margin="5,0,5,5"
-                             Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=CloseBoxOutline}"
+                             Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=TimesSquare}"
                              Controls:TextBoxHelper.ClearTextButton="True"
                              Controls:TextBoxHelper.Watermark="eMASS Email (you@example.com)"
                              vh:DependencyProperties.FloatingWatermark="eMASS Email"
@@ -85,7 +85,7 @@
                         </Binding>
                     </TextBox>
                     <TextBox Margin="5,0,5,5"
-                             Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=CloseBoxOutline}"
+                             Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=TimesSquare}"
                              Controls:TextBoxHelper.ClearTextButton="True"
                              Controls:TextBoxHelper.Watermark="Organization (e.g. NAVAIR)"
                              vh:DependencyProperties.FloatingWatermark="Organization"
@@ -111,12 +111,12 @@
                         <Button Grid.Column="1"
                                 Margin="5,0,5,5"
                                 Command="{Binding BrowseForDatabaseCommand}"
-                                Content="{IconPacks:Modern Kind=PageSearch}"
+                                Content="{IconPacks:FontAwesomeLight Kind=FileSearch}"
                                 ToolTip="Search" />
                         <Button Grid.Column="2"
                                 Margin="5,0,5,5"
                                 Command="{Binding CreateDatabaseCommand}"
-                                Content="{IconPacks:Modern Kind=PageNew}"
+                                Content="{IconPacks:FontAwesomeLight Kind=FilePlus}"
                                 ToolTip="Create" />
                     </Grid>
                     <Grid Grid.Column="0">
@@ -152,19 +152,19 @@
                                  Margin="5,0,5,5"
                                  HorizontalAlignment="Stretch"
                                  VerticalAlignment="Center"
-                                 Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=CloseBoxOutline}"
+                                 Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=TimesSquare}"
                                  Controls:TextBoxHelper.ClearTextButton="True"
                                  Controls:TextBoxHelper.Watermark="STIG Library or Single STIG (ZIP File)"
                                  Text="{Binding StigLibraryLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <Button Grid.Column="1"
                                 Margin="5,0,5,5"
                                 Command="{Binding SelectStigLibraryCommand}"
-                                Content="{IconPacks:Modern Kind=PageSearch}"
+                                Content="{IconPacks:FontAwesomeLight Kind=FileSearch}"
                                 ToolTip="Search" />
                         <Button Grid.Column="2"
                                 Margin="5,0,5,5"
                                 Command="{Binding IngestStigLibraryCommand}"
-                                Content="{IconPacks:Modern Kind=PageUpload}"
+                                Content="{IconPacks:FontAwesomeLight Kind=FileImport}"
                                 ToolTip="Upload" />
                     </Grid>
                     <!--<Label Grid.Column="0" Style="{StaticResource SecondLevelHeaderStyle}">
@@ -234,11 +234,11 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <IconPacks:PackIconOcticons Grid.Column="0"
-                                                                Margin="5,0"
-                                                                HorizontalAlignment="Center"
-                                                                VerticalAlignment="Center"
-                                                                Kind="Alert" />
+                                    <IconPacks:PackIconFontAwesomeLight Grid.Column="0"
+                                                                        Margin="5,0"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        Kind="ExclamationTriangle" />
                                     <TextBlock Grid.Column="1"
                                                Text="Danger Zone"
                                                TextTrimming="CharacterEllipsis" />
@@ -379,11 +379,11 @@
                         </Label>
                         <Button Grid.Column="2"
                                 Margin="5,0,5,5"
-                                Content="{IconPacks:Material Kind=PlusBoxOutline}"
+                                Content="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
                                 ToolTip="Add Overlay" />
                         <Button Grid.Column="3"
                                 Margin="5,0,5,5"
-                                Content="{IconPacks:Material Kind=MinusBoxOutline}"
+                                Content="{IconPacks:FontAwesomeLight Kind=MinusSquare}"
                                 ToolTip="Remove Overlay(s)" />
                     </Grid>
                     <DataGrid MinHeight="100"
@@ -410,15 +410,16 @@
                         <TextBox Grid.Column="0"
                                  Margin="5,0,5,5"
                                  VerticalAlignment="Center"
+                                 Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=TimesSquare}"
                                  Controls:TextBoxHelper.ClearTextButton="True"
                                  Controls:TextBoxHelper.Watermark="Enter a new organization name" />
                         <Button Grid.Column="1"
                                 Margin="5,0,5,5"
-                                Content="{IconPacks:Material Kind=PlusBoxOutline}"
+                                Content="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
                                 ToolTip="Add Organization" />
                         <Button Grid.Column="2"
                                 Margin="5,0,5,5"
-                                Content="{IconPacks:Material Kind=MinusBoxOutline}"
+                                Content="{IconPacks:FontAwesomeLight Kind=MinusSquare}"
                                 ToolTip="Remove Organization(s)" />
                     </Grid>
                     <DataGrid MinHeight="100"

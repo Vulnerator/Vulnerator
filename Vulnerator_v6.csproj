@@ -120,6 +120,9 @@
       <HintPath>packages\HtmlToXamlConverter.1.0.5727.24510\lib\net45\HtmlToXamlConverter.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="JetBrains.Annotations">
+      <HintPath>..\MahApps.Metro.IconPacks\src\MahApps.Metro.IconPacks\bin\Debug\MahApps.Metro.IconPacks\net45\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="LiveCharts, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
       <HintPath>packages\LiveCharts.0.9.7\lib\net45\LiveCharts.dll</HintPath>
       <Private>True</Private>
@@ -135,10 +138,12 @@
       <HintPath>packages\MahApps.Metro.1.6.5\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="MahApps.Metro.IconPacks, Version=3.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
-      <HintPath>packages\MahApps.Metro.IconPacks.3.0.0-alpha0146\lib\net45\MahApps.Metro.IconPacks.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\MahApps.Metro.IconPacks\src\MahApps.Metro.IconPacks\bin\Debug\MahApps.Metro.IconPacks\net45\MahApps.Metro.IconPacks.dll</HintPath>
     </Reference>
     <Reference Include="MahApps.Metro.IconPacks.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
-      <HintPath>packages\MahApps.Metro.IconPacks.3.0.0-alpha0146\lib\net45\MahApps.Metro.IconPacks.Core.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\MahApps.Metro.IconPacks\src\MahApps.Metro.IconPacks\bin\Debug\MahApps.Metro.IconPacks\net45\MahApps.Metro.IconPacks.Core.dll</HintPath>
     </Reference>
     <Reference Include="Markdig, Version=0.15.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Markdig.0.15.0\lib\net40\Markdig.dll</HintPath>

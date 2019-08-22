@@ -39,13 +39,14 @@
         <DataTemplate>
             <Border Width="48"
                     Background="{DynamicResource GrayBrush10}">
-                <IconPacks:PackIconMaterialLight Width="24"
-                                                 Height="24"
-                                                 Margin="4"
-                                                 HorizontalAlignment="Center"
-                                                 VerticalAlignment="Center"
-                                                 Foreground="{DynamicResource BlackBrush}"
-                                                 Kind="ChartHistogram" />
+                <IconPacks:PackIconFontAwesomeLight Width="24"
+                                                    Height="24"
+                                                    Margin="4"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Flip="Horizontal"
+                                                    Foreground="{DynamicResource BlackBrush}"
+                                                    Kind="Analytics" />
             </Border>
         </DataTemplate>
     </Controls:MetroWindow.IconTemplate>
@@ -66,37 +67,37 @@
                     <Button x:Name="projectButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
-                            Content="{IconPacks:Octicons Bookmark}"
+                            Content="{IconPacks:FontAwesomeLight Home}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="GitHub Project Page" />
                     <Button x:Name="githubButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
-                            Content="{IconPacks:Octicons Octoface}"
+                            Content="{IconPacks:FontAwesomeBrand GithubAlt}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="GitHub Repository" />
                     <Button x:Name="wikiButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
-                            Content="{IconPacks:Octicons Book}"
+                            Content="{IconPacks:FontAwesomeLight GraduationCap}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="Wiki" />
                     <Button x:Name="issueButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
-                            Content="{IconPacks:Octicons IssueOpened}"
+                            Content="{IconPacks:FontAwesomeLight Bug}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="Issues" />
                     <Button x:Name="gitterButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
-                            Content="{IconPacks:FontAwesome GitterBrands}"
+                            Content="{IconPacks:FontAwesomeBrand Gitter}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="Gitter Chat" />
                     <Button x:Name="slackButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
-                            Content="{IconPacks:FontAwesome SlackBrands}"
+                            Content="{IconPacks:FontAwesomeBrand Slack}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="Slack Workspace (Chat)" />
                 </Controls:WindowCommands>
@@ -167,18 +168,18 @@
                                                         Tag="{StaticResource vulnerabilityManagementView}"
                                                         ToolTip="Vulnerability Management">
                             <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconMaterial HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center"
-                                                            Kind="ChartLine" />
+                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Kind="ChartLine" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                         <Controls:HamburgerMenuIconItem Label="Reporting"
                                                         Tag="{StaticResource ReportingView}"
                                                         ToolTip="Reporting">
                             <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconMaterial HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center"
-                                                            Kind="FileDownloadOutline" />
+                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Kind="FileExport" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                         <!--<Controls:HamburgerMenuIconItem Label="RMF"
@@ -194,18 +195,18 @@
                                                         Tag="{StaticResource configurationManagementView}"
                                                         ToolTip="Configuration Management">
                             <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconMaterial HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center"
-                                                            Kind="MonitorMultiple" />
+                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Kind="DesktopAlt" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                         <Controls:HamburgerMenuIconItem Label="News"
                                                         Tag="{StaticResource newsView}"
                                                         ToolTip="News">
                             <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconModern HorizontalAlignment="Center"
-                                                          VerticalAlignment="Center"
-                                                          Kind="Newspaper" />
+                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Kind="Newspaper" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                     </Controls:HamburgerMenuItemCollection>
@@ -225,27 +226,27 @@
                                                         Tag="{StaticResource settingsView}"
                                                         ToolTip="Settings">
                             <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconMaterial HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center"
-                                                            Kind="Settings" />
+                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Kind="Cog" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                         <Controls:HamburgerMenuIconItem Label="Theme"
                                                         Tag="{StaticResource themeView}"
                                                         ToolTip="Theme">
                             <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconFontAwesome HorizontalAlignment="Center"
-                                                               VerticalAlignment="Center"
-                                                               Kind="PaintBrushSolid" />
+                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Kind="Palette" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                         <Controls:HamburgerMenuIconItem Label="About"
                                                         Tag="{StaticResource aboutView}"
                                                         ToolTip="About">
                             <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconMaterial HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center"
-                                                            Kind="Help" />
+                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Kind="QuestionCircle" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                     </Controls:HamburgerMenuItemCollection>
@@ -324,7 +325,7 @@
                     <Button Margin="0,0,3,0"
                             Command="{Binding GetLatestVersionCommand}"
                             CommandParameter="{Binding Release.HtmlUrl}"
-                            Content="{IconPacks:Octicons DesktopDownload}"
+                            Content="{IconPacks:FontAwesomeLight Download}"
                             ToolTip="Download Now"
                             Visibility="{Binding NewVersionVisibility}" />
                 </StatusBarItem>

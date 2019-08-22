@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                     xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
+                    xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     xmlns:local="clr-namespace:Vulnerator.View.Styles">
 
     <!--  WindowButtonCommands control templates  -->
@@ -13,6 +14,9 @@
                     Width="48"
                     Height="48"
                     MaxHeight="48"
+                    Content="{IconPacks:FontAwesomeLight Kind=WindowMinimize,
+                                                         Height=16,
+                                                         Width=16}"
                     Focusable="False"
                     IsEnabled="{Binding IsMinButtonEnabled, RelativeSource={RelativeSource AncestorType={x:Type Controls:MetroWindow}}}"
                     ToolTip="{Binding Minimize, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
@@ -31,20 +35,14 @@
                                  RelativeSource="{RelativeSource AncestorType={x:Type Controls:MetroWindow}}" />
                     </MultiBinding>
                 </Button.Visibility>
-                <Path Width="16"
-                      Height="16"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Center"
-                      Data="M496 480H16c-8.8 0-16-7.2-16-16s7.2-16 16-16h480c8.8 0 16 7.2 16 16s-7.2 16-16 16z"
-                      Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
-                      RenderOptions.EdgeMode="Aliased"
-                      SnapsToDevicePixels="True"
-                      Stretch="Uniform" />
             </Button>
             <Button x:Name="PART_Max"
                     Width="48"
                     Height="48"
                     MaxHeight="48"
+                    Content="{IconPacks:FontAwesomeLight Kind=WindowMaximize,
+                                                         Height=16,
+                                                         Width=16}"
                     Focusable="False"
                     IsEnabled="{Binding IsMaxRestoreButtonEnabled, RelativeSource={RelativeSource AncestorType={x:Type Controls:MetroWindow}}}"
                     ToolTip="{Binding Maximize, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
@@ -63,22 +61,14 @@
                                  RelativeSource="{RelativeSource AncestorType={x:Type Controls:MetroWindow}}" />
                     </MultiBinding>
                 </Button.Visibility>
-                <!--  normal state  -->
-                <Path x:Name="PART_MaxPath"
-                      Width="16"
-                      Height="16"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Center"
-                      Data="M464 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm16 400c0 8.8-7.2 16-16 16H48c-8.8 0-16-7.2-16-16V192h448v240zM32 160V80c0-8.8 7.2-16 16-16h416c8.8 0 16 7.2 16 16v80H32z"
-                      Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
-                      RenderOptions.EdgeMode="Aliased"
-                      SnapsToDevicePixels="True"
-                      Stretch="Uniform" />
             </Button>
             <Button x:Name="PART_Close"
                     Width="48"
                     Height="48"
                     MaxHeight="48"
+                    Content="{IconPacks:FontAwesomeLight Kind=WindowClose,
+                                                         Height=16,
+                                                         Width=16}"
                     Focusable="False"
                     IsEnabled="{Binding RelativeSource={RelativeSource AncestorType={x:Type Controls:MetroWindow}}, Path=IsCloseButtonEnabled, Mode=OneWay}"
                     ToolTip="{Binding Close, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
@@ -94,33 +84,6 @@
                                  RelativeSource="{RelativeSource AncestorType={x:Type Controls:MetroWindow}}" />
                     </MultiBinding>
                 </Button.Visibility>
-                <Path Width="16"
-                      Height="16"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Center"
-                      Data="M464 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm16 400c0 8.8-7.2 16-16 16H48c-8.8 0-16-7.2-16-16V80c0-8.8 7.2-16 16-16h416c8.8 0 16 7.2 16 16v352zM348.6 188.3L280.9 256l67.7 67.7c4.6 4.6 4.6 12 0 16.6l-8.3 8.3c-4.6 4.6-12 4.6-16.6 0L256 280.9l-67.7 67.7c-4.6 4.6-12 4.6-16.6 0l-8.3-8.3c-4.6-4.6-4.6-12 0-16.6l67.7-67.7-67.7-67.7c-4.6-4.6-4.6-12 0-16.6l8.3-8.3c4.6-4.6 12-4.6 16.6 0l67.7 67.7 67.7-67.7c4.6-4.6 12-4.6 16.6 0l8.3 8.3c4.5 4.6 4.5 12 0 16.6z"
-                      Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
-                      RenderOptions.EdgeMode="Aliased"
-                      SnapsToDevicePixels="True"
-                      Stretch="Uniform" />
-                <!--<Grid>
-                    <Line HorizontalAlignment="Center"
-                          VerticalAlignment="Center"
-                          SnapsToDevicePixels="True"
-                          Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
-                          X1="0"
-                          X2="10"
-                          Y1="0"
-                          Y2="10" />
-                    <Line HorizontalAlignment="Center"
-                          VerticalAlignment="Center"
-                          SnapsToDevicePixels="True"
-                          Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
-                          X1="0"
-                          X2="10"
-                          Y1="10"
-                          Y2="0" />
-                </Grid>-->
             </Button>
         </StackPanel>
         <ControlTemplate.Triggers>
@@ -133,8 +96,8 @@
             </MultiDataTrigger>
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type Controls:MetroWindow}}, Path=WindowState}"
                          Value="Maximized">
+                <Setter TargetName="PART_Max" Property="Content" Value="{IconPacks:FontAwesomeLight Kind=WindowRestore, Height=16, Width=16}" />
                 <Setter TargetName="PART_Max" Property="ToolTip" Value="{Binding Restore, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
-                <Setter TargetName="PART_MaxPath" Property="Data" Value="M464 0H144c-26.5 0-48 21.5-48 48v48H48c-26.5 0-48 21.5-48 48v320c0 26.5 21.5 48 48 48h320c26.5 0 48-21.5 48-48v-48h48c26.5 0 48-21.5 48-48V48c0-26.5-21.5-48-48-48zM32 144c0-8.8 7.2-16 16-16h320c8.8 0 16 7.2 16 16v80H32v-80zm352 320c0 8.8-7.2 16-16 16H48c-8.8 0-16-7.2-16-16V256h352v208zm96-96c0 8.8-7.2 16-16 16h-48V144c0-26.5-21.5-48-48-48H128V48c0-8.8 7.2-16 16-16h320c8.8 0 16 7.2 16 16v320z" />
             </DataTrigger>
             <Trigger Property="Theme" Value="Light">
                 <Setter TargetName="PART_Close" Property="Style" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=LightCloseButtonStyle}" />
