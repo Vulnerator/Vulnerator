@@ -9,13 +9,13 @@ namespace Vulnerator.View.Converter
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null || value.ToString() == string.Empty)
-            { return "CheckboxBlankCircleOutline"; }
+            { return "Circle"; }
             else
             {
                 if (System.Convert.ToBoolean(value))
-                { return "CheckboxMarkedCircleOutline"; }
+                { return "CheckCircle"; }
                 else
-                { return "CheckboxBlankCircleOutline"; }
+                { return "Circle"; }
             }
         }
 

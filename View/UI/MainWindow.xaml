@@ -67,7 +67,7 @@
                     <Button x:Name="projectButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
-                            Content="{IconPacks:FontAwesomeLight Home}"
+                            Content="{IconPacks:FontAwesomeSolid Home}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="GitHub Project Page" />
                     <Button x:Name="githubButton"
@@ -79,13 +79,13 @@
                     <Button x:Name="wikiButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
-                            Content="{IconPacks:FontAwesomeLight GraduationCap}"
+                            Content="{IconPacks:FontAwesomeSolid GraduationCap}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="Wiki" />
                     <Button x:Name="issueButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
-                            Content="{IconPacks:FontAwesomeLight Bug}"
+                            Content="{IconPacks:FontAwesomeSolid Bug}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="Issues" />
                     <Button x:Name="gitterButton"
@@ -186,9 +186,9 @@
                                                         Tag="{StaticResource rmfView}"
                                                         ToolTip="RMF">
                             <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconMaterial HorizontalAlignment="Center"
+                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
-                                                            Kind="Certificate" />
+                                                            Kind="FileCertificate" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>-->
                         <Controls:HamburgerMenuIconItem Label="Configuration Management"
@@ -217,9 +217,9 @@
                                                         Tag="{StaticResource userGuideView}"
                                                         ToolTip="User Guide">
                             <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconOcticons HorizontalAlignment="Center"
+                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
-                                                            Kind="Book" />
+                                                            Kind="Books" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>-->
                         <Controls:HamburgerMenuIconItem Label="Settings"

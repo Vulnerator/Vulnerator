@@ -31,6 +31,7 @@
                                                     Height="{TemplateBinding Height}"
                                                     Margin="4"
                                                     HorizontalAlignment="Center"
+                                                    Flip="Horizontal"
                                                     Foreground="{DynamicResource BlackBrush}"
                                                     Kind="Analytics" />
             </Border>

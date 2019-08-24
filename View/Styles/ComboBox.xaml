@@ -191,15 +191,16 @@
                               Grid.Column="2"
                               Width="{TemplateBinding Controls:TextBoxHelper.ButtonWidth}"
                               Background="Transparent">
-                            <Path x:Name="BtnArrow"
-                                  Width="8"
-                                  Height="4"
-                                  HorizontalAlignment="Center"
-                                  Data="F1 M 301.14,-189.041L 311.57,-189.041L 306.355,-182.942L 301.14,-189.041 Z "
-                                  Fill="{DynamicResource GrayBrush1}"
-                                  IsHitTestVisible="false"
-                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                  Stretch="Uniform" />
+                            <ContentControl HorizontalContentAlignment="Center"
+                                            VerticalContentAlignment="Center"
+                                            Foreground="{DynamicResource GrayBrush1}">
+                                <IconPacks:PackIconFontAwesomeLight Width="8"
+                                                                    Height="8"
+                                                                    HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Foreground="{DynamicResource GrayBrush1}"
+                                                                    Kind="CaretDown" />
+                            </ContentControl>
                         </Grid>
                     </Grid>
                     <ControlTemplate.Triggers>

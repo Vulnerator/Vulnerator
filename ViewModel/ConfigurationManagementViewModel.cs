@@ -28,7 +28,7 @@ namespace Vulnerator.ViewModel
         private List<Hardware> _hardwares;
         public List<Hardware> Hardwares
         {
-            get { return _hardwares; }
+            get => _hardwares;
             set
             {
                 if (_hardwares != value)
@@ -42,7 +42,7 @@ namespace Vulnerator.ViewModel
         private List<Software> _softwares;
         public List<Software> Softwares
         {
-            get { return _softwares; }
+            get => _softwares;
             set
             {
                 if (_softwares != value)
@@ -56,7 +56,7 @@ namespace Vulnerator.ViewModel
         private List<Contact> _contacts;
         public List<Contact> Contacts
         {
-            get { return _contacts; }
+            get => _contacts;
             set
             {
                 if (_contacts != value)
@@ -70,7 +70,7 @@ namespace Vulnerator.ViewModel
         private List<Group> _groups;
         public List<Group> Groups
         {
-            get { return _groups; }
+            get => _groups;
             set
             {
                 if (_groups != value)
@@ -84,7 +84,7 @@ namespace Vulnerator.ViewModel
         private List<VulnerabilitySource> _vulnerabilitySources;
         public List<VulnerabilitySource> VulnerabilitySources
         {
-            get { return _vulnerabilitySources; }
+            get => _vulnerabilitySources;
             set
             {
                 if (_vulnerabilitySources != value)
@@ -98,7 +98,7 @@ namespace Vulnerator.ViewModel
         private List<PPS> _pps;
         public List<PPS> PPS
         {
-            get { return _pps; }
+            get => _pps;
             set
             {
                 if (_pps != value)
@@ -112,7 +112,7 @@ namespace Vulnerator.ViewModel
         private List<IP_Addresses> _ipAddresses;
         public List<IP_Addresses> IpAddresses
         {
-            get { return _ipAddresses; }
+            get => _ipAddresses;
             set
             {
                 if (_ipAddresses != value)
@@ -126,7 +126,7 @@ namespace Vulnerator.ViewModel
         private List<MAC_Addresses> _macAddresses;
         public List<MAC_Addresses> MacAddresses
         {
-            get { return _macAddresses; }
+            get => _macAddresses;
             set
             {
                 if (_macAddresses != value)
@@ -140,7 +140,7 @@ namespace Vulnerator.ViewModel
         private object _selectedHardware;
         public object SelectedHardware
         {
-            get { return _selectedHardware; }
+            get => _selectedHardware;
             set
             {
                 if (_selectedHardware != value)
@@ -151,10 +151,26 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private Group _selectedGroup;
+
+        public Group SelectedGroup
+        {
+            get => _selectedGroup;
+            set
+            {
+                if (_selectedGroup != value)
+                {
+                    _selectedGroup = value;
+                    RaisePropertyChanged("SelectedGroup");
+                }
+            }
+            
+        }
+
         private VulnerabilitySource _selectedVulnerabilitySource;
         public VulnerabilitySource SelectedVulnerabilitySource
         {
-            get { return _selectedVulnerabilitySource; }
+            get => _selectedVulnerabilitySource;
             set
             {
                 if (_selectedVulnerabilitySource != value)
@@ -305,8 +321,7 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        public RelayCommand AssociateStigToHardwareCommand
-        { get { return new RelayCommand(AssociateStigToHardware); } }
+        public RelayCommand AssociateStigToHardwareCommand => new RelayCommand(AssociateStigToHardware);
 
         private void AssociateStigToHardware()
         { 

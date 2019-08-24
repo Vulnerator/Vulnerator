@@ -15,13 +15,101 @@
         <Setter Property="AutoGenerateColumns" Value="False" />
         <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="CanUserAddRows" Value="True" />
+        <Setter Property="CanUserAddRows" Value="False" />
         <Setter Property="Controls:ControlsHelper.FocusBorderBrush" Value="{DynamicResource TextBoxFocusBorderBrush}" />
         <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
     </Style>
 
-    <Style x:Key="CustomCenterAlignedDataGridHeaderStyle"
+    <Style x:Key="CustomColumnHeaderGripper"
+           TargetType="{x:Type Thumb}">
+        <Setter Property="Background" Value="{DynamicResource GrayBrush5}" />
+        <Setter Property="Cursor" Value="SizeWE" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Border Margin="{TemplateBinding Padding}"
+                            Background="Transparent"
+                            BorderBrush="{TemplateBinding Background}"
+                            BorderThickness="0,0,1,0"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Width" Value="8" />
+    </Style>
+
+    <Style x:Key="CustomHeaderBaseStyle"
            BasedOn="{StaticResource MetroDataGridColumnHeader}"
+           TargetType="{x:Type DataGridColumnHeader}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border x:Name="BackgroundBorder"
+                                Grid.ColumnSpan="2"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}" />
+
+                        <Controls:ContentControlEx x:Name="HeaderContent"
+                                                   Margin="{TemplateBinding BorderThickness}"
+                                                   Padding="{TemplateBinding Padding}"
+                                                   HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                   VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                   Content="{TemplateBinding Content}"
+                                                   ContentCharacterCasing="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.ContentCharacterCasing)}"
+                                                   ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                                   ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                   ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                                   RecognizesAccessKey="True"
+                                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+
+                        <Thumb x:Name="PART_LeftHeaderGripper"
+                               HorizontalAlignment="Left"
+                               Background="Transparent"
+                               Style="{StaticResource CustomColumnHeaderGripper}" />
+
+                        <IconPacks:PackIconFontAwesomeLight x:Name="SortArrow"
+                                                            Grid.Column="1"
+                                                            Width="8"
+                                                            Height="10"
+                                                            Margin="0,0,8,2"
+                                                            VerticalAlignment="Center"
+                                                            Foreground="{TemplateBinding Foreground}"
+                                                            Visibility="Collapsed" />
+
+                        <Thumb x:Name="PART_RightHeaderGripper"
+                               Grid.Column="1"
+                               HorizontalAlignment="Right"
+                               Background="Transparent"
+                               Style="{StaticResource CustomColumnHeaderGripper}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="SortDirection" Value="Ascending">
+                            <Setter TargetName="SortArrow" Property="Kind" Value="LongArrowAltUp" />
+                            <Setter TargetName="SortArrow" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="SortDirection" Value="Descending">
+                            <Setter TargetName="SortArrow" Property="Kind" Value="LongArrowAltDown" />
+                            <Setter TargetName="SortArrow" Property="Margin" Value="0,0,8,0" />
+                            <Setter TargetName="SortArrow" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="DisplayIndex" Value="0">
+                            <Setter TargetName="PART_LeftHeaderGripper" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CustomCenterAlignedDataGridHeaderStyle"
+           BasedOn="{StaticResource CustomHeaderBaseStyle}"
            TargetType="{x:Type DataGridColumnHeader}">
         <Setter Property="Controls:ControlsHelper.ContentCharacterCasing" Value="Normal" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -29,7 +117,7 @@
     </Style>
 
     <Style x:Key="CustomLeftAlignedDataGridHeaderStyle"
-           BasedOn="{StaticResource MetroDataGridColumnHeader}"
+           BasedOn="{StaticResource CustomHeaderBaseStyle}"
            TargetType="{x:Type DataGridColumnHeader}">
         <Setter Property="Controls:ControlsHelper.ContentCharacterCasing" Value="Normal" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />

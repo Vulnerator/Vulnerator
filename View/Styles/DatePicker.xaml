@@ -101,7 +101,7 @@
                                 SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                         <Grid x:Name="PART_InnerGrid"
                               Grid.Row="1"
-                              Margin="1,3">
+                              Margin="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition x:Name="ButtonColumn"
@@ -116,22 +116,26 @@
                             <Button x:Name="PART_Button"
                                     Grid.RowSpan="2"
                                     Grid.Column="1"
+                                    VerticalAlignment="Stretch"
                                     Foreground="{TemplateBinding Foreground}"
                                     IsTabStop="False"
                                     Style="{DynamicResource ChromelessButtonStyle}">
                                 <ContentControl Width="{TemplateBinding Controls:TextBoxHelper.ButtonWidth}"
                                                 Height="{TemplateBinding Controls:TextBoxHelper.ButtonWidth}"
                                                 Padding="2"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
                                                 Content="{IconPacks:FontAwesomeLight Kind=CalendarDay}"
-                                                Style="{DynamicResource PathIconContentControlStyle}" />
+                                                Style="{DynamicResource MahApps.Styles.ContentControl.PathIcon}" />
                             </Button>
 
                             <DatePickerTextBox x:Name="PART_TextBox"
                                                Grid.Row="1"
                                                Grid.Column="0"
                                                Margin="0,1"
+                                               Padding="0,1"
                                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                               VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                               VerticalContentAlignment="Center"
                                                Controls:TextBoxHelper.Watermark="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:TextBoxHelper.Watermark), Mode=OneWay}"
                                                Controls:TextBoxHelper.WatermarkAlignment="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:TextBoxHelper.WatermarkAlignment), Mode=OneWay}"
                                                Controls:TextBoxHelper.WatermarkTrimming="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:TextBoxHelper.WatermarkTrimming), Mode=OneWay}"

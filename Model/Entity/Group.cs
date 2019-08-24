@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 namespace Vulnerator.Model.Entity
 {
     using System.Collections.Generic;
@@ -44,35 +46,41 @@ namespace Vulnerator.Model.Entity
 
         public long? Organization_ID { get; set; }
 
-        public long Confidentiality_ID { get; set; }
+        public long? Confidentiality_ID { get; set; }
 
-        public long Integrity_ID { get; set; }
+        public long? Integrity_ID { get; set; }
 
-        public long Availability_ID { get; set; }
+        public long? Availability_ID { get; set; }
 
-        public long SystemCategorization_ID { get; set; }
+        public long? SystemCategorization_ID { get; set; }
 
         [StringLength(25)]
+        [CanBeNull]
         public string AccreditationVersion { get; set; }
 
         [StringLength(1)]
+        [CanBeNull]
         public string CybersafeGrade { get; set; }
 
         [StringLength(5)]
+        [CanBeNull]
         public string FISCAM_Applies { get; set; }
 
         public long? ControlSelection_ID { get; set; }
 
         [StringLength(5)]
+        [CanBeNull]
         public string HasForeignNationals { get; set; }
 
         [StringLength(25)]
+        [CanBeNull]
         public string SystemType { get; set; }
 
         [StringLength(1)]
+        [CanBeNull]
         public string RDTE_Zone { get; set; }
 
-        public long StepOneQuestionnaire_ID { get; set; }
+        public long? StepOneQuestionnaire_ID { get; set; }
 
         public long? SAP_ID { get; set; }
 

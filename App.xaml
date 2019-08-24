@@ -36,6 +36,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/ComboBox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/DataGrid.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/DatePicker.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/Expander.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/HamburgerMenu.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/Label.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/ListBox.xaml" />

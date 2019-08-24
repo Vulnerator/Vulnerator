@@ -11,9 +11,9 @@ namespace Vulnerator.View.Converter
             if (value.ToString() != string.Empty)
             {
                 if (System.Convert.ToBoolean(value))
-                { return "CheckboxMarkedCircleOutline"; }
+                { return "CheckCircle"; }
                 else
-                { return "Exclamation"; }
+                { return "ExclamationTriangle"; }
             }
             return null;
         }
