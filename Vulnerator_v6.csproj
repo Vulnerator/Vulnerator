@@ -123,7 +123,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="JetBrains.Annotations">
-      <HintPath>..\MahApps.Metro.IconPacks\src\MahApps.Metro.IconPacks\bin\Debug\MahApps.Metro.IconPacks\net45\JetBrains.Annotations.dll</HintPath>
+      <HintPath>.\Resources\DllFiles\JetBrains.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="LiveCharts, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
       <HintPath>packages\LiveCharts.0.9.7\lib\net45\LiveCharts.dll</HintPath>
@@ -145,7 +145,7 @@
     </Reference>
     <Reference Include="MahApps.Metro.IconPacks.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\MahApps.Metro.IconPacks\src\MahApps.Metro.IconPacks\bin\Debug\MahApps.Metro.IconPacks\net45\MahApps.Metro.IconPacks.Core.dll</HintPath>
+      <HintPath>.\Resources\DllFiles\MahApps.Metro.IconPacks.Core.dll</HintPath>
     </Reference>
     <Reference Include="Markdig, Version=0.16.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Markdig.0.16.0\lib\net40\Markdig.dll</HintPath>
@@ -775,6 +775,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\DllFiles\MahApps.Metro.IconPacks.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\DllFiles\JetBrains.Annotations.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\DllFiles\MahApps.Metro.IconPacks.Core.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Content Include="Resources\UserGuide\Images\ThemeFlyout.jpg">
