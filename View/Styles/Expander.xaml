@@ -92,19 +92,11 @@
                         <Grid Margin="{TemplateBinding Padding}"
                               Background="Transparent"
                               SnapsToDevicePixels="False">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <Grid Margin="1">
-                                <IconPacks:PackIconFontAwesomeLight x:Name="Arrow"
-                                                                    HorizontalAlignment="Center"
-                                                                    VerticalAlignment="Center"
-                                                                    Foreground="{TemplateBinding Foreground}"
-                                                                    Kind="CaretCircleUp" />
-                            </Grid>
-                            <Controls:ContentControlEx Grid.Row="1"
-                                                       Margin="0,4,0,0"
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Controls:ContentControlEx Margin="0,4,0,0"
                                                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                                        Content="{TemplateBinding Content}"
@@ -114,6 +106,14 @@
                                                        ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
                                                        RecognizesAccessKey="True"
                                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            <Grid Grid.Column="1"
+                                  Margin="1">
+                                <IconPacks:PackIconFontAwesomeLight x:Name="Arrow"
+                                                                    HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Foreground="{TemplateBinding Foreground}"
+                                                                    Kind="CaretCircleUp" />
+                            </Grid>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -199,18 +199,11 @@
                         <Grid Margin="{TemplateBinding Padding}"
                               Background="Transparent"
                               SnapsToDevicePixels="False">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <Grid Margin="1">
-                                <IconPacks:PackIconFontAwesomeLight x:Name="Arrow"
-                                                                    HorizontalAlignment="Center"
-                                                                    VerticalAlignment="Center"
-                                                                    Foreground="{TemplateBinding Foreground}"
-                                                                    Kind="CaretCircleDown" />
-                            </Grid>
-                            <Controls:ContentControlEx Grid.Row="1"
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Controls:ContentControlEx Grid.Column="0"
                                                        Margin="0,4,0,0"
                                                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -221,11 +214,19 @@
                                                        ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
                                                        RecognizesAccessKey="True"
                                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            <Grid Grid.Column="1"
+                                  Margin="1">
+                                <IconPacks:PackIconFontAwesomeLight x:Name="Arrow"
+                                                                    HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Foreground="{TemplateBinding Foreground}"
+                                                                    Kind="CaretCircleDown" />
+                            </Grid>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="true">
-                            <Setter TargetName="Arrow" Property="Flip" Value="Horizontal" />
+                            <Setter TargetName="Arrow" Property="Flip" Value="Vertical" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
                             <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource GrayBrush2}" />
@@ -285,12 +286,15 @@
                         <Rectangle x:Name="DisabledVisualElement"
                                    Fill="{DynamicResource MahApps.Brushes.Controls.Disabled}"
                                    IsHitTestVisible="false"
-                                   Opacity="0" />
+                                   Opacity="0"
+                                   RadiusX="3"
+                                   RadiusY="3" />
                         <DockPanel x:Name="ExpanderRoot">
                             <Border x:Name="HeaderSite"
                                     Background="{TemplateBinding Background}"
                                     BorderBrush="{TemplateBinding BorderBrush}"
                                     BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="3"
                                     DockPanel.Dock="Top"
                                     SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                     UseLayoutRounding="True">
@@ -324,6 +328,7 @@
                                     Background="Transparent"
                                     BorderBrush="{TemplateBinding BorderBrush}"
                                     BorderThickness="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=BorderThickness, Converter={StaticResource ThicknessBindingConverter}, ConverterParameter={x:Static Converters:ThicknessSideType.Top}}"
+                                    CornerRadius="3"
                                     DockPanel.Dock="Bottom"
                                     Focusable="false"
                                     Opacity="0"
@@ -360,7 +365,9 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsExpanded" Value="true">
+                            <Setter TargetName="ExpandSite" Property="CornerRadius" Value="0,0,3,3" />
                             <Setter TargetName="ExpandSite" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="HeaderSite" Property="CornerRadius" Value="3,3,0,0" />
                             <Trigger.EnterActions>
                                 <BeginStoryboard Storyboard="{StaticResource MahApps.Storyboard.ExpanderExpand}" />
                             </Trigger.EnterActions>
@@ -379,6 +386,12 @@
                             <Setter TargetName="ExpandSite" Property="DockPanel.Dock" Value="Top" />
                             <Setter TargetName="HeaderSite" Property="DockPanel.Dock" Value="Bottom" />
                             <Setter TargetName="ToggleSite" Property="Style" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ExpanderHelper.HeaderUpStyle)}" />
+                        </Trigger>
+                        <Trigger Property="ExpandDirection" Value="Down">
+                            <Setter TargetName="ExpandSite" Property="BorderThickness" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=BorderThickness, Converter={StaticResource ThicknessBindingConverter}, ConverterParameter={x:Static Converters:ThicknessSideType.Top}}" />
+                            <Setter TargetName="ExpandSite" Property="DockPanel.Dock" Value="Bottom" />
+                            <Setter TargetName="HeaderSite" Property="DockPanel.Dock" Value="Top" />
+                            <Setter TargetName="ToggleSite" Property="Style" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ExpanderHelper.HeaderDownStyle)}" />
                         </Trigger>
                         <Trigger Property="ExpandDirection" Value="Left">
                             <Setter TargetName="ExpandSite" Property="BorderThickness" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=BorderThickness, Converter={StaticResource ThicknessBindingConverter}, ConverterParameter={x:Static Converters:ThicknessSideType.Right}}" />

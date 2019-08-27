@@ -222,6 +222,7 @@
                                 </Label>
                                 <ListView Grid.Row="3"
                                           Margin="0,0,5,5"
+                                          Controls:ControlsHelper.CornerRadius="3"
                                           BorderBrush="{DynamicResource TextBoxBorderBrush}"
                                           BorderThickness="1"
                                           ItemsSource="{Binding IssueLabelCategoryList}"

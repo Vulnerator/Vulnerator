@@ -107,6 +107,7 @@
                                  VerticalAlignment="Center"
                                  Controls:TextBoxHelper.Watermark="Database File"
                                  IsReadOnly="True"
+                                 Style="{StaticResource NonHeaderedTextBoxStyle}"
                                  Text="{Binding Source={StaticResource Settings}, Path=Default.Database}" />
                         <Button Grid.Column="1"
                                 Margin="5,0,5,5"
@@ -155,6 +156,7 @@
                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=TimesSquare}"
                                  Controls:TextBoxHelper.ClearTextButton="True"
                                  Controls:TextBoxHelper.Watermark="STIG Library or Single STIG (ZIP File)"
+                                 Style="{StaticResource NonHeaderedTextBoxStyle}"
                                  Text="{Binding StigLibraryLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <Button Grid.Column="1"
                                 Margin="5,0,5,5"
@@ -226,7 +228,9 @@
 
                     <Expander Margin="5,0"
                               Background="Red"
-                              BorderBrush="Red">
+                              BorderBrush="Red"
+                              ExpandDirection="Down"
+                              Style="{StaticResource CustomExpander}">
                         <Expander.Header>
                             <Label Foreground="White">
                                 <Grid>
@@ -412,7 +416,8 @@
                                  VerticalAlignment="Center"
                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=TimesSquare}"
                                  Controls:TextBoxHelper.ClearTextButton="True"
-                                 Controls:TextBoxHelper.Watermark="Enter a new organization name" />
+                                 Controls:TextBoxHelper.Watermark="Enter a new organization name"
+                                 Style="{StaticResource NonHeaderedTextBoxStyle}" />
                         <Button Grid.Column="1"
                                 Margin="5,0,5,5"
                                 Content="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
