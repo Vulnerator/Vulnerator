@@ -13,9 +13,9 @@ namespace Vulnerator.View.Converter
             else
             {
                 if (System.Convert.ToBoolean(value))
-                { return "CheckCircle"; }
+                { return "Check"; }
                 else
-                { return "Circle"; }
+                { return "None"; }
             }
         }
 

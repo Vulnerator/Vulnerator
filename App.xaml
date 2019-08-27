@@ -41,6 +41,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/HamburgerMenu.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/Label.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/ListBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/ListView.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/MarkdownViewer.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/MetroWindow.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/NotificationMessage.xaml" />

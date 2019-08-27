@@ -54,7 +54,8 @@
                                     <DataTemplate>
                                         <CheckBox Margin="5,0,0,0"
                                                   HorizontalAlignment="Center"
-                                                  Command="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}" />
+                                                  Command="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
+                                                  Style="{StaticResource CustomCheckBox}" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -110,22 +111,22 @@
                                   VerticalScrollBarVisibility="Auto">
                         <Grid>
                             <GridExtra:ResponsiveGrid>
-                                <TextBox Controls:TextBoxHelper.Watermark="Selected Report Name"
+                                <TextBox Margin="5,0"
+                                         Controls:TextBoxHelper.Watermark="Selected Report Name"
                                          vh:DependencyProperties.FloatingWatermark="Report Name (Read Only)"
                                          IsReadOnly="True"
-                                         Margin="5,0"
                                          Style="{StaticResource ResponsiveGridReportingTextBoxStyle}"
                                          Text="{Binding SelectedReport.Displayed_Report_Name}" />
-                                <TextBox Controls:TextBoxHelper.Watermark="Selected Report Type"
+                                <TextBox Margin="5,0"
+                                         Controls:TextBoxHelper.Watermark="Selected Report Type"
                                          vh:DependencyProperties.FloatingWatermark="Report Type (Read Only)"
                                          IsReadOnly="True"
-                                         Margin="5,0"
                                          Style="{StaticResource ResponsiveGridReportingTextBoxStyle}"
                                          Text="{Binding SelectedReport.Report_Type}" />
-                                <TextBox Controls:TextBoxHelper.Watermark="Selected Report Category"
+                                <TextBox Margin="5,0"
+                                         Controls:TextBoxHelper.Watermark="Selected Report Category"
                                          vh:DependencyProperties.FloatingWatermark="Report Category (Read Only)"
                                          IsReadOnly="True"
-                                         Margin="5,0"
                                          Style="{StaticResource ResponsiveGridReportingTextBoxStyle}"
                                          Text="{Binding SelectedReport.ReportCategory.Report_Category_Name}" />
                             </GridExtra:ResponsiveGrid>

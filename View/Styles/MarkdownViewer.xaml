@@ -78,7 +78,7 @@
     </Style>
 
     <Style x:Key="{x:Static wpf:Styles.TaskListStyleKey}"
-           BasedOn="{StaticResource MetroCheckBox}"
+           BasedOn="{StaticResource CustomCheckBox}"
            TargetType="{x:Type CheckBox}" />
 
     <Style x:Key="{x:Static wpf:Styles.ThematicBreakStyleKey}"

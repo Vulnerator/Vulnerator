@@ -94,7 +94,8 @@
         <Border Grid.Column="1"
                 Margin="5"
                 BorderBrush="{DynamicResource TextBoxBorderBrush}"
-                BorderThickness="1">
+                BorderThickness="1"
+                CornerRadius="3">
             <wpf:MarkdownViewer Grid.Column="1"
                                 VerticalAlignment="Stretch"
                                 HorizontalContentAlignment="Left"

@@ -32,6 +32,7 @@
                                                    Margin="5,0"
                                                    HorizontalAlignment="Left"
                                                    VerticalAlignment="Top"
+                                                   Controls:ControlsHelper.CornerRadius="3"
                                                    Command="{Binding ChangeThemeCommand}"
                                                    DisplayMemberPath="DisplayName"
                                                    ItemsSource="{Binding Themes}"

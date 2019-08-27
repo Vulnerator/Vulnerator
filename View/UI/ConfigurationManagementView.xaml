@@ -76,7 +76,8 @@
                                         <DataTemplate>
                                             <CheckBox Margin="5,0,0,0"
                                                       HorizontalAlignment="Center"
-                                                      IsChecked="{Binding IsChecked}" />
+                                                      IsChecked="{Binding IsChecked}"
+                                                      Style="{StaticResource CustomCheckBox}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -643,7 +644,8 @@
                                         <DataTemplate>
                                             <CheckBox Margin="5,0,0,0"
                                                       HorizontalAlignment="Center"
-                                                      IsChecked="{Binding IsChecked}" />
+                                                      IsChecked="{Binding IsChecked}"
+                                                      Style="{StaticResource CustomCheckBox}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -765,7 +767,8 @@
                                                   VerticalAlignment="Bottom"
                                                   Content="FAM Accepted"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
-                                                  IsChecked="{Binding FAM_Accepted}" />
+                                                  IsChecked="{Binding FAM_Accepted}"
+                                                  Style="{StaticResource CustomCheckBox}" />
                                         <DataGrid Grid.Row="2"
                                                   Grid.Column="1"
                                                   Grid.ColumnSpan="4"
@@ -816,42 +819,48 @@
                                                   VerticalAlignment="Bottom"
                                                   Content="Has Custom Code"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
-                                                  IsChecked="{Binding Has_Custom_Code}" />
+                                                  IsChecked="{Binding Has_Custom_Code}"
+                                                  Style="{StaticResource CustomCheckBox}" />
                                         <CheckBox Grid.Row="3"
                                                   Grid.Column="3"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Content="IA / IA Enabled"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
-                                                  IsChecked="{Binding IaOrIa_Enabled}" />
+                                                  IsChecked="{Binding IaOrIa_Enabled}"
+                                                  Style="{StaticResource CustomCheckBox}" />
                                         <CheckBox Grid.Row="3"
                                                   Grid.Column="4"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Content="Approved for Baseline (Global)"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
-                                                  IsChecked="{Binding ApprovedForBaseline_Global}" />
+                                                  IsChecked="{Binding ApprovedForBaseline_Global}"
+                                                  Style="{StaticResource CustomCheckBox}" />
                                         <CheckBox Grid.Row="4"
                                                   Grid.Column="1"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Content="Is OS / Firmware"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
-                                                  IsChecked="{Binding Is_OS_Or_Firmware}" />
+                                                  IsChecked="{Binding Is_OS_Or_Firmware}"
+                                                  Style="{StaticResource CustomCheckBox}" />
                                         <CheckBox Grid.Row="4"
                                                   Grid.Column="2"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Content="Externally Authorized"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
-                                                  IsChecked="{Binding Externally_Authorized}" />
+                                                  IsChecked="{Binding Externally_Authorized}"
+                                                  Style="{StaticResource CustomCheckBox}" />
                                         <CheckBox Grid.Row="4"
                                                   Grid.Column="3"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Content="Report in Accreditation"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
-                                                  IsChecked="{Binding ReportInAccreditation_Global}" />
+                                                  IsChecked="{Binding ReportInAccreditation_Global}"
+                                                  Style="{StaticResource CustomCheckBox}" />
                                         <TextBox Grid.Row="4"
                                                  Grid.Column="4"
                                                  Margin="5,0,5,5"
@@ -1018,7 +1027,8 @@
                                         <DataTemplate>
                                             <CheckBox Margin="5,0,0,0"
                                                       HorizontalAlignment="Center"
-                                                      IsChecked="{Binding IsChecked}" />
+                                                      IsChecked="{Binding IsChecked}"
+                                                      Style="{StaticResource CustomCheckBox}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -1182,7 +1192,8 @@
                                                   VerticalAlignment="Bottom"
                                                   Content="Report in Accreditation"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
-                                                  IsChecked="{Binding ReportInAccreditation_Global}" />
+                                                  IsChecked="{Binding ReportInAccreditation_Global}"
+                                                  Style="{StaticResource CustomCheckBox}" />
                                         <TextBox Grid.Row="2"
                                                  Grid.Column="1"
                                                  Margin="0,0,5,5"
@@ -1205,7 +1216,8 @@
                                                   VerticalAlignment="Bottom"
                                                   Content="DoD Compliant"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
-                                                  IsChecked="{Binding Hardware_PPS.DoD_Compliant}" />
+                                                  IsChecked="{Binding Hardware_PPS.DoD_Compliant}"
+                                                  Style="{StaticResource CustomCheckBox}" />
                                     </Grid>
                                 </DataTemplate>
                             </DataGrid.RowDetailsTemplate>
@@ -1361,7 +1373,8 @@
                                         <DataTemplate>
                                             <CheckBox Margin="5,0,0,0"
                                                       HorizontalAlignment="Center"
-                                                      IsChecked="{Binding IsChecked}" />
+                                                      IsChecked="{Binding IsChecked}"
+                                                      Style="{StaticResource CustomCheckBox}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -1795,7 +1808,8 @@
                                         <DataTemplate>
                                             <CheckBox Margin="5,0,0,0"
                                                       HorizontalAlignment="Center"
-                                                      IsChecked="{Binding IsChecked}" />
+                                                      IsChecked="{Binding IsChecked}"
+                                                      Style="{StaticResource CustomCheckBox}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -1889,14 +1903,14 @@
                             </Label>
                         </Expander.Header>
                         <StackPanel Width="200">
-                            <TextBox Style="{StaticResource HeaderedTextBoxStyle}"
+                            <TextBox Controls:TextBoxHelper.Watermark="Group Name"
+                                     Style="{StaticResource HeaderedTextBoxStyle}"
                                      Text="{Binding SelectedGroup.Name, Mode=TwoWay}"
-                                     TextWrapping="Wrap"
-                                     Controls:TextBoxHelper.Watermark="Group Name"/>
-                            <TextBox Style="{StaticResource HeaderedTextBoxStyle}"
+                                     TextWrapping="Wrap" />
+                            <TextBox Controls:TextBoxHelper.Watermark="Group Acronym"
+                                     Style="{StaticResource HeaderedTextBoxStyle}"
                                      Text="{Binding SelectedGroup.Name, Mode=TwoWay}"
-                                     TextWrapping="Wrap"
-                                     Controls:TextBoxHelper.Watermark="Group Acronym"/>
+                                     TextWrapping="Wrap" />
                         </StackPanel>
                     </Expander>
                     <Expander Grid.Column="2"
@@ -2007,7 +2021,8 @@
                                         <DataTemplate>
                                             <CheckBox Margin="5,0,0,0"
                                                       HorizontalAlignment="Center"
-                                                      IsChecked="{Binding IsChecked}" />
+                                                      IsChecked="{Binding IsChecked}"
+                                                      Style="{StaticResource CustomCheckBox}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -2150,7 +2165,8 @@
                                                   VerticalAlignment="Bottom"
                                                   Content="Platform System"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
-                                                  IsChecked="{Binding IsChecked}" />
+                                                  IsChecked="{Binding IsChecked}"
+                                                  Style="{StaticResource CustomCheckBox}" />
                                         <DatePicker Grid.Row="2"
                                                     Grid.Column="1"
                                                     Margin="0,0,5,5"
@@ -2173,14 +2189,16 @@
                                                   VerticalAlignment="Bottom"
                                                   Content="Has Foreign Nationals"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
-                                                  IsChecked="{Binding IsChecked}" />
+                                                  IsChecked="{Binding IsChecked}"
+                                                  Style="{StaticResource CustomCheckBox}" />
                                         <CheckBox Grid.Row="2"
                                                   Grid.Column="4"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Content="FISCAM System"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
-                                                  IsChecked="{Binding IsChecked}" />
+                                                  IsChecked="{Binding IsChecked}"
+                                                  Style="{StaticResource CustomCheckBox}" />
                                     </Grid>
                                 </DataTemplate>
                             </DataGrid.RowDetailsTemplate>

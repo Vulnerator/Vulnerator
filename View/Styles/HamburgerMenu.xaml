@@ -41,6 +41,15 @@
     <Style x:Key="HamburgerMenuCreatorsStyle"
            BasedOn="{StaticResource {x:Type Controls:HamburgerMenu}}"
            TargetType="{x:Type Controls:HamburgerMenu}">
+        <Setter Property="HamburgerMenuTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <ContentControl Width="22"
+                                    Height="22"
+                                    Content="{IconPacks:FontAwesomeLight Kind=Bars}" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
         <Setter Property="ItemContainerStyle" Value="{StaticResource HamburgerMenuCreatorsItemStyle}" />
         <Setter Property="OptionsItemContainerStyle" Value="{StaticResource HamburgerMenuCreatorsItemStyle}" />
         <Setter Property="PaneBackground" Value="{DynamicResource GrayBrush10}" />

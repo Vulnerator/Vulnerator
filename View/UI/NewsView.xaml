@@ -190,7 +190,8 @@
                                           BorderBrush="{DynamicResource TextBoxBorderBrush}"
                                           BorderThickness="1"
                                           ItemsSource="{Binding ElementName=issueListBox, Path=SelectedItem.Labels}"
-                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                          Style="{StaticResource CustomListView}">
                                     <ListView.ItemContainerStyle>
                                         <Style TargetType="Control">
                                             <Setter Property="Focusable" Value="False" />
@@ -205,7 +206,9 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Rectangle Width="5"
                                                            VerticalAlignment="Stretch"
-                                                           Fill="{Binding Color}" />
+                                                           Fill="{Binding Color}"
+                                                           RadiusX="3"
+                                                           RadiusY="3" />
                                                 <TextBlock Grid.Column="1"
                                                            Margin="5,0,0,0"
                                                            Text="{Binding Name}"
@@ -226,7 +229,8 @@
                                           BorderBrush="{DynamicResource TextBoxBorderBrush}"
                                           BorderThickness="1"
                                           ItemsSource="{Binding IssueLabelCategoryList}"
-                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                          Style="{StaticResource CustomListView}">
                                     <ListView.ItemContainerStyle>
                                         <Style TargetType="Control">
                                             <Setter Property="Focusable" Value="False" />
@@ -241,7 +245,9 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Rectangle Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}"
                                                            VerticalAlignment="Stretch"
-                                                           Fill="{Binding Color}" />
+                                                           Fill="{Binding Color}"
+                                                           RadiusX="3"
+                                                           RadiusY="3" />
                                                 <TextBlock Grid.Column="1"
                                                            Margin="5,0,0,0"
                                                            Text="{Binding Category}"
@@ -255,7 +261,8 @@
                             <Border Grid.Row="1"
                                     Margin="5,0,5,5"
                                     BorderBrush="{DynamicResource TextBoxBorderBrush}"
-                                    BorderThickness="1">
+                                    BorderThickness="1"
+                                    CornerRadius="3">
                                 <wpf:MarkdownViewer VerticalAlignment="Stretch"
                                                     HorizontalContentAlignment="Left"
                                                     Markdown="{Binding ElementName=issueListBox, Path=SelectedItem.Body}"
@@ -403,7 +410,8 @@
                         <Border Grid.Row="2"
                                 Margin="5"
                                 BorderBrush="{DynamicResource TextBoxBorderBrush}"
-                                BorderThickness="1">
+                                BorderThickness="1"
+                                CornerRadius="3">
                             <wpf:MarkdownViewer VerticalAlignment="Stretch"
                                                 HorizontalContentAlignment="Left"
                                                 Markdown="{Binding ElementName=releaseListBox, Path=SelectedItem.Body}"
