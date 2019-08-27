@@ -141,7 +141,7 @@
     </Reference>
     <Reference Include="MahApps.Metro.IconPacks, Version=3.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\MahApps.Metro.IconPacks\src\MahApps.Metro.IconPacks\bin\Debug\MahApps.Metro.IconPacks\net45\MahApps.Metro.IconPacks.dll</HintPath>
+      <HintPath>.\Resources\DllFiles\MahApps.Metro.IconPacks.dll</HintPath>
     </Reference>
     <Reference Include="MahApps.Metro.IconPacks.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -774,6 +774,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\DllFiles\MahApps.Metro.IconPacks.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Content Include="Resources\UserGuide\Images\ThemeFlyout.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
