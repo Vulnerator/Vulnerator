@@ -39,14 +39,14 @@
         <DataTemplate>
             <Border Width="48"
                     Background="{DynamicResource GrayBrush10}">
-                <IconPacks:PackIconFontAwesomeLight Width="24"
+                <IconPacks:PackIconFontAwesomeBrands Width="24"
                                                     Height="24"
                                                     Margin="4"
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
                                                     Flip="Horizontal"
                                                     Foreground="{DynamicResource BlackBrush}"
-                                                    Kind="Analytics" />
+                                                    Kind="Vulnerator" />
             </Border>
         </DataTemplate>
     </Controls:MetroWindow.IconTemplate>
