@@ -202,7 +202,21 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Validation.ErrorTemplate" Value="{DynamicResource ValidationErrorTemplate}" />
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel>
+                        <AdornedElementPlaceholder x:Name="textBox" />
+                        <Border Background="Red"
+                                BorderBrush="Red"
+                                BorderThickness="1,0,1,1">
+                            <TextBlock Foreground="White"
+                                       Text="{Binding [0].ErrorContent}" />
+                        </Border>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
         <Setter Property="vh:DependencyProperties.FloatingWatermark" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:TextBoxHelper.Watermark)}" />
         <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource Self}, Path=Foreground}" />
     </Style>

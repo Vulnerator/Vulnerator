@@ -20,7 +20,7 @@ namespace Vulnerator.ViewModel
         private List<Group> _groups { get; set; }
         public List<Group> Groups
         {
-            get { return _groups; }
+            get => _groups;
             set
             {
                 if (_groups != value)
@@ -34,7 +34,7 @@ namespace Vulnerator.ViewModel
         private List<RequiredReport> _vulnerabilityReports;
         public List<RequiredReport> VulnerabilityReports
         {
-            get { return _vulnerabilityReports; }
+            get => _vulnerabilityReports;
             set
             {
                 if (_vulnerabilityReports != value)
@@ -49,7 +49,7 @@ namespace Vulnerator.ViewModel
 
         public RequiredReport SelectedReport
         {
-            get { return _selectedReport; }
+            get => _selectedReport;
             set
             {
                 if (_selectedReport != value)
@@ -69,7 +69,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to instantiate ReportingViewModel."));
+                log.Error("Unable to instantiate ReportingViewModel.");
                 log.Debug("Exception details:", exception);
             }
         }
@@ -83,7 +83,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to update ReportingViewModel."));
+                log.Error("Unable to update ReportingViewModel.");
                 log.Debug("Exception details:", exception);
             }
         }
@@ -111,7 +111,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to populate required reports"));
+                log.Error("Unable to populate required reports");
                 log.Debug("Exception details:", exception);
             }
         }

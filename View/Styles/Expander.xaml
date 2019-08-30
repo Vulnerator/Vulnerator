@@ -12,19 +12,8 @@
     <Thickness x:Key="ExpanderHeaderThemePadding">2</Thickness>
     <sys:Double x:Key="ExpanderToggleButtonEllipseThemeSize">18</sys:Double>
 
-    <Style x:Key="MahApps.Styles.ToggleButton.ExpanderHeader.Base"
-           TargetType="{x:Type ToggleButton}">
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="BorderBrush" Value="Transparent" />
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-        <Setter Property="Margin" Value="0" />
-        <Setter Property="Padding" Value="{DynamicResource ExpanderHeaderThemePadding}" />
-        <Setter Property="SnapsToDevicePixels" Value="True" />
-    </Style>
-
     <Style x:Key="CustomExpanderHeaderRight"
-           BasedOn="{StaticResource MahApps.Styles.ToggleButton.ExpanderHeader.Base}"
+           BasedOn="{StaticResource ExpanderBaseHeaderStyle}"
            TargetType="{x:Type ToggleButton}">
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="Template">
@@ -79,7 +68,7 @@
     </Style>
 
     <Style x:Key="CustomExpanderHeaderUp"
-           BasedOn="{StaticResource MahApps.Styles.ToggleButton.ExpanderHeader.Base}"
+           BasedOn="{StaticResource ExpanderBaseHeaderStyle}"
            TargetType="{x:Type ToggleButton}">
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="Template">
@@ -240,43 +229,19 @@
         </Setter>
     </Style>
 
-    <Storyboard x:Key="MahApps.Storyboard.ExpanderExpand">
-        <DoubleAnimation Storyboard.TargetName="ExpandSite"
-                         Storyboard.TargetProperty="(UIElement.Opacity)"
-                         To="1"
-                         Duration="0:0:0.25" />
-        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ExpandSite"
-                                       Storyboard.TargetProperty="(UIElement.Visibility)">
-            <DiscreteObjectKeyFrame KeyTime="0"
-                                    Value="{x:Static Visibility.Visible}" />
-        </ObjectAnimationUsingKeyFrames>
-    </Storyboard>
-
-    <Storyboard x:Key="MahApps.Storyboard.ExpanderCollapse">
-        <DoubleAnimation Storyboard.TargetName="ExpandSite"
-                         Storyboard.TargetProperty="(UIElement.Opacity)"
-                         To="0"
-                         Duration="0:0:0.25" />
-        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ExpandSite"
-                                       Storyboard.TargetProperty="(UIElement.Visibility)">
-            <DiscreteObjectKeyFrame KeyTime="0:0:0.25"
-                                    Value="{x:Static Visibility.Collapsed}" />
-        </ObjectAnimationUsingKeyFrames>
-    </Storyboard>
-
     <Style x:Key="CustomExpander"
            TargetType="{x:Type Expander}">
-        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}" />
+        <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Controls:ControlsHelper.ContentCharacterCasing" Value="Upper" />
-        <Setter Property="Controls:ControlsHelper.HeaderFontSize" Value="{DynamicResource MahApps.Sizes.Font.Content}" />
+        <Setter Property="Controls:ControlsHelper.HeaderFontSize" Value="{DynamicResource ContentFontSize}" />
         <Setter Property="Controls:ExpanderHelper.HeaderDownStyle" Value="{StaticResource CustomExpanderHeaderDown}" />
         <Setter Property="Controls:ExpanderHelper.HeaderLeftStyle" Value="{StaticResource CustomExpanderHeaderLeft}" />
         <Setter Property="Controls:ExpanderHelper.HeaderRightStyle" Value="{StaticResource CustomExpanderHeaderRight}" />
         <Setter Property="Controls:ExpanderHelper.HeaderUpStyle" Value="{StaticResource CustomExpanderHeaderUp}" />
         <Setter Property="Controls:GroupBoxHelper.HeaderForeground" Value="{x:Null}" />
-        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Black}" />
+        <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />
         <Setter Property="Padding" Value="4" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
@@ -284,7 +249,7 @@
                 <ControlTemplate TargetType="{x:Type Expander}">
                     <Grid>
                         <Rectangle x:Name="DisabledVisualElement"
-                                   Fill="{DynamicResource MahApps.Brushes.Controls.Disabled}"
+                                   Fill="{DynamicResource ControlsDisabledBrush}"
                                    IsHitTestVisible="false"
                                    Opacity="0"
                                    RadiusX="3"
@@ -369,10 +334,10 @@
                             <Setter TargetName="ExpandSite" Property="Visibility" Value="Visible" />
                             <Setter TargetName="HeaderSite" Property="CornerRadius" Value="3,3,0,0" />
                             <Trigger.EnterActions>
-                                <BeginStoryboard Storyboard="{StaticResource MahApps.Storyboard.ExpanderExpand}" />
+                                <BeginStoryboard Storyboard="{StaticResource MetroExpanderExpandStoryboard}" />
                             </Trigger.EnterActions>
                             <Trigger.ExitActions>
-                                <BeginStoryboard Storyboard="{StaticResource MahApps.Storyboard.ExpanderCollapse}" />
+                                <BeginStoryboard Storyboard="{StaticResource MetroExpanderCollapseStoryboard}" />
                             </Trigger.ExitActions>
                         </Trigger>
                         <Trigger Property="ExpandDirection" Value="Right">

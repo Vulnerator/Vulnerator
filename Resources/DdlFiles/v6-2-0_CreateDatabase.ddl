@@ -286,7 +286,7 @@ CREATE TABLE EnumeratedLocalWindowsUsersSettings
 CREATE TABLE EnumeratedWindowsGroups
 	(
 	 Group_ID INTEGER PRIMARY KEY ,
-	 Group_Name NVARCHAR (50) NOT NULL
+	 Name NVARCHAR (50) NOT NULL
 	);
 CREATE TABLE EnumeratedWindowsGroupsUsers
 	(
@@ -432,6 +432,7 @@ CREATE TABLE Groups_MitigationsOrConditions
 	(
 	 MitigationOrCondition_ID INTEGER NOT NULL ,
 	 Group_ID INTEGER NOT NULL ,
+	 UNIQUE (MitigationOrCondition_ID, Group_ID) ON CONFLICT IGNORE,
 	 FOREIGN KEY (MitigationOrCondition_ID) REFERENCES MitigationsOrConditions(MitigationOrCondition_ID),
 	 FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID)
 	);

@@ -58,7 +58,7 @@ namespace Vulnerator.Model.BusinessLogic
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         InsertParameterPlaceholders(sqliteCommand);
-                        sqliteCommand.Parameters["Group_Name"].Value = "All";
+                        sqliteCommand.Parameters["Name"].Value = "All";
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         using (Stream stream = System.IO.File.OpenRead(file.FilePath))
                         {
@@ -755,7 +755,7 @@ namespace Vulnerator.Model.BusinessLogic
                 string[] parameters = new string[]
                 {
                     // Groups Table
-                    "Group_ID", "Group_Name", "Is_Accreditation", "Accreditation_ID", "Organization_ID",
+                    "Group_ID", "Name", "Is_Accreditation", "Accreditation_ID", "Organization_ID",
                     // FindingTypes Table
                     "Finding_Type",
                     // Hardware Table
@@ -801,7 +801,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert SQLiteParameter placeholders into SQLiteCommand"));
+                log.Error("Unable to insert SQLiteParameter placeholders into SQLiteCommand");
                 throw exception;
             }
         }

@@ -20,10 +20,7 @@ namespace Vulnerator.View.Converter
         {
         }
 
-        public static ResizeModeMinMaxButtonVisibilityConverter Instance
-        {
-            get { return _instance ?? (_instance = new ResizeModeMinMaxButtonVisibilityConverter()); }
-        }
+        public static ResizeModeMinMaxButtonVisibilityConverter Instance => _instance ?? (_instance = new ResizeModeMinMaxButtonVisibilityConverter());
 
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {

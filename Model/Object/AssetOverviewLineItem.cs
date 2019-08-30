@@ -19,28 +19,28 @@
         public bool plugin26917Found = false;
 
         public AssetOverviewLineItem(string assetToReport)
-        { this.AssetToReport = assetToReport; }
+        { AssetToReport = assetToReport; }
 
         public void IncreaseCatIAndTotalCounts()
         { 
-            this.CatI++;
-            this.Total++;
+            CatI++;
+            Total++;
         }
 
         public void IncreaseCatIIAndTotalCounts()
         {
-            this.CatII++;
-            this.Total++;
+            CatII++;
+            Total++;
         }
         public void IncreaseCatIIIAndTotalCounts()
         {
-            this.CatIII++;
-            this.Total++;
+            CatIII++;
+            Total++;
         }
         public void IncreaseCatIVAndTotalCounts()
         {
-            this.CatIV++;
-            this.Total++;
+            CatIV++;
+            Total++;
         }
     }
 }

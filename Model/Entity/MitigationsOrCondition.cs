@@ -60,11 +60,11 @@ namespace Vulnerator.Model.Entity
         [StringLength(25)]
         public string Mitigated_Status { get; set; }
 
-        public DateTime? Approval_Date { get; set; }
+        public string Approval_Date { get; set; }
 
-        public DateTime? Estimated_Completion_Date { get; set; }
+        public string Estimated_Completion_Date { get; set; }
 
-        public DateTime? Expiration_Date { get; set; }
+        public string Expiration_Date { get; set; }
 
         [StringLength(5)]
         public string IsApproved { get; set; }

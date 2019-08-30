@@ -62,9 +62,9 @@
                            FontSize="{DynamicResource WindowTitleFontSize}"
                            Text="{TemplateBinding Content}"
                            TextTrimming="CharacterEllipsis" />
-                <Controls:WindowCommands Foreground="{DynamicResource BlackBrush}"
-                                         ShowLastSeparator="False"
-                                         DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=Controls:MetroWindow}}">
+                <Controls:WindowCommands DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=Controls:MetroWindow}}"
+                                         Foreground="{DynamicResource BlackBrush}"
+                                         ShowLastSeparator="False">
                     <Button x:Name="projectButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"

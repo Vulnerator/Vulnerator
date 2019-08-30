@@ -95,7 +95,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to generate XmlWriterSettings."));
+                log.Error("Unable to generate XmlWriterSettings.");
                 log.Debug("Exception details:", exception);
                 throw exception;
             }

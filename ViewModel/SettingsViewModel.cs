@@ -34,7 +34,7 @@ namespace Vulnerator.ViewModel
         private string stigLibraryLocation;
         public string StigLibraryLocation
         {
-            get { return stigLibraryLocation; }
+            get => stigLibraryLocation;
             set
             {
                 if (stigLibraryLocation != value)
@@ -48,7 +48,7 @@ namespace Vulnerator.ViewModel
         private int progressBarMax;
         public int ProgressBarMax
         {
-            get { return progressBarMax; }
+            get => progressBarMax;
             set
             {
                 if (progressBarMax != value)
@@ -62,7 +62,7 @@ namespace Vulnerator.ViewModel
         private int progressBarValue;
         public int ProgressBarValue
         {
-            get { return progressBarValue; }
+            get => progressBarValue;
             set
             {
                 if (progressBarValue != value)
@@ -76,7 +76,7 @@ namespace Vulnerator.ViewModel
         private string progressVisibility = "Collapsed";
         public string ProgressVisibility
         {
-            get { return progressVisibility; }
+            get => progressVisibility;
             set
             {
                 if (progressVisibility != value)
@@ -90,7 +90,7 @@ namespace Vulnerator.ViewModel
         private string noLibraryVisibility = "Collapsed";
         public string NoLibraryVisibility
         {
-            get { return noLibraryVisibility; }
+            get => noLibraryVisibility;
             set
             {
                 if (noLibraryVisibility != value)
@@ -104,7 +104,7 @@ namespace Vulnerator.ViewModel
         private string ingestionErrorVisibility = "Collapsed";
         public string IngestionErrorVisibility
         {
-            get { return ingestionErrorVisibility; }
+            get => ingestionErrorVisibility;
             set
             {
                 if (ingestionErrorVisibility != value)
@@ -118,7 +118,7 @@ namespace Vulnerator.ViewModel
         private string ingestionSuccessVisibility = "Collapsed";
         public string IngestionSuccessVisibility
         {
-            get { return ingestionSuccessVisibility; }
+            get => ingestionSuccessVisibility;
             set
             {
                 if (ingestionSuccessVisibility != value)
@@ -129,8 +129,7 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        public RelayCommand BrowseForDatabaseCommand
-        { get { return new RelayCommand(BrowseForDatabase); } }
+        public RelayCommand BrowseForDatabaseCommand => new RelayCommand(BrowseForDatabase);
 
         private void BrowseForDatabase()
         {
@@ -148,8 +147,7 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        public RelayCommand CreateDatabaseCommand
-        { get { return new RelayCommand(CreateDatabase); } }
+        public RelayCommand CreateDatabaseCommand => new RelayCommand(CreateDatabase);
 
         private void CreateDatabase()
         {
@@ -166,8 +164,7 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        public RelayCommand SelectStigLibraryCommand
-        { get { return new RelayCommand(SelectStigLibrary); } }
+        public RelayCommand SelectStigLibraryCommand => new RelayCommand(SelectStigLibrary);
 
         private void SelectStigLibrary()
         {
@@ -191,8 +188,7 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        public RelayCommand IngestStigLibraryCommand
-        { get { return new RelayCommand(IngestStigLibrary); } }
+        public RelayCommand IngestStigLibraryCommand => new RelayCommand(IngestStigLibrary);
 
         private void IngestStigLibrary()
         {
@@ -372,59 +368,6 @@ namespace Vulnerator.ViewModel
                 RawStigReader rawStigReader = new RawStigReader();
                 if (rawStigReader.ReadRawStig(zipArchiveEntry) == "Parsed")
                 { stigFilesParsed++; }
-            }
-        }
-
-        public RelayCommand BuildAnsibleTowerReportsCommand
-        { get { return new RelayCommand(BuildAnsibleTowerReports); } }
-
-        private void BuildAnsibleTowerReports()
-        {
-            try
-            {
-                CommonOpenFileDialog commonOpenFileDialog = new CommonOpenFileDialog();
-                commonOpenFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                commonOpenFileDialog.IsFolderPicker = true;
-                if (commonOpenFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
-                {
-                    ansibleReportFolder = commonOpenFileDialog.FileName;
-                    backgroundWorker = new BackgroundWorker();
-                    backgroundWorker.DoWork += buildAnsibleTowerReportsBackgroundWorker_DoWork;
-                    backgroundWorker.RunWorkerAsync();
-                    backgroundWorker.Dispose();
-                }
-            }
-            catch (Exception exception)
-            { log.Debug("Exception details:", exception); }
-        }
-
-        private void buildAnsibleTowerReportsBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            try
-            {
-                string[] operatingSystems = new string[] { "Red Hat Enterprise Linux 6", "Red Hat Enterprise Linux 7", "Solaris 10", "Solaris 11", "SUSE" };
-                foreach (string os in operatingSystems)
-                {
-                    string progressLabel = $"Processing {os}";
-                    guiFeedback.SetFields(progressLabel, "Visible", true);
-                    Messenger.Default.Send(guiFeedback);
-                    string tempOs = os;
-                    if (os.Contains("Red Hat"))
-                    { tempOs = "Red Hat"; }
-                    string saveFolder = $"{ansibleReportFolder}\\{tempOs.Replace(" ", "")}";
-                    if (!Directory.Exists(saveFolder))
-                    { Directory.CreateDirectory(saveFolder); }
-                    AnsibleTowerBuilder ansibleTowerBuilder = new AnsibleTowerBuilder();
-                    ansibleTowerBuilder.BuildRoles(os, saveFolder);
-                }
-                ansibleReportFolder = string.Empty;
-                guiFeedback.SetFields("Ansible Tower report creation complete", "Collapsed", true);
-                Messenger.Default.Send(guiFeedback);
-            }
-            catch (Exception exception)
-            {
-                log.Error(string.Format("Unable to generate Ansible Tower report templates."));
-                throw exception;
             }
         }
     }

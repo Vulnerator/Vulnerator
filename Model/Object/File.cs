@@ -7,7 +7,7 @@ namespace Vulnerator.Model.Object
         private string _fileName;
         public string FileName
         {
-            get { return _fileName; }
+            get => _fileName;
             set
             {
                 if (_fileName != value)
@@ -21,7 +21,7 @@ namespace Vulnerator.Model.Object
         private string _fileType;
         public string FileType
         {
-            get { return _fileType; }
+            get => _fileType;
             set
             {
                 if (_fileType != value)
@@ -35,7 +35,7 @@ namespace Vulnerator.Model.Object
         private string _status;
         public string Status
         {
-            get { return _status; }
+            get => _status;
             set
             {
                 if (_status != value)
@@ -49,7 +49,7 @@ namespace Vulnerator.Model.Object
         private string _filePath;
         public string FilePath
         {
-            get { return _filePath; }
+            get => _filePath;
             set
             {
                 if (_filePath != value)
@@ -63,7 +63,7 @@ namespace Vulnerator.Model.Object
         private string _identifiersProvided;
         public string IdentifiersProvided
         {
-            get { return _identifiersProvided; }
+            get => _identifiersProvided;
             set
             {
                 if (_identifiersProvided != value)
@@ -77,7 +77,7 @@ namespace Vulnerator.Model.Object
         private string _fileHostName;
         public string FileHostName
         {
-            get { return _fileHostName; }
+            get => _fileHostName;
             set
             {
                 if (_fileHostName != value)
@@ -91,7 +91,7 @@ namespace Vulnerator.Model.Object
         private string _fileIpAddress;
         public string FileIpAddress
         {
-            get { return _fileIpAddress; }
+            get => _fileIpAddress;
             set
             {
                 if (_fileIpAddress != value)
@@ -105,7 +105,7 @@ namespace Vulnerator.Model.Object
         private string _fileMacAddress;
         public string FileMacAddress
         {
-            get { return _fileMacAddress; }
+            get => _fileMacAddress;
             set
             {
                 if (_fileMacAddress != value)

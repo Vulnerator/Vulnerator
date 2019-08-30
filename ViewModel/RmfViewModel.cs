@@ -9,7 +9,7 @@ namespace Vulnerator.ViewModel
         private bool _isBackgroundPaneOpen = false;
         public bool IsBackgroundPaneOpen
         {
-            get { return _isBackgroundPaneOpen; }
+            get => _isBackgroundPaneOpen;
             set
             {
                 if (_isBackgroundPaneOpen != value)

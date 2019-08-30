@@ -191,7 +191,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to instantiate ConfigurationManagementViewModel."));
+                log.Error("Unable to instantiate ConfigurationManagementViewModel.");
                 log.Debug("Exception details:", exception);
             }
         }
@@ -205,7 +205,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to update MitigationsNistViewModel."));
+                log.Error("Unable to update MitigationsNistViewModel.");
                 log.Debug("Exception details:", exception);
             }
         }
@@ -260,7 +260,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to populate ConfigurationManagementView"));
+                log.Error("Unable to populate ConfigurationManagementView");
                 throw exception;
             }
         }
@@ -287,7 +287,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to create CKL file."));
+                log.Error("Unable to create CKL file.");
                 log.Debug("Exception details:", exception);
                 GuiFeedback guiFeedback = new GuiFeedback();
                 guiFeedback.SetFields(
@@ -316,7 +316,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to generate CKL file background worker."));
+                log.Error("Unable to generate CKL file background worker.");
                 log.Debug("Exception details:", exception);
             }
         }
@@ -334,7 +334,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to generate background worker for AssociateStigToHardware"));
+                log.Error("Unable to generate background worker for AssociateStigToHardware");
                 log.Debug("Exception details:", exception);
             }
         }
@@ -352,7 +352,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to associate STIG to Hardware"));
+                log.Error("Unable to associate STIG to Hardware");
                 log.Debug("Exception details:", exception);
             }
         }

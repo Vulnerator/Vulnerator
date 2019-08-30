@@ -44,7 +44,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to create vulnerability related indices."));
+                log.Error("Unable to create vulnerability related indices.");
                 throw exception;
             }
             finally
@@ -129,7 +129,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to drop vulnerability related indices."));
+                log.Error("Unable to drop vulnerability related indices.");
                 throw exception;
             }
             finally
@@ -208,7 +208,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert / map reference."));
+                log.Error("Unable to insert / map reference.");
                 throw exception;
             }
         }
@@ -224,7 +224,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert / map reference."));
+                log.Error("Unable to insert / map reference.");
                 throw exception;
             }
         }
@@ -239,7 +239,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert a new Data Entry Date"));
+                log.Error("Unable to insert a new Data Entry Date");
                 throw exception;
             }
         }
@@ -253,7 +253,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert group into database."));
+                log.Error("Unable to insert group into database.");
                 throw exception;
             }
         }
@@ -282,7 +282,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert a new mitigation."));
+                log.Error("Unable to insert a new mitigation.");
                 throw exception;
             }
         }
@@ -296,7 +296,7 @@ namespace Vulnerator.Model.DataAccess
                     // CCI Table
                     "CCI",
                     // Groups Table
-                    "Group_ID", "Group_Name", "Is_Accreditation", "Accreditation_ID", "Organization_ID",
+                    "Group_ID", "Name", "Is_Accreditation", "Accreditation_ID", "Organization_ID",
                     // FindingTypes Table
                     "Finding_Type",
                     // Hardware Table
@@ -342,7 +342,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert SQLiteParameter placeholders into SQLiteCommand"));
+                log.Error("Unable to insert SQLiteParameter placeholders into SQLiteCommand");
                 throw exception;
             }
         }
@@ -465,7 +465,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to map mitigation to group."));
+                log.Error("Unable to map mitigation to group.");
                 throw exception;
             }
         }
@@ -480,7 +480,7 @@ namespace Vulnerator.Model.DataAccess
             catch (Exception exception)
             {
                 log.Error(
-                    $"Unable to map \"{sqliteCommand.Parameters["Host_Name"].Value.ToString()}\" to \"{sqliteCommand.Parameters["Group_Name"].Value.ToString()}\".");
+                    $"Unable to map \"{sqliteCommand.Parameters["Host_Name"].Value.ToString()}\" to \"{sqliteCommand.Parameters["Name"].Value.ToString()}\".");
                 throw exception;
             }
         }
@@ -512,7 +512,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to map hardware to source."));
+                log.Error("Unable to map hardware to source.");
                 log.Debug("Exception details: " + exception);
             }
         }
@@ -555,7 +555,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to select the last inserted Row ID."));
+                log.Error("Unable to select the last inserted Row ID.");
                 throw exception;
             }
         }
@@ -578,7 +578,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to generate "));
+                log.Error("Unable to generate ");
                 throw exception;
             }
         }
@@ -626,7 +626,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format(""));
+                log.Error("");
                 throw exception;
             }
         }
@@ -655,7 +655,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to update MitigationOrCondition."));
+                log.Error("Unable to update MitigationOrCondition.");
                 throw exception;
             }
         }

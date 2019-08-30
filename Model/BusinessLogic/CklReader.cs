@@ -29,7 +29,7 @@ namespace Vulnerator.Model.BusinessLogic
         private List<string> ccis = new List<string>();
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private string[] persistentParameters = new string[] {
-            "Group_Name", "Finding_Source_File_Name", "Source_Name", "Source_Version", "Source_Release", "Host_Name", "Scan_IP", "FQDN", "NetBIOS", "Finding_Type"
+            "Name", "Finding_Source_File_Name", "Source_Name", "Source_Version", "Source_Release", "Host_Name", "Scan_IP", "FQDN", "NetBIOS", "Finding_Type"
         };
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Vulnerator.Model.BusinessLogic
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
-                        sqliteCommand.Parameters["Group_Name"].Value = "All";
+                        sqliteCommand.Parameters["Name"].Value = "All";
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
                         using (XmlReader xmlReader = XmlReader.Create(file.FilePath, xmlReaderSettings))

@@ -41,38 +41,27 @@ namespace Vulnerator.ViewModel
             SimpleIoc.Default.Register<ConfigurationManagementViewModel>();
         }
 
-        public AboutViewModel About
-        { get { return SimpleIoc.Default.GetInstance<AboutViewModel>(); } }
+        public AboutViewModel About => SimpleIoc.Default.GetInstance<AboutViewModel>();
 
-        public MainViewModel Main
-        { get { return SimpleIoc.Default.GetInstance<MainViewModel>(); } }
+        public MainViewModel Main => SimpleIoc.Default.GetInstance<MainViewModel>();
 
-        public NewsViewModel News
-        { get { return SimpleIoc.Default.GetInstance<NewsViewModel>(); } }
+        public NewsViewModel News => SimpleIoc.Default.GetInstance<NewsViewModel>();
 
-        public ReportingViewModel Reporting
-        { get { return SimpleIoc.Default.GetInstance<ReportingViewModel>(); } }
+        public ReportingViewModel Reporting => SimpleIoc.Default.GetInstance<ReportingViewModel>();
 
-        public RmfViewModel Rmf
-        { get { return SimpleIoc.Default.GetInstance<RmfViewModel>(); } }
+        public RmfViewModel Rmf => SimpleIoc.Default.GetInstance<RmfViewModel>();
 
-        public SettingsViewModel Settings
-        { get { return SimpleIoc.Default.GetInstance<SettingsViewModel>(); } }
+        public SettingsViewModel Settings => SimpleIoc.Default.GetInstance<SettingsViewModel>();
 
-        public SplashViewModel Splash
-        { get { return SimpleIoc.Default.GetInstance<SplashViewModel>(); } }
+        public SplashViewModel Splash => SimpleIoc.Default.GetInstance<SplashViewModel>();
 
-        public ThemeViewModel Theme
-        { get { return SimpleIoc.Default.GetInstance<ThemeViewModel>(); } }
+        public ThemeViewModel Theme => SimpleIoc.Default.GetInstance<ThemeViewModel>();
 
-        public UserGuideViewModel UserGuide
-        { get { return SimpleIoc.Default.GetInstance<UserGuideViewModel>(); } }
+        public UserGuideViewModel UserGuide => SimpleIoc.Default.GetInstance<UserGuideViewModel>();
 
-        public VulnerabilityViewModel Vulnerability
-        { get { return SimpleIoc.Default.GetInstance<VulnerabilityViewModel>(); } }
+        public VulnerabilityViewModel Vulnerability => SimpleIoc.Default.GetInstance<VulnerabilityViewModel>();
 
-        public ConfigurationManagementViewModel ConfigurationManagement
-        { get { return SimpleIoc.Default.GetInstance<ConfigurationManagementViewModel>(); } }
+        public ConfigurationManagementViewModel ConfigurationManagement => SimpleIoc.Default.GetInstance<ConfigurationManagementViewModel>();
 
         public static void Cleanup()
         { }

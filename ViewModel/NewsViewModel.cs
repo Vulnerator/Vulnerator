@@ -24,7 +24,7 @@ namespace Vulnerator.ViewModel
         private AsyncObservableCollection<Issue> _issueList;
         public AsyncObservableCollection<Issue> IssueList
         {
-            get { return _issueList; }
+            get => _issueList;
             set
             {
                 if (_issueList != value)
@@ -38,7 +38,7 @@ namespace Vulnerator.ViewModel
         private AsyncObservableCollection<Release> _releaseList;
         public AsyncObservableCollection<Release> ReleaseList
         {
-            get { return _releaseList; }
+            get => _releaseList;
             set
             {
                 if (_releaseList != value)
@@ -52,7 +52,7 @@ namespace Vulnerator.ViewModel
         private AsyncObservableCollection<IssueLabelCategory> _issueLabelCategoryList;
         public AsyncObservableCollection<IssueLabelCategory> IssueLabelCategoryList
         {
-            get { return _issueLabelCategoryList; }
+            get => _issueLabelCategoryList;
             set
             {
                 if (_issueLabelCategoryList != value)

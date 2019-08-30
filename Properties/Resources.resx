@@ -133,7 +133,7 @@ WHERE
     <value>INSERT INTO Data_Entry_Dates VALUES (NULL, @Entry_Date);</value>
   </data>
   <data name="InsertGroup" xml:space="preserve">
-    <value>INSERT INTO Groups VALUES (NULL, @Group_Name, @Group_Tier, 'False', NULL, NULL);</value>
+    <value>INSERT INTO Groups VALUES (NULL, @Name, @Group_Tier, 'False', NULL, NULL);</value>
   </data>
   <data name="InsertHardware" xml:space="preserve">
     <value>INSERT INTO Hardware VALUES (NULL,@Displayed_Host_Name, @Host_Name,@FQDN,@NetBIOS,@Scan_IP, @Found_21745, @Found_26917,@Is_Virtual_Server,@NIAP_Level,@Manufacturer,@ModelNumber,@Is_IA_Enabled,@SerialNumber,@Role,(SELECT LifecycleStatus_ID FROM LifecycleStatuses WHERE LifecycleStatus = 'Uncategorized'), @OS);</value>
@@ -234,7 +234,7 @@ VALUES (
     <value>INSERT OR IGNORE INTO VulnerabilitySources VALUES (NULL, @Source_Name, @Source_Secondary_Identifier, @Vulnerability_Source_File_Name, @Source_Description, @Source_Version, @Source_Release);</value>
   </data>
   <data name="MapHardwareToGroup" xml:space="preserve">
-    <value>INSERT INTO HardwareGroups VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT Group_ID FROM Groups WHERE Group_Name = @Group_Name));</value>
+    <value>INSERT INTO HardwareGroups VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT Group_ID FROM Groups WHERE Name = @Name));</value>
   </data>
   <data name="MapHardwareToSoftware" xml:space="preserve">
     <value>INSERT INTO SoftwareHardware VALUES ((SELECT Software_ID FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP),@Install_Date  ,(SELECT ReportInAccreditation_Global FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), (SELECT ApprovedForBaseline_Global FROM Software WHERE Discovered_Software_Name = @Discovered_Software_Name), @BaselineApprover);</value>
@@ -249,7 +249,7 @@ VALUES (
     <value>INSERT INTO HardwareMacAddresses VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name), (SELECT MAC_Address_ID FROM MAC_Addresses WHERE MAC_Address = @MAC_Address));</value>
   </data>
   <data name="MapMitigationToGroup" xml:space="preserve">
-    <value>INSERT INTO Groups_MitigationsOrConditions VALUES (@MitigationOrCondition_ID, (SELECT Group_ID FROM Groups WHERE Group_Name = @Group_Name));</value>
+    <value>INSERT INTO Groups_MitigationsOrConditions VALUES (@MitigationOrCondition_ID, @Group_ID);</value>
   </data>
   <data name="MapPortToHardware" xml:space="preserve">
     <value>INSERT INTO Hardware_PPS (Hardware_ID, PPS_ID, Discovered_Service, Display_Service) VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT PPS_ID FROM PPS WHERE Port = @Port AND Protocol = @Protocol), @Discovered_Service, @Display_Service);</value>

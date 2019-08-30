@@ -100,7 +100,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Groups VALUES (NULL, @Group_Name, @Group_Tier, &apos;False&apos;, NULL, NULL);.
+        ///   Looks up a localized string similar to INSERT INTO Groups VALUES (NULL, @Name, @Group_Tier, &apos;False&apos;, NULL, NULL);.
         /// </summary>
         internal static string InsertGroup {
             get {
@@ -268,7 +268,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO HardwareGroups VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT Group_ID FROM Groups WHERE Group_Name = @Group_Name));.
+        ///   Looks up a localized string similar to INSERT INTO HardwareGroups VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT Group_ID FROM Groups WHERE Name = @Name));.
         /// </summary>
         internal static string MapHardwareToGroup {
             get {
@@ -313,7 +313,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Groups_MitigationsOrConditions VALUES (@MitigationOrCondition_ID, (SELECT Group_ID FROM Groups WHERE Group_Name = @Group_Name));.
+        ///   Looks up a localized string similar to INSERT INTO Groups_MitigationsOrConditions VALUES (@MitigationOrCondition_ID, @Group_ID);.
         /// </summary>
         internal static string MapMitigationToGroup {
             get {

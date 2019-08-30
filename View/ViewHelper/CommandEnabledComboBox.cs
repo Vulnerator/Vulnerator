@@ -14,8 +14,8 @@ namespace Vulnerator.View.ViewHelper
 
         public ICommand Command
         {
-            get { return (ICommand)GetValue(CommandProperty); }
-            set { SetValue(CommandProperty, value); }
+            get => (ICommand)GetValue(CommandProperty);
+            set => SetValue(CommandProperty, value);
         }
 
         public static readonly DependencyProperty CommandTargetProperty = DependencyProperty.Register(
@@ -23,8 +23,8 @@ namespace Vulnerator.View.ViewHelper
 
         public IInputElement CommandTarget
         {
-            get { return (IInputElement)GetValue(CommandTargetProperty); }
-            set { SetValue(CommandTargetProperty, value); }
+            get => (IInputElement)GetValue(CommandTargetProperty);
+            set => SetValue(CommandTargetProperty, value);
         }
 
         public static readonly DependencyProperty CommandParameterProperty = DependencyProperty.Register(
@@ -32,8 +32,8 @@ namespace Vulnerator.View.ViewHelper
 
         public object CommandParameter
         {
-            get { return (object)GetValue(CommandParameterProperty); }
-            set { SetValue(CommandParameterProperty, value); }
+            get => (object)GetValue(CommandParameterProperty);
+            set => SetValue(CommandParameterProperty, value);
         }
 
         public CommandEnabledComboBox() : base() { }
@@ -71,20 +71,20 @@ namespace Vulnerator.View.ViewHelper
         private void CanExecuteChanged(object sender, EventArgs e)
         {
 
-            if (this.Command != null)
+            if (Command != null)
             {
-                RoutedCommand command = this.Command as RoutedCommand;
+                RoutedCommand command = Command as RoutedCommand;
 
                 // If a RoutedCommand.
                 if (command != null)
                 {
-                    if (command.CanExecute(this.CommandParameter, this.CommandTarget))
+                    if (command.CanExecute(CommandParameter, CommandTarget))
                     {
-                        this.IsEnabled = true;
+                        IsEnabled = true;
                     }
                     else
                     {
-                        this.IsEnabled = false;
+                        IsEnabled = false;
                     }
                 }
                 // If a not RoutedCommand.
@@ -92,11 +92,11 @@ namespace Vulnerator.View.ViewHelper
                 {
                     if (Command.CanExecute(CommandParameter))
                     {
-                        this.IsEnabled = true;
+                        IsEnabled = true;
                     }
                     else
                     {
-                        this.IsEnabled = false;
+                        IsEnabled = false;
                     }
                 }
             }
@@ -106,13 +106,13 @@ namespace Vulnerator.View.ViewHelper
         {
             base.OnSelectionChanged(e);
 
-            if (this.Command != null)
+            if (Command != null)
             {
-                RoutedCommand command = this.Command as RoutedCommand;
+                RoutedCommand command = Command as RoutedCommand;
 
                 if (command != null)
                 {
-                    command.Execute(this.CommandParameter, this.CommandTarget);
+                    command.Execute(CommandParameter, CommandTarget);
                 }
                 else
                 {

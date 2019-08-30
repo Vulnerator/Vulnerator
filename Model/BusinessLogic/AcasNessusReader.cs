@@ -35,7 +35,7 @@ namespace Vulnerator.Model.BusinessLogic
         List<VulnerabilityReference> references = new List<VulnerabilityReference>();
         private string[] persistentParameters = new string[] 
         {
-            "Group_Name", "Finding_Source_File_Name", "Source_Name", "Scan_IP", "Host_Name", "Finding_Type", "FQDN", "NetBIOS"
+            "Name", "Finding_Source_File_Name", "Source_Name", "Scan_IP", "Host_Name", "Finding_Type", "FQDN", "NetBIOS"
         };
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters["Finding_Type"].Value = "ACAS";
-                        sqliteCommand.Parameters["Group_Name"].Value = "All";
+                        sqliteCommand.Parameters["Name"].Value = "All";
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
                         using (XmlReader xmlReader = XmlReader.Create(file.FilePath, xmlReaderSettings))

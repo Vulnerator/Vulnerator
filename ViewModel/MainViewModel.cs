@@ -159,7 +159,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to instantiate MainViewModel."));
+                log.Error("Unable to instantiate MainViewModel.");
                 log.Debug("Exception details:", exception);
             }
         }
@@ -182,7 +182,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to instantiate database"));
+                log.Error("Unable to instantiate database");
                 log.Debug("Exception details:", exception);
             }
         }
@@ -398,7 +398,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to launch STIG library ingestion notification."));
+                log.Error("Unable to launch STIG library ingestion notification.");
                 log.Debug("Exception details:", exception);
             }
         }
@@ -436,7 +436,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to generate notification"));
+                log.Error("Unable to generate notification");
                 throw exception;
             }
         }
