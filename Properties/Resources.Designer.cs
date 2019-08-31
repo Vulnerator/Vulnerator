@@ -70,6 +70,30 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM
+        ///  MitigationsOrConditions
+        ///WHERE
+        ///  MitigationOrCondition_ID = @MitigationOrCondition_ID;.
+        /// </summary>
+        internal static string DeleteMitigation {
+            get {
+                return ResourceManager.GetString("DeleteMitigation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM
+        ///  Groups_MitigationsOrConditions
+        ///WHERE
+        ///  MitigationOrCondition_ID = @MitigationOrCondition_ID;.
+        /// </summary>
+        internal static string DeleteMitigationGroupMapping {
+            get {
+                return ResourceManager.GetString("DeleteMitigationGroupMapping", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DELETE FROM 
         ///    Vulnerabilities
         ///WHERE 

@@ -120,6 +120,18 @@
   <data name="DeleteAcasVulnerabilitiesMappedToUnknownVersion" xml:space="preserve">
     <value>DELETE FROM Vulnerabilities_VulnerabilitySources WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Version = 'Version Unknown');</value>
   </data>
+  <data name="DeleteMitigation" xml:space="preserve">
+    <value>DELETE FROM
+  MitigationsOrConditions
+WHERE
+  MitigationOrCondition_ID = @MitigationOrCondition_ID;</value>
+  </data>
+  <data name="DeleteMitigationGroupMapping" xml:space="preserve">
+    <value>DELETE FROM
+  Groups_MitigationsOrConditions
+WHERE
+  MitigationOrCondition_ID = @MitigationOrCondition_ID;</value>
+  </data>
   <data name="DeleteVulnerability" xml:space="preserve">
     <value>DELETE FROM 
     Vulnerabilities

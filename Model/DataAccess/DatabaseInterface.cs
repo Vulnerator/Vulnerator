@@ -97,6 +97,38 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public void DeleteMitigationGroupMapping(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.DeleteMitigationGroupMapping;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(
+                    $"Unable to delete Mitigation / Group mapping.");
+                log.Debug("Exception details:", exception);
+                throw exception;
+            }
+        }
+
+        public void DeleteMitigationOrCondition(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.DeleteMitigation;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error(
+                    $"Unable to delete Mitigation / Group mapping.");
+                log.Debug("Exception details:", exception);
+                throw exception;
+            }
+        }
+
         public void DropVulnerabilityRelatedIndices()
         {
             try
