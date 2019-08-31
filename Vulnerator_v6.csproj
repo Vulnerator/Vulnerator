@@ -468,6 +468,7 @@
     <Compile Include="View\Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="View\Converter\DateTimeConverter.cs" />
     <Compile Include="View\Converter\DebugDataBindingConverter.cs" />
+    <Compile Include="View\Converter\IsNullConverter.cs" />
     <Compile Include="View\Converter\MarkupConverter.cs" />
     <Compile Include="View\Converter\MathConverter.cs" />
     <Compile Include="View\Converter\MitigationsSelectedItemConverter.cs" />

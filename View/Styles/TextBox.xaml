@@ -16,6 +16,7 @@
 
     <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     <Converters:RemainingCharactersConverter x:Key="RemainingCharactersConverter" />
+    <Converters:IsNullConverter x:Key="IsNullConverter" />
 
     <Style x:Key="TrimmingTextboxStyle"
            BasedOn="{StaticResource MetroTextBox}"
@@ -596,6 +597,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="Text" Value="{Binding Path=(vh:DependencyProperties.PrimaryText), RelativeSource={RelativeSource Self}}" />
         <Setter Property="Validation.ErrorTemplate">
             <Setter.Value>
                 <ControlTemplate>
@@ -613,6 +615,14 @@
         </Setter>
         <Setter Property="vh:DependencyProperties.FloatingWatermark" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:TextBoxHelper.Watermark)}" />
         <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource Self}, Path=Foreground}" />
+        <Setter Property="vh:DependencyProperties.PrimaryText" Value="{Binding Path=(vh:DependencyProperties.PrimaryText), RelativeSource={RelativeSource Self}}" />
+        <Setter Property="vh:DependencyProperties.SecondaryText" Value="{Binding Path=(vh:DependencyProperties.PrimaryText), RelativeSource={RelativeSource Self}}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=(vh:DependencyProperties.AlternateTextTrigger), RelativeSource={RelativeSource Self}, Converter={StaticResource IsNullConverter}}"
+                         Value="False">
+                <Setter Property="Text" Value="{Binding Path=(vh:DependencyProperties.SecondaryText), RelativeSource={RelativeSource Self}}" />
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="NonHeaderedTextBoxStyle"

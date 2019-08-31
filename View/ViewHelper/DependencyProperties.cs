@@ -55,5 +55,40 @@ namespace Vulnerator.View.ViewHelper
 
         public static void SetShowCharacterCount(DependencyObject d, bool value)
         { d.SetValue(ShowCharacterCountProperty, value); }
+
+        public static readonly DependencyProperty PrimaryTextProperty = DependencyProperty.RegisterAttached(
+            "PrimaryText",
+            typeof(string),
+            typeof(DependencyProperties),
+            new FrameworkPropertyMetadata(""));
+
+        public static string GetPrimaryText(DependencyObject d)
+        { return (string) d.GetValue(PrimaryTextProperty); }
+
+        public static void SetPrimaryText(DependencyObject d, string value)
+        { d.SetValue(PrimaryTextProperty, value); }
+
+        public static readonly DependencyProperty SecondaryTextProperty = DependencyProperty.RegisterAttached(
+            "SecondaryText",
+            typeof(string),
+            typeof(DependencyProperties),
+            new FrameworkPropertyMetadata(""));
+
+        public static string GetSecondaryText(DependencyObject d)
+        { return (string)d.GetValue(SecondaryTextProperty); }
+
+        public static void SetSecondaryText(DependencyObject d, string value)
+        { d.SetValue(SecondaryTextProperty, value); }
+
+        public static readonly DependencyProperty AlternateTextTriggerProperty = DependencyProperty.RegisterAttached(
+            "AlternateTextTrigger",
+            typeof(object),
+            typeof(DependencyProperties));
+
+        public static object GetAlternateTextTrigger(DependencyObject d)
+        { return (object)d.GetValue(AlternateTextTriggerProperty); }
+
+        public static void SetAlternateTextTrigger(DependencyObject d, object value)
+        { d.SetValue(AlternateTextTriggerProperty, value); }
     }
 }
