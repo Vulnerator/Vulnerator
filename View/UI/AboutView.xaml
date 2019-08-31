@@ -40,17 +40,25 @@
                         <RowDefinition />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <Image Grid.Row="0"
+                    <!--<Image Grid.Row="0"
                            Grid.RowSpan="3"
                            Grid.Column="0"
                            Height="80"
                            Margin="5,0,5,5"
                            HorizontalAlignment="Stretch"
                            VerticalAlignment="Stretch"
-                           Source="pack://application:,,,/Resources/vulneratorlogodraft.ico" />
+                           Source="pack://application:,,,/Resources/vulneratorlogodraft.ico" />-->
+                    <IconPacks:PackIconFontAwesomeBrands Kind="Vulnerator"
+                                                         Grid.RowSpan="3"
+                                                         Height="104"
+                                                         Width="108"
+                                                         Margin="0,0,5,0"
+                                                         HorizontalAlignment="Stretch"
+                                                         VerticalAlignment="Stretch"/>
                     <Label Grid.Row="0"
                            Grid.Column="1"
                            Content="Vulnerator"
+                           VerticalAlignment="Center"
                            Style="{StaticResource TopLevelHeaderStyle}" />
                     <StackPanel Grid.Row="1"
                                 Grid.Column="1"
