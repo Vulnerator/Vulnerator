@@ -27,7 +27,7 @@
                       BorderBrush="{DynamicResource AccentColorBrush}"
                       BorderThickness="1"
                       DataContext="{Binding Main, Source={StaticResource Locator}}"
-                      Icon="/Vulnerator;component/Resources/vulneratorlogodraft.ico"
+                      Icon="/Vulnerator;component/Resources/vulnerator.ico"
                       KeyboardNavigation.TabNavigation="Continue"
                       ResizeMode="CanResize"
                       Style="{DynamicResource CustomCleanWindowStyleKey}"

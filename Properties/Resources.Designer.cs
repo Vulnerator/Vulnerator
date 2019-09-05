@@ -807,7 +807,6 @@ namespace Vulnerator.Properties {
         /// <summary>
         ///   Looks up a localized string similar to UPDATE MitigationsOrConditions 
         ///SET 
-        ///	Vulnerability_ID = @Vulnerability_ID, 
         ///	Impact_Description = @Impact_Description,
         ///	Predisposing_Conditions = @Predisposing_Conditions,
         ///	Technical_Mitigation = @Technical_Mitigation,
@@ -819,7 +818,8 @@ namespace Vulnerator.Properties {
         ///	Risk = @Risk,
         ///	Residual_Risk = @Residual_Risk,
         ///	Mitigated_Status = @Mitigated_Status,
-        ///	Expiratio [rest of string was truncated]&quot;;.
+        ///	Expiration_Date = @Expiration_Date,
+        ///Estimated_Com [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string UpdateMitigationOrCondition {
             get {

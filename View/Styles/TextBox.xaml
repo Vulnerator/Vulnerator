@@ -597,7 +597,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Text" Value="{Binding Path=(vh:DependencyProperties.PrimaryText), RelativeSource={RelativeSource Self}}" />
+        <Setter Property="Text" Value="{Binding Path=(vh:DependencyProperties.PrimaryText), RelativeSource={RelativeSource Self}, Mode=TwoWay}" />
         <Setter Property="Validation.ErrorTemplate">
             <Setter.Value>
                 <ControlTemplate>
@@ -620,7 +620,7 @@
         <Style.Triggers>
             <DataTrigger Binding="{Binding Path=(vh:DependencyProperties.AlternateTextTrigger), RelativeSource={RelativeSource Self}, Converter={StaticResource IsNullConverter}}"
                          Value="False">
-                <Setter Property="Text" Value="{Binding Path=(vh:DependencyProperties.SecondaryText), RelativeSource={RelativeSource Self}}" />
+                <Setter Property="Text" Value="{Binding Path=(vh:DependencyProperties.SecondaryText), RelativeSource={RelativeSource Self}, Mode=TwoWay}" />
             </DataTrigger>
         </Style.Triggers>
     </Style>

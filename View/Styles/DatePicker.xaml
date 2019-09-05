@@ -4,6 +4,7 @@
                     xmlns:Converters="clr-namespace:MahApps.Metro.Converters;assembly=MahApps.Metro"
                     xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     xmlns:behaviours="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
+                    xmlns:converter="clr-namespace:Vulnerator.View.Converter"
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                     xmlns:local="clr-namespace:Vulnerator.View.Styles"
                     xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
@@ -14,6 +15,8 @@
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Shared.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/Storyboard.xaml" />
     </ResourceDictionary.MergedDictionaries>
+
+    <converter:IsNullConverter x:Key="IsNullConverter" />
 
     <Style x:Key="HeaderedDatePickerStyle"
            TargetType="{x:Type DatePicker}">
@@ -32,6 +35,7 @@
         <Setter Property="IsTodayHighlighted" Value="True" />
         <Setter Property="MinHeight" Value="26" />
         <Setter Property="Padding" Value="0" />
+        <Setter Property="SelectedDate" Value="{Binding Path=(vh:DependencyProperties.PrimaryText), RelativeSource={RelativeSource Self}}" />
         <Setter Property="SelectedDateFormat" Value="Short" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
@@ -219,6 +223,14 @@
         </Setter>
         <Setter Property="vh:DependencyProperties.FloatingWatermark" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:TextBoxHelper.Watermark)}" />
         <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource Self}, Path=Foreground}" />
+        <Setter Property="vh:DependencyProperties.PrimaryText" Value="{Binding Path=(vh:DependencyProperties.PrimaryText), RelativeSource={RelativeSource Self}}" />
+        <Setter Property="vh:DependencyProperties.SecondaryText" Value="{Binding Path=(vh:DependencyProperties.PrimaryText), RelativeSource={RelativeSource Self}}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=(vh:DependencyProperties.AlternateTextTrigger), RelativeSource={RelativeSource Self}, Converter={StaticResource IsNullConverter}}"
+                         Value="False">
+                <Setter Property="SelectedDate" Value="{Binding Path=(vh:DependencyProperties.SecondaryText), RelativeSource={RelativeSource Self}}" />
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="MetroDatePickerTextBox"

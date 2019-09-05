@@ -69,7 +69,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\vulneratorlogodraft.ico</ApplicationIcon>
+    <ApplicationIcon>./Resources/vulnerator.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Vulnerator.App</StartupObject>
@@ -469,6 +469,8 @@
     <Compile Include="View\Converter\DateTimeConverter.cs" />
     <Compile Include="View\Converter\DebugDataBindingConverter.cs" />
     <Compile Include="View\Converter\IsNullConverter.cs" />
+    <Compile Include="View\Converter\IsNullToCollapsedConverter.cs" />
+    <Compile Include="View\Converter\IsNullToVisibleConverter.cs" />
     <Compile Include="View\Converter\MarkupConverter.cs" />
     <Compile Include="View\Converter\MathConverter.cs" />
     <Compile Include="View\Converter\MitigationsSelectedItemConverter.cs" />
@@ -752,16 +754,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\chart.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\processwarning.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
@@ -784,6 +776,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\vulnerator.ico" />
     <Resource Include="Resources\DllFiles\MahApps.Metro.IconPacks.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -818,11 +811,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".github\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\vulneratorlogodraft.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -1,5 +1,6 @@
 namespace Vulnerator.Model.Entity
 {
+    using PropertyChanged;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -7,6 +8,7 @@ namespace Vulnerator.Model.Entity
     using System.ComponentModel.DataAnnotations.Schema;
     using System.ComponentModel;
 
+    [AddINotifyPropertyChangedInterface]
     public partial class MitigationsOrCondition : INotifyPropertyChanged
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

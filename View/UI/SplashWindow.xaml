@@ -13,7 +13,7 @@
                       BorderBrush="{DynamicResource AccentColorBrush}"
                       DataContext="{Binding Splash, Source={StaticResource Locator}}"
                       GlowBrush="{DynamicResource AccentColorBrush}"
-                      Icon="/Vulnerator;component/Resources/vulneratorlogodraft.ico"
+                      Icon="/Vulnerator;component/Resources/vulnerator.ico"
                       ResizeMode="NoResize"
                       ShowCloseButton="False"
                       ShowMaxRestoreButton="False"
@@ -27,13 +27,13 @@
     <Controls:MetroWindow.IconTemplate>
         <DataTemplate>
             <Border Width="48">
-                <IconPacks:PackIconFontAwesomeLight Width="{TemplateBinding Width}"
-                                                    Height="{TemplateBinding Height}"
-                                                    Margin="4"
-                                                    HorizontalAlignment="Center"
-                                                    Flip="Horizontal"
-                                                    Foreground="{DynamicResource BlackBrush}"
-                                                    Kind="Analytics" />
+                <IconPacks:PackIconFontAwesomeBrands Width="{TemplateBinding Width}"
+                                                     Height="{TemplateBinding Height}"
+                                                     Margin="4"
+                                                     HorizontalAlignment="Center"
+                                                     Flip="Horizontal"
+                                                     Foreground="{DynamicResource BlackBrush}"
+                                                     Kind="Vulnerator" />
             </Border>
         </DataTemplate>
     </Controls:MetroWindow.IconTemplate>

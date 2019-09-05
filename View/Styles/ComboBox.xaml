@@ -4,6 +4,7 @@
                     xmlns:Converters="clr-namespace:MahApps.Metro.Converters;assembly=MahApps.Metro"
                     xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     xmlns:behaviours="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
+                    xmlns:converter="clr-namespace:Vulnerator.View.Converter"
                     xmlns:local="clr-namespace:Vulnerator.View.Styles"
                     xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
@@ -17,6 +18,8 @@
     <Thickness x:Key="ComboBoxBorderThemeThickness">1</Thickness>
     <Thickness x:Key="ComboBoxPopupBorderThemeThickness">1</Thickness>
     <Thickness x:Key="ComboBoxPopupBorderThemePadding">1</Thickness>
+
+    <converter:IsNullConverter x:Key="IsNullConverter" />
 
     <Style x:Key="EditableTextBoxStyle"
            BasedOn="{StaticResource MetroTextBox}"
@@ -249,6 +252,7 @@
         <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="SelectedItem" Value="{Binding Path=(vh:DependencyProperties.PrimaryText), RelativeSource={RelativeSource Self}}" />
         <!--  change SnapsToDevicePixels to true to view a better border and validation error  -->
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
@@ -623,6 +627,14 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="vh:DependencyProperties.FloatingWatermark" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:TextBoxHelper.Watermark)}" />
         <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource Self}, Path=Foreground}" />
+        <Setter Property="vh:DependencyProperties.PrimaryText" Value="{Binding Path=(vh:DependencyProperties.PrimaryText), RelativeSource={RelativeSource Self}}" />
+        <Setter Property="vh:DependencyProperties.SecondaryText" Value="{Binding Path=(vh:DependencyProperties.PrimaryText), RelativeSource={RelativeSource Self}}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=(vh:DependencyProperties.AlternateTextTrigger), RelativeSource={RelativeSource Self}, Converter={StaticResource IsNullConverter}}"
+                         Value="False">
+                <Setter Property="SelectedItem" Value="{Binding Path=(vh:DependencyProperties.SecondaryText), RelativeSource={RelativeSource Self}}" />
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="VirtualisedMetroComboBox"
