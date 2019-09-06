@@ -81,6 +81,10 @@ namespace Vulnerator.Model.Entity
 
         public virtual Hardware Hardware { get; set; }
 
+        public virtual Software Software { get; set; }
+
+        public virtual MitigationsOrCondition MitigationsOrCondition { get; set; }
+
         public virtual UniqueFindingsSourceFile UniqueFindingsSourceFile { get; set; }
 
         public virtual Vulnerability Vulnerability { get; set; }
