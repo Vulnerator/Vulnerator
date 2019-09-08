@@ -305,6 +305,20 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public void InsertEmptyMitigationOrCondition(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.InsertMitigationsOrConditionsDefaultValues;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to insert a new empty mitigation.");
+                throw exception;
+            }
+        }
+
         public void InsertMitigationOrCondition(SQLiteCommand sqliteCommand)
         {
             try

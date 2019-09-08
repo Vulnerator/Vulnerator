@@ -189,6 +189,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO MitigationsOrConditions DEFAULT VALUES;.
+        /// </summary>
+        internal static string InsertMitigationsOrConditionsDefaultValues {
+            get {
+                return ResourceManager.GetString("InsertMitigationsOrConditionsDefaultValues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO PPS VALUES (NULL, @Port, @Protocol);.
         /// </summary>
         internal static string InsertPPS {
