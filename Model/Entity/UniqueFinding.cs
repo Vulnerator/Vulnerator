@@ -28,9 +28,9 @@ namespace Vulnerator.Model.Entity
         [StringLength(2147483647)]
         public string Finding_Details { get; set; }
 
-        public DateTime First_Discovered { get; set; }
+        public string First_Discovered { get; set; }
 
-        public DateTime Last_Observed { get; set; }
+        public string Last_Observed { get; set; }
 
         [Required]
         [StringLength(5)]

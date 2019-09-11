@@ -129,6 +129,20 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public void DeleteUniqueFinding(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.DeleteUniqueFinding;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to delete the selected UniqueFinding.");
+                throw exception;
+            }
+        }
+
         public void DropVulnerabilityRelatedIndices()
         {
             try
@@ -732,6 +746,20 @@ namespace Vulnerator.Model.DataAccess
             {
                 log.Error(
                     $"Unable to update the unique finding for \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\", \"{sqliteCommand.Parameters["Host_Name"].Value.ToString()}\", \"{sqliteCommand.Parameters["Scan_IP"].Value.ToString()}\".");
+                throw exception;
+            }
+        }
+
+        public void UpdateUniqueFindingMitigationOrCondition(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.UpdateUniqueFindingMitigationOrCondition;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to update MitigationOrCondition for the UniqueFinding.");
                 throw exception;
             }
         }

@@ -132,6 +132,9 @@ WHERE
 WHERE
   MitigationOrCondition_ID = @MitigationOrCondition_ID;</value>
   </data>
+  <data name="DeleteUniqueFinding" xml:space="preserve">
+    <value>DELETE FROM UniqueFindings WHERE Unique_Finding_ID = @Unique_Finding_ID;</value>
+  </data>
   <data name="DeleteVulnerability" xml:space="preserve">
     <value>DELETE FROM 
     Vulnerabilities
@@ -655,6 +658,13 @@ AND
 AND 
 	Last_Observed &lt; @Last_Observed;</value>
   </data>
+  <data name="UpdateUniqueFindingMitigationOrCondition" xml:space="preserve">
+    <value>UPDATE UniqueFindings
+SET
+  MitigationOrCondition_ID = @MitigationOrCondition_ID
+WHERE
+  Unique_Finding_ID = @Unique_Finding_ID;</value>
+  </data>
   <data name="UpdateVulnerability" xml:space="preserve">
     <value>UPDATE Vulnerabilities SET Vulnerability_Title=@Vulnerability_Title, Vulnerability_Description = @Vulnerability_Description, Risk_Statement = @Risk_Statement, Fix_Text = @Fix_Text, Modified_Date = @Modified_Date, Fix_Published_Date = @Fix_Published_Date, Raw_Risk = @Raw_Risk, Vulnerability_Version = @Vulnerability_Version, Vulnerability_Release = @Vulnerability_Release WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;</value>
   </data>
@@ -699,6 +709,6 @@ WHERE
 SET 
     Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release)
 WHERE
-    Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = 'Version Unknown')</value>
+    Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = 'Version Unknown');</value>
   </data>
 </root>

@@ -94,6 +94,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM UniqueFindings WHERE Unique_Finding_ID = @Unique_Finding_ID;.
+        /// </summary>
+        internal static string DeleteUniqueFinding {
+            get {
+                return ResourceManager.GetString("DeleteUniqueFinding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DELETE FROM 
         ///    Vulnerabilities
         ///WHERE 
@@ -876,6 +885,19 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UPDATE UniqueFindings
+        ///SET
+        ///  MitigationOrCondition_ID = @MitigationOrCondition_ID
+        ///WHERE
+        ///  Unique_Finding_ID = @Unique_Finding_ID;.
+        /// </summary>
+        internal static string UpdateUniqueFindingMitigationOrCondition {
+            get {
+                return ResourceManager.GetString("UpdateUniqueFindingMitigationOrCondition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to UPDATE Vulnerabilities SET Vulnerability_Title=@Vulnerability_Title, Vulnerability_Description = @Vulnerability_Description, Risk_Statement = @Risk_Statement, Fix_Text = @Fix_Text, Modified_Date = @Modified_Date, Fix_Published_Date = @Fix_Published_Date, Raw_Risk = @Raw_Risk, Vulnerability_Version = @Vulnerability_Version, Vulnerability_Release = @Vulnerability_Release WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;.
         /// </summary>
         internal static string UpdateVulnerability {
@@ -941,7 +963,7 @@ namespace Vulnerator.Properties {
         ///SET 
         ///    Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release)
         ///WHERE
-        ///    Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = &apos;Version Unknown&apos;).
+        ///    Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = &apos;Version Unknown&apos;);.
         /// </summary>
         internal static string UpdateVulnerabilitySourceFromAcas {
             get {
