@@ -172,7 +172,6 @@ namespace Vulnerator.Properties {
         ///   Looks up a localized string similar to INSERT INTO MitigationsOrConditions 
         ///VALUES (
         ///	NULL, 
-        ///	@Vulnerability_ID, 
         ///	@Impact_Description, 
         ///	@Predisposing_Conditions, 
         ///	@Technical_Mitigation, 
@@ -355,7 +354,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Groups_MitigationsOrConditions VALUES (@MitigationOrCondition_ID, @Group_ID);.
+        ///   Looks up a localized string similar to INSERT INTO GroupsMitigationsOrConditions VALUES (@MitigationOrCondition_ID, @Group_ID, @Vulnerability_ID);.
         /// </summary>
         internal static string MapMitigationToGroup {
             get {

@@ -13,16 +13,13 @@ namespace Vulnerator.Model.Entity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public MitigationsOrCondition()
-        { Groups = new ObservableCollection<Group>(); }
+        { GroupsMitigationsOrConditions = new ObservableCollection<GroupsMitigationsOrConditions>(); }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long MitigationOrCondition_ID { get; set; }
-
-        [Required]
-        public long Vulnerability_ID { get; set; }
 
         public virtual Vulnerability Vulnerability { get; set; }
 
@@ -78,6 +75,6 @@ namespace Vulnerator.Model.Entity
         public bool IsChecked { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Group> Groups { get; set; }
+        public virtual ICollection<GroupsMitigationsOrConditions> GroupsMitigationsOrConditions { get; set; }
     }
 }

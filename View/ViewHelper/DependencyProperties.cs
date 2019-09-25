@@ -58,26 +58,26 @@ namespace Vulnerator.View.ViewHelper
 
         public static readonly DependencyProperty PrimaryTextProperty = DependencyProperty.RegisterAttached(
             "PrimaryText",
-            typeof(string),
+            typeof(object),
             typeof(DependencyProperties),
             new FrameworkPropertyMetadata(""));
 
-        public static string GetPrimaryText(DependencyObject d)
-        { return (string) d.GetValue(PrimaryTextProperty); }
+        public static object GetPrimaryText(DependencyObject d)
+        { return d.GetValue(PrimaryTextProperty); }
 
-        public static void SetPrimaryText(DependencyObject d, string value)
+        public static void SetPrimaryText(DependencyObject d, object value)
         { d.SetValue(PrimaryTextProperty, value); }
 
         public static readonly DependencyProperty SecondaryTextProperty = DependencyProperty.RegisterAttached(
             "SecondaryText",
-            typeof(string),
+            typeof(object),
             typeof(DependencyProperties),
             new FrameworkPropertyMetadata(""));
 
-        public static string GetSecondaryText(DependencyObject d)
-        { return (string)d.GetValue(SecondaryTextProperty); }
+        public static object GetSecondaryText(DependencyObject d)
+        { return d.GetValue(SecondaryTextProperty); }
 
-        public static void SetSecondaryText(DependencyObject d, string value)
+        public static void SetSecondaryText(DependencyObject d, object value)
         { d.SetValue(SecondaryTextProperty, value); }
 
         public static readonly DependencyProperty AlternateTextTriggerProperty = DependencyProperty.RegisterAttached(
@@ -86,7 +86,7 @@ namespace Vulnerator.View.ViewHelper
             typeof(DependencyProperties));
 
         public static object GetAlternateTextTrigger(DependencyObject d)
-        { return (object)d.GetValue(AlternateTextTriggerProperty); }
+        { return d.GetValue(AlternateTextTriggerProperty); }
 
         public static void SetAlternateTextTrigger(DependencyObject d, object value)
         { d.SetValue(AlternateTextTriggerProperty, value); }

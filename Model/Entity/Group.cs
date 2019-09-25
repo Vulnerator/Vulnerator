@@ -13,7 +13,7 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Group()
         {
-            MitigationsOrConditions = new ObservableCollection<MitigationsOrCondition>();
+            GroupsMitigationsOrConditions = new ObservableCollection<GroupsMitigationsOrConditions>();
             Contacts = new ObservableCollection<Contact>();
             Hardwares = new ObservableCollection<Hardware>();
         }
@@ -106,7 +106,7 @@ namespace Vulnerator.Model.Entity
         public virtual ConfidentialityLevel ConfidentialityLevel { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MitigationsOrCondition> MitigationsOrConditions { get; set; }
+        public virtual ICollection<GroupsMitigationsOrConditions> GroupsMitigationsOrConditions { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Contact> Contacts { get; set; }

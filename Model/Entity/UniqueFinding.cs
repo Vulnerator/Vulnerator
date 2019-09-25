@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 namespace Vulnerator.Model.Entity
 {
     using System;
@@ -40,7 +42,7 @@ namespace Vulnerator.Model.Entity
 
         public long Finding_Source_File_ID { get; set; }
 
-        [Required]
+        [CanBeNull]
         public long? MitigationOrCondition_ID { get; set; }
 
         [Required]
@@ -83,6 +85,7 @@ namespace Vulnerator.Model.Entity
 
         public virtual Software Software { get; set; }
 
+        [CanBeNull]
         public virtual MitigationsOrCondition MitigationsOrCondition { get; set; }
 
         public virtual UniqueFindingsSourceFile UniqueFindingsSourceFile { get; set; }

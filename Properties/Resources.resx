@@ -163,7 +163,6 @@ WHERE
     <value>INSERT INTO MitigationsOrConditions 
 VALUES (
 	NULL, 
-	@Vulnerability_ID, 
 	@Impact_Description, 
 	@Predisposing_Conditions, 
 	@Technical_Mitigation, 
@@ -267,7 +266,7 @@ VALUES (
     <value>INSERT INTO HardwareMacAddresses VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name), (SELECT MAC_Address_ID FROM MAC_Addresses WHERE MAC_Address = @MAC_Address));</value>
   </data>
   <data name="MapMitigationToGroup" xml:space="preserve">
-    <value>INSERT INTO Groups_MitigationsOrConditions VALUES (@MitigationOrCondition_ID, @Group_ID);</value>
+    <value>INSERT INTO GroupsMitigationsOrConditions VALUES (@MitigationOrCondition_ID, @Group_ID, @Vulnerability_ID);</value>
   </data>
   <data name="MapPortToHardware" xml:space="preserve">
     <value>INSERT INTO Hardware_PPS (Hardware_ID, PPS_ID, Discovered_Service, Display_Service) VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT PPS_ID FROM PPS WHERE Port = @Port AND Protocol = @Protocol), @Discovered_Service, @Display_Service);</value>

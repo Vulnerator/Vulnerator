@@ -428,13 +428,15 @@ CREATE TABLE GroupsWaivers
 	 FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
 	 FOREIGN KEY (Waiver_ID) REFERENCES Waivers(Waiver_ID)
 	);
-CREATE TABLE Groups_MitigationsOrConditions
+CREATE TABLE GroupsMitigationsOrConditions
 	(
 	 MitigationOrCondition_ID INTEGER NOT NULL ,
 	 Group_ID INTEGER NOT NULL ,
-	 UNIQUE (MitigationOrCondition_ID, Group_ID) ON CONFLICT IGNORE,
+	 Vulnerability_ID INTEGER NOT NULL ,
+	 UNIQUE (MitigationOrCondition_ID, Group_ID, Vulnerability_ID) ON CONFLICT IGNORE,
 	 FOREIGN KEY (MitigationOrCondition_ID) REFERENCES MitigationsOrConditions(MitigationOrCondition_ID),
-	 FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID)
+	 FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID) ,
+	 FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID)
 	);
 CREATE TABLE GroupsContacts
 	(
@@ -666,7 +668,6 @@ CREATE TABLE MissionAreas
 CREATE TABLE MitigationsOrConditions
 	(
 	 MitigationOrCondition_ID INTEGER PRIMARY KEY ,
-	 Vulnerability_ID INTEGER ,
 	 Impact_Description NVARCHAR (2000) ,
 	 Predisposing_Conditions NVARCHAR (2000) ,
 	 Technical_Mitigation NVARCHAR (2000) ,
@@ -683,8 +684,7 @@ CREATE TABLE MitigationsOrConditions
 	 Approval_Date DATE ,
 	 Expiration_Date DATE ,
 	 IsApproved NVARCHAR (5) ,
-	 Approver NVARCHAR (100) ,
-	 FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID)
+	 Approver NVARCHAR (100)
 	);
 CREATE TABLE NavigationTransportationSystems
 	(

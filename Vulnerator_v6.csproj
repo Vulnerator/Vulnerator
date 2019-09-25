@@ -316,6 +316,7 @@
     <Compile Include="Model\DataAccess\DatabaseInterface.cs" />
     <Compile Include="Model\Entity\Accessibility.cs" />
     <Compile Include="Model\Entity\GroupsCCIs.cs" />
+    <Compile Include="Model\Entity\GroupsMitigationsOrConditions.cs" />
     <Compile Include="Model\Entity\GroupsWaivers.cs" />
     <Compile Include="Model\Entity\AdditionalTestConsideration.cs" />
     <Compile Include="Model\Entity\ATC_IATC.cs" />
