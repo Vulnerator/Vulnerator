@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web.Configuration;
 using System.Xml;
 
 namespace Vulnerator.Helper
@@ -109,6 +110,9 @@ namespace Vulnerator.Helper
             XmlReader subTreeXmlReader = xmlReader.ReadSubtree();
             while (subTreeXmlReader.Read())
             { value = string.Concat(value, xmlReader.Value); }
+
+            if (value.StartsWith("\n"))
+            { value = value.Remove(0, 1); }
             value = value.Replace("\n", Environment.NewLine);
             if (!sanitizeBrackets)
             { return value; }
@@ -162,5 +166,14 @@ namespace Vulnerator.Helper
             { throw new ArgumentNullException(nameof(source)); }
             return new ObservableCollection<T>(source);
         }
+
+        public static string SanitizeExcessiveNewLineAndTab(this string _string)
+        {
+            Regex regex = new Regex(Properties.Resources.RegexExcessiveNewLineAndTab);
+            return regex.Replace(_string,  Environment.NewLine + @"• ");
+        }
+
+        public static string InsertStartingBullet(this string _string)
+        { return _string.Insert(0, @"• "); }
     }
 }
