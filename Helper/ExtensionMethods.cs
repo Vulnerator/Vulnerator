@@ -111,13 +111,35 @@ namespace Vulnerator.Helper
             while (subTreeXmlReader.Read())
             { value = string.Concat(value, xmlReader.Value); }
 
-            if (value.StartsWith("\n"))
-            { value = value.Remove(0, 1); }
-            value = value.Replace("\n", Environment.NewLine);
+            value = value.SanitizeNewLines();
+
             if (!sanitizeBrackets)
             { return value; }
             value = value.Replace("&gt", ">");
             value = value.Replace("&lt", "<");
+            return value;
+        }
+
+        public static string SanitizeNewLines(this string _input)
+        {
+            string value = _input;
+            if (value.StartsWith("\n"))
+            { value = value.Remove(0, 1); }
+
+            Regex regex = new Regex(Properties.Resources.RegexIndentedMidlineNewLine);
+            value = regex.Replace(value, Environment.NewLine + "    ");
+            regex = new Regex(Properties.Resources.RegexMidlineNewLine);
+            value = regex.Replace(value, " ");
+            regex = new Regex(Properties.Resources.RegexTrailingNewLine);
+            value = regex.Replace(value, string.Empty);
+            regex = new Regex(Properties.Resources.RegexExcessiveNewLineAndTab);
+            value = regex.Replace(value, "  • ");
+            if (value.EndsWith(@"\r\n"))
+            { value = value.Remove(value.Length - 2, 2); }
+            value = value.Trim();
+            value = value.Replace("\r\n", Environment.NewLine);
+            value = value.Replace("\n", Environment.NewLine);
+
             return value;
         }
 
@@ -165,12 +187,6 @@ namespace Vulnerator.Helper
             if (source == null)
             { throw new ArgumentNullException(nameof(source)); }
             return new ObservableCollection<T>(source);
-        }
-
-        public static string SanitizeExcessiveNewLineAndTab(this string _string)
-        {
-            Regex regex = new Regex(Properties.Resources.RegexExcessiveNewLineAndTab);
-            return regex.Replace(_string,  Environment.NewLine + @"• ");
         }
 
         public static string InsertStartingBullet(this string _string)

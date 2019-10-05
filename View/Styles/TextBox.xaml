@@ -351,6 +351,7 @@
                                         Visibility="Hidden">
                             <Grid>
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
@@ -379,7 +380,7 @@
                                     </TextBlock.RenderTransform>
                                 </TextBlock>
                                 <TextBlock x:Name="PART_CharacterCounter"
-                                           Grid.Column="1"
+                                           Grid.Column="2"
                                            HorizontalAlignment="Right"
                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                            Foreground="{TemplateBinding vh:DependencyProperties.FloatingWatermarkForeground}"

@@ -243,7 +243,7 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "description":
                                 {
-                                    sqliteCommand.Parameters["Vulnerability_Description"].Value = xmlReader.ObtainCurrentNodeValue(true).SanitizeExcessiveNewLineAndTab();
+                                    sqliteCommand.Parameters["Vulnerability_Description"].Value = xmlReader.ObtainCurrentNodeValue(true);
                                     break;
                                 }
                             case "plugin_modification_date":
@@ -281,16 +281,8 @@ namespace Vulnerator.Model.BusinessLogic
                             case "plugin_output":
                                 {
                                     sqliteCommand.Parameters["Tool_Generated_Output"].Value = xmlReader.ObtainCurrentNodeValue(true);
-                                    switch (pluginId)
-                                    {
-                                        case "19506":
-                                            {
-                                                SetSourceInformation(sqliteCommand);
-                                                break;
-                                            }
-                                        default:
-                                            { break; }
-                                    }
+                                    if (pluginId == "19506")
+                                    { SetSourceInformation(sqliteCommand); }
                                     break;
                                 }
                             case "stig_severity":

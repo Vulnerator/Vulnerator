@@ -463,14 +463,14 @@ namespace Vulnerator.Model.DataAccess
                                         {
                                             string implementationGuidance = xmlReader.ObtainCurrentNodeValue(false);
                                             implementationGuidance =
-                                                implementationGuidance.SanitizeExcessiveNewLineAndTab().InsertStartingBullet();
+                                                implementationGuidance.SanitizeNewLines().InsertStartingBullet();
                                             sqliteCommand.Parameters.Add(new SQLiteParameter("ImplementationGuidance", implementationGuidance));
                                             break;
                                         }
                                     case "AssessmentProcedures":
                                         {
                                             string ap = xmlReader.ObtainCurrentNodeValue(false);
-                                            ap = ap.SanitizeExcessiveNewLineAndTab().InsertStartingBullet();
+                                            ap = ap.SanitizeNewLines().InsertStartingBullet();
                                             sqliteCommand.Parameters.Add(new SQLiteParameter("AP_Text", ap));
                                             break;
                                         }

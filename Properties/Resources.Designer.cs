@@ -516,6 +516,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (?:\r)*\n\s{4,}.
+        /// </summary>
+        internal static string RegexIndentedMidlineNewLine {
+            get {
+                return ResourceManager.GetString("RegexIndentedMidlineNewLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to (?:(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]){1,3}.
         /// </summary>
         internal static string RegexIPv4 {
@@ -543,6 +552,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (?:(?&lt;!\r\n)(?&lt;=[^(\r)])(?:\r\n)(?=[a-z0-9])|(?:(?&lt;!\r)\n)(?=[a-z0-9])).
+        /// </summary>
+        internal static string RegexMidlineNewLine {
+            get {
+                return ResourceManager.GetString("RegexMidlineNewLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to (?&lt;=Release: )\d+(?=\s).
         /// </summary>
         internal static string RegexRawStigRelease {
@@ -566,6 +584,15 @@ namespace Vulnerator.Properties {
         internal static string RegexStigId {
             get {
                 return ResourceManager.GetString("RegexStigId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (?:(?&lt;=\s)\n(?=\s|$)).
+        /// </summary>
+        internal static string RegexTrailingNewLine {
+            get {
+                return ResourceManager.GetString("RegexTrailingNewLine", resourceCulture);
             }
         }
         
