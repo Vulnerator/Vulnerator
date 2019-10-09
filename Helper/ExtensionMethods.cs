@@ -126,12 +126,16 @@ namespace Vulnerator.Helper
             if (value.StartsWith("\n"))
             { value = value.Remove(0, 1); }
 
+            // Remove mid-line indented newline characters
             Regex regex = new Regex(Properties.Resources.RegexIndentedMidlineNewLine);
             value = regex.Replace(value, Environment.NewLine + "    ");
+            // Remove non-indented mid-line newline characters
             regex = new Regex(Properties.Resources.RegexMidlineNewLine);
             value = regex.Replace(value, " ");
+            // Remove trailing newline characters
             regex = new Regex(Properties.Resources.RegexTrailingNewLine);
             value = regex.Replace(value, string.Empty);
+            // Remove excessive newline and tab characters; replace with bullet ("•")
             regex = new Regex(Properties.Resources.RegexExcessiveNewLineAndTab);
             value = regex.Replace(value, "  • ");
             if (value.EndsWith(@"\r\n"))
