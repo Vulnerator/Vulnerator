@@ -516,6 +516,7 @@
     <Compile Include="View\UI\VulnerabilityManagementView.xaml.cs">
       <DependentUpon>VulnerabilityManagementView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Validation\NumericValidationRule.cs" />
     <Compile Include="View\ViewHelper\CommandEnabledComboBox.cs" />
     <Compile Include="View\Converter\EmailPersonnelLabelJoiner.cs" />
     <Compile Include="View\Converter\EmailTextLabelStringJoiner.cs" />

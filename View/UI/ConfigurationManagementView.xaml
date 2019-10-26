@@ -13,6 +13,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:v="clr-namespace:Vulnerator.View"
+             xmlns:validation="clr-namespace:Vulnerator.View.Validation"
              xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
              xmlns:vm="clr-namespace:Vulnerator.ViewModel"
              HorizontalAlignment="Stretch"
@@ -1911,9 +1912,42 @@
                                      Style="{StaticResource HeaderedTextBoxStyle}"
                                      Text="{Binding SelectedGroup.Name, Mode=TwoWay}"
                                      TextWrapping="Wrap" />
+                            <TextBox Controls:TextBoxHelper.Watermark="Group Tier (Digits Only)"
+                                     vh:DependencyProperties.FloatingWatermark="Group Tier"
+                                     Style="{StaticResource HeaderedTextBoxStyle}"
+                                     TextWrapping="Wrap">
+                                <Binding Mode="TwoWay"
+                                         UpdateSourceTrigger="PropertyChanged"
+                                         Path="SelectedGroup.Group_Tier">
+                                    <Binding.ValidationRules>
+                                        <validation:NumericValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox>
+                            <Controls:ToggleSwitch x:Name="groupAccreditationToggleSwitch"
+                                                   Margin="0,10,0,0"
+                                                   HorizontalContentAlignment="Right"
+                                                   Content="Is Accreditation"
+                                                   FontFamily="Segoe UI"
+                                                   FontSize="12"
+                                                   IsChecked="{Binding SelectedGroup.Is_Accreditation, Mode=TwoWay}"
+                                                   Style="{DynamicResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+                            <TextBox Controls:TextBoxHelper.Watermark="eMASS ID (Digits Only)"
+                                     vh:DependencyProperties.FloatingWatermark="eMASS ID"
+                                     Style="{StaticResource HeaderedTextBoxStyle}"
+                                     Text="{Binding SelectedGroup.Accreditation_eMASS_ID, Mode=TwoWay}"
+                                     TextWrapping="Wrap"
+                                     Visibility="{Binding ElementName=groupAccreditationToggleSwitch, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            <Controls:ToggleSwitch Margin="0,10,0,0"
+                                                   HorizontalContentAlignment="Right"
+                                                   Content="Is Platform"
+                                                   FontFamily="Segoe UI"
+                                                   FontSize="12"
+                                                   IsChecked="{Binding SelectedGroup.IsPlatform, Mode=TwoWay}"
+                                                   Style="{DynamicResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
                         </StackPanel>
                     </Expander>
-                    <Expander Grid.Column="2"
+                    <!--<Expander Grid.Column="2"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
                               ExpandDirection="Right">
@@ -1972,7 +2006,7 @@
                                 </Grid>
                             </Label>
                         </Expander.Header>
-                    </Expander>
+                    </Expander>-->
                 </Grid>
             </TabItem>
             <TabItem Header="Accreditations"
