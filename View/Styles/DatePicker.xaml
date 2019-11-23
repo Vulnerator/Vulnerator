@@ -35,7 +35,7 @@
         <Setter Property="IsTodayHighlighted" Value="True" />
         <Setter Property="MinHeight" Value="26" />
         <Setter Property="Padding" Value="0" />
-        <Setter Property="SelectedDate" Value="{Binding Path=(vh:DependencyProperties.PrimaryText), RelativeSource={RelativeSource Self}}" />
+        <Setter Property="SelectedDate" Value="{Binding Path=(vh:DependencyProperties.PrimaryValue), RelativeSource={RelativeSource Self}}" />
         <Setter Property="SelectedDateFormat" Value="Short" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
@@ -223,12 +223,12 @@
         </Setter>
         <Setter Property="vh:DependencyProperties.FloatingWatermark" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:TextBoxHelper.Watermark)}" />
         <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource Self}, Path=Foreground}" />
-        <Setter Property="vh:DependencyProperties.PrimaryText" Value="{Binding Path=(vh:DependencyProperties.PrimaryText), RelativeSource={RelativeSource Self}}" />
-        <Setter Property="vh:DependencyProperties.SecondaryText" Value="{Binding Path=(vh:DependencyProperties.PrimaryText), RelativeSource={RelativeSource Self}}" />
+        <Setter Property="vh:DependencyProperties.PrimaryValue" Value="{Binding Path=(vh:DependencyProperties.PrimaryValue), RelativeSource={RelativeSource Self}}" />
+        <Setter Property="vh:DependencyProperties.SecondaryValue" Value="{Binding Path=(vh:DependencyProperties.PrimaryValue), RelativeSource={RelativeSource Self}}" />
         <Style.Triggers>
-            <DataTrigger Binding="{Binding Path=(vh:DependencyProperties.AlternateTextTrigger), RelativeSource={RelativeSource Self}, Converter={StaticResource IsNullConverter}}"
+            <DataTrigger Binding="{Binding Path=(vh:DependencyProperties.AlternateValueTrigger), RelativeSource={RelativeSource Self}, Converter={StaticResource IsNullConverter}}"
                          Value="False">
-                <Setter Property="SelectedDate" Value="{Binding Path=(vh:DependencyProperties.SecondaryText), RelativeSource={RelativeSource Self}}" />
+                <Setter Property="SelectedDate" Value="{Binding Path=(vh:DependencyProperties.SecondaryValue), RelativeSource={RelativeSource Self}}" />
             </DataTrigger>
         </Style.Triggers>
     </Style>

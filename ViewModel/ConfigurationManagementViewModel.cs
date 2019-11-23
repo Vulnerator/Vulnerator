@@ -167,6 +167,21 @@ namespace Vulnerator.ViewModel
             
         }
 
+        private Group _newGroup;
+
+        public Group NewGroup
+        {
+            get { return _newGroup; }
+            set
+            {
+                if (_newGroup != value)
+                {
+                    _newGroup = value;
+                    RaisePropertyChanged("NewGroup");
+                }
+            }
+        }
+
         private VulnerabilitySource _selectedVulnerabilitySource;
         public VulnerabilitySource SelectedVulnerabilitySource
         {
@@ -256,6 +271,7 @@ namespace Vulnerator.ViewModel
                         .OrderBy(m => m.MAC_Address)
                         .AsNoTracking()
                         .ToList();
+                    NewGroup = new Group();
                 }
             }
             catch (Exception exception)

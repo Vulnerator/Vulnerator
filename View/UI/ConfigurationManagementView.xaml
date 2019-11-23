@@ -1905,24 +1905,24 @@
                         </Expander.Header>
                         <StackPanel Width="200">
                             <TextBox Controls:TextBoxHelper.Watermark="Group Name"
+                                     vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
+                                     vh:DependencyProperties.PrimaryValue="{Binding NewGroup.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     vh:DependencyProperties.SecondaryValue="{Binding SelectedGroup.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource HeaderedTextBoxStyle}"
-                                     Text="{Binding SelectedGroup.Name, Mode=TwoWay}"
                                      TextWrapping="Wrap" />
                             <TextBox Controls:TextBoxHelper.Watermark="Group Acronym"
+                                     vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
+                                     vh:DependencyProperties.PrimaryValue="{Binding NewGroup.Acronym, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     vh:DependencyProperties.SecondaryValue="{Binding SelectedGroup.Acronym, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource HeaderedTextBoxStyle}"
-                                     Text="{Binding SelectedGroup.Name, Mode=TwoWay}"
                                      TextWrapping="Wrap" />
                             <TextBox Controls:TextBoxHelper.Watermark="Group Tier (Digits Only)"
+                                     vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
                                      vh:DependencyProperties.FloatingWatermark="Group Tier"
+                                     vh:DependencyProperties.PrimaryValue="{Binding NewGroup.Group_Tier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     vh:DependencyProperties.SecondaryValue="{Binding SelectedGroup.Group_Tier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource HeaderedTextBoxStyle}"
                                      TextWrapping="Wrap">
-                                <Binding Mode="TwoWay"
-                                         UpdateSourceTrigger="PropertyChanged"
-                                         Path="SelectedGroup.Group_Tier">
-                                    <Binding.ValidationRules>
-                                        <validation:NumericValidationRule />
-                                    </Binding.ValidationRules>
-                                </Binding>
                             </TextBox>
                             <Controls:ToggleSwitch x:Name="groupAccreditationToggleSwitch"
                                                    Margin="0,10,0,0"
@@ -1931,7 +1931,7 @@
                                                    FontFamily="Segoe UI"
                                                    FontSize="12"
                                                    IsChecked="{Binding SelectedGroup.Is_Accreditation, Mode=TwoWay}"
-                                                   Style="{DynamicResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+                                                   Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
                             <TextBox Controls:TextBoxHelper.Watermark="eMASS ID (Digits Only)"
                                      vh:DependencyProperties.FloatingWatermark="eMASS ID"
                                      Style="{StaticResource HeaderedTextBoxStyle}"
@@ -1944,7 +1944,7 @@
                                                    FontFamily="Segoe UI"
                                                    FontSize="12"
                                                    IsChecked="{Binding SelectedGroup.IsPlatform, Mode=TwoWay}"
-                                                   Style="{DynamicResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+                                                   Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
                         </StackPanel>
                     </Expander>
                     <!--<Expander Grid.Column="2"
