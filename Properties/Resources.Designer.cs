@@ -854,6 +854,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UPDATE.
+        /// </summary>
+        internal static string UpdateGroup {
+            get {
+                return ResourceManager.GetString("UpdateGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to UPDATE MitigationsOrConditions 
         ///SET 
         ///	Impact_Description = @Impact_Description,

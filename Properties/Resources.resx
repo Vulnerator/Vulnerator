@@ -616,6 +616,9 @@ GROUP BY Vulnerabilities.Vulnerability_ID;</value>
   <data name="UpdateDeltaAnalysisFlag" xml:space="preserve">
     <value>UPDATE UniqueFindings SET Delta_Analysis_Required = 'True' WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier);</value>
   </data>
+  <data name="UpdateGroup" xml:space="preserve">
+    <value>UPDATE</value>
+  </data>
   <data name="UpdateMitigationOrCondition" xml:space="preserve">
     <value>UPDATE MitigationsOrConditions 
 SET 

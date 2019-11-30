@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Entity;
+using System.Data.SQLite;
 using System.Linq;
 using Vulnerator.Model.BusinessLogic;
 using Vulnerator.Model.DataAccess;
@@ -21,9 +22,9 @@ namespace Vulnerator.ViewModel
     {
         private DatabaseContext databaseContext;
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
-        private BackgroundWorker backgroundWorker;
         private VulnerabilitySource vulnerabilitySource;
         private string saveDirectory = string.Empty;
+        private DatabaseInterface databaseInterface = new DatabaseInterface();
 
         private List<Hardware> _hardwares;
         public List<Hardware> Hardwares
@@ -160,6 +161,7 @@ namespace Vulnerator.ViewModel
             {
                 if (_selectedGroup != value)
                 {
+                    NewGroup = value != null ? null : new Group();
                     _selectedGroup = value;
                     RaisePropertyChanged("SelectedGroup");
                 }
@@ -285,7 +287,7 @@ namespace Vulnerator.ViewModel
         { get { return new RelayCommand<object>(p => GenerateCkl(p)); } }
 
         private void GenerateCkl(object param)
-        { 
+        {
             try
             {
                 CommonOpenFileDialog commonOpenFileDialog = new CommonOpenFileDialog();
@@ -295,7 +297,7 @@ namespace Vulnerator.ViewModel
                 {
                     vulnerabilitySource = param as VulnerabilitySource;
                     saveDirectory = commonOpenFileDialog.FileName;
-                    backgroundWorker = new BackgroundWorker();
+                    BackgroundWorker backgroundWorker = new BackgroundWorker();
                     backgroundWorker.DoWork += generateCklBackgroundWorker_DoWork;
                     backgroundWorker.RunWorkerAsync();
                     backgroundWorker.Dispose();
@@ -305,11 +307,14 @@ namespace Vulnerator.ViewModel
             {
                 log.Error("Unable to create CKL file.");
                 log.Debug("Exception details:", exception);
+            }
+            finally
+            {
                 GuiFeedback guiFeedback = new GuiFeedback();
                 guiFeedback.SetFields(
-                   "Unable to generate the selected CKL for the select asset",
-                   "Collapsed",
-                   true);
+                    "Unable to generate the selected CKL for the select asset",
+                    "Collapsed",
+                    true);
                 Messenger.Default.Send(guiFeedback);
             }
         }
@@ -343,7 +348,7 @@ namespace Vulnerator.ViewModel
         { 
             try
             {
-                backgroundWorker = new BackgroundWorker();
+                BackgroundWorker backgroundWorker = new BackgroundWorker();
                 backgroundWorker.DoWork += associateStigToHardwareBackgroundWorker_DoWork;
                 backgroundWorker.RunWorkerAsync();
                 backgroundWorker.Dispose();
@@ -370,6 +375,98 @@ namespace Vulnerator.ViewModel
             {
                 log.Error("Unable to associate STIG to Hardware");
                 log.Debug("Exception details:", exception);
+            }
+        }
+
+        public RelayCommand ModifyGroupCommand => new RelayCommand(ModifyGroup);
+        private void ModifyGroup()
+        {
+            try
+            {
+                if (SelectedGroup == null && NewGroup == null)
+                { return; }
+
+                BackgroundWorker backgroundWorker = new BackgroundWorker();
+                if (SelectedGroup != null)
+                { backgroundWorker.DoWork += updateGroupBackgroundWorker_DoWork; }
+
+                if (NewGroup != null)
+                { backgroundWorker.DoWork += addGroupBackgroundWorker_DoWork; }
+
+                backgroundWorker.RunWorkerAsync();
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                log.Error("");
+                log.Debug("");
+            }
+        }
+
+        private void updateGroupBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
+                { DatabaseBuilder.sqliteConnection.Open(); }
+
+                using (SQLiteTransaction sQLiteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
+                {
+                    using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                    {
+                        databaseInterface.InsertParameterPlaceholders(sqliteCommand);
+                        sqliteCommand.Parameters["Group_ID"].Value = SelectedGroup.Group_ID;
+                        sqliteCommand.Parameters["Name"].Value = SelectedGroup.Name;
+                        sqliteCommand.Parameters["Acronym"].Value = SelectedGroup.Acronym;
+                        sqliteCommand.Parameters["Group_Tier"].Value = SelectedGroup.Group_Tier;
+                        sqliteCommand.Parameters["Is_Accreditation"].Value = SelectedGroup.Is_Accreditation;
+                        sqliteCommand.Parameters["Accreditation_eMASS_ID"].Value = SelectedGroup.Accreditation_eMASS_ID;
+                        sqliteCommand.Parameters["IsPlatform"].Value = SelectedGroup.IsPlatform;
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error($"Unable to insert group {NewGroup.Name}");
+                log.Debug($"Exception details: {exception}");
+            }
+            finally
+            {
+                if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
+                { DatabaseBuilder.sqliteConnection.Close(); }
+            }
+        }
+
+        private void addGroupBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
+                { DatabaseBuilder.sqliteConnection.Open(); }
+
+                using (SQLiteTransaction sQLiteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
+                {
+                    using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                    {
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("Name", NewGroup.Name));
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("Acronym", NewGroup.Acronym));
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("Group_Tier", NewGroup.Group_Tier));
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("Is_Accreditation", NewGroup.Is_Accreditation));
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("Accreditation_eMASS_ID", NewGroup.Accreditation_eMASS_ID));
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("IsPlatform", NewGroup.IsPlatform));
+                        databaseInterface.InsertGroup(sqliteCommand);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error($"Unable to insert group {NewGroup.Name}");
+                log.Debug($"Exception details: {exception}");
+            }
+            finally
+            {
+                if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
+                { DatabaseBuilder.sqliteConnection.Close(); }
             }
         }
     }

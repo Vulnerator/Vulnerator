@@ -356,7 +356,10 @@ namespace Vulnerator.Model.DataAccess
                     // CCI Table
                     "CCI",
                     // Groups Table
-                    "Group_ID", "Name", "Is_Accreditation", "Accreditation_ID", "Organization_ID",
+                    "Group_ID", "Name", "Acronym", "Group_Tier", "Ia_Accreditation", "Accreditation_eMASS_ID", "IsPlatform", "Organization_ID",
+                    "Confidentiality_ID", "Integrity_ID", "Availability_ID", "System_Categorization_ID", "Accreditation_Version", "CybersafeGrade",
+                    "FISCAM_Applies", "ControlSelection_ID", "HasForeignNationals", "SystemType", "RDTE_Zone", "StepOneQuestionnaire_ID", "SAP_ID",
+                    "PIT_Determination_ID",
                     // FindingTypes Table
                     "Finding_Type",
                     // Hardware Table
