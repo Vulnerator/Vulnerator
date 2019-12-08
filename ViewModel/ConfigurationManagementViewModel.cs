@@ -178,6 +178,7 @@ namespace Vulnerator.ViewModel
             {
                 if (_newGroup != value)
                 {
+                    SelectedGroup = value != null ? null : new Group();
                     _newGroup = value;
                     RaisePropertyChanged("NewGroup");
                 }
@@ -394,12 +395,13 @@ namespace Vulnerator.ViewModel
                 { backgroundWorker.DoWork += addGroupBackgroundWorker_DoWork; }
 
                 backgroundWorker.RunWorkerAsync();
+                backgroundWorker.RunWorkerCompleted += modifyGroupBackgroundWorker_RunWorkerCompleted;
                 backgroundWorker.Dispose();
             }
             catch (Exception exception)
             {
-                log.Error("");
-                log.Debug("");
+                log.Error("Unable to insert or update a group.");
+                log.Debug($"Exception details: {exception}");
             }
         }
 
@@ -422,6 +424,7 @@ namespace Vulnerator.ViewModel
                         sqliteCommand.Parameters["Is_Accreditation"].Value = SelectedGroup.Is_Accreditation;
                         sqliteCommand.Parameters["Accreditation_eMASS_ID"].Value = SelectedGroup.Accreditation_eMASS_ID;
                         sqliteCommand.Parameters["IsPlatform"].Value = SelectedGroup.IsPlatform;
+                        databaseInterface.UpdateGroup(sqliteCommand);
                     }
                 }
             }
@@ -448,6 +451,7 @@ namespace Vulnerator.ViewModel
                 {
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
+                        databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters.Add(new SQLiteParameter("Name", NewGroup.Name));
                         sqliteCommand.Parameters.Add(new SQLiteParameter("Acronym", NewGroup.Acronym));
                         sqliteCommand.Parameters.Add(new SQLiteParameter("Group_Tier", NewGroup.Group_Tier));
@@ -467,6 +471,21 @@ namespace Vulnerator.ViewModel
             {
                 if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
                 { DatabaseBuilder.sqliteConnection.Close(); }
+            }
+        }
+
+        private void modifyGroupBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+            try
+            {
+                Messenger.Default.Send(new NotificationMessage<string>("ModelUpdate", "AllModels"), MessengerToken.ModelUpdated);
+                NewGroup = new Group();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to run Group post-modification background worker RunWorkerCompleted tasks.");
+                throw exception;
             }
         }
     }

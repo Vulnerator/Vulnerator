@@ -1926,10 +1926,12 @@
                             <Controls:ToggleSwitch x:Name="groupAccreditationToggleSwitch"
                                                    Margin="0,10,0,0"
                                                    HorizontalContentAlignment="Right"
+                                                   vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
+                                                   vh:DependencyProperties.PrimaryValue="{Binding NewGroup.Is_Accreditation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                   vh:DependencyProperties.SecondaryValue="{Binding SelectedGroup.Is_Accreditation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                    Content="Is Accreditation"
                                                    FontFamily="Segoe UI"
                                                    FontSize="12"
-                                                   IsChecked="{Binding SelectedGroup.Is_Accreditation, Mode=TwoWay}"
                                                    Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
                             <TextBox Controls:TextBoxHelper.Watermark="eMASS ID (Digits Only)"
                                      vh:DependencyProperties.FloatingWatermark="eMASS ID"
@@ -1939,10 +1941,12 @@
                                      Visibility="{Binding ElementName=groupAccreditationToggleSwitch, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" />
                             <Controls:ToggleSwitch Margin="0,10,0,5"
                                                    HorizontalContentAlignment="Right"
+                                                   vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
+                                                   vh:DependencyProperties.PrimaryValue="{Binding NewGroup.IsPlatform, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                   vh:DependencyProperties.SecondaryValue="{Binding SelectedGroup.IsPlatform, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                    Content="Is Platform"
                                                    FontFamily="Segoe UI"
                                                    FontSize="12"
-                                                   IsChecked="{Binding SelectedGroup.IsPlatform, Mode=TwoWay}"
                                                    Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
                             <Button Margin="0,0,0,5"
                                     HorizontalAlignment="Center"

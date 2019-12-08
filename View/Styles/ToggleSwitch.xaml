@@ -1,14 +1,16 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:Vulnerator.View.Styles"
                     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-                    xmlns:converters="clr-namespace:MahApps.Metro.Converters;assembly=MahApps.Metro">
+                    xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
+                    xmlns:converters="clr-namespace:MahApps.Metro.Converters;assembly=MahApps.Metro"
+                    xmlns:local="clr-namespace:Vulnerator.View.Styles"
+                    xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Themes/ToggleSwitch.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <!--  Metro style  -->
+    <Converters:NullToBooleanConverter x:Key="NullToBooleanConverter" />
 
     <!--  obsolete  -->
     <Style x:Key="MetroToggleSwitchButton"
@@ -33,8 +35,8 @@
     </Style>
 
     <!--  Win10 style  -->
-
-    <converters:ThicknessToDoubleConverter x:Key="ThicknessToDouble" TakeThicknessSide="Left" />
+    <converters:ThicknessToDoubleConverter x:Key="ThicknessToDouble"
+                                           TakeThicknessSide="Left" />
 
     <Style x:Key="MahApps.Metro.Styles.ToggleSwitchButton.Win10"
            BasedOn="{StaticResource MahApps.Metro.Styles.ToggleSwitchButton}"
@@ -42,6 +44,7 @@
         <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Height" Value="18" />
+        <Setter Property="IsChecked" Value="{Binding Path=(vh:DependencyProperties.PrimaryValue), RelativeSource={RelativeSource Self}, Mode=TwoWay}" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="OffSwitchBrush" Value="{DynamicResource ControlBorderBrush}" />
         <Setter Property="OnSwitchBrush" Value="{DynamicResource AccentColorBrush}" />
@@ -78,11 +81,11 @@
                                     <TranslateTransform x:Name="PART_ThumbTranslate" />
                                 </Grid.RenderTransform>
                                 <Rectangle x:Name="PART_ThumbIndicatorInner"
-                                         Width="12"
-                                         Height="12"
-                                         RadiusY="3"
-                                         RadiusX="3"
-                                         Fill="{TemplateBinding ThumbIndicatorBrush}" />
+                                           Width="12"
+                                           Height="12"
+                                           Fill="{TemplateBinding ThumbIndicatorBrush}"
+                                           RadiusX="3"
+                                           RadiusY="3" />
                             </Grid>
                         </Grid>
                         <Thumb x:Name="PART_DraggingThumb">
@@ -160,6 +163,18 @@
         <Setter Property="ThumbIndicatorDisabledBrush" Value="{DynamicResource MahApps.Metro.Brushes.ToggleSwitchButton.ThumbIndicatorDisabledBrush.Win10}" />
         <Setter Property="ThumbIndicatorWidth" Value="12" />
         <Setter Property="Width" Value="44" />
+        <Setter Property="vh:DependencyProperties.PrimaryValue" Value="{Binding Path=(vh:DependencyProperties.PrimaryValue), RelativeSource={RelativeSource Self}}" />
+        <Setter Property="vh:DependencyProperties.SecondaryValue" Value="{Binding Path=(vh:DependencyProperties.PrimaryValue), RelativeSource={RelativeSource Self}}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=(vh:DependencyProperties.AlternateValueTrigger), RelativeSource={RelativeSource Self}, Converter={StaticResource IsNullConverter}}"
+                         Value="False">
+                <Setter Property="IsChecked" Value="{Binding Path=(vh:DependencyProperties.SecondaryValue), RelativeSource={RelativeSource Self}, Mode=TwoWay, Converter={StaticResource NullToBooleanConverter}}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Path=(vh:DependencyProperties.AlternateValueTrigger), RelativeSource={RelativeSource Self}, Converter={StaticResource IsNullConverter}}"
+                         Value="True">
+                <Setter Property="IsChecked" Value="{Binding Path=(vh:DependencyProperties.PrimaryValue), RelativeSource={RelativeSource Self}, Mode=TwoWay, Converter={StaticResource NullToBooleanConverter}}" />
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="CustomWin10ToggleSwitchStyle"
@@ -184,5 +199,5 @@
         <!--            </Trigger>-->
         <!--        </Style.Triggers>-->
     </Style>
-    
+
 </ResourceDictionary>

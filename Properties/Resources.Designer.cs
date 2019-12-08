@@ -854,7 +854,17 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UPDATE.
+        ///   Looks up a localized string similar to UPDATE Groups SET
+        ///                  Name = @Name,
+        ///                  Acronym = @Acronym,
+        ///                  Group_Tier = @Group_Tier,
+        ///                  Is_Accreditation = @Is_Accreditation,
+        ///                  Accreditation_eMASS_ID = @Accreditation_eMASS_ID,
+        ///                  IsPlatform = @IsPlatform,
+        ///                  Organization_ID = @Organization_ID,
+        ///                  Confidentiality_ID = @Confidentiality_ID,
+        ///                  Integrity_ID = @Integrity_ID,
+        ///                  Availability_ID = @Ava [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string UpdateGroup {
             get {

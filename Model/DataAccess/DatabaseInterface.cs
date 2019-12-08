@@ -1012,5 +1012,20 @@ namespace Vulnerator.Model.DataAccess
                 throw exception;
             }
         }
+
+        public void UpdateGroup(SQLiteCommand sqliteCommand)
+        {
+
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.UpdateGroup;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error($"Unable to update Group \"{sqliteCommand.Parameters["Name"].Value}\"");
+                throw exception;
+            }
+        }
     }
 }
