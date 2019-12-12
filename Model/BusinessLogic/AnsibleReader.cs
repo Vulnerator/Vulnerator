@@ -16,7 +16,7 @@ namespace Vulnerator.Model.BusinessLogic
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         DatabaseInterface databaseInterface = new DatabaseInterface();
         private string[] persistentParameters = new string[] {
-            "Group_Name", "Finding_Source_File_Name", "Source_Name", "Source_Version", "Source_Release", "Scan_IP", "Host_Name", "Finding_Type"
+            "Name", "Finding_Source_File_Name", "Source_Name", "Source_Version", "Source_Release", "Scan_IP", "Host_Name", "Finding_Type"
         };
         List<string> ccis = new List<string>();
 
@@ -39,7 +39,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters["Finding_Type"].Value = "CKL";
-                        sqliteCommand.Parameters["Group_Name"].Value = "All";
+                        sqliteCommand.Parameters["Name"].Value = "All";
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         using (XmlReader xmlReader = XmlReader.Create(file.FilePath, GenerateXmlReaderSettings()))
                         {
@@ -184,7 +184,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to parse Ansible source data."));
+                log.Error("Unable to parse Ansible source data.");
                 throw exception;
             }
         }

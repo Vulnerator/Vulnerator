@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 namespace Vulnerator.Model.Entity
 {
     using System;
@@ -28,9 +30,9 @@ namespace Vulnerator.Model.Entity
         [StringLength(2147483647)]
         public string Finding_Details { get; set; }
 
-        public DateTime First_Discovered { get; set; }
+        public string First_Discovered { get; set; }
 
-        public DateTime Last_Observed { get; set; }
+        public string Last_Observed { get; set; }
 
         [Required]
         [StringLength(5)]
@@ -40,7 +42,7 @@ namespace Vulnerator.Model.Entity
 
         public long Finding_Source_File_ID { get; set; }
 
-        [Required]
+        [CanBeNull]
         public long? MitigationOrCondition_ID { get; set; }
 
         [Required]
@@ -80,6 +82,11 @@ namespace Vulnerator.Model.Entity
         public virtual FindingType FindingType { get; set; }
 
         public virtual Hardware Hardware { get; set; }
+
+        public virtual Software Software { get; set; }
+
+        [CanBeNull]
+        public virtual MitigationsOrCondition MitigationsOrCondition { get; set; }
 
         public virtual UniqueFindingsSourceFile UniqueFindingsSourceFile { get; set; }
 

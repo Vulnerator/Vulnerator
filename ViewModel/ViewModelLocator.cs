@@ -34,45 +34,34 @@ namespace Vulnerator.ViewModel
             SimpleIoc.Default.Register<AboutViewModel>();
             SimpleIoc.Default.Register<NewsViewModel>();
             SimpleIoc.Default.Register<ThemeViewModel>();
+            SimpleIoc.Default.Register<ReportingViewModel>();
             SimpleIoc.Default.Register<RmfViewModel>();
             SimpleIoc.Default.Register<SplashViewModel>();
             SimpleIoc.Default.Register<SettingsViewModel>();
             SimpleIoc.Default.Register<ConfigurationManagementViewModel>();
-            SimpleIoc.Default.Register<MitigationsNistMappingViewModel>();
         }
 
-        public AboutViewModel About
-        { get { return SimpleIoc.Default.GetInstance<AboutViewModel>(); } }
+        public AboutViewModel About => SimpleIoc.Default.GetInstance<AboutViewModel>();
 
-        public MainViewModel Main
-        { get { return SimpleIoc.Default.GetInstance<MainViewModel>(); } }
+        public MainViewModel Main => SimpleIoc.Default.GetInstance<MainViewModel>();
 
-        public NewsViewModel News
-        { get { return SimpleIoc.Default.GetInstance<NewsViewModel>(); } }
+        public NewsViewModel News => SimpleIoc.Default.GetInstance<NewsViewModel>();
 
-        public RmfViewModel Rmf
-        { get { return SimpleIoc.Default.GetInstance<RmfViewModel>(); } }
+        public ReportingViewModel Reporting => SimpleIoc.Default.GetInstance<ReportingViewModel>();
 
-        public SettingsViewModel Settings
-        { get { return SimpleIoc.Default.GetInstance<SettingsViewModel>(); } }
+        public RmfViewModel Rmf => SimpleIoc.Default.GetInstance<RmfViewModel>();
 
-        public SplashViewModel Splash
-        { get { return SimpleIoc.Default.GetInstance<SplashViewModel>(); } }
+        public SettingsViewModel Settings => SimpleIoc.Default.GetInstance<SettingsViewModel>();
 
-        public ThemeViewModel Theme
-        { get { return SimpleIoc.Default.GetInstance<ThemeViewModel>(); } }
+        public SplashViewModel Splash => SimpleIoc.Default.GetInstance<SplashViewModel>();
 
-        public UserGuideViewModel UserGuide
-        { get { return SimpleIoc.Default.GetInstance<UserGuideViewModel>(); } }
+        public ThemeViewModel Theme => SimpleIoc.Default.GetInstance<ThemeViewModel>();
 
-        public VulnerabilityViewModel Vulnerability
-        { get { return SimpleIoc.Default.GetInstance<VulnerabilityViewModel>(); } }
+        public UserGuideViewModel UserGuide => SimpleIoc.Default.GetInstance<UserGuideViewModel>();
 
-        public ConfigurationManagementViewModel ConfigurationManagement
-        { get { return SimpleIoc.Default.GetInstance<ConfigurationManagementViewModel>(); } }
+        public VulnerabilityViewModel Vulnerability => SimpleIoc.Default.GetInstance<VulnerabilityViewModel>();
 
-        public MitigationsNistMappingViewModel MitigationsNist
-        { get { return SimpleIoc.Default.GetInstance<MitigationsNistMappingViewModel>(); } }
+        public ConfigurationManagementViewModel ConfigurationManagement => SimpleIoc.Default.GetInstance<ConfigurationManagementViewModel>();
 
         public static void Cleanup()
         { }

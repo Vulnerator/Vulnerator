@@ -4,6 +4,7 @@
                     xmlns:Converters="clr-namespace:MahApps.Metro.Converters;assembly=MahApps.Metro"
                     xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     xmlns:behaviours="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
+                    xmlns:converter="clr-namespace:Vulnerator.View.Converter"
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                     xmlns:local="clr-namespace:Vulnerator.View.Styles"
                     xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
@@ -14,6 +15,8 @@
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Shared.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/Storyboard.xaml" />
     </ResourceDictionary.MergedDictionaries>
+
+    <converter:IsNullConverter x:Key="IsNullConverter" />
 
     <Style x:Key="HeaderedDatePickerStyle"
            TargetType="{x:Type DatePicker}">
@@ -32,6 +35,7 @@
         <Setter Property="IsTodayHighlighted" Value="True" />
         <Setter Property="MinHeight" Value="26" />
         <Setter Property="Padding" Value="0" />
+        <Setter Property="SelectedDate" Value="{Binding Path=(vh:DependencyProperties.PrimaryValue), RelativeSource={RelativeSource Self}}" />
         <Setter Property="SelectedDateFormat" Value="Short" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
@@ -98,10 +102,11 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3"
                                 SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                         <Grid x:Name="PART_InnerGrid"
                               Grid.Row="1"
-                              Margin="1,3">
+                              Margin="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition x:Name="ButtonColumn"
@@ -116,23 +121,26 @@
                             <Button x:Name="PART_Button"
                                     Grid.RowSpan="2"
                                     Grid.Column="1"
+                                    VerticalAlignment="Stretch"
                                     Foreground="{TemplateBinding Foreground}"
                                     IsTabStop="False"
                                     Style="{DynamicResource ChromelessButtonStyle}">
-                                <!--  PackIconMaterialLight - Calendar  -->
                                 <ContentControl Width="{TemplateBinding Controls:TextBoxHelper.ButtonWidth}"
                                                 Height="{TemplateBinding Controls:TextBoxHelper.ButtonWidth}"
                                                 Padding="2"
-                                                Content="M 7,2.00001L 8,2.00001C 8.55228,2.00001 9,2.44772 9,3.00001L 9,4L 14,4L 14,3C 14,2.44771 14.4477,2 15,2L 16,2C 16.5523,2 17,2.44771 17,3L 17,4C 18.6569,4 20,5.34315 20,7L 20,18C 20,19.6569 18.6569,21 17,21L 6,21C 4.34315,21 3,19.6569 3,18L 3,7C 3,5.34315 4.34314,4 6,4L 6,3.00001C 6,2.44772 6.44771,2.00001 7,2.00001 Z M 15,4L 16,4L 16,2.99999L 15,2.99999L 15,4 Z M 8,4L 8,3L 7,3L 7,4L 8,4 Z M 6,5.00001C 4.89543,5.00001 4,5.89544 4,7.00001L 4,8.00001L 19,8.00001L 19,7.00001C 19,5.89544 18.1046,5.00001 17,5.00001L 6,5.00001 Z M 4,18C 4,19.1046 4.89543,20 6,20L 17,20C 18.1046,20 19,19.1046 19,18L 19,9.00001L 4,9.00001L 4,18 Z M 12,13L 17,13L 17,18L 12,18L 12,13 Z M 13,14L 13,17L 16,17L 16,14L 13,14 Z"
-                                                Style="{DynamicResource PathIconContentControlStyle}" />
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Content="{IconPacks:FontAwesomeLight Kind=CalendarDay}"
+                                                Style="{DynamicResource MahApps.Styles.ContentControl.PathIcon}" />
                             </Button>
 
                             <DatePickerTextBox x:Name="PART_TextBox"
                                                Grid.Row="1"
                                                Grid.Column="0"
                                                Margin="0,1"
+                                               Padding="0,1"
                                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                               VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                               VerticalContentAlignment="Center"
                                                Controls:TextBoxHelper.Watermark="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:TextBoxHelper.Watermark), Mode=OneWay}"
                                                Controls:TextBoxHelper.WatermarkAlignment="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:TextBoxHelper.WatermarkAlignment), Mode=OneWay}"
                                                Controls:TextBoxHelper.WatermarkTrimming="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:TextBoxHelper.WatermarkTrimming), Mode=OneWay}"
@@ -198,9 +206,31 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Validation.ErrorTemplate" Value="{DynamicResource ValidationErrorTemplate}" />
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel>
+                        <AdornedElementPlaceholder x:Name="textBox" />
+                        <Border Background="Red"
+                                BorderBrush="Red"
+                                BorderThickness="1,0,1,1">
+                            <TextBlock Foreground="White"
+                                       Text="{Binding [0].ErrorContent}" />
+                        </Border>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
         <Setter Property="vh:DependencyProperties.FloatingWatermark" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:TextBoxHelper.Watermark)}" />
         <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource Self}, Path=Foreground}" />
+        <Setter Property="vh:DependencyProperties.PrimaryValue" Value="{Binding Path=(vh:DependencyProperties.PrimaryValue), RelativeSource={RelativeSource Self}}" />
+        <Setter Property="vh:DependencyProperties.SecondaryValue" Value="{Binding Path=(vh:DependencyProperties.PrimaryValue), RelativeSource={RelativeSource Self}}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=(vh:DependencyProperties.AlternateValueTrigger), RelativeSource={RelativeSource Self}, Converter={StaticResource IsNullConverter}}"
+                         Value="False">
+                <Setter Property="SelectedDate" Value="{Binding Path=(vh:DependencyProperties.SecondaryValue), RelativeSource={RelativeSource Self}}" />
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="MetroDatePickerTextBox"

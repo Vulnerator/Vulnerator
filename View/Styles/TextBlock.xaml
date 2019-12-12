@@ -17,6 +17,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
     <Style x:Key="HyperlinkStatusBarItemStyle"
            TargetType="StatusBarItem">
         <Style.Triggers>
@@ -24,6 +25,15 @@
                 <Setter Property="Foreground" Value="{DynamicResource AccentColorBrush}" />
             </Trigger>
         </Style.Triggers>
+    </Style>
+
+    <Style x:Key="ExpanderHeaderTextBlockStyle"
+           TargetType="{x:Type TextBlock}">
+        <Setter Property="Foreground" Value="{DynamicResource LabelTextBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="5,0" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 
 </ResourceDictionary>

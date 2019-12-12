@@ -223,7 +223,8 @@
                                     </Grid.ColumnDefinitions>
                                     <CheckBox x:Name="typeAccreditationCheckBox"
                                               Margin="0,5,5,6"
-                                              VerticalAlignment="Bottom">
+                                              VerticalAlignment="Bottom"
+                                              Style="{StaticResource CustomCheckBox}">
                                         <TextBlock Text="Type Authorization"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>
@@ -329,19 +330,22 @@
                                                            TextAlignment="Right"
                                                            TextTrimming="CharacterEllipsis" />
                                                 <CheckBox Grid.Row="6"
-                                                          Grid.ColumnSpan="2">
+                                                          Grid.ColumnSpan="2"
+                                                          Style="{StaticResource CustomCheckBox}">
                                                     <TextBlock Text="Is Baseline Location"
                                                                TextTrimming="CharacterEllipsis" />
                                                 </CheckBox>
                                                 <CheckBox Grid.Row="6"
                                                           Grid.Column="2"
-                                                          Grid.ColumnSpan="2">
+                                                          Grid.ColumnSpan="2"
+                                                          Style="{StaticResource CustomCheckBox}">
                                                     <TextBlock Text="Is Deployment Location"
                                                                TextTrimming="CharacterEllipsis" />
                                                 </CheckBox>
                                                 <CheckBox Grid.Row="6"
                                                           Grid.Column="4"
-                                                          Grid.ColumnSpan="2">
+                                                          Grid.ColumnSpan="2"
+                                                          Style="{StaticResource CustomCheckBox}">
                                                     <TextBlock Text="Is Test Location"
                                                                TextTrimming="CharacterEllipsis" />
                                                 </CheckBox>
@@ -391,7 +395,8 @@
                                                 Style="{StaticResource HeaderedDatePickerStyle}" />
                                     <CheckBox Grid.Row="2"
                                               Margin="0,5,5,6"
-                                              VerticalAlignment="Bottom">
+                                              VerticalAlignment="Bottom"
+                                              Style="{StaticResource CustomCheckBox}">
                                         <TextBlock Text="Has Authorization Documentation"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>
@@ -459,19 +464,22 @@
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <CheckBox Grid.Row="0"
-                                              Margin="0,5,5,6">
+                                              Margin="0,5,5,6"
+                                              Style="{StaticResource CustomCheckBox}">
                                         <TextBlock Text="FISMA Reportable"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>
                                     <CheckBox Grid.Row="0"
                                               Grid.Column="1"
-                                              Margin="0,5,0,6">
+                                              Margin="0,5,0,6"
+                                              Style="{StaticResource CustomCheckBox}">
                                         <TextBlock Text="ERS Reportable"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>
                                     <CheckBox Grid.Row="1"
                                               Margin="0,5,5,6"
-                                              VerticalAlignment="Bottom">
+                                              VerticalAlignment="Bottom"
+                                              Style="{StaticResource CustomCheckBox}">
                                         <TextBlock Text="Security Review Completed"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>
@@ -482,7 +490,8 @@
                                                 Style="{StaticResource HeaderedDatePickerStyle}" />
                                     <CheckBox Grid.Row="2"
                                               Margin="0,5,5,6"
-                                              VerticalAlignment="Bottom">
+                                              VerticalAlignment="Bottom"
+                                              Style="{StaticResource CustomCheckBox}">
                                         <TextBlock Text="Privacy Impact Assessment (PIA) Required"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>
@@ -493,7 +502,8 @@
                                                 Style="{StaticResource HeaderedDatePickerStyle}" />
                                     <CheckBox Grid.Row="3"
                                               Margin="0,5,5,6"
-                                              VerticalAlignment="Bottom">
+                                              VerticalAlignment="Bottom"
+                                              Style="{StaticResource CustomCheckBox}">
                                         <TextBlock Text="eAuthentication Risk Assessent (ERA) Required"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>
@@ -511,13 +521,15 @@
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <CheckBox Grid.ColumnSpan="2"
-                                              Margin="0,15,5,6">
+                                              Margin="0,15,5,6"
+                                              Style="{StaticResource CustomCheckBox}">
                                         <TextBlock Text="Contingency Plan Required"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>
                                     <CheckBox x:Name="contingencyPlanTestedCheckBox"
                                               Grid.Column="2"
-                                              Margin="0,15,5,6">
+                                              Margin="0,15,5,6"
+                                              Style="{StaticResource CustomCheckBox}">
                                         <TextBlock Text="Contingency Plan Tested"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>
@@ -857,11 +869,11 @@
                                                                 <TextBlock Text="Select all overlays required for the system (if applicable)"
                                                                            TextWrapping="Wrap" />
                                                             </Canvas.ToolTip>
-                                                            <IconPacks:PackIconFontAwesome Grid.Column="1"
-                                                                                           Height="14"
-                                                                                           Margin="5,0"
-                                                                                           VerticalAlignment="Center"
-                                                                                           Kind="QuestionCircleRegular" />
+                                                            <IconPacks:PackIconFontAwesomeLight Grid.Column="1"
+                                                                                                Height="14"
+                                                                                                Margin="5,0"
+                                                                                                VerticalAlignment="Center"
+                                                                                                Kind="QuestionCircle" />
                                                         </Canvas>
                                                     </Grid>
                                                 </DataGridTextColumn.Header>
@@ -891,11 +903,11 @@
                                                                 <TextBlock Text="Select all executive orders or overarching policies that define the impact of data loss / breach (if applicable)"
                                                                            TextWrapping="Wrap" />
                                                             </Canvas.ToolTip>
-                                                            <IconPacks:PackIconFontAwesome Grid.Column="1"
-                                                                                           Height="14"
-                                                                                           Margin="5,0"
-                                                                                           VerticalAlignment="Center"
-                                                                                           Kind="QuestionCircleRegular" />
+                                                            <IconPacks:PackIconFontAwesomeLight Grid.Column="1"
+                                                                                                Height="14"
+                                                                                                Margin="5,0"
+                                                                                                VerticalAlignment="Center"
+                                                                                                Kind="QuestionCircle" />
                                                         </Canvas>
                                                     </Grid>
                                                 </DataGridTextColumn.Header>
@@ -909,7 +921,8 @@
                                               IsEditable="True"
                                               Style="{StaticResource HeaderedComboBoxStyle}" />
                                     <CheckBox x:Name="clearanceRequirementCheckBox"
-                                              Margin="0,16,0,10">
+                                              Margin="0,16,0,10"
+                                              Style="{StaticResource CustomCheckBox}">
                                         <TextBlock Text="Clearance requirements vary by role"
                                                    TextTrimming="CharacterEllipsis" />
                                     </CheckBox>
@@ -941,11 +954,11 @@
                                                                 <TextBlock Text="Select all interconnected systems which could elevate the impact level (if applicable)"
                                                                            TextWrapping="Wrap" />
                                                             </Canvas.ToolTip>
-                                                            <IconPacks:PackIconFontAwesome Grid.Column="1"
-                                                                                           Height="14"
-                                                                                           Margin="5,0"
-                                                                                           VerticalAlignment="Center"
-                                                                                           Kind="QuestionCircleRegular" />
+                                                            <IconPacks:PackIconFontAwesomeLight Grid.Column="1"
+                                                                                                Height="14"
+                                                                                                Margin="5,0"
+                                                                                                VerticalAlignment="Center"
+                                                                                                Kind="QuestionCircle" />
                                                         </Canvas>
                                                     </Grid>
                                                 </DataGridTextColumn.Header>
@@ -975,11 +988,11 @@
                                                                 <TextBlock Text="Select all organizations involved in the Joint Authorization (if applicable)"
                                                                            TextWrapping="Wrap" />
                                                             </Canvas.ToolTip>
-                                                            <IconPacks:PackIconFontAwesome Grid.Column="1"
-                                                                                           Height="14"
-                                                                                           Margin="5,0"
-                                                                                           VerticalAlignment="Center"
-                                                                                           Kind="QuestionCircleRegular" />
+                                                            <IconPacks:PackIconFontAwesomeLight Grid.Column="1"
+                                                                                                Height="14"
+                                                                                                Margin="5,0"
+                                                                                                VerticalAlignment="Center"
+                                                                                                Kind="QuestionCircle" />
                                                         </Canvas>
                                                     </Grid>
                                                 </DataGridTextColumn.Header>
@@ -989,7 +1002,8 @@
                                 </StackPanel>
                                 <CheckBox Grid.Row="1"
                                           Grid.ColumnSpan="2"
-                                          Margin="0,0,5,5">
+                                          Margin="0,0,5,5"
+                                          Style="{StaticResource CustomCheckBox}">
                                     <TextBlock Text="Data loss / breach from multiple sources creates an aggregation condition that heightens risk"
                                                TextWrapping="Wrap" />
                                 </CheckBox>
@@ -1006,32 +1020,39 @@
                                 </Label>
                             </Expander.Header>
                             <StackPanel>
-                                <CheckBox Margin="0,0,0,5">
+                                <CheckBox Margin="0,0,0,5"
+                                          Style="{StaticResource CustomCheckBox}">
                                     <TextBlock Text="Involves intelligence activities"
                                                TextWrapping="Wrap" />
 
                                 </CheckBox>
-                                <CheckBox Margin="0,0,0,5">
+                                <CheckBox Margin="0,0,0,5"
+                                          Style="{StaticResource CustomCheckBox}">
                                     <TextBlock Text="Involves cryptologic activities relating to national security"
                                                TextWrapping="Wrap" />
                                 </CheckBox>
-                                <CheckBox Margin="0,0,0,5">
+                                <CheckBox Margin="0,0,0,5"
+                                          Style="{StaticResource CustomCheckBox}">
                                     <TextBlock Text="Involves command and control of military forces"
                                                TextWrapping="Wrap" />
                                 </CheckBox>
-                                <CheckBox Margin="0,0,0,5">
+                                <CheckBox Margin="0,0,0,5"
+                                          Style="{StaticResource CustomCheckBox}">
                                     <TextBlock Text="Involves equipment that is an integral part of a weapon or weapons system"
                                                TextWrapping="Wrap" />
                                 </CheckBox>
-                                <CheckBox Margin="0,0,0,5">
+                                <CheckBox Margin="0,0,0,5"
+                                          Style="{StaticResource CustomCheckBox}">
                                     <TextBlock Text="Is critical to the direct fulfillment of military or intelligence missions"
                                                TextWrapping="Wrap" />
                                 </CheckBox>
-                                <CheckBox Margin="0,0,0,5">
+                                <CheckBox Margin="0,0,0,5"
+                                          Style="{StaticResource CustomCheckBox}">
                                     <TextBlock Text="Information system is used for routine administrative and business applications (e.g. payroll, finance, logistics, and personnel management applications)"
                                                TextWrapping="Wrap" />
                                 </CheckBox>
-                                <CheckBox Margin="0,0,0,5">
+                                <CheckBox Margin="0,0,0,5"
+                                          Style="{StaticResource CustomCheckBox}">
                                     <TextBlock Text="Information System is protected at all times by procedures established for information that has been specifically authorized under criteria established by an Executive Order or an Act of Congress to be kept classified in the interest of national defense or foreign policy"
                                                TextWrapping="Wrap" />
                                 </CheckBox>
@@ -1241,13 +1262,15 @@
                                                 <ColumnDefinition />
                                                 <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
-                                            <CheckBox Margin="5,5,5,10">
+                                            <CheckBox Margin="5,5,5,10"
+                                                      Style="{StaticResource CustomCheckBox}">
                                                 <TextBlock Text="Inheritable"
                                                            TextTrimming="CharacterEllipsis" />
                                             </CheckBox>
                                             <CheckBox x:Name="inheritedCheckBox"
                                                       Grid.Column="1"
-                                                      Margin="0,5,5,10">
+                                                      Margin="0,5,5,10"
+                                                      Style="{StaticResource CustomCheckBox}">
                                                 <TextBlock Text="Inherited"
                                                            TextTrimming="CharacterEllipsis" />
                                             </CheckBox>
@@ -1301,12 +1324,14 @@
                             </Label>
                         </Expander.Header>
                         <StackPanel>
-                            <CheckBox Margin="0,0,5,5">
+                            <CheckBox Margin="0,0,5,5"
+                                      Style="{StaticResource CustomCheckBox}">
                                 <TextBlock Text="Inheritable"
                                            TextTrimming="CharacterEllipsis" />
                             </CheckBox>
                             <CheckBox x:Name="bulkInheritedCheckBox"
-                                      Margin="0,0,5,5">
+                                      Margin="0,0,5,5"
+                                      Style="{StaticResource CustomCheckBox}">
                                 <TextBlock Text="Inherited"
                                            TextTrimming="CharacterEllipsis" />
                             </CheckBox>
@@ -1407,7 +1432,8 @@
                             </Label>
                         </Expander.Header>
                         <StackPanel>
-                            <CheckBox Margin="0,0,5,5">
+                            <CheckBox Margin="0,0,5,5"
+                                      Style="{StaticResource CustomCheckBox}">
                                 <TextBlock Text="Completed" />
                             </CheckBox>
                             <DatePicker Margin="0,0,5,5"

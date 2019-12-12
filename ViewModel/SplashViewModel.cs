@@ -14,7 +14,7 @@ namespace Vulnerator.ViewModel
         private bool isPersistent = false;
         public bool IsPersistent
         {
-            get { return isPersistent; }
+            get => isPersistent;
             set
             {
                 if (isPersistent != value)
@@ -28,7 +28,7 @@ namespace Vulnerator.ViewModel
         private bool isPortable = false;
         public bool IsPortable
         {
-            get { return isPortable; }
+            get => isPortable;
             set
             {
                 if (isPortable != value)
@@ -42,7 +42,7 @@ namespace Vulnerator.ViewModel
         private string databasePath;
         public string DatabasePath
         {
-            get { return databasePath; }
+            get => databasePath;
             set
             {
                 if (databasePath != value)
@@ -56,7 +56,7 @@ namespace Vulnerator.ViewModel
         private string errorVisibility = "Collapsed";
         public string ErrorVisibility
         {
-            get { return errorVisibility; }
+            get => errorVisibility;
             set
             {
                 if (errorVisibility != value)
@@ -70,7 +70,7 @@ namespace Vulnerator.ViewModel
         private string errorText;
         public string ErrorText
         {
-            get { return errorText; }
+            get => errorText;
             set
             {
                 if (errorText != value)
@@ -81,8 +81,7 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        public RelayCommand BrowseForDatabaseCommand
-        { get { return new RelayCommand(BrowseForDatabase); } }
+        public RelayCommand BrowseForDatabaseCommand => new RelayCommand(BrowseForDatabase);
 
         private void BrowseForDatabase()
         {
@@ -96,8 +95,7 @@ namespace Vulnerator.ViewModel
             DatabasePath = fileName;
         }
 
-        public RelayCommand CreateDatabaseCommand
-        { get { return new RelayCommand(CreateDatabase); } }
+        public RelayCommand CreateDatabaseCommand => new RelayCommand(CreateDatabase);
 
         private void CreateDatabase()
         {
@@ -112,8 +110,7 @@ namespace Vulnerator.ViewModel
             DatabasePath = fileName;
         }
 
-        public RelayCommand<MetroWindow> LaunchCommand
-        { get { return new RelayCommand<MetroWindow>(Launch); } }
+        public RelayCommand<MetroWindow> LaunchCommand => new RelayCommand<MetroWindow>(Launch);
 
         private void Launch(MetroWindow metroWindow)
         {

@@ -19,7 +19,7 @@ namespace Vulnerator.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -70,10 +70,43 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM
+        ///	MitigationsOrConditions
+        ///WHERE
+        ///	MitigationOrCondition_ID = @MitigationOrCondition_ID;.
+        /// </summary>
+        internal static string DeleteMitigation {
+            get {
+                return ResourceManager.GetString("DeleteMitigation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM
+        ///	Groups_MitigationsOrConditions
+        ///WHERE
+        ///	MitigationOrCondition_ID = @MitigationOrCondition_ID;.
+        /// </summary>
+        internal static string DeleteMitigationGroupMapping {
+            get {
+                return ResourceManager.GetString("DeleteMitigationGroupMapping", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM UniqueFindings WHERE Unique_Finding_ID = @Unique_Finding_ID;.
+        /// </summary>
+        internal static string DeleteUniqueFinding {
+            get {
+                return ResourceManager.GetString("DeleteUniqueFinding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DELETE FROM 
-        ///    Vulnerabilities
+        ///		Vulnerabilities
         ///WHERE 
-        ///    Vulnerability_ID IS @Vulnerability_ID;.
+        ///		Vulnerability_ID IS @Vulnerability_ID;.
         /// </summary>
         internal static string DeleteVulnerability {
             get {
@@ -100,7 +133,28 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Groups VALUES (NULL, @Group_Name, @Group_Tier, &apos;False&apos;, NULL, NULL);.
+        ///   Looks up a localized string similar to INSERT INTO
+        ///    Groups
+        ///VALUES (
+        ///        NULL,
+        ///        @Name,
+        ///        @Acronym,
+        ///        @Group_Tier,
+        ///        @Is_Accreditation,
+        ///        @Accreditation_eMASS_ID,
+        ///        @IsPlatform,
+        ///        @Organization_ID,
+        ///        @Confidentiality_ID,
+        ///        @Integrity_ID,
+        ///        @Availability_ID,
+        ///        @SystemCategorization_ID,
+        ///        @AccreditationVersion,
+        ///        @CybersafeGrade,
+        ///        @FISCAM_Applies,
+        ///        @ControlSelection_ID,
+        ///        @HasForeignNationals,
+        ///        @SystemType,
+        ///        @R [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InsertGroup {
             get {
@@ -139,7 +193,6 @@ namespace Vulnerator.Properties {
         ///   Looks up a localized string similar to INSERT INTO MitigationsOrConditions 
         ///VALUES (
         ///	NULL, 
-        ///	@Vulnerability_ID, 
         ///	@Impact_Description, 
         ///	@Predisposing_Conditions, 
         ///	@Technical_Mitigation, 
@@ -161,6 +214,15 @@ namespace Vulnerator.Properties {
         internal static string InsertMitigationOrCondition {
             get {
                 return ResourceManager.GetString("InsertMitigationOrCondition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO MitigationsOrConditions DEFAULT VALUES;.
+        /// </summary>
+        internal static string InsertMitigationsOrConditionsDefaultValues {
+            get {
+                return ResourceManager.GetString("InsertMitigationsOrConditionsDefaultValues", resourceCulture);
             }
         }
         
@@ -268,7 +330,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO HardwareGroups VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT Group_ID FROM Groups WHERE Group_Name = @Group_Name));.
+        ///   Looks up a localized string similar to INSERT INTO HardwareGroups VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT Group_ID FROM Groups WHERE Name = @Name));.
         /// </summary>
         internal static string MapHardwareToGroup {
             get {
@@ -313,7 +375,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Groups_MitigationsOrConditions VALUES (@MitigationOrCondition_ID, (SELECT Group_ID FROM Groups WHERE Group_Name = @Group_Name));.
+        ///   Looks up a localized string similar to INSERT INTO GroupsMitigationsOrConditions VALUES (@MitigationOrCondition_ID, @Group_ID, @Vulnerability_ID);.
         /// </summary>
         internal static string MapMitigationToGroup {
             get {
@@ -466,11 +528,20 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to (?:\n){2,}(?:\t){2,}.
+        ///   Looks up a localized string similar to (?:(\r?)\n){2,}(?:\t){2,}.
         /// </summary>
         internal static string RegexExcessiveNewLineAndTab {
             get {
                 return ResourceManager.GetString("RegexExcessiveNewLineAndTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (?:\r)*\n\s{4,}.
+        /// </summary>
+        internal static string RegexIndentedMidlineNewLine {
+            get {
+                return ResourceManager.GetString("RegexIndentedMidlineNewLine", resourceCulture);
             }
         }
         
@@ -502,6 +573,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (?:(?&lt;!\r\n)(?&lt;=[^(\r)])(?:\r\n)(?=[a-z0-9])|(?:(?&lt;!\r)\n)(?=[a-z0-9])).
+        /// </summary>
+        internal static string RegexMidlineNewLine {
+            get {
+                return ResourceManager.GetString("RegexMidlineNewLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to (?&lt;=Release: )\d+(?=\s).
         /// </summary>
         internal static string RegexRawStigRelease {
@@ -529,20 +609,29 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (?:(?&lt;=\s)\n(?=\s|$)).
+        /// </summary>
+        internal static string RegexTrailingNewLine {
+            get {
+                return ResourceManager.GetString("RegexTrailingNewLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT Source_Name,
-        ///    Vulnerabilities.Vulnerability_ID,
-        ///    Vulnerability_Group_ID,
-        ///    Unique_Vulnerability_Identifier,
-        ///    Vulnerability_Version,
-        ///    Raw_Risk,
-        ///    Vulnerability_Title,
-        ///    Vulnerability_Description,
-        ///    Check_Content,
-        ///    Fix_Text,
-        ///    GROUP_CONCAT(DISTINCT CCI) AS CCIs
+        ///		Vulnerabilities.Vulnerability_ID,
+        ///		Vulnerability_Group_ID,
+        ///		Unique_Vulnerability_Identifier,
+        ///		Vulnerability_Version,
+        ///		Raw_Risk,
+        ///		Vulnerability_Title,
+        ///		Vulnerability_Description,
+        ///		Check_Content,
+        ///		Fix_Text,
+        ///		GROUP_CONCAT(DISTINCT CCI) AS CCIs
         ///FROM Vulnerabilities
         ///LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
-        ///LEFT JOIN VulnerabilitySources ON Vulnerabiliti [rest of string was truncated]&quot;;.
+        ///LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySour [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SelectAnsibleTowerData {
             get {
@@ -552,22 +641,23 @@ namespace Vulnerator.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///    Unique_Vulnerability_Identifier,
-        ///    Vulnerability_Version,
-        ///    Vulnerability_Title,
-        ///    Vulnerability_Description,
-        ///    Source_Name,
-        ///    Source_Version,
-        ///    Source_Release, 
-        ///    Comments, 
-        ///    Finding_Details,
-        ///    Raw_Risk, 
-        ///    Status,
-        ///    Displayed_Software_Name,
-        ///    GROUP_CONCAT(DISTINCt Reference) AS Reference,
-        ///    GROUP_CONCAT(DISTINCT Scan_IP) AS IPs,
-        ///    GROUP_CONCAT(DISTINCT (Control_Family || &apos;-&apos; || Control_Number || &apos;.&apos; || Enhancement)) AS NIST_Controls
-        ///FROM Vulnerabilit [rest of string was truncated]&quot;;.
+        ///		Unique_Vulnerability_Identifier,
+        ///		Vulnerability_Version,
+        ///		Vulnerability_Title,
+        ///		Vulnerability_Description,
+        ///		Source_Name,
+        ///		Source_Version,
+        ///		Source_Release, 
+        ///		Comments, 
+        ///		Finding_Details,
+        ///		Raw_Risk, 
+        ///		Status,
+        ///		Displayed_Software_Name,
+        ///		GROUP_CONCAT(DISTINCt Reference) AS Reference,
+        ///		GROUP_CONCAT(DISTINCT Scan_IP) AS IPs,
+        ///		GROUP_CONCAT(DISTINCT (Control_Family || &apos;-&apos; || Control_Number || &apos;.&apos; || Enhancement)) AS NIST_Controls
+        ///FROM Vulnerabilities
+        ///LEFT JOIN UniqueFindings  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SelectGroupedPoamVulnerabilities {
             get {
@@ -577,10 +667,10 @@ namespace Vulnerator.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT 
-        ///    Host_Name,
-        ///    FQDN,
-        ///    NetBIOS,
-        ///    Scan_IP
+        ///		Host_Name,
+        ///		FQDN,
+        ///		NetBIOS,
+        ///		Scan_IP
         ///FROM Hardware
         ///WHERE Hardware_ID = @Hardware_ID;.
         /// </summary>
@@ -592,20 +682,20 @@ namespace Vulnerator.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT 
-        ///    UniqueFindings.Hardware_ID,
-        ///    Hardware.Role,
-        ///    Hardware.Displayed_Host_Name,
-        ///    Hardware.FQDN,
-        ///    GROUP_CONCAT(DISTINCT IP_Address) AS IpAddresses,
-        ///    GROUP_CONCAT(DISTINCT MAC_Address) AS MacAddresses,
-        ///    UniqueFindings.Classification,
-        ///    UniqueFindings.Technology_Area,
-        ///    UniqueFindings.Web_DB_Site,
-        ///    UniqueFindings.Web_DB_Instance,
-        ///    VulnerabilitySources.Source_Name,
-        ///    VulnerabilitySources.Source_Version,
-        ///    VulnerabilitySources.Source_Release,
-        ///    Vulnerability [rest of string was truncated]&quot;;.
+        ///		UniqueFindings.Hardware_ID,
+        ///		Hardware.Role,
+        ///		Hardware.Displayed_Host_Name,
+        ///		Hardware.FQDN,
+        ///		GROUP_CONCAT(DISTINCT IP_Address) AS IpAddresses,
+        ///		GROUP_CONCAT(DISTINCT MAC_Address) AS MacAddresses,
+        ///		UniqueFindings.Classification,
+        ///		UniqueFindings.Technology_Area,
+        ///		UniqueFindings.Web_DB_Site,
+        ///		UniqueFindings.Web_DB_Instance,
+        ///		VulnerabilitySources.Source_Name,
+        ///		VulnerabilitySources.Source_Version,
+        ///		VulnerabilitySources.Source_Release,
+        ///		VulnerabilitySources.Source_Secondary_Ide [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SelectHardwareCklCreationData {
             get {
@@ -623,6 +713,36 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT
+        ///			 Vulnerability_Title,
+        ///			 Vulnerability_Description,
+        ///			 Instance_Identifier,
+        ///			 DOD_AssessmentProcedureMapping,
+        ///			 Unique_Vulnerability_Identifier,
+        ///			 Estimated_Completion_Date,
+        ///			 Source_Name,
+        ///			 Mitigated_Status,
+        ///			 Raw_Risk,
+        ///			 Displayed_Host_Name,
+        ///			 Displayed_Software_Name,
+        ///			 Comments,
+        ///			 Finding_Details,
+        ///			 Technical_Mitigation,
+        ///			 Predisposing_Conditions,
+        ///			 Severity_Pervasiveness,
+        ///			 Threat_Relevance,
+        ///			 Risk_Statement,
+        ///			 Likelihood,
+        ///			 Impact,
+        ///			  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SelectUngroupedVulnerabilities {
+            get {
+                return ResourceManager.GetString("SelectUngroupedVulnerabilities", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT Unique_Vulnerability_Identifier
         ///FROM Vulnerabilities
         ///LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
@@ -636,15 +756,15 @@ namespace Vulnerator.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///    Vulnerabilities.Vulnerability_ID
+        ///		Vulnerabilities.Vulnerability_ID
         ///FROM
-        ///    Vulnerabilities
+        ///		Vulnerabilities
         ///JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
         ///JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID
         ///WHERE 
-        ///    Published_Date IS NOT @Published_Date
+        ///		Published_Date IS NOT @Published_Date
         ///AND
-        ///    Source_Name IS @Source_Name.
+        ///		Source_Name IS @Source_Name.
         /// </summary>
         internal static string SelectVulnerabilitiesForDeletion {
             get {
@@ -654,13 +774,13 @@ namespace Vulnerator.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT 
-        ///    Unique_Vulnerability_Identifier, 
-        ///    Vulnerability_Version 
+        ///		Unique_Vulnerability_Identifier, 
+        ///		Vulnerability_Version 
         ///FROM Vulnerabilities 
         ///LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
         ///LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID
         ///WHERE 
-        ///    Source_Name = @Source_Name 
+        ///		Source_Name = @Source_Name 
         ///AND Source_Version = @Source_Version 
         ///AND Source_Release = @Source_Release;.
         /// </summary>
@@ -701,7 +821,7 @@ namespace Vulnerator.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///    Vulnerabilities.Vulnerability_ID
+        ///		Vulnerabilities.Vulnerability_ID
         ///FROM Vulnerabilities
         ///LEFT JOIN Vulnerabilities_VulnerabilitySources ON Vulnerabilities.Vulnerability_ID = Vulnerabilities_VulnerabilitySources.Vulnerability_ID
         ///LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySources.Vulnerability_Source_ID = VulnerabilitySources.Vulnerability_Source_ID
@@ -724,19 +844,20 @@ namespace Vulnerator.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT 
-        ///    Hardware.Role,
-        ///    Hardware.Displayed_Host_Name,
-        ///    Hardware.FQDN,
-        ///    GROUP_CONCAT(DISTINCT IP_Address) AS IpAddresses,
-        ///    GROUP_CONCAT(DISTINCT MAC_Address) AS MacAddresses,
-        ///    UniqueFindings.Classification,
-        ///    UniqueFindings.Technology_Area,
-        ///    UniqueFindings.Web_DB_Site,
-        ///    UniqueFindings.Web_DB_Instance,
-        ///    VulnerabilitySources.Source_Name,
-        ///    VulnerabilitySources.Source_Version,
-        ///    VulnerabilitySources.Source_Release,
-        ///    VulnerabilitySources.Source_Secondary_Identifi [rest of string was truncated]&quot;;.
+        ///		Hardware.Role,
+        ///		Hardware.Displayed_Host_Name,
+        ///		Hardware.FQDN,
+        ///		GROUP_CONCAT(DISTINCT IP_Address) AS IpAddresses,
+        ///		GROUP_CONCAT(DISTINCT MAC_Address) AS MacAddresses,
+        ///		UniqueFindings.Classification,
+        ///		UniqueFindings.Technology_Area,
+        ///		UniqueFindings.Web_DB_Site,
+        ///		UniqueFindings.Web_DB_Instance,
+        ///		VulnerabilitySources.Source_Name,
+        ///		VulnerabilitySources.Source_Version,
+        ///		VulnerabilitySources.Source_Release,
+        ///		VulnerabilitySources.Source_Secondary_Identifier,
+        ///		VulnerabilitySource [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TempStorage {
             get {
@@ -754,9 +875,27 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UPDATE Groups SET
+        ///                  Name = @Name,
+        ///                  Acronym = @Acronym,
+        ///                  Group_Tier = @Group_Tier,
+        ///                  Is_Accreditation = @Is_Accreditation,
+        ///                  Accreditation_eMASS_ID = @Accreditation_eMASS_ID,
+        ///                  IsPlatform = @IsPlatform,
+        ///                  Organization_ID = @Organization_ID,
+        ///                  Confidentiality_ID = @Confidentiality_ID,
+        ///                  Integrity_ID = @Integrity_ID,
+        ///                  Availability_ID = @Ava [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string UpdateGroup {
+            get {
+                return ResourceManager.GetString("UpdateGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to UPDATE MitigationsOrConditions 
         ///SET 
-        ///	Vulnerability_ID = @Vulnerability_ID, 
         ///	Impact_Description = @Impact_Description,
         ///	Predisposing_Conditions = @Predisposing_Conditions,
         ///	Technical_Mitigation = @Technical_Mitigation,
@@ -768,7 +907,8 @@ namespace Vulnerator.Properties {
         ///	Risk = @Risk,
         ///	Residual_Risk = @Residual_Risk,
         ///	Mitigated_Status = @Mitigated_Status,
-        ///	Expiratio [rest of string was truncated]&quot;;.
+        ///	Expiration_Date = @Expiration_Date,
+        ///Estimated_Com [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string UpdateMitigationOrCondition {
             get {
@@ -778,7 +918,7 @@ namespace Vulnerator.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to UPDATE RequiredReports SET 
-        ///    Is_Report_Selected = @Is_Report_Selected
+        ///		Is_Report_Selected = @Is_Report_Selected
         ///WHERE Required_Report_ID = @Required_Report_ID;.
         /// </summary>
         internal static string UpdateRequiredReportIsSelected {
@@ -816,6 +956,19 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UPDATE UniqueFindings
+        ///SET
+        ///	MitigationOrCondition_ID = @MitigationOrCondition_ID
+        ///WHERE
+        ///	Unique_Finding_ID = @Unique_Finding_ID;.
+        /// </summary>
+        internal static string UpdateUniqueFindingMitigationOrCondition {
+            get {
+                return ResourceManager.GetString("UpdateUniqueFindingMitigationOrCondition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to UPDATE Vulnerabilities SET Vulnerability_Title=@Vulnerability_Title, Vulnerability_Description = @Vulnerability_Description, Risk_Statement = @Risk_Statement, Fix_Text = @Fix_Text, Modified_Date = @Modified_Date, Fix_Published_Date = @Fix_Published_Date, Raw_Risk = @Raw_Risk, Vulnerability_Version = @Vulnerability_Version, Vulnerability_Release = @Vulnerability_Release WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier;.
         /// </summary>
         internal static string UpdateVulnerability {
@@ -826,12 +979,12 @@ namespace Vulnerator.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to UPDATE
-        ///    Vulnerabilities
+        ///		Vulnerabilities
         ///SET
-        ///    Modified_Date = @Modified_Date,
-        ///    Published_Date = @Published_Date
+        ///		Modified_Date = @Modified_Date,
+        ///		Published_Date = @Published_Date
         ///WHERE
-        ///    Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Version = @Vulnerability_Version AND Vulnerability_Release = @Vulnerability_Release).
+        ///		Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier AND Vulnerability_Version = @Vulnerability_Version AND Vulnerability_Release = @Vulnerability_Release).
         /// </summary>
         internal static string UpdateVulnerabilityDates {
             get {
@@ -877,11 +1030,11 @@ namespace Vulnerator.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to UPDATE 
-        ///    Vulnerabilities_VulnerabilitySources 
+        ///		Vulnerabilities_VulnerabilitySources 
         ///SET 
-        ///    Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release)
+        ///		Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = @Source_Version AND Source_Release = @Source_Release)
         ///WHERE
-        ///    Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = &apos;Version Unknown&apos;).
+        ///		Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name AND Source_Version = &apos;Version Unknown&apos;);.
         /// </summary>
         internal static string UpdateVulnerabilitySourceFromAcas {
             get {

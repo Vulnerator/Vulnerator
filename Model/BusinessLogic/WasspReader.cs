@@ -15,7 +15,7 @@ namespace Vulnerator.Model.BusinessLogic
     class WasspReader
     {
         private string fileNameWithoutPath = string.Empty;
-        private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
+        private bool UserPrefersHostName => bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier"));
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private DatabaseInterface databaseInterface = new DatabaseInterface();
 
@@ -62,7 +62,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters["Finding_Type"].Value = "WASSP";
-                        sqliteCommand.Parameters["Group_Name"].Value = "All";
+                        sqliteCommand.Parameters["Name"].Value = "All";
                         sqliteCommand.Parameters["Source_Name"].Value = "Windows Automated Security Scanning Program (WASSP)";
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         using (XmlReader xmlReader = XmlReader.Create(wasspFile, xmlReaderSettings))

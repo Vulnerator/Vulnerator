@@ -95,7 +95,6 @@ namespace Vulnerator
 
             string logPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             string logFile = logPath + @"\Vulnerator_v6_StartupErrorLog.txt";
-            string _exception = error.ToString();
 
             if (!Directory.Exists(logPath))
             { Directory.CreateDirectory(logPath); }

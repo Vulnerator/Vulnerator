@@ -454,7 +454,7 @@ namespace Vulnerator.Model.DataAccess
                                             sqliteCommand.Parameters.Add(new SQLiteParameter("Number", xmlReader.GetAttribute("number")));
                                             if (!xmlReader.GetAttribute("enhancement").Equals("0"))
                                             { sqliteCommand.Parameters.Add(new SQLiteParameter("Enhancement", xmlReader.GetAttribute("enhancement"))); }
-                                            sqliteCommand.Parameters.Add(new SQLiteParameter("DoD_AP", xmlReader.GetAttribute("dod-ap")));
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("DoD_AP", xmlReader.GetAttribute("dod-ap")?.Replace(" )", ")")));
                                             sqliteCommand.Parameters.Add(new SQLiteParameter("ControlIndicator", xmlReader.GetAttribute("indicator")));
                                             sqliteCommand.Parameters.Add(new SQLiteParameter("CCI", xmlReader.GetAttribute("cci")));
                                             break;
@@ -462,16 +462,15 @@ namespace Vulnerator.Model.DataAccess
                                     case "ImplementationGuidance":
                                         {
                                             string implementationGuidance = xmlReader.ObtainCurrentNodeValue(false);
-                                            Regex regex = new Regex(Properties.Resources.RegexExcessiveNewLineAndTab, RegexOptions.Singleline);
-                                            implementationGuidance = regex.Replace(implementationGuidance, Environment.NewLine + Environment.NewLine);
+                                            implementationGuidance =
+                                                implementationGuidance.SanitizeNewLines().InsertStartingBullet();
                                             sqliteCommand.Parameters.Add(new SQLiteParameter("ImplementationGuidance", implementationGuidance));
                                             break;
                                         }
                                     case "AssessmentProcedures":
                                         {
                                             string ap = xmlReader.ObtainCurrentNodeValue(false);
-                                            Regex regex = new Regex(Properties.Resources.RegexExcessiveNewLineAndTab, RegexOptions.Singleline);
-                                            ap = regex.Replace(ap, Environment.NewLine + Environment.NewLine);
+                                            ap = ap.SanitizeNewLines().InsertStartingBullet();
                                             sqliteCommand.Parameters.Add(new SQLiteParameter("AP_Text", ap));
                                             break;
                                         }

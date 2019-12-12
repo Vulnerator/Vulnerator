@@ -55,5 +55,40 @@ namespace Vulnerator.View.ViewHelper
 
         public static void SetShowCharacterCount(DependencyObject d, bool value)
         { d.SetValue(ShowCharacterCountProperty, value); }
+
+        public static readonly DependencyProperty PrimaryValueProperty = DependencyProperty.RegisterAttached(
+            "PrimaryValue",
+            typeof(object),
+            typeof(DependencyProperties),
+            new FrameworkPropertyMetadata(""));
+
+        public static object GetPrimaryValue(DependencyObject d)
+        { return d.GetValue(PrimaryValueProperty); }
+
+        public static void SetPrimaryValue(DependencyObject d, object value)
+        { d.SetValue(PrimaryValueProperty, value); }
+
+        public static readonly DependencyProperty SecondaryValueProperty = DependencyProperty.RegisterAttached(
+            "SecondaryValue",
+            typeof(object),
+            typeof(DependencyProperties),
+            new FrameworkPropertyMetadata(""));
+
+        public static object GetSecondaryValue(DependencyObject d)
+        { return d.GetValue(SecondaryValueProperty); }
+
+        public static void SetSecondaryValue(DependencyObject d, object value)
+        { d.SetValue(SecondaryValueProperty, value); }
+
+        public static readonly DependencyProperty AlternateValueTriggerProperty = DependencyProperty.RegisterAttached(
+            "AlternateValueTrigger",
+            typeof(object),
+            typeof(DependencyProperties));
+
+        public static object GetAlternateValueTrigger(DependencyObject d)
+        { return d.GetValue(AlternateValueTriggerProperty); }
+
+        public static void SetAlternateValueTrigger(DependencyObject d, object value)
+        { d.SetValue(AlternateValueTriggerProperty, value); }
     }
 }
