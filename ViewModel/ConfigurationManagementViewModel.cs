@@ -159,12 +159,9 @@ namespace Vulnerator.ViewModel
             get => _selectedGroup;
             set
             {
-                if (_selectedGroup != value)
-                {
-                    NewGroup = value != null ? null : new Group();
-                    _selectedGroup = value;
-                    RaisePropertyChanged("SelectedGroup");
-                }
+                if (_selectedGroup == value) return;
+                _selectedGroup = value;
+                RaisePropertyChanged("SelectedGroup");
             }
             
         }
@@ -176,12 +173,9 @@ namespace Vulnerator.ViewModel
             get { return _newGroup; }
             set
             {
-                if (_newGroup != value)
-                {
-                    SelectedGroup = value != null ? null : new Group();
-                    _newGroup = value;
-                    RaisePropertyChanged("NewGroup");
-                }
+                if (_newGroup == value) return;
+                _newGroup = value;
+                RaisePropertyChanged("NewGroup");
             }
         }
 
@@ -384,18 +378,16 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                if (SelectedGroup == null && NewGroup == null)
-                { return; }
+                if (SelectedGroup == null && NewGroup == null) return;
 
                 BackgroundWorker backgroundWorker = new BackgroundWorker();
                 if (SelectedGroup != null)
                 { backgroundWorker.DoWork += updateGroupBackgroundWorker_DoWork; }
-
-                if (NewGroup != null)
+                else
                 { backgroundWorker.DoWork += addGroupBackgroundWorker_DoWork; }
 
                 backgroundWorker.RunWorkerAsync();
-                backgroundWorker.RunWorkerCompleted += modifyGroupBackgroundWorker_RunWorkerCompleted;
+                backgroundWorker.RunWorkerCompleted += groupActionBackgroundWorker_RunWorkerCompleted;
                 backgroundWorker.Dispose();
             }
             catch (Exception exception)
@@ -421,11 +413,13 @@ namespace Vulnerator.ViewModel
                         sqliteCommand.Parameters["Name"].Value = SelectedGroup.Name;
                         sqliteCommand.Parameters["Acronym"].Value = SelectedGroup.Acronym;
                         sqliteCommand.Parameters["Group_Tier"].Value = SelectedGroup.Group_Tier;
-                        sqliteCommand.Parameters["Is_Accreditation"].Value = SelectedGroup.Is_Accreditation;
+                        sqliteCommand.Parameters["Is_Accreditation"].Value = SelectedGroup.Is_Accreditation ?? "False";
                         sqliteCommand.Parameters["Accreditation_eMASS_ID"].Value = SelectedGroup.Accreditation_eMASS_ID;
-                        sqliteCommand.Parameters["IsPlatform"].Value = SelectedGroup.IsPlatform;
+                        sqliteCommand.Parameters["IsPlatform"].Value = SelectedGroup.IsPlatform ?? "False";
                         databaseInterface.UpdateGroup(sqliteCommand);
                     }
+
+                    sQLiteTransaction.Commit();
                 }
             }
             catch (Exception exception)
@@ -452,14 +446,16 @@ namespace Vulnerator.ViewModel
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("Name", NewGroup.Name));
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("Acronym", NewGroup.Acronym));
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("Group_Tier", NewGroup.Group_Tier));
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("Is_Accreditation", NewGroup.Is_Accreditation));
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("Accreditation_eMASS_ID", NewGroup.Accreditation_eMASS_ID));
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("IsPlatform", NewGroup.IsPlatform));
+                        sqliteCommand.Parameters["Name"].Value = NewGroup.Name;
+                        sqliteCommand.Parameters["Acronym"].Value = NewGroup.Acronym;
+                        sqliteCommand.Parameters["Group_Tier"].Value = NewGroup.Group_Tier;
+                        sqliteCommand.Parameters["Is_Accreditation"].Value = NewGroup.Is_Accreditation ?? "False";
+                        sqliteCommand.Parameters["Accreditation_eMASS_ID"].Value = NewGroup.Accreditation_eMASS_ID;
+                        sqliteCommand.Parameters["IsPlatform"].Value = NewGroup.IsPlatform ?? "False";
                         databaseInterface.InsertGroup(sqliteCommand);
                     }
+
+                    sQLiteTransaction.Commit();
                 }
             }
             catch (Exception exception)
@@ -474,7 +470,87 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private void modifyGroupBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        public RelayCommand ClearSelectedGroupCommand => new RelayCommand(ClearSelectedGroup);
+
+        private void ClearSelectedGroup()
+        {
+            try
+            {
+                if (SelectedGroup == null) return;
+                SelectedGroup = null;
+                if (NewGroup != null) return;
+                NewGroup = new Group();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to clear selected group.");
+                throw;
+            }
+        }
+
+        public RelayCommand DeleteGroupCommand => new RelayCommand(DeleteGroupHandler);
+
+        private void DeleteGroupHandler()
+        {
+
+            try
+            {
+                if (SelectedGroup == null && Groups.Count(x => x.IsChecked) < 1) return;
+                BackgroundWorker backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += deleteGroupBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerCompleted += groupActionBackgroundWorker_RunWorkerCompleted;
+                backgroundWorker.RunWorkerAsync();
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                log.Error($"Unable to delete group \"{SelectedGroup.Name}\"");
+                log.Debug($"Exception details: {exception}");
+            }
+        }
+
+        private void deleteGroupBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+
+            try
+            {
+                using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
+                {
+                    using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                    {
+                        if (Groups.Count(x => x.IsChecked) > 0 )
+                        {
+                            foreach (Group group in Groups.Where(x => x.IsChecked))
+                            { DeleteGroup(group, sqliteCommand); }
+                        }
+                        else if (SelectedGroup != null)
+                        { DeleteGroup(SelectedGroup, sqliteCommand); }
+                    }
+                    // sqliteTransaction.Commit();
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Group deletion BackgroundWorker failed.");
+                throw;
+            }
+        }
+
+        private void DeleteGroup(Group group, SQLiteCommand sqliteCommand)
+        {
+
+            try
+            {
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Group_ID", group.Group_ID));
+            }
+            catch (Exception exception)
+            {
+                log.Error("Group deletion failed.");
+                throw;
+            }
+        }
+
+        private void groupActionBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
 
             try

@@ -356,8 +356,8 @@ namespace Vulnerator.Model.DataAccess
                     // CCI Table
                     "CCI",
                     // Groups Table
-                    "Group_ID", "Name", "Acronym", "Group_Tier", "Ia_Accreditation", "Accreditation_eMASS_ID", "IsPlatform", "Organization_ID",
-                    "Confidentiality_ID", "Integrity_ID", "Availability_ID", "System_Categorization_ID", "Accreditation_Version", "CybersafeGrade",
+                    "Group_ID", "Name", "Acronym", "Group_Tier", "Is_Accreditation", "Accreditation_eMASS_ID", "IsPlatform", "Organization_ID",
+                    "Confidentiality_ID", "Integrity_ID", "Availability_ID", "SystemCategorization_ID", "AccreditationVersion", "CybersafeGrade",
                     "FISCAM_Applies", "ControlSelection_ID", "HasForeignNationals", "SystemType", "RDTE_Zone", "StepOneQuestionnaire_ID", "SAP_ID",
                     "PIT_Determination_ID",
                     // FindingTypes Table
@@ -401,7 +401,7 @@ namespace Vulnerator.Model.DataAccess
                     "Score", "Scan_Date"
                 };
                 foreach (string parameter in parameters)
-                { sqliteCommand.Parameters.Add(new SQLiteParameter(parameter, string.Empty)); }
+                { sqliteCommand.Parameters.Add(new SQLiteParameter(parameter, DBNull.Value)); }
             }
             catch (Exception exception)
             {

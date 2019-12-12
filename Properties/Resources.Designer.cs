@@ -133,7 +133,28 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Groups VALUES (NULL, @Name, @Group_Tier, &apos;False&apos;, NULL, NULL);.
+        ///   Looks up a localized string similar to INSERT INTO
+        ///    Groups
+        ///VALUES (
+        ///        NULL,
+        ///        @Name,
+        ///        @Acronym,
+        ///        @Group_Tier,
+        ///        @Is_Accreditation,
+        ///        @Accreditation_eMASS_ID,
+        ///        @IsPlatform,
+        ///        @Organization_ID,
+        ///        @Confidentiality_ID,
+        ///        @Integrity_ID,
+        ///        @Availability_ID,
+        ///        @SystemCategorization_ID,
+        ///        @AccreditationVersion,
+        ///        @CybersafeGrade,
+        ///        @FISCAM_Applies,
+        ///        @ControlSelection_ID,
+        ///        @HasForeignNationals,
+        ///        @SystemType,
+        ///        @R [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InsertGroup {
             get {
