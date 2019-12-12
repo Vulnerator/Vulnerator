@@ -12,6 +12,7 @@ namespace Vulnerator.Model.Entity
         {
             NistControlsCCIs = new ObservableCollection<NistControlsCCI>();
             Vulnerabilities = new ObservableCollection<Vulnerability>();
+            GroupsCCIs = new ObservableCollection<GroupsCCIs>();
         }
 
         [Key]
@@ -40,5 +41,7 @@ namespace Vulnerator.Model.Entity
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Vulnerability> Vulnerabilities { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GroupsCCIs> GroupsCCIs { get; set; }
     }
 }

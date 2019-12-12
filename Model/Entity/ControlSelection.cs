@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace Vulnerator.Model.Entity
 {
     using System.Collections.Generic;
@@ -6,11 +8,13 @@ namespace Vulnerator.Model.Entity
     using System.ComponentModel.DataAnnotations.Schema;
 
     [Table("ControlSelection")]
-    public partial class ControlSelection
+    public partial class ControlSelection : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ControlSelection()
-        { Accreditations = new ObservableCollection<Accreditation>(); }
+        { Groups = new ObservableCollection<Group>(); }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -136,6 +140,6 @@ namespace Vulnerator.Model.Entity
         public string InheritableControlsJustification { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Accreditation> Accreditations { get; set; }
+        public virtual ICollection<Group> Groups { get; set; }
     }
 }

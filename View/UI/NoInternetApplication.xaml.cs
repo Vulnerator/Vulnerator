@@ -14,7 +14,7 @@ namespace Vulnerator.View.UI
 
         private void CloseClick(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

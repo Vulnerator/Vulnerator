@@ -92,7 +92,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to write CKL asset information."));
+                log.Error("Unable to write CKL asset information.");
                 throw exception;
             }
         }
@@ -116,7 +116,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to write CKL STIG information."));
+                log.Error("Unable to write CKL STIG information.");
                 throw exception;
             }
         }
@@ -132,7 +132,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to generate SI_DATA node."));
+                log.Error("Unable to generate SI_DATA node.");
                 throw exception;
             }
         }
@@ -197,7 +197,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to write CKL vulnerability node."));
+                log.Error("Unable to write CKL vulnerability node.");
                 throw exception;
             }
         }
@@ -213,7 +213,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to generate STIG_DATA node."));
+                log.Error("Unable to generate STIG_DATA node.");
                 throw exception;
             }
         }
@@ -236,7 +236,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to generate XmlWriterSettings."));
+                log.Error("Unable to generate XmlWriterSettings.");
                 throw exception;
             }
         }

@@ -25,11 +25,7 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        public string License
-        {
-            get
-            { return GetLicenseText(); }
-        }
+        public string License => GetLicenseText();
 
         public AboutViewModel()
         { }
@@ -50,10 +46,7 @@ namespace Vulnerator.ViewModel
             return licenseText;
         }
 
-        public RelayCommand<object> AboutLinksCommand
-        {
-            get { return new RelayCommand<object>(AboutLinks); }
-        }
+        public RelayCommand<object> AboutLinksCommand => new RelayCommand<object>(AboutLinks);
 
         private void AboutLinks(object param)
         {

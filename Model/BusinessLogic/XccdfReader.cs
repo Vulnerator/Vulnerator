@@ -42,7 +42,7 @@ namespace Vulnerator.Model.BusinessLogic
         private List<string> responsibilities = new List<string>();
         private List<string> iaControls = new List<string>();
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
-        private string[] persistentParameters = new string[] { "Group_Name", "Finding_Source_File_Name", "Source_Name" };
+        private string[] persistentParameters = new string[] { "Name", "Finding_Source_File_Name", "Source_Name" };
 
         public string ReadXccdfFile(Object.File file)
         {
@@ -82,7 +82,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "XCCDF"));
-                        sqliteCommand.Parameters["Group_Name"].Value = "All";
+                        sqliteCommand.Parameters["Name"].Value = "All";
                         sqliteCommand.Parameters.Add(new SQLiteParameter("FileName", fileNameWithoutPath));
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         using (XmlReader xmlReader = XmlReader.Create(file.FilePath, xmlReaderSettings))
@@ -334,7 +334,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to parse SCC XCCDF \"Rule\" node."));
+                log.Error("Unable to parse SCC XCCDF \"Rule\" node.");
                 throw exception;
             }
         }

@@ -11,7 +11,7 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public NistControl()
         {
-            AccreditationsNistControls = new HashSet<AccreditationsNistControl>();
+            GroupsCCIs = new HashSet<GroupsCCIs>();
             NistControlsAvailabilityLevels = new HashSet<NistControlsAvailabilityLevel>();
             NistControlsCAAs = new HashSet<NistControlsCAA>();
             NistControlsCCIs = new HashSet<NistControlsCCI>();
@@ -51,7 +51,7 @@ namespace Vulnerator.Model.Entity
         public string Monitoring_Frequency { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AccreditationsNistControl> AccreditationsNistControls { get; set; }
+        public virtual ICollection<GroupsCCIs> GroupsCCIs { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<NistControlsAvailabilityLevel> NistControlsAvailabilityLevels { get; set; }

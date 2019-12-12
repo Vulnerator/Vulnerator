@@ -12,25 +12,25 @@ namespace Vulnerator.Model.Object
             int intParseResult;
             if (int.TryParse(text, out intParseResult))
             {
-                this.DataType = CellValues.Number;
-                this.CellValue = new CellValue(text);
-                this.StyleIndex = index;
+                DataType = CellValues.Number;
+                CellValue = new CellValue(text);
+                StyleIndex = index;
             }
             else
             {
-                this.DataType = CellValues.InlineString;
+                DataType = CellValues.InlineString;
                 if (text.Contains(">"))
                 { text.Replace(">", "&gt;"); }
                 if (text.Contains("<"))
                 { text.Replace("<", "&lt;"); }
                 if (text.Length < 32767)
-                { this.InlineString = new InlineString { Text = new Text { Text = text } }; }
+                { InlineString = new InlineString { Text = new Text { Text = text } }; }
                 else if (text.Length > 32767 && !string.IsNullOrWhiteSpace(assetName))
                 {
                     string outputPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\AcasScanOutput_TextFiles";
                     string outputTextFile = outputPath + @"\" + pluginId + "_" + assetName + "_ScanOutput.txt";
 
-                    this.InlineString = new InlineString
+                    InlineString = new InlineString
                     {
                         Text = new Text
                         {
@@ -57,7 +57,7 @@ namespace Vulnerator.Model.Object
                     catch
                     { return; }
                 }
-                this.StyleIndex = index;
+                StyleIndex = index;
             }
         }
     }

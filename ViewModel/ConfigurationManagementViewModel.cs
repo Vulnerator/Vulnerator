@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Entity;
+using System.Data.SQLite;
 using System.Linq;
 using Vulnerator.Model.BusinessLogic;
 using Vulnerator.Model.DataAccess;
@@ -21,14 +22,14 @@ namespace Vulnerator.ViewModel
     {
         private DatabaseContext databaseContext;
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
-        private BackgroundWorker backgroundWorker;
         private VulnerabilitySource vulnerabilitySource;
         private string saveDirectory = string.Empty;
+        private DatabaseInterface databaseInterface = new DatabaseInterface();
 
         private List<Hardware> _hardwares;
         public List<Hardware> Hardwares
         {
-            get { return _hardwares; }
+            get => _hardwares;
             set
             {
                 if (_hardwares != value)
@@ -42,7 +43,7 @@ namespace Vulnerator.ViewModel
         private List<Software> _softwares;
         public List<Software> Softwares
         {
-            get { return _softwares; }
+            get => _softwares;
             set
             {
                 if (_softwares != value)
@@ -56,7 +57,7 @@ namespace Vulnerator.ViewModel
         private List<Contact> _contacts;
         public List<Contact> Contacts
         {
-            get { return _contacts; }
+            get => _contacts;
             set
             {
                 if (_contacts != value)
@@ -70,7 +71,7 @@ namespace Vulnerator.ViewModel
         private List<Group> _groups;
         public List<Group> Groups
         {
-            get { return _groups; }
+            get => _groups;
             set
             {
                 if (_groups != value)
@@ -81,24 +82,10 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private List<Accreditation> _accreditations;
-        public List<Accreditation> Accreditations
-        {
-            get { return _accreditations; }
-            set
-            {
-                if (_accreditations != value)
-                {
-                    _accreditations = value;
-                    RaisePropertyChanged("Accreditations");
-                }
-            }
-        }
-
         private List<VulnerabilitySource> _vulnerabilitySources;
         public List<VulnerabilitySource> VulnerabilitySources
         {
-            get { return _vulnerabilitySources; }
+            get => _vulnerabilitySources;
             set
             {
                 if (_vulnerabilitySources != value)
@@ -109,10 +96,10 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private List<PP> _pps;
-        public List<PP> PPS
+        private List<PPS> _pps;
+        public List<PPS> PPS
         {
-            get { return _pps; }
+            get => _pps;
             set
             {
                 if (_pps != value)
@@ -126,7 +113,7 @@ namespace Vulnerator.ViewModel
         private List<IP_Addresses> _ipAddresses;
         public List<IP_Addresses> IpAddresses
         {
-            get { return _ipAddresses; }
+            get => _ipAddresses;
             set
             {
                 if (_ipAddresses != value)
@@ -140,7 +127,7 @@ namespace Vulnerator.ViewModel
         private List<MAC_Addresses> _macAddresses;
         public List<MAC_Addresses> MacAddresses
         {
-            get { return _macAddresses; }
+            get => _macAddresses;
             set
             {
                 if (_macAddresses != value)
@@ -154,7 +141,7 @@ namespace Vulnerator.ViewModel
         private object _selectedHardware;
         public object SelectedHardware
         {
-            get { return _selectedHardware; }
+            get => _selectedHardware;
             set
             {
                 if (_selectedHardware != value)
@@ -165,10 +152,37 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private Group _selectedGroup;
+
+        public Group SelectedGroup
+        {
+            get => _selectedGroup;
+            set
+            {
+                if (_selectedGroup == value) return;
+                _selectedGroup = value;
+                RaisePropertyChanged("SelectedGroup");
+            }
+            
+        }
+
+        private Group _newGroup;
+
+        public Group NewGroup
+        {
+            get { return _newGroup; }
+            set
+            {
+                if (_newGroup == value) return;
+                _newGroup = value;
+                RaisePropertyChanged("NewGroup");
+            }
+        }
+
         private VulnerabilitySource _selectedVulnerabilitySource;
         public VulnerabilitySource SelectedVulnerabilitySource
         {
-            get { return _selectedVulnerabilitySource; }
+            get => _selectedVulnerabilitySource;
             set
             {
                 if (_selectedVulnerabilitySource != value)
@@ -189,7 +203,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to instantiate ConfigurationManagementViewModel."));
+                log.Error("Unable to instantiate ConfigurationManagementViewModel.");
                 log.Debug("Exception details:", exception);
             }
         }
@@ -203,7 +217,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to update MitigationsNistViewModel."));
+                log.Error("Unable to update MitigationsNistViewModel.");
                 log.Debug("Exception details:", exception);
             }
         }
@@ -229,7 +243,7 @@ namespace Vulnerator.ViewModel
                         .OrderBy(s => s.Displayed_Software_Name)
                         .AsNoTracking().ToList();
                     Contacts = databaseContext.Contacts
-                        .Include(c => c.Accreditations)
+                        .Include(c => c.Groups)
                         .Include(c => c.Certifications)
                         .Include(c => c.Groups)
                         .Include(c => c.Organization)
@@ -242,7 +256,6 @@ namespace Vulnerator.ViewModel
                     Groups = databaseContext.Groups
                         .Include(g => g.Hardwares)
                         .AsNoTracking().ToList();
-                    Accreditations = databaseContext.Accreditations.AsNoTracking().ToList();
                     VulnerabilitySources = databaseContext.VulnerabilitySources
                         .Where(vs => !vs.Source_Name.Contains("Nessus"))
                         .OrderBy(vs => vs.Source_Name)
@@ -255,11 +268,12 @@ namespace Vulnerator.ViewModel
                         .OrderBy(m => m.MAC_Address)
                         .AsNoTracking()
                         .ToList();
+                    NewGroup = new Group();
                 }
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to populate ConfigurationManagementView"));
+                log.Error("Unable to populate ConfigurationManagementView");
                 throw exception;
             }
         }
@@ -268,7 +282,7 @@ namespace Vulnerator.ViewModel
         { get { return new RelayCommand<object>(p => GenerateCkl(p)); } }
 
         private void GenerateCkl(object param)
-        { 
+        {
             try
             {
                 CommonOpenFileDialog commonOpenFileDialog = new CommonOpenFileDialog();
@@ -278,7 +292,7 @@ namespace Vulnerator.ViewModel
                 {
                     vulnerabilitySource = param as VulnerabilitySource;
                     saveDirectory = commonOpenFileDialog.FileName;
-                    backgroundWorker = new BackgroundWorker();
+                    BackgroundWorker backgroundWorker = new BackgroundWorker();
                     backgroundWorker.DoWork += generateCklBackgroundWorker_DoWork;
                     backgroundWorker.RunWorkerAsync();
                     backgroundWorker.Dispose();
@@ -286,13 +300,16 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to create CKL file."));
+                log.Error("Unable to create CKL file.");
                 log.Debug("Exception details:", exception);
+            }
+            finally
+            {
                 GuiFeedback guiFeedback = new GuiFeedback();
                 guiFeedback.SetFields(
-                   "Unable to generate the selected CKL for the select asset",
-                   "Collapsed",
-                   true);
+                    "Unable to generate the selected CKL for the select asset",
+                    "Collapsed",
+                    true);
                 Messenger.Default.Send(guiFeedback);
             }
         }
@@ -315,26 +332,25 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to generate CKL file background worker."));
+                log.Error("Unable to generate CKL file background worker.");
                 log.Debug("Exception details:", exception);
             }
         }
 
-        public RelayCommand AssociateStigToHardwareCommand
-        { get { return new RelayCommand(AssociateStigToHardware); } }
+        public RelayCommand AssociateStigToHardwareCommand => new RelayCommand(AssociateStigToHardware);
 
         private void AssociateStigToHardware()
         { 
             try
             {
-                backgroundWorker = new BackgroundWorker();
+                BackgroundWorker backgroundWorker = new BackgroundWorker();
                 backgroundWorker.DoWork += associateStigToHardwareBackgroundWorker_DoWork;
                 backgroundWorker.RunWorkerAsync();
                 backgroundWorker.Dispose();
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to generate background worker for AssociateStigToHardware"));
+                log.Error("Unable to generate background worker for AssociateStigToHardware");
                 log.Debug("Exception details:", exception);
             }
         }
@@ -352,8 +368,200 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to associate STIG to Hardware"));
+                log.Error("Unable to associate STIG to Hardware");
                 log.Debug("Exception details:", exception);
+            }
+        }
+
+        public RelayCommand ModifyGroupCommand => new RelayCommand(ModifyGroup);
+        private void ModifyGroup()
+        {
+            try
+            {
+                if (SelectedGroup == null && NewGroup == null) return;
+
+                BackgroundWorker backgroundWorker = new BackgroundWorker();
+                if (SelectedGroup != null)
+                { backgroundWorker.DoWork += updateGroupBackgroundWorker_DoWork; }
+                else
+                { backgroundWorker.DoWork += addGroupBackgroundWorker_DoWork; }
+
+                backgroundWorker.RunWorkerAsync();
+                backgroundWorker.RunWorkerCompleted += groupActionBackgroundWorker_RunWorkerCompleted;
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to insert or update a group.");
+                log.Debug($"Exception details: {exception}");
+            }
+        }
+
+        private void updateGroupBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
+                { DatabaseBuilder.sqliteConnection.Open(); }
+
+                using (SQLiteTransaction sQLiteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
+                {
+                    using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                    {
+                        databaseInterface.InsertParameterPlaceholders(sqliteCommand);
+                        sqliteCommand.Parameters["Group_ID"].Value = SelectedGroup.Group_ID;
+                        sqliteCommand.Parameters["Name"].Value = SelectedGroup.Name;
+                        sqliteCommand.Parameters["Acronym"].Value = SelectedGroup.Acronym;
+                        sqliteCommand.Parameters["Group_Tier"].Value = SelectedGroup.Group_Tier;
+                        sqliteCommand.Parameters["Is_Accreditation"].Value = SelectedGroup.Is_Accreditation ?? "False";
+                        sqliteCommand.Parameters["Accreditation_eMASS_ID"].Value = SelectedGroup.Accreditation_eMASS_ID;
+                        sqliteCommand.Parameters["IsPlatform"].Value = SelectedGroup.IsPlatform ?? "False";
+                        databaseInterface.UpdateGroup(sqliteCommand);
+                    }
+
+                    sQLiteTransaction.Commit();
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error($"Unable to insert group {NewGroup.Name}");
+                log.Debug($"Exception details: {exception}");
+            }
+            finally
+            {
+                if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
+                { DatabaseBuilder.sqliteConnection.Close(); }
+            }
+        }
+
+        private void addGroupBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
+                { DatabaseBuilder.sqliteConnection.Open(); }
+
+                using (SQLiteTransaction sQLiteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
+                {
+                    using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                    {
+                        databaseInterface.InsertParameterPlaceholders(sqliteCommand);
+                        sqliteCommand.Parameters["Name"].Value = NewGroup.Name;
+                        sqliteCommand.Parameters["Acronym"].Value = NewGroup.Acronym;
+                        sqliteCommand.Parameters["Group_Tier"].Value = NewGroup.Group_Tier;
+                        sqliteCommand.Parameters["Is_Accreditation"].Value = NewGroup.Is_Accreditation ?? "False";
+                        sqliteCommand.Parameters["Accreditation_eMASS_ID"].Value = NewGroup.Accreditation_eMASS_ID;
+                        sqliteCommand.Parameters["IsPlatform"].Value = NewGroup.IsPlatform ?? "False";
+                        databaseInterface.InsertGroup(sqliteCommand);
+                    }
+
+                    sQLiteTransaction.Commit();
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error($"Unable to insert group {NewGroup.Name}");
+                log.Debug($"Exception details: {exception}");
+            }
+            finally
+            {
+                if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
+                { DatabaseBuilder.sqliteConnection.Close(); }
+            }
+        }
+
+        public RelayCommand ClearSelectedGroupCommand => new RelayCommand(ClearSelectedGroup);
+
+        private void ClearSelectedGroup()
+        {
+            try
+            {
+                if (SelectedGroup == null) return;
+                SelectedGroup = null;
+                if (NewGroup != null) return;
+                NewGroup = new Group();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to clear selected group.");
+                throw;
+            }
+        }
+
+        public RelayCommand DeleteGroupCommand => new RelayCommand(DeleteGroupHandler);
+
+        private void DeleteGroupHandler()
+        {
+
+            try
+            {
+                if (SelectedGroup == null && Groups.Count(x => x.IsChecked) < 1) return;
+                BackgroundWorker backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += deleteGroupBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerCompleted += groupActionBackgroundWorker_RunWorkerCompleted;
+                backgroundWorker.RunWorkerAsync();
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                log.Error($"Unable to delete group \"{SelectedGroup.Name}\"");
+                log.Debug($"Exception details: {exception}");
+            }
+        }
+
+        private void deleteGroupBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+
+            try
+            {
+                using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
+                {
+                    using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                    {
+                        if (Groups.Count(x => x.IsChecked) > 0 )
+                        {
+                            foreach (Group group in Groups.Where(x => x.IsChecked))
+                            { DeleteGroup(group, sqliteCommand); }
+                        }
+                        else if (SelectedGroup != null)
+                        { DeleteGroup(SelectedGroup, sqliteCommand); }
+                    }
+                    // sqliteTransaction.Commit();
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Group deletion BackgroundWorker failed.");
+                throw;
+            }
+        }
+
+        private void DeleteGroup(Group group, SQLiteCommand sqliteCommand)
+        {
+
+            try
+            {
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Group_ID", group.Group_ID));
+            }
+            catch (Exception exception)
+            {
+                log.Error("Group deletion failed.");
+                throw;
+            }
+        }
+
+        private void groupActionBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+            try
+            {
+                Messenger.Default.Send(new NotificationMessage<string>("ModelUpdate", "AllModels"), MessengerToken.ModelUpdated);
+                NewGroup = new Group();
+            }
+            catch (Exception exception)
+            {
+                log.Error("Unable to run Group post-modification background worker RunWorkerCompleted tasks.");
+                throw exception;
             }
         }
     }

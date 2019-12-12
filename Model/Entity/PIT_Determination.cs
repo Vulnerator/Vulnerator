@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace Vulnerator.Model.Entity
 {
     using System;
@@ -6,12 +8,14 @@ namespace Vulnerator.Model.Entity
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class PIT_Determination
+    public partial class PIT_Determination : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PIT_Determination()
         {
-            Accreditations = new HashSet<Accreditation>();
+            Groups = new HashSet<Group>();
         }
 
         [Key]
@@ -89,7 +93,7 @@ namespace Vulnerator.Model.Entity
         public string OtherSystemTypeDescription { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Accreditation> Accreditations { get; set; }
+        public virtual ICollection<Group> Groups { get; set; }
 
         public virtual DiagnosticTestingSystem DiagnosticTestingSystem { get; set; }
 

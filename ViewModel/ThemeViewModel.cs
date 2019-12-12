@@ -19,7 +19,7 @@ namespace Vulnerator.ViewModel
         private bool _themeChecked;
         public bool ThemeChecked
         {
-            get { return _themeChecked; }
+            get => _themeChecked;
             set
             {
                 if (_themeChecked != value)
@@ -33,7 +33,7 @@ namespace Vulnerator.ViewModel
         private List<ThemeDefinition> _themes { get; set; }
         public List<ThemeDefinition> Themes
         {
-            get { return _themes; }
+            get => _themes;
             set
             {
                 if (_themes != value)
@@ -47,7 +47,7 @@ namespace Vulnerator.ViewModel
         private ThemeDefinition _selectedTheme { get; set; }
         public ThemeDefinition SelectedTheme
         {
-            get { return _selectedTheme; }
+            get => _selectedTheme;
             set
             {
                 if (_selectedTheme != value)
@@ -70,7 +70,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to instantiate new ThemeViewModel."));
+                log.Error("Unable to instantiate new ThemeViewModel.");
                 log.Debug("Exception details:", exception);
             }
         }
@@ -114,7 +114,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to populate list of available themes."));
+                log.Error("Unable to populate list of available themes.");
                 throw exception;
             }
         }

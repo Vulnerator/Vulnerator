@@ -25,9 +25,9 @@ namespace Vulnerator.Model.BusinessLogic
         private string acasVersion = string.Empty;
         private string acasRelease = string.Empty;
         private string vulneratorDatabaseConnection = @"Data Source = " + ConfigAlter.ReadSettingsFromDictionary("tbMitDbLocation");
-        private bool UserPrefersHostName { get { return bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier")); } }
+        private bool UserPrefersHostName => bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier"));
         private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
-        private string[] persistentParameters = new string[] { "Group_Name", "Finding_Source_File_Name", "Source_Name" };
+        private string[] persistentParameters = new string[] { "Name", "Finding_Source_File_Name", "Source_Name" };
         List<VulnerabilityReference> references = new List<VulnerabilityReference>();
         private DatabaseInterface databaseInterface = new DatabaseInterface();
 
@@ -57,7 +57,7 @@ namespace Vulnerator.Model.BusinessLogic
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         sqliteCommand.Parameters["Finding_Type"].Value = "ACAS";
-                        sqliteCommand.Parameters["Group_Name"].Value = "All";
+                        sqliteCommand.Parameters["Name"].Value = "All";
                         using (TextReader textReader = System.IO.File.OpenText(file.FilePath))
                         {
                             var csvReader = new CsvReader(textReader);

@@ -26,7 +26,7 @@ namespace Vulnerator.ViewModel
         private List<UserGuidePage> _userGuidePages = new List<UserGuidePage>();
         public List<UserGuidePage> UserGuidePages
         {
-            get { return _userGuidePages; }
+            get => _userGuidePages;
             set
             {
                 if (_userGuidePages != value)
@@ -40,7 +40,7 @@ namespace Vulnerator.ViewModel
         private string _displayedPage;
         public string DisplayedPage
         {
-            get { return _displayedPage; }
+            get => _displayedPage;
             set
             {
                 if (_displayedPage != value)
@@ -57,7 +57,7 @@ namespace Vulnerator.ViewModel
             { RenderUserGuidePages(); }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to instantiate UserGuideViewModel."));
+                log.Error("Unable to instantiate UserGuideViewModel.");
                 log.Debug("Exception details:", exception);
             }
         }
@@ -84,7 +84,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to render User Guide Pages."));
+                log.Error("Unable to render User Guide Pages.");
                 throw exception;
             }
         }
@@ -101,7 +101,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to get page content."));
+                log.Error("Unable to get page content.");
                 throw exception;
             }
         }
@@ -123,7 +123,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to sanitize page content."));
+                log.Error("Unable to sanitize page content.");
                 throw exception;
             } }
 
@@ -151,7 +151,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to get page number."));
+                log.Error("Unable to get page number.");
                 throw exception;
             }
         }

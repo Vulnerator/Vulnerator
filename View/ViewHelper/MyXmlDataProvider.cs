@@ -8,7 +8,7 @@ namespace Vulnerator.View.ViewHelper
     {
         public new Uri Source
         {
-            get { return base.Source; }
+            get => base.Source;
             set
             {
                 base.Source = value;

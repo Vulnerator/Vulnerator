@@ -46,7 +46,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to associate STIG to hardware asset"));
+                log.Error("Unable to associate STIG to hardware asset");
                 throw exception;
             }
             finally
@@ -72,7 +72,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to prepare the SQLiteCommand to insert a new unique finding."));
+                log.Error("Unable to prepare the SQLiteCommand to insert a new unique finding.");
                 throw exception;
             }
         }

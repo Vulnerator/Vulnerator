@@ -32,7 +32,7 @@ namespace Vulnerator.View.Converter
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return DoConvert(value, parameter, this.Operation);
+            return DoConvert(value, parameter, Operation);
         }
 
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
@@ -41,7 +41,7 @@ namespace Vulnerator.View.Converter
             {
                 return Binding.DoNothing;
             }
-            return DoConvert(values[0], values[1], this.Operation);
+            return DoConvert(values[0], values[1], Operation);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -111,22 +111,22 @@ namespace Vulnerator.View.Converter
 
         public override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            return this.theMathConverter.Convert(values, targetType, parameter, culture);
+            return theMathConverter.Convert(values, targetType, parameter, culture);
         }
 
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return this.theMathConverter.Convert(value, targetType, parameter, culture);
+            return theMathConverter.Convert(value, targetType, parameter, culture);
         }
 
         public override object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
-            return this.theMathConverter.ConvertBack(value, targetTypes, parameter, culture);
+            return theMathConverter.ConvertBack(value, targetTypes, parameter, culture);
         }
 
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return this.theMathConverter.ConvertBack(value, targetType, parameter, culture);
+            return theMathConverter.ConvertBack(value, targetType, parameter, culture);
         }
 
         public override object ProvideValue(IServiceProvider serviceProvider)
@@ -153,22 +153,22 @@ namespace Vulnerator.View.Converter
 
         public override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            return this.theMathConverter.Convert(values, targetType, parameter, culture);
+            return theMathConverter.Convert(values, targetType, parameter, culture);
         }
 
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return this.theMathConverter.Convert(value, targetType, parameter, culture);
+            return theMathConverter.Convert(value, targetType, parameter, culture);
         }
 
         public override object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
-            return this.theMathConverter.ConvertBack(value, targetTypes, parameter, culture);
+            return theMathConverter.ConvertBack(value, targetTypes, parameter, culture);
         }
 
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return this.theMathConverter.ConvertBack(value, targetType, parameter, culture);
+            return theMathConverter.ConvertBack(value, targetType, parameter, culture);
         }
 
         public override object ProvideValue(IServiceProvider serviceProvider)
@@ -195,22 +195,22 @@ namespace Vulnerator.View.Converter
 
         public override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            return this.theMathConverter.Convert(values, targetType, parameter, culture);
+            return theMathConverter.Convert(values, targetType, parameter, culture);
         }
 
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return this.theMathConverter.Convert(value, targetType, parameter, culture);
+            return theMathConverter.Convert(value, targetType, parameter, culture);
         }
 
         public override object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
-            return this.theMathConverter.ConvertBack(value, targetTypes, parameter, culture);
+            return theMathConverter.ConvertBack(value, targetTypes, parameter, culture);
         }
 
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return this.theMathConverter.ConvertBack(value, targetType, parameter, culture);
+            return theMathConverter.ConvertBack(value, targetType, parameter, culture);
         }
 
         public override object ProvideValue(IServiceProvider serviceProvider)
@@ -237,22 +237,22 @@ namespace Vulnerator.View.Converter
 
         public override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            return this.theMathConverter.Convert(values, targetType, parameter, culture);
+            return theMathConverter.Convert(values, targetType, parameter, culture);
         }
 
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return this.theMathConverter.Convert(value, targetType, parameter, culture);
+            return theMathConverter.Convert(value, targetType, parameter, culture);
         }
 
         public override object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
-            return this.theMathConverter.ConvertBack(value, targetTypes, parameter, culture);
+            return theMathConverter.ConvertBack(value, targetTypes, parameter, culture);
         }
 
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return this.theMathConverter.ConvertBack(value, targetType, parameter, culture);
+            return theMathConverter.ConvertBack(value, targetType, parameter, culture);
         }
 
         public override object ProvideValue(IServiceProvider serviceProvider)

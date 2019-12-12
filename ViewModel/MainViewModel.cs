@@ -59,7 +59,7 @@ namespace Vulnerator.ViewModel
         /// </summary>
         public string NewVersionText
         {
-            get { return _newVersionText; }
+            get => _newVersionText;
             set
             {
                 if (_newVersionText != value)
@@ -73,7 +73,7 @@ namespace Vulnerator.ViewModel
         private string _newVersionVisibility = "Collapsed";
         public string NewVersionVisibility
         {
-            get { return _newVersionVisibility; }
+            get => _newVersionVisibility;
             set
             {
                 if (_newVersionVisibility != value)
@@ -87,7 +87,7 @@ namespace Vulnerator.ViewModel
         private string _progressLabelText = "Awaiting Execution";
         public string ProgressLabelText
         {
-            get { return _progressLabelText; }
+            get => _progressLabelText;
             set
             {
                 if (_progressLabelText != value)
@@ -101,7 +101,7 @@ namespace Vulnerator.ViewModel
         private string _progressRingVisibility = "Collapsed";
         public string ProgressRingVisibility
         {
-            get { return _progressRingVisibility; }
+            get => _progressRingVisibility;
             set
             {
                 if (_progressRingVisibility != value)
@@ -115,7 +115,7 @@ namespace Vulnerator.ViewModel
         private bool _isEnabled = true;
         public bool IsEnabled
         {
-            get { return _isEnabled; }
+            get => _isEnabled;
             set
             {
                 if (_isEnabled != value)
@@ -129,7 +129,7 @@ namespace Vulnerator.ViewModel
         private Release _release = new Release();
         public Release Release
         {
-            get { return _release; }
+            get => _release;
             set
             {
                 if (_release != value)
@@ -159,7 +159,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to instantiate MainViewModel."));
+                log.Error("Unable to instantiate MainViewModel.");
                 log.Debug("Exception details:", exception);
             }
         }
@@ -182,7 +182,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to instantiate database"));
+                log.Error("Unable to instantiate database");
                 log.Debug("Exception details:", exception);
             }
         }
@@ -222,8 +222,7 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        public RelayCommand<object> GetLatestVersionCommand
-        { get { return new RelayCommand<object>(GetLatestVersion); } }
+        public RelayCommand<object> GetLatestVersionCommand => new RelayCommand<object>(GetLatestVersion);
 
         private void GetLatestVersion(object param)
         {
@@ -239,8 +238,7 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        public RelayCommand<object> AboutLinksCommand
-        { get { return new RelayCommand<object>(AboutLinks); } }
+        public RelayCommand<object> AboutLinksCommand => new RelayCommand<object>(AboutLinks);
 
         private void AboutLinks(object param)
         {
@@ -368,8 +366,7 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        public RelayCommand LaunchStigNotificationCommand
-        { get { return new RelayCommand(LaunchStigNotification); } }
+        public RelayCommand LaunchStigNotificationCommand => new RelayCommand(LaunchStigNotification);
 
         private void LaunchStigNotification()
         {
@@ -401,7 +398,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to launch STIG library ingestion notification."));
+                log.Error("Unable to launch STIG library ingestion notification.");
                 log.Debug("Exception details:", exception);
             }
         }
@@ -439,7 +436,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to generate notification"));
+                log.Error("Unable to generate notification");
                 throw exception;
             }
         }
@@ -449,12 +446,9 @@ namespace Vulnerator.ViewModel
             string urlAssociation = @"Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http";
             string browserPathKey = @"$BROWSER$\shell\open\command";
 
-            RegistryKey userChoiceKey = null;
-            string browserPath = "";
-
             try
             {
-                userChoiceKey = Registry.CurrentUser.OpenSubKey(urlAssociation + @"\UserChoice", false);
+                RegistryKey userChoiceKey = Registry.CurrentUser.OpenSubKey(urlAssociation + @"\UserChoice", false);
 
                 if (userChoiceKey == null)
                 {
@@ -475,7 +469,7 @@ namespace Vulnerator.ViewModel
                     userChoiceKey.Close();
                     string concreteBrowserKey = browserPathKey.Replace("$BROWSER$", progId);
                     var kp = Registry.ClassesRoot.OpenSubKey(concreteBrowserKey, false);
-                    browserPath = CleanifyBrowserPath(kp.GetValue(null) as string);
+                    string browserPath = CleanifyBrowserPath(kp.GetValue(null) as string);
                     kp.Close();
                     return browserPath;
                 }

@@ -22,68 +22,47 @@ namespace Vulnerator.ViewModel
 
         public object InvokeParameter
         {
-            get
-            {
-                return this.GetValue(InvokeParameterProperty);
-            }
-            set
-            {
-                this.SetValue(InvokeParameterProperty, value);
-            }
+            get => GetValue(InvokeParameterProperty);
+            set => SetValue(InvokeParameterProperty, value);
         }
 
 
         public ICommand Command
         {
-            get
-            {
-                return (ICommand)this.GetValue(CommandProperty);
-            }
-            set
-            {
-                this.SetValue(CommandProperty, value);
-            }
+            get => (ICommand)GetValue(CommandProperty);
+            set => SetValue(CommandProperty, value);
         }
 
         public string CommandName
         {
-            get
-            {
-                return this.commandName;
-            }
+            get => commandName;
             set
             {
-                if (this.CommandName != value)
+                if (CommandName != value)
                 {
-                    this.commandName = value;
+                    commandName = value;
                 }
             }
         }
 
         public object CommandParameter
         {
-            get
-            {
-                return this.GetValue(CommandParameterProperty);
-            }
+            get => GetValue(CommandParameterProperty);
 
-            set
-            {
-                this.SetValue(CommandParameterProperty, value);
-            }
+            set => SetValue(CommandParameterProperty, value);
         }
 
         public object Sender { get; set; }
 
         protected override void Invoke(object parameter)
         {
-            this.InvokeParameter = parameter;
-            if (this.AssociatedObject != null)
+            InvokeParameter = parameter;
+            if (AssociatedObject != null)
             {
-                ICommand command = this.Command;
-                if ((command != null) && command.CanExecute(this.CommandParameter))
+                ICommand command = Command;
+                if ((command != null) && command.CanExecute(CommandParameter))
                 {
-                    command.Execute(this.CommandParameter);
+                    command.Execute(CommandParameter);
                 }
             }
         }

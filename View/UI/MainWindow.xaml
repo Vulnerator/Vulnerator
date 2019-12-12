@@ -27,23 +27,26 @@
                       BorderBrush="{DynamicResource AccentColorBrush}"
                       BorderThickness="1"
                       DataContext="{Binding Main, Source={StaticResource Locator}}"
-                      GlowBrush="{DynamicResource AccentColorBrush}"
-                      Icon="/Vulnerator;component/Resources/vulneratorlogodraft.ico"
+                      Icon="/Vulnerator;component/Resources/vulnerator.ico"
                       KeyboardNavigation.TabNavigation="Continue"
                       ResizeMode="CanResize"
                       Style="{DynamicResource CustomCleanWindowStyleKey}"
+                      TitlebarHeight="48"
                       mc:Ignorable="d">
 
     <!--  Window Icon Template  -->
     <Controls:MetroWindow.IconTemplate>
         <DataTemplate>
-            <Border Width="48">
-                <IconPacks:PackIconMaterialLight Width="{TemplateBinding Width}"
-                                                 Height="{TemplateBinding Height}"
-                                                 Margin="4"
-                                                 HorizontalAlignment="Center"
-                                                 Foreground="{DynamicResource BlackBrush}"
-                                                 Kind="ChartHistogram" />
+            <Border Width="48"
+                    Background="{DynamicResource GrayBrush10}">
+                <IconPacks:PackIconFontAwesomeBrands Width="24"
+                                                    Height="24"
+                                                    Margin="4"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Flip="Horizontal"
+                                                    Foreground="{DynamicResource BlackBrush}"
+                                                    Kind="Vulnerator" />
             </Border>
         </DataTemplate>
     </Controls:MetroWindow.IconTemplate>
@@ -53,48 +56,49 @@
         <DataTemplate>
             <StackPanel HorizontalAlignment="Left"
                         Orientation="Horizontal">
-                <TextBlock Margin="5,0"
+                <TextBlock Margin="6,0,5,0"
                            VerticalAlignment="Center"
                            FontFamily="{DynamicResource HeaderFontFamily}"
                            FontSize="{DynamicResource WindowTitleFontSize}"
                            Text="{TemplateBinding Content}"
                            TextTrimming="CharacterEllipsis" />
-                <Controls:WindowCommands Foreground="{DynamicResource BlackBrush}"
+                <Controls:WindowCommands DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=Controls:MetroWindow}}"
+                                         Foreground="{DynamicResource BlackBrush}"
                                          ShowLastSeparator="False">
                     <Button x:Name="projectButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
-                            Content="{IconPacks:Octicons Bookmark}"
+                            Content="{IconPacks:FontAwesomeSolid Home}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="GitHub Project Page" />
                     <Button x:Name="githubButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
-                            Content="{IconPacks:Octicons Octoface}"
+                            Content="{IconPacks:FontAwesomeBrand GithubAlt}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="GitHub Repository" />
                     <Button x:Name="wikiButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
-                            Content="{IconPacks:Octicons Book}"
+                            Content="{IconPacks:FontAwesomeSolid GraduationCap}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="Wiki" />
                     <Button x:Name="issueButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
-                            Content="{IconPacks:Octicons IssueOpened}"
+                            Content="{IconPacks:FontAwesomeSolid Bug}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="Issues" />
                     <Button x:Name="gitterButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
-                            Content="{IconPacks:FontAwesome GitterBrands}"
+                            Content="{IconPacks:FontAwesomeBrand Gitter}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="Gitter Chat" />
                     <Button x:Name="slackButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
-                            Content="{IconPacks:FontAwesome SlackBrands}"
+                            Content="{IconPacks:FontAwesomeBrand Slack}"
                             Foreground="{DynamicResource BlackBrush}"
                             ToolTip="Slack Workspace (Chat)" />
                 </Controls:WindowCommands>
@@ -104,7 +108,7 @@
 
     <!--  Window Command Button Styling  -->
     <Controls:MetroWindow.WindowButtonCommands>
-        <Controls:WindowButtonCommands Template="{DynamicResource MahApps.Metro.Templates.WindowButtonCommands.Win10}" />
+        <Controls:WindowButtonCommands Template="{DynamicResource Vulnerator.Templates.WindowButtonCommands.Win10}" />
     </Controls:MetroWindow.WindowButtonCommands>
 
     <!--  Window-Level Resource Dictionary  -->
@@ -114,10 +118,10 @@
                                        IsInitialLoadEnabled="True" />
         <Converters:SelectedItemToContentConverter x:Key="SelectedItemToContentConverter" />
         <local:VulnerabilityManagementView x:Key="vulnerabilityManagementView" />
-        <local:MitigationsNistMappingView x:Key="mitigationsNistMappingView" />
         <local:AboutView x:Key="aboutView" />
         <local:ConfigurationManagementView x:Key="configurationManagementView" />
         <local:NewsView x:Key="newsView" />
+        <local:ReportingView x:Key="ReportingView" />
         <local:RmfView x:Key="rmfView" />
         <local:SettingsView x:Key="settingsView" />
         <local:ThemeView x:Key="themeView" />
@@ -165,85 +169,85 @@
                                                         Tag="{StaticResource vulnerabilityManagementView}"
                                                         ToolTip="Vulnerability Management">
                             <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconMaterial HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center"
-                                                            Kind="ChartLine" />
+                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Kind="ChartLine" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
-                        <Controls:HamburgerMenuIconItem Label="Mitigations &amp; NIST Mapping"
-                                                        Tag="{StaticResource mitigationsNistMappingView}"
-                                                        ToolTip="Mitigations &amp; NIST Mapping">
+                        <Controls:HamburgerMenuIconItem Label="Reporting"
+                                                        Tag="{StaticResource ReportingView}"
+                                                        ToolTip="Reporting">
                             <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconModern HorizontalAlignment="Center"
-                                                          VerticalAlignment="Center"
-                                                          Kind="ListCheck" />
+                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Kind="FileExport" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
-                        <Controls:HamburgerMenuIconItem Label="RMF"
+                        <!--<Controls:HamburgerMenuIconItem Label="RMF"
                                                         Tag="{StaticResource rmfView}"
                                                         ToolTip="RMF">
                             <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconMaterial HorizontalAlignment="Center"
+                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
-                                                            Kind="Certificate" />
+                                                            Kind="FileCertificate" />
                             </Controls:HamburgerMenuIconItem.Icon>
-                        </Controls:HamburgerMenuIconItem>
+                        </Controls:HamburgerMenuIconItem>-->
                         <Controls:HamburgerMenuIconItem Label="Configuration Management"
                                                         Tag="{StaticResource configurationManagementView}"
                                                         ToolTip="Configuration Management">
                             <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconMaterial HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center"
-                                                            Kind="MonitorMultiple" />
+                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Kind="DesktopAlt" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                         <Controls:HamburgerMenuIconItem Label="News"
                                                         Tag="{StaticResource newsView}"
                                                         ToolTip="News">
                             <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconModern HorizontalAlignment="Center"
-                                                          VerticalAlignment="Center"
-                                                          Kind="Newspaper" />
+                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Kind="Newspaper" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                     </Controls:HamburgerMenuItemCollection>
                 </Controls:HamburgerMenu.ItemsSource>
                 <Controls:HamburgerMenu.OptionsItemsSource>
                     <Controls:HamburgerMenuItemCollection>
-                        <Controls:HamburgerMenuIconItem Label="User Guide"
+                        <!--<Controls:HamburgerMenuIconItem Label="User Guide"
                                                         Tag="{StaticResource userGuideView}"
                                                         ToolTip="User Guide">
                             <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconOcticons HorizontalAlignment="Center"
+                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
-                                                            Kind="Book" />
+                                                            Kind="Books" />
                             </Controls:HamburgerMenuIconItem.Icon>
-                        </Controls:HamburgerMenuIconItem>
+                        </Controls:HamburgerMenuIconItem>-->
                         <Controls:HamburgerMenuIconItem Label="Settings"
                                                         Tag="{StaticResource settingsView}"
                                                         ToolTip="Settings">
                             <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconMaterial HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center"
-                                                            Kind="Settings" />
+                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Kind="Cog" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                         <Controls:HamburgerMenuIconItem Label="Theme"
                                                         Tag="{StaticResource themeView}"
                                                         ToolTip="Theme">
                             <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconFontAwesome HorizontalAlignment="Center"
-                                                               VerticalAlignment="Center"
-                                                               Kind="PaintBrushSolid" />
+                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Kind="Palette" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                         <Controls:HamburgerMenuIconItem Label="About"
                                                         Tag="{StaticResource aboutView}"
                                                         ToolTip="About">
                             <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconMaterial HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center"
-                                                            Kind="Help" />
+                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Kind="QuestionCircle" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                     </Controls:HamburgerMenuItemCollection>
@@ -322,7 +326,7 @@
                     <Button Margin="0,0,3,0"
                             Command="{Binding GetLatestVersionCommand}"
                             CommandParameter="{Binding Release.HtmlUrl}"
-                            Content="{IconPacks:Octicons DesktopDownload}"
+                            Content="{IconPacks:FontAwesomeLight Download}"
                             ToolTip="Download Now"
                             Visibility="{Binding NewVersionVisibility}" />
                 </StatusBarItem>

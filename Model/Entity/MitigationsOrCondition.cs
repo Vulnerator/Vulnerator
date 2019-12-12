@@ -1,5 +1,6 @@
 namespace Vulnerator.Model.Entity
 {
+    using PropertyChanged;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -7,20 +8,18 @@ namespace Vulnerator.Model.Entity
     using System.ComponentModel.DataAnnotations.Schema;
     using System.ComponentModel;
 
+    [AddINotifyPropertyChangedInterface]
     public partial class MitigationsOrCondition : INotifyPropertyChanged
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public MitigationsOrCondition()
-        { Groups = new ObservableCollection<Group>(); }
+        { GroupsMitigationsOrConditions = new ObservableCollection<GroupsMitigationsOrConditions>(); }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long MitigationOrCondition_ID { get; set; }
-
-        [Required]
-        public long Vulnerability_ID { get; set; }
 
         public virtual Vulnerability Vulnerability { get; set; }
 
@@ -60,11 +59,11 @@ namespace Vulnerator.Model.Entity
         [StringLength(25)]
         public string Mitigated_Status { get; set; }
 
-        public DateTime? Approval_Date { get; set; }
+        public string Approval_Date { get; set; }
 
-        public DateTime? Estimated_Completion_Date { get; set; }
+        public string Estimated_Completion_Date { get; set; }
 
-        public DateTime? Expiration_Date { get; set; }
+        public string Expiration_Date { get; set; }
 
         [StringLength(5)]
         public string IsApproved { get; set; }
@@ -76,6 +75,6 @@ namespace Vulnerator.Model.Entity
         public bool IsChecked { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Group> Groups { get; set; }
+        public virtual ICollection<GroupsMitigationsOrConditions> GroupsMitigationsOrConditions { get; set; }
     }
 }
