@@ -7,6 +7,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Data.Entity;
 using System.Data.SQLite;
 using System.Linq;
@@ -514,11 +515,14 @@ namespace Vulnerator.ViewModel
 
             try
             {
+                if (!DatabaseBuilder.sqliteConnection.State.Equals(ConnectionState.Open))
+                { DatabaseBuilder.sqliteConnection.Open(); }
+
                 using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
                 {
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
-                        if (Groups.Count(x => x.IsChecked) > 0 )
+                        if (Groups.Count(x => x.IsChecked) > 0)
                         {
                             foreach (Group group in Groups.Where(x => x.IsChecked))
                             { DeleteGroup(group, sqliteCommand); }
@@ -526,13 +530,19 @@ namespace Vulnerator.ViewModel
                         else if (SelectedGroup != null)
                         { DeleteGroup(SelectedGroup, sqliteCommand); }
                     }
-                    // sqliteTransaction.Commit();
+
+                    sqliteTransaction.Commit();
                 }
             }
             catch (Exception exception)
             {
                 log.Error("Group deletion BackgroundWorker failed.");
-                throw;
+                throw exception;
+            }
+            finally
+            {
+                if (!DatabaseBuilder.sqliteConnection.State.Equals(ConnectionState.Closed))
+                { DatabaseBuilder.sqliteConnection.Close(); }
             }
         }
 
@@ -542,11 +552,12 @@ namespace Vulnerator.ViewModel
             try
             {
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Group_ID", group.Group_ID));
+                databaseInterface.DeleteGroup(sqliteCommand);
             }
             catch (Exception exception)
             {
                 log.Error("Group deletion failed.");
-                throw;
+                throw exception;
             }
         }
 
