@@ -1037,7 +1037,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete GroupCCIs mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                log.Error($"Unable to delete GroupsCCIs mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
                 throw exception;
             }
         }
@@ -1051,7 +1051,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete GroupWaivers mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                log.Error($"Unable to delete GroupsWaivers mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
                 throw exception;
             }
         }
@@ -1065,7 +1065,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete GroupWaivers mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                log.Error($"Unable to delete GroupsOverlays mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
                 throw exception;
             }
         }
@@ -1079,7 +1079,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete GroupWaivers mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                log.Error($"Unable to delete GroupsConnectedSystems mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
                 throw exception;
             }
         }
@@ -1093,7 +1093,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete GroupWaivers mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                log.Error($"Unable to delete GroupsMitigationsOrConditions mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
                 throw exception;
             }
         }
@@ -1107,7 +1107,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete GroupWaivers mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                log.Error($"Unable to delete GroupsConnections mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
                 throw exception;
             }
         }
@@ -1121,7 +1121,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete GroupWaivers mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                log.Error($"Unable to delete HardwareGroups mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
                 throw exception;
             }
         }
@@ -1135,7 +1135,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete GroupWaivers mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                log.Error($"Unable to delete Groups_IATA_Standards mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
                 throw exception;
             }
         }
@@ -1149,7 +1149,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete GroupWaivers mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                log.Error($"Unable to delete GroupsContacts mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
                 throw exception;
             }
         }
