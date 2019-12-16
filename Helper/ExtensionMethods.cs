@@ -1,16 +1,20 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web.Configuration;
 using System.Xml;
+using Vulnerator.Model.Object;
+using File = System.IO.File;
 
 namespace Vulnerator.Helper
 {
     public static class ExtensionMethods
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
+
         private static readonly Dictionary<string, string> rawStatusDictionary = new Dictionary<string, string>
         {
             { "notafinding", "Completed" },
@@ -89,11 +93,19 @@ namespace Vulnerator.Helper
 
         public static string FirstCharacterToUpper(this string _string)
         {
-            if (_string == null)
-            { return null; }
-            if (_string.Length > 1)
-            { return char.ToUpper(_string[0]) + _string.Substring(1); }
-            return _string.ToUpper();
+            try
+            {
+                if (_string == null)
+                { return null; }
+                if (_string.Length > 1)
+                { return char.ToUpper(_string[0]) + _string.Substring(1); }
+                return _string.ToUpper();
+            }
+            catch (Exception exception)
+            {
+                log.Error($"Unable to convert first character in {_string} to upper case.");
+                throw exception;
+            }
         }
 
         public static bool IsTooLargeForExcelCell(this int _int)
