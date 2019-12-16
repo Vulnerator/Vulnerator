@@ -17,6 +17,7 @@ using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Object;
 using Vulnerator.View.UI;
 using Vulnerator.ViewModel.ViewModelHelper;
+using Logger = Vulnerator.Helper.Logger;
 
 namespace Vulnerator.ViewModel
 {
