@@ -10,6 +10,18 @@ namespace Vulnerator.Helper
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Model.Object.Logger));
 
+        public void LogStatusUpdate(string message)
+        {
+            try
+            { log.Info(message); }
+            catch (Exception exception)
+            {
+                #if DEBUG
+                throw exception;
+                #endif
+            }
+        }
+
         /// <summary>
         /// Log writer to handle 'Error' level logging
         /// </summary>
@@ -31,7 +43,7 @@ namespace Vulnerator.Helper
         /// </summary>
         /// <param name="message">The 'Error' message to be logged</param>
         /// <param name="exception">The Exception to be logged in the 'Debug' output</param>
-        private void LogErrorWithDebug(string message, Exception ex)
+        public void LogErrorWithDebug(string message, Exception ex)
         {
             try
             {

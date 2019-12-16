@@ -9,9 +9,11 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Vulnerator.Helper;
 using Vulnerator.Model.BusinessLogic;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Object;
@@ -43,7 +45,7 @@ namespace Vulnerator.ViewModel
         private GitHubActions githubActions;
         public INotificationMessageManager NotificationMessageManager { get; set; } = new NotificationMessageManager();
         public Logger logger = new Logger();
-        public static readonly ILog log = LogManager.GetLogger(typeof(Logger));
+        private LogWriter _logWriter = new LogWriter();
 
         public string ApplicationVersion
         {
@@ -55,6 +57,7 @@ namespace Vulnerator.ViewModel
         }
 
         private string _newVersionText = "Update Info Unavailable";
+
         /// <summary>
         /// String to notify users of new application version(s) available for download
         /// </summary>
@@ -149,57 +152,81 @@ namespace Vulnerator.ViewModel
             try
             {
                 logger.Setup();
-                log.Info("Initializing application.");
+                _logWriter.LogStatusUpdate("'Logger' successfully initialized.");
+                _logWriter.LogStatusUpdate("Initializing 'MainViewModel'.");
                 githubActions = new GitHubActions();
                 databaseBuilder = new DatabaseBuilder();
                 VersionTest();
                 Properties.Settings.Default.ActiveUser = Environment.UserName;
                 Messenger.Default.Register<GuiFeedback>(this, (guiFeedback) => UpdateGui(guiFeedback));
+                _logWriter.LogStatusUpdate("'UpdateGui' Messenger registered.");
                 Messenger.Default.Register<string>(this, (databaseLocation) => InstantiateNewDatabase(databaseLocation));
+                _logWriter.LogStatusUpdate("'InstantiateNewDatabase' Messenger registered.");
                 Messenger.Default.Register<Notification>(this, (notification) => GenerateNotification(notification));
+                _logWriter.LogStatusUpdate("'GenerateNotification' Messenger registered.");
+                _logWriter.LogStatusUpdate("'MainViewModel' successfully initialized.");
             }
             catch (Exception exception)
             {
-                log.Error("Unable to instantiate MainViewModel.");
-                log.Debug("Exception details:", exception);
+                string error = "Unable to initialize 'MainViewModel'.";
+                _logWriter.LogErrorWithDebug(error, exception);
             }
         }
 
         private void UpdateGui(GuiFeedback guiFeedback)
         {
-            ProgressLabelText = guiFeedback.ProgressLabelText;
-            ProgressRingVisibility = guiFeedback.ProgressRingVisibility;
-            IsEnabled = guiFeedback.IsEnabled;
+            try
+            {
+                ProgressLabelText = guiFeedback.ProgressLabelText;
+                ProgressRingVisibility = guiFeedback.ProgressRingVisibility;
+                IsEnabled = guiFeedback.IsEnabled;
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to update the GUI.";
+                _logWriter.LogErrorWithDebug(error, exception);
+            }
         }
 
         private void InstantiateNewDatabase(string databaseLocation)
         { 
             try
             {
+                _logWriter.LogStatusUpdate($"Instantiating new database at '{databaseLocation}'.");
                 Properties.Settings.Default.Database = databaseLocation;
                 DatabaseBuilder.databaseConnection = string.Format(@"Data Source = {0}; Version=3;", Properties.Settings.Default.Database);
                 DatabaseBuilder.sqliteConnection = new System.Data.SQLite.SQLiteConnection(DatabaseBuilder.databaseConnection);
                 databaseBuilder = new DatabaseBuilder();
+                _logWriter.LogStatusUpdate($"Database instantiated at '{databaseLocation}'.");
             }
             catch (Exception exception)
             {
-                log.Error("Unable to instantiate database");
-                log.Debug("Exception details:", exception);
+                string error = $"Unable to instantiate database at '{databaseLocation}'.";
+                _logWriter.LogErrorWithDebug(error, exception);
             }
         }
 
         private void VersionTest()
         {
-            backgroundWorker = new BackgroundWorker();
-            backgroundWorker.DoWork += versionTestBackgroundWorker_DoWork;
-            backgroundWorker.RunWorkerAsync();
-            backgroundWorker.Dispose();
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += versionTestBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerAsync();
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to generate 'VersionTest' BackgroundWorker.";
+                _logWriter.LogErrorWithDebug(error, exception);
+            }
         }
 
         private async void versionTestBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             try
             {
+                _logWriter.LogStatusUpdate("Obtaining latest available release information.");
                 Release = await githubActions.GetLatestGitHubRelease();
                 if (Release.TagName == "Unavailable")
                 { return; }
@@ -215,10 +242,11 @@ namespace Vulnerator.ViewModel
                     else
                     { NewVersionText = "Running Latest Version"; }
                 }
+                _logWriter.LogStatusUpdate("Latest available release information obtained, parsed, and presented successfully.");
             }
             catch (Exception exception)
             {
-                log.Error("Unable to obtain version update information.");
+                _logWriter.LogError("Unable to obtain application version update information.");
                 throw exception;
             }
         }
@@ -226,18 +254,7 @@ namespace Vulnerator.ViewModel
         public RelayCommand<object> GetLatestVersionCommand => new RelayCommand<object>(GetLatestVersion);
 
         private void GetLatestVersion(object param)
-        {
-            try
-            { Process.Start(GetDefaultBrowserPath(), param.ToString()); }
-            catch (Exception exception)
-            {
-                log.Error("Unable to obtain launch GitHub link; no internet application exists.");
-                log.Debug("Exception details: " + exception);
-                NoInternetApplication internetWarning = new NoInternetApplication();
-                internetWarning.ShowDialog();
-                return;
-            }
-        }
+        { WebNavigate(param.ToString()); }
 
         public RelayCommand<object> AboutLinksCommand => new RelayCommand<object>(AboutLinks);
 
@@ -249,32 +266,32 @@ namespace Vulnerator.ViewModel
             {
                 case "projectButton":
                     {
-                        VisitProjectPage();
+                        WebNavigate("https://vulnerator.github.io/Vulnerator");
                         break;
                     }
                 case "wikiButton":
                     {
-                        VisitWikiPage();
+                        WebNavigate("https://github.com/Vulnerator/Vulnerator/wiki");
                         break;
                     }
                 case "githubButton":
                     {
-                        VisitRepo();
+                        WebNavigate("https://github.com/Vulnerator/Vulnerator");
                         break;
                     }
                 case "issueButton":
                     {
-                        VisitIssues();
+                        WebNavigate("https://github.com/Vulnerator/Vulnerator/issues");
                         break;
                     }
                 case "gitterButton":
                     {
-                        VisitGitter();
+                        WebNavigate("https://gitter.im/Vulnerator/Vulnerator");
                         break;
                     }
                 case "slackButton":
                     {
-                        VisitSlack();
+                        WebNavigate("https://join.slack.com/t/vulnerator-chat/shared_invite/enQtODcwMTkxMzI2NjQ3LTg0YzFjMjg0NjJkODkzMTIyNTgyN2I0ZDczYmQwMmFhODQyOWI4MDEyODU2MjJmM2ZkNDZiYzNmZjM0NzQ1ODQ");
                         break;
                     }
                 default:
@@ -282,88 +299,16 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private void VisitProjectPage()
+        private void WebNavigate(string webPage)
         {
-            string goTo = "https://vulnerator.github.io/Vulnerator";
             try
-            { Process.Start(GetDefaultBrowserPath(), goTo); }
+            { Process.Start(GetDefaultBrowserPath(), webPage); }
             catch (Exception exception)
             {
-                log.Error("Unable to launch link; no internet application exists.");
+                string error = $"Unable to navigate to {webPage}; no internet application exists.";
+                _logWriter.LogErrorWithDebug(error, exception);
                 NoInternetApplication internetWarning = new NoInternetApplication();
                 internetWarning.ShowDialog();
-                return;
-            }
-        }
-
-        private void VisitWikiPage()
-        {
-            string goTo = "https://github.com/Vulnerator/Vulnerator/wiki";
-            try
-            { Process.Start(GetDefaultBrowserPath(), goTo); }
-            catch (Exception exception)
-            {
-                log.Error("Unable to launch link; no internet application exists.");
-                NoInternetApplication internetWarning = new NoInternetApplication();
-                internetWarning.ShowDialog();
-                return;
-            }
-        }
-
-        private void VisitRepo()
-        {
-            string goTo = "https://github.com/Vulnerator/Vulnerator";
-            try
-            { Process.Start(GetDefaultBrowserPath(), goTo); }
-            catch (Exception exception)
-            {
-                log.Error("Unable to launch link; no internet application exists.");
-                NoInternetApplication internetWarning = new NoInternetApplication();
-                internetWarning.ShowDialog();
-                return;
-            }
-        }
-
-        private void VisitIssues()
-        {
-            string goTo = "https://github.com/Vulnerator/Vulnerator/issues";
-            try
-            { Process.Start(GetDefaultBrowserPath(), goTo); }
-            catch (Exception exception)
-            {
-                log.Error("Unable to launch link; no internet application exists.");
-                NoInternetApplication internetWarning = new NoInternetApplication();
-                internetWarning.ShowDialog();
-                return;
-            }
-        }
-
-        private void VisitGitter()
-        {
-            string goTo = "https://gitter.im/Vulnerator/Vulnerator";
-            try
-            { Process.Start(GetDefaultBrowserPath(), goTo); }
-            catch (Exception exception)
-            {
-                log.Error("Unable to launch link; no internet application exists.");
-                NoInternetApplication internetWarning = new NoInternetApplication();
-                internetWarning.ShowDialog();
-                return;
-            }
-        }
-
-        private void VisitSlack()
-        {
-            // Slack Invite Link, which allows new users to sign up - does not expire
-            string goTo = "https://join.slack.com/t/vulnerator-chat/shared_invite/enQtMzQxMzc2MTE0NTI4LWQ1MTVmOGRmZjU4M2UzODU4ZDBhZDk1NGNlY2ZmMjgxNGEzNjUxMmE4OTkwNjQ3NTBhYzU3NmQ2OGI4YjViYzM";
-            try
-            { Process.Start(GetDefaultBrowserPath(), goTo); }
-            catch (Exception exception)
-            {
-                log.Error("Unable to launch link; no internet application exists.");
-                NoInternetApplication internetWarning = new NoInternetApplication();
-                internetWarning.ShowDialog();
-                return;
             }
         }
 
@@ -399,8 +344,8 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to launch STIG library ingestion notification.");
-                log.Debug("Exception details:", exception);
+                string error = "Unable to display STIG Library ingestion notification.";
+                _logWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -437,8 +382,8 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate notification");
-                throw exception;
+                string error = $"Unable to generate '{notification.Header}' notification";
+                _logWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -476,17 +421,19 @@ namespace Vulnerator.ViewModel
                 }
             }
             catch (Exception exception)
-            {
-                log.Error("Unable to obtain default browser data.");
-                throw exception;
-            }
+            { throw exception; }
         }
 
         private static string CleanifyBrowserPath(string p)
         {
-            string[] url = p.Split('"');
-            string clean = url[1];
-            return clean;
+            try
+            {
+                string[] url = p.Split('"');
+                string clean = url[1];
+                return clean;
+            }
+            catch (Exception exception)
+            { throw exception; }
         }
     }
 }
