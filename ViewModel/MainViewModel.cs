@@ -45,7 +45,6 @@ namespace Vulnerator.ViewModel
         private GitHubActions githubActions;
         public INotificationMessageManager NotificationMessageManager { get; set; } = new NotificationMessageManager();
         public Logger logger = new Logger();
-        private LogWriter _logWriter = new LogWriter();
 
         public string ApplicationVersion
         {
@@ -152,24 +151,24 @@ namespace Vulnerator.ViewModel
             try
             {
                 logger.Setup();
-                _logWriter.LogStatusUpdate("'Logger' successfully initialized.");
-                _logWriter.LogStatusUpdate("Initializing 'MainViewModel'.");
+                LogWriter.LogStatusUpdate("'Logger' successfully initialized.");
+                LogWriter.LogStatusUpdate("Initializing 'MainViewModel'.");
                 githubActions = new GitHubActions();
                 databaseBuilder = new DatabaseBuilder();
                 VersionTest();
                 Properties.Settings.Default.ActiveUser = Environment.UserName;
                 Messenger.Default.Register<GuiFeedback>(this, (guiFeedback) => UpdateGui(guiFeedback));
-                _logWriter.LogStatusUpdate("'UpdateGui' Messenger registered.");
+                LogWriter.LogStatusUpdate("'UpdateGui' Messenger registered.");
                 Messenger.Default.Register<string>(this, (databaseLocation) => InstantiateNewDatabase(databaseLocation));
-                _logWriter.LogStatusUpdate("'InstantiateNewDatabase' Messenger registered.");
+                LogWriter.LogStatusUpdate("'InstantiateNewDatabase' Messenger registered.");
                 Messenger.Default.Register<Notification>(this, (notification) => GenerateNotification(notification));
-                _logWriter.LogStatusUpdate("'GenerateNotification' Messenger registered.");
-                _logWriter.LogStatusUpdate("'MainViewModel' successfully initialized.");
+                LogWriter.LogStatusUpdate("'GenerateNotification' Messenger registered.");
+                LogWriter.LogStatusUpdate("'MainViewModel' successfully initialized.");
             }
             catch (Exception exception)
             {
                 string error = "Unable to initialize 'MainViewModel'.";
-                _logWriter.LogErrorWithDebug(error, exception);
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -184,7 +183,7 @@ namespace Vulnerator.ViewModel
             catch (Exception exception)
             {
                 string error = "Unable to update the GUI.";
-                _logWriter.LogErrorWithDebug(error, exception);
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -192,17 +191,17 @@ namespace Vulnerator.ViewModel
         { 
             try
             {
-                _logWriter.LogStatusUpdate($"Instantiating new database at '{databaseLocation}'.");
+                LogWriter.LogStatusUpdate($"Instantiating new database at '{databaseLocation}'.");
                 Properties.Settings.Default.Database = databaseLocation;
                 DatabaseBuilder.databaseConnection = string.Format(@"Data Source = {0}; Version=3;", Properties.Settings.Default.Database);
                 DatabaseBuilder.sqliteConnection = new System.Data.SQLite.SQLiteConnection(DatabaseBuilder.databaseConnection);
                 databaseBuilder = new DatabaseBuilder();
-                _logWriter.LogStatusUpdate($"Database instantiated at '{databaseLocation}'.");
+                LogWriter.LogStatusUpdate($"Database instantiated at '{databaseLocation}'.");
             }
             catch (Exception exception)
             {
                 string error = $"Unable to instantiate database at '{databaseLocation}'.";
-                _logWriter.LogErrorWithDebug(error, exception);
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -218,7 +217,7 @@ namespace Vulnerator.ViewModel
             catch (Exception exception)
             {
                 string error = "Unable to generate 'VersionTest' BackgroundWorker.";
-                _logWriter.LogErrorWithDebug(error, exception);
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -226,7 +225,7 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                _logWriter.LogStatusUpdate("Obtaining latest available release information.");
+                LogWriter.LogStatusUpdate("Obtaining latest available release information.");
                 Release = await githubActions.GetLatestGitHubRelease();
                 if (Release.TagName == "Unavailable")
                 { return; }
@@ -242,11 +241,11 @@ namespace Vulnerator.ViewModel
                     else
                     { NewVersionText = "Running Latest Version"; }
                 }
-                _logWriter.LogStatusUpdate("Latest available release information obtained, parsed, and presented successfully.");
+                LogWriter.LogStatusUpdate("Latest available release information obtained, parsed, and presented successfully.");
             }
             catch (Exception exception)
             {
-                _logWriter.LogError("Unable to obtain application version update information.");
+                LogWriter.LogError("Unable to obtain application version update information.");
                 throw exception;
             }
         }
@@ -306,7 +305,7 @@ namespace Vulnerator.ViewModel
             catch (Exception exception)
             {
                 string error = $"Unable to navigate to {webPage}; no internet application exists.";
-                _logWriter.LogErrorWithDebug(error, exception);
+                LogWriter.LogErrorWithDebug(error, exception);
                 NoInternetApplication internetWarning = new NoInternetApplication();
                 internetWarning.ShowDialog();
             }
@@ -345,7 +344,7 @@ namespace Vulnerator.ViewModel
             catch (Exception exception)
             {
                 string error = "Unable to display STIG Library ingestion notification.";
-                _logWriter.LogErrorWithDebug(error, exception);
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -383,7 +382,7 @@ namespace Vulnerator.ViewModel
             catch (Exception exception)
             {
                 string error = $"Unable to generate '{notification.Header}' notification";
-                _logWriter.LogErrorWithDebug(error, exception);
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -402,10 +401,11 @@ namespace Vulnerator.ViewModel
                     if (browserKey == null)
                     {
                         browserKey =
-                        Registry.CurrentUser.OpenSubKey(
-                        urlAssociation, false);
+                            Registry.CurrentUser.OpenSubKey(
+                                urlAssociation, false);
                     }
-                    var path = CleanifyBrowserPath(browserKey.GetValue(null) as string);
+
+                    var path = SanitizeBrowserPath(browserKey.GetValue(null) as string);
                     browserKey.Close();
                     return path;
                 }
@@ -415,25 +415,31 @@ namespace Vulnerator.ViewModel
                     userChoiceKey.Close();
                     string concreteBrowserKey = browserPathKey.Replace("$BROWSER$", progId);
                     var kp = Registry.ClassesRoot.OpenSubKey(concreteBrowserKey, false);
-                    string browserPath = CleanifyBrowserPath(kp.GetValue(null) as string);
+                    string browserPath = SanitizeBrowserPath(kp.GetValue(null) as string);
                     kp.Close();
                     return browserPath;
                 }
             }
             catch (Exception exception)
-            { throw exception; }
+            {
+                LogWriter.LogError("Unable to obtain default browser information.");
+                throw exception;
+            }
         }
 
-        private static string CleanifyBrowserPath(string p)
+        private static string SanitizeBrowserPath(string path)
         {
             try
             {
-                string[] url = p.Split('"');
+                string[] url = path.Split('"');
                 string clean = url[1];
                 return clean;
             }
             catch (Exception exception)
-            { throw exception; }
+            {
+                LogWriter.LogError($"Unable to sanitize browser path '{path}'");
+                throw exception;
+            }
         }
     }
 }
