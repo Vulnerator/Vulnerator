@@ -6,11 +6,11 @@ namespace Vulnerator.Helper
     /// <summary>
     /// Class to handle writing logs for the application
     /// </summary>
-    public class LogWriter
+    public static class LogWriter
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Model.Object.Logger));
 
-        public void LogStatusUpdate(string message)
+        public static void LogStatusUpdate(string message)
         {
             try
             { log.Info(message); }
@@ -26,7 +26,7 @@ namespace Vulnerator.Helper
         /// Log writer to handle 'Error' level logging
         /// </summary>
         /// <param name="message">The 'Error' message to be logged</param>
-        public void LogError(string message)
+        public static void LogError(string message)
         {
             try
             { log.Error(message); }
@@ -43,7 +43,7 @@ namespace Vulnerator.Helper
         /// </summary>
         /// <param name="message">The 'Error' message to be logged</param>
         /// <param name="exception">The Exception to be logged in the 'Debug' output</param>
-        public void LogErrorWithDebug(string message, Exception ex)
+        public static void LogErrorWithDebug(string message, Exception ex)
         {
             try
             {
