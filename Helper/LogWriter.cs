@@ -8,7 +8,7 @@ namespace Vulnerator.Helper
     /// </summary>
     public static class LogWriter
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(Model.Object.Logger));
+        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
         public static void LogStatusUpdate(string message)
         {
