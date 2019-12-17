@@ -1899,7 +1899,7 @@
                                 <Button Grid.Column="2"
                                         Margin="5,0,0,0"
                                         HorizontalAlignment="Right"
-                                        Command="{Binding DeleteSelectedGroupCommand}"
+                                        Command="{Binding DeleteGroupCommand}"
                                         Content="Delete Selected Group" />
                             </Grid>
                         </ScrollViewer>

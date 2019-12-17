@@ -70,6 +70,96 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM Groups WHERE Group_ID = @Group_ID;.
+        /// </summary>
+        internal static string DeleteGroup {
+            get {
+                return ResourceManager.GetString("DeleteGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM Groups_IATA_Standards WHERE Group_ID = @Group_ID;.
+        /// </summary>
+        internal static string DeleteGroups_IATA_StandardsMappingByGroup {
+            get {
+                return ResourceManager.GetString("DeleteGroups_IATA_StandardsMappingByGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM GroupsCCIs WHERE Group_ID = @Group_ID;.
+        /// </summary>
+        internal static string DeleteGroupsCCIsMappingByGroup {
+            get {
+                return ResourceManager.GetString("DeleteGroupsCCIsMappingByGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM GroupsConnectedSystems WHERE Group_ID = @Group_ID;.
+        /// </summary>
+        internal static string DeleteGroupsConnectedSystemsMappingByGroup {
+            get {
+                return ResourceManager.GetString("DeleteGroupsConnectedSystemsMappingByGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM GroupsConnections WHERE Group_ID = @Group_ID;.
+        /// </summary>
+        internal static string DeleteGroupsConnectionsMappingByGroup {
+            get {
+                return ResourceManager.GetString("DeleteGroupsConnectionsMappingByGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM GroupsContacts WHERE Group_ID = @Group_ID;.
+        /// </summary>
+        internal static string DeleteGroupsContactsMappingByGroup {
+            get {
+                return ResourceManager.GetString("DeleteGroupsContactsMappingByGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM GroupsMitigationsOrConditions WHERE Group_ID = @Group_ID;.
+        /// </summary>
+        internal static string DeleteGroupsMitigationsOrConditionsMappingByGroup {
+            get {
+                return ResourceManager.GetString("DeleteGroupsMitigationsOrConditionsMappingByGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM GroupsOverlays WHERE Group_ID = @Group_ID;.
+        /// </summary>
+        internal static string DeleteGroupsOverlaysMappingByGroup {
+            get {
+                return ResourceManager.GetString("DeleteGroupsOverlaysMappingByGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM GroupsWaivers WHERE Group_ID = @Group_ID;.
+        /// </summary>
+        internal static string DeleteGroupsWaiversMappingByGroup {
+            get {
+                return ResourceManager.GetString("DeleteGroupsWaiversMappingByGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM HardwareGroups WHERE Group_ID = @Group_ID;.
+        /// </summary>
+        internal static string DeleteHardwareGroupsMappingByGroup {
+            get {
+                return ResourceManager.GetString("DeleteHardwareGroupsMappingByGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DELETE FROM
         ///	MitigationsOrConditions
         ///WHERE

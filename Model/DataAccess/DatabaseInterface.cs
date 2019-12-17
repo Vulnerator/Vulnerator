@@ -1027,5 +1027,156 @@ namespace Vulnerator.Model.DataAccess
                 throw exception;
             }
         }
+
+        public void DeleteGroupsCCIsMappingByGroup(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.DeleteGroupsCCIsMappingByGroup;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error($"Unable to delete GroupsCCIs mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                throw exception;
+            }
+        }
+
+        public void DeleteGroupsWaiversMappingByGroup(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.DeleteGroupsWaiversMappingByGroup;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error($"Unable to delete GroupsWaivers mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                throw exception;
+            }
+        }
+
+        public void DeleteGroupsOverlaysMappingByGroup(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.DeleteGroupsOverlaysMappingByGroup;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error($"Unable to delete GroupsOverlays mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                throw exception;
+            }
+        }
+
+        public void DeleteGroupsConnectedSystemsMappingByGroup(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.DeleteGroupsConnectedSystemsMappingByGroup;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error($"Unable to delete GroupsConnectedSystems mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                throw exception;
+            }
+        }
+
+        public void DeleteGroupsMitigationsOrConditionsMappingByGroup(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.DeleteGroupsMitigationsOrConditionsMappingByGroup;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error($"Unable to delete GroupsMitigationsOrConditions mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                throw exception;
+            }
+        }
+
+        public void DeleteGroupsConnectionsMappingByGroup(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.DeleteGroupsConnectionsMappingByGroup;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error($"Unable to delete GroupsConnections mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                throw exception;
+            }
+        }
+
+        public void DeleteHardwareGroupsMappingByGroup(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.DeleteHardwareGroupsMappingByGroup;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error($"Unable to delete HardwareGroups mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                throw exception;
+            }
+        }
+
+        public void DeleteGroups_IATA_StandardsMappingByGroup(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.DeleteGroups_IATA_StandardsMappingByGroup;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error($"Unable to delete Groups_IATA_Standards mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                throw exception;
+            }
+        }
+
+        public void DeleteGroupsContactsMappingByGroup(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = Properties.Resources.DeleteGroupsContactsMappingByGroup;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error($"Unable to delete GroupsContacts mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                throw exception;
+            }
+        }
+
+        public void DeleteGroup(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                // Ensure that no mappings will be orphaned
+                DeleteGroupsCCIsMappingByGroup(sqliteCommand);
+                DeleteGroupsWaiversMappingByGroup(sqliteCommand);
+                DeleteGroupsOverlaysMappingByGroup(sqliteCommand);
+                DeleteGroupsConnectedSystemsMappingByGroup(sqliteCommand);
+                DeleteGroupsMitigationsOrConditionsMappingByGroup(sqliteCommand);
+                DeleteGroupsConnectionsMappingByGroup(sqliteCommand);
+                DeleteHardwareGroupsMappingByGroup(sqliteCommand);
+                DeleteGroups_IATA_StandardsMappingByGroup(sqliteCommand);
+                DeleteGroupsContactsMappingByGroup(sqliteCommand);
+                // Execute DeleteGroup Command
+                sqliteCommand.CommandText = Properties.Resources.DeleteGroup;
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                log.Error($"Unable to delete Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                throw exception;
+            }
+        }
     }
 }

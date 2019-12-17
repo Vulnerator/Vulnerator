@@ -120,6 +120,36 @@
   <data name="DeleteAcasVulnerabilitiesMappedToUnknownVersion" xml:space="preserve">
     <value>DELETE FROM Vulnerabilities_VulnerabilitySources WHERE Vulnerability_Source_ID = (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Version = 'Version Unknown');</value>
   </data>
+  <data name="DeleteGroup" xml:space="preserve">
+    <value>DELETE FROM Groups WHERE Group_ID = @Group_ID;</value>
+  </data>
+  <data name="DeleteGroupsCCIsMappingByGroup" xml:space="preserve">
+    <value>DELETE FROM GroupsCCIs WHERE Group_ID = @Group_ID;</value>
+  </data>
+  <data name="DeleteGroupsConnectedSystemsMappingByGroup" xml:space="preserve">
+    <value>DELETE FROM GroupsConnectedSystems WHERE Group_ID = @Group_ID;</value>
+  </data>
+  <data name="DeleteGroupsConnectionsMappingByGroup" xml:space="preserve">
+    <value>DELETE FROM GroupsConnections WHERE Group_ID = @Group_ID;</value>
+  </data>
+  <data name="DeleteGroupsContactsMappingByGroup" xml:space="preserve">
+    <value>DELETE FROM GroupsContacts WHERE Group_ID = @Group_ID;</value>
+  </data>
+  <data name="DeleteGroupsMitigationsOrConditionsMappingByGroup" xml:space="preserve">
+    <value>DELETE FROM GroupsMitigationsOrConditions WHERE Group_ID = @Group_ID;</value>
+  </data>
+  <data name="DeleteGroupsOverlaysMappingByGroup" xml:space="preserve">
+    <value>DELETE FROM GroupsOverlays WHERE Group_ID = @Group_ID;</value>
+  </data>
+  <data name="DeleteGroupsWaiversMappingByGroup" xml:space="preserve">
+    <value>DELETE FROM GroupsWaivers WHERE Group_ID = @Group_ID;</value>
+  </data>
+  <data name="DeleteGroups_IATA_StandardsMappingByGroup" xml:space="preserve">
+    <value>DELETE FROM Groups_IATA_Standards WHERE Group_ID = @Group_ID;</value>
+  </data>
+  <data name="DeleteHardwareGroupsMappingByGroup" xml:space="preserve">
+    <value>DELETE FROM HardwareGroups WHERE Group_ID = @Group_ID;</value>
+  </data>
   <data name="DeleteMitigation" xml:space="preserve">
     <value>DELETE FROM
 	MitigationsOrConditions
