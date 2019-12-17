@@ -1174,7 +1174,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete GroupWaivers mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                log.Error($"Unable to delete Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
                 throw exception;
             }
         }
