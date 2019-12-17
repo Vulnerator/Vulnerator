@@ -21,26 +21,35 @@ namespace Vulnerator.Helper
         /// </summary>
         public void Setup()
         {
-            SetIsDebugFlag();
-            Hierarchy hierarchy = (Hierarchy)LogManager.GetRepository();
-            hierarchy.Root.RemoveAllAppenders();
-            PatternLayout patternLayout = new PatternLayout();
-            patternLayout.AddConverter(new ConverterInfo
+            try
+            {
+                SetIsDebugFlag();
+                Hierarchy hierarchy = (Hierarchy)LogManager.GetRepository();
+                hierarchy.Root.RemoveAllAppenders();
+                PatternLayout patternLayout = new PatternLayout();
+                patternLayout.AddConverter(new ConverterInfo
                 {
                     Name = "fileNameNoPath",
                     Type = typeof(FileNameNoPathConverter)
                 }
-            );
-            patternLayout.ConversionPattern = "%-30d %-15level %-40fileNameNoPath %-20L %m%n";
-            patternLayout.ActivateOptions();
-            RollingFileAppender rollingFileAppender = GenerateRollingFileAppender(patternLayout);
-            hierarchy.Root.AddAppender(rollingFileAppender);
-            log4net.Config.BasicConfigurator.Configure(rollingFileAppender);
+                );
+                patternLayout.ConversionPattern = "%-30d %-15level %-40fileNameNoPath %-20L %m%n";
+                patternLayout.ActivateOptions();
+                RollingFileAppender rollingFileAppender = GenerateRollingFileAppender(patternLayout);
+                hierarchy.Root.AddAppender(rollingFileAppender);
+                log4net.Config.BasicConfigurator.Configure(rollingFileAppender);
 
-            if (_isDebug)
-            { hierarchy.Root.Level = Level.All; }
-            else
-            { hierarchy.Root.Level = Level.Info; }
+                if (_isDebug)
+                { hierarchy.Root.Level = Level.All; }
+                else
+                { hierarchy.Root.Level = Level.Info; }
+            }
+            catch (Exception exception)
+            {
+                #if DEBUG
+                throw exception;
+                #endif
+            }
         }
 
         /// <summary>
@@ -64,7 +73,11 @@ namespace Vulnerator.Helper
                 return rollingFileAppender;
             }
             catch (Exception exception)
-            { throw exception; }
+            {
+                #if DEBUG
+                throw exception;
+                #endif
+            }
         }
 
         /// <summary>
