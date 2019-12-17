@@ -444,7 +444,6 @@
     <Compile Include="Model\Object\FprVulnerability.cs" />
     <Compile Include="Model\Object\GitHubActions.cs" />
     <Compile Include="Model\Object\Issue.cs" />
-    <Compile Include="Model\Object\Logger.cs" />
     <Compile Include="Model\Object\Release.cs" />
     <Compile Include="Model\Object\FormattedCell.cs" />
     <Compile Include="Model\BusinessLogic\HTMLtoXML.cs" />
