@@ -27,7 +27,6 @@ namespace Vulnerator.Model.BusinessLogic
         private string webDbInstance = string.Empty;
         private string classification = string.Empty;
         private List<string> ccis = new List<string>();
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private string[] persistentParameters = new string[] {
             "Name", "Finding_Source_File_Name", "Source_Name", "Source_Version", "Source_Release", "Host_Name", "Scan_IP", "FQDN", "NetBIOS", "Finding_Type"
         };
@@ -45,7 +44,7 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 if (file.FilePath.IsFileInUse())
                 {
-                    log.Error(file.FileName + " is in use; please close any open instances and try again.");
+                    LogWriter.LogError($"'{file.FileName}' is in use; please close any open instances and try again.");
                     return "Failed; File In Use";
                 }
                 if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
@@ -95,8 +94,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to process CKL file {file.FileName}.");
-                log.Debug("Exception details:", exception);
+                string error = $"Unable to process CKL file '{file.FileName}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
                 return "Failed; See Log";
             }
             finally
@@ -178,7 +177,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to parse \"ASSET\" node.");
+                LogWriter.LogError("Unable to parse 'ASSET' node.");
                 throw exception;
             }
         }
@@ -218,7 +217,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to parse IP / MAC Address.");
+                LogWriter.LogError("Unable to parse IP / MAC Address.");
                 throw exception;
             }
         }
@@ -240,7 +239,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to insert IP / MAC address \"{item}\" into database.");
+                LogWriter.LogError($"Unable to insert IP / MAC address '{item}' into database.");
                 throw exception;
             }
         }
@@ -318,7 +317,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to parse \"STIG_INFO\" node.");
+                LogWriter.LogError("Unable to parse 'STIG_INFO' node.");
                 throw exception;
             }
         }
@@ -501,7 +500,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to parse \"VULN\" node.");
+                LogWriter.LogError("Unable to parse 'VULN' node.");
                 throw exception;
             }
         }
@@ -561,7 +560,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to parse unique finding data.");
+                LogWriter.LogError("Unable to parse unique finding data.");
                 throw exception;
             }
         }
@@ -585,8 +584,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to create a Unique Finding record for plugin \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\".");
+                LogWriter.LogError(
+                    $"Unable to create a Unique Finding record for plugin '{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}'.");
                 throw exception;
             }
         }
@@ -605,7 +604,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate XmlReaderSettings.");
+                LogWriter.LogError("Unable to generate XmlReaderSettings.");
                 throw exception;
             }
         }
@@ -632,7 +631,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to obtain the value from the \"STIG_INFO\" sub-node");
+                LogWriter.LogError("Unable to obtain the value from the 'STIG_INFO' sub-node");
                 throw exception;
             }
         }
@@ -651,7 +650,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to obtain \"ATTRIBUTE_DATA\" node value.");
+                LogWriter.LogError("Unable to obtain 'ATTRIBUTE_DATA' node value.");
                 throw exception;
             }
         }
@@ -712,8 +711,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to verify host \"{file.FileHostName}\" - \"{file.FileIpAddress}\" exists.");
-                log.Debug("Exception details:", exception);
+                string error = $"Unable to verify host '{file.FileHostName}' - '{file.FileIpAddress}' exists.";
+                LogWriter.LogErrorWithDebug(error, exception);
                 return file;
             }
         }
