@@ -308,8 +308,6 @@
     <Compile Include="Helper\LogWriter.cs" />
     <Compile Include="Model\BusinessLogic\AcasNessusReader.cs" />
     <Compile Include="Model\BusinessLogic\AcasCsvReader.cs" />
-    <Compile Include="Model\BusinessLogic\AnsibleReader.cs" />
-    <Compile Include="Model\BusinessLogic\AnsibleTowerBuilder.cs" />
     <Compile Include="Model\BusinessLogic\CklCreator.cs" />
     <Compile Include="Model\BusinessLogic\RawStigReader.cs" />
     <Compile Include="Model\BusinessLogic\AssociateStig.cs" />
@@ -666,7 +664,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\BusinessLogic\ConfigAlter.cs" />
     <Compile Include="ViewModel\BaseInpc.cs" />
     <Compile Include="ViewModel\DelegateCommand.cs" />
     <Compile Include="View\Converter\StringToBoolConverter.cs" />

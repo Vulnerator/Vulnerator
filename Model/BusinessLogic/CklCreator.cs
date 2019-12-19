@@ -15,8 +15,6 @@ namespace Vulnerator.Model.BusinessLogic
 {
     public class CklCreator
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
-
         public void CreateCklFromHardware(Hardware hardware, VulnerabilitySource vulnerabilitySource, string saveDirectory)
         { 
             try
@@ -59,8 +57,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to generate a CKL for {hardware.Displayed_Host_Name} - {vulnerabilitySource.Source_Name}.");
+                LogWriter.LogError(
+                    $"Unable to generate a CKL for '{hardware.Displayed_Host_Name}' - '{vulnerabilitySource.Source_Name}'.");
                 throw exception;
             }
             finally
@@ -92,7 +90,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to write CKL asset information.");
+                LogWriter.LogError("Unable to write CKL asset information.");
                 throw exception;
             }
         }
@@ -116,7 +114,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to write CKL STIG information.");
+                LogWriter.LogError("Unable to write CKL STIG information.");
                 throw exception;
             }
         }
@@ -132,7 +130,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate SI_DATA node.");
+                LogWriter.LogError("Unable to generate SI_DATA node.");
                 throw exception;
             }
         }
@@ -197,7 +195,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to write CKL vulnerability node.");
+                LogWriter.LogError("Unable to write CKL vulnerability node.");
                 throw exception;
             }
         }
@@ -213,7 +211,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate STIG_DATA node.");
+                LogWriter.LogError("Unable to generate STIG_DATA node.");
                 throw exception;
             }
         }
@@ -236,7 +234,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate XmlWriterSettings.");
+                LogWriter.LogError("Unable to generate XmlWriterSettings.");
                 throw exception;
             }
         }
