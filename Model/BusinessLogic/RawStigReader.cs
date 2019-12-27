@@ -18,7 +18,6 @@ namespace Vulnerator.Model.BusinessLogic
     public class RawStigReader
     {
         readonly DatabaseInterface databaseInterface = new DatabaseInterface();
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private bool sourceUpdated = true;
         private List<string> iaControls = new List<string>();
         private readonly List<string> ccis = new List<string>();
@@ -34,7 +33,7 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                log.Info($"Begin ingestion of raw STIG file {rawStig.Name}");
+                LogWriter.LogStatusUpdate($"Begin ingestion of raw STIG file '{rawStig.Name}'.");
                 if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
                 { DatabaseBuilder.sqliteConnection.Open(); }
                 using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
@@ -78,8 +77,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to process STIG file \"{rawStig.Name}\".");
-                log.Debug("Exception details: " + exception);
+                string error = $"Unable to process STIG file '{rawStig.Name}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
                 return "Failed";
             }
             finally
@@ -142,7 +141,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to process Benchmark node.");
+                LogWriter.LogError("Unable to process 'Benchmark' node.");
                 throw exception;
             }
         }
@@ -221,7 +220,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to process Group node.");
+                LogWriter.LogError("Unable to process 'Group' node.");
                 throw exception;
             }
         }
@@ -295,7 +294,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to process Rule description node.");
+                LogWriter.LogError("Unable to process 'Rule' node.");
                 throw exception;
             }
         }
@@ -378,7 +377,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to process Rule description node.");
+                LogWriter.LogError("Unable to process Rule 'description' node.");
                 throw exception;
             }
         }
@@ -400,7 +399,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate XmlReaderSettings.");
+                LogWriter.LogError("Unable to generate XmlReaderSettings.");
                 throw exception;
             }
         }
@@ -420,7 +419,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to obtain currently accessed node value.");
+                LogWriter.LogError("Unable to obtain currently accessed node value.");
                 throw exception;
             }
         }
@@ -438,7 +437,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate a Stream from the provided string.");
+                LogWriter.LogError("Unable to generate a Stream from the provided string.");
                 throw exception;
             }
         }

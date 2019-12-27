@@ -41,7 +41,6 @@ namespace Vulnerator.Model.BusinessLogic
         private List<string> macs = new List<string>();
         private List<string> responsibilities = new List<string>();
         private List<string> iaControls = new List<string>();
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private string[] persistentParameters = new string[] { "Name", "Finding_Source_File_Name", "Source_Name" };
 
         public string ReadXccdfFile(Object.File file)
@@ -50,7 +49,7 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 if (file.FileName.IsFileInUse())
                 {
-                    log.Error(file.FileName + " is in use; please close any open instances and try again.");
+                    LogWriter.LogError($"'{file.FileName}' is in use; please close any open instances and try again.");
                     return "Failed; File In Use";
                 }
 
@@ -62,8 +61,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to process XCCDF file.");
-                log.Debug("Exception details:", exception);
+                string error = $"Unable to process XCCDF file '{file.FileName}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
                 return "Failed; See Log";
             }
         }
@@ -130,7 +129,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to parse XCCDF using XML reader.");
+                LogWriter.LogError("Unable to parse XCCDF using XML reader.");
                 throw exception;
             }
             finally
@@ -168,7 +167,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to parse SCC XCCDF.");
+                LogWriter.LogError("Unable to parse SCC XCCDF.");
                 throw exception;
             }
         }
@@ -227,7 +226,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to process Benchmark node.");
+                LogWriter.LogError("Unable to process 'Benchmark' node.");
                 throw exception;
             }
         }
@@ -262,7 +261,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to get XCCDF vulnerability information.");
+                LogWriter.LogError("Unable to get XCCDF vulnerability information.");
                 throw exception;
             }
         }
@@ -334,7 +333,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to parse SCC XCCDF \"Rule\" node.");
+                LogWriter.LogError("Unable to parse SCC XCCDF 'Rule' node.");
                 throw exception;
             }
         }
@@ -417,7 +416,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to process Rule description node.");
+                LogWriter.LogError("Unable to process Rule 'description' node.");
                 throw exception;
             }
         }
@@ -458,7 +457,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to parse XCCDF test results.");
+                LogWriter.LogError("Unable to parse XCCDF test results.");
                 throw exception;
             }
         }
@@ -533,7 +532,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to set affected asset information.");
+                LogWriter.LogError("Unable to set affected asset information from SCC XCCDF file.");
                 throw exception;
             }
         }
@@ -571,7 +570,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to set XCCDF scan result.");
+                LogWriter.LogError("Unable to set XCCDF scan result.");
                 throw exception;
             }
         }
@@ -590,8 +589,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to create a uniqueFinding record for plugin \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\".");
+                LogWriter.LogError(
+                    $"Unable to create a uniqueFinding record for plugin '{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}'.");
                 throw exception;
             }
         }
@@ -657,7 +656,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to retrieve description and/or IAC.");
+                LogWriter.LogError("Unable to retrieve description and/or IAC.");
                 throw exception;
             }
         }
@@ -683,7 +682,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate a Stream from the provided string.");
+                LogWriter.LogError("Unable to generate a Stream from the provided string.");
                 throw exception;
             }
         }
@@ -705,7 +704,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate XmlReaderSettings.");
+                LogWriter.LogError("Unable to generate XmlReaderSettings.");
                 throw exception;
             }
         }
@@ -722,7 +721,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to obtain currently accessed node value.");
+                LogWriter.LogError("Unable to obtain currently accessed node value.");
                 throw exception;
             }
         }
