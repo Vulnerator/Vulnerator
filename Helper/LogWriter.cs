@@ -57,5 +57,21 @@ namespace Vulnerator.Helper
                 #endif
             }
         }
+
+        /// <summary>
+        /// Log writer to handle 'Warn' level logging
+        /// </summary>
+        /// <param name="message">The 'Warn' message to be logged</param>
+        public static void LogWarning(string message)
+        {
+            try
+            { log.Warn(message); }
+            catch (Exception exception)
+            {
+#if DEBUG
+                throw exception;
+#endif
+            }
+        }
     }
 }

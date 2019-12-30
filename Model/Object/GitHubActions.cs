@@ -4,13 +4,13 @@ using Octokit;
 using System;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
+using Vulnerator.Helper;
 using Vulnerator.ViewModel;
 
 namespace Vulnerator.Model.Object
 {
     public class GitHubActions
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         public async void GetGitHubIssues(AsyncObservableCollection<Issue> issueList)
         {
             try
@@ -45,7 +45,7 @@ namespace Vulnerator.Model.Object
                 }
                 else
                 {
-                    log.Warn("Github issues are only available if an internet connection is present.");
+                    LogWriter.LogWarning("Github issues are only available if an internet connection is present.");
                     Issue issue = new Issue();
                     issue.Title = "Network connection unavailable";
                     issueList.Add(issue);
@@ -53,8 +53,8 @@ namespace Vulnerator.Model.Object
             }
             catch (Exception exception)
             {
-                log.Error("Unable to retrieve GitHub Vulnerator issue listing.");
-                log.Debug("Exception details: " + exception);
+                string error = "Unable to retrieve GitHub Vulnerator issue listing.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -82,12 +82,12 @@ namespace Vulnerator.Model.Object
                     }
                 }
                 else
-                { log.Warn("GitHub releases are only available if an internet connection is available."); }
+                { LogWriter.LogWarning("GitHub releases are only available if an internet connection is available."); }
             }
             catch (Exception exception)
             {
-                log.Error("Unable to retrieve GitHub Vulnerator release listing.");
-                log.Debug("Exception details: " + exception);
+                string error = "Unable to retrieve GitHub Vulnerator release listing.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -110,8 +110,8 @@ namespace Vulnerator.Model.Object
             }
             catch (Exception exception)
             {
-                log.Error("Unable to retrieve GitHub Vulnerator release listing.");
-                log.Debug("Exception details: " + exception);
+                string error = "Unable to retrieve GitHub Vulnerator release listing.";
+                LogWriter.LogErrorWithDebug(error, exception);
                 _release.TagName = "Unavailable";
                 return _release;
             }

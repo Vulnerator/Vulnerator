@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Vulnerator.Helper;
 using Vulnerator.Model.Object;
 using Vulnerator.View.UI;
 
@@ -13,7 +14,6 @@ namespace Vulnerator.ViewModel
 {
     public class AboutViewModel : ViewModelBase
     {
-        public static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private Assembly assembly = Assembly.GetExecutingAssembly();
         public string ApplicationVersion
         {
@@ -32,18 +32,26 @@ namespace Vulnerator.ViewModel
 
         private string GetLicenseText()
         {
-            string licenseText = string.Empty;
-            using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.LICENSE"))
+            try
             {
-                using (StreamReader streamReader = new StreamReader(stream))
+                string licenseText = string.Empty;
+                using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.LICENSE"))
                 {
-                    licenseText = streamReader.ReadToEnd();
-                    licenseText = licenseText.Replace("(c)", "©");
-                    licenseText = Regex.Replace(licenseText, "\r\n", " ");
-                    licenseText = Regex.Replace(licenseText, "  ", "\r\n\r\n");
+                    using (StreamReader streamReader = new StreamReader(stream))
+                    {
+                        licenseText = streamReader.ReadToEnd();
+                        licenseText = licenseText.Replace("(c)", "©");
+                        licenseText = Regex.Replace(licenseText, "\r\n", " ");
+                        licenseText = Regex.Replace(licenseText, "  ", "\r\n\r\n");
+                    }
                 }
+                return licenseText;
             }
-            return licenseText;
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to retrieve Vulnerator license text.");
+                throw exception;
+            }
         }
 
         public RelayCommand<object> AboutLinksCommand => new RelayCommand<object>(AboutLinks);
@@ -86,10 +94,10 @@ namespace Vulnerator.ViewModel
             { Process.Start(mailTo); }
             catch (Exception exception)
             {
-                log.Error("Unable to send email; no email application exists.");
+                string error = "Unable to send email; no email application exists.";
+                LogWriter.LogErrorWithDebug(error, exception);
                 NoEmailApplication emailWarning = new NoEmailApplication();
                 emailWarning.ShowDialog();
-                return;
             }
         }
 
@@ -100,10 +108,10 @@ namespace Vulnerator.ViewModel
             { Process.Start(mailTo); }
             catch (Exception exception)
             {
-                log.Error("Unable to send email; no email application exists.");
+                string error = "Unable to send email; no email application exists.";
+                LogWriter.LogErrorWithDebug(error, exception);
                 NoEmailApplication emailWarning = new NoEmailApplication();
                 emailWarning.ShowDialog();
-                return;
             }
         }
 
@@ -114,7 +122,8 @@ namespace Vulnerator.ViewModel
             { Process.Start(mailTo); }
             catch (Exception exception)
             {
-                log.Error("Unable to send email; no email application exists.");
+                string error = "Unable to send email; no email application exists.";
+                LogWriter.LogErrorWithDebug(error, exception);
                 NoEmailApplication emailWarning = new NoEmailApplication();
                 emailWarning.ShowDialog();
                 return;
@@ -128,7 +137,23 @@ namespace Vulnerator.ViewModel
             { Process.Start(mailTo); }
             catch (Exception exception)
             {
-                log.Error("Unable to send email; no email application exists.");
+                string error = "Unable to send email; no email application exists.";
+                LogWriter.LogErrorWithDebug(error, exception);
+                NoEmailApplication emailWarning = new NoEmailApplication();
+                emailWarning.ShowDialog();
+                return;
+            }
+        }
+
+        private void EmailDeveloper(string email)
+        {
+            string mailTo = $"mailto:{email}";
+            try
+            { Process.Start(mailTo); }
+            catch (Exception exception)
+            {
+                string error = "Unable to send email; no email application exists.";
+                LogWriter.LogErrorWithDebug(error, exception);
                 NoEmailApplication emailWarning = new NoEmailApplication();
                 emailWarning.ShowDialog();
                 return;
