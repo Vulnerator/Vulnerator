@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\amkuc\.Rider2018.2\config\extensions" t="IncludeRecursive" />
-    <e p="C:\Users\amkuc\.Rider2018.2\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\amkuc\.Rider2018.2\system\resharper-host\Local\Transient\ReSharperHost\v182\SolutionCaches\_Vulnerator_v6.639477873.00" t="ExcludeRecursive" />
-    <e p="C:\Users\amkuc\Source\Repos\Vulnerator" t="IncludeRecursive">
+    <e p="C:\Users\Alex Kuchta\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Alex Kuchta\.Rider2019.3\system\resharper-host\Local\Transient\ReSharperHost\v193\SolutionCaches\_Vulnerator_v6.-1305605790.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Alex Kuchta\Source\Repos\Vulnerator" t="IncludeRecursive">
       <e p=".github" t="Include" />
       <e p="App.config" t="Include" />
       <e p="App.xaml" t="Include" />
@@ -14,18 +13,17 @@
       <e p="Helper" t="Include">
         <e p="ExtensionMethods.cs" t="Include" />
         <e p="FileNameNoPathConverter.cs" t="Include" />
+        <e p="Logger.cs" t="Include" />
+        <e p="LogWriter.cs" t="Include" />
       </e>
       <e p="LICENSE" t="Include" />
       <e p="Model" t="Include">
         <e p="BusinessLogic" t="Include">
           <e p="AcasCsvReader.cs" t="Include" />
           <e p="AcasNessusReader.cs" t="Include" />
-          <e p="AnsibleReader.cs" t="Include" />
-          <e p="AnsibleTowerBuilder.cs" t="Include" />
           <e p="AssociateStig.cs" t="Include" />
           <e p="CklCreator.cs" t="Include" />
           <e p="CklReader.cs" t="Include" />
-          <e p="ConfigAlter.cs" t="Include" />
           <e p="DiacapToRmf.cs" t="Include" />
           <e p="FprReader.cs" t="Include" />
           <e p="HTMLtoXML.cs" t="Include" />
@@ -44,9 +42,6 @@
         </e>
         <e p="Entity" t="Include">
           <e p="Accessibility.cs" t="Include" />
-          <e p="Accreditation.cs" t="Include" />
-          <e p="AccreditationsNistControl.cs" t="Include" />
-          <e p="AccreditationsWaiver.cs" t="Include" />
           <e p="AdditionalTestConsideration.cs" t="Include" />
           <e p="ATC_IATC.cs" t="Include" />
           <e p="ATC_IATC_PendingItems.cs" t="Include" />
@@ -84,7 +79,9 @@
           <e p="FISMA.cs" t="Include" />
           <e p="GoverningPolicy.cs" t="Include" />
           <e p="Group.cs" t="Include" />
-          <e p="GroupTier.cs" t="Include" />
+          <e p="GroupsCCIs.cs" t="Include" />
+          <e p="GroupsMitigationsOrConditions.cs" t="Include" />
+          <e p="GroupsWaivers.cs" t="Include" />
           <e p="Hardware.cs" t="Include" />
           <e p="Hardware_PPS.cs" t="Include" />
           <e p="HardwareLocation.cs" t="Include" />
@@ -117,7 +114,7 @@
           <e p="Overlay.cs" t="Include" />
           <e p="Overview.cs" t="Include" />
           <e p="PIT_Determination.cs" t="Include" />
-          <e p="PP.cs" t="Include" />
+          <e p="PPS.cs" t="Include" />
           <e p="RelatedDocument.cs" t="Include" />
           <e p="RelatedTesting.cs" t="Include" />
           <e p="ReportCategory.cs" t="Include" />
@@ -163,7 +160,6 @@
           <e p="Issue.cs" t="Include" />
           <e p="IssueLabelCategory.cs" t="Include" />
           <e p="Likelihood.cs" t="Include" />
-          <e p="Logger.cs" t="Include" />
           <e p="Notification.cs" t="Include" />
           <e p="Release.cs" t="Include" />
           <e p="Risk.cs" t="Include" />
@@ -171,7 +167,31 @@
           <e p="VulnerabilityReference.cs" t="Include" />
         </e>
       </e>
-      <e p="obj" t="ExcludeRecursive" />
+      <e p="obj" t="ExcludeRecursive">
+        <e p="Debug" t="Include">
+          <e p="App.g.cs" t="Include" />
+          <e p="GeneratedInternalTypeHelper.g.cs" t="Include" />
+          <e p="View" t="Include">
+            <e p="UI" t="Include">
+              <e p="AboutView.g.cs" t="Include" />
+              <e p="CloseReportWorkbook.g.cs" t="Include" />
+              <e p="ConfigurationManagementView.g.cs" t="Include" />
+              <e p="MainWindow.g.cs" t="Include" />
+              <e p="NewsView.g.cs" t="Include" />
+              <e p="NoEmailApplication.g.cs" t="Include" />
+              <e p="NoInternetApplication.g.cs" t="Include" />
+              <e p="ReportingView.g.cs" t="Include" />
+              <e p="RmfView.g.cs" t="Include" />
+              <e p="SettingsView.g.cs" t="Include" />
+              <e p="SplashWindow.g.cs" t="Include" />
+              <e p="ThemeView.g.cs" t="Include" />
+              <e p="UserGuideView.g.cs" t="Include" />
+              <e p="VulnerabilityManagementView.g.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Vulnerator_Content.g.cs" t="Include" />
+        </e>
+      </e>
       <e p="packages" t="ExcludeRecursive">
         <e p="SQLite.3.13.0\runtimes\win7-x64\native\sqlite3.dll" t="Include" />
         <e p="SQLite.3.13.0\runtimes\win7-x86\native\sqlite3.dll" t="Include" />
@@ -186,14 +206,17 @@
       </e>
       <e p="readme.md" t="Include" />
       <e p="Resources" t="Include">
-        <e p="chart.ico" t="Include" />
         <e p="DdlFiles" t="Include">
           <e p="v6-2-0_CreateDatabase.ddl" t="Include" />
           <e p="v6-2-0_CreateVulnerabilityRelatedIndices.ddl" t="Include" />
           <e p="v6-2-0_DropVulnerabilityRelatedIndices.ddl" t="Include" />
         </e>
         <e p="DiacapToRmf.xml" t="Include" />
-        <e p="processwarning.ico" t="Include" />
+        <e p="DllFiles" t="Include">
+          <e p="JetBrains.Annotations.dll" t="Include" />
+          <e p="MahApps.Metro.IconPacks.Core.dll" t="Include" />
+          <e p="MahApps.Metro.IconPacks.dll" t="Include" />
+        </e>
         <e p="RawData" t="Include">
           <e p="IAControls_Mapping.xml" t="Include" />
           <e p="NIST_800-53_CCI_Mapping.xml" t="Include" />
@@ -214,7 +237,7 @@
           <e p="Looking-Ahead.md" t="Include" />
           <e p="Using-the-Software.md" t="Include" />
         </e>
-        <e p="vulneratorlogodraft.ico" t="Include" />
+        <e p="vulnerator.ico" t="Include" />
       </e>
       <e p="Settings.cs" t="Include" />
       <e p="Solution Items" t="Include" />
@@ -225,6 +248,7 @@
           <e p="BooleanToHiddenConverter.cs" t="Include" />
           <e p="BooleanToIconConverter.cs" t="Include" />
           <e p="BooleanToVisibilityConverter.cs" t="Include" />
+          <e p="DateTimeConverter.cs" t="Include" />
           <e p="DebugDataBindingConverter.cs" t="Include" />
           <e p="EmailPersonnelLabelJoiner.cs" t="Include" />
           <e p="EmailTextLabelStringJoiner.cs" t="Include" />
@@ -232,35 +256,47 @@
           <e p="HtmlToFlowDocumentConverter.cs" t="Include" />
           <e p="ImportButtonTextAppendingConverter.cs" t="Include" />
           <e p="InverseBooleanConverter.cs" t="Include" />
+          <e p="IsNullConverter.cs" t="Include" />
+          <e p="IsNullToCollapsedConverter.cs" t="Include" />
+          <e p="IsNullToVisibleConverter.cs" t="Include" />
           <e p="MarkupConverter.cs" t="Include" />
           <e p="MathConverter.cs" t="Include" />
           <e p="MaxLengthToRemainingCharactersConverter.cs" t="Include" />
           <e p="MitigationsSelectedItemConverter.cs" t="Include" />
+          <e p="NullToBooleanConverter.cs" t="Include" />
           <e p="ObtainFirstSplitStringValueConverter.cs" t="Include" />
           <e p="ObtainSecondSplitStringValueConverter.cs" t="Include" />
           <e p="ObtainThirdSplitStringValueConverter.cs" t="Include" />
           <e p="RemainingCharactersConverter.cs" t="Include" />
+          <e p="ResizeModeMinMaxButtonVisibilityConverter.cs" t="Include" />
           <e p="SelectedItemToContentConverter.cs" t="Include" />
           <e p="StringJoiningConverter.cs" t="Include" />
           <e p="StringToBoolConverter.cs" t="Include" />
         </e>
         <e p="Styles" t="Include">
+          <e p="Border.xaml" t="Include" />
           <e p="Button.xaml" t="Include" />
+          <e p="CheckBox.xaml" t="Include" />
           <e p="ComboBox.xaml" t="Include" />
           <e p="DataGrid.xaml" t="Include" />
           <e p="DatePicker.xaml" t="Include" />
+          <e p="Expander.xaml" t="Include" />
           <e p="HamburgerMenu.xaml" t="Include" />
           <e p="Label.xaml" t="Include" />
           <e p="ListBox.xaml" t="Include" />
+          <e p="ListView.xaml" t="Include" />
           <e p="MarkdownViewer.xaml" t="Include" />
           <e p="MetroWindow.xaml" t="Include" />
           <e p="NotificationMessage.xaml" t="Include" />
           <e p="NotificationMessageContainer.xaml" t="Include" />
           <e p="Rectangle.xaml" t="Include" />
+          <e p="StackPanel.xaml" t="Include" />
           <e p="Storyboard.xaml" t="Include" />
           <e p="TabItem.xaml" t="Include" />
           <e p="TextBlock.xaml" t="Include" />
           <e p="TextBox.xaml" t="Include" />
+          <e p="ToggleSwitch.xaml" t="Include" />
+          <e p="WindowButtonCommands.xaml" t="Include" />
         </e>
         <e p="Theme" t="Include">
           <e p="BlackAndWhite.xaml" t="Include" />
@@ -275,14 +311,14 @@
           <e p="ConfigurationManagementView.xaml.cs" t="Include" />
           <e p="MainWindow.xaml" t="Include" />
           <e p="MainWindow.xaml.cs" t="Include" />
-          <e p="MitigationsNistMappingView.xaml" t="Include" />
-          <e p="MitigationsNistMappingView.xaml.cs" t="Include" />
           <e p="NewsView.xaml" t="Include" />
           <e p="NewsView.xaml.cs" t="Include" />
           <e p="NoEmailApplication.xaml" t="Include" />
           <e p="NoEmailApplication.xaml.cs" t="Include" />
           <e p="NoInternetApplication.xaml" t="Include" />
           <e p="NoInternetApplication.xaml.cs" t="Include" />
+          <e p="ReportingView.xaml" t="Include" />
+          <e p="ReportingView.xaml.cs" t="Include" />
           <e p="RmfView.xaml" t="Include" />
           <e p="RmfView.xaml.cs" t="Include" />
           <e p="SettingsView.xaml" t="Include" />
@@ -300,6 +336,7 @@
           <e p="BlankFieldValidationRule.cs" t="Include" />
           <e p="EmailValidationRule.cs" t="Include" />
           <e p="MitigationDatabaseValidationRule.cs" t="Include" />
+          <e p="NumericValidationRule.cs" t="Include" />
           <e p="PhoneNumberValidationRule.cs" t="Include" />
         </e>
         <e p="ViewHelper" t="Include">
@@ -318,8 +355,8 @@
         <e p="EventCommand.cs" t="Include" />
         <e p="MainViewModel.cs" t="Include" />
         <e p="MessengerToken.cs" t="Include" />
-        <e p="MitigationsNistMappingViewModel.cs" t="Include" />
         <e p="NewsViewModel.cs" t="Include" />
+        <e p="ReportingViewModel.cs" t="Include" />
         <e p="RmfViewModel.cs" t="Include" />
         <e p="SettingsViewModel.cs" t="Include" />
         <e p="SplashViewModel.cs" t="Include" />

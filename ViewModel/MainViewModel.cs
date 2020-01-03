@@ -40,7 +40,6 @@ namespace Vulnerator.ViewModel
         private Assembly assembly = Assembly.GetExecutingAssembly();
         private AsyncObservableCollection<Release> ReleaseList;
         private BackgroundWorker backgroundWorker;
-        private ConfigAlter configAlter;
         private DatabaseBuilder databaseBuilder;
         private GitHubActions githubActions;
         public INotificationMessageManager NotificationMessageManager { get; set; } = new NotificationMessageManager();

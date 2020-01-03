@@ -24,8 +24,6 @@ namespace Vulnerator.Model.BusinessLogic
         private string dateTimeFormat = "MMM d, yyyy hh:mm:ss";
         private string acasVersion = string.Empty;
         private string acasRelease = string.Empty;
-        private string vulneratorDatabaseConnection = @"Data Source = " + ConfigAlter.ReadSettingsFromDictionary("tbMitDbLocation");
-        private bool UserPrefersHostName => bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier"));
         private string[] persistentParameters = new string[] { "Name", "Finding_Source_File_Name", "Source_Name" };
         List<VulnerabilityReference> references = new List<VulnerabilityReference>();
         private DatabaseInterface databaseInterface = new DatabaseInterface();

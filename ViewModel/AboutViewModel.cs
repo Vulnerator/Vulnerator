@@ -28,7 +28,18 @@ namespace Vulnerator.ViewModel
         public string License => GetLicenseText();
 
         public AboutViewModel()
-        { }
+        {
+            try
+            {
+                LogWriter.LogStatusUpdate("Begin instantiation of AboutViewModel.");
+                LogWriter.LogStatusUpdate("AboutViewModel instantiated successfully.");
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to instantiate AboutViewModel.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
 
         private string GetLicenseText()
         {
@@ -49,8 +60,9 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Unable to retrieve Vulnerator license text.");
-                throw exception;
+                string error = "Unable to retrieve Vulnerator license text.";
+                LogWriter.LogErrorWithDebug(error, exception);
+                return string.Empty;
             }
         }
 
@@ -64,84 +76,26 @@ namespace Vulnerator.ViewModel
             {
                 case "emailAlexTextBox":
                     {
-                        EmailAlex();
+                        EmailDeveloper("alex.kuchta@navy.mil");
                         break;
                     }
                 case "emailJeffvTextBox":
                     {
-                        EmailJeffV();
+                        EmailDeveloper("Jeff.Vanerwegen@Vencore.com");
                         break;
                     }
                 case "emailRickTextBox":
                     {
-                        EmailRick();
+                        EmailDeveloper("rick.murphy@navy.mil");
                         break;
                     }
                 case "emailJeffpTextBox":
                     {
-                        EmailJeffP();
+                        EmailDeveloper("jeffrey.a.purcell@navy.mil");
                         break;
                     }
                 default:
                     { break; }
-            }
-        }
-
-        private void EmailAlex()
-        {
-            string mailTo = "mailto:alex.kuchta@navy.mil";
-            try
-            { Process.Start(mailTo); }
-            catch (Exception exception)
-            {
-                string error = "Unable to send email; no email application exists.";
-                LogWriter.LogErrorWithDebug(error, exception);
-                NoEmailApplication emailWarning = new NoEmailApplication();
-                emailWarning.ShowDialog();
-            }
-        }
-
-        private void EmailJeffV()
-        {
-            string mailTo = "mailto:Jeff.Vanerwegen@Vencore.com";
-            try
-            { Process.Start(mailTo); }
-            catch (Exception exception)
-            {
-                string error = "Unable to send email; no email application exists.";
-                LogWriter.LogErrorWithDebug(error, exception);
-                NoEmailApplication emailWarning = new NoEmailApplication();
-                emailWarning.ShowDialog();
-            }
-        }
-
-        private void EmailRick()
-        {
-            string mailTo = "mailto:rick.murphy@navy.mil";
-            try
-            { Process.Start(mailTo); }
-            catch (Exception exception)
-            {
-                string error = "Unable to send email; no email application exists.";
-                LogWriter.LogErrorWithDebug(error, exception);
-                NoEmailApplication emailWarning = new NoEmailApplication();
-                emailWarning.ShowDialog();
-                return;
-            }
-        }
-
-        private void EmailJeffP()
-        {
-            string mailTo = "mailto:jeffrey.a.purcell@navy.mil";
-            try
-            { Process.Start(mailTo); }
-            catch (Exception exception)
-            {
-                string error = "Unable to send email; no email application exists.";
-                LogWriter.LogErrorWithDebug(error, exception);
-                NoEmailApplication emailWarning = new NoEmailApplication();
-                emailWarning.ShowDialog();
-                return;
             }
         }
 
@@ -156,7 +110,6 @@ namespace Vulnerator.ViewModel
                 LogWriter.LogErrorWithDebug(error, exception);
                 NoEmailApplication emailWarning = new NoEmailApplication();
                 emailWarning.ShowDialog();
-                return;
             }
         }
     }
