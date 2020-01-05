@@ -2,19 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="de390ca3-78ef-4edc-b2ba-9c703e40330d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Vulnerator_v6/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Vulnerator_v6/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Vulnerator_v6/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Vulnerator_v6/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Vulnerator_v6/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/BusinessLogic/AcasCsvReader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/BusinessLogic/AcasCsvReader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ViewModel/AboutViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ViewModel/AboutViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ViewModel/ConfigurationManagementViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ViewModel/ConfigurationManagementViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ViewModel/MainViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ViewModel/MainViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ViewModel/NewsViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ViewModel/NewsViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ViewModel/ReportingViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ViewModel/ReportingViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ViewModel/SettingsViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ViewModel/SettingsViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ViewModel/ThemeViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ViewModel/ThemeViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ViewModel/UserGuideViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ViewModel/UserGuideViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ViewModel/VulnerabilityViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ViewModel/VulnerabilityViewModel.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,34 +13,41 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Model/BusinessLogic/AcasCsvReader.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/App.xaml.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Model/BusinessLogic/RawStigReader.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8174FDEA-D4CF-43F8-90DD-416E078FC301/d9/05b70c06/XmlReader.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Model/BusinessLogic/CklReader.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Helper/ExtensionMethods.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/42073FCF-9EFD-4A92-A6F0-A4CC94099FE3/7d/3008abfb/ResourceManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/View/Styles/Button.xaml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Properties/Resources.resx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8174FDEA-D4CF-43F8-90DD-416E078FC301/8d/c26cc120/XmlTextReaderImpl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/View/UI/MainWindow.xaml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/App.xaml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ViewModel/ViewModelLocator.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ViewModel/SettingsViewModel.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ViewModel/ThemeViewModel.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ViewModel/NewsViewModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8174FDEA-D4CF-43F8-90DD-416E078FC301/72/c34b0d17/XsdValidatingReader.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ViewModel/RmfViewModel.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ViewModel/DelegateCommand.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ViewModel/ReportingViewModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/View/UI/ConfigurationManagementView.xaml" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ViewModel/MessengerToken.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ViewModel/AboutViewModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ViewModel/MainViewModel.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ViewModel/BaseInpc.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Properties/Resources.resx" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/View/UI/NewsView.xaml" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ViewModel/AsyncObservableCollection.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ViewModel/ConfigurationManagementViewModel.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Model/DataAccess/DatabaseInterface.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ViewModel/EventCommand.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ViewModel/VulnerabilityViewModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/View/UI/UserGuideView.xaml" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ViewModel/UserGuideViewModel.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/View/Theme/BlackAndWhite.xaml" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ViewModel/ViewModelHelper/GuiFeedback.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Model/BusinessLogic/AcasCsvReader.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Model/BusinessLogic/RawStigReader.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Model/BusinessLogic/CklReader.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Helper/ExtensionMethods.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/View/Styles/Button.xaml" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/ViewModel/ViewModelLocator.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/ViewModel/MainViewModel.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/View/UI/MainWindow.xaml" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -71,6 +66,7 @@
         <option value="$PROJECT_DIR$/ViewModel/ThemeViewModel.cs" />
         <option value="$PROJECT_DIR$/ViewModel/UserGuideViewModel.cs" />
         <option value="$PROJECT_DIR$/ViewModel/VulnerabilityViewModel.cs" />
+        <option value="$PROJECT_DIR$/View/UI/UserGuideView.xaml" />
       </list>
     </option>
   </component>
@@ -162,6 +158,26 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
+    <state width="1235" height="412" key="GridCell.Tab.0.bottom" timestamp="1578199341469">
+      <screen x="-349" y="-2160" width="2560" height="1440" />
+    </state>
+    <state width="1235" height="412" key="GridCell.Tab.0.bottom/0.0.1829.1029/-349.-2160.2560.1440@-349.-2160.2560.1440" timestamp="1578199341469" />
+    <state width="1235" height="412" key="GridCell.Tab.0.center" timestamp="1578199341468">
+      <screen x="-349" y="-2160" width="2560" height="1440" />
+    </state>
+    <state width="1235" height="412" key="GridCell.Tab.0.center/0.0.1829.1029/-349.-2160.2560.1440@-349.-2160.2560.1440" timestamp="1578199341468" />
+    <state width="1235" height="412" key="GridCell.Tab.0.left" timestamp="1578199341468">
+      <screen x="-349" y="-2160" width="2560" height="1440" />
+    </state>
+    <state width="1235" height="412" key="GridCell.Tab.0.left/0.0.1829.1029/-349.-2160.2560.1440@-349.-2160.2560.1440" timestamp="1578199341468" />
+    <state width="1235" height="412" key="GridCell.Tab.0.right" timestamp="1578199341469">
+      <screen x="-349" y="-2160" width="2560" height="1440" />
+    </state>
+    <state width="1235" height="412" key="GridCell.Tab.0.right/0.0.1829.1029/-349.-2160.2560.1440@-349.-2160.2560.1440" timestamp="1578199341469" />
+    <state x="1303" y="-1723" key="RollbackChangesDialog" timestamp="1578198301564">
+      <screen x="-349" y="-2160" width="2560" height="1440" />
+    </state>
+    <state x="1303" y="-1723" key="RollbackChangesDialog/0.0.1829.1029/-349.-2160.2560.1440@-349.-2160.2560.1440" timestamp="1578198301564" />
     <state x="462" y="244" key="SettingsEditor" timestamp="1578003395347">
       <screen x="0" y="0" width="1920" height="1200" />
     </state>
