@@ -285,6 +285,7 @@
           <e p="Label.xaml" t="Include" />
           <e p="ListBox.xaml" t="Include" />
           <e p="ListView.xaml" t="Include" />
+          <e p="Margins.xaml" t="Include" />
           <e p="MarkdownViewer.xaml" t="Include" />
           <e p="MetroWindow.xaml" t="Include" />
           <e p="NotificationMessage.xaml" t="Include" />

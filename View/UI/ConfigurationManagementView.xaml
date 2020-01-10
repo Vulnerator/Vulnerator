@@ -31,7 +31,7 @@
         <Controls:MetroAnimatedSingleRowTabControl Controls:TabControlHelper.Underlined="SelectedTabItem">
             <TabItem Header="Hardware"
                      Style="{StaticResource CustomMetroTabItem}">
-                <Grid Margin="5,0,5,5">
+                <Grid Margin="{StaticResource MarginLeftRightBottom5}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
@@ -43,8 +43,7 @@
                             <RowDefinition />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <DockPanel Grid.Row="0"
-                                   Margin="0,0,0,5">
+                        <DockPanel Grid.Row="0">
                             <Grid HorizontalAlignment="Stretch"
                                   DockPanel.Dock="Top">
                                 <Grid.ColumnDefinitions>
@@ -53,18 +52,12 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Label Style="{StaticResource TopLevelHeaderStyle}">
-                                    <TextBlock Text="Hardware Assets"
-                                               TextTrimming="CharacterEllipsis" />
-                                </Label>
                                 <Label Grid.Column="2"
-                                       Margin="0,3"
                                        VerticalAlignment="Bottom">
                                     <TextBlock Text="Count:"
                                                TextTrimming="CharacterEllipsis" />
                                 </Label>
                                 <Label Grid.Column="3"
-                                       Margin="0,3"
                                        VerticalAlignment="Bottom">
                                     <TextBlock Text="{Binding Hardwares.Count}"
                                                TextTrimming="CharacterEllipsis" />
@@ -79,7 +72,7 @@
                                                             Width="Auto">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <CheckBox Margin="5,0,0,0"
+                                                <CheckBox Margin="{StaticResource MarginLeft5}"
                                                           HorizontalAlignment="Center"
                                                           IsChecked="{Binding IsChecked}"
                                                           Style="{StaticResource CustomCheckBox}" />
@@ -516,7 +509,7 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <IconPacks:PackIconFontAwesomeLight Grid.Column="0"
-                                                                        Margin="5"
+                                                                        Margin="{StaticResource MarginAll5}"
                                                                         HorizontalAlignment="Center"
                                                                         VerticalAlignment="Center"
                                                                         Kind="PlusSquare" />
@@ -545,7 +538,7 @@
                                          vh:DependencyProperties.FloatingWatermark="Scan IP"
                                          Style="{StaticResource HeaderedTextBoxStyle}" />
                                 <DataGrid MinHeight="100"
-                                          Margin="0,15,0,0"
+                                          Margin="{StaticResource MarginTop5}"
                                           Style="{StaticResource GreyBorderedDataGridStyle}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Additional IPs"
@@ -559,27 +552,27 @@
                                                            Style="{StaticResource HeaderedComboBoxStyle}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Operating System"
                                          Style="{StaticResource HeaderedTextBoxStyle}" />
-                                <Controls:ToggleSwitch Margin="0,10,0,5"
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Found 21745"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
                                                        IsEnabled="False"
                                                        Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
-                                <Controls:ToggleSwitch Margin="0,10,0,5"
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Found 26917"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
                                                        IsEnabled="False"
                                                        Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
-                                <Controls:ToggleSwitch Margin="0,10,0,5"
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is Virtual Server"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
                                                        Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
-                                <Controls:ToggleSwitch Margin="0,10,0,5"
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is IA Enabled"
                                                        FontFamily="Segoe UI"
@@ -602,7 +595,7 @@
             </TabItem>
             <TabItem Header="Software"
                      Style="{StaticResource CustomMetroTabItem}">
-                <Grid Margin="5,0,5,5">
+                <Grid Margin="{StaticResource MarginLeftRightBottom5}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
@@ -614,8 +607,7 @@
                             <RowDefinition />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <DockPanel Grid.Row="0"
-                                   Margin="0,0,0,5">
+                        <DockPanel Grid.Row="0">
                             <Grid HorizontalAlignment="Stretch"
                                   DockPanel.Dock="Top">
                                 <Grid.ColumnDefinitions>
@@ -624,18 +616,12 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Label Style="{StaticResource TopLevelHeaderStyle}">
-                                    <TextBlock Text="Installed Software"
-                                               TextTrimming="CharacterEllipsis" />
-                                </Label>
                                 <Label Grid.Column="2"
-                                       Margin="0,3"
                                        VerticalAlignment="Bottom">
                                     <TextBlock Text="Count:"
                                                TextTrimming="CharacterEllipsis" />
                                 </Label>
                                 <Label Grid.Column="3"
-                                       Margin="0,3"
                                        VerticalAlignment="Bottom">
                                     <TextBlock Text="{Binding Softwares.Count}"
                                                TextTrimming="CharacterEllipsis" />
@@ -649,7 +635,7 @@
                                                             Width="Auto">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <CheckBox Margin="5,0,0,0"
+                                                <CheckBox Margin="{StaticResource MarginLeft5}"
                                                           HorizontalAlignment="Center"
                                                           IsChecked="{Binding IsChecked}"
                                                           Style="{StaticResource CustomCheckBox}" />
@@ -886,7 +872,7 @@
                     <Expander Grid.Column="1"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
-                              ExpandDirection="Right">
+                              ExpandDirection="Right" Style="{StaticResource CustomExpander}">
                         <Expander.Header>
                             <Label Foreground="{DynamicResource LabelTextBrush}">
                                 <Label.LayoutTransform>
@@ -898,7 +884,7 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <IconPacks:PackIconFontAwesomeLight Grid.Column="0"
-                                                                        Margin="5"
+                                                                        Margin="{StaticResource MarginAll5}"
                                                                         HorizontalAlignment="Center"
                                                                         VerticalAlignment="Center"
                                                                         Kind="PlusSquare" />
@@ -918,7 +904,7 @@
             </TabItem>
             <TabItem Header="PPS"
                      Style="{StaticResource CustomMetroTabItem}">
-                <Grid Margin="5,0,5,5">
+                <Grid Margin="{StaticResource MarginLeftRightBottom5}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
@@ -940,35 +926,27 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Label Style="{StaticResource TopLevelHeaderStyle}">
-                                    <TextBlock Text="Ports, Protocols, &amp; Services"
-                                               TextTrimming="CharacterEllipsis" />
-                                </Label>
                                 <Label Grid.Column="2"
-                                       Margin="0,3"
                                        VerticalAlignment="Bottom">
                                     <TextBlock Text="Count:"
                                                TextTrimming="CharacterEllipsis" />
                                 </Label>
                                 <Label Grid.Column="3"
-                                       Margin="0,3"
                                        VerticalAlignment="Bottom">
                                     <TextBlock Text="{Binding PPS.Count}"
                                                TextTrimming="CharacterEllipsis" />
                                 </Label>
                             </Grid>
-                            <DataGrid AutoGenerateColumns="False"
-                                      DockPanel.Dock="Top"
+                            <DataGrid DockPanel.Dock="Top"
                                       ItemsSource="{Binding PPS}"
                                       Style="{StaticResource GreyBorderedDataGridStyle}"
-                                      HorizontalScrollBarVisibility="Disabled"
                                       VerticalScrollBarVisibility="Auto">
                                 <DataGrid.Columns>
                                     <DataGridTemplateColumn x:Name="ppsCheckBoxColumn"
                                                             Width="Auto">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <CheckBox Margin="5,0,0,0"
+                                                <CheckBox Margin="{StaticResource MarginLeft5}"
                                                           HorizontalAlignment="Center"
                                                           IsChecked="{Binding IsChecked}"
                                                           Style="{StaticResource CustomCheckBox}" />
@@ -1170,7 +1148,7 @@
                     <Expander Grid.Column="1"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
-                              ExpandDirection="Right">
+                              ExpandDirection="Right" Style="{StaticResource CustomExpander}">
                         <Expander.Header>
                             <Label Foreground="{DynamicResource LabelTextBrush}">
                                 <Label.LayoutTransform>
@@ -1182,7 +1160,7 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <IconPacks:PackIconFontAwesomeLight Grid.Column="0"
-                                                                        Margin="5"
+                                                                        Margin="{StaticResource MarginAll5}"
                                                                         HorizontalAlignment="Center"
                                                                         VerticalAlignment="Center"
                                                                         Kind="PlusSquare" />
@@ -1224,18 +1202,12 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Label Style="{StaticResource TopLevelHeaderStyle}">
-                                    <TextBlock Text="Contacts"
-                                               TextTrimming="CharacterEllipsis" />
-                                </Label>
                                 <Label Grid.Column="2"
-                                       Margin="0,3"
                                        VerticalAlignment="Bottom">
                                     <TextBlock Text="Count:"
                                                TextTrimming="CharacterEllipsis" />
                                 </Label>
                                 <Label Grid.Column="3"
-                                       Margin="0,3"
                                        VerticalAlignment="Bottom">
                                     <TextBlock Text="{Binding Contacts.Count}"
                                                TextTrimming="CharacterEllipsis" />
@@ -1249,7 +1221,7 @@
                                                             Width="Auto">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <CheckBox Margin="5,0,0,0"
+                                                <CheckBox Margin="{StaticResource MarginLeft5}"
                                                           HorizontalAlignment="Center"
                                                           IsChecked="{Binding IsChecked}"
                                                           Style="{StaticResource CustomCheckBox}" />
@@ -1539,7 +1511,7 @@
                     <Expander Grid.Column="1"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
-                              ExpandDirection="Right">
+                              ExpandDirection="Right" Style="{StaticResource CustomExpander}">
                         <Expander.Header>
                             <Label Foreground="{DynamicResource LabelTextBrush}">
                                 <Label.LayoutTransform>
@@ -1551,7 +1523,7 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <IconPacks:PackIconFontAwesomeLight Grid.Column="0"
-                                                                        Margin="5"
+                                                                        Margin="{StaticResource MarginAll5}"
                                                                         HorizontalAlignment="Center"
                                                                         VerticalAlignment="Center"
                                                                         Kind="PlusSquare" />
@@ -1571,7 +1543,7 @@
             </TabItem>
             <TabItem Header="Groups"
                      Style="{StaticResource CustomMetroTabItem}">
-                <Grid Margin="5,0,5,5">
+                <Grid Margin="{StaticResource MarginAll5}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
@@ -1583,8 +1555,7 @@
                             <RowDefinition />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <DockPanel Grid.Row="0"
-                                   Margin="0,0,0,5">
+                        <DockPanel Grid.Row="0">
                             <Grid HorizontalAlignment="Stretch"
                                   DockPanel.Dock="Top">
                                 <Grid.ColumnDefinitions>
@@ -1593,21 +1564,8 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Label Grid.Column="2"
-                                       Margin="0,3"
-                                       VerticalAlignment="Bottom">
-                                    <TextBlock Text="Count:"
-                                               TextTrimming="CharacterEllipsis" />
-                                </Label>
-                                <Label Grid.Column="3"
-                                       Margin="0,3"
-                                       VerticalAlignment="Bottom">
-                                    <TextBlock Text="{Binding Groups.Count}"
-                                               TextTrimming="CharacterEllipsis" />
-                                </Label>
                             </Grid>
-                            <DataGrid Margin="0,0,5,0"
-                                      DockPanel.Dock="Top"
+                            <DataGrid DockPanel.Dock="Top"
                                       ItemsSource="{Binding Groups}"
                                       SelectedItem="{Binding SelectedGroup, Mode=TwoWay}"
                                       Style="{StaticResource GreyBorderedDataGridStyle}">
@@ -1616,7 +1574,7 @@
                                                             Width="Auto">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <CheckBox Margin="5,0,0,0"
+                                                <CheckBox Margin="{StaticResource MarginLeft5}"
                                                           HorizontalAlignment="Center"
                                                           IsChecked="{Binding IsChecked}"
                                                           Style="{StaticResource CustomCheckBox}" />
@@ -1688,23 +1646,35 @@
                             </DataGrid>
                         </DockPanel>
                         <ScrollViewer Grid.Row="1"
-                                      Margin="0,0,5,5"
+                                      Margin="{StaticResource MarginTop5}"
                                       HorizontalAlignment="Stretch"
                                       VerticalAlignment="Stretch"
                                       HorizontalScrollBarVisibility="Auto"
                                       VerticalScrollBarVisibility="Disabled">
                             <Grid>
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Button Grid.Column="1"
+                                <Label Grid.Column="0"
+                                       VerticalAlignment="Center">
+                                    <TextBlock Text="Count:"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                                <Label Grid.Column="1"
+                                       VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Groups.Count}"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                                <Button Grid.Column="3"
                                         HorizontalAlignment="Right"
                                         Command="{Binding ClearSelectedGroupCommand}"
                                         Content="Clear Selected Group" />
-                                <Button Grid.Column="2"
-                                        Margin="5,0,0,0"
+                                <Button Grid.Column="4"
+                                        Margin="{StaticResource MarginLeft5}"
                                         HorizontalAlignment="Right"
                                         Command="{Binding DeleteGroupCommand}"
                                         Content="Delete Selected Group" />
@@ -1714,8 +1684,7 @@
                     <Expander Grid.Column="1"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
-                              ExpandDirection="Right"
-                              Style="{StaticResource CustomExpander}">
+                              ExpandDirection="Right" Style="{StaticResource CustomExpander}">
                         <Expander.Header>
                             <Label Foreground="{DynamicResource LabelTextBrush}">
                                 <Label.LayoutTransform>
@@ -1727,7 +1696,7 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <IconPacks:PackIconFontAwesomeLight Grid.Column="0"
-                                                                        Margin="5"
+                                                                        Margin="{StaticResource MarginAll5}"
                                                                         HorizontalAlignment="Center"
                                                                         VerticalAlignment="Center"
                                                                         Kind="PlusSquare" />
@@ -1760,7 +1729,7 @@
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          TextWrapping="Wrap" />
                                 <Controls:ToggleSwitch x:Name="groupAccreditationToggleSwitch"
-                                                       Margin="0,10,0,0"
+                                                       Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
                                                        vh:DependencyProperties.PrimaryValue="{Binding NewGroup.Is_Accreditation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -1775,7 +1744,7 @@
                                          Text="{Binding SelectedGroup.Accreditation_eMASS_ID, Mode=TwoWay}"
                                          TextWrapping="Wrap"
                                          Visibility="{Binding ElementName=groupAccreditationToggleSwitch, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                                <Controls:ToggleSwitch Margin="0,10,0,5"
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
                                                        vh:DependencyProperties.PrimaryValue="{Binding NewGroup.IsPlatform, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -1784,7 +1753,7 @@
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
                                                        Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
-                                <Button Margin="0,0,0,5"
+                                <Button Margin="{StaticResource MarginTop5}"
                                         HorizontalAlignment="Center"
                                         Command="{Binding ModifyGroupCommand}"
                                         Content="Add/Update Group" />
@@ -1797,7 +1766,7 @@
             </TabItem>
             <TabItem Header="Accreditations"
                      Style="{StaticResource CustomMetroTabItem}">
-                <Grid Margin="5,0,5,5">
+                <Grid Margin="{StaticResource MarginLeftRightBottom5}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
@@ -1809,8 +1778,7 @@
                             <RowDefinition />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <DockPanel Grid.Row="0"
-                                   Margin="0,0,0,5">
+                        <DockPanel Grid.Row="0">
                             <Grid HorizontalAlignment="Stretch"
                                   DockPanel.Dock="Top">
                                 <Grid.ColumnDefinitions>
@@ -1819,18 +1787,12 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Label Style="{StaticResource TopLevelHeaderStyle}">
-                                    <TextBlock Text="Accreditation Boundaries"
-                                               TextTrimming="CharacterEllipsis" />
-                                </Label>
                                 <Label Grid.Column="2"
-                                       Margin="0,3"
                                        VerticalAlignment="Bottom">
                                     <TextBlock Text="Count:"
                                                TextTrimming="CharacterEllipsis" />
                                 </Label>
                                 <Label Grid.Column="3"
-                                       Margin="0,3"
                                        VerticalAlignment="Bottom">
                                     <TextBlock Text="{Binding Accreditations.Count}"
                                                TextTrimming="CharacterEllipsis" />
@@ -1844,7 +1806,7 @@
                                                             Width="Auto">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <CheckBox Margin="5,0,0,0"
+                                                <CheckBox Margin="{StaticResource MarginLeft5}"
                                                           HorizontalAlignment="Center"
                                                           IsChecked="{Binding IsChecked}"
                                                           Style="{StaticResource CustomCheckBox}" />
@@ -2033,7 +1995,7 @@
                     <Expander Grid.Column="1"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
-                              ExpandDirection="Right">
+                              ExpandDirection="Right" Style="{StaticResource CustomExpander}">
                         <Expander.Header>
                             <Label Foreground="{DynamicResource LabelTextBrush}">
                                 <Label.LayoutTransform>
@@ -2045,7 +2007,7 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <IconPacks:PackIconFontAwesomeLight Grid.Column="0"
-                                                                        Margin="5"
+                                                                        Margin="{StaticResource MarginAll5}"
                                                                         HorizontalAlignment="Center"
                                                                         VerticalAlignment="Center"
                                                                         Kind="PlusSquare" />
