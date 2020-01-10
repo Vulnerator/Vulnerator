@@ -40,13 +40,13 @@
             <Border Width="48"
                     Background="{DynamicResource GrayBrush10}">
                 <IconPacks:PackIconFontAwesomeBrands Width="24"
-                                                    Height="24"
-                                                    Margin="4"
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    Flip="Horizontal"
-                                                    Foreground="{DynamicResource BlackBrush}"
-                                                    Kind="Vulnerator" />
+                                                     Height="24"
+                                                     Margin="4"
+                                                     HorizontalAlignment="Center"
+                                                     VerticalAlignment="Center"
+                                                     Flip="Horizontal"
+                                                     Foreground="{DynamicResource BlackBrush}"
+                                                     Kind="Vulnerator" />
             </Border>
         </DataTemplate>
     </Controls:MetroWindow.IconTemplate>
@@ -139,6 +139,7 @@
                                   Margin="0"
                                   HorizontalContentAlignment="Stretch"
                                   VerticalContentAlignment="Stretch"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
                                   KeyboardNavigation.TabNavigation="Continue">
         <Grid>
             <Grid.RowDefinitions>
@@ -146,6 +147,7 @@
                 <RowDefinition Height="38" />
             </Grid.RowDefinitions>
             <Controls:HamburgerMenu x:Name="hamburgerMenu"
+                                    Background="{DynamicResource WindowBackgroundBrush}"
                                     DisplayMode="CompactInline"
                                     Foreground="{DynamicResource LabelTextBrush}"
                                     ItemTemplate="{StaticResource HamburgerMenuItem}"

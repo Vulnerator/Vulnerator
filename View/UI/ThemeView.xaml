@@ -22,7 +22,8 @@
              DataContext="{Binding Theme, Source={StaticResource Locator}}"
              mc:Ignorable="d">
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
-        <ScrollViewer CanContentScroll="True"
+        <ScrollViewer Margin="5,0,5,5"
+                      CanContentScroll="True"
                       HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollBarVisibility="Auto">
             <StackPanel>
