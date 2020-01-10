@@ -26,7 +26,7 @@
     </UserControl.Resources>
 
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
-        <Controls:MetroAnimatedSingleRowTabControl Margin="5"
+        <Controls:MetroAnimatedSingleRowTabControl Margin="5,0,5,5"
                                                    Controls:TabControlHelper.Underlined="SelectedTabItem"
                                                    TabStripPlacement="Left">
             <TabItem Style="{StaticResource CustomVerticalMetroTabItem}">

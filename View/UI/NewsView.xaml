@@ -32,11 +32,10 @@
     </UserControl.Resources>
 
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
-        <Controls:MetroAnimatedSingleRowTabControl Margin="5,0,0,0"
-                                                   Controls:TabControlHelper.Underlined="SelectedTabItem">
+        <Controls:MetroAnimatedSingleRowTabControl Controls:TabControlHelper.Underlined="SelectedTabItem">
             <TabItem Header="Issues"
                      Style="{StaticResource CustomMetroTabItem}">
-                <Grid>
+                <Grid Margin="5,0,5,5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
@@ -85,7 +84,7 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0"
-                              Margin="5,0">
+                              Margin="5,0,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition />
@@ -186,7 +185,6 @@
                                                TextTrimming="CharacterEllipsis" />
                                 </Label>
                                 <ListView Grid.Row="1"
-                                          Margin="0,0,5,5"
                                           BorderBrush="{DynamicResource TextBoxBorderBrush}"
                                           BorderThickness="1"
                                           ItemsSource="{Binding ElementName=issueListBox, Path=SelectedItem.Labels}"
@@ -224,7 +222,6 @@
                                                TextTrimming="CharacterEllipsis" />
                                 </Label>
                                 <ListView Grid.Row="3"
-                                          Margin="0,0,5,5"
                                           Controls:ControlsHelper.CornerRadius="3"
                                           BorderBrush="{DynamicResource TextBoxBorderBrush}"
                                           BorderThickness="1"
@@ -259,7 +256,7 @@
                                 </ListView>
                             </Grid>
                             <Border Grid.Row="1"
-                                    Margin="5,0,5,5"
+                                    Margin="5,0"
                                     BorderBrush="{DynamicResource TextBoxBorderBrush}"
                                     BorderThickness="1"
                                     CornerRadius="3">
@@ -277,7 +274,7 @@
             </TabItem>
             <TabItem Header="Releases"
                      Style="{StaticResource CustomMetroTabItem}">
-                <Grid>
+                <Grid Margin="5,0,5,5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
@@ -327,7 +324,7 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0"
-                              Margin="5,0">
+                              Margin="5,0,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition />
@@ -344,7 +341,7 @@
                             </Label>
                         </Grid>
                         <Grid Grid.Row="1"
-                              Margin="5,0">
+                              Margin="5,0,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition />
@@ -408,7 +405,7 @@
                             </Label>
                         </Grid>
                         <Border Grid.Row="2"
-                                Margin="5"
+                                Margin="5,0,0,0"
                                 BorderBrush="{DynamicResource TextBoxBorderBrush}"
                                 BorderThickness="1"
                                 CornerRadius="3">

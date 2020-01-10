@@ -22,11 +22,10 @@
              DataContext="{Binding Reporting, Source={StaticResource Locator}}"
              mc:Ignorable="d">
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
-        <Controls:MetroAnimatedSingleRowTabControl Margin="5"
-                                                   Controls:TabControlHelper.Underlined="SelectedTabItem">
+        <Controls:MetroAnimatedSingleRowTabControl Controls:TabControlHelper.Underlined="SelectedTabItem">
             <TabItem Header="Vulnerabilities"
                      Style="{StaticResource CustomMetroTabItem}">
-                <Grid>
+                <Grid Margin="5,0,5,5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
@@ -162,7 +161,7 @@
             </TabItem>
             <TabItem Header="Configuration Management"
                      Style="{StaticResource CustomMetroTabItem}">
-                <Grid />
+                <Grid Margin="5,0,5,5" />
             </TabItem>
         </Controls:MetroAnimatedSingleRowTabControl>
     </Grid>
