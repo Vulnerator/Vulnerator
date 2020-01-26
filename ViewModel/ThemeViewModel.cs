@@ -8,14 +8,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using Vulnerator.Helper;
 using Vulnerator.Model.Object;
+using Vulnerator.Properties;
 
 namespace Vulnerator.ViewModel
 {
     public class ThemeViewModel : ViewModelBase
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
-
         private bool _themeChecked;
         public bool ThemeChecked
         {
@@ -62,16 +62,18 @@ namespace Vulnerator.ViewModel
         { 
             try
             {
+                LogWriter.LogStatusUpdate("Begin instantiation of ThemeViewModel.");
                 ThemeManager.AddAppTheme("PowerShellDark", new Uri("pack://application:,,,/Vulnerator;component/View/Theme/PowerShellDark.xaml"));
                 ThemeManager.AddAppTheme("BlackAndWhite", new Uri("pack://application:,,,/Vulnerator;component/View/Theme/BlackAndWhite.xaml"));
                 Themes = PopulateAvailableThemes();
                 SetTheme(Properties.Settings.Default["Theme"].ToString());
                 SetAccent(Properties.Settings.Default["Accent"].ToString());
+                LogWriter.LogStatusUpdate("ThemeManagementViewModel instantiated successfully.");
             }
             catch (Exception exception)
             {
-                log.Error("Unable to instantiate new ThemeViewModel.");
-                log.Debug("Exception details:", exception);
+                string error = "Unable to instantiate new ThemeViewModel.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -114,42 +116,71 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to populate list of available themes.");
+                LogWriter.LogError("Unable to populate list of available themes.");
                 throw exception;
             }
         }
 
         private void SetTheme(string theme)
         {
-            Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
-            ThemeManager.ChangeAppStyle(Application.Current, appStyle.Item2, ThemeManager.GetAppTheme(theme));
-            SelectedTheme = Themes.FirstOrDefault(t => t.ActualName == theme);
+            try
+            {
+                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
+                ThemeManager.ChangeAppStyle(Application.Current, appStyle.Item2, ThemeManager.GetAppTheme(theme));
+                SelectedTheme = Themes.FirstOrDefault(t => t.ActualName == theme);
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to set the application theme to '{theme}'.");
+                throw exception;
+            }
         }
 
         private void SetAccent(string accent)
         {
-            Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
-            ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent(accent), appStyle.Item1);
+            try
+            {
+                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
+                ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent(accent), appStyle.Item1);
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to set the application accent to '{accent}'");
+            }
         }
 
-        public RelayCommand<object> ChangeThemeCommand
-        { get { return new RelayCommand<object>((p) => ChangeTheme(p)); } }
-        private void ChangeTheme(object parameter)
+        public RelayCommand ChangeThemeCommand => new RelayCommand(ChangeTheme);
+        private void ChangeTheme()
         {
-            //string theme = (bool)parameter == true ? "BaseLight" : "BaseDark";
-            string theme = SelectedTheme.ActualName;
-            Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
-            ThemeManager.ChangeAppStyle(Application.Current, appStyle.Item2, ThemeManager.GetAppTheme(theme));
-            Properties.Settings.Default["Theme"] = theme;
+            try
+            {
+                string theme = SelectedTheme.ActualName;
+                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
+                ThemeManager.ChangeAppStyle(Application.Current, appStyle.Item2, ThemeManager.GetAppTheme(theme));
+                Settings.Default["Theme"] = theme;
+            }
+            catch (Exception exception)
+            {
+                string error = $"Unable to change the application theme to '{SelectedTheme.ActualName}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
         }
 
         public RelayCommand<object> ChangeAccentCommand
         { get { return new RelayCommand<object>((p) => ChangeAccent(p)); } }
         private void ChangeAccent(object parameter)
         {
-            Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
-            ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent(parameter.ToString()), appStyle.Item1);
-            Properties.Settings.Default["Accent"] = parameter.ToString();
+            try
+            {
+                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
+                ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent(parameter.ToString()), appStyle.Item1);
+                Settings.Default["Accent"] = parameter.ToString();
+            }
+            catch (Exception exception)
+            {
+                string error = $"Unable to change the application accent to '{parameter}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
         }
 
         public class ThemeDefinition

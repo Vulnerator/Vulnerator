@@ -9,7 +9,6 @@ namespace Vulnerator.Model.BusinessLogic
 {
     public class MitigationsTextParser
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         //public void ParseMitigation(string fileName, string status, string group, ObservableCollection<MitigationItem> mitList, ObservableCollection<SystemGroup> groupList)
         //{
         //    try

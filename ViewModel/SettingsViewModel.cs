@@ -8,14 +8,17 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Windows;
+using Vulnerator.Helper;
 using Vulnerator.Model.BusinessLogic;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Object;
+using Vulnerator.Properties;
 using Vulnerator.ViewModel.ViewModelHelper;
 
 namespace Vulnerator.ViewModel
@@ -23,11 +26,9 @@ namespace Vulnerator.ViewModel
     public class SettingsViewModel : ViewModelBase
     {
         OpenFileDialog openFileDialog;
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private BackgroundWorker backgroundWorker;
         private GuiFeedback guiFeedback = new GuiFeedback();
         private DatabaseInterface databaseInterface = new DatabaseInterface();
-        string ansibleReportFolder = string.Empty;
         int? stigFilesAttempted;
         int? stigFilesParsed;
 
@@ -133,17 +134,25 @@ namespace Vulnerator.ViewModel
 
         private void BrowseForDatabase()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.CheckFileExists = true;
-            openFileDialog.DefaultExt = "sqlite";
-            openFileDialog.Filter = "SQLite File (*sqlite)|*.sqlite";
-            openFileDialog.Title = "Please select a SQLite file";
-            if ((bool)openFileDialog.ShowDialog())
+            try
             {
-                Properties.Settings.Default.Database = openFileDialog.FileName;
-                DatabaseBuilder.databaseConnection =
-                    $@"Data Source = {Properties.Settings.Default.Database}; Version=3;";
-                DatabaseBuilder.sqliteConnection = new System.Data.SQLite.SQLiteConnection(DatabaseBuilder.databaseConnection);
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.CheckFileExists = true;
+                openFileDialog.DefaultExt = "sqlite";
+                openFileDialog.Filter = "SQLite File (*sqlite)|*.sqlite";
+                openFileDialog.Title = "Please select a SQLite file";
+                if ((bool)openFileDialog.ShowDialog())
+                {
+                    Settings.Default.Database = openFileDialog.FileName;
+                    DatabaseBuilder.databaseConnection =
+                        $@"Data Source = {Settings.Default.Database}; Version=3;";
+                    DatabaseBuilder.sqliteConnection = new SQLiteConnection(DatabaseBuilder.databaseConnection);
+                }
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to browse for the Vulnerator Database.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -151,16 +160,22 @@ namespace Vulnerator.ViewModel
 
         private void CreateDatabase()
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.OverwritePrompt = true;
-            saveFileDialog.DefaultExt = "sqlite";
-            saveFileDialog.Filter = "SQLite File (*sqlite)|*.sqlite";
-            saveFileDialog.Title = "Please provide a name for the SQLite file";
-            saveFileDialog.CheckPathExists = true;
-            if ((bool)saveFileDialog.ShowDialog())
+            try
             {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.OverwritePrompt = true;
+                saveFileDialog.DefaultExt = "sqlite";
+                saveFileDialog.Filter = "SQLite File (*sqlite)|*.sqlite";
+                saveFileDialog.Title = "Please provide a name for the SQLite file";
+                saveFileDialog.CheckPathExists = true;
+                if (!(bool) saveFileDialog.ShowDialog()) return;
                 Messenger.Default.Send(saveFileDialog.FileName);
                 Messenger.Default.Send(new NotificationMessage<string>("ModelUpdate", "AllModels"), MessengerToken.ModelUpdated);
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to create the new Vulnerator Database.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -183,8 +198,8 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to retrieve STIG Library.");
-                log.Debug("Exception details: " + exception);
+                string error = "Unable to retrieve STIG Library.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -192,11 +207,19 @@ namespace Vulnerator.ViewModel
 
         private void IngestStigLibrary()
         {
-            backgroundWorker = new BackgroundWorker();
-            backgroundWorker.DoWork += ingestStigLibraryBackgroundWorker_DoWork;
-            backgroundWorker.RunWorkerCompleted += ingestStigLibraryBackgroundWorker_RunWorkerCompleted;
-            backgroundWorker.RunWorkerAsync();
-            backgroundWorker.Dispose();
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += ingestStigLibraryBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerCompleted += ingestStigLibraryBackgroundWorker_RunWorkerCompleted;
+                backgroundWorker.RunWorkerAsync();
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to ingest the STIG library.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
         }
 
         private void ingestStigLibraryBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -251,8 +274,8 @@ namespace Vulnerator.ViewModel
                             Message = "STIG Library failed to ingest."
                         };
                         Exception exception = e.Result as Exception;
-                        log.Error("Unable to ingest STIG Library.");
-                        log.Debug("Exception details: " + exception);
+                        string error = "Unable to ingest STIG Library.";
+                        LogWriter.LogErrorWithDebug(error, exception);
                     }
                     else
                     {
@@ -323,51 +346,73 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to handle STIG ingestion background worker completion events.");
-                log.Debug($"Exception details: {exception}");
+                LogWriter.LogError("Unable to handle STIG ingestion background worker completion events.");
+                throw exception;
             }
         }
 
         private void ParseZip(string fileName)
         {
-            using (ZipArchive zipArchive = ZipFile.Open(StigLibraryLocation, ZipArchiveMode.Read))
+            try
             {
-                ProgressBarMax = zipArchive.Entries.Count();
-                foreach (ZipArchiveEntry entry in zipArchive.Entries)
+                using (ZipArchive zipArchive = ZipFile.Open(fileName, ZipArchiveMode.Read))
                 {
-                    HandleZipArchiveEntry(entry);
-                    ProgressBarValue++;
+                    ProgressBarMax = zipArchive.Entries.Count();
+                    foreach (ZipArchiveEntry entry in zipArchive.Entries)
+                    {
+                        HandleZipArchiveEntry(entry);
+                        ProgressBarValue++;
+                    }
                 }
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to parse ZipArchive '{fileName}'");
+                throw exception;
             }
         }
 
         private void ParseZip(ZipArchiveEntry zipArchiveEntry)
         {
-            using (Stream stream = zipArchiveEntry.Open())
+            try
             {
-                using (ZipArchive zipArchive = new ZipArchive(stream, ZipArchiveMode.Read))
+                using (Stream stream = zipArchiveEntry.Open())
                 {
-                    foreach (ZipArchiveEntry entry in zipArchive.Entries)
-                    { HandleZipArchiveEntry(entry); }
+                    using (ZipArchive zipArchive = new ZipArchive(stream, ZipArchiveMode.Read))
+                    {
+                        foreach (ZipArchiveEntry entry in zipArchive.Entries)
+                        { HandleZipArchiveEntry(entry); }
+                    }
                 }
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to parse ZipArchiveEntry '{zipArchiveEntry}'.");
             }
         }
 
         private void HandleZipArchiveEntry(ZipArchiveEntry zipArchiveEntry)
         {
-            if (zipArchiveEntry.Name.EndsWith("zip"))
+            try
             {
-                if (!zipArchiveEntry.Name.Contains("SCAP_1-1"))
-                { ParseZip(zipArchiveEntry); }
+                if (zipArchiveEntry.Name.EndsWith("zip"))
+                {
+                    if (!zipArchiveEntry.Name.Contains("SCAP_1-1"))
+                    { ParseZip(zipArchiveEntry); }
+                }
+                if (zipArchiveEntry.Name.EndsWith("xml"))
+                {
+                    stigFilesAttempted++;
+                    guiFeedback.SetFields($"Ingesting {zipArchiveEntry.Name}", "Visible", true);
+                    Messenger.Default.Send(guiFeedback);
+                    RawStigReader rawStigReader = new RawStigReader();
+                    if (rawStigReader.ReadRawStig(zipArchiveEntry) == "Parsed")
+                    { stigFilesParsed++; }
+                }
             }
-            if (zipArchiveEntry.Name.EndsWith("xml"))
+            catch (Exception exception)
             {
-                stigFilesAttempted++;
-                guiFeedback.SetFields($"Ingesting {zipArchiveEntry.Name}", "Visible", true);
-                Messenger.Default.Send(guiFeedback);
-                RawStigReader rawStigReader = new RawStigReader();
-                if (rawStigReader.ReadRawStig(zipArchiveEntry) == "Parsed")
-                { stigFilesParsed++; }
+                LogWriter.LogError($"Unable to correctly handle ZipArchiveEntry '{zipArchiveEntry}'.");
             }
         }
     }

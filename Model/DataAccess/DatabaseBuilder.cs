@@ -16,7 +16,6 @@ namespace Vulnerator.Model.DataAccess
         private Assembly assembly = Assembly.GetExecutingAssembly();
         public static string databaseConnection =
             $@"Data Source = {Properties.Settings.Default.Database}; Version=3;datetimeformat=Ticks;";
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         public static SQLiteConnection sqliteConnection = new SQLiteConnection(databaseConnection);
 
         public DatabaseBuilder()
@@ -45,8 +44,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable create database file.");
-                log.Debug("Exception details:", exception);
+                string error = $"Unable create database file '{Properties.Settings.Default.Database}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
             finally
             { sqliteConnection.Close(); }
@@ -64,7 +63,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to update the Vulnerator Database.");
+                LogWriter.LogError("Unable to update the Vulnerator Database.");
                 throw exception;
             }
         }
@@ -73,7 +72,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                log.Info("Begin creating database.");
+                LogWriter.LogStatusUpdate($"Begin creating database '{Properties.Settings.Default.Database}'.");
                 SQLiteConnection.CreateFile(Properties.Settings.Default.Database);
                 if (!sqliteConnection.State.ToString().Equals("Open"))
                 { sqliteConnection.Open(); }
@@ -91,11 +90,11 @@ namespace Vulnerator.Model.DataAccess
                     }
                     sqliteTransaction.Commit();
                 }
-                log.Info("Database created successfully.");
+                LogWriter.LogStatusUpdate($"Database '{Properties.Settings.Default.Database}' created successfully.");
             }
             catch (Exception exception)
             {
-                log.Error("Database creation failed.");
+                LogWriter.LogError($"Database '{Properties.Settings.Default.Database}' creation failed.");
                 throw exception;
             }
         }
@@ -114,7 +113,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to read DDL Resource File.");
+                LogWriter.LogError($"Unable to read DDL Resource File '{ddlResourceFile}'.");
                 throw exception;
             }
         }
@@ -181,7 +180,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to populate IA Control List.");
+                LogWriter.LogError("Unable to populate IA Control List.");
                 throw exception;
             }
         }
@@ -239,7 +238,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to populate CCI List.");
+                LogWriter.LogError("Unable to populate CCI List.");
                 throw exception;
             }
         }
@@ -258,7 +257,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to insert CCI Item into database.");
+                LogWriter.LogError("Unable to insert CCI Item into database.");
                 throw exception;
             }
         }
@@ -357,7 +356,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to populate NIST Control list.");
+                LogWriter.LogError("Unable to populate NIST Control list.");
                 throw exception;
             }
         }
@@ -376,7 +375,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to insert NIST Controls into database.");
+                LogWriter.LogError("Unable to insert NIST Controls into database.");
                 throw exception;
             }
         }
@@ -429,7 +428,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to map NIST Controls to CIA Triad.");
+                LogWriter.LogError("Unable to map NIST Controls to CIA Triad.");
                 throw exception;
             }
         }
@@ -503,7 +502,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to map NIST Controls to CCI values.");
+                LogWriter.LogError("Unable to map NIST Controls to CCI values.");
                 throw exception;
             }
         }
@@ -555,7 +554,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to map NIST controls to CNSS 1523 Overlays.");
+                LogWriter.LogError("Unable to map NIST controls to CNSS 1523 Overlays.");
                 throw exception;
             }
         }
@@ -612,7 +611,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to map NIST controls to monitoring frequencies.");
+                LogWriter.LogError("Unable to map NIST controls to monitoring frequencies.");
                 throw exception;
             }
         }
@@ -640,7 +639,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to obtain CCI References.");
+                LogWriter.LogError("Unable to obtain CCI References.");
                 throw exception;
             }
         }

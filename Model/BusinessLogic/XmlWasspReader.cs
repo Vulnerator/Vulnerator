@@ -13,7 +13,6 @@ namespace Vulnerator.Model.BusinessLogic
     class XmlWasspReader
     {
         private string fileNameWithoutPath = string.Empty;
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private DatabaseInterface databaseInterface = new DatabaseInterface();
 
         public string ReadXmlWassp(Object.File file)
@@ -22,7 +21,7 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 if (file.FilePath.IsFileInUse())
                 {
-                    log.Error(file.FilePath + " is in use; please close any open instances and try again.");
+                    LogWriter.LogError($"'{file.FileName}' is in use; please close any open instances and try again.");
                     return "Failed; File In Use";
                 }
 
@@ -31,8 +30,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to process WASSP file.");
-                log.Debug("Exception details:", exception);
+                string error = $"Unable to process WASSP file '{file.FileName}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
                 return "Failed; See Log";
             }
         }
@@ -61,7 +60,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to parse WASSP file using XML reader.");
+                LogWriter.LogError($"Unable to parse WASSP file '{file.FileName}' using XML reader.");
                 throw exception;
             }
             finally
@@ -151,7 +150,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to parse vulnerability information.");
+                LogWriter.LogError("Unable to parse vulnerability information.");
                 throw exception;
             }
         }
@@ -171,7 +170,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate XmlReaderSettings.");
+                LogWriter.LogError("Unable to generate XmlReaderSettings.");
                 throw exception;
             }
         }

@@ -11,6 +11,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Data.SQLite;
 using System.Linq;
+using Vulnerator.Helper;
 using Vulnerator.Model.BusinessLogic;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Entity;
@@ -22,7 +23,6 @@ namespace Vulnerator.ViewModel
     public class ConfigurationManagementViewModel : ViewModelBase
     {
         private DatabaseContext databaseContext;
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private VulnerabilitySource vulnerabilitySource;
         private string saveDirectory = string.Empty;
         private DatabaseInterface databaseInterface = new DatabaseInterface();
@@ -198,14 +198,15 @@ namespace Vulnerator.ViewModel
         { 
             try
             {
-                log.Info("Begin instantiation of ConfigurationManagementViewModel.");
+                LogWriter.LogStatusUpdate("Begin instantiation of ConfigurationManagementViewModel.");
                 PopulateGui();
                 Messenger.Default.Register<NotificationMessage<string>>(this, MessengerToken.ModelUpdated, (msg) => HandleModelUpdate(msg.Notification));
+                LogWriter.LogStatusUpdate("ConfigurationManagementViewModel instantiated successfully.");
             }
             catch (Exception exception)
             {
-                log.Error("Unable to instantiate ConfigurationManagementViewModel.");
-                log.Debug("Exception details:", exception);
+                string error = "Unable to instantiate ConfigurationManagementViewModel.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -218,8 +219,8 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to update MitigationsNistViewModel.");
-                log.Debug("Exception details:", exception);
+                string error = "Unable to update MitigationsNistViewModel.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -274,7 +275,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to populate ConfigurationManagementView");
+                LogWriter.LogError("Unable to populate ConfigurationManagementView lists.");
                 throw exception;
             }
         }
@@ -301,8 +302,8 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to create CKL file.");
-                log.Debug("Exception details:", exception);
+                string error = "Unable to create CKL file.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
             finally
             {
@@ -333,8 +334,8 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate CKL file background worker.");
-                log.Debug("Exception details:", exception);
+                LogWriter.LogError("Unable to generate CKL file background worker.");
+                throw exception;
             }
         }
 
@@ -351,8 +352,8 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate background worker for AssociateStigToHardware");
-                log.Debug("Exception details:", exception);
+                string error = "Unable to generate background worker for AssociateStigToHardware.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -369,8 +370,8 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to associate STIG to Hardware");
-                log.Debug("Exception details:", exception);
+                LogWriter.LogError($"Unable to associate STIG '{SelectedVulnerabilitySource.Vulnerability_Source_File_Name}' to Hardware.");
+                throw exception;
             }
         }
 
@@ -393,8 +394,8 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to insert or update a group.");
-                log.Debug($"Exception details: {exception}");
+                string error = "Unable to insert or update the group.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -425,8 +426,8 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to insert group {NewGroup.Name}");
-                log.Debug($"Exception details: {exception}");
+                LogWriter.LogError($"Unable to update group '{NewGroup.Name}'.");
+                throw exception;
             }
             finally
             {
@@ -461,8 +462,8 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to insert group {NewGroup.Name}");
-                log.Debug($"Exception details: {exception}");
+                string error = $"Unable to insert group '{NewGroup.Name}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
             finally
             {
@@ -484,8 +485,8 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to clear selected group.");
-                throw;
+                string error = "Unable to clear the selected group.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -505,8 +506,8 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete group \"{SelectedGroup.Name}\"");
-                log.Debug($"Exception details: {exception}");
+                string error = $"Unable to delete group '{SelectedGroup.Name}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -536,7 +537,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Group deletion BackgroundWorker failed.");
+                LogWriter.LogError("Group deletion BackgroundWorker failed.");
                 throw exception;
             }
             finally
@@ -556,7 +557,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Group deletion failed.");
+                LogWriter.LogError("Group deletion failed.");
                 throw exception;
             }
         }
@@ -571,7 +572,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to run Group post-modification background worker RunWorkerCompleted tasks.");
+                LogWriter.LogError("Unable to run Group post-modification background worker RunWorkerCompleted tasks.");
                 throw exception;
             }
         }

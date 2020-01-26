@@ -15,6 +15,7 @@ using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Object;
 using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Win32;
+using Vulnerator.Helper;
 using Vulnerator.Model.BusinessLogic;
 using Vulnerator.ViewModel.ViewModelHelper;
 
@@ -22,7 +23,6 @@ namespace Vulnerator.ViewModel
 {
     public class ReportingViewModel : ViewModelBase
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private BackgroundWorker backgroundWorker;
         private SaveFileDialog saveExcelFile;
         private SaveFileDialog savePdfFile;
@@ -77,13 +77,15 @@ namespace Vulnerator.ViewModel
         {
             try
             {
+                LogWriter.LogStatusUpdate("Begin instantiation of ReportingViewModel.");
                 PopulateGui();
                 Messenger.Default.Register<NotificationMessage<string>>(this, MessengerToken.ModelUpdated, (msg) => HandleModelUpdate(msg.Notification));
+                LogWriter.LogStatusUpdate("ReportingViewModel instantiated successfully.");
             }
             catch (Exception exception)
             {
-                log.Error("Unable to instantiate ReportingViewModel.");
-                log.Debug("Exception details:", exception);
+                string error = "Unable to instantiate ReportingViewModel.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -96,17 +98,25 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to update ReportingViewModel.");
-                log.Debug("Exception details:", exception);
+                string error = "Unable to update ReportingViewModel.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
         private void PopulateGui()
         {
-            using (DatabaseContext databaseContext = new DatabaseContext())
+            try
             {
-                PopulateReports(databaseContext);
-                Groups = databaseContext.Groups.AsNoTracking().ToList();
+                using (DatabaseContext databaseContext = new DatabaseContext())
+                {
+                    PopulateReports(databaseContext);
+                    Groups = databaseContext.Groups.AsNoTracking().ToList();
+                }
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to populate ReportingViewModel GUI.");
+                throw exception;
             }
         }
 
@@ -124,8 +134,8 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to populate required reports");
-                log.Debug("Exception details:", exception);
+                LogWriter.LogError("Unable to populate ReportingViewModel required reports list.");
+                throw exception;
             }
         }
 
@@ -136,10 +146,18 @@ namespace Vulnerator.ViewModel
 
         private void ExecuteExport()
         {
-            backgroundWorker = new BackgroundWorker();
-            backgroundWorker.DoWork += ExecuteExportBackgroundWorker_DoWork;
-            backgroundWorker.RunWorkerAsync();
-            backgroundWorker.Dispose();
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += ExecuteExportBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerAsync();
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to execute report export.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
         }
 
         private void ExecuteExportBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -162,8 +180,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to export the requested reports.");
-                log.Debug("Exception details:", exception);
+                LogWriter.LogError("An error occurred on the ExecuteExport BackgroundWorker.");
                 throw exception;
             }
         }
@@ -172,10 +189,18 @@ namespace Vulnerator.ViewModel
 
         private void SetReportRequirement()
         {
-            backgroundWorker = new BackgroundWorker();
-            backgroundWorker.DoWork += ExecuteSetReportRequirementBackgroundWorker_DoWork;
-            backgroundWorker.RunWorkerAsync();
-            backgroundWorker.Dispose();
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += ExecuteSetReportRequirementBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerAsync();
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to set required reports.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
         }
 
         private void ExecuteSetReportRequirementBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -194,92 +219,112 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to update report selection criteria for {SelectedReport.Displayed_Report_Name}");
-                log.Debug("Exception details:", exception);
+                LogWriter.LogError($"Unable to update report selection criteria for {SelectedReport.Displayed_Report_Name}");
+                throw exception;
             }
         }
 
-        private bool ExcelReportsAreRequired()
-        {
-            bool PoamAndRarAreNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbPoamRar"));
-            bool SummaryTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbAssetOverview"));
-            bool DiscrepanciesTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbDiscrepancies"));
-            bool AcasOutputTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbAcasOutput"));
-            bool StigDetailsTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbStigDetails"));
-            if (PoamAndRarAreNeeded || SummaryTabIsNeeded || DiscrepanciesTabIsNeeded || AcasOutputTabIsNeeded || StigDetailsTabIsNeeded)
-            { return true; }
-            else
-            { return false; }
-        }
+        // TODO: Rework this for the actual reports
+        // private bool ExcelReportsAreRequired()
+        // {
+        //     bool PoamAndRarAreNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbPoamRar"));
+        //     bool SummaryTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbAssetOverview"));
+        //     bool DiscrepanciesTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbDiscrepancies"));
+        //     bool AcasOutputTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbAcasOutput"));
+        //     bool StigDetailsTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbStigDetails"));
+        //     if (PoamAndRarAreNeeded || SummaryTabIsNeeded || DiscrepanciesTabIsNeeded || AcasOutputTabIsNeeded || StigDetailsTabIsNeeded)
+        //     { return true; }
+        //     else
+        //     { return false; }
+        // }
 
         private bool? GetExcelReportName()
         {
-            saveExcelFile = new SaveFileDialog();
-            saveExcelFile.AddExtension = true;
-            saveExcelFile.Filter = "Excel Files (*.xlsx)|*.xlsx";
-            saveExcelFile.DefaultExt = "xlsx";
-            saveExcelFile.Title = "Save Excel Report";
-            saveExcelFile.OverwritePrompt = true;
-            saveExcelFile.CheckPathExists = true;
-            return saveExcelFile.ShowDialog();
+            try
+            {
+                saveExcelFile = new SaveFileDialog();
+                saveExcelFile.AddExtension = true;
+                saveExcelFile.Filter = "Excel Files (*.xlsx)|*.xlsx";
+                saveExcelFile.DefaultExt = "xlsx";
+                saveExcelFile.Title = "Save Excel Report";
+                saveExcelFile.OverwritePrompt = true;
+                saveExcelFile.CheckPathExists = true;
+                return saveExcelFile.ShowDialog();
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to get the Excel report name.";
+                LogWriter.LogErrorWithDebug(error, exception);
+                return null;
+            }
         }
 
         private string CreateExcelReports()
         {
-            log.Info("Begin creation of " + saveExcelFile.FileName);
+            LogWriter.LogStatusUpdate($"Begin creation of '{saveExcelFile.FileName}'.");
             fileStopWatch.Start();
             OpenXmlReportCreator openXmlReportCreator = new OpenXmlReportCreator();
             if (!openXmlReportCreator.CreateExcelReport(saveExcelFile.FileName).Contains("successful"))
             {
-                log.Error("Creation of " + saveExcelFile.FileName + " failed; Elapsed time: " + fileStopWatch.Elapsed.ToString());
+                LogWriter.LogError($"Creation of '{saveExcelFile.FileName}' failed; Elapsed time: '{fileStopWatch.Elapsed.ToString()}'");
                 fileStopWatch.Stop();
                 fileStopWatch.Reset();
                 return "Excel report creation error; see log for details";
             }
             else
             {
-                log.Info(saveExcelFile.FileName + " created successfully; Elapsed time: " + fileStopWatch.Elapsed.ToString());
+                LogWriter.LogStatusUpdate($"'{saveExcelFile.FileName}' created successfully; Elapsed time: {fileStopWatch.Elapsed.ToString()}");
                 fileStopWatch.Stop();
                 fileStopWatch.Reset();
                 return "Excel report created successfully";
             }
         }
 
-        private bool PdfReportIsRequired()
-        {
-            if (bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbPdfSum")))
-            { return true; }
-            else
-            { return false; }
-        }
+        // TODO: Implement this in the correct method for the reworked reporting structure
+        // private bool PdfReportIsRequired()
+        // {
+        //     if (bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbPdfSum")))
+        //     { return true; }
+        //     else
+        //     { return false; }
+        // }
 
         private bool? GetPdfReportName()
         {
-            savePdfFile = new SaveFileDialog();
-            savePdfFile.AddExtension = true;
-            savePdfFile.Filter = "PDF Files (*.pdf)|*.pdf";
-            savePdfFile.DefaultExt = "xls";
-            savePdfFile.Title = "Save PDF Report";
-            savePdfFile.OverwritePrompt = true;
-            savePdfFile.CheckPathExists = true;
-            return savePdfFile.ShowDialog();
+            try
+            {
+                savePdfFile = new SaveFileDialog();
+                savePdfFile.AddExtension = true;
+                savePdfFile.Filter = "PDF Files (*.pdf)|*.pdf";
+                savePdfFile.DefaultExt = "xls";
+                savePdfFile.Title = "Save PDF Report";
+                savePdfFile.OverwritePrompt = true;
+                savePdfFile.CheckPathExists = true;
+                return savePdfFile.ShowDialog();
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to get the PDF report name.";
+                LogWriter.LogErrorWithDebug(error, exception);
+                return null;
+            }
         }
 
         private string CreatePdfReport()
         {
-            log.Info("Begin creation of " + savePdfFile.FileName);
+            LogWriter.LogStatusUpdate("Begin creation of " + savePdfFile.FileName);
             fileStopWatch.Start();
             PdfReportCreator pdfReportCreator = new PdfReportCreator();
             if (!pdfReportCreator.PdfWriter(savePdfFile.FileName.ToString(), string.Empty).Equals("Success"))
             {
-                log.Error("Creation of " + savePdfFile.FileName + " failed; Elapsed time: " + fileStopWatch.Elapsed.ToString());
+                LogWriter.LogError($"Creation of '{savePdfFile.FileName}' failed; Elapsed time: {fileStopWatch.Elapsed.ToString()}");
                 fileStopWatch.Stop();
                 fileStopWatch.Reset();
                 return "PDF report creation error; see log for details";
             }
             else
             {
-                log.Info(savePdfFile.FileName + " created successfully; Elapsed time: " + fileStopWatch.Elapsed.ToString());
+                LogWriter.LogStatusUpdate($"'{savePdfFile.FileName}' created successfully; Elapsed time: {fileStopWatch.Elapsed.ToString()}");
                 fileStopWatch.Stop();
                 fileStopWatch.Reset();
                 return "PDF summary created successfully";

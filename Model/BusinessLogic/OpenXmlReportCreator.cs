@@ -9,9 +9,11 @@ using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Vulnerator.Helper;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Object;
 using Vulnerator.ViewModel;
+using File = Vulnerator.Model.Object.File;
 
 namespace Vulnerator.Model.BusinessLogic
 {
@@ -34,7 +36,6 @@ namespace Vulnerator.Model.BusinessLogic
         private UInt32Value sheetIndex = 1;
         private string[] delimiter = new string[] { ",\r\n" };
         string doubleCarriageReturn = Environment.NewLine + Environment.NewLine;
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
 
         private OpenXmlWriter assetOverviewOpenXmlWriter;
         private OpenXmlWriter poamOpenXmlWriter;
@@ -53,7 +54,7 @@ namespace Vulnerator.Model.BusinessLogic
                 { DatabaseBuilder.sqliteConnection.Open(); }
                 using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Create(fileName, SpreadsheetDocumentType.Workbook))
                 {
-                    log.Info("Creating workbook framework.");
+                    LogWriter.LogStatusUpdate("Creating workbook framework.");
                     WorkbookPart workbookPart = spreadsheetDocument.AddWorkbookPart();
                     WorkbookStylesPart workbookStylesPart = workbookPart.AddNewPart<WorkbookStylesPart>();
                     workbookStylesPart.Stylesheet = CreateStylesheet();
@@ -75,7 +76,7 @@ namespace Vulnerator.Model.BusinessLogic
 
                     if (false)
                     {
-                        log.Info("Creating Asset Overview tab.");
+                        LogWriter.LogStatusUpdate("Creating Asset Overview tab.");
                         foreach (string findingType in findingTypes)
                         {
                             if (CountVulnerabilitiesByFindingType(findingType) > 0)
@@ -89,7 +90,7 @@ namespace Vulnerator.Model.BusinessLogic
 
                     if (Properties.Settings.Default.ReportTestPlan)
                     {
-                        log.Info("Creating Test Plan tab.");
+                        LogWriter.LogStatusUpdate("Creating Test Plan tab.");
                         WriteTestPlanHeaderRowOne();
                         WriteTestPlanHeaderRowTwo();
                         WriteTestPlanHeaderRowThree();
@@ -99,29 +100,29 @@ namespace Vulnerator.Model.BusinessLogic
 
                     if (Properties.Settings.Default.ReportPoamRar)
                     {
-                        log.Info("Creating POA&M and RAR tabs.");
+                        LogWriter.LogStatusUpdate("Creating POA&M and RAR tabs.");
                         foreach (string findingType in findingTypes)
                         { WriteFindingsToPoamAndRar(findingType); }
                     }
 
                     if (Properties.Settings.Default.ReportScapStigDiscrepancies)
                     {
-                        log.Info("Creating Discrepancies tab.");
+                        LogWriter.LogStatusUpdate("Creating Discrepancies tab.");
                         WriteIndividualDiscrepancies();
                     }
 
                     if (Properties.Settings.Default.ReportVulnerabilityDeepDive)
                     {
-                        log.Info("Creating ACAS Output tab.");
+                        LogWriter.LogStatusUpdate("Creating ACAS Output tab.");
                         WriteIndividualAcasOutput();
-                        log.Info("Creating STIG Details tab.");
+                        LogWriter.LogStatusUpdate("Creating STIG Details tab.");
                         WriteStigDetailItems("CKL");
                         WriteStigDetailItems("XCCDF");
-                        log.Info("Creating Fortify Details tab.");
+                        LogWriter.LogStatusUpdate("Creating Fortify Details tab.");
                         WriteFprDetailsItems("FPR");
                     }
 
-                    log.Info("Finalizing workbook.");
+                    LogWriter.LogStatusUpdate("Finalizing workbook.");
                     EndSpreadsheets();
                     CreateSharedStringPart(workbookPart);
                 }
@@ -130,8 +131,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to create " + fileName + " (Excel Report).");
-                log.Debug("Exception details: " + exception);
+                string error = $"Unable to create '{fileName}' (Excel Report).";
+                LogWriter.LogErrorWithDebug(error, exception);
                 return "Excel report creation failed - see log for details";
             }
             finally
@@ -162,7 +163,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Spreadsheet creation failed to initialize properly.");
+                LogWriter.LogError("Spreadsheet creation failed to initialize properly.");
                 throw exception;
             }
         }
@@ -190,7 +191,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to write findings to the POA&M and/or RAR tab(s).");
+                LogWriter.LogError("Unable to write findings to the 'POA&M' and/or 'RAR' tab(s).");
                 throw exception;
             }
         }
@@ -219,7 +220,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to finalize spreadsheets.");
+                LogWriter.LogError("Unable to finalize spreadsheets.");
                 throw exception;
             }
         }
@@ -242,7 +243,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to initialize Asset Overview tab.");
+                LogWriter.LogError("Unable to initialize 'Asset Overview' tab.");
                 throw exception;
             }
         }
@@ -267,7 +268,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate Asset Overview tab columns.");
+                LogWriter.LogError("Unable to generate 'Asset Overview' tab columns.");
                 throw exception;
             }
         }
@@ -293,7 +294,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate first Asset Overview header row.");
+                LogWriter.LogError("Unable to generate first 'Asset Overview' header row.");
                 throw exception;
             }
         }
@@ -322,7 +323,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate first Finding Type header row.");
+                LogWriter.LogError("Unable to generate first 'Finding Type' header row.");
                 throw exception;
             }
         }
@@ -371,7 +372,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate second Finding Type header row.");
+                LogWriter.LogError("Unable to generate second 'Finding Type' header row.");
                 throw exception;
             }
         }
@@ -395,7 +396,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to count vulnerabilities of finding type " + findingType);
+                LogWriter.LogError($"Unable to count vulnerabilities of finding type '{findingType}'.");
                 throw exception;
             }
         }
@@ -438,7 +439,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to write Asset Overview items.");
+                LogWriter.LogError("Unable to write 'Asset Overview' items.");
                 throw exception;
             }
         }
@@ -515,7 +516,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate Asset Overview header row.");
+                LogWriter.LogError("Unable to generate 'Asset Overview' header row.");
                 throw exception;
             }
         }
@@ -531,7 +532,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to finalize Asset Overview tab.");
+                LogWriter.LogError("Unable to finalize 'Asset Overview' tab.");
                 throw exception;
             }
         }
@@ -548,7 +549,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate Asset Overview MergeCells element.");
+                LogWriter.LogError("Unable to generate 'Asset Overview' MergeCells element.");
                 throw exception;
             }
         }
@@ -579,7 +580,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to initialize POA&M tab.");
+                LogWriter.LogError("Unable to initialize 'POA&M' tab.");
                 throw exception;
             }
         }
@@ -608,7 +609,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate POA&M columns.");
+                LogWriter.LogError("Unable to generate 'POA&M' columns.");
                 throw exception;
             }
         }
@@ -637,7 +638,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate first POA&M header row.");
+                LogWriter.LogError("Unable to generate first 'POA&M' header row.");
                 throw exception;
             }
         }
@@ -666,7 +667,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate second POA&M header row.");
+                LogWriter.LogError("Unable to generate second 'POA&M' header row.");
                 throw exception;
             }
         }
@@ -695,7 +696,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate third POA&M header row.");
+                LogWriter.LogError("Unable to generate third 'POA&M' header row.");
                 throw exception;
             }
         }
@@ -724,7 +725,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate fourth POA&M header row.");
+                LogWriter.LogError("Unable to generate fourth 'POA&M' header row.");
                 throw exception;
             }
         }
@@ -753,7 +754,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate fifth POA&M header row.");
+                LogWriter.LogError("Unable to generate fifth POA&M header row.");
                 throw exception;
             }
         }
@@ -782,7 +783,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate sixth POA&M header row.");
+                LogWriter.LogError("Unable to generate sixth 'POA&M' header row.");
                 throw exception;
             }
         }
@@ -869,7 +870,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to write finding to POA&M.");
+                LogWriter.LogError("Unable to write finding to 'POA&M'.");
                 throw exception;
             }
         }
@@ -885,7 +886,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to finalize POA&M tab.");
+                LogWriter.LogError("Unable to finalize 'POA&M' tab.");
                 throw exception;
             }
         }
@@ -905,7 +906,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate POA&M MergeCells element.");
+                LogWriter.LogError("Unable to generate 'POA&M' 'MergeCells' element.");
                 throw exception;
             }
         }
@@ -930,7 +931,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to initialize RAR tab.");
+                LogWriter.LogError("Unable to initialize 'RAR' tab.");
                 throw exception;
             }
         }
@@ -965,7 +966,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate RAR columns.");
+                LogWriter.LogError("Unable to generate 'RAR' columns.");
                 throw exception;
             }
         }
@@ -1006,7 +1007,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate RAR header rows.");
+                LogWriter.LogError("Unable to generate 'RAR' header rows.");
                 throw exception;
             }
         }
@@ -1115,7 +1116,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to write finding to RAR.");
+                LogWriter.LogError("Unable to write finding to 'RAR'.");
                 throw exception;
             }
         }
@@ -1130,7 +1131,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to finalize RAR tab.");
+                LogWriter.LogError("Unable to finalize 'RAR' tab.");
                 throw exception;
             }
         }
@@ -1155,7 +1156,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to initialize ACAS Output tab.");
+                LogWriter.LogError("Unable to initialize 'ACAS Output' tab.");
                 throw exception;
             }
         }
@@ -1189,7 +1190,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate ACAS Output columns.");
+                LogWriter.LogError("Unable to generate 'ACAS Output' columns.");
                 throw exception;
             }
         }
@@ -1223,7 +1224,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate ACAS Output header row.");
+                LogWriter.LogError("Unable to generate 'ACAS Output' header row.");
                 throw exception;
             }
         }
@@ -1300,7 +1301,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to insert ACAS output value.");
+                LogWriter.LogError("Unable to insert 'ACAS output' value.");
                 throw exception;
             }
         }
@@ -1315,7 +1316,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to finalize ACAS Output tab.");
+                LogWriter.LogError("Unable to finalize 'ACAS Output' tab.");
                 throw exception;
             }
         }
@@ -1340,7 +1341,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to initialize STIG Details tab.");
+                LogWriter.LogError("Unable to initialize 'STIG Details' tab.");
                 throw exception;
             }
         }
@@ -1376,7 +1377,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate STIG Details columns.");
+                LogWriter.LogError("Unable to generate 'STIG Details' columns.");
                 throw exception;
             }
         }
@@ -1412,7 +1413,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate STIG Details header row.");
+                LogWriter.LogError("Unable to generate 'STIG Details' header row.");
                 throw exception;
             }
         }
@@ -1499,7 +1500,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to insert STIG Detail item.");
+                LogWriter.LogError("Unable to insert 'STIG Detail' item.");
                 throw exception;
             }
         }
@@ -1514,7 +1515,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to finalize STIG Details tab.");
+                LogWriter.LogError("Unable to finalize 'STIG Details' tab.");
                 throw exception;
             }
         }
@@ -1539,7 +1540,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to initialize Fortify Details tab.");
+                LogWriter.LogError("Unable to initialize 'Fortify Details' tab.");
                 throw exception;
             }
         }
@@ -1571,7 +1572,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate Fortify Details columns.");
+                LogWriter.LogError("Unable to generate 'Fortify Details' columns.");
                 throw exception;
             }
         }
@@ -1603,7 +1604,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate Fortify Details header row.");
+                LogWriter.LogError("Unable to generate 'Fortify Details' header row.");
                 throw exception;
             }
         }
@@ -1685,7 +1686,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to insert Fortify Detail item.");
+                LogWriter.LogError("Unable to insert 'Fortify Detail' item.");
                 throw exception;
             }
         }
@@ -1701,7 +1702,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to finalize Fortify Details tab.");
+                LogWriter.LogError("Unable to finalize 'Fortify Details' tab.");
                 throw exception;
             }
         }
@@ -1726,7 +1727,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to initialize Discrepancies tab.");
+                LogWriter.LogError("Unable to initialize 'Discrepancies' tab.");
                 throw exception;
             }
         }
@@ -1751,7 +1752,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate Discrepancies columns.");
+                LogWriter.LogError("Unable to generate 'Discrepancies' columns.");
                 throw exception;
             }
         }
@@ -1776,7 +1777,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate Discrepancies header row.");
+                LogWriter.LogError("Unable to generate 'Discrepancies' header row.");
                 throw exception;
             }
         }
@@ -1842,7 +1843,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to insert discrepancy.");
+                LogWriter.LogError("Unable to insert 'Discrepancy'.");
                 throw exception;
             }
         }
@@ -1857,7 +1858,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to finalize Discrepancies tab.");
+                LogWriter.LogError("Unable to finalize 'Discrepancies' tab.");
                 throw exception;
             }
         }
@@ -1881,7 +1882,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to initialize Test Plan tab.");
+                LogWriter.LogError("Unable to initialize 'Test Plan' tab.");
                 throw exception;
             }
         }
@@ -1903,7 +1904,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate Test Plan columns.");
+                LogWriter.LogError("Unable to generate 'Test Plan' columns.");
                 throw exception;
             }
         }
@@ -1925,7 +1926,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate first Test Plan header row.");
+                LogWriter.LogError("Unable to generate first 'Test Plan' header row.");
                 throw exception;
             }
         }
@@ -1946,7 +1947,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate second Test Plan header row.");
+                LogWriter.LogError("Unable to generate second 'Test Plan' header row.");
                 throw exception;
             }
         }
@@ -1967,7 +1968,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate third Test Plan header row.");
+                LogWriter.LogError("Unable to generate third 'Test Plan' header row.");
                 throw exception;
             }
         }
@@ -1996,7 +1997,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to obtain test plan items.");
+                LogWriter.LogError("Unable to obtain 'Test Plan' items.");
                 throw exception;
             }
         }
@@ -2045,7 +2046,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to create Test Plan finding type header row.");
+                LogWriter.LogError("Unable to create 'Test Plan' finding type header row.");
                 throw exception;
             }
         }
@@ -2119,7 +2120,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to write test plan items.");
+                LogWriter.LogError("Unable to write 'Test Plan' items.");
                 throw exception;
             }
         }
@@ -2135,7 +2136,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to finalize Test Plan report.");
+                LogWriter.LogError("Unable to finalize 'Test Plan' report.");
                 throw exception;
             }
         }
@@ -2151,7 +2152,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate Test Plan MergeCells element.");
+                LogWriter.LogError("Unable to generate 'Test Plan' MergeCells element.");
                 throw exception;
             }
         }
@@ -2188,7 +2189,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to write cell value to Excel report.");
+                LogWriter.LogError("Unable to write cell value to Excel report.");
                 throw exception;
             }
         }
@@ -2215,7 +2216,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to create SharedStringPart in Excel report.");
+                LogWriter.LogError("Unable to create 'SharedStringPart' in Excel report.");
                 throw exception;
             }
         }
@@ -2246,7 +2247,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to convert ACAS severity value to DISA category.");
+                LogWriter.LogError("Unable to convert ACAS severity value to DISA category.");
                 throw exception;
             }
         }
@@ -2302,7 +2303,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to handle large cell value.");
+                LogWriter.LogError("Unable to handle large cell value.");
                 throw exception;
             }
         }
@@ -2344,7 +2345,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to obtain discrepancies for comparisson.");
+                LogWriter.LogError("Unable to obtain discrepancies for comparisson.");
                 throw exception;
             }
         }
@@ -2424,7 +2425,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to create Excel report Stylesheet.");
+                LogWriter.LogError("Unable to create Excel report Stylesheet.");
                 throw exception;
             }
         }
@@ -2443,7 +2444,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to create Font.");
+                LogWriter.LogError("Unable to create Font.");
                 throw exception;
             }
         }
@@ -2463,7 +2464,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to create Fill.");
+                LogWriter.LogError("Unable to create Fill.");
                 throw exception;
             }
         }
@@ -2497,7 +2498,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to create Border.");
+                LogWriter.LogError("Unable to create Border.");
                 throw exception;
             }
         }
@@ -2522,7 +2523,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to create CellFormat.");
+                LogWriter.LogError("Unable to create CellFormat.");
                 throw exception;
             }
         }
@@ -2563,7 +2564,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to set SQLite command text for Excel report.");
+                LogWriter.LogError("Unable to set SQLite command text for Excel report.");
                 throw exception;
             }
         }
@@ -2592,7 +2593,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to set credentialed string for Excel report.");
+                LogWriter.LogError("Unable to set credentialed string for Excel report.");
                 throw exception;
             }
         }

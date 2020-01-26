@@ -5,14 +5,13 @@ using System.Data.SQLite;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Vulnerator.Helper;
 using Vulnerator.Model.Object;
 
 namespace Vulnerator.Model.DataAccess
 {
     public class DatabaseInterface
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
-
         public void CreateVulnerabilityRelatedIndices()
         {
             try
@@ -44,7 +43,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to create vulnerability related indices.");
+                LogWriter.LogError("Unable to create vulnerability related indices.");
                 throw exception;
             }
             finally
@@ -60,9 +59,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to delete Vulnerability / CCI mapping \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()} - {sqliteCommand.Parameters["CCI"].Value.ToString()}\".");
-                log.Debug("Exception details:", exception);
+                LogWriter.LogError($"Unable to delete the Vulnerability / CCI mapping for UniqueFinding ID '{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}' and CCI '{sqliteCommand.Parameters["CCI"].Value}'.");
                 throw exception;
             }
         }
@@ -90,25 +87,21 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to delete Vulnerability \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}\".");
-                log.Debug("Exception details:", exception);
+                LogWriter.LogError($"Unable to delete the Vulnerability '{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}'.");
                 throw exception;
             }
         }
 
-        public void DeleteMitigationGroupMapping(SQLiteCommand sqliteCommand)
+        public void DeleteMitigationGroupMappingByMitigation(SQLiteCommand sqliteCommand)
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteMitigationGroupMapping;
+                sqliteCommand.CommandText = Properties.Resources.DeleteMitigationGroupMappingByMitigation;
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to delete Mitigation / Group mapping.");
-                log.Debug("Exception details:", exception);
+                LogWriter.LogError($"Unable to delete the Mitigation / Group mappings for Mitigation ID '{sqliteCommand.Parameters["MitigationOrCondition_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -122,9 +115,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to delete Mitigation / Group mapping.");
-                log.Debug("Exception details:", exception);
+                LogWriter.LogError($"Unable to delete the MitigationOrCondition with Mitigation ID '{sqliteCommand.Parameters["MitigationOrCondition_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -138,7 +129,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to delete the selected UniqueFinding.");
+                LogWriter.LogError($"Unable to delete the selected UniqueFinding with Unique Finding ID '{sqliteCommand.Parameters["Unique_Finding_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -175,7 +166,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to drop vulnerability related indices.");
+                LogWriter.LogError("$Unable to drop vulnerability related indices.");
                 throw exception;
             }
             finally
@@ -193,8 +184,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert IP Address \"{0}\"."));
-                log.Debug("Exception details:", exception);
+                LogWriter.LogError($"Unable to insert and map IP Address '{sqliteCommand.Parameters["IP_Address"].Value}'.");
                 throw exception;
             }
         }
@@ -210,7 +200,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to insert / map MAC Address \"{0}\" belonging to host \"{1}\"."));
+                LogWriter.LogError($"Unable to insert and map MAC Address '{sqliteCommand.Parameters["MAC_Address"].Value}'.");
                 throw exception;
             }
         }
@@ -226,35 +216,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to insert or map port \"{sqliteCommand.Parameters["Protocol"].Value.ToString()} {sqliteCommand.Parameters["Port"].Value.ToString()}\".");
-                throw exception;
-            }
-        }
-
-        public void InsertAndMapVulnerabilityReferences(SQLiteCommand sqliteCommand, List<string> references, string referenceType)
-        {
-            try
-            {
-                foreach (string reference in references)
-                {
-                    sqliteCommand.CommandText = Properties.Resources.InsertVulnerabilityReference;
-                    if (!referenceType.Equals("CVE") && !referenceType.Equals("CPE"))
-                    {
-                        referenceType = reference.Split(':')[0];
-                        sqliteCommand.Parameters.Add(new SQLiteParameter("Reference", reference.Split(':')[1]));
-                    }
-                    else
-                    { sqliteCommand.Parameters.Add(new SQLiteParameter("Reference", reference)); }
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Reference_Type", referenceType));
-                    sqliteCommand.ExecuteNonQuery();
-                    sqliteCommand.CommandText = Properties.Resources.MapReferenceToVulnerability;
-                    sqliteCommand.ExecuteNonQuery();
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Error("Unable to insert / map reference.");
+                LogWriter.LogError($"Unable to insert or map '{sqliteCommand.Parameters["Protocol"].Value} {sqliteCommand.Parameters["Port"].Value}'.");
                 throw exception;
             }
         }
@@ -270,7 +232,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to insert / map reference.");
+                LogWriter.LogError($"Unable to insert and map vulnerability reference '{sqliteCommand.Parameters["Reference"].Value}'.");
                 throw exception;
             }
         }
@@ -285,7 +247,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to insert a new Data Entry Date");
+                LogWriter.LogError("Unable to insert a new data entry date.");
                 throw exception;
             }
         }
@@ -299,7 +261,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to insert group into database.");
+                LogWriter.LogError($"Unable to insert group '{sqliteCommand.Parameters["Name"].Value}' into database.");
                 throw exception;
             }
         }
@@ -314,7 +276,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to insert host \"{sqliteCommand.Parameters["IP_Address"].Value.ToString()}\".");
+                LogWriter.LogError($"Unable to insert host '{sqliteCommand.Parameters["IP_Address"].Value}'.");
                 throw exception;
             }
         }
@@ -328,7 +290,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to insert a new empty mitigation.");
+                LogWriter.LogError("Unable to insert a new empty mitigation.");
                 throw exception;
             }
         }
@@ -342,7 +304,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to insert a new mitigation.");
+                LogWriter.LogError("Unable to insert the new mitigation.");
                 throw exception;
             }
         }
@@ -405,7 +367,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to insert SQLiteParameter placeholders into SQLiteCommand");
+                LogWriter.LogError("Unable to insert SQLiteParameter placeholders into SQLiteCommand");
                 throw exception;
             }
         }
@@ -420,7 +382,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to insert unique finding source file \"{file.FileName}\".");
+                LogWriter.LogError($"Unable to insert unique finding source file '{file.FileName}'.");
                 throw exception;
             }
         }
@@ -434,8 +396,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to insert unique finding source file \"{sqliteCommand.Parameters["Finding_Source_File_Name"].Value.ToString()}\".");
+                LogWriter.LogError($"Unable to insert unique finding source file '{sqliteCommand.Parameters["Finding_Source_File_Name"].Value}'.");
                 throw exception;
             }
         }
@@ -449,8 +410,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to insert SCAP score for \"{sqliteCommand.Parameters["Host_Name"].Value.ToString()}\" - \"{sqliteCommand.Parameters["Source_Name"].Value.ToString()}\".");
+                LogWriter.LogError($"Unable to insert SCAP score for '{sqliteCommand.Parameters["Host_Name"].Value}', '{sqliteCommand.Parameters["Source_Name"].Value}'.");
                 throw exception;
             }
         }
@@ -468,8 +428,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to insert software \"{sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString()}\" into table.");
+                LogWriter.LogError($"Unable to insert software '{sqliteCommand.Parameters["Discovered_Software_Name"].Value}'.");
                 throw exception;
             }
         }
@@ -483,8 +442,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to generate a new unique finding for \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\", \"{sqliteCommand.Parameters["Host_Name"].Value.ToString()}\", \"{sqliteCommand.Parameters["Scan_IP"].Value.ToString()}\".");
+                LogWriter.LogError($"Unable to generate a new unique finding for '{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}', '{sqliteCommand.Parameters["Host_Name"].Value}', '{sqliteCommand.Parameters["Scan_IP"].Value}'.");
                 throw exception;
             }
         }
@@ -498,8 +456,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to insert vulnerability \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\".");
+                LogWriter.LogError($"Unable to insert vulnerability '{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}'.");
                 throw exception;
             }
         }
@@ -513,8 +470,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to insert vulnerability source \"{sqliteCommand.Parameters["Source_Name"].Value.ToString()}\".");
+                LogWriter.LogError($"Unable to insert vulnerability source '{sqliteCommand.Parameters["Source_Name"].Value}'.");
                 throw exception;
             }
         }
@@ -528,7 +484,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to map mitigation to group.");
+                LogWriter.LogError($"Unable to map mitigation with Mitigation ID '{sqliteCommand.Parameters["MitigationOrCondition_ID"].Value}' to group with Group ID '{sqliteCommand.Parameters["Group_ID"]}' and vulnerability with Vulnerability ID '{sqliteCommand.Parameters["Vulnerability_ID"]}'.");
                 throw exception;
             }
         }
@@ -542,8 +498,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to map \"{sqliteCommand.Parameters["Host_Name"].Value.ToString()}\" to \"{sqliteCommand.Parameters["Name"].Value.ToString()}\".");
+                LogWriter.LogError($"Unable to map host '{sqliteCommand.Parameters["Host_Name"].Value}' to group '{sqliteCommand.Parameters["Name"].Value}'.");
                 throw exception;
             }
         }
@@ -560,8 +515,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to map software \"{sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString()}\" to \"{sqliteCommand.Parameters["Host_Name"].Value.ToString()}\".");
+                LogWriter.LogError($"Unable to map software '{sqliteCommand.Parameters["Discovered_Software_Name"].Value}' to hardware '{sqliteCommand.Parameters["Host_Name"].Value}'.");
                 throw exception;
             }
         }
@@ -575,8 +529,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to map hardware to source.");
-                log.Debug("Exception details: " + exception);
+                LogWriter.LogError($"Unable to map hardware '{sqliteCommand.Parameters["Host_Name"].Value}' to source '{sqliteCommand.Parameters["Source_Name"].Value}'.");
+                throw exception;
             }
         }
 
@@ -589,8 +543,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to map CCI \"{sqliteCommand.Parameters["CCI"].Value.ToString()}\" to vulnerability \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\".");
+                LogWriter.LogError($"Unable to map CCI '{sqliteCommand.Parameters["CCI"].Value}' to vulnerability '{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}'.");
                 throw exception;
             }
         }
@@ -604,7 +557,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to map vulnerability \"{0}\" to source \"{1}\"."));
+                LogWriter.LogError($"Unable to map vulnerability '{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}' to source '{sqliteCommand.Parameters["Source_Name"].Value}'.");
                 throw exception;
             }
         }
@@ -618,7 +571,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to select the last inserted Row ID.");
+                LogWriter.LogError("Unable to select the last inserted row ID.");
                 throw exception;
             }
         }
@@ -641,7 +594,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate ");
+                LogWriter.LogError($"Unable to generate a list of vulnerabilities associated with the vulnerability source associated with ID '{sqliteCommand.Parameters["Vulnerability_Source_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -662,8 +615,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to retrieve the vulnerability source name for vulnerability source {sqliteCommand.Parameters["Vulnerability_Source_ID"].Value.ToString()}");
+                LogWriter.LogError($"Unable to retrieve the vulnerability source name for the vulnerability source associated with ID '{sqliteCommand.Parameters["Vulnerability_Source_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -689,7 +641,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("");
+                LogWriter.LogError($"Unable to select the details for the hardware record associated with ID '{sqliteCommand.Parameters["Hardware_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -703,8 +655,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to set the credentialed scan status for \"{sqliteCommand.Parameters["Scan-IP"].Value.ToString()}\".");
+                LogWriter.LogError($"Unable to set the credentialed scan status for '{sqliteCommand.Parameters["Scan_IP"].Value}'.");
                 throw exception;
             }
         }
@@ -718,7 +669,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to update MitigationOrCondition.");
+                LogWriter.LogError($"Unable to update MitigationOrCondition associated with ID '{sqliteCommand.Parameters["MitigationOrCondition_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -747,8 +698,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to update the unique finding for \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\", \"{sqliteCommand.Parameters["Host_Name"].Value.ToString()}\", \"{sqliteCommand.Parameters["Scan_IP"].Value.ToString()}\".");
+                LogWriter.LogError($"Unable to update the unique finding for '{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}', '{sqliteCommand.Parameters["Host_Name"].Value}', '{sqliteCommand.Parameters["Scan_IP"].Value}'.");
                 throw exception;
             }
         }
@@ -762,7 +712,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to update MitigationOrCondition for the UniqueFinding.");
+                LogWriter.LogError($"Unable to update MitigationOrCondition associated with ID '{sqliteCommand.Parameters["MitigationOrCondition_ID"].Value}' for the UniqueFinding with ID '{sqliteCommand.Parameters["Unique_Finding_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -776,8 +726,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to insert vulnerability \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\".");
+                LogWriter.LogError($"Unable to insert vulnerability '{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}'.");
                 throw exception;
             }
         }
@@ -791,8 +740,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to update the delta analysis flag(s) for unique findings related to \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\".");
+                LogWriter.LogError($"Unable to update the delta analysis flag(s) for unique findings related to '{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}'.");
                 throw exception;
             }
         }
@@ -826,8 +774,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to update vulnerability source \"{sqliteCommand.Parameters["Source_Name"].Value.ToString()}\".");
+                LogWriter.LogError($"Unable to update vulnerability source '{sqliteCommand.Parameters["Source_Name"].Value}'.");
                 throw exception;
             }
         }
@@ -841,9 +788,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to update the \"Is_Report_Selected\" field for Report ID {sqliteCommand.Parameters["Is_Report_Selected"].Value.ToString()}");
-                log.Debug("Exception details:", exception);
+                LogWriter.LogError($"Unable to update the 'Is_Report_Selected' field for Report ID '{sqliteCommand.Parameters["Required_Report_ID"].Value}'");
+                throw exception;
             }
         }
 
@@ -855,8 +801,8 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to vulnerability to IA Control.");
-                log.Debug("Exception details: " + exception);
+                LogWriter.LogError("Unable to vulnerability to IA Control.");
+                throw exception;
             }
         }
 
@@ -875,7 +821,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error("Unable to read DDL Resource File.");
+                LogWriter.LogError($"Unable to read DDL Resource File '{ddlResourceFile}'.");
                 throw exception;
             }
         }
@@ -907,8 +853,8 @@ namespace Vulnerator.Model.DataAccess
                             bool oldReleaseParsed = int.TryParse(regex.Replace(sqliteDataReader["Source_Release"].ToString(), string.Empty), out oldRelease);
                             if (newVersionParsed && oldVersionParsed)
                             {
-                                versionUpdated = (newVersion > oldVersion) ? true : false;
-                                versionSame = (newVersion == oldVersion) ? true : false;
+                                versionUpdated = (newVersion > oldVersion);
+                                versionSame = (newVersion == oldVersion);
                             }
                             if (newReleaseParsed && oldReleaseParsed && (newRelease > oldRelease))
                             { releaseUpdated = true; }
@@ -923,8 +869,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to determine if an update is required for vulnerability \"{sqliteCommand.Parameters["Source_Name"].Value.ToString()}\".");
+                LogWriter.LogError($"Unable to determine if an update is required for vulnerability '{sqliteCommand.Parameters["Source_Name"].Value}'.");
                 throw exception;
             }
         }
@@ -992,8 +937,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to compare vulnerability version information for \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\" against current database information.");
+                LogWriter.LogError($"Unable to compare vulnerability version information for '{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}' against current database information.");
                 throw exception;
             }
         }
@@ -1007,8 +951,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to update the Modified Date for \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\".");
+                LogWriter.LogError($"Unable to update the Modified Date for '{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}'.");
                 throw exception;
             }
         }
@@ -1023,7 +966,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to update Group \"{sqliteCommand.Parameters["Name"].Value}\"");
+                LogWriter.LogError($"Unable to update Group '{sqliteCommand.Parameters["Name"].Value}'.");
                 throw exception;
             }
         }
@@ -1037,7 +980,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete GroupsCCIs mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                LogWriter.LogError($"Unable to delete GroupsCCIs mapping for Group with Group_ID '{sqliteCommand.Parameters["Group_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -1051,7 +994,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete GroupsWaivers mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                LogWriter.LogError($"Unable to delete GroupsWaivers mapping for Group with Group_ID '{sqliteCommand.Parameters["Group_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -1065,7 +1008,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete GroupsOverlays mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                LogWriter.LogError($"Unable to delete GroupsOverlays mapping for Group with Group_ID '{sqliteCommand.Parameters["Group_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -1079,7 +1022,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete GroupsConnectedSystems mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                LogWriter.LogError($"Unable to delete GroupsConnectedSystems mapping for Group with Group_ID '{sqliteCommand.Parameters["Group_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -1093,7 +1036,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete GroupsMitigationsOrConditions mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                LogWriter.LogError($"Unable to delete GroupsMitigationsOrConditions mapping for Group with Group_ID '{sqliteCommand.Parameters["Group_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -1107,7 +1050,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete GroupsConnections mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                LogWriter.LogError($"Unable to delete GroupsConnections mapping for Group with Group_ID '{sqliteCommand.Parameters["Group_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -1121,7 +1064,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete HardwareGroups mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                LogWriter.LogError($"Unable to delete HardwareGroups mapping for Group with Group_ID '{sqliteCommand.Parameters["Group_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -1135,7 +1078,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete Groups_IATA_Standards mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                LogWriter.LogError($"Unable to delete Groups_IATA_Standards mapping for Group with Group_ID '{sqliteCommand.Parameters["Group_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -1149,7 +1092,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete GroupsContacts mapping for Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                LogWriter.LogError($"Unable to delete GroupsContacts mapping for Group with Group_ID '{sqliteCommand.Parameters["Group_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -1174,7 +1117,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to delete Group with Group_ID \"{sqliteCommand.Parameters["Group_ID"].Value}\".");
+                LogWriter.LogError($"Unable to delete Group with Group_ID '{sqliteCommand.Parameters["Group_ID"].Value}'.");
                 throw exception;
             }
         }
