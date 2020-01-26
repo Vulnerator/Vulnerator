@@ -213,7 +213,7 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 LogWriter.LogError(
-                    $"Unable to create a uniqueFinding record for plugin '{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}'.");
+                    $"Unable to create a uniqueFinding record for plugin '{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}'.");
                 throw exception;
             }
         }

@@ -130,7 +130,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Unable to generate SI_DATA node.");
+                LogWriter.LogError("Unable to generate 'SI_DATA' node.");
                 throw exception;
             }
         }
@@ -195,7 +195,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Unable to write CKL vulnerability node.");
+                LogWriter.LogError("Unable to write CKL 'vulnerability' node.");
                 throw exception;
             }
         }
@@ -211,7 +211,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Unable to generate STIG_DATA node.");
+                LogWriter.LogError("Unable to generate 'STIG_DATA' node.");
                 throw exception;
             }
         }

@@ -317,7 +317,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Unable to parse FVDL Description node.");
+                LogWriter.LogError("Unable to parse FVDL 'Description' node.");
                 throw exception;
             }
         }

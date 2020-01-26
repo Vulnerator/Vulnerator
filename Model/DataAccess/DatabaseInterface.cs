@@ -788,7 +788,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                LogWriter.LogError($"Unable to update the 'Is_Report_Selected' field for Report ID {sqliteCommand.Parameters["Required_Report_ID"].Value}");
+                LogWriter.LogError($"Unable to update the 'Is_Report_Selected' field for Report ID '{sqliteCommand.Parameters["Required_Report_ID"].Value}'");
                 throw exception;
             }
         }
