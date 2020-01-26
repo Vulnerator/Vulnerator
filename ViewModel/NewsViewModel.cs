@@ -5,13 +5,13 @@ using Vulnerator.Model.Object;
 using System;
 using log4net;
 using Microsoft.Win32;
+using Vulnerator.Helper;
 using Vulnerator.View.UI;
 
 namespace Vulnerator.ViewModel
 {
     public class NewsViewModel : ViewModelBase
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private GitHubActions githubActions = new GitHubActions();
         public MarkdownPipeline MarkdownPipeline = new MarkdownPipelineBuilder()
             .UseAdvancedExtensions()
@@ -82,11 +82,10 @@ namespace Vulnerator.ViewModel
             { System.Diagnostics.Process.Start(GetDefaultBrowserPath(), param.ToString()); }
             catch (Exception exception)
             {
-                log.Error("Unable to obtain launch GitHub link; no internet application exists.");
-                log.Debug("Exception details: " + exception);
+                string error = "Unable to obtain launch GitHub link; no internet application exists.";
+                LogWriter.LogErrorWithDebug(error, exception);
                 NoInternetApplication internetWarning = new NoInternetApplication();
                 internetWarning.ShowDialog();
-                return;
             }
         }
 
@@ -128,7 +127,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to obtain default browser data.");
+                LogWriter.LogError("Unable to obtain default browser data.");
                 throw exception;
             }
         }

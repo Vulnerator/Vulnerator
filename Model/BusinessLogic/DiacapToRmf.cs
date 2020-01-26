@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml;
+using Vulnerator.Helper;
 using Vulnerator.Model.Object;
 
 namespace Vulnerator.Model.BusinessLogic
 {
     public static class DiacapToRmf
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         public static Dictionary<string, string> RevisionThree = new Dictionary<string, string>();
         public static Dictionary<string, string> RevisionFour = new Dictionary<string, string>();
 
@@ -18,7 +18,7 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                log.Info("Initializing DIACAP to RMF conversion dictionaries.");
+                LogWriter.LogStatusUpdate("Initializing DIACAP to RMF conversion dictionaries.");
                 string diacapControl = string.Empty;
                 Assembly assembly = Assembly.GetExecutingAssembly();
                 string fileName = "Vulnerator.Resources.DiacapToRmf.xml";
@@ -63,22 +63,30 @@ namespace Vulnerator.Model.BusinessLogic
                         }
                     }
                 }
-                log.Info("DIACAP to RMF conversion dictionaries initialize successfully.");
+                LogWriter.LogStatusUpdate("DIACAP to RMF conversion dictionaries initialize successfully.");
             }
             catch (Exception exception)
             {
-                log.Error("Unable to initialize DIACAP to RMF conversion dictionaries.");
-                log.Debug("Exception details: " + exception);
+                string error = "Unable to initialize DIACAP to RMF conversion dictionaries.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
         private static void InsertDictionaryValue(Dictionary<string, string> conversionDictionary, XmlReader xmlReader, string diacapControl)
         {
-            xmlReader.Read();
-            if (!conversionDictionary.ContainsKey(diacapControl))
-            { conversionDictionary.Add(diacapControl, xmlReader.Value); }
-            else
-            { conversionDictionary[diacapControl] = conversionDictionary[diacapControl].ToString() + Environment.NewLine + xmlReader.Value; }
+            try
+            {
+                xmlReader.Read();
+                if (!conversionDictionary.ContainsKey(diacapControl))
+                { conversionDictionary.Add(diacapControl, xmlReader.Value); }
+                else
+                { conversionDictionary[diacapControl] = conversionDictionary[diacapControl].ToString() + Environment.NewLine + xmlReader.Value; }
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to insert DIACAP to RMF conversion dictionary value for '{diacapControl}' - '{xmlReader.Value}'");
+                throw;
+            }
         }
     }
 }

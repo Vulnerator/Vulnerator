@@ -31,7 +31,6 @@ namespace Vulnerator.Model.BusinessLogic
         private string dateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
         private bool found21745 = false;
         private bool found26917 = false;
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         List<VulnerabilityReference> references = new List<VulnerabilityReference>();
         private string[] persistentParameters = new string[] 
         {
@@ -49,7 +48,7 @@ namespace Vulnerator.Model.BusinessLogic
             {                
                 if (file.FilePath.IsFileInUse())
                 {
-                    log.Error(file.FileName + " is in use; please close any open instances and try again.");
+                    LogWriter.LogError($"'{file.FileName}' is in use; please close any open instances and try again.");
                     return "Failed; File In Use";
                 }
 
@@ -60,8 +59,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to process Nessus file.");
-                log.Debug("Exception details:", exception);
+                string error = $"Unable to process ACAS Nessus file '{file.FileName}'";
+                LogWriter.LogErrorWithDebug(error, exception);
                 return "Failed; See Log";
             }
         }
@@ -118,7 +117,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to parse nessus file with XmlReader.");
+                LogWriter.LogError("Unable to parse ACAS Nessus file with XmlReader.");
                 throw exception;
             }
             finally
@@ -212,7 +211,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to parse host \"{hostIp}\".");
+                LogWriter.LogError($"Unable to parse host '{hostIp}'.");
                 throw exception;
             }
         }
@@ -397,7 +396,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to parse plugin \"{pluginId}\".");
+                LogWriter.LogError($"Unable to parse plugin '{pluginId}'.");
                 throw exception;
             }
         }
@@ -467,8 +466,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to parse Windows software (Plugin 20811) for \"{sqliteCommand.Parameters["Scan_IP"].Value.ToString()}\".");
+                LogWriter.LogError(
+                    $"Unable to parse Windows software (Plugin 20811) for '{sqliteCommand.Parameters["Scan_IP"].Value.ToString()}'.");
                 throw exception;
             }
         }
@@ -558,8 +557,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to parse SSH software (Plugin 22869/29217) for \"{sqliteCommand.Parameters["Scan_IP"].Value.ToString()}\".");
+                LogWriter.LogError(
+                    $"Unable to parse SSH software (Plugin 22869/29217) for '{sqliteCommand.Parameters["Scan_IP"].Value.ToString()}'.");
                 throw exception;
             }
         }
@@ -581,7 +580,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to obtain the software name for plugin \"{0}\"."));
+                LogWriter.LogError($"Unable to obtain the software name for plugin '{pluginId}'.");
                 throw exception;
             }
         }
@@ -599,8 +598,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to parse the version information for plugin \"{sqliteCommand.Parameters["Vulnerability_Version"].Value.ToString()}\".");
+                LogWriter.LogError(
+                    $"Unable to parse the version information for plugin '{sqliteCommand.Parameters["Vulnerability_Version"].Value.ToString()}'.");
                 throw exception;
             }
         }
@@ -625,8 +624,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to insert source \"{sqliteCommand.Parameters["Source_Name"].Value.ToString()} {sqliteCommand.Parameters["Source_Version"].Value.ToString()} {sqliteCommand.Parameters["Source_Release"].Value.ToString()}\".");
+                LogWriter.LogError(
+                    $"Unable to insert source '{sqliteCommand.Parameters["Source_Name"].Value.ToString()} {sqliteCommand.Parameters["Source_Version"].Value.ToString()} {sqliteCommand.Parameters["Source_Release"].Value.ToString()}'.");
                 throw exception;
             }
         }
@@ -645,8 +644,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to create a uniqueFinding record for plugin \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\".");
+                LogWriter.LogError(
+                    $"Unable to create a uniqueFinding record for plugin '{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}'.");
                 throw exception;
             }
         }
@@ -663,7 +662,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to obtain currently accessed node value.");
+                LogWriter.LogError("Unable to obtain currently accessed node value.");
                 throw exception;
             }
         }
@@ -682,7 +681,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate XmlReaderSettings.");
+                LogWriter.LogError("Unable to generate XmlReaderSettings.");
                 throw exception;
             }
         }
@@ -709,7 +708,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to convert \"{riskFactor}\" to a standardized raw risk.");
+                LogWriter.LogError($"Unable to convert '{riskFactor}' to a standardized raw risk.");
                 throw exception;
             }
         }
@@ -740,7 +739,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to set ACAS Nessus File source information.");
+                LogWriter.LogError("Unable to set ACAS Nessus File source information.");
                 throw exception;
             }
         }

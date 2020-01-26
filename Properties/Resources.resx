@@ -156,7 +156,7 @@
 WHERE
 	MitigationOrCondition_ID = @MitigationOrCondition_ID;</value>
   </data>
-  <data name="DeleteMitigationGroupMapping" xml:space="preserve">
+  <data name="DeleteMitigationGroupMappingByMitigation" xml:space="preserve">
     <value>DELETE FROM
 	Groups_MitigationsOrConditions
 WHERE

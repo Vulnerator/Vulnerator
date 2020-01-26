@@ -177,9 +177,9 @@ namespace Vulnerator.Properties {
         ///WHERE
         ///	MitigationOrCondition_ID = @MitigationOrCondition_ID;.
         /// </summary>
-        internal static string DeleteMitigationGroupMapping {
+        internal static string DeleteMitigationGroupMappingByMitigation {
             get {
-                return ResourceManager.GetString("DeleteMitigationGroupMapping", resourceCulture);
+                return ResourceManager.GetString("DeleteMitigationGroupMappingByMitigation", resourceCulture);
             }
         }
         

@@ -4,17 +4,17 @@ using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
 using PdfSharp.Pdf;
 using System;
+using Vulnerator.Helper;
 using Vulnerator.Model.Object;
 
 namespace Vulnerator.Model.BusinessLogic
 {
     public class PdfReportCreator
     {
-        private string ContactOrganization = ConfigAlter.ReadSettingsFromDictionary("tbEmassOrg");
-        private string ContactName = ConfigAlter.ReadSettingsFromDictionary("tbEmassName");
-        private string ContactNumber = ConfigAlter.ReadSettingsFromDictionary("tbEmassNumber");
-        private string ContactEmail = ConfigAlter.ReadSettingsFromDictionary("tbEmassEmail");
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
+        private string ContactOrganization = Properties.Settings.Default.Organization;
+        private string ContactName = Properties.Settings.Default.Name;
+        private string ContactNumber = Properties.Settings.Default.Phone;
+        private string ContactEmail = Properties.Settings.Default.Email;
 
         public string PdfWriter(string filename, string systemName)
         {
@@ -125,8 +125,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to create PDF report.");
-                log.Debug("Exception details: " + exception);
+                string error = "Unable to create PDF report";
+                LogWriter.LogErrorWithDebug(error, exception);
                 return "Failed; See Log";
             }
         }                                                                                                           // End method "PdfCreator"

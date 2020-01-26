@@ -24,9 +24,6 @@ namespace Vulnerator.Model.BusinessLogic
         private string dateTimeFormat = "MMM d, yyyy hh:mm:ss";
         private string acasVersion = string.Empty;
         private string acasRelease = string.Empty;
-        private string vulneratorDatabaseConnection = @"Data Source = " + ConfigAlter.ReadSettingsFromDictionary("tbMitDbLocation");
-        private bool UserPrefersHostName => bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier"));
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private string[] persistentParameters = new string[] { "Name", "Finding_Source_File_Name", "Source_Name" };
         List<VulnerabilityReference> references = new List<VulnerabilityReference>();
         private DatabaseInterface databaseInterface = new DatabaseInterface();
@@ -44,7 +41,7 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 if (file.FilePath.IsFileInUse())
                 {
-                    log.Error(file.FileName + " is in use; please close any open instances and try again.");
+                    LogWriter.LogError($"'{file.FileName}' is in use; please close any open instances and try again.");
                     return "Failed; File In Use";
                 }
 
@@ -70,7 +67,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     string missingHeader = CheckForCsvHeaders(csvReader);
                                     if (!string.IsNullOrWhiteSpace(missingHeader))
                                     {
-                                        log.Error("CSV File is missing the \"" + missingHeader + "\" column; please generate a " +
+                                        LogWriter.LogError($"CSV File is missing the '{missingHeader}' column; please generate a " +
                                             "new CSV file utilizing the ACAS report template that was packaged with the application.");
                                         return "Failed; See Log";
                                     }
@@ -178,8 +175,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to process CSV file.");
-                log.Debug("Exception details:", exception);
+                string error = $"Unable to process ACAS CSV file '{file.FileName}'";
+                LogWriter.LogErrorWithDebug(error, exception);
                 return "Failed; See Log";
             }
             finally
@@ -196,7 +193,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to santize cross reference \"{unsanitizedCrossReference}\"");
+                LogWriter.LogError($"Unable to sanitize cross reference '{unsanitizedCrossReference}'");
                 throw exception;
             }
         }
@@ -215,8 +212,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to create a uniqueFinding record for plugin \"{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString()}\".");
+                LogWriter.LogError(
+                    $"Unable to create a uniqueFinding record for plugin '{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}'.");
                 throw exception;
             }
         }
@@ -231,7 +228,7 @@ namespace Vulnerator.Model.BusinessLogic
                     "Cross References", "Last Observed", "Plugin Modification Date", "CVSS Temporal Score", "CVSS Base Score", "CVSS Vector", "Plugin Text",
                     "Protocol", "Port", "Family", "First Discovered", "Vuln Publication Date", "Patch Publication Date", "Version"
                 };
-                log.Info("Verifying CSV headers.");
+                LogWriter.LogStatusUpdate("Verifying CSV headers.");
                 csvReader.ReadHeader();
                 foreach (string headerName in headersToVerify)
                 {
@@ -243,7 +240,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("CSV header checking has failed.");
+                LogWriter.LogError("CSV header checking has failed.");
                 throw exception;
             }
         }
@@ -262,7 +259,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to parse date information.");
+                LogWriter.LogError($"Unable to parse date information from '{stringToParse}'.");
                 throw exception;
             }
         }
@@ -277,7 +274,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to extract operating system.");
+                LogWriter.LogError($"Unable to extract operating system from '{pluginText}'.");
                 throw exception;
             }
         }
@@ -347,8 +344,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to parse Windows software (Plugin 20811) for \"{sqliteCommand.Parameters["Scan_IP"].Value.ToString()}\".");
+                LogWriter.LogError(
+                    $"Unable to parse Windows software (Plugin 20811) for '{sqliteCommand.Parameters["Scan_IP"].Value.ToString()}'.");
                 throw exception;
             }
         }
@@ -428,8 +425,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to parse SSH software (Plugin 22869/29217) for \"{sqliteCommand.Parameters["Scan_IP"].Value.ToString()}\".");
+                LogWriter.LogError(
+                    $"Unable to parse SSH software (Plugin 22869/29217) for '{sqliteCommand.Parameters["Scan_IP"].Value.ToString()}'.");
                 throw exception;
             }
         }
@@ -451,7 +448,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to obtain the software name for plugin \"{0}\"."));
+                LogWriter.LogError($"Unable to obtain the software name for plugin \"{pluginId}\".");
                 throw exception;
             }
         }
@@ -478,7 +475,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error($"Unable to convert \"{riskFactor}\" to a standardized raw risk.");
+                LogWriter.LogError($"Unable to convert '{riskFactor}' to a standardized raw risk.");
                 throw exception;
             }
         }
@@ -509,7 +506,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to set ACAS Nessus File source information.");
+                LogWriter.LogError("Unable to set ACAS Nessus source file information.");
                 throw exception;
             }
         }
@@ -534,8 +531,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to insert source \"{sqliteCommand.Parameters["Source_Name"].Value.ToString()} {sqliteCommand.Parameters["Source_Version"].Value.ToString()} {sqliteCommand.Parameters["Source_Release"].Value.ToString()}\".");
+                LogWriter.LogError(
+                    $"Unable to insert source '{sqliteCommand.Parameters["Source_Name"].Value.ToString()} {sqliteCommand.Parameters["Source_Version"].Value.ToString()} {sqliteCommand.Parameters["Source_Release"].Value.ToString()}'.");
                 throw exception;
             }
         }
@@ -553,8 +550,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error(
-                    $"Unable to parse the version information for plugin \"{sqliteCommand.Parameters["Vulnerability_Version"].Value.ToString()}\".");
+                LogWriter.LogError(
+                    $"Unable to parse the version information for plugin '{sqliteCommand.Parameters["Vulnerability_Version"].Value.ToString()}'.");
                 throw exception;
             }
         }

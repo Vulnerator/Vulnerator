@@ -15,7 +15,6 @@ namespace Vulnerator.Model.BusinessLogic
 {
     class FprReader
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private string softwareName = string.Empty;
         private string firstDiscovered = DateTime.Now.ToShortDateString();
         private string lastObserved = DateTime.Now.ToShortDateString();
@@ -33,7 +32,7 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 if (file.FilePath.IsFileInUse())
                 {
-                    log.Error(file.FileName + " is in use; please close any open instances and try again.");
+                    LogWriter.LogError($"'{file.FileName}' is in use; please close any open instances and try again.");
                     return "Failed; File In Use";
                 }
                 ReadFprArchive(file);
@@ -41,8 +40,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to process FPR file.");
-                log.Debug("Exception details:", exception);
+                string error = $"Unable to process FPR file '{file.FileName}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
                 return "Failed; See Log";
             }
         }
@@ -115,7 +114,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to read FPR Archive.");
+                LogWriter.LogError("Unable to read FPR Archive.");
                 throw exception;
             }
             finally
@@ -169,7 +168,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to read \"audit.fvdl\".");
+                LogWriter.LogError("Unable to read FPR 'audit.fvdl'.");
                 throw exception;
             }
         }
@@ -240,7 +239,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to parse FVDL Vulnerability node.");
+                LogWriter.LogError("Unable to parse the FPR FVDL 'Vulnerability' node.");
                 throw exception;
             }
         }
@@ -318,7 +317,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to parse FVDL Description node.");
+                LogWriter.LogError("Unable to parse FVDL 'Description' node.");
                 throw exception;
             }
         }
@@ -329,7 +328,7 @@ namespace Vulnerator.Model.BusinessLogic
             { return content.Replace("&lt;", "<").Replace("&gt;", ">"); }
             catch (Exception exception)
             {
-                log.Error("Unable to sanitize node content.");
+                LogWriter.LogError("Unable to sanitize the FPR node content.");
                 throw exception;
             }
         }
@@ -378,7 +377,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to sanitize the \"Abstract\" node value.");
+                LogWriter.LogError("Unable to sanitize the FPR 'Abstract' node value.");
                 throw exception;
             }
         }
@@ -443,7 +442,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to sanitize Description value.");
+                LogWriter.LogError("Unable to sanitize FPR 'Description' value.");
                 throw exception;
             }
         }
@@ -492,52 +491,60 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to sanitize Recommendations value.");
+                LogWriter.LogError("Unable to sanitize FPR 'Recommendations' value.");
                 throw exception;
             }
         }
 
         private string InjectDefinitionValues(string input, FprVulnerability fprVulnerability)
         {
-            string output = input;
-            string placeholder = string.Empty;
-            foreach (string key in fprVulnerability.ReplacementDefinitions.Keys)
+            try
             {
-                string[] locationDefArray = new string[] { "SourceFunction", "SinkFunction", "PrimaryCall.name" };
-                placeholder = "<Replace key=\"" + key + "\"/>";
-                if (output.Contains(placeholder))
-                { output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]); }
-                if (locationDefArray.Contains(key))
+                string output = input;
+                string placeholder = string.Empty;
+                foreach (string key in fprVulnerability.ReplacementDefinitions.Keys)
                 {
-                    switch (key)
+                    string[] locationDefArray = new string[] { "SourceFunction", "SinkFunction", "PrimaryCall.name" };
+                    placeholder = "<Replace key=\"" + key + "\"/>";
+                    if (output.Contains(placeholder))
+                    { output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]); }
+                    if (locationDefArray.Contains(key))
                     {
-                        case "SourceFunction":
-                            {
-                                placeholder = "<Replace key=\"" + key + "\" link=\"SourceLocation\"/>";
-                                if (output.Contains(placeholder))
-                                { output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]); }
-                                break;
-                            }
-                        case "SinkFunction":
-                            {
-                                placeholder = "<Replace key=\"" + key + "\" link=\"SinkLocation\"/>";
-                                if (output.Contains(placeholder))
-                                { output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]); }
-                                break;
-                            }
-                        case "PrimaryCall.name":
-                            {
-                                placeholder = "<Replace key=\"" + key + "\" link=\"PrimaryLocation\"/>";
-                                if (output.Contains(placeholder))
-                                { output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]); }
-                                break;
-                            }
-                        default:
-                            { break; }
+                        switch (key)
+                        {
+                            case "SourceFunction":
+                                {
+                                    placeholder = "<Replace key=\"" + key + "\" link=\"SourceLocation\"/>";
+                                    if (output.Contains(placeholder))
+                                    { output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]); }
+                                    break;
+                                }
+                            case "SinkFunction":
+                                {
+                                    placeholder = "<Replace key=\"" + key + "\" link=\"SinkLocation\"/>";
+                                    if (output.Contains(placeholder))
+                                    { output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]); }
+                                    break;
+                                }
+                            case "PrimaryCall.name":
+                                {
+                                    placeholder = "<Replace key=\"" + key + "\" link=\"PrimaryLocation\"/>";
+                                    if (output.Contains(placeholder))
+                                    { output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]); }
+                                    break;
+                                }
+                            default:
+                                { break; }
+                        }
                     }
                 }
+                return output;
             }
-            return output;
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to inject definition values into FPR vulnerability.");
+                throw exception;
+            }
         }
 
         private string ObtainReferencesValue(XmlReader xmlReader)
@@ -553,7 +560,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to obtain References key.");
+                LogWriter.LogError("Unable to obtain FPR 'References' value.");
                 throw exception;
             }
         }
@@ -575,7 +582,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to obtain References value.");
+                LogWriter.LogError("Unable to obtain FPR 'References' key.");
                 throw exception;
             }
         }
@@ -633,7 +640,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to read \"audit.xml\".");
+                LogWriter.LogError("Unable to read FPR 'audit.xml' file.");
                 throw exception;
             }
         }
@@ -655,7 +662,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to obtain analysis value.");
+                LogWriter.LogError("Unable to obtain FPR 'Analysis' value.");
                 throw exception;
             }
         }
@@ -706,7 +713,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to obtain FPR comment values.");
+                LogWriter.LogError("Unable to obtain FPR 'Comment' values.");
                 throw exception;
             }
         }
@@ -725,7 +732,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate XmlReaderSettings.");
+                LogWriter.LogError("Unable to generate XmlReaderSettings.");
                 throw exception;
             }
         }
@@ -743,7 +750,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate a Stream from the provided string.");
+                LogWriter.LogError("Unable to generate a Stream from the provided string.");
                 throw exception;
             }
         }
@@ -801,7 +808,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to insert SQLiteParameter placeholders into SQLiteCommand");
+                LogWriter.LogError("Unable to insert SQLiteParameter placeholders into SQLiteCommand");
                 throw exception;
             }
         }

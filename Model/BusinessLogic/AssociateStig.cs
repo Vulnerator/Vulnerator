@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,12 +8,12 @@ using Vulnerator.Model.Object;
 using Vulnerator.Model.DataAccess;
 using log4net;
 using System.Data.SQLite;
+using Vulnerator.Helper;
 
 namespace Vulnerator.Model.BusinessLogic
 {
     public class AssociateStig
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private DatabaseInterface databaseInterface = new DatabaseInterface();
 
         public void ToHardware(int vulnerabilitySourceId, int hardwareId)
@@ -46,12 +47,12 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to associate STIG to hardware asset");
+                LogWriter.LogError($"Unable to associate STIG with VulnerabilitySource_ID '{vulnerabilitySourceId}' to hardware asset with Hardware_ID '{hardwareId}'");
                 throw exception;
             }
             finally
             {
-                if (!DatabaseBuilder.sqliteConnection.State.Equals("Closed"))
+                if (!DatabaseBuilder.sqliteConnection.State.Equals(ConnectionState.Closed))
                 { DatabaseBuilder.sqliteConnection.Close(); }
             }
         }
@@ -72,7 +73,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to prepare the SQLiteCommand to insert a new unique finding.");
+                LogWriter.LogError("Unable to prepare the SQLiteCommand to insert a new unique finding.");
                 throw exception;
             }
         }

@@ -3,17 +3,17 @@ using log4net;
 using Markdig;
 using System.IO;
 using System.Reflection;
+using Vulnerator.Helper;
 using Vulnerator.Model.Object;
 using System.Collections.Generic;
 using System;
+using log4net.Appender;
 
 
 namespace Vulnerator.ViewModel
 {
     public class UserGuideViewModel : ViewModelBase
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
-
         private Assembly assembly = Assembly.GetExecutingAssembly();
         public MarkdownPipeline MarkdownPipeline = new MarkdownPipelineBuilder()
             .UseAdvancedExtensions()
@@ -52,13 +52,17 @@ namespace Vulnerator.ViewModel
         }
 
         public UserGuideViewModel()
-        { 
+        {
             try
-            { RenderUserGuidePages(); }
+            {
+                LogWriter.LogStatusUpdate("Begin instantiation of UserGuideViewModel.");
+                RenderUserGuidePages();
+                LogWriter.LogStatusUpdate("UserGuideViewModel instantiated successfully.");
+            }
             catch (Exception exception)
             {
-                log.Error("Unable to instantiate UserGuideViewModel.");
-                log.Debug("Exception details:", exception);
+                string error = "Unable to instantiate UserGuideViewModel.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -84,7 +88,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to render User Guide Pages.");
+                LogWriter.LogError("Unable to render User Guide pages.");
                 throw exception;
             }
         }
@@ -101,7 +105,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to get page content.");
+                LogWriter.LogError($"Unable to get page content for '{resource}'.");
                 throw exception;
             }
         }
@@ -123,7 +127,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to sanitize page content.");
+                LogWriter.LogError($"Unable to sanitize page content '{content}'.");
                 throw exception;
             } }
 
@@ -151,7 +155,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                log.Error("Unable to get page number.");
+                LogWriter.LogError($"Unable to get page number for '{resource}'.");
                 throw exception;
             }
         }

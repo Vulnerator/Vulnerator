@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Vulnerator.Helper;
 using Vulnerator.Model.Object;
 using Vulnerator.View.UI;
 
@@ -13,7 +14,6 @@ namespace Vulnerator.ViewModel
 {
     public class AboutViewModel : ViewModelBase
     {
-        public static readonly ILog log = LogManager.GetLogger(typeof(Logger));
         private Assembly assembly = Assembly.GetExecutingAssembly();
         public string ApplicationVersion
         {
@@ -28,22 +28,42 @@ namespace Vulnerator.ViewModel
         public string License => GetLicenseText();
 
         public AboutViewModel()
-        { }
+        {
+            try
+            {
+                LogWriter.LogStatusUpdate("Begin instantiation of AboutViewModel.");
+                LogWriter.LogStatusUpdate("AboutViewModel instantiated successfully.");
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to instantiate AboutViewModel.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
 
         private string GetLicenseText()
         {
-            string licenseText = string.Empty;
-            using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.LICENSE"))
+            try
             {
-                using (StreamReader streamReader = new StreamReader(stream))
+                string licenseText = string.Empty;
+                using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.LICENSE"))
                 {
-                    licenseText = streamReader.ReadToEnd();
-                    licenseText = licenseText.Replace("(c)", "©");
-                    licenseText = Regex.Replace(licenseText, "\r\n", " ");
-                    licenseText = Regex.Replace(licenseText, "  ", "\r\n\r\n");
+                    using (StreamReader streamReader = new StreamReader(stream))
+                    {
+                        licenseText = streamReader.ReadToEnd();
+                        licenseText = licenseText.Replace("(c)", "©");
+                        licenseText = Regex.Replace(licenseText, "\r\n", " ");
+                        licenseText = Regex.Replace(licenseText, "  ", "\r\n\r\n");
+                    }
                 }
+                return licenseText;
             }
-            return licenseText;
+            catch (Exception exception)
+            {
+                string error = "Unable to retrieve Vulnerator license text.";
+                LogWriter.LogErrorWithDebug(error, exception);
+                return string.Empty;
+            }
         }
 
         public RelayCommand<object> AboutLinksCommand => new RelayCommand<object>(AboutLinks);
@@ -56,22 +76,22 @@ namespace Vulnerator.ViewModel
             {
                 case "emailAlexTextBox":
                     {
-                        EmailAlex();
+                        EmailDeveloper("alex.kuchta@navy.mil");
                         break;
                     }
                 case "emailJeffvTextBox":
                     {
-                        EmailJeffV();
+                        EmailDeveloper("Jeff.Vanerwegen@Vencore.com");
                         break;
                     }
                 case "emailRickTextBox":
                     {
-                        EmailRick();
+                        EmailDeveloper("rick.murphy@navy.mil");
                         break;
                     }
                 case "emailJeffpTextBox":
                     {
-                        EmailJeffP();
+                        EmailDeveloper("jeffrey.a.purcell@navy.mil");
                         break;
                     }
                 default:
@@ -79,59 +99,17 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private void EmailAlex()
+        private void EmailDeveloper(string email)
         {
-            string mailTo = "mailto:alex.kuchta@navy.mil";
+            string mailTo = $"mailto:{email}";
             try
             { Process.Start(mailTo); }
             catch (Exception exception)
             {
-                log.Error("Unable to send email; no email application exists.");
+                string error = "Unable to send email; no email application exists.";
+                LogWriter.LogErrorWithDebug(error, exception);
                 NoEmailApplication emailWarning = new NoEmailApplication();
                 emailWarning.ShowDialog();
-                return;
-            }
-        }
-
-        private void EmailJeffV()
-        {
-            string mailTo = "mailto:Jeff.Vanerwegen@Vencore.com";
-            try
-            { Process.Start(mailTo); }
-            catch (Exception exception)
-            {
-                log.Error("Unable to send email; no email application exists.");
-                NoEmailApplication emailWarning = new NoEmailApplication();
-                emailWarning.ShowDialog();
-                return;
-            }
-        }
-
-        private void EmailRick()
-        {
-            string mailTo = "mailto:rick.murphy@navy.mil";
-            try
-            { Process.Start(mailTo); }
-            catch (Exception exception)
-            {
-                log.Error("Unable to send email; no email application exists.");
-                NoEmailApplication emailWarning = new NoEmailApplication();
-                emailWarning.ShowDialog();
-                return;
-            }
-        }
-
-        private void EmailJeffP()
-        {
-            string mailTo = "mailto:jeffrey.a.purcell@navy.mil";
-            try
-            { Process.Start(mailTo); }
-            catch (Exception exception)
-            {
-                log.Error("Unable to send email; no email application exists.");
-                NoEmailApplication emailWarning = new NoEmailApplication();
-                emailWarning.ShowDialog();
-                return;
             }
         }
     }

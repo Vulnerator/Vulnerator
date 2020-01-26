@@ -9,14 +9,14 @@ using System.Xml;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Helper;
 using Vulnerator.Model.Object;
+using File = System.IO.File;
 
 namespace Vulnerator.Model.BusinessLogic
 {
     class WasspReader
     {
         private string fileNameWithoutPath = string.Empty;
-        private bool UserPrefersHostName => bool.Parse(ConfigAlter.ReadSettingsFromDictionary("rbHostIdentifier"));
-        private static readonly ILog log = LogManager.GetLogger(typeof(Logger));
+        private bool UserPrefersHostName => Properties.Settings.Default.CklRequiresHostName;
         private DatabaseInterface databaseInterface = new DatabaseInterface();
 
         public string ReadWassp(Object.File file)
@@ -25,7 +25,7 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 if (file.FilePath.IsFileInUse())
                 {
-                    log.Error(file.FileName + " is in use; please close any open instances and try again.");
+                    LogWriter.LogError($"'{file.FileName}' is in use; please close any open instances and try again.");
                     return "Failed; File In Use";
                 }
 
@@ -43,8 +43,8 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to process WASSP file.");
-                log.Debug("Exception details:", exception);
+                string error = $"Unable to process WASSP file '{file.FileName}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
                 return "Failed; See Log";
             }
         }
@@ -143,7 +143,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to parse WASSP file with XML reader.");
+                LogWriter.LogError("Unable to parse WASSP file with XML reader.");
                 throw exception;
             }
             finally
@@ -164,7 +164,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to obtain node value.");
+                LogWriter.LogError("Unable to obtain current node value.");
                 throw exception;
             }
         }
@@ -183,7 +183,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
             catch (Exception exception)
             {
-                log.Error("Unable to generate XmlReaderSettings.");
+                LogWriter.LogError("Unable to generate XmlReaderSettings.");
                 throw exception;
             }
         }

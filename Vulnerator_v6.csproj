@@ -304,10 +304,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helper\Logger.cs" />
+    <Compile Include="Helper\LogWriter.cs" />
     <Compile Include="Model\BusinessLogic\AcasNessusReader.cs" />
     <Compile Include="Model\BusinessLogic\AcasCsvReader.cs" />
-    <Compile Include="Model\BusinessLogic\AnsibleReader.cs" />
-    <Compile Include="Model\BusinessLogic\AnsibleTowerBuilder.cs" />
     <Compile Include="Model\BusinessLogic\CklCreator.cs" />
     <Compile Include="Model\BusinessLogic\RawStigReader.cs" />
     <Compile Include="Model\BusinessLogic\AssociateStig.cs" />
@@ -442,7 +442,6 @@
     <Compile Include="Model\Object\FprVulnerability.cs" />
     <Compile Include="Model\Object\GitHubActions.cs" />
     <Compile Include="Model\Object\Issue.cs" />
-    <Compile Include="Model\Object\Logger.cs" />
     <Compile Include="Model\Object\Release.cs" />
     <Compile Include="Model\Object\FormattedCell.cs" />
     <Compile Include="Model\BusinessLogic\HTMLtoXML.cs" />
@@ -665,7 +664,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\BusinessLogic\ConfigAlter.cs" />
     <Compile Include="ViewModel\BaseInpc.cs" />
     <Compile Include="ViewModel\DelegateCommand.cs" />
     <Compile Include="View\Converter\StringToBoolConverter.cs" />

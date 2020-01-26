@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Vulnerator.Helper;
 
 namespace Vulnerator.ViewModel.ViewModelHelper
 {
@@ -17,9 +18,17 @@ namespace Vulnerator.ViewModel.ViewModelHelper
 
         public void SetFields(string progressLabelText, string progressRingVisibility, bool isEnabled)
         {
-            ProgressLabelText = progressLabelText;
-            ProgressRingVisibility = progressRingVisibility;
-            IsEnabled = isEnabled;
+            try
+            {
+                ProgressLabelText = progressLabelText;
+                ProgressRingVisibility = progressRingVisibility;
+                IsEnabled = isEnabled;
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to set GUI fields.");
+                throw exception;
+            }
         }
     }
 }
