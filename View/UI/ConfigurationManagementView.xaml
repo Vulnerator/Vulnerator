@@ -511,8 +511,7 @@
                     <Expander Grid.Column="1"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
-                              ExpandDirection="Right"
-                              Style="{StaticResource CustomExpander}">
+                              ExpandDirection="Right">
                         <Expander.Header>
                             <Label Foreground="{DynamicResource LabelTextBrush}">
                                 <Label.LayoutTransform>
@@ -565,6 +564,40 @@
                                                            Controls:TextBoxHelper.Watermark="Add IP"
                                                            IsEditable="True"
                                                            Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <DataGrid MinHeight="100"
+                                          Margin="{StaticResource MarginTop5}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Additional MACs"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                                           Controls:TextBoxHelper.ClearTextButton="True"
+                                                           Controls:TextBoxHelper.Watermark="Add MAC"
+                                                           IsEditable="True"
+                                                           Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <DataGrid MinHeight="100"
+                                          Margin="{StaticResource MarginTop5}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Installed Software"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                                           Controls:TextBoxHelper.ClearTextButton="True"
+                                                           Controls:TextBoxHelper.Watermark="Add Software"
+                                                           IsEditable="True"
+                                                           Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <DataGrid MinHeight="100"
+                                          Margin="{StaticResource MarginTop5}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Associated PPS"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
                                 <TextBox Controls:TextBoxHelper.Watermark="Operating System"
                                          Style="{StaticResource HeaderedTextBoxStyle}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
@@ -601,6 +634,10 @@
                                          Style="{StaticResource HeaderedTextBoxStyle}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Role"
                                          Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <Button Margin="{StaticResource MarginTop5}"
+                                        HorizontalAlignment="Center"
+                                        Command="{Binding ModifyGroupCommand}"
+                                        Content="Add/Update Hardware" />
                             </StackPanel>
                         </ScrollViewer>
                     </Expander>
@@ -901,8 +938,7 @@
                     <Expander Grid.Column="1"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
-                              ExpandDirection="Right"
-                              Style="{StaticResource CustomExpander}">
+                              ExpandDirection="Right">
                         <Expander.Header>
                             <Label Foreground="{DynamicResource LabelTextBrush}">
                                 <Label.LayoutTransform>
@@ -924,8 +960,89 @@
                                 </Grid>
                             </Label>
                         </Expander.Header>
-                        <ScrollViewer>
-                            <StackPanel Width="200" />
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
+                            <StackPanel Width="250">
+                                <TextBox Controls:TextBoxHelper.Watermark="Discovered Software Name (Read Only)"
+                                         IsReadOnly="True"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Preferred Software Name"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Software Acronym"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Software Version (Read Only)"
+                                         IsReadOnly="True"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Software Function"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <DataGrid MinHeight="100"
+                                          Margin="{StaticResource MarginTop5}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Associated Hardware"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                                           Controls:TextBoxHelper.ClearTextButton="True"
+                                                           Controls:TextBoxHelper.Watermark="Associated Hardware"
+                                                           IsEditable="True"
+                                                           Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="DADMS ID"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="DADMS Disposition"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="DADMS Last Date Approved"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Is OS / Firmware"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Has Custom Code"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Is IA / IA Enabled"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Is FAM Accepted"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Is Externally Authorized"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Report in Accreditation"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Approved for Baseline"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Baseline Approver"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <Button Margin="{StaticResource MarginTop5}"
+                                        HorizontalAlignment="Center"
+                                        Command="{Binding ModifyGroupCommand}"
+                                        Content="Add/Update Software" />
+                            </StackPanel>
                         </ScrollViewer>
                     </Expander>
                     <!--  TODO: Implement Bulk Process Expander  -->
@@ -1568,8 +1685,7 @@
                     <Expander Grid.Column="1"
                               Background="{DynamicResource WindowBackgroundBrush}"
                               BorderThickness="0"
-                              ExpandDirection="Right"
-                              Style="{StaticResource CustomExpander}">
+                              ExpandDirection="Right">
                         <Expander.Header>
                             <Label Foreground="{DynamicResource LabelTextBrush}">
                                 <Label.LayoutTransform>
@@ -1592,7 +1708,21 @@
                             </Label>
                         </Expander.Header>
                         <ScrollViewer>
-                            <StackPanel Width="200" />
+                            <StackPanel Width="200">
+                                <TextBox Controls:TextBoxHelper.Watermark="First Name"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Last Name"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Email"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <ComboBox Controls:TextBoxHelper.Watermark="Title"
+                                          IsEditable="True"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <Button Margin="{StaticResource MarginTop5}"
+                                        HorizontalAlignment="Center"
+                                        Command="{Binding ModifyGroupCommand}"
+                                        Content="Add/Update Contact" />
+                            </StackPanel>
                         </ScrollViewer>
                     </Expander>
                     <!--  TODO: Implement Bulk Process Expander  -->
