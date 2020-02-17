@@ -97,8 +97,8 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private List<PPS> _pps;
-        public List<PPS> PPS
+        private List<PortsProtocols> _pps;
+        public List<PortsProtocols> PortsProtocols
         {
             get => _pps;
             set
@@ -106,7 +106,7 @@ namespace Vulnerator.ViewModel
                 if (_pps != value)
                 {
                     _pps = value;
-                    RaisePropertyChanged("PPS");
+                    RaisePropertyChanged("PortsProtocols");
                 }
             }
         }
@@ -236,7 +236,7 @@ namespace Vulnerator.ViewModel
                         .Include(h => h.MAC_Addresses)
                         .Include(h => h.Groups)
                         .Include(h => h.Contacts)
-                        .Include(h => h.Hardware_PPS.Select(p => p.PP))
+                        .Include(h => h.Hardware_PortsProtocols.Select(p => p.PP))
                         .Include(h => h.VulnerabilitySources)
                         .OrderBy(h => h.Displayed_Host_Name)
                         .AsNoTracking().ToList();
@@ -252,8 +252,8 @@ namespace Vulnerator.ViewModel
                         .Include(c => c.Softwares)
                         .Include(c => c.Title)
                         .AsNoTracking().ToList();
-                    PPS = databaseContext.PPS
-                        .Include(p => p.Hardware_PPS.Select(h => h.Hardware))
+                    PortsProtocols = databaseContext.PortsProtocols
+                        .Include(p => p.Hardware_PortsProtocols.Select(h => h.Hardware))
                         .AsNoTracking().ToList();
                     Groups = databaseContext.Groups
                         .Include(g => g.Hardwares)

@@ -7,20 +7,20 @@ namespace Vulnerator.Model.Entity
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("PPS")]
-    public partial class PPS : INotifyPropertyChanged
+    [Table("PortsProtocols")]
+    public partial class PortsProtocols : INotifyPropertyChanged
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public PPS()
+        public PortsProtocols()
         {
-            Hardware_PPS = new HashSet<Hardware_PPS>();
+            Hardware_PortsProtocols = new HashSet<Hardware_PortsProtocols>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long PPS_ID { get; set; }
+        public long PortsProtocols_ID { get; set; }
 
         public long Port { get; set; }
 
@@ -29,6 +29,6 @@ namespace Vulnerator.Model.Entity
         public string Protocol { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Hardware_PPS> Hardware_PPS { get; set; }
+        public virtual ICollection<Hardware_PortsProtocols> Hardware_PortsProtocols { get; set; }
     }
 }

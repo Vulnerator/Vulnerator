@@ -4,7 +4,7 @@ namespace Vulnerator.Model.Entity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    public partial class Hardware_PPS : INotifyPropertyChanged
+    public partial class Hardware_PortsProtocols : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -16,7 +16,7 @@ namespace Vulnerator.Model.Entity
         [Key]
         [Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long PPS_ID { get; set; }
+        public long PortsProtocols_ID { get; set; }
 
         [StringLength(5)]
         public string ReportInAccreditation { get; set; }
@@ -43,6 +43,6 @@ namespace Vulnerator.Model.Entity
 
         public virtual Hardware Hardware { get; set; }
 
-        public virtual PPS PP { get; set; }
+        public virtual PortsProtocols PP { get; set; }
     }
 }

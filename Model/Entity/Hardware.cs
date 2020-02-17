@@ -12,7 +12,7 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Hardware()
         {
-            Hardware_PPS = new ObservableCollection<Hardware_PPS>();
+            Hardware_PortsProtocols = new ObservableCollection<Hardware_PortsProtocols>();
             HardwareLocations = new ObservableCollection<HardwareLocation>();
             ScapScores = new ObservableCollection<ScapScore>();
             SoftwareHardwares = new ObservableCollection<SoftwareHardware>();
@@ -81,7 +81,7 @@ namespace Vulnerator.Model.Entity
         public virtual LifecycleStatus LifecycleStatus { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Hardware_PPS> Hardware_PPS { get; set; }
+        public virtual ICollection<Hardware_PortsProtocols> Hardware_PortsProtocols { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<HardwareLocation> HardwareLocations { get; set; }

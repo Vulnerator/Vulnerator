@@ -336,7 +336,7 @@
                                                   CanUserAddRows="False"
                                                   CanUserDeleteRows="False"
                                                   IsReadOnly="True"
-                                                  ItemsSource="{Binding Hardware_PPS}"
+                                                  ItemsSource="{Binding Hardware_PortsProtocols}"
                                                   Style="{StaticResource GreyBorderedDataGridStyle}">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Width="*"
@@ -594,7 +594,7 @@
                                           Margin="{StaticResource MarginTop5}"
                                           Style="{StaticResource GreyBorderedDataGridStyle}">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Associated PPS"
+                                        <DataGridTextColumn Header="Associated PortsProtocols"
                                                             HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                                     </DataGrid.Columns>
                                 </DataGrid>
@@ -1064,7 +1064,7 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <DataGrid Grid.Row="0"
-                                  ItemsSource="{Binding PPS}"
+                                  ItemsSource="{Binding PortsProtocols}"
                                   Style="{StaticResource GreyBorderedDataGridStyle}"
                                   VerticalScrollBarVisibility="Auto">
                             <DataGrid.Columns>
@@ -1122,7 +1122,7 @@
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Width="*"
-                                                    Binding="{Binding Hardware_PPS.Count}"
+                                                    Binding="{Binding Hardware_PortsProtocols.Count}"
                                                     Header="Occurences"
                                                     HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
@@ -1161,7 +1161,7 @@
                                                   Grid.ColumnSpan="3"
                                                   Height="200"
                                                   Margin="0,0,5,5"
-                                                  ItemsSource="{Binding Hardware_PPS}"
+                                                  ItemsSource="{Binding Hardware_PortsProtocols}"
                                                   Style="{StaticResource GreyBorderedDataGridStyle}">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Width="*"
@@ -1232,7 +1232,7 @@
                                                  Controls:TextBoxHelper.Watermark="Data Flow Direction"
                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  Style="{StaticResource HeaderedTextBoxStyle}"
-                                                 Text="{Binding Hardware_PPS.Direction}" />
+                                                 Text="{Binding Hardware_PortsProtocols.Direction}" />
                                         <CheckBox Grid.Row="1"
                                                   Grid.Column="3"
                                                   Margin="5,0,5,5"
@@ -1248,7 +1248,7 @@
                                                  Controls:TextBoxHelper.Watermark="Boundary Crossed"
                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
                                                  Style="{StaticResource HeaderedTextBoxStyle}"
-                                                 Text="{Binding Hardware_PPS.BoundaryCrossed}" />
+                                                 Text="{Binding Hardware_PortsProtocols.BoundaryCrossed}" />
                                         <TextBox Grid.Row="2"
                                                  Grid.Column="2"
                                                  Margin="5,0,5,5"
@@ -1256,14 +1256,14 @@
                                                  Controls:TextBoxHelper.ClearTextButton="True"
                                                  Controls:TextBoxHelper.Watermark="Classification"
                                                  Style="{StaticResource HeaderedTextBoxStyle}"
-                                                 Text="{Binding Hardware_PPS.Classification}" />
+                                                 Text="{Binding Hardware_PortsProtocols.Classification}" />
                                         <CheckBox Grid.Row="2"
                                                   Grid.Column="3"
                                                   Margin="5,0,5,5"
                                                   VerticalAlignment="Bottom"
                                                   Content="DoD Compliant"
                                                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
-                                                  IsChecked="{Binding Hardware_PPS.DoD_Compliant}"
+                                                  IsChecked="{Binding Hardware_PortsProtocols.DoD_Compliant}"
                                                   Style="{StaticResource CustomCheckBox}" />
                                     </Grid>
                                 </DataTemplate>
@@ -1290,18 +1290,18 @@
                                 </Label>
                                 <Label Grid.Column="1"
                                        VerticalAlignment="Bottom">
-                                    <TextBlock Text="{Binding PPS.Count}"
+                                    <TextBlock Text="{Binding PortsProtocols.Count}"
                                                TextTrimming="CharacterEllipsis" />
                                 </Label>
                                 <Button Grid.Column="3"
                                         HorizontalAlignment="Right"
                                         Command="{Binding}"
-                                        Content="Clear Selected PPS" />
+                                        Content="Clear Selected PortsProtocols" />
                                 <Button Grid.Column="4"
                                         Margin="{StaticResource MarginLeft5}"
                                         HorizontalAlignment="Right"
                                         Command="{Binding}"
-                                        Content="Delete Selected PPS" />
+                                        Content="Delete Selected PortsProtocols" />
                             </Grid>
                         </ScrollViewer>
                     </Grid>

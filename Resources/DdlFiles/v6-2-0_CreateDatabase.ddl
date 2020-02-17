@@ -474,10 +474,10 @@ CREATE TABLE Hardware_MitigationsOrConditions
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
 	 FOREIGN KEY (MitigationOrCondition_ID) REFERENCES MitigationsOrConditions(MitigationOrCondition_ID)
 	);
-CREATE TABLE Hardware_PPS
+CREATE TABLE Hardware_PortsProtocols
 	(
 	 Hardware_ID INTEGER NOT NULL ,
-	 PPS_ID INTEGER NOT NULL ,
+	 PortsProtocols_ID INTEGER NOT NULL ,
 	 ReportInAccreditation NVARCHAR (5) ,
 	 Discovered_Service NVARCHAR (25) ,
 	 Display_Service NVARCHAR (50),
@@ -485,9 +485,9 @@ CREATE TABLE Hardware_PPS
 	 BoundaryCrossed NVARCHAR (25) ,
 	 DoD_Compliant NVARCHAR (5) ,
 	 Classification NVARCHAR (25) ,
-	 PRIMARY KEY (Hardware_ID, PPS_ID, Discovered_Service) ON CONFLICT IGNORE ,
+	 PRIMARY KEY (Hardware_ID, PortsProtocols_ID, Discovered_Service) ON CONFLICT IGNORE ,
 	 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
-	 FOREIGN KEY (PPS_ID) REFERENCES PPS(PPS_ID)
+	 FOREIGN KEY (PortsProtocols_ID) REFERENCES PortsProtocols(PortsProtocols_ID)
 	);
 CREATE TABLE HardwareContacts
 	(
@@ -800,7 +800,8 @@ CREATE TABLE NssQuestionnaire
 CREATE TABLE Organizations
 	(
 	 Organization_ID INTEGER PRIMARY KEY ,
-	 Organization NVARCHAR (50) NOT NULL
+	 OrganizationName NVARCHAR (100) NOT NULL,
+	 OrganizationAcronym NVARCHAR (100)
 	);
 CREATE TABLE Overlays
 	(
@@ -849,10 +850,10 @@ CREATE TABLE PIT_Determination
 	 FOREIGN KEY (DiagnosticTesting_ID) REFERENCES DiagnosticTestingSystems(DiagnosticTesting_ID),
 	 FOREIGN KEY (MedicalTechnology_ID) REFERENCES MedicalTechnologies(MedicalTechnology_ID)
 	);
-CREATE TABLE PPS
+CREATE TABLE PortsProtocols
 	(
-	 PPS_ID INTEGER PRIMARY KEY ,
-	 Port INTEGER NOT NULL ,
+	 PortsProtocols_ID INTEGER PRIMARY KEY,
+	 Port INTEGER NOT NULL,
 	 Protocol NVARCHAR (25) NOT NULL ,
 	 UNIQUE (Port, Protocol) ON CONFLICT IGNORE
 	);
@@ -979,7 +980,15 @@ CREATE TABLE Sensors
 	 ISR NVARCHAR (5) NOT NULL ,
 	 National NVARCHAR (5) NOT NULL ,
 	 NavigationAndControl NVARCHAR (5) NOT NULL ,
-	 FOREIGN KEY (Sensor_ID) REFERENCES PIT_Determination(Sensor_ID)
+	 FOREIGN KEY (PIT_Determination_ID) REFERENCES PIT_Determination(PIT_Determination_ID)
+	);
+CREATE TABLE PortServices
+	(
+	 PortService_ID INTEGER PRIMARY KEY,
+	 PortServiceName NVARCHAR (100) NOT NULL,
+	 PortServiceAcronym NVARCHAR (50)
+	 PortsProtocols_ID INTEGER NOT NULL,
+	 FOREIGN KEY (PortsProtocols_ID) REFERENCES PortsProtocols(PortsProtocols_ID)
 	);
 CREATE TABLE Software
 	(
@@ -1045,7 +1054,7 @@ CREATE TABLE StepOneQuestionnaire
 	 RMF_Activity NVARCHAR (25) NOT NULL ,
 	 Accessibility_ID INTEGER NOT NULL ,
 	 Overview_ID INTEGER NOT NULL ,
-	 PPSM_RegistrationNumber NVARCHAR (25) NOT NULL ,
+	 PortsProtocolsM_RegistrationNumber NVARCHAR (25) NOT NULL ,
 	 AuthorizationInformation_ID INTEGER NOT NULL ,
 	 FISMA_ID INTEGER NOT NULL ,
 	 Business_ID INTEGER NOT NULL ,

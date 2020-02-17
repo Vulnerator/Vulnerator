@@ -317,11 +317,11 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO PPS VALUES (NULL, @Port, @Protocol);.
+        ///   Looks up a localized string similar to INSERT INTO PortsProtocols VALUES (NULL, @Port, @Protocol);.
         /// </summary>
-        internal static string InsertPPS {
+        internal static string InsertPortsProtocols {
             get {
-                return ResourceManager.GetString("InsertPPS", resourceCulture);
+                return ResourceManager.GetString("InsertPortsProtocols", resourceCulture);
             }
         }
         
@@ -474,7 +474,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Hardware_PPS (Hardware_ID, PPS_ID, Discovered_Service, Display_Service) VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT PPS_ID FROM PPS WHERE Port = @Port AND Protocol = @Protocol), @Discovered_Service, @Display_Service);.
+        ///   Looks up a localized string similar to INSERT INTO Hardware_PortsProtocols (Hardware_ID, PortsProtocols_ID, Discovered_Service, Display_Service) VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT PortsProtocols_ID FROM PortsProtocols WHERE Port = @Port AND Protocol = @Protocol), @Discovered_Service, @Display_Service);.
         /// </summary>
         internal static string MapPortToHardware {
             get {

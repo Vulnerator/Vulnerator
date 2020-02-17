@@ -238,8 +238,8 @@ VALUES (
   <data name="InsertMitigationsOrConditionsDefaultValues" xml:space="preserve">
     <value>INSERT INTO MitigationsOrConditions DEFAULT VALUES;</value>
   </data>
-  <data name="InsertPPS" xml:space="preserve">
-    <value>INSERT INTO PPS VALUES (NULL, @Port, @Protocol);</value>
+  <data name="InsertPortsProtocols" xml:space="preserve">
+    <value>INSERT INTO PortsProtocols VALUES (NULL, @Port, @Protocol);</value>
   </data>
   <data name="InsertScapScore" xml:space="preserve">
     <value>INSERT INTO ScapScores VALUES (NULL, @Score, (SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP), (SELECT Finding_Source_File_ID FROM UniqueFindingsSourceFiles WHERE Finding_Source_File_Name = @Finding_Source_File_Name), (SELECT Vulnerability_Source_ID FROM VulnerabilitySources WHERE Source_Name = @Source_Name), @Scan_Date);</value>
@@ -323,7 +323,7 @@ VALUES (
     <value>INSERT INTO GroupsMitigationsOrConditions VALUES (@MitigationOrCondition_ID, @Group_ID, @Vulnerability_ID);</value>
   </data>
   <data name="MapPortToHardware" xml:space="preserve">
-    <value>INSERT INTO Hardware_PPS (Hardware_ID, PPS_ID, Discovered_Service, Display_Service) VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT PPS_ID FROM PPS WHERE Port = @Port AND Protocol = @Protocol), @Discovered_Service, @Display_Service);</value>
+    <value>INSERT INTO Hardware_PortsProtocols (Hardware_ID, PortsProtocols_ID, Discovered_Service, Display_Service) VALUES ((SELECT Hardware_ID FROM Hardware WHERE Scan_IP = @Scan_IP AND Host_Name = @Host_Name AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT PortsProtocols_ID FROM PortsProtocols WHERE Port = @Port AND Protocol = @Protocol), @Discovered_Service, @Display_Service);</value>
   </data>
   <data name="MapReferenceToVulnerability" xml:space="preserve">
     <value>INSERT INTO Vulnerabilities_VulnerabilityReferences VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE Unique_Vulnerability_Identifier = @Unique_Vulnerability_Identifier), (SELECT Reference_ID FROM VulnerabilityReferences WHERE Reference = @Reference AND Reference_Type = @Reference_Type));</value>

@@ -387,7 +387,7 @@
     <Compile Include="Model\Entity\Overlay.cs" />
     <Compile Include="Model\Entity\Overview.cs" />
     <Compile Include="Model\Entity\PIT_Determination.cs" />
-    <Compile Include="Model\Entity\PPS.cs" />
+    <Compile Include="Model\Entity\PortsProtocols.cs" />
     <Compile Include="Model\Entity\RelatedDocument.cs" />
     <Compile Include="Model\Entity\RelatedTesting.cs" />
     <Compile Include="Model\Entity\ReportCategory.cs" />

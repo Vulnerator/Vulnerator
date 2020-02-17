@@ -209,7 +209,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.InsertPPS;
+                sqliteCommand.CommandText = Properties.Resources.InsertPortsProtocols;
                 sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.CommandText = Properties.Resources.MapPortToHardware;
                 sqliteCommand.ExecuteNonQuery();
@@ -331,8 +331,8 @@ namespace Vulnerator.Model.DataAccess
                     "IP_Address_ID", "IP_Address",
                     // MAC_Addresses Table
                     "MAC_Address_ID", "MAC_Address",
-                    // PPS Table
-                    "PPS_ID", "Port", "Protocol", "Discovered_Service", "Display_Service",
+                    // PortsProtocols Table
+                    "PortsProtocols_ID", "Port", "Protocol", "Discovered_Service", "Display_Service",
                     // Software Table
                     "Software_ID", "Discovered_Software_Name", "Displayed_Software_Name", "Software_Acronym", "Software_Version",
                     "Function", "Install_Date", "DADMS_ID", "DADMS_Disposition", "DADMS_LDA", "Has_Custom_Code", "IaOrIa_Enabled",

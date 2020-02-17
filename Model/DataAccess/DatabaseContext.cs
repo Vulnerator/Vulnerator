@@ -53,7 +53,7 @@ namespace Vulnerator.Model.DataAccess
 
         public virtual DbSet<GroupsMitigationsOrConditions> GroupsMitigationsOrConditions { get; set; }
         public virtual DbSet<Hardware> Hardwares { get; set; }
-        public virtual DbSet<Hardware_PPS> Hardware_PPS { get; set; }
+        public virtual DbSet<Hardware_PortsProtocols> Hardware_PortsProtocols { get; set; }
         public virtual DbSet<IA_Controls> IA_Controls { get; set; }
         public virtual DbSet<IATA_Standards> IATA_Standards { get; set; }
         public virtual DbSet<ImpactAdjustment> ImpactAdjustments { get; set; }
@@ -77,7 +77,7 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<Overlay> Overlays { get; set; }
         public virtual DbSet<Overview> Overviews { get; set; }
         public virtual DbSet<PIT_Determination> PIT_Determination { get; set; }
-        public virtual DbSet<PPS> PPS { get; set; }
+        public virtual DbSet<PortsProtocols> PortsProtocols { get; set; }
         public virtual DbSet<RelatedDocument> RelatedDocuments { get; set; }
         public virtual DbSet<RelatedTesting> RelatedTestings { get; set; }
         public virtual DbSet<ReportCategory> ReportCategories { get; set; }
@@ -353,7 +353,7 @@ namespace Vulnerator.Model.DataAccess
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Hardware>()
-                .HasMany(e => e.Hardware_PPS)
+                .HasMany(e => e.Hardware_PortsProtocols)
                 .WithRequired(e => e.Hardware)
                 .WillCascadeOnDelete(false);
 
@@ -505,8 +505,8 @@ namespace Vulnerator.Model.DataAccess
                 .WithMany(e => e.Overlays)
                 .Map(m => m.ToTable("NistControlsOverlays").MapLeftKey("Overlay_ID").MapRightKey("NIST_Control_ID"));
 
-            modelBuilder.Entity<PPS>()
-                .HasMany(e => e.Hardware_PPS)
+            modelBuilder.Entity<PortsProtocols>()
+                .HasMany(e => e.Hardware_PortsProtocols)
                 .WithRequired(e => e.PP)
                 .WillCascadeOnDelete(false);
 

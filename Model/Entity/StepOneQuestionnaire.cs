@@ -55,7 +55,7 @@ namespace Vulnerator.Model.Entity
 
         [Required]
         [StringLength(25)]
-        public string PPSM_RegistrationNumber { get; set; }
+        public string PortsProtocolsM_RegistrationNumber { get; set; }
 
         public long AuthorizationInformation_ID { get; set; }
 
