@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="de390ca3-78ef-4edc-b2ba-9c703e40330d" name="Default Changelist" comment="">
+      <changelist_data name="" email="" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Vulnerator_v6/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Vulnerator_v6/.idea/contentModel.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/App.xaml.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ViewModel/SettingsViewModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ViewModel/ThemeViewModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ViewModel/NewsViewModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ViewModel/RmfViewModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ViewModel/DelegateCommand.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ViewModel/ReportingViewModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/View/UI/ConfigurationManagementView.xaml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ViewModel/MessengerToken.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ViewModel/AboutViewModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ViewModel/BaseInpc.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Properties/Resources.resx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/View/UI/NewsView.xaml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ViewModel/AsyncObservableCollection.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ViewModel/ConfigurationManagementViewModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Model/DataAccess/DatabaseInterface.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ViewModel/EventCommand.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ViewModel/VulnerabilityViewModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/View/UI/UserGuideView.xaml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ViewModel/UserGuideViewModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/View/Theme/BlackAndWhite.xaml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ViewModel/ViewModelHelper/GuiFeedback.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Model/BusinessLogic/AcasCsvReader.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Model/BusinessLogic/RawStigReader.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Model/BusinessLogic/CklReader.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/App.xaml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Helper/ExtensionMethods.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/View/Styles/Button.xaml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ViewModel/ViewModelLocator.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ViewModel/MainViewModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/View/UI/MainWindow.xaml" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/View/UI/MainWindow.xaml" />
+        <option value="$PROJECT_DIR$/Helper/ExtensionMethods.cs" />
+        <option value="$PROJECT_DIR$/View/UI/NewsView.xaml" />
+        <option value="$PROJECT_DIR$/Model/BusinessLogic/RawStigReader.cs" />
+        <option value="$PROJECT_DIR$/ViewModel/ConfigurationManagementViewModel.cs" />
+        <option value="$PROJECT_DIR$/ViewModel/MainViewModel.cs" />
+        <option value="$PROJECT_DIR$/ViewModel/NewsViewModel.cs" />
+        <option value="$PROJECT_DIR$/ViewModel/AboutViewModel.cs" />
+        <option value="$PROJECT_DIR$/Model/BusinessLogic/AcasCsvReader.cs" />
+        <option value="$PROJECT_DIR$/ViewModel/ReportingViewModel.cs" />
+        <option value="$PROJECT_DIR$/ViewModel/SettingsViewModel.cs" />
+        <option value="$PROJECT_DIR$/ViewModel/ThemeViewModel.cs" />
+        <option value="$PROJECT_DIR$/ViewModel/UserGuideViewModel.cs" />
+        <option value="$PROJECT_DIR$/ViewModel/VulnerabilityViewModel.cs" />
+        <option value="$PROJECT_DIR$/View/UI/UserGuideView.xaml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1Vr7H0FXTTro36zym5MsnOKE8w3" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
+    <property name="Rider.DefaultBreakpoints.AreToggled" value="true" />
+    <property name="Rider.ProjectViewActivator.IsNotFirstRun" value="true" />
+    <property name="TWShift.4" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Color Scheme Font" />
+  </component>
+  <component name="RunManager">
+    <configuration name="Default" type="DotNetProject" factoryName=".NET Project">
+      <option name="EXE_PATH" value="$PROJECT_DIR$/bin/Debug/Vulnerator.exe" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/bin/Debug" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/Vulnerator_v6.csproj" />
+      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
+      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+      <option name="PROJECT_KIND" value="Console" />
+      <option name="PROJECT_TFM" value=".NETFramework,Version=v4.5.2" />
+      <method v="2">
+        <option name="Build" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="de390ca3-78ef-4edc-b2ba-9c703e40330d" name="Default Changelist" comment="" />
+      <created>1536198461837</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1536198461837</updated>
+      <workItem from="1536198465239" duration="278000" />
+      <workItem from="1548382249896" duration="1826000" />
+      <workItem from="1549132676261" duration="2603000" />
+      <workItem from="1550110764666" duration="2421000" />
+      <workItem from="1577999276436" duration="277000" />
+      <workItem from="1577999652216" duration="3367000" />
+      <workItem from="1578003319992" duration="8275000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1235" height="412" key="GridCell.Tab.0.bottom" timestamp="1578199341469">
+      <screen x="-349" y="-2160" width="2560" height="1440" />
+    </state>
+    <state width="1235" height="412" key="GridCell.Tab.0.bottom/0.0.1829.1029/-349.-2160.2560.1440@-349.-2160.2560.1440" timestamp="1578199341469" />
+    <state width="1235" height="412" key="GridCell.Tab.0.center" timestamp="1578199341468">
+      <screen x="-349" y="-2160" width="2560" height="1440" />
+    </state>
+    <state width="1235" height="412" key="GridCell.Tab.0.center/0.0.1829.1029/-349.-2160.2560.1440@-349.-2160.2560.1440" timestamp="1578199341468" />
+    <state width="1235" height="412" key="GridCell.Tab.0.left" timestamp="1578199341468">
+      <screen x="-349" y="-2160" width="2560" height="1440" />
+    </state>
+    <state width="1235" height="412" key="GridCell.Tab.0.left/0.0.1829.1029/-349.-2160.2560.1440@-349.-2160.2560.1440" timestamp="1578199341468" />
+    <state width="1235" height="412" key="GridCell.Tab.0.right" timestamp="1578199341469">
+      <screen x="-349" y="-2160" width="2560" height="1440" />
+    </state>
+    <state width="1235" height="412" key="GridCell.Tab.0.right/0.0.1829.1029/-349.-2160.2560.1440@-349.-2160.2560.1440" timestamp="1578199341469" />
+    <state x="1303" y="-1723" key="RollbackChangesDialog" timestamp="1578198301564">
+      <screen x="-349" y="-2160" width="2560" height="1440" />
+    </state>
+    <state x="1303" y="-1723" key="RollbackChangesDialog/0.0.1829.1029/-349.-2160.2560.1440@-349.-2160.2560.1440" timestamp="1578198301564" />
+    <state x="462" y="244" key="SettingsEditor" timestamp="1578003395347">
+      <screen x="0" y="0" width="1920" height="1200" />
+    </state>
+    <state x="462" y="244" key="SettingsEditor/0.0.1920.1200@0.0.1920.1200" timestamp="1578003395347" />
+    <state x="617" y="281" key="run.anything.popup" timestamp="1578015873142">
+      <screen x="0" y="0" width="1920" height="1200" />
+    </state>
+    <state x="617" y="281" key="run.anything.popup/0.0.1920.1200@0.0.1920.1200" timestamp="1578015873142" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" displayValue="System.Threading.ThreadAbortException" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="DotNetProject">
+        <watch expression="sqliteCommand.Parameters[&quot;Published_Date&quot;].Value" language="C#" custom="RiderImportsList:" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="watch">
+      <expression>
+        <expression-string>sqliteCommand.Parameters[&quot;Published_Date&quot;].Value</expression-string>
+        <language-id>C#</language-id>
+        <custom-info>RiderImportsList:</custom-info>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

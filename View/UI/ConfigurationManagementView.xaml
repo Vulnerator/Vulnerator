@@ -1,0 +1,2225 @@
+﻿<UserControl x:Class="Vulnerator.View.UI.ConfigurationManagementView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
+             xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:LiveCharts="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dat="clr-namespace:System.Windows.Data;assembly=PresentationFramework"
+             xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:local="clr-namespace:Vulnerator.View.UI"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:v="clr-namespace:Vulnerator.View"
+             xmlns:validation="clr-namespace:Vulnerator.View.Validation"
+             xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
+             xmlns:vm="clr-namespace:Vulnerator.ViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             d:DesignHeight="800"
+             d:DesignWidth="800"
+             DataContext="{Binding ConfigurationManagement, Source={StaticResource Locator}}"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Converters:BooleanToCheckboxConverter x:Key="CheckboxConverter" />
+    </UserControl.Resources>
+
+    <Grid Background="{DynamicResource WindowBackgroundBrush}">
+        <Controls:MetroAnimatedSingleRowTabControl Controls:TabControlHelper.Underlined="SelectedTabItem">
+            <TabItem Header="Hardware"
+                     Style="{StaticResource CustomMetroTabItem}">
+                <Grid Margin="{StaticResource MarginLeftRightBottom5}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <DataGrid Grid.Row="0"
+                                  ItemsSource="{Binding Hardwares}"
+                                  SelectedItem="{Binding SelectedHardware}"
+                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn x:Name="hardwareCheckBoxColumn"
+                                                        Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Margin="{StaticResource MarginLeft5}"
+                                                      HorizontalAlignment="Center"
+                                                      IsChecked="{Binding IsChecked}"
+                                                      Style="{StaticResource CustomCheckBox}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Width="*"
+                                                    Binding="{Binding Displayed_Host_Name}"
+                                                    Header="Preferred Host Name"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Preferred Host Name" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*"
+                                                    Binding="{Binding FQDN}"
+                                                    Header="FQDN"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="FQDN" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*"
+                                                    Binding="{Binding NetBIOS}"
+                                                    Header="NetBIOS"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="NetBIOS" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*"
+                                                    Binding="{Binding Scan_IP}"
+                                                    Header="Last Scan IP"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Scan IP" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="{Binding ElementName=hardwareCheckBoxColumn, Path=ActualWidth}" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <TextBox Grid.Column="1"
+                                                 Margin="0,0,5,5"
+                                                 Controls:TextBoxHelper.Watermark="Scan Host Name"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding Host_Name}" />
+                                        <TextBox Grid.Column="2"
+                                                 Margin="5,0,5,5"
+                                                 Controls:TextBoxHelper.Watermark="Last Scan Date (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="" />
+                                        <TextBox Grid.Column="3"
+                                                 Margin="5,0,5,5"
+                                                 Controls:TextBoxHelper.Watermark="Uncredentialed - 21745 (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding Found_21745}" />
+                                        <TextBox Grid.Column="4"
+                                                 Margin="5,0,5,5"
+                                                 Controls:TextBoxHelper.Watermark="Uncredentialed - 26917 (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding Found_26917}" />
+                                        <DataGrid Grid.Row="1"
+                                                  Grid.Column="1"
+                                                  Height="100"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Top"
+                                                  CanUserAddRows="False"
+                                                  ItemsSource="{Binding IP_Addresses}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding IP_Address}"
+                                                                    Header="IP Addresses"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <DataGrid Grid.Row="1"
+                                                  Grid.Column="2"
+                                                  Height="100"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Top"
+                                                  AutoGenerateColumns="False"
+                                                  CanUserAddRows="False"
+                                                  ItemsSource="{Binding MAC_Addresses}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding MAC_Address}"
+                                                                    Header="MAC Addresses"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <DataGrid Grid.Row="1"
+                                                  Grid.Column="3"
+                                                  Height="100"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Top"
+                                                  AutoGenerateColumns="False"
+                                                  CanUserAddRows="False"
+                                                  ItemsSource="{Binding Groups}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Name}"
+                                                                    Header="Associated Groups"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <DataGrid Grid.Row="1"
+                                                  Grid.Column="4"
+                                                  Height="100"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Top"
+                                                  AutoGenerateColumns="False"
+                                                  CanUserAddRows="False"
+                                                  ItemsSource="{Binding Contacts}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding First_Name}"
+                                                                    Header="First Name"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Last_Name}"
+                                                                    Header="Last Name"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Email}"
+                                                                    Header="Email"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <ComboBox Grid.Row="2"
+                                                  Grid.Column="1"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ClearTextButton="True"
+                                                  Controls:TextBoxHelper.Watermark="Add IP Address"
+                                                  vh:DependencyProperties.FloatingWatermark="IP Address"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  DisplayMemberPath="IP_Address"
+                                                  ItemsSource="{Binding Path=DataContext.IpAddresses, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
+                                        <ComboBox Grid.Row="2"
+                                                  Grid.Column="2"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ClearTextButton="True"
+                                                  Controls:TextBoxHelper.Watermark="Add MAC Address"
+                                                  vh:DependencyProperties.FloatingWatermark="MAC Address"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  DisplayMemberPath="MAC_Address"
+                                                  ItemsSource="{Binding Path=DataContext.MacAddresses, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
+                                        <ComboBox Grid.Row="2"
+                                                  Grid.Column="3"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ClearTextButton="True"
+                                                  Controls:TextBoxHelper.Watermark="Add Associated Group"
+                                                  vh:DependencyProperties.FloatingWatermark="Group"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  DisplayMemberPath="Name"
+                                                  IsEditable="True"
+                                                  ItemsSource="{Binding Path=DataContext.Groups, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
+                                        <ComboBox Grid.Row="2"
+                                                  Grid.Column="4"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ClearTextButton="True"
+                                                  Controls:TextBoxHelper.Watermark="Add Associated Contact"
+                                                  vh:DependencyProperties.FloatingWatermark="Contact"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  ItemsSource="{Binding Path=DataContext.Contacts, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width=".25*" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="{Binding First_Name}" />
+                                                            <TextBlock Text=" " />
+                                                            <TextBlock Text="{Binding Last_Name}" />
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="2"
+                                                                   Text="{Binding Email}" />
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                        <DataGrid Grid.Row="3"
+                                                  Grid.Column="1"
+                                                  Grid.ColumnSpan="4"
+                                                  Height="100"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Top"
+                                                  CanUserAddRows="False"
+                                                  CanUserDeleteRows="False"
+                                                  IsReadOnly="True"
+                                                  ItemsSource="{Binding Hardware_PortsProtocols}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding PP.Port}"
+                                                                    Header="Port"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding PP.Protocol}"
+                                                                    Header="Protocol"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Discovered_Service}"
+                                                                    Header="Discovered Service Name"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Display_Service}"
+                                                                    Header="Preferred Service Name"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTemplateColumn Width="Auto"
+                                                                        Header="Report in Accreditation"
+                                                                        HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <IconPacks:PackIconMaterial HorizontalAlignment="Center"
+                                                                                        Kind="{Binding ReportInAccreditation, Converter={StaticResource CheckboxConverter}}"
+                                                                                        ToolTip="{Binding ReportInAccreditation}" />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <DataGrid Grid.Row="4"
+                                                  Grid.Column="1"
+                                                  Grid.ColumnSpan="2"
+                                                  Height="100"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Stretch"
+                                                  CanUserAddRows="False"
+                                                  CanUserDeleteRows="False"
+                                                  IsReadOnly="True"
+                                                  ItemsSource="{Binding SoftwareHardwares}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Software.Displayed_Software_Name}"
+                                                                    Header="Preferred Software Name"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn Width="Auto"
+                                                                    Binding="{Binding Software.Software_Version}"
+                                                                    Header="Version"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTemplateColumn Width="Auto"
+                                                                        Header="OS / Firmware"
+                                                                        HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}"
+                                                                        SortMemberPath="Is_OS_Or_Firmware">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <IconPacks:PackIconMaterial HorizontalAlignment="Center"
+                                                                                        Kind="{Binding Software.Is_OS_Or_Firmware, Converter={StaticResource CheckboxConverter}}"
+                                                                                        ToolTip="{Binding Software.Is_OS_Or_Firmware}" />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <DataGrid Grid.Row="4"
+                                                  Grid.Column="3"
+                                                  Grid.ColumnSpan="2"
+                                                  Height="100"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Top"
+                                                  CanUserAddRows="False"
+                                                  CanUserDeleteRows="False"
+                                                  IsReadOnly="True"
+                                                  ItemsSource="{Binding VulnerabilitySources}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Source_Name}"
+                                                                    Header="Associated STIGs"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTemplateColumn Width="Auto">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <Button Margin="5"
+                                                                    Command="{Binding DataContext.GenerateCklCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=SelectedItem}">
+                                                                <IconPacks:PackIconMaterial Width="12"
+                                                                                            Height="12"
+                                                                                            Kind="Export" />
+                                                            </Button>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <ComboBox Grid.Row="5"
+                                                  Grid.Column="1"
+                                                  Grid.ColumnSpan="2"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ClearTextButton="True"
+                                                  Controls:TextBoxHelper.Watermark="Add Associated Software"
+                                                  vh:DependencyProperties.FloatingWatermark="Software"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  DisplayMemberPath="Displayed_Software_Name"
+                                                  ItemsSource="{Binding Path=DataContext.Softwares, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
+                                        <ComboBox Grid.Row="5"
+                                                  Grid.Column="3"
+                                                  Grid.ColumnSpan="2"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding Path=DataContext.AssociateStigToHardwareCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ClearTextButton="True"
+                                                  Controls:TextBoxHelper.Watermark="Add Associated Checklist"
+                                                  vh:DependencyProperties.FloatingWatermark="Checklist"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  DisplayMemberPath="Source_Name"
+                                                  ItemsSource="{Binding Path=DataContext.VulnerabilitySources, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                  SelectedItem="{Binding Path=DataContext.SelectedVulnerabilitySource, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </DataGrid>
+                        <ScrollViewer Grid.Row="1"
+                                      Margin="{StaticResource MarginTop5}"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Disabled">
+                            <Grid HorizontalAlignment="Stretch"
+                                  DockPanel.Dock="Top">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0"
+                                       VerticalAlignment="Bottom">
+                                    <TextBlock Text="Count:"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                                <Label Grid.Column="1"
+                                       VerticalAlignment="Bottom">
+                                    <TextBlock Text="{Binding Hardwares.Count}"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                                <Button Grid.Column="3"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding}"
+                                        Content="Clear Selected Hardware" />
+                                <Button Grid.Column="4"
+                                        Margin="{StaticResource MarginLeft5}"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding}"
+                                        Content="Delete Selected Hardware" />
+                            </Grid>
+                        </ScrollViewer>
+                    </Grid>
+                    <Expander Grid.Column="1"
+                              Background="{DynamicResource WindowBackgroundBrush}"
+                              BorderThickness="0"
+                              ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconFontAwesomeLight Grid.Column="0"
+                                                                        Margin="{StaticResource MarginAll5}"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        Kind="PlusSquare" />
+                                    <TextBlock Grid.Column="1"
+                                               Style="{StaticResource ExpanderHeaderTextBlockStyle}"
+                                               Text="Add / Update" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <TextBox Controls:TextBoxHelper.Watermark="Discovered Host Name (Read Only)"
+                                         vh:DependencyProperties.FloatingWatermark="Discovered Host Name"
+                                         IsReadOnly="True"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Preferred Host Name"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="FQDN (Read Only)"
+                                         vh:DependencyProperties.FloatingWatermark="FQDN"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="NetBIOS Name (Read Only)"
+                                         vh:DependencyProperties.FloatingWatermark="NetBIOS Name"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Scan IP (Read Only)"
+                                         vh:DependencyProperties.FloatingWatermark="Scan IP"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <DataGrid MinHeight="100"
+                                          Margin="{StaticResource MarginTop5}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Additional IPs"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                                           Controls:TextBoxHelper.ClearTextButton="True"
+                                                           Controls:TextBoxHelper.Watermark="Add IP"
+                                                           IsEditable="True"
+                                                           Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <DataGrid MinHeight="100"
+                                          Margin="{StaticResource MarginTop5}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Additional MACs"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                                           Controls:TextBoxHelper.ClearTextButton="True"
+                                                           Controls:TextBoxHelper.Watermark="Add MAC"
+                                                           IsEditable="True"
+                                                           Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <DataGrid MinHeight="100"
+                                          Margin="{StaticResource MarginTop5}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Installed Software"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                                           Controls:TextBoxHelper.ClearTextButton="True"
+                                                           Controls:TextBoxHelper.Watermark="Add Software"
+                                                           IsEditable="True"
+                                                           Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <DataGrid MinHeight="100"
+                                          Margin="{StaticResource MarginTop5}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Associated PortsProtocols"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <TextBox Controls:TextBoxHelper.Watermark="Operating System"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Found 21745"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       IsEnabled="False"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Found 26917"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       IsEnabled="False"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Is Virtual Server"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Is IA Enabled"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="NIAP Level"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Manufacturer"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Serial Number"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Role"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <Button Margin="{StaticResource MarginTop5}"
+                                        HorizontalAlignment="Center"
+                                        Command="{Binding ModifyGroupCommand}"
+                                        Content="Add/Update Hardware" />
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Expander>
+                    <!--  TODO: Implement Bulk Process Expander  -->
+                    <!--  TODO: Implement Filter Expander  -->
+                </Grid>
+            </TabItem>
+            <TabItem Header="Software"
+                     Style="{StaticResource CustomMetroTabItem}">
+                <Grid Margin="{StaticResource MarginLeftRightBottom5}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <DataGrid Grid.Row="0"
+                                  ItemsSource="{Binding Softwares}"
+                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn x:Name="softwareCheckBoxColumn"
+                                                        Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Margin="{StaticResource MarginLeft5}"
+                                                      HorizontalAlignment="Center"
+                                                      IsChecked="{Binding IsChecked}"
+                                                      Style="{StaticResource CustomCheckBox}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Width="*"
+                                                    Binding="{Binding Displayed_Software_Name}"
+                                                    Header="Preferred Software Name"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Preferred Software Name" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="Auto"
+                                                    Binding="{Binding SoftwareHardwares.Count}"
+                                                    Header="Count"
+                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}"
+                                                    IsReadOnly="True">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="{Binding ElementName=softwareCheckBoxColumn, Path=ActualWidth}" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <TextBox Grid.Column="1"
+                                                 Margin="0,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.Watermark="Discovered Software Name (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding Discovered_Software_Name}" />
+                                        <TextBox Grid.Column="2"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.Watermark="Acronym"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding Software_Acronym}" />
+                                        <TextBox Grid.Column="3"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.ClearTextButton="True"
+                                                 Controls:TextBoxHelper.Watermark="Software Function"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding Function}" />
+                                        <TextBox Grid.Column="4"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.ClearTextButton="True"
+                                                 Controls:TextBoxHelper.Watermark="Software Instance"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding Instance}" />
+                                        <TextBox Grid.Row="1"
+                                                 Grid.Column="1"
+                                                 Margin="0,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.Watermark="DADMS ID"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding DADMS_ID}" />
+                                        <TextBox Grid.Row="1"
+                                                 Grid.Column="2"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.Watermark="DADMS Disposition"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding DADMS_Disposition}" />
+                                        <DatePicker Grid.Row="1"
+                                                    Grid.Column="3"
+                                                    Margin="5,0,5,5"
+                                                    VerticalAlignment="Bottom"
+                                                    Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=CloseBoxOutline}"
+                                                    Controls:TextBoxHelper.ClearTextButton="True"
+                                                    Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                    Controls:TextBoxHelper.Watermark="DADMS Last Date Approved (LDA)"
+                                                    vh:DependencyProperties.FloatingWatermark="DADMS LDA"
+                                                    vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                    Style="{StaticResource HeaderedDatePickerStyle}"
+                                                    Text="{Binding DADMS_LDA}" />
+                                        <CheckBox Grid.Row="1"
+                                                  Grid.Column="4"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Content="FAM Accepted"
+                                                  Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsChecked="{Binding FAM_Accepted}"
+                                                  Style="{StaticResource CustomCheckBox}" />
+                                        <DataGrid Grid.Row="2"
+                                                  Grid.Column="1"
+                                                  Grid.ColumnSpan="4"
+                                                  Height="100"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Top"
+                                                  IsReadOnly="True"
+                                                  ItemsSource="{Binding SoftwareHardwares}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Hardware.Displayed_Host_Name}"
+                                                                    Header="Preferred Host Name"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Hardware.Displayed_Host_Name}"
+                                                                    Header="Discovered Host Name"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Hardware.FQDN}"
+                                                                    Header="FQDN"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Hardware.NetBIOS}"
+                                                                    Header="NetBIOS"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Hardware.Scan_IP}"
+                                                                    Header="Last Scan IP"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <ComboBox Grid.Row="3"
+                                                  Grid.Column="1"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ClearTextButton="True"
+                                                  Controls:TextBoxHelper.Watermark="Add Associated Hardware"
+                                                  vh:DependencyProperties.FloatingWatermark="Hardware"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsEditable="True"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
+                                        <CheckBox Grid.Row="3"
+                                                  Grid.Column="2"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Content="Has Custom Code"
+                                                  Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsChecked="{Binding Has_Custom_Code}"
+                                                  Style="{StaticResource CustomCheckBox}" />
+                                        <CheckBox Grid.Row="3"
+                                                  Grid.Column="3"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Content="IA / IA Enabled"
+                                                  Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsChecked="{Binding IaOrIa_Enabled}"
+                                                  Style="{StaticResource CustomCheckBox}" />
+                                        <CheckBox Grid.Row="3"
+                                                  Grid.Column="4"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Content="Approved for Baseline (Global)"
+                                                  Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsChecked="{Binding ApprovedForBaseline_Global}"
+                                                  Style="{StaticResource CustomCheckBox}" />
+                                        <CheckBox Grid.Row="4"
+                                                  Grid.Column="1"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Content="Is OS / Firmware"
+                                                  Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsChecked="{Binding Is_OS_Or_Firmware}"
+                                                  Style="{StaticResource CustomCheckBox}" />
+                                        <CheckBox Grid.Row="4"
+                                                  Grid.Column="2"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Content="Externally Authorized"
+                                                  Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsChecked="{Binding Externally_Authorized}"
+                                                  Style="{StaticResource CustomCheckBox}" />
+                                        <CheckBox Grid.Row="4"
+                                                  Grid.Column="3"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Content="Report in Accreditation"
+                                                  Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsChecked="{Binding ReportInAccreditation_Global}"
+                                                  Style="{StaticResource CustomCheckBox}" />
+                                        <TextBox Grid.Row="4"
+                                                 Grid.Column="4"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.Watermark="Global Baseline Approver (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding BaselineApprover_Global}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
+                        </DataGrid>
+                        <ScrollViewer Grid.Row="1"
+                                      Margin="{StaticResource MarginTop5}"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Disabled">
+                            <Grid HorizontalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0"
+                                       VerticalAlignment="Bottom">
+                                    <TextBlock Text="Count:"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                                <Label Grid.Column="1"
+                                       VerticalAlignment="Bottom">
+                                    <TextBlock Text="{Binding Softwares.Count}"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                                <Button Grid.Column="3"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding}"
+                                        Content="Clear Selected Software" />
+                                <Button Grid.Column="4"
+                                        Margin="{StaticResource MarginLeft5}"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding}"
+                                        Content="Delete Selected Software" />
+                            </Grid>
+                        </ScrollViewer>
+                    </Grid>
+                    <Expander Grid.Column="1"
+                              Background="{DynamicResource WindowBackgroundBrush}"
+                              BorderThickness="0"
+                              ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconFontAwesomeLight Grid.Column="0"
+                                                                        Margin="{StaticResource MarginAll5}"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        Kind="PlusSquare" />
+                                    <TextBlock Grid.Column="1"
+                                               Style="{StaticResource ExpanderHeaderTextBlockStyle}"
+                                               Text="Add / Update" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
+                            <StackPanel Width="250">
+                                <TextBox Controls:TextBoxHelper.Watermark="Discovered Software Name (Read Only)"
+                                         IsReadOnly="True"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Preferred Software Name"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Software Acronym"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Software Version (Read Only)"
+                                         IsReadOnly="True"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Software Function"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <DataGrid MinHeight="100"
+                                          Margin="{StaticResource MarginTop5}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Associated Hardware"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                                           Controls:TextBoxHelper.ClearTextButton="True"
+                                                           Controls:TextBoxHelper.Watermark="Associated Hardware"
+                                                           IsEditable="True"
+                                                           Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="DADMS ID"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="DADMS Disposition"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="DADMS Last Date Approved"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Is OS / Firmware"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Has Custom Code"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Is IA / IA Enabled"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Is FAM Accepted"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Is Externally Authorized"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Report in Accreditation"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Approved for Baseline"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Baseline Approver"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <Button Margin="{StaticResource MarginTop5}"
+                                        HorizontalAlignment="Center"
+                                        Command="{Binding ModifyGroupCommand}"
+                                        Content="Add/Update Software" />
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Expander>
+                    <!--  TODO: Implement Bulk Process Expander  -->
+                    <!--  TODO: Implement Filter Expander  -->
+                </Grid>
+            </TabItem>
+            <TabItem Header="PPS"
+                     Style="{StaticResource CustomMetroTabItem}">
+                <Grid Margin="{StaticResource MarginLeftRightBottom5}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <DataGrid Grid.Row="0"
+                                  ItemsSource="{Binding PortsProtocols}"
+                                  Style="{StaticResource GreyBorderedDataGridStyle}"
+                                  VerticalScrollBarVisibility="Auto">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn x:Name="ppsCheckBoxColumn"
+                                                        Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Margin="{StaticResource MarginLeft5}"
+                                                      HorizontalAlignment="Center"
+                                                      IsChecked="{Binding IsChecked}"
+                                                      Style="{StaticResource CustomCheckBox}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Width="*"
+                                                    Binding="{Binding Port}"
+                                                    Header="Port"
+                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Port" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*"
+                                                    Binding="{Binding Protocol}"
+                                                    Header="Protocol"
+                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Protocol" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*"
+                                                    Binding="{Binding Hardware_PortsProtocols.Count}"
+                                                    Header="Occurences"
+                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Preferred Service Name" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="{Binding ElementName=ppsCheckBoxColumn, Path=ActualWidth}" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <DataGrid Grid.Column="1"
+                                                  Grid.ColumnSpan="3"
+                                                  Height="200"
+                                                  Margin="0,0,5,5"
+                                                  ItemsSource="{Binding Hardware_PortsProtocols}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Hardware.Displayed_Host_Name}"
+                                                                    Header="Preferred Host Name"
+                                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}"
+                                                                    IsReadOnly="True" />
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Hardware.Scan_IP}"
+                                                                    Header="Last Scan IP"
+                                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}"
+                                                                    IsReadOnly="True" />
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Discovered_Service}"
+                                                                    Header="Discovered Service Name"
+                                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}"
+                                                                    IsReadOnly="True" />
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Display_Service}"
+                                                                    Header="Preferred Service Name"
+                                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                                                    <DataGridTextColumn.ElementStyle>
+                                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                                               TargetType="TextBlock">
+                                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                                        </Style>
+                                                    </DataGridTextColumn.ElementStyle>
+                                                    <DataGridTextColumn.EditingElementStyle>
+                                                        <Style BasedOn="{StaticResource MetroTextBox}"
+                                                               TargetType="TextBox">
+                                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Preferred Service Name" />
+                                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                                        </Style>
+                                                    </DataGridTextColumn.EditingElementStyle>
+                                                </DataGridTextColumn>
+                                                <DataGridTemplateColumn Width="Auto"
+                                                                        Header="Report in Accreditation"
+                                                                        HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <IconPacks:PackIconMaterial HorizontalAlignment="Center"
+                                                                                        Kind="{Binding ReportInAccreditation, Converter={StaticResource CheckboxConverter}}"
+                                                                                        ToolTip="{Binding ReportInAccreditation}" />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <ComboBox Grid.Row="1"
+                                                  Grid.Column="1"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ClearTextButton="True"
+                                                  Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                  Controls:TextBoxHelper.Watermark="Add Associated Hardware"
+                                                  vh:DependencyProperties.FloatingWatermark="Hardware"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsEditable="True"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
+                                        <TextBox Grid.Row="1"
+                                                 Grid.Column="2"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.ClearTextButton="True"
+                                                 Controls:TextBoxHelper.Watermark="Data Flow Direction"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding Hardware_PortsProtocols.Direction}" />
+                                        <CheckBox Grid.Row="1"
+                                                  Grid.Column="3"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Content="Report in Accreditation"
+                                                  Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsChecked="{Binding ReportInAccreditation_Global}"
+                                                  Style="{StaticResource CustomCheckBox}" />
+                                        <TextBox Grid.Row="2"
+                                                 Grid.Column="1"
+                                                 Margin="0,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.Watermark="Boundary Crossed"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding Hardware_PortsProtocols.BoundaryCrossed}" />
+                                        <TextBox Grid.Row="2"
+                                                 Grid.Column="2"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.ClearTextButton="True"
+                                                 Controls:TextBoxHelper.Watermark="Classification"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding Hardware_PortsProtocols.Classification}" />
+                                        <CheckBox Grid.Row="2"
+                                                  Grid.Column="3"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Content="DoD Compliant"
+                                                  Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsChecked="{Binding Hardware_PortsProtocols.DoD_Compliant}"
+                                                  Style="{StaticResource CustomCheckBox}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
+                        </DataGrid>
+                        <ScrollViewer Grid.Row="1"
+                                      Margin="{StaticResource MarginTop5}"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Disabled">
+                            <Grid HorizontalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0"
+                                       VerticalAlignment="Bottom">
+                                    <TextBlock Text="Count:"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                                <Label Grid.Column="1"
+                                       VerticalAlignment="Bottom">
+                                    <TextBlock Text="{Binding PortsProtocols.Count}"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                                <Button Grid.Column="3"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding}"
+                                        Content="Clear Selected PortsProtocols" />
+                                <Button Grid.Column="4"
+                                        Margin="{StaticResource MarginLeft5}"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding}"
+                                        Content="Delete Selected PortsProtocols" />
+                            </Grid>
+                        </ScrollViewer>
+                    </Grid>
+                    <Expander Grid.Column="1"
+                              Background="{DynamicResource WindowBackgroundBrush}"
+                              BorderThickness="0"
+                              ExpandDirection="Right"
+                              Style="{StaticResource CustomExpander}">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconFontAwesomeLight Grid.Column="0"
+                                                                        Margin="{StaticResource MarginAll5}"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        Kind="PlusSquare" />
+                                    <TextBlock Grid.Column="1"
+                                               Style="{StaticResource ExpanderHeaderTextBlockStyle}"
+                                               Text="Add / Update" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                        <ScrollViewer>
+                            <StackPanel Width="200" />
+                        </ScrollViewer>
+                    </Expander>
+                    <!--  TODO: Implement Bulk Process Expander  -->
+                    <!--  TODO: Implement Filter Expander  -->
+                </Grid>
+            </TabItem>
+            <TabItem Header="Contacts"
+                     Style="{StaticResource CustomMetroTabItem}">
+                <Grid Margin="5,0,5,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <DataGrid Grid.Row="0"
+                                  ItemsSource="{Binding Contacts}"
+                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn x:Name="contactsCheckBoxColumn"
+                                                        Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Margin="{StaticResource MarginLeft5}"
+                                                      HorizontalAlignment="Center"
+                                                      IsChecked="{Binding IsChecked}"
+                                                      Style="{StaticResource CustomCheckBox}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Width="*"
+                                                    Binding="{Binding First_Name}"
+                                                    Header="First Name"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="First Name" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*"
+                                                    Binding="{Binding Last_Name}"
+                                                    Header="Last Name"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Last Name" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*"
+                                                    Binding="{Binding Email}"
+                                                    Header="Email"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Email" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*"
+                                                    Binding="{Binding Title.Title1}"
+                                                    Header="Title"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Title" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*"
+                                                    Binding="{Binding Organization.Organization1}"
+                                                    Header="Organization"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Organization" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="{Binding ElementName=contactsCheckBoxColumn, Path=ActualWidth}" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <DataGrid Grid.Column="1"
+                                                  Grid.ColumnSpan="4"
+                                                  Height="200"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Top"
+                                                  AutoGenerateColumns="False"
+                                                  CanUserAddRows="True"
+                                                  IsReadOnly="True"
+                                                  ItemsSource="{Binding Hardwares}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Displayed_Host_Name}"
+                                                                    Header="Preferred Host Name"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Discovered_Host_Name}"
+                                                                    Header="Discovered Host Name"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding FQDN}"
+                                                                    Header="FQDN"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding NetBIOS}"
+                                                                    Header="NetBIOS"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Scan_IP}"
+                                                                    Header="Last Scan IP"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <ComboBox Grid.Row="1"
+                                                  Grid.Column="1"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ClearTextButton="True"
+                                                  Controls:TextBoxHelper.Watermark="Add Associated Hardware"
+                                                  vh:DependencyProperties.FloatingWatermark="Hardware"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsEditable="True"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
+                                        <DataGrid Grid.Row="2"
+                                                  Grid.Column="1"
+                                                  Height="100"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Top"
+                                                  CanUserAddRows="True"
+                                                  ItemsSource="{Binding Softwares}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Displayed_Software_Name}"
+                                                                    Header="Associated Software"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                <DataGridTextColumn Width="Auto"
+                                                                    Binding="{Binding Software_Version}"
+                                                                    Header="Version"
+                                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <DataGrid Grid.Row="2"
+                                                  Grid.Column="2"
+                                                  Height="100"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Top"
+                                                  IsReadOnly="True"
+                                                  ItemsSource="{Binding Groups}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Name}"
+                                                                    Header="Associated Groups"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <DataGrid Grid.Row="2"
+                                                  Grid.Column="3"
+                                                  Height="100"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Top"
+                                                  IsReadOnly="True"
+                                                  ItemsSource="{Binding Accreditations}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Accreditation_Name}"
+                                                                    Header="Associated Accreditations"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <DataGrid Grid.Row="2"
+                                                  Grid.Column="4"
+                                                  Height="100"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Top"
+                                                  IsReadOnly="True"
+                                                  ItemsSource="{Binding Certifications}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Width="*"
+                                                                    Binding="{Binding Certification1}"
+                                                                    Header="Associated Certifications"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <ComboBox Grid.Row="3"
+                                                  Grid.Column="1"
+                                                  Margin="0,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ClearTextButton="True"
+                                                  Controls:TextBoxHelper.Watermark="Add Associated Software"
+                                                  vh:DependencyProperties.FloatingWatermark="Software"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsEditable="True"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
+                                        <ComboBox Grid.Row="3"
+                                                  Grid.Column="2"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ClearTextButton="True"
+                                                  Controls:TextBoxHelper.Watermark="Add Associated Group"
+                                                  vh:DependencyProperties.FloatingWatermark="Group"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsEditable="True"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
+                                        <ComboBox Grid.Row="3"
+                                                  Grid.Column="3"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ClearTextButton="True"
+                                                  Controls:TextBoxHelper.Watermark="Add Associated Accreditation"
+                                                  vh:DependencyProperties.FloatingWatermark="Accreditation"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsEditable="True"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
+                                        <ComboBox Grid.Row="3"
+                                                  Grid.Column="4"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Controls:TextBoxHelper.ButtonCommand="{Binding}"
+                                                  Controls:TextBoxHelper.ButtonContent="{IconPacks:Material Kind=PlusBoxOutline}"
+                                                  Controls:TextBoxHelper.ClearTextButton="True"
+                                                  Controls:TextBoxHelper.Watermark="Add Associated Certification"
+                                                  vh:DependencyProperties.FloatingWatermark="Certification"
+                                                  vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsEditable="True"
+                                                  Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
+                        </DataGrid>
+                        <ScrollViewer Grid.Row="1"
+                                      Margin="{StaticResource MarginTop5}"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Disabled">
+                            <Grid HorizontalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0"
+                                       VerticalAlignment="Bottom">
+                                    <TextBlock Text="Count:"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                                <Label Grid.Column="1"
+                                       VerticalAlignment="Bottom">
+                                    <TextBlock Text="{Binding Contacts.Count}"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                                <Button Grid.Column="3"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding}"
+                                        Content="Clear Selected Contact" />
+                                <Button Grid.Column="4"
+                                        Margin="{StaticResource MarginLeft5}"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding}"
+                                        Content="Delete Selected Contact" />
+                            </Grid>
+                        </ScrollViewer>
+                    </Grid>
+                    <Expander Grid.Column="1"
+                              Background="{DynamicResource WindowBackgroundBrush}"
+                              BorderThickness="0"
+                              ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconFontAwesomeLight Grid.Column="0"
+                                                                        Margin="{StaticResource MarginAll5}"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        Kind="PlusSquare" />
+                                    <TextBlock Grid.Column="1"
+                                               Style="{StaticResource ExpanderHeaderTextBlockStyle}"
+                                               Text="Add / Update" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                        <ScrollViewer>
+                            <StackPanel Width="200">
+                                <TextBox Controls:TextBoxHelper.Watermark="First Name"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Last Name"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Email"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <ComboBox Controls:TextBoxHelper.Watermark="Title"
+                                          IsEditable="True"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <Button Margin="{StaticResource MarginTop5}"
+                                        HorizontalAlignment="Center"
+                                        Command="{Binding ModifyGroupCommand}"
+                                        Content="Add/Update Contact" />
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Expander>
+                    <!--  TODO: Implement Bulk Process Expander  -->
+                    <!--  TODO: Implement Filter Expander  -->
+                </Grid>
+            </TabItem>
+            <TabItem Header="Groups"
+                     Style="{StaticResource CustomMetroTabItem}">
+                <Grid Margin="{StaticResource MarginAll5}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <DataGrid Grid.Row="0"
+                                  ItemsSource="{Binding Groups}"
+                                  SelectedItem="{Binding SelectedGroup, Mode=TwoWay}"
+                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn x:Name="projectsCheckBoxColumn"
+                                                        Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Margin="{StaticResource MarginLeft5}"
+                                                      HorizontalAlignment="Center"
+                                                      IsChecked="{Binding IsChecked}"
+                                                      Style="{StaticResource CustomCheckBox}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Width="*"
+                                                    Binding="{Binding Name}"
+                                                    Header="Name"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*"
+                                                    Binding="{Binding Acronym}"
+                                                    Header="Acronym"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*"
+                                                    Binding="{Binding Group_Tier}"
+                                                    Header="Tier"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="Auto"
+                                                    Binding="{Binding Hardwares.Count}"
+                                                    Header="Asset Count"
+                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTemplateColumn Width="Auto"
+                                                        Header="Is Accreditation"
+                                                        HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}"
+                                                        SortMemberPath="Is_Accreditation">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
+                                                                                Kind="{Binding Is_Accreditation, Converter={StaticResource CheckboxConverter}}"
+                                                                                ToolTip="{Binding Is_Accreditation}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <ScrollViewer Grid.Row="1"
+                                      Margin="{StaticResource MarginTop5}"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Disabled">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0"
+                                       VerticalAlignment="Center">
+                                    <TextBlock Text="Count:"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                                <Label Grid.Column="1"
+                                       VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Groups.Count}"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                                <Button Grid.Column="3"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding ClearSelectedGroupCommand}"
+                                        Content="Clear Selected Group" />
+                                <Button Grid.Column="4"
+                                        Margin="{StaticResource MarginLeft5}"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding DeleteGroupCommand}"
+                                        Content="Delete Selected Group" />
+                            </Grid>
+                        </ScrollViewer>
+                    </Grid>
+                    <Expander Grid.Column="1"
+                              Background="{DynamicResource WindowBackgroundBrush}"
+                              BorderThickness="0"
+                              ExpandDirection="Right"
+                              Style="{StaticResource CustomExpander}">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconFontAwesomeLight Grid.Column="0"
+                                                                        Margin="{StaticResource MarginAll5}"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        Kind="PlusSquare" />
+                                    <TextBlock Grid.Column="1"
+                                               Style="{StaticResource ExpanderHeaderTextBlockStyle}"
+                                               Text="Add / Update" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
+                            <StackPanel Width="200">
+                                <TextBox Controls:TextBoxHelper.Watermark="Group Name"
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewGroup.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding SelectedGroup.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         TextWrapping="Wrap" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Group Acronym"
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewGroup.Acronym, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding SelectedGroup.Acronym, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         TextWrapping="Wrap" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Group Tier (Digits Only)"
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
+                                         vh:DependencyProperties.FloatingWatermark="Group Tier"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewGroup.Group_Tier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding SelectedGroup.Group_Tier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         TextWrapping="Wrap" />
+                                <Controls:ToggleSwitch x:Name="groupAccreditationToggleSwitch"
+                                                       Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
+                                                       vh:DependencyProperties.PrimaryValue="{Binding NewGroup.Is_Accreditation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       vh:DependencyProperties.SecondaryValue="{Binding SelectedGroup.Is_Accreditation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       Content="Is Accreditation"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="eMASS ID (Digits Only)"
+                                         vh:DependencyProperties.FloatingWatermark="eMASS ID"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedGroup.Accreditation_eMASS_ID, Mode=TwoWay}"
+                                         TextWrapping="Wrap"
+                                         Visibility="{Binding ElementName=groupAccreditationToggleSwitch, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
+                                                       vh:DependencyProperties.PrimaryValue="{Binding NewGroup.IsPlatform, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       vh:DependencyProperties.SecondaryValue="{Binding SelectedGroup.IsPlatform, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       Content="Is Platform"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                <Button Margin="{StaticResource MarginTop5}"
+                                        HorizontalAlignment="Center"
+                                        Command="{Binding ModifyGroupCommand}"
+                                        Content="Add/Update Group" />
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Expander>
+                    <!--  TODO: Implement Bulk Process Expander  -->
+                    <!--  TODO: Implement Filter Expander  -->
+                </Grid>
+            </TabItem>
+            <TabItem Header="Accreditations"
+                     Style="{StaticResource CustomMetroTabItem}">
+                <Grid Margin="{StaticResource MarginLeftRightBottom5}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <DataGrid Grid.Row="0"
+                                  ItemsSource="{Binding Accreditations}"
+                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn x:Name="accreditationCheckBoxColumn"
+                                                        Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Margin="{StaticResource MarginLeft5}"
+                                                      HorizontalAlignment="Center"
+                                                      IsChecked="{Binding IsChecked}"
+                                                      Style="{StaticResource CustomCheckBox}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Width="*"
+                                                    Header="Name"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Project Name" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="Auto"
+                                                    Header="Acronym"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Project Name" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="Auto"
+                                                    Header="eMASS ID"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                               TargetType="TextBlock">
+                                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style BasedOn="{StaticResource HeaderedTextBoxStyle}"
+                                               TargetType="TextBox">
+                                            <Setter Property="Controls:TextBoxHelper.Watermark" Value="Project Name" />
+                                            <Setter Property="Margin" Value="0,5,5,5" />
+                                            <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}" />
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="{Binding ElementName=accreditationCheckBoxColumn, Path=ActualWidth}" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <TextBox Grid.Column="1"
+                                                 Margin="0,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.Watermark="Accreditation Version"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding AccreditationVersion}" />
+                                        <TextBox Grid.Column="2"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.Watermark="Confidentiality (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding Mode=OneWay}" />
+                                        <TextBox Grid.Column="3"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.Watermark="Integrity (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding Mode=OneWay}" />
+                                        <TextBox Grid.Column="4"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.Watermark="Availability (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding Mode=OneWay}" />
+                                        <TextBox Grid.Row="1"
+                                                 Grid.Column="1"
+                                                 Margin="0,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.Watermark="Accreditation Type (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding Mode=OneWay}" />
+                                        <TextBox Grid.Row="1"
+                                                 Grid.Column="2"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.Watermark="RDT&amp;E Zone (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding Mode=OneWay}" />
+                                        <TextBox Grid.Row="1"
+                                                 Grid.Column="3"
+                                                 Margin="5,0,5,5"
+                                                 VerticalAlignment="Bottom"
+                                                 Controls:TextBoxHelper.Watermark="CyberSafe Grade (Read Only)"
+                                                 vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                 IsReadOnly="True"
+                                                 Style="{StaticResource HeaderedTextBoxStyle}"
+                                                 Text="{Binding Mode=OneWay}" />
+                                        <CheckBox Grid.Row="1"
+                                                  Grid.Column="4"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Content="Platform System"
+                                                  Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsChecked="{Binding IsChecked}"
+                                                  Style="{StaticResource CustomCheckBox}" />
+                                        <DatePicker Grid.Row="2"
+                                                    Grid.Column="1"
+                                                    Margin="0,0,5,5"
+                                                    VerticalAlignment="Bottom"
+                                                    Controls:TextBoxHelper.Watermark="ATO Granted"
+                                                    vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                    Style="{StaticResource HeaderedDatePickerStyle}"
+                                                    Text="{Binding Accreditation_Acronym, Mode=OneWay}" />
+                                        <DatePicker Grid.Row="2"
+                                                    Grid.Column="2"
+                                                    Margin="5,0,5,5"
+                                                    VerticalAlignment="Bottom"
+                                                    Controls:TextBoxHelper.Watermark="ATO Expiration"
+                                                    vh:DependencyProperties.FloatingWatermarkForeground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                    Style="{StaticResource HeaderedDatePickerStyle}"
+                                                    Text="{Binding Accreditation_Acronym, Mode=OneWay}" />
+                                        <CheckBox Grid.Row="2"
+                                                  Grid.Column="3"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Content="Has Foreign Nationals"
+                                                  Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsChecked="{Binding IsChecked}"
+                                                  Style="{StaticResource CustomCheckBox}" />
+                                        <CheckBox Grid.Row="2"
+                                                  Grid.Column="4"
+                                                  Margin="5,0,5,5"
+                                                  VerticalAlignment="Bottom"
+                                                  Content="FISCAM System"
+                                                  Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Path=Foreground}"
+                                                  IsChecked="{Binding IsChecked}"
+                                                  Style="{StaticResource CustomCheckBox}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
+                        </DataGrid>
+                        <ScrollViewer Grid.Row="1"
+                                      Margin="{StaticResource MarginTop5}"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Disabled">
+                            <Grid HorizontalAlignment="Stretch"
+                                  DockPanel.Dock="Top">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0"
+                                       VerticalAlignment="Bottom">
+                                    <TextBlock Text="Count:"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                                <Label Grid.Column="1"
+                                       VerticalAlignment="Bottom">
+                                    <TextBlock Text="{Binding Accreditations.Count}"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                                <Button Grid.Column="3"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding}"
+                                        Content="Clear Selected Accreditation" />
+                                <Button Grid.Column="4"
+                                        Margin="{StaticResource MarginLeft5}"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding}"
+                                        Content="Delete Selected Accreditation" />
+                            </Grid>
+                        </ScrollViewer>
+                    </Grid>
+                    <Expander Grid.Column="1"
+                              Background="{DynamicResource WindowBackgroundBrush}"
+                              BorderThickness="0"
+                              ExpandDirection="Right"
+                              Style="{StaticResource CustomExpander}">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconFontAwesomeLight Grid.Column="0"
+                                                                        Margin="{StaticResource MarginAll5}"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        Kind="PlusSquare" />
+                                    <TextBlock Grid.Column="1"
+                                               Margin="5,0"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource LabelTextBrush}"
+                                               Text="Add / Update"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                    </Expander>
+                    <!--  TODO: Implement Bulk Process Expander  -->
+                    <!--  TODO: Implement Filter Expander  -->
+                </Grid>
+            </TabItem>
+        </Controls:MetroAnimatedSingleRowTabControl>
+    </Grid>
+</UserControl>

@@ -1,11 +1,30 @@
-﻿# Vulnerator
-## The official distribution of the vulnerability parsing utility.
-
-[![Join the chat at https://gitter.im/Vulnerator/Vulnerator](https://badges.gitter.im/Vulnerator/Vulnerator.svg)](https://gitter.im/Vulnerator/Vulnerator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) :arrow_left: Click this if you'd like to talk to a real, live person!
+﻿<div align="center">
+    <img width="25%" src="VulneratorLogoDraft.png">
+	<h1>Vulnerator</h1>
+	<h2>Vulnerability Continuous Monitoring Made Easy</h2>
+		<a href="https://gitter.im/Vulnerator/Vulnerator">
+			<img src="https://img.shields.io/badge/Gitter-Join%20Chat-green.svg?style=flat-square&colorB=5523ed">
+		</a>
+        <a href="https://join.slack.com/t/vulnerator-chat/shared_invite/enQtMzQxMzc2MTE0NTI4LWQ1MTVmOGRmZjU4M2UzODU4ZDBhZDk1NGNlY2ZmMjgxNGEzNjUxMmE4OTkwNjQ3NTBhYzU3NmQ2OGI4YjViYzM">
+			<img src="https://img.shields.io/badge/Slack-Join%20Chat-green.svg?style=flat-square&colorB=5523ed">
+		</a>
+		<a href="https://github.com/Vulnerator/Vulnerator/releases/latest">
+			<img src="https://img.shields.io/github/release/Vulnerator/Vulnerator.svg?style=flat-square">
+		</a>
+		<a href="https://github.com/Vulnerator/Vulnerator/issues">
+			<img src="https://img.shields.io/github/issues-raw/Vulnerator/Vulnerator.svg?style=flat-square">
+		</a>
+		<a href="https://github.com/Vulnerator/Vulnerator/issues">
+			<img src="https://img.shields.io/github/issues-closed-raw/Vulnerator/Vulnerator.svg?style=flat-square&colorB=green">
+		</a>
+        <a href="https://github.com/Vulnerator/Vulnerator/blob/testing/LICENSE">
+			<img src="https://img.shields.io/github/license/Vulnerator/Vulnerator.svg?style=flat-square&colorB=f77a1b">
+		</a>
+</div>
 
 ### Software Security
 With the move from SoftwareForge to the public domain, the integrity of the application has recently been thrust into the limelight.  To ensure the application is secure, please note the following measures:
-* [@amkuchta](https://github.com/amkuchta "Alex Kuchta's GitHub Page") has personally had his hand in every line of code in the application - there is not a single file that has not been touched, modified, or updated by him
+* [Alex Kuchta](https://github.com/amkuchta "Alex Kuchta's GitHub Page") has personally had his hand in every line of code in the application - there is not a single file that has not been touched, modified, or updated by him
 * Only four GitHub users have the power to update the application.  This means that although anybody can fork the repository and change their personal repo, only one of the four "gatekeepers" can authorize a change to the ```master``` branch
 * Each release is listed with both an ```MD5``` and ```SHA256``` checksum value - after you download the application, I encourage you to check the hash yourself to ensure that you downloaded what you expected
 * If the above measures are not enough, please feel free to create your own fork of the repository and compile the application yourself - this will allow you to do a manual code review to ensure that no malicious lines exist before creating an executable.
