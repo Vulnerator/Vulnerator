@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E8CE3AD3-D6E9-4B2B-87D7-2B69313E6A61}"
 EndProject
@@ -9,13 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vulnerator_v6", "Vulnerator
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		7.2.6 Internal|Any CPU = 7.2.6 Internal|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{ACB51B18-6A76-48F4-8D03-10504B892593}.7.2.6 Internal|Any CPU.ActiveCfg = 7.2.6 Internal|Any CPU
-		{ACB51B18-6A76-48F4-8D03-10504B892593}.7.2.6 Internal|Any CPU.Build.0 = 7.2.6 Internal|Any CPU
 		{ACB51B18-6A76-48F4-8D03-10504B892593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ACB51B18-6A76-48F4-8D03-10504B892593}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACB51B18-6A76-48F4-8D03-10504B892593}.Release|Any CPU.ActiveCfg = Release|Any CPU

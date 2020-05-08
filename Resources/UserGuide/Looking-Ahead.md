@@ -1,0 +1,8 @@
+# Upcoming Plans
+In our eyes, the sky is truly the limit with Vulnerator.  To give you an idea of where we are headed...
+
+1. **Contact Lists:** Includes the ability to tie assets back to points of contact, then notify said POCs of outstanding vulnerabilities that fall within their purview any time you parse a new file.  We see this as particularly handy for items such as VRAM compliance reporting (especially if you work with a large number of systems, like a data center)
+2. **Additional File Format Parsing:** The idea is to ingest additional vulnerability output types, such as OpenSCAP xml files and HP Fortify code review.  The more vulnerability sources we can ingest, the more pivotable the data becomes
+3. **Enhanced Outputs:** While Excel formats are great, they are not always the easiest to work with, nor are they what management is interested in.  Items such as PDF and Access Databases are in the works, and we intend to incorporate charts with pretty colors
+4. **Accreditation / Certificate of Networthiness:** Eventually, we would like to have this application be a full-blown, installable suite of tools; this is a bit farther down the pipeline, but not outside of the realm of possibilities
+4. **Whatever _You_ Want:** At the end of the day, this is really your tool - if you need something, create an issue for it!  As developers, every bit of input helps (no matter how hard we try, we can't think of everything!)
