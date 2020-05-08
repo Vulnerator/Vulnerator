@@ -15,32 +15,33 @@ CREATE TABLE AdditionalTestConsiderations
 	 ConsiderationTitle NVARCHAR (25) ,
 	 ConsiderationDetails NVARCHAR (1000)
 	);
-CREATE TABLE ATC_IATC
+CREATE TABLE AuthorizationToConnectOrInterim_ATC
 	(
-	 ATC_ID INTEGER PRIMARY KEY ,
-	 ATC_GrantedDate DATE NOT NULL ,
-	 ATC_ExpirationDate DATE NOT NULL ,
-	 CND_ServiceProvider NVARCHAR (25)
+	 AuthorizationToConnectOrInterim_ATC_ID INTEGER PRIMARY KEY ,
+	 AuthorizationToConnectOrInterim_ATC_GrantedDate DATE NOT NULL ,
+	 AuthorizationToConnectOrInterim_ATC_ExpirationDate DATE NOT NULL ,
+	 AuthorizationToConnectOrInterim_ATC_CND_ServiceProvider NVARCHAR (25)
 	);
-CREATE TABLE ATC_IATC_ATC_IATC_PendingItems
+CREATE TABLE AuthorizationToConnectOrInterim_ATC_AuthorizationToConnectOrInterim_ATC_PendingItems
 	(
-	 ATC_ID INTEGER NOT NULL ,
-	 ATC_IATC_PendingItem_ID INTEGER NOT NULL ,
-	 FOREIGN KEY (ATC_ID) REFERENCES ATC_IATC(ATC_ID),
-	 FOREIGN KEY (ATC_IATC_PendingItem_ID) REFERENCES ATC_IATC_PendingItems(ATC_IATC_PendingItem_ID)
+	 AuthorizationToConnectOrInterim_ATC_AuthorizationToConnectOrInterim_ATC_PendingItems INTEGER PRIMARY KEY,
+	 AuthorizationToConnectOrInterim_ATC_ID INTEGER NOT NULL ,
+	 AuthorizationToConnectOrInterim_ATC_PendingItem_ID INTEGER NOT NULL ,
+	 FOREIGN KEY (AuthorizationToConnectOrInterim_ATC_ID) REFERENCES AuthorizationToConnectOrInterim_ATC(AuthorizationToConnectOrInterim_ATC_ID),
+	 FOREIGN KEY (AuthorizationToConnectOrInterim_ATC_PendingItem_ID) REFERENCES AuthorizationToConnectOrInterim_ATC_PendingItems(AuthorizationToConnectOrInterim_ATC_PendingItem_ID)
 	);
-CREATE TABLE ATC_IATC_PendingItems
+CREATE TABLE AuthorizationToConnectOrInterim_ATC_PendingItems
 	(
-	 ATC_IATC_PendingItem_ID INTEGER PRIMARY KEY ,
-	 PendingItem NVARCHAR (50) NOT NULL ,
-	 PendingItemDueDate DATE NOT NULL
+	 AuthorizationToConnectOrInterim_ATC_PendingItem_ID INTEGER PRIMARY KEY ,
+	 AuthorizationToConnectOrInterim_ATC_PendingItem NVARCHAR (50) NOT NULL ,
+	 AuthorizationToConnectOrInterim_ATC_PendingItemDueDate DATE NOT NULL
 	);
 CREATE TABLE AuthorizationConditions
 	(
 	 AuthorizationCondition_ID INTEGER PRIMARY KEY ,
-	 Condition NVARCHAR (500) NOT NULL ,
-	 CompletionDate DATE NOT NULL ,
-	 IsCompleted NVARCHAR (5) NOT NULL
+	 AuthorizationCondition NVARCHAR (500) NOT NULL ,
+	 AuthorizationConditionCompletionDate DATE NOT NULL ,
+	 AuthorizationConditionIsCompleted INTEGER NOT NULL
 	);
 CREATE TABLE AuthorizationInformation
 	(
@@ -48,7 +49,7 @@ CREATE TABLE AuthorizationInformation
 	 SecurityPlanApprovalStatus NVARCHAR (25) NOT NULL ,
 	 SecurityPlanApprovalDate DATE ,
 	 AuthorizationStatus NVARCHAR (25) NOT NULL ,
-	 HasAuthorizationDocumentation NVARCHAR (5) NOT NULL ,
+	 HasAuthorizationDocumentation INTEGER NOT NULL ,
 	 AssessmentCompletionDate DATE ,
 	 AuthorizationDate DATE ,
 	 AuthorizationTerminationDate DATE ,
@@ -56,22 +57,24 @@ CREATE TABLE AuthorizationInformation
 	);
 CREATE TABLE AuthorizationInformation_AuthorizationConditions
 	(
+	 AuthorizationInformation_AuthorizationConditions_ID INTEGER PRIMARY KEY,
 	 AuthorizationInformation_ID INTEGER NOT NULL ,
 	 AuthorizationCondition_ID INTEGER NOT NULL ,
+	 UNIQUE (AuthorizationInformation_ID, AuthorizationCondition_ID) ON CONFLICT IGNORE,
 	 FOREIGN KEY (AuthorizationInformation_ID) REFERENCES AuthorizationInformation(AuthorizationInformation_ID),
 	 FOREIGN KEY (AuthorizationCondition_ID) REFERENCES AuthorizationConditions(AuthorizationCondition_ID)
 	);
 CREATE TABLE AvailabilityLevels
 	(
 	 Availability_ID INTEGER PRIMARY KEY ,
-	 Availability_Level NVARCHAR (25) NOT NULL
+	 AvailabilityLevel NVARCHAR (25) NOT NULL
 	);
 CREATE TABLE Buildings
 	(
 	 Building_ID INTEGER PRIMARY KEY ,
-	 RealTimeAccessControl NVARCHAR (5) NOT NULL ,
-	 HVAC NVARCHAR (5) NOT NULL ,
-	 RealTimeSecurityMonitoring NVARCHAR (5) NOT NULL ,
+	 HasRealTimeAccessControl INTEGER NOT NULL ,
+	 HasHVAC INTEGER NOT NULL ,
+	 HasRealTimeSecurityMonitoring INTEGER NOT NULL ,
 	 FOREIGN KEY (Building_ID) REFERENCES PIT_Determination(Building_ID)
 	);
 CREATE TABLE Business
@@ -90,52 +93,52 @@ CREATE TABLE Business
 CREATE TABLE CalibrationSystems
 	(
 	 Calibration_ID INTEGER PRIMARY KEY ,
-	 BuiltInCalibration NVARCHAR (5) NOT NULL ,
-	 PortableCalibration NVARCHAR (5) NOT NULL ,
+	 IsBuiltInCalibration INTEGER NOT NULL ,
+	 IsPortableCalibration INTEGER NOT NULL ,
 	 FOREIGN KEY (Calibration_ID) REFERENCES PIT_Determination(Calibration_ID)
 	);
 CREATE TABLE Categories
 	(
 	 Category_ID INTEGER PRIMARY KEY ,
-	 Category NVARCHAR (25) NOT NULL
+	 CategoryName NVARCHAR (25) NOT NULL
 	);
 CREATE TABLE CCIs
 	(
 	 CCI_ID INTEGER PRIMARY KEY ,
-	 CCI NVARCHAR (25) NOT NULL ,
-	 Definition NVARCHAR (500) NOT NULL ,
-	 Type NVARCHAR (25) NOT NULL,
+	 CCI_Number NVARCHAR (25) NOT NULL ,
+	 CCI_Definition NVARCHAR (500) NOT NULL ,
+	 CCI_Type NVARCHAR (25) NOT NULL,
 	 CCI_Status NVARCHAR (25) NOT NULL
 	);
 CREATE TABLE Certifications
 	(
 	 Certification_ID INTEGER PRIMARY KEY ,
-	 Certification NVARCHAR (50) NOT NULL
+	 CertificationName NVARCHAR (50) NOT NULL
 	);
 CREATE TABLE CombatSystems
 	(
 	 CombatSystem_ID INTEGER PRIMARY KEY ,
-	 CommandAndControl NVARCHAR (5) NOT NULL ,
-	 CombatIdentification NVARCHAR (5) NOT NULL ,
-	 RealTimeTrackManagement NVARCHAR (5) NOT NULL ,
-	 ForceOrders NVARCHAR (5) NOT NULL ,
-	 TroopMovement NVARCHAR (5) NOT NULL ,
-	 EngagementCoordination NVARCHAR (5) NOT NULL ,
+	 IsCommandAndControl INTEGER NOT NULL ,
+	 IsCombatIdentification INTEGER NOT NULL ,
+	 HasRealTimeTrackManagement INTEGER NOT NULL ,
+	 CanIssueForceOrders INTEGER NOT NULL ,
+	 CanControlTroopMovement INTEGER NOT NULL ,
+	 CanControlEngagementCoordination INTEGER NOT NULL ,
 	 FOREIGN KEY (CombatSystem_ID) REFERENCES PIT_Determination(CombatSystem_ID)
 	);
 CREATE TABLE CommonControlPackages
 	(
 	 CCP_ID INTEGER PRIMARY KEY ,
-	 CCAP_Name NVARCHAR (100) NOT NULL
+	 CCP_Name NVARCHAR (100) NOT NULL
 	);
 CREATE TABLE CommunicationSystems
 	(
 	 CommunicationSystem_ID INTEGER PRIMARY KEY ,
-	 VoiceCommunication NVARCHAR (5) NOT NULL ,
-	 SatelliteCommunication NVARCHAR (5) NOT NULL ,
-	 TacticalCommunication NVARCHAR (5) NOT NULL ,
-	 ISDN_VTC_Systems NVARCHAR (5) NOT NULL ,
-	 InterrogatorsTransponders NVARCHAR (5) NOT NULL ,
+	 IsVoiceCommunication INTEGER NOT NULL ,
+	 IsSatelliteCommunication INTEGER NOT NULL ,
+	 IsTacticalCommunication INTEGER NOT NULL ,
+	 IsISDN_VTC_System INTEGER NOT NULL ,
+	 HasInterrogatorsTransponders INTEGER NOT NULL ,
 	 FOREIGN KEY (CommunicationSystem_ID) REFERENCES PIT_Determination(CommunicationSystem_ID)
 	);
 CREATE TABLE ConfidentialityLevels
@@ -147,42 +150,45 @@ CREATE TABLE ConnectedSystems
 	(
 	 ConnectedSystem_ID INTEGER PRIMARY KEY ,
 	 ConnectedSystemName NVARCHAR (100) NOT NULL ,
-	 IsAuthorized NVARCHAR (5) NOT NULL
+	 IsAuthorized INTEGER NOT NULL
 	);
 CREATE TABLE Connections
 	(
 	 Connection_ID INTEGER PRIMARY KEY ,
-	 Internet NVARCHAR (5) ,
-	 DODIN NVARCHAR (5) ,
-	 DMZ NVARCHAR (5) ,
-	 VPN NVARCHAR (5) ,
-	 CNSDP NVARCHAR (5) ,
-	 EnterpriseServicesProvider NVARCHAR (5)
+	 IsInternetConnected INTEGER ,
+	 IsDODIN_Connected INTEGER ,
+	 IsDMZ_Connected INTEGER ,
+	 IsVPN_Connected INTEGER ,
+	 IsCND_ServiceProvider INTEGER ,
+	 IsEnterpriseServicesProvider INTEGER
 	);
 CREATE TABLE Connectivity
 	(
 	 Connectivity_ID INTEGER PRIMARY KEY ,
-	 Connectivity NVARCHAR (25) NOT NULL ,
-	 OwnCircuit NVARCHAR (5) NOT NULL ,
-	 CCSD_Number NVARCHAR (25) NOT NULL ,
-	 CCSD_Location NVARCHAR (50) NOT NULL ,
-	 CCSD_Support NVARCHAR (100) NOT NULL
+	 ConnectivityName NVARCHAR (25) NOT NULL ,
+	 HasOwnCircuit INTEGER NOT NULL ,
+	 CommandCommunicationsSecurityDesginatorNumber NVARCHAR (25) NOT NULL ,
+	 CommandCommunicationsSecurityDesginatorLocation NVARCHAR (50) NOT NULL ,
+	 CommandCommunicationsSecurityDesginatorSupport NVARCHAR (100) NOT NULL
 	);
 CREATE TABLE Contacts
 	(
 	 Contact_ID INTEGER PRIMARY KEY ,
-	 First_Name NVARCHAR (25) NOT NULL ,
-	 Last_Name NVARCHAR (50) NOT NULL ,
+	 FirstName NVARCHAR (25) NOT NULL ,
+	 LastName NVARCHAR (50) NOT NULL ,
 	 Email NVARCHAR (50) NOT NULL ,
-	 Title_ID INTEGER NOT NULL ,
+	 Phone NVARCHAR (20) ,
+	 TitleID INTEGER NOT NULL ,
 	 Organization_ID INTEGER NOT NULL ,
 	 FOREIGN KEY (Title_ID) REFERENCES Titles(Title_ID),
 	 FOREIGN KEY (Organization_ID) REFERENCES Organizations(Organization_ID)
 	);
 CREATE TABLE ContactsCertifications
 	(
-	 Contact_ID INTEGER PRIMARY KEY ,
+	 ContactsCertifications_ID INTEGER PRIMARY KEY,
+	 Contact_ID INTEGER NOT NULL ,
 	 Certification_ID INTEGER NOT NULL ,
+	 UNIQUE (Contact_ID, Certification_ID) ON CONFLICT IGNORE,
 	 FOREIGN KEY (Contact_ID) REFERENCES Contacts(Contact_ID),
 	 FOREIGN KEY (Certification_ID) REFERENCES Certifications(Certification_ID)
 	);
@@ -194,41 +200,41 @@ CREATE TABLE ControlApplicabilityAssessment
 CREATE TABLE ControlSelection
 	(
 	 ControlSelection_ID INTEGER PRIMARY KEY ,
-	 TierOneApplied NVARCHAR (5) NOT NULL ,
-	 TierOneJustification NVARCHAR (50) NOT NULL ,
-	 TierTwoApplied NVARCHAR (5) NOT NULL ,
-	 TierTwoJustification NVARCHAR (50) NOT NULL ,
-	 TierThreeApplied NVARCHAR (5) NOT NULL ,
-	 TierThreeJustification NVARCHAR (50) NOT NULL ,
-	 CNSS_1253_Applied NVARCHAR (5) NOT NULL ,
-	 CNSS_1253_Justification NVARCHAR (50) NOT NULL ,
-	 SpaceApplied NVARCHAR (5) NOT NULL ,
-	 SpaceJustification NVARCHAR (50) NOT NULL ,
-	 CDS_Applied NVARCHAR (5) NOT NULL ,
-	 CDS_Justification NVARCHAR (50) ,
-	 IntelligenceApplied NVARCHAR (5) NOT NULL ,
-	 IntelligenceJustification NVARCHAR (50) NOT NULL ,
-	 ClassifiedApplied NVARCHAR (5) NOT NULL ,
-	 ClassifiedJustification NVARCHAR (50) NOT NULL ,
-	 OtherApplied NVARCHAR (5) NOT NULL ,
-	 OtherJustification NVARCHAR (50) NOT NULL ,
-	 CompensatingControlsApplied NVARCHAR (5) NOT NULL ,
-	 CompensatingControlsJustification NVARCHAR (50) NOT NULL ,
-	 NA_BaselineControls NVARCHAR (5) NOT NULL ,
-	 NA_BaselineControlsJustification NVARCHAR (100) NOT NULL ,
-	 BaselineControlsModified NVARCHAR (5) NOT NULL ,
-	 ModifiedBaselineJustification NVARCHAR (100) NOT NULL ,
-	 BaselineRiskModified NVARCHAR (5) NOT NULL ,
-	 BaselineRiskModificationJustification NVARCHAR (100) NOT NULL ,
-	 BaselineScopeApproved NVARCHAR (5) NOT NULL ,
-	 BaselineScopeJustification NVARCHAR (100) NOT NULL ,
-	 InheritableControlsDefined NVARCHAR (5) NOT NULL ,
-	 InheritableControlsJustification NVARCHAR (100) NOT NULL
+	 IsTierOneApplied INTEGER NOT NULL ,
+	 TierOneAppliedJustification NVARCHAR (50) NOT NULL ,
+	 IsTierTwoApplied INTEGER NOT NULL ,
+	 TierTwoAppliedJustification NVARCHAR (50) NOT NULL ,
+	 IsTierThreeApplied INTEGER NOT NULL ,
+	 TierThreeAppliedJustification NVARCHAR (50) NOT NULL ,
+	 IsCNSS_1253_Applied INTEGER NOT NULL ,
+	 CNSS_1253_AppliedJustification NVARCHAR (50) NOT NULL ,
+	 IsSpaceApplied INTEGER NOT NULL ,
+	 SpaceAppliedJustification NVARCHAR (50) NOT NULL ,
+	 IsCDS_Applied INTEGER NOT NULL ,
+	 CDS_AppliedJustification NVARCHAR (50) ,
+	 IsIntelligenceApplied INTEGER NOT NULL ,
+	 IntelligenceAppliedJustification NVARCHAR (50) NOT NULL ,
+	 IsClassifiedApplied INTEGER NOT NULL ,
+	 ClassifiedAppliedJustification NVARCHAR (50) NOT NULL ,
+	 IsOtherApplied INTEGER NOT NULL ,
+	 OtherAppliedJustification NVARCHAR (50) NOT NULL ,
+	 AreCompensatingControlsApplied INTEGER NOT NULL ,
+	 CompensatingControlsAppliedJustification NVARCHAR (50) NOT NULL ,
+	 HasNA_BaselineControls INTEGER NOT NULL ,
+	 NA_BaselineControlsAppliedJustification NVARCHAR (100) NOT NULL ,
+	 AreBaselineControlsModified INTEGER NOT NULL ,
+	 BaselineIsModifiedJustification NVARCHAR (100) NOT NULL ,
+	 IsBaselineRiskModified INTEGER NOT NULL ,
+	 BaselineRiskIsModificationJustification NVARCHAR (100) NOT NULL ,
+	 IsBaselineScopeApproved INTEGER NOT NULL ,
+	 BaselineScopeIsApprovedJustification NVARCHAR (100) NOT NULL ,
+	 AreInheritableControlsDefined INTEGER NOT NULL ,
+	 InheritableControlsAreDefinedJustification NVARCHAR (100) NOT NULL
 	);
 CREATE TABLE ControlSets
 	(
 	 ControlSet_ID INTEGER PRIMARY KEY ,
-	 ControlSet NVARCHAR (50) NOT NULL
+	 ControlSetName NVARCHAR (50) NOT NULL
 	);
 CREATE TABLE CustomTestCases
 	(
@@ -245,7 +251,7 @@ CREATE TABLE CustomTestCases
 CREATE TABLE DADMS_Networks
 	(
 	 DADMS_Network_ID INTEGER PRIMARY KEY ,
-	 DADMS_Network_Name NVARCHAR (50) NOT NULL
+	 DADMS_NetworkName NVARCHAR (50) NOT NULL
 	);
 CREATE TABLE DiagnosticTestingSystems
 	(
@@ -278,8 +284,10 @@ CREATE TABLE EnumeratedDomainUsersSettings
 	);
 CREATE TABLE EnumeratedLocalWindowsUsersSettings
 	(
+	 EnumeratedDomainUsersSettings_ID INTEGER PRIMARY KEY,
 	 User_ID INTEGER NOT NULL ,
 	 Local_Settings_ID INTEGER NOT NULL ,
+	 UNIQUE (User_ID, Local_Settings_ID) ON CONFLICT IGNORE,
 	 FOREIGN KEY (User_ID) REFERENCES EnumeratedWindowsUsers(User_ID),
 	 FOREIGN KEY (Local_Settings_ID) REFERENCES WindowsLocalUserSettings(Local_Settings_ID)
 	);
@@ -980,15 +988,28 @@ CREATE TABLE Sensors
 	 ISR NVARCHAR (5) NOT NULL ,
 	 National NVARCHAR (5) NOT NULL ,
 	 NavigationAndControl NVARCHAR (5) NOT NULL ,
+	 PIT_Determination_ID INTEGER NOT NULL,
 	 FOREIGN KEY (PIT_Determination_ID) REFERENCES PIT_Determination(PIT_Determination_ID)
 	);
 CREATE TABLE PortServices
 	(
 	 PortService_ID INTEGER PRIMARY KEY,
-	 PortServiceName NVARCHAR (100) NOT NULL,
+	 PortServiceName NVARCHAR (100) NOT NULL UNIQUE ON CONFLICT IGNORE,
 	 PortServiceAcronym NVARCHAR (50)
 	 PortsProtocols_ID INTEGER NOT NULL,
+	 UNIQUE (PortServiceName, PortsProtocols_ID) ON CONFLICT IGNORE,
 	 FOREIGN KEY (PortsProtocols_ID) REFERENCES PortsProtocols(PortsProtocols_ID)
+	 
+	);
+CREATE TABLE PortServicesSoftware
+	(
+	 PortServiceSoftware_ID INTEGER PRIMARY KEY,
+	 PortService_ID INTEGER NOT NULL,
+	 Software_ID INTEGER NOT NULL,
+	 UNIQUE (PortService_ID, Software_ID) ON CONFLICT IGNORE,
+	 FOREIGN KEY (PortService_ID) REFERENCES PortServices(PortService_ID),
+	 FOREIGN KEY (Software_ID) REFERENCES Software(Software_ID)
+	 
 	);
 CREATE TABLE Software
 	(
@@ -1059,9 +1080,9 @@ CREATE TABLE StepOneQuestionnaire
 	 FISMA_ID INTEGER NOT NULL ,
 	 Business_ID INTEGER NOT NULL ,
 	 SystemEnterpriseArchitecture NVARCHAR (2000) NOT NULL ,
-	 ATC_ID INTEGER ,
+	 AuthorizationToConnectOrInterim_ATC_ID INTEGER ,
 	 NistControlSet NVARCHAR (50) NOT NULL,
-	 FOREIGN KEY (ATC_ID) REFERENCES ATC_IATC(ATC_ID)
+	 FOREIGN KEY (AuthorizationToConnectOrInterim_ATC_ID) REFERENCES AuthorizationToConnectOrInterim_ATC(AuthorizationToConnectOrInterim_ATC_ID)
 	);
 CREATE TABLE StepOneQuestionnaire_Connectivity
 	(
@@ -1405,10 +1426,10 @@ CREATE TABLE ReportSeverities
 	(
 	 Required_Report_ID INTEGER NOT NULL,
 	 UserName NVARCHAR (50) NOT NULL,
-	 ReportCatI BOOLEAN NOT NULL,
-	 ReportCatII BOOLEAN NOT NULL,
-	 ReportCatIII BOOLEAN NOT NULL,
-	 ReportCatIV BOOLEAN NOT NULL,
+	 ReportCatI INTEGER NOT NULL,
+	 ReportCatII INTEGER NOT NULL,
+	 ReportCatIII INTEGER NOT NULL,
+	 ReportCatIV INTEGER NOT NULL,
 	 FOREIGN KEY (Required_Report_ID) REFERENCES RequiredReports(Required_Report_ID),
 	 UNIQUE (Required_Report_ID, UserName) ON CONFLICT IGNORE
 	);
