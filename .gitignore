@@ -23,7 +23,7 @@ bld/
 .vs/
 
 # Jetbrains idea directory
-.idea/
+.idea
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
