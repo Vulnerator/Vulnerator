@@ -24,6 +24,7 @@ namespace Vulnerator.Model.Entity
 
         [Required]
         [StringLength(25)]
+        [Column("IntegrityLevel")]
         public string Integrity_Level { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

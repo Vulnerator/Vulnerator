@@ -149,7 +149,7 @@ CREATE TABLE CommunicationSystems (
 
 CREATE TABLE ConfidentialityLevels (
                                        ConfidentialityLevel_ID INTEGER PRIMARY KEY,
-                                       Confidentiality_Level NVARCHAR (25) NOT NULL
+                                       ConfidentialityLevel NVARCHAR (25) NOT NULL
 );
 
 CREATE TABLE ConnectedSystems (
@@ -757,8 +757,8 @@ CREATE TABLE NIST_Controls (
                                ControlEnhancement INTEGER,
                                ControlTitle NVARCHAR (50) NOT NULL,
                                ControlText NVARCHAR (500) NOT NULL,
-                               Supplemental_Guidance NVARCHAR (500) NOT NULL,
-                               Monitoring_Frequency NVARCHAR (10)
+                               SupplementalGuidance NVARCHAR (500) NOT NULL,
+                               MonitoringFrequency NVARCHAR (10)
 );
 
 CREATE TABLE NIST_Controls_IATA_Standards (
