@@ -13,7 +13,7 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PortsProtocols()
         {
-            Hardware_PortsProtocols = new HashSet<Hardware_PortsProtocols>();
+            HardwarePortsProtocols = new HashSet<HardwarePortsProtocols>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -29,6 +29,6 @@ namespace Vulnerator.Model.Entity
         public string Protocol { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Hardware_PortsProtocols> Hardware_PortsProtocols { get; set; }
+        public virtual ICollection<HardwarePortsProtocols> HardwarePortsProtocols { get; set; }
     }
 }

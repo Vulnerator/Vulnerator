@@ -15,12 +15,12 @@ namespace Vulnerator.Model.Entity
         public ConfidentialityLevel()
         {
             Groups = new ObservableCollection<Group>();
-            NistControlsConfidentialityLevels = new ObservableCollection<NistControlsConfidentialityLevel>();
+            NIST_ControlsConfidentialityLevels = new ObservableCollection<NistControlsConfidentialityLevel>();
         }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long Confidentiality_ID { get; set; }
+        public long ConfidentialityLevel_ID { get; set; }
 
         [Required]
         [StringLength(25)]
@@ -30,6 +30,6 @@ namespace Vulnerator.Model.Entity
         public virtual ICollection<Group> Groups { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NistControlsConfidentialityLevel> NistControlsConfidentialityLevels { get; set; }
+        public virtual ICollection<NistControlsConfidentialityLevel> NIST_ControlsConfidentialityLevels { get; set; }
     }
 }

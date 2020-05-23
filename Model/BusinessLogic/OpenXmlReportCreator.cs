@@ -64,11 +64,11 @@ namespace Vulnerator.Model.BusinessLogic
                     List<string> findingTypes = new List<string>();
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
-                        sqliteCommand.CommandText = "SELECT Finding_Type FROM FindingTypes;";
+                        sqliteCommand.CommandText = "SELECT FindingType FROM FindingTypes;";
                         using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                         {
                             while (sqliteDataReader.Read())
-                            { findingTypes.Add(sqliteDataReader["Finding_Type"].ToString()); }
+                            { findingTypes.Add(sqliteDataReader["FindingType"].ToString()); }
                         }
                     }
 
@@ -174,13 +174,13 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Finding_Type", findingType));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
                     sqliteCommand.CommandText = Properties.Resources.SelectGroupedPoamVulnerabilities;
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
                         while (sqliteDataReader.Read())
                         {
-                            if (sqliteDataReader["Unique_Vulnerability_Identifier"].ToString().Equals("Plugin"))
+                            if (sqliteDataReader["UniqueVulnerabilityIdentifier"].ToString().Equals("Plugin"))
                             { continue; }
 
                             WriteFindingToPoam(sqliteDataReader);
@@ -409,9 +409,9 @@ namespace Vulnerator.Model.BusinessLogic
                 using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
-                    sqliteCommand.CommandText = "SELECT AssetIdToReport, HostName, IpAddress, GroupName, " + 
-                        "SUM(CASE WHEN (RawRisk = 'I' OR (Impact = 'Critical' AND RawRisk IS NULL) OR (Impact = 'High' AND RawRisk IS NULL)) AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatI, " + 
-                        "SUM(CASE WHEN (RawRisk = 'II' OR (Impact = 'Medium' AND RawRisk IS NULL)) AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatII, " + 
+                    sqliteCommand.CommandText = "SELECT AssetIdToReport, DiscoveredHostName, IpAddress, GroupName, " +
+                        "SUM(CASE WHEN (RawRisk = 'I' OR (Impact = 'Critical' AND RawRisk IS NULL) OR (Impact = 'High' AND RawRisk IS NULL)) AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatI, " +
+                        "SUM(CASE WHEN (RawRisk = 'II' OR (Impact = 'Medium' AND RawRisk IS NULL)) AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatII, " +
                         "SUM(CASE WHEN (RawRisk = 'III' OR (Impact = 'Low' AND RawRisk IS NULL)) AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatIII, " +
                         "SUM(CASE WHEN (RawRisk = 'IV' OR (Impact = 'Informational' AND RawRisk IS NULL)) AND Status = 'Ongoing' THEN 1 ELSE 0 END) AS CatIV, " +
                         "COUNT(CASE WHEN Status = 'Ongoing' THEN 1 END) AS Total, " +
@@ -449,7 +449,7 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 assetOverviewOpenXmlWriter.WriteStartElement(new Row());
-                WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["HostName"].ToString(), 18);
+                WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["DiscoveredHostName"].ToString(), 18);
                 WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["IpAddress"].ToString(), 18);
                 WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["GroupName"].ToString(), 18);
                 WriteCellValue(assetOverviewOpenXmlWriter, sqliteDataReader["OperatingSystem"].ToString(), 18);
@@ -794,33 +794,33 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 poamOpenXmlWriter.WriteStartElement(new Row());
                 WriteCellValue(poamOpenXmlWriter, poamRowCounterIndex.ToString(), 16);
-                if (!string.IsNullOrWhiteSpace(sqliteDataReader["Displayed_Software_Name"].ToString()))
+                if (!string.IsNullOrWhiteSpace(sqliteDataReader["DisplayedSoftwareName"].ToString()))
                 {
-                    string descriptionCellValue = "Title: " + Environment.NewLine + sqliteDataReader["Vulnerability_Title"].ToString() + doubleCarriageReturn +
-                    "Description: " + Environment.NewLine + sqliteDataReader["Vulnerability_Description"].ToString() + doubleCarriageReturn +
-                    "Devices Affected:" + Environment.NewLine + sqliteDataReader["Displayed_Software_Name"].ToString().Replace(",", Environment.NewLine);
+                    string descriptionCellValue = "Title: " + Environment.NewLine + sqliteDataReader["VulnerabilityTitle"].ToString() + doubleCarriageReturn +
+                    "Description: " + Environment.NewLine + sqliteDataReader["VulnerabilityDescription"].ToString() + doubleCarriageReturn +
+                    "Devices Affected:" + Environment.NewLine + sqliteDataReader["DisplayedSoftwareName"].ToString().Replace(",", Environment.NewLine);
 
                     WriteCellValue(
                         poamOpenXmlWriter,
                         LargeCellValueHandler(
                             descriptionCellValue,
-                            sqliteDataReader["Unique_vulnerability_Identifier"].ToString(),
-                            sqliteDataReader["Displayed_Software_Name"].ToString().Replace(",", Environment.NewLine),
+                            sqliteDataReader["UniqueVulnerabilityIdentifier"].ToString(),
+                            sqliteDataReader["DisplayedSoftwareName"].ToString().Replace(",", Environment.NewLine),
                             "Description"
                         ),
                         20);
                 }
                 else
                 {
-                    string descriptionCellValue = "Title: " + Environment.NewLine + sqliteDataReader["Vulnerability_Title"].ToString() + doubleCarriageReturn +
-                    "Description: " + Environment.NewLine + sqliteDataReader["Vulnerability_Description"].ToString() + doubleCarriageReturn +
+                    string descriptionCellValue = "Title: " + Environment.NewLine + sqliteDataReader["VulnerabilityTitle"].ToString() + doubleCarriageReturn +
+                    "Description: " + Environment.NewLine + sqliteDataReader["VulnerabilityDescription"].ToString() + doubleCarriageReturn +
                     "Devices Affected:" + Environment.NewLine + sqliteDataReader["IPs"].ToString().Replace(",", Environment.NewLine);
 
                     WriteCellValue(
                         poamOpenXmlWriter,
                         LargeCellValueHandler(
                             descriptionCellValue,
-                            sqliteDataReader["Unique_vulnerability_Identifier"].ToString(),
+                            sqliteDataReader["UniqueVulnerabilityIdentifier"].ToString(),
                             sqliteDataReader["IPs"].ToString().Replace(",", Environment.NewLine),
                             "Description"
                         ),
@@ -833,15 +833,15 @@ namespace Vulnerator.Model.BusinessLogic
                 else
                 { WriteCellValue(poamOpenXmlWriter, string.Empty, 24); }
                 WriteCellValue(poamOpenXmlWriter, ContactOrganization + ", " + ContactName + ", " + ContactNumber + ", " + ContactEmail, 20);
-                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Unique_Vulnerability_Identifier"].ToString(), 24);
-                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Raw_Risk"].ToString(), 24);
+                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["UniqueVulnerabilityIdentifier"].ToString(), 24);
+                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["RawRisk"].ToString(), 24);
                 string mitigationText = string.Empty;
                 if (true)
                 { mitigationText = sqliteDataReader["Comments"].ToString(); }
                 if (true)
                 {
                     if (string.IsNullOrWhiteSpace(mitigationText))
-                    { mitigationText = sqliteDataReader["Finding_Details"].ToString(); }
+                    { mitigationText = sqliteDataReader["FindingDetails"].ToString(); }
                     else
                     { mitigationText += doubleCarriageReturn + sqliteDataReader["FindingDetails"].ToString(); }
                 }
@@ -849,7 +849,7 @@ namespace Vulnerator.Model.BusinessLogic
                     poamOpenXmlWriter,
                     LargeCellValueHandler(
                         mitigationText,
-                        sqliteDataReader["Unique_Vulnerability_Identifier"].ToString(),
+                        sqliteDataReader["UniqueVulnerabilityIdentifier"].ToString(),
                         sqliteDataReader["IPs"].ToString().Replace(",", Environment.NewLine),
                         "Mitigation"
                     ),
@@ -859,8 +859,8 @@ namespace Vulnerator.Model.BusinessLogic
                 WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
                 WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
                 WriteCellValue(poamOpenXmlWriter, string.Empty, 20);
-                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Source_Name"].ToString() + " :: " +
-                        sqliteDataReader["Source_Version"].ToString() + "." + sqliteDataReader["Source_Release"].ToString(), 24);
+                WriteCellValue(poamOpenXmlWriter, sqliteDataReader["SourceName"].ToString() + " :: " +
+                        sqliteDataReader["SourceVersion"].ToString() + "." + sqliteDataReader["SourceRelease"].ToString(), 24);
                 WriteCellValue(poamOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24);
                 if (!string.IsNullOrWhiteSpace(sqliteDataReader["IPs"].ToString()))
                 { WriteCellValue(poamOpenXmlWriter, sqliteDataReader["IPs"].ToString().Replace(",", Environment.NewLine), 20); }
@@ -998,7 +998,7 @@ namespace Vulnerator.Model.BusinessLogic
                 WriteCellValue(rarOpenXmlWriter, "Threat Description" + Environment.NewLine + "(16e.1)", 26);
                 WriteCellValue(rarOpenXmlWriter, "Likelihood" + Environment.NewLine + "(Cells 16d.3 & 16e)" + Environment.NewLine + "(VL-VH)" + Environment.NewLine + "(16f)", 26);
                 WriteCellValue(rarOpenXmlWriter, "Impact" + Environment.NewLine + "(VL-VH)" + Environment.NewLine + "(16g)", 26);
-                WriteCellValue(rarOpenXmlWriter, "Impact Description"+ Environment.NewLine + "(16h)", 26);
+                WriteCellValue(rarOpenXmlWriter, "Impact Description" + Environment.NewLine + "(16h)", 26);
                 WriteCellValue(rarOpenXmlWriter, "Risk" + Environment.NewLine + "(Cells 16f & 16g)" + Environment.NewLine + "(VL-VH)" + Environment.NewLine + "(16i)", 26);
                 WriteCellValue(rarOpenXmlWriter, "Proposed Mitigations" + Environment.NewLine + "(From POA&M)" + Environment.NewLine + "(16j)", 26);
                 WriteCellValue(rarOpenXmlWriter, "Residual Risk" + Environment.NewLine + "(After Proposed Mitigations)" + Environment.NewLine + "(16k)", 26);
@@ -1083,19 +1083,19 @@ namespace Vulnerator.Model.BusinessLogic
                             sqliteDataReader["VulnId"].ToString(),
                             sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine),
                             "Mitigation"
-                        ), 
+                        ),
                         20);
                 }
                 WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
                 WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
                 WriteCellValue(
-                    rarOpenXmlWriter, 
+                    rarOpenXmlWriter,
                     LargeCellValueHandler(
                         sqliteDataReader["Description"].ToString(),
                         sqliteDataReader["VulnId"].ToString(),
                         sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine),
                         "Description"
-                    ), 
+                    ),
                     20);
                 WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
                 WriteCellValue(rarOpenXmlWriter, ConvertAcasSeverityToRmfImpact(sqliteDataReader["Impact"].ToString()), 24);
@@ -1106,7 +1106,7 @@ namespace Vulnerator.Model.BusinessLogic
                         sqliteDataReader["VulnId"].ToString(),
                         sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine),
                         "Description"
-                    ), 
+                    ),
                     20);
                 WriteCellValue(rarOpenXmlWriter, string.Empty, 24);
                 WriteCellValue(rarOpenXmlWriter, string.Empty, 20);
@@ -1246,16 +1246,16 @@ namespace Vulnerator.Model.BusinessLogic
                             WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["VulnTitle"].ToString(), 20);
                             WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["Impact"].ToString(), 24);
                             WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["RawRisk"].ToString(), 24);
-                            WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["HostName"].ToString(), 24);
+                            WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["DiscoveredHostName"].ToString(), 24);
                             WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["IpAddress"].ToString(), 24);
                             WriteCellValue(
-                                acasOutputOpenXmlWriter, 
+                                acasOutputOpenXmlWriter,
                                 LargeCellValueHandler(
                                     sqliteDataReader["RiskStatement"].ToString(),
                                     sqliteDataReader["VulnId"].ToString(),
                                     sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine),
                                     "Synopsis"
-                                ), 
+                                ),
                                 20);
                             WriteCellValue(
                                 acasOutputOpenXmlWriter,
@@ -1264,7 +1264,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     sqliteDataReader["VulnId"].ToString(),
                                     sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine),
                                     "Description"
-                                ), 
+                                ),
                                 20);
                             WriteCellValue(
                                 acasOutputOpenXmlWriter,
@@ -1273,7 +1273,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     sqliteDataReader["VulnId"].ToString(),
                                     sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine),
                                     "PluginOutput"
-                                ), 
+                                ),
                                 20);
                             WriteCellValue(
                                 acasOutputOpenXmlWriter,
@@ -1282,7 +1282,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     sqliteDataReader["VulnId"].ToString(),
                                     sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine),
                                     "FixText"
-                                ), 
+                                ),
                                 20);
                             WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["CrossReferences"].ToString(), 24);
                             WriteCellValue(acasOutputOpenXmlWriter, sqliteDataReader["CPEs"].ToString(), 24);
@@ -1448,7 +1448,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     sqliteDataReader["VulnId"].ToString(),
                                     sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine),
                                     "Description"
-                                ), 
+                                ),
                                 20);
                             WriteCellValue(
                                 stigDetailsOpenXmlWriter,
@@ -1457,7 +1457,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     sqliteDataReader["VulnId"].ToString(),
                                     sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine),
                                     "CheckContent"
-                                ), 
+                                ),
                                 20);
                             WriteCellValue(
                                 stigDetailsOpenXmlWriter,
@@ -1466,9 +1466,9 @@ namespace Vulnerator.Model.BusinessLogic
                                     sqliteDataReader["VulnId"].ToString(),
                                     sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine),
                                     "FixText"
-                                ), 
+                                ),
                                 20);
-                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["HostName"].ToString(), 24);
+                            WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["DiscoveredHostName"].ToString(), 24);
                             WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["IpAddress"].ToString(), 20);
                             WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["Status"].ToString(), 24);
                             WriteCellValue(
@@ -1478,7 +1478,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     sqliteDataReader["VulnId"].ToString(),
                                     sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine),
                                     "Comments"
-                                ), 
+                                ),
                                 20);
                             WriteCellValue(
                                 stigDetailsOpenXmlWriter,
@@ -1487,7 +1487,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     sqliteDataReader["VulnId"].ToString(),
                                     sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine),
                                     "FindingDetails"
-                                ), 
+                                ),
                                 20);
                             WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["FileName"].ToString(), 24);
                             WriteCellValue(stigDetailsOpenXmlWriter, sqliteDataReader["GroupName"].ToString(), 24);
@@ -1643,7 +1643,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     sqliteDataReader["VulnId"].ToString(),
                                     sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine),
                                     "Description"
-                                ), 
+                                ),
                                 20);
                             WriteCellValue(
                                 fprDetailsOpenXmlWriter,
@@ -1652,7 +1652,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     sqliteDataReader["VulnId"].ToString(),
                                     sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine),
                                     "RiskStatement"
-                                ), 
+                                ),
                                 20);
                             WriteCellValue(
                                 fprDetailsOpenXmlWriter,
@@ -1661,7 +1661,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     sqliteDataReader["VulnId"].ToString(),
                                     sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine),
                                     "FixText"
-                                ), 
+                                ),
                                 20);
                             WriteCellValue(
                                 fprDetailsOpenXmlWriter,
@@ -1670,7 +1670,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     sqliteDataReader["VulnId"].ToString(),
                                     sqliteDataReader["AssetIdToReport"].ToString().Replace(",", Environment.NewLine),
                                     "Comments"
-                                ), 
+                                ),
                                 20);
                             WriteCellValue(fprDetailsOpenXmlWriter, sqliteDataReader["NistControl"].ToString(), 24);
                             WriteCellValue(fprDetailsOpenXmlWriter, sqliteDataReader["AssetIdToReport"].ToString(), 24);
@@ -1830,7 +1830,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     discrepancy.VulnId,
                                     discrepancy.AssetId,
                                     "FindingDetails"
-                                ), 
+                                ),
                                 20);
                             WriteCellValue(discrepanciesOpenXmlWriter, discrepancy.FileName, 20);
                             WriteCellValue(discrepanciesOpenXmlWriter, item.FileName, 20);
@@ -1979,7 +1979,7 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
-                    sqliteCommand.CommandText = "SELECT DISTINCT Source, Version, Release, HostName, IpAddress, FileName " +
+                    sqliteCommand.CommandText = "SELECT DISTINCT Source, Version, Release, DiscoveredHostName, IpAddress, FileName " +
                         "FROM UniqueFinding NATURAL JOIN FileNames NATURAL JOIN Assets " +
                         "NATURAL JOIN VulnerabilitySources NATURAL JOIN FindingTypes " +
                         "WHERE FindingType = @FindingType ORDER BY Source, Version, Release;";
@@ -2108,7 +2108,7 @@ namespace Vulnerator.Model.BusinessLogic
                     WriteCellValue(testPlanOpenXmlWriter, sqliteDataReader["Source"].ToString(), 18);
                     WriteCellValue(testPlanOpenXmlWriter, sqliteDataReader["Version"].ToString(), 18);
                     WriteCellValue(testPlanOpenXmlWriter, sqliteDataReader["Release"].ToString(), 18);
-                    WriteCellValue(testPlanOpenXmlWriter, sqliteDataReader["HostName"].ToString(), 18);
+                    WriteCellValue(testPlanOpenXmlWriter, sqliteDataReader["DiscoveredHostName"].ToString(), 18);
                     WriteCellValue(testPlanOpenXmlWriter, sqliteDataReader["IpAddress"].ToString(), 18);
                     WriteCellValue(testPlanOpenXmlWriter, string.Empty, 18);
                     WriteCellValue(testPlanOpenXmlWriter, sqliteDataReader["FileName"].ToString(), 18);

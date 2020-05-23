@@ -24,7 +24,7 @@ namespace Vulnerator.Model.BusinessLogic
         private string dateTimeFormat = "MMM d, yyyy hh:mm:ss";
         private string acasVersion = string.Empty;
         private string acasRelease = string.Empty;
-        private string[] persistentParameters = new string[] { "Name", "Finding_Source_File_Name", "Source_Name" };
+        private string[] persistentParameters = new string[] { "Name", "FindingSourceFileName", "SourceName" };
         List<VulnerabilityReference> references = new List<VulnerabilityReference>();
         private DatabaseInterface databaseInterface = new DatabaseInterface();
 
@@ -53,7 +53,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
-                        sqliteCommand.Parameters["Finding_Type"].Value = "ACAS";
+                        sqliteCommand.Parameters["FindingType"].Value = "ACAS";
                         sqliteCommand.Parameters["Name"].Value = "All";
                         using (TextReader textReader = System.IO.File.OpenText(file.FilePath))
                         {
@@ -73,17 +73,17 @@ namespace Vulnerator.Model.BusinessLogic
                                     }
                                     csvReader.Read();
                                 }
-                                sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = csvReader.GetField("Plugin");
-                                sqliteCommand.Parameters["Vulnerability_Title"].Value = csvReader.GetField("Plugin Name");
-                                sqliteCommand.Parameters["Scan_IP"].Value = csvReader.GetField("IP Address");
-                                sqliteCommand.Parameters["Host_Name"].Value = csvReader.GetField("DNS Name");
-                                sqliteCommand.Parameters["Displayed_Host_Name"].Value = csvReader.GetField("DNS Name");
+                                sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value = csvReader.GetField("Plugin");
+                                sqliteCommand.Parameters["VulnerabilityTitle"].Value = csvReader.GetField("Plugin Name");
+                                sqliteCommand.Parameters["ScanIP"].Value = csvReader.GetField("IP Address");
+                                sqliteCommand.Parameters["DiscoveredHostName"].Value = csvReader.GetField("DNS Name");
+                                sqliteCommand.Parameters["DisplayedHostName"].Value = csvReader.GetField("DNS Name");
                                 sqliteCommand.Parameters["NetBIOS"].Value = csvReader.GetField("NetBIOS Name");
-                                sqliteCommand.Parameters["Risk_Statement"].Value = csvReader.GetField("Synopsis");
-                                sqliteCommand.Parameters["Vulnerability_Description"].Value = csvReader.GetField("Description");
-                                sqliteCommand.Parameters["Fix_Text"].Value = csvReader.GetField("Solution");
-                                sqliteCommand.Parameters["Raw_Risk"].Value = ConvertRiskFactorToRawRisk(csvReader.GetField("Risk Factor"));
-                                sqliteCommand.Parameters["Raw_Risk"].Value = csvReader.GetField("STIG Severity");
+                                sqliteCommand.Parameters["RiskStatement"].Value = csvReader.GetField("Synopsis");
+                                sqliteCommand.Parameters["VulnerabilityDescription"].Value = csvReader.GetField("Description");
+                                sqliteCommand.Parameters["FixText"].Value = csvReader.GetField("Solution");
+                                sqliteCommand.Parameters["RawRisk"].Value = ConvertRiskFactorToRawRisk(csvReader.GetField("Risk Factor"));
+                                sqliteCommand.Parameters["RawRisk"].Value = csvReader.GetField("STIG Severity");
                                 string crossReferences = csvReader.GetField("Cross References");
                                 if (!string.IsNullOrWhiteSpace(crossReferences))
                                 {
@@ -95,29 +95,29 @@ namespace Vulnerator.Model.BusinessLogic
                                     else
                                     { references.Add(SanitizeCrossReferences(crossReferences)); }
                                 }
-                                sqliteCommand.Parameters["Last_Observed"].Value = DateTime.Parse(csvReader.GetField("Last Observed")).ToShortDateString();
-                                sqliteCommand.Parameters["Modified_Date"].Value = csvReader.GetField("Plugin Modification Date");
-                                sqliteCommand.Parameters["CVSS_Temporal_Score"].Value = csvReader.GetField("CVSS Temporal Score");
-                                sqliteCommand.Parameters["CVSS_Base_Score"].Value = csvReader.GetField("CVSS Base Score");
+                                sqliteCommand.Parameters["LastObserved"].Value = DateTime.Parse(csvReader.GetField("Last Observed")).ToShortDateString();
+                                sqliteCommand.Parameters["ModifiedDate"].Value = csvReader.GetField("Plugin Modification Date");
+                                sqliteCommand.Parameters["CVSS_TemporalScore"].Value = csvReader.GetField("CVSS Temporal Score");
+                                sqliteCommand.Parameters["CVSS_BaseScore"].Value = csvReader.GetField("CVSS Base Score");
                                 if (!string.IsNullOrWhiteSpace(csvReader.GetField("CVSS Temporal Score")))
                                 {
-                                    sqliteCommand.Parameters["CVSS_Base_Vector"].Value = csvReader.GetField("CVSS Vector")
-                                        .Split( new string[] { "/E:" }, StringSplitOptions.None)[0];
-                                    sqliteCommand.Parameters["CVSS_Temporal_Vector"].Value = csvReader.GetField("CVSS Vector");
+                                    sqliteCommand.Parameters["CVSS_BaseVector"].Value = csvReader.GetField("CVSS Vector")
+                                        .Split(new string[] { "/E:" }, StringSplitOptions.None)[0];
+                                    sqliteCommand.Parameters["CVSS_TemporalVector"].Value = csvReader.GetField("CVSS Vector");
                                 }
                                 else
-                                { sqliteCommand.Parameters["CVSS_Base_Vector"].Value = csvReader.GetField("CVSS Vector"); }
-                                sqliteCommand.Parameters["Tool_Generated_Output"].Value = csvReader.GetField("Plugin Text")
+                                { sqliteCommand.Parameters["CVSS_BaseVector"].Value = csvReader.GetField("CVSS Vector"); }
+                                sqliteCommand.Parameters["ToolGeneratedOutput"].Value = csvReader.GetField("Plugin Text")
                                     .Replace("Plugin Output: ", string.Empty);
-                                if (sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString().Equals("19506"))
+                                if (sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value.ToString().Equals("19506"))
                                 { SetSourceInformation(sqliteCommand); }
                                 sqliteCommand.Parameters["Protocol"].Value = csvReader.GetField("Protocol");
                                 sqliteCommand.Parameters["Port"].Value = csvReader.GetField("Port");
                                 sqliteCommand.Parameters["VulnerabilityFamilyOrClass"].Value = csvReader.GetField("Family");
-                                sqliteCommand.Parameters["First_Discovered"].Value = DateTime.Parse(csvReader.GetField("First Discovered")).ToShortDateString();
-                                sqliteCommand.Parameters["Published_Date"].Value = DateTime.Parse(csvReader.GetField("Plugin Publication Date")).ToShortDateString();
-                                sqliteCommand.Parameters["Fix_Published_Date"].Value = DateTime.Parse(csvReader.GetField("Patch Publication Date")).ToShortDateString();
-                                sqliteCommand.Parameters["Vulnerability_Version"].Value = csvReader.GetField("Version");
+                                sqliteCommand.Parameters["FirstDiscovered"].Value = DateTime.Parse(csvReader.GetField("First Discovered")).ToShortDateString();
+                                sqliteCommand.Parameters["PublishedDate"].Value = DateTime.Parse(csvReader.GetField("Plugin Publication Date")).ToShortDateString();
+                                sqliteCommand.Parameters["FixPublishedDate"].Value = DateTime.Parse(csvReader.GetField("Patch Publication Date")).ToShortDateString();
+                                sqliteCommand.Parameters["VulnerabilityVersion"].Value = csvReader.GetField("Version");
                                 ParsePluginRevision(sqliteCommand);
                                 sqliteCommand.Parameters["MAC_Address"].Value = csvReader.GetField("MAC Address");
                                 PrepareVulnerabilitySource(sqliteCommand);
@@ -129,7 +129,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 databaseInterface.InsertAndMapMacAddress(sqliteCommand);
                                 if (Properties.Settings.Default.CaptureAcasEnumeratedSoftware)
                                 {
-                                    switch (sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value.ToString())
+                                    switch (sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value.ToString())
                                     {
                                         case "20811":
                                             {
@@ -155,7 +155,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     foreach (VulnerabilityReference reference in references)
                                     {
                                         sqliteCommand.Parameters["Reference"].Value = reference.Reference;
-                                        sqliteCommand.Parameters["Reference_Type"].Value = reference.ReferenceType;
+                                        sqliteCommand.Parameters["ReferenceType"].Value = reference.ReferenceType;
                                         databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand);
                                     }
                                 }
@@ -184,7 +184,7 @@ namespace Vulnerator.Model.BusinessLogic
         }
 
         private VulnerabilityReference SanitizeCrossReferences(string unsanitizedCrossReference)
-        { 
+        {
             try
             {
                 string referenceType = unsanitizedCrossReference.Split('#')[0].Trim();
@@ -203,17 +203,17 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 sqliteCommand.Parameters["Status"].Value = "Ongoing";
-                sqliteCommand.Parameters["Unique_Finding_ID"].Value = DBNull.Value;
+                sqliteCommand.Parameters["UniqueFinding_ID"].Value = DBNull.Value;
                 sqliteCommand.Parameters["Approval_Status"].Value = "Not Approved";
-                sqliteCommand.Parameters["Delta_Analysis_Required"].Value = "False";
-                sqliteCommand.Parameters["Finding_Type"].Value = "ACAS";
+                sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "False";
+                sqliteCommand.Parameters["FindingType"].Value = "ACAS";
                 databaseInterface.UpdateUniqueFinding(sqliteCommand);
                 databaseInterface.InsertUniqueFinding(sqliteCommand);
             }
             catch (Exception exception)
             {
                 LogWriter.LogError(
-                    $"Unable to create a uniqueFinding record for plugin '{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}'.");
+                    $"Unable to create a uniqueFinding record for plugin '{sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value}'.");
                 throw exception;
             }
         }
@@ -222,7 +222,7 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                string[] headersToVerify = new string[] 
+                string[] headersToVerify = new string[]
                 {
                     "Plugin", "Plugin Name", "IP Address", "DNS Name", "NetBIOS Name", "Synopsis", "Description", "Solution", "Risk Factor", "STIG Severity",
                     "Cross References", "Last Observed", "Plugin Modification Date", "CVSS Temporal Score", "CVSS Base Score", "CVSS Vector", "Plugin Text",
@@ -290,7 +290,7 @@ namespace Vulnerator.Model.BusinessLogic
                     Properties.Resources.RegexAcasWindowsSoftwareVersion,
                     Properties.Resources.RegexAcasSoftwareInstallDate
                 };
-                string rawOutput = sqliteCommand.Parameters["Tool_Generated_Output"].Value.ToString();
+                string rawOutput = sqliteCommand.Parameters["ToolGeneratedOutput"].Value.ToString();
                 using (StringReader stringReader = new StringReader(rawOutput))
                 {
                     string line;
@@ -310,33 +310,33 @@ namespace Vulnerator.Model.BusinessLogic
                                 case 0:
                                     {
                                         string name = SanitizeWindowsSoftwareName(regex.Match(line), "20811");
-                                        sqliteCommand.Parameters["Discovered_Software_Name"].Value = name;
-                                        sqliteCommand.Parameters["Displayed_Software_Name"].Value = name;
+                                        sqliteCommand.Parameters["DiscoveredSoftwareName"].Value = name;
+                                        sqliteCommand.Parameters["DisplayedSoftwareName"].Value = name;
                                         break;
                                     }
                                 case 1:
                                     {
-                                        sqliteCommand.Parameters["Software_Version"].Value = regex.Match(line).Value.Trim();
+                                        sqliteCommand.Parameters["SoftwareVersion"].Value = regex.Match(line).Value.Trim();
                                         break;
                                     }
                                 case 2:
                                     {
-                                        sqliteCommand.Parameters["Install_Date"].Value = regex.Match(line).Value.Trim();
+                                        sqliteCommand.Parameters["InstallDate"].Value = regex.Match(line).Value.Trim();
                                         break;
                                     }
                                 default:
                                     { break; }
                             }
                         }
-                        if (!string.IsNullOrWhiteSpace(sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString()))
+                        if (!string.IsNullOrWhiteSpace(sqliteCommand.Parameters["DiscoveredSoftwareName"].Value.ToString()))
                         {
                             sqliteCommand.Parameters["DADMS_ID"].Value = DBNull.Value;
-                            sqliteCommand.Parameters["ReportInAccreditation_Global"].Value = "False";
-                            sqliteCommand.Parameters["ApprovedForBaseline_Global"].Value = "False";
+                            sqliteCommand.Parameters["ReportInAccreditationGlobal"].Value = "False";
+                            sqliteCommand.Parameters["ApprovedForBaselineGlobal"].Value = "False";
                             databaseInterface.InsertSoftware(sqliteCommand);
                             databaseInterface.MapHardwareToSoftware(sqliteCommand);
                         }
-                        string[] parametersToClear = new string[] { "Discovered_Software_Name", "Displayed_Software_Name", "Software_Version", "Install_Date" };
+                        string[] parametersToClear = new string[] { "DiscoveredSoftwareName", "DisplayedSoftwareName", "SoftwareVersion", "InstallDate" };
                         foreach (string parameter in parametersToClear)
                         { sqliteCommand.Parameters[parameter].Value = string.Empty; }
                     }
@@ -345,7 +345,7 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 LogWriter.LogError(
-                    $"Unable to parse Windows software (Plugin 20811) for '{sqliteCommand.Parameters["Scan_IP"].Value.ToString()}'.");
+                    $"Unable to parse Windows software (Plugin 20811) for '{sqliteCommand.Parameters["ScanIP"].Value.ToString()}'.");
                 throw exception;
             }
         }
@@ -373,7 +373,7 @@ namespace Vulnerator.Model.BusinessLogic
                     };
                 }
 
-                string rawOutput = sqliteCommand.Parameters["Tool_Generated_Output"].Value.ToString();
+                string rawOutput = sqliteCommand.Parameters["ToolGeneratedOutput"].Value.ToString();
                 using (StringReader stringReader = new StringReader(rawOutput))
                 {
                     string line;
@@ -396,28 +396,28 @@ namespace Vulnerator.Model.BusinessLogic
                                 case 0:
                                     {
                                         string name = regex.Match(line).Value.Trim();
-                                        sqliteCommand.Parameters["Discovered_Software_Name"].Value = name;
-                                        sqliteCommand.Parameters["Displayed_Software_Name"].Value = name;
+                                        sqliteCommand.Parameters["DiscoveredSoftwareName"].Value = name;
+                                        sqliteCommand.Parameters["DisplayedSoftwareName"].Value = name;
                                         break;
                                     }
                                 case 1:
                                     {
-                                        sqliteCommand.Parameters["Software_Version"].Value = regex.Match(line).Value.Trim();
+                                        sqliteCommand.Parameters["SoftwareVersion"].Value = regex.Match(line).Value.Trim();
                                         break;
                                     }
                                 default:
                                     { break; }
                             }
                         }
-                        if (!string.IsNullOrWhiteSpace(sqliteCommand.Parameters["Discovered_Software_Name"].Value.ToString()))
+                        if (!string.IsNullOrWhiteSpace(sqliteCommand.Parameters["DiscoveredSoftwareName"].Value.ToString()))
                         {
                             sqliteCommand.Parameters["DADMS_ID"].Value = DBNull.Value;
-                            sqliteCommand.Parameters["ReportInAccreditation_Global"].Value = "False";
-                            sqliteCommand.Parameters["ApprovedForBaseline_Global"].Value = "False";
+                            sqliteCommand.Parameters["ReportInAccreditationGlobal"].Value = "False";
+                            sqliteCommand.Parameters["ApprovedForBaselineGlobal"].Value = "False";
                             databaseInterface.InsertSoftware(sqliteCommand);
                             databaseInterface.MapHardwareToSoftware(sqliteCommand);
                         }
-                        string[] parametersToClear = new string[] { "Discovered_Software_Name", "Displayed_Software_Name", "Software_Version", "Install_Date" };
+                        string[] parametersToClear = new string[] { "DiscoveredSoftwareName", "DisplayedSoftwareName", "SoftwareVersion", "InstallDate" };
                         foreach (string parameter in parametersToClear)
                         { sqliteCommand.Parameters[parameter].Value = string.Empty; }
                     }
@@ -426,7 +426,7 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 LogWriter.LogError(
-                    $"Unable to parse SSH software (Plugin 22869/29217) for '{sqliteCommand.Parameters["Scan_IP"].Value.ToString()}'.");
+                    $"Unable to parse SSH software (Plugin 22869/29217) for '{sqliteCommand.Parameters["ScanIP"].Value.ToString()}'.");
                 throw exception;
             }
         }
@@ -484,7 +484,7 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                StringReader stringReader = new StringReader(sqliteCommand.Parameters["Tool_Generated_Output"].Value.ToString());
+                StringReader stringReader = new StringReader(sqliteCommand.Parameters["ToolGeneratedOutput"].Value.ToString());
                 string line = string.Empty;
                 while (line != null)
                 {
@@ -515,24 +515,24 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Name", "Tenable Nessus Scanner"));
-                sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Secondary_Identifier", "Assured Compliance Assessment Solution (ACAS)"));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("SourceName", "Tenable Nessus Scanner"));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("SourceSecondaryIdentifier", "Assured Compliance Assessment Solution (ACAS)"));
                 if (!string.IsNullOrWhiteSpace(acasVersion))
-                { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Version", acasVersion)); }
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("SourceVersion", acasVersion)); }
                 else
-                { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Version", "Version Unknown")); }
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("SourceVersion", "Version Unknown")); }
                 if (!string.IsNullOrWhiteSpace(acasRelease))
-                { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", acasRelease)); }
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("SourceRelease", acasRelease)); }
                 else
-                { sqliteCommand.Parameters.Add(new SQLiteParameter("Source_Release", "Release Unknown")); }
+                { sqliteCommand.Parameters.Add(new SQLiteParameter("SourceRelease", "Release Unknown")); }
                 databaseInterface.InsertVulnerabilitySource(sqliteCommand);
-                if (!sqliteCommand.Parameters["Source_Version"].Value.ToString().Equals("Version Unknown"))
+                if (!sqliteCommand.Parameters["SourceVersion"].Value.ToString().Equals("Version Unknown"))
                 { databaseInterface.UpdateVulnerabilitySource(sqliteCommand); }
             }
             catch (Exception exception)
             {
                 LogWriter.LogError(
-                    $"Unable to insert source '{sqliteCommand.Parameters["Source_Name"].Value.ToString()} {sqliteCommand.Parameters["Source_Version"].Value.ToString()} {sqliteCommand.Parameters["Source_Release"].Value.ToString()}'.");
+                    $"Unable to insert source '{sqliteCommand.Parameters["SourceName"].Value.ToString()} {sqliteCommand.Parameters["SourceVersion"].Value.ToString()} {sqliteCommand.Parameters["SourceRelease"].Value.ToString()}'.");
                 throw exception;
             }
         }
@@ -541,17 +541,17 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                string pluginVersion = sqliteCommand.Parameters["Vulnerability_Version"].Value.ToString();
+                string pluginVersion = sqliteCommand.Parameters["VulnerabilityVersion"].Value.ToString();
                 pluginVersion = pluginVersion.Replace("$", string.Empty);
                 if (pluginVersion.Contains(":"))
                 { pluginVersion = pluginVersion.Split(':')[1]; }
                 pluginVersion = pluginVersion.Trim();
-                sqliteCommand.Parameters["Vulnerability_Version"].Value = pluginVersion;
+                sqliteCommand.Parameters["VulnerabilityVersion"].Value = pluginVersion;
             }
             catch (Exception exception)
             {
                 LogWriter.LogError(
-                    $"Unable to parse the version information for plugin '{sqliteCommand.Parameters["Vulnerability_Version"].Value.ToString()}'.");
+                    $"Unable to parse the version information for plugin '{sqliteCommand.Parameters["VulnerabilityVersion"].Value.ToString()}'.");
                 throw exception;
             }
         }

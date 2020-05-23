@@ -16,11 +16,11 @@ namespace Vulnerator.Model.Entity
 
         public long Hardware_ID { get; set; }
 
-        public long Finding_Source_File_ID { get; set; }
+        public long FindingSourceFile_ID { get; set; }
 
-        public long Vulnerability_Source_ID { get; set; }
+        public long VulnerabilitySource_ID { get; set; }
 
-        public DateTime Scan_Date { get; set; }
+        public DateTime ScanDate { get; set; }
 
         public virtual Hardware Hardware { get; set; }
 

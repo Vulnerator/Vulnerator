@@ -4,7 +4,7 @@ namespace Vulnerator.Model.Entity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    public partial class Hardware_PortsProtocols : INotifyPropertyChanged
+    public partial class HardwarePortsProtocols : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -24,10 +24,10 @@ namespace Vulnerator.Model.Entity
         [Key]
         [Column(Order = 2)]
         [StringLength(25)]
-        public string Discovered_Service { get; set; }
+        public string DiscoveredService { get; set; }
 
         [StringLength(50)]
-        public string Display_Service { get; set; }
+        public string DisplayService { get; set; }
 
         [StringLength(25)]
         public string Direction { get; set; }

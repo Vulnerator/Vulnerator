@@ -40,7 +40,7 @@ namespace Vulnerator.Model.DataAccess
                     }
                     sqliteTransaction.Commit();
                 }
-                
+
             }
             catch (Exception exception)
             {
@@ -368,9 +368,9 @@ namespace Vulnerator.Model.DataAccess
                 if (!sqliteCommand.Parameters.Contains("SupplementalGuidance"))
                 { sqliteCommand.Parameters.Add(new SQLiteParameter("SupplementalGuidance", string.Empty)); }
                 if (sqliteCommand.Parameters.Contains("Enhancement"))
-                { sqliteCommand.CommandText = "INSERT INTO NistControls VALUES (NULL, @Family, @Number, @Enhancement, @Title, @Text, @SupplementalGuidance, NULL);"; }
+                { sqliteCommand.CommandText = "INSERT INTO NIST_Controls VALUES (NULL, @Family, @Number, @Enhancement, @Title, @Text, @SupplementalGuidance, NULL);"; }
                 else
-                { sqliteCommand.CommandText = "INSERT INTO NistControls VALUES (NULL, @Family, @Number, NULL, @Title, @Text, @SupplementalGuidance, NULL);"; }
+                { sqliteCommand.CommandText = "INSERT INTO NIST_Controls VALUES (NULL, @Family, @Number, NULL, @Title, @Text, @SupplementalGuidance, NULL);"; }
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -407,18 +407,18 @@ namespace Vulnerator.Model.DataAccess
                     // Insert data into appropriate table
                     if (key.Contains("Confidentiality"))
                     {
-                        sqliteCommand.CommandText = "INSERT INTO NistControlsConfidentialityLevels VALUES " +
-                            "(@NIST_Control_ID, (SELECT Confidentiality_ID FROM ConfidentialityLevels WHERE Confidentiality_Level = @Level), @IsNss);";
+                        sqliteCommand.CommandText = "INSERT INTO NIST_ControlsConfidentialityLevels VALUES " +
+                            "(@NIST_Control_ID, (SELECT ConfidentialityLevel_ID FROM ConfidentialityLevels WHERE Confidentiality_Level = @Level), @IsNss);";
                     }
                     else if (key.Contains("Integrity"))
                     {
-                        sqliteCommand.CommandText = "INSERT INTO NistControlsIntegrityLevels VALUES " +
-                            "(@NIST_Control_ID, (SELECT Integrity_ID FROM IntegrityLevels WHERE Integrity_Level = @Level), @IsNss);";
+                        sqliteCommand.CommandText = "INSERT INTO NIST_ControlsIntegrityLevels VALUES " +
+                            "(@NIST_Control_ID, (SELECT IntegrityLevel_ID FROM IntegrityLevels WHERE Integrity_Level = @Level), @IsNss);";
                     }
                     else
                     {
-                        sqliteCommand.CommandText = "INSERT INTO NistControlsAvailabilityLevels VALUES " +
-                            "(@NIST_Control_ID, (SELECT Availability_ID FROM AvailabilityLevels WHERE Availability_Level = @Level), @IsNss);";
+                        sqliteCommand.CommandText = "INSERT INTO NIST_ControlsAvailabilityLevels VALUES " +
+                            "(@NIST_Control_ID, (SELECT AvailabilityLevel_ID FROM AvailabilityLevels WHERE Availability_Level = @Level), @IsNss);";
                     }
                     sqliteCommand.ExecuteNonQuery();
                     sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["IsNss"]);
@@ -484,13 +484,13 @@ namespace Vulnerator.Model.DataAccess
                                 if (sqliteCommand.Parameters.Contains("Enhancement"))
                                 {
                                     sqliteCommand.CommandText = "INSERT INTO NistControlsCCIs VALUES " +
-                                        "((SELECT NIST_Control_ID FROM NistControls WHERE Control_Family = @Family AND Control_Number = @Number AND Enhancement = @Enhancement), " +
+                                        "((SELECT NIST_Control_ID FROM NIST_Controls WHERE Control_Family = @Family AND Control_Number = @Number AND Enhancement = @Enhancement), " +
                                         "(SELECT CCI_ID FROM CCIs WHERE CCI = @CCI), @DoD_AP, @ControlIndicator, @ImplementationGuidance, @AP_Text);";
                                 }
                                 else
                                 {
                                     sqliteCommand.CommandText = "INSERT INTO NistControlsCCIs VALUES " +
-                                        "((SELECT NIST_Control_ID FROM NistControls WHERE Control_Family = @Family AND Control_Number = @Number AND Enhancement IS NULL), " +
+                                        "((SELECT NIST_Control_ID FROM NIST_Controls WHERE Control_Family = @Family AND Control_Number = @Number AND Enhancement IS NULL), " +
                                         "(SELECT CCI_ID FROM CCIs WHERE CCI = @CCI), @DoD_AP, @ControlIndicator, @ImplementationGuidance, @AP_Text);";
                                 }
                                 sqliteCommand.ExecuteNonQuery();
@@ -594,12 +594,12 @@ namespace Vulnerator.Model.DataAccess
                             {
                                 if (sqliteCommand.Parameters.Contains("Enhancement"))
                                 {
-                                    sqliteCommand.CommandText = "UPDATE NistControls SET Monitoring_Frequency = @Frequency WHERE Control_Family = @Family AND " +
+                                    sqliteCommand.CommandText = "UPDATE NIST_Controls SET Monitoring_Frequency = @Frequency WHERE Control_Family = @Family AND " +
                                         "Control_Number = @Number AND Enhancement = @Enhancement;";
                                 }
                                 else
                                 {
-                                    sqliteCommand.CommandText = "UPDATE NistControls SET Monitoring_Frequency = @Frequency WHERE Control_Family = @Family AND " +
+                                    sqliteCommand.CommandText = "UPDATE NIST_Controls SET Monitoring_Frequency = @Frequency WHERE Control_Family = @Family AND " +
                                         "Control_Number = @Number AND Enhancement IS NULL;";
                                 }
                                 sqliteCommand.ExecuteNonQuery();

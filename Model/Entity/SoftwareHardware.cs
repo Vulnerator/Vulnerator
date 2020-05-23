@@ -21,7 +21,7 @@ namespace Vulnerator.Model.Entity
 
         [Key]
         [Column(Order = 2)]
-        public DateTime Install_Date { get; set; }
+        public DateTime InstallDate { get; set; }
 
         [StringLength(5)]
         public string ReportInAccreditation { get; set; }

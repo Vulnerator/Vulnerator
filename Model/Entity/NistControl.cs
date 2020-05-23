@@ -12,11 +12,11 @@ namespace Vulnerator.Model.Entity
         public NistControl()
         {
             GroupsCCIs = new HashSet<GroupsCCIs>();
-            NistControlsAvailabilityLevels = new HashSet<NistControlsAvailabilityLevel>();
+            NIST_ControlsAvailabilityLevels = new HashSet<NistControlsAvailabilityLevel>();
             NistControlsCAAs = new HashSet<NistControlsCAA>();
             NistControlsCCIs = new HashSet<NistControlsCCI>();
-            NistControlsConfidentialityLevels = new HashSet<NistControlsConfidentialityLevel>();
-            NistControlsIntegrityLevels = new HashSet<NistControlsIntegrityLevel>();
+            NIST_ControlsConfidentialityLevels = new HashSet<NistControlsConfidentialityLevel>();
+            NIST_ControlsIntegrityLevels = new HashSet<NistControlsIntegrityLevel>();
             IATA_Standards = new HashSet<IATA_Standards>();
             CommonControlPackages = new HashSet<CommonControlPackage>();
             ControlSets = new HashSet<ControlSet>();
@@ -54,7 +54,7 @@ namespace Vulnerator.Model.Entity
         public virtual ICollection<GroupsCCIs> GroupsCCIs { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NistControlsAvailabilityLevel> NistControlsAvailabilityLevels { get; set; }
+        public virtual ICollection<NistControlsAvailabilityLevel> NIST_ControlsAvailabilityLevels { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<NistControlsCAA> NistControlsCAAs { get; set; }
@@ -63,10 +63,10 @@ namespace Vulnerator.Model.Entity
         public virtual ICollection<NistControlsCCI> NistControlsCCIs { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NistControlsConfidentialityLevel> NistControlsConfidentialityLevels { get; set; }
+        public virtual ICollection<NistControlsConfidentialityLevel> NIST_ControlsConfidentialityLevels { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NistControlsIntegrityLevel> NistControlsIntegrityLevels { get; set; }
+        public virtual ICollection<NistControlsIntegrityLevel> NIST_ControlsIntegrityLevels { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<IATA_Standards> IATA_Standards { get; set; }

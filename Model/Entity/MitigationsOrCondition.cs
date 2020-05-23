@@ -24,22 +24,22 @@ namespace Vulnerator.Model.Entity
         public virtual Vulnerability Vulnerability { get; set; }
 
         [StringLength(2000)]
-        public string Impact_Description { get; set; }
+        public string ImpactDescription { get; set; }
 
         [StringLength(2000)]
-        public string Predisposing_Conditions { get; set; }
+        public string PredisposingConditions { get; set; }
 
         [StringLength(2000)]
-        public string Technical_Mitigation { get; set; }
+        public string TechnicalMitigation { get; set; }
 
         [StringLength(2000)]
-        public string Proposed_Mitigation { get; set; }
+        public string ProposedMitigation { get; set; }
 
         [StringLength(10)]
-        public string Threat_Relevance { get; set; }
+        public string ThreatRelevance { get; set; }
 
         [StringLength(10)]
-        public string Severity_Pervasiveness { get; set; }
+        public string SeverityPervasiveness { get; set; }
 
         [StringLength(10)]
         public string Likelihood { get; set; }
@@ -51,19 +51,19 @@ namespace Vulnerator.Model.Entity
         public string Risk { get; set; }
 
         [StringLength(10)]
-        public string Residual_Risk { get; set; }
+        public string ResidualRisk { get; set; }
 
         [StringLength(10)]
-        public string Residual_Risk_After_Proposed { get; set; }
+        public string ResidualRiskAfterProposed { get; set; }
 
         [StringLength(25)]
-        public string Mitigated_Status { get; set; }
+        public string MitigatedStatus { get; set; }
 
-        public string Approval_Date { get; set; }
+        public string ApprovalDate { get; set; }
 
-        public string Estimated_Completion_Date { get; set; }
+        public string EstimatedCompletionDate { get; set; }
 
-        public string Expiration_Date { get; set; }
+        public string ExpirationDate { get; set; }
 
         [StringLength(5)]
         public string IsApproved { get; set; }

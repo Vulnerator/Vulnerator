@@ -16,7 +16,7 @@ namespace Vulnerator.Model.Entity
         [Key]
         [Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long Integrity_ID { get; set; }
+        public long IntegrityLevel_ID { get; set; }
 
         [Key]
         [Column(Order = 2)]

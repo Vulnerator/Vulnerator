@@ -9,7 +9,7 @@ namespace Vulnerator.Model.Entity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ControlSet()
-        { NistControls = new ObservableCollection<NistControl>(); }
+        { NIST_Controls = new ObservableCollection<NistControl>(); }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -21,6 +21,6 @@ namespace Vulnerator.Model.Entity
         public string ControlSet1 { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NistControl> NistControls { get; set; }
+        public virtual ICollection<NistControl> NIST_Controls { get; set; }
     }
 }

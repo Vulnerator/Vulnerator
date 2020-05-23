@@ -28,7 +28,7 @@ namespace Vulnerator.Model.BusinessLogic
         private string classification = string.Empty;
         private List<string> ccis = new List<string>();
         private string[] persistentParameters = new string[] {
-            "Name", "Finding_Source_File_Name", "Source_Name", "Source_Version", "Source_Release", "Host_Name", "Scan_IP", "FQDN", "NetBIOS", "Finding_Type"
+            "Name", "FindingSourceFileName", "SourceName", "SourceVersion", "SourceRelease", "DiscoveredHostName", "ScanIP", "FQDN", "NetBIOS", "FindingType"
         };
 
         /// <summary>
@@ -124,8 +124,8 @@ namespace Vulnerator.Model.BusinessLogic
                                     string hostName = xmlReader.ObtainCurrentNodeValue(true);
                                     if (!string.IsNullOrWhiteSpace(hostName) && !hostName.Equals("HOST NAME"))
                                     {
-                                        sqliteCommand.Parameters["Host_Name"].Value = hostName;
-                                        sqliteCommand.Parameters["Displayed_Host_Name"].Value = hostName;
+                                        sqliteCommand.Parameters["DiscoveredHostName"].Value = hostName;
+                                        sqliteCommand.Parameters["DisplayedHostName"].Value = hostName;
                                     }
                                     break;
                                 }
@@ -165,7 +165,7 @@ namespace Vulnerator.Model.BusinessLogic
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ASSET"))
                     {
-                        sqliteCommand.Parameters["Is_Virtual_Server"].Value = "False";
+                        sqliteCommand.Parameters["IsVirtualServer"].Value = "False";
                         databaseInterface.InsertHardware(sqliteCommand);
                         if (!string.IsNullOrWhiteSpace(ip) && !ip.Equals("IP"))
                         { ParseIpAndMacAddress(sqliteCommand, ip); }
@@ -253,7 +253,7 @@ namespace Vulnerator.Model.BusinessLogic
                 {
                     string sourceName = xmlReader.ObtainCurrentNodeValue(true).Replace('_', ' ');
                     sourceName = sourceName.ToSanitizedSource();
-                    sqliteCommand.Parameters["Source_Name"].Value = sourceName;
+                    sqliteCommand.Parameters["SourceName"].Value = sourceName;
                     databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                 }
                 else
@@ -269,36 +269,36 @@ namespace Vulnerator.Model.BusinessLogic
                                     {
                                         string sourceName = ObtainStigInfoSubNodeValue(xmlReader).Replace('_', ' ');
                                         sourceName = sourceName.ToSanitizedSource();
-                                        sqliteCommand.Parameters["Source_Name"].Value = sourceName;
+                                        sqliteCommand.Parameters["SourceName"].Value = sourceName;
                                         break;
                                     }
                                 case "version":
                                     {
-                                        sqliteCommand.Parameters["Source_Version"].Value = ObtainStigInfoSubNodeValue(xmlReader);
+                                        sqliteCommand.Parameters["SourceVersion"].Value = ObtainStigInfoSubNodeValue(xmlReader);
                                         break;
                                     }
                                 case "releaseinfo":
                                     {
                                         string release = ObtainStigInfoSubNodeValue(xmlReader);
                                         if (release.Contains(" "))
-                                        { sqliteCommand.Parameters["Source_Release"].Value = release.Split(' ')[1]; }
+                                        { sqliteCommand.Parameters["SourceRelease"].Value = release.Split(' ')[1]; }
                                         else
-                                        { sqliteCommand.Parameters["Source_Release"].Value = release; }
+                                        { sqliteCommand.Parameters["SourceRelease"].Value = release; }
                                         break;
                                     }
                                 case "stigid":
                                     {
-                                        sqliteCommand.Parameters["Source_Secondary_Identifier"].Value = ObtainStigInfoSubNodeValue(xmlReader);
+                                        sqliteCommand.Parameters["SourceSecondaryIdentifier"].Value = ObtainStigInfoSubNodeValue(xmlReader);
                                         break;
                                     }
                                 case "description":
                                     {
-                                        sqliteCommand.Parameters["Source_Description"].Value = ObtainStigInfoSubNodeValue(xmlReader);
+                                        sqliteCommand.Parameters["SourceDescription"].Value = ObtainStigInfoSubNodeValue(xmlReader);
                                         break;
                                     }
                                 case "filename":
                                     {
-                                        sqliteCommand.Parameters["Vulnerability_Source_File_Name"].Value = ObtainStigInfoSubNodeValue(xmlReader);
+                                        sqliteCommand.Parameters["VulnerabilitySourceFileName"].Value = ObtainStigInfoSubNodeValue(xmlReader);
                                         break;
                                     }
                                 default:
@@ -326,7 +326,7 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                sqliteCommand.Parameters["Modified_Date"].Value = DateTime.Now.ToShortDateString();
+                sqliteCommand.Parameters["ModifiedDate"].Value = DateTime.Now.ToShortDateString();
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement() && xmlReader.Name.Equals("VULN_ATTRIBUTE"))
@@ -336,17 +336,17 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "Vuln_Num":
                                 {
-                                    sqliteCommand.Parameters["Vulnerability_Group_ID"].Value = ObtainAttributeDataNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["VulnerabilityGroup_ID"].Value = ObtainAttributeDataNodeValue(xmlReader);
                                     break;
                                 }
                             case "Severity":
                                 {
-                                    sqliteCommand.Parameters["Raw_Risk"].Value = ObtainAttributeDataNodeValue(xmlReader).ToRawRisk();
+                                    sqliteCommand.Parameters["RawRisk"].Value = ObtainAttributeDataNodeValue(xmlReader).ToRawRisk();
                                     break;
                                 }
                             case "Group_Title":
                                 {
-                                    sqliteCommand.Parameters["Vulnerability_Group_Title"].Value = ObtainAttributeDataNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["VulnerabilityGroup_Title"].Value = ObtainAttributeDataNodeValue(xmlReader);
                                     break;
                                 }
                             case "Rule_ID":
@@ -360,43 +360,43 @@ namespace Vulnerator.Model.BusinessLogic
                                         ruleRelease = rule.Split('r')[1];
                                         rule = rule.Split('r')[0];
                                     }
-                                    sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = rule;
-                                    sqliteCommand.Parameters["Vulnerability_Version"].Value = ruleRelease;
+                                    sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value = rule;
+                                    sqliteCommand.Parameters["VulnerabilityVersion"].Value = ruleRelease;
                                     break;
                                 }
                             case "Rule_Ver":
                                 {
-                                    sqliteCommand.Parameters["Secondary_Vulnerability_Identifier"].Value = ObtainAttributeDataNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["SecondaryVulnerabilityIdentifier"].Value = ObtainAttributeDataNodeValue(xmlReader);
                                     break;
                                 }
                             case "Rule_Title":
                                 {
-                                    sqliteCommand.Parameters["Vulnerability_Title"].Value = ObtainAttributeDataNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["VulnerabilityTitle"].Value = ObtainAttributeDataNodeValue(xmlReader);
                                     break;
                                 }
                             case "Vuln_Discuss":
                                 {
-                                    sqliteCommand.Parameters["Vulnerability_Description"].Value = ObtainAttributeDataNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["VulnerabilityDescription"].Value = ObtainAttributeDataNodeValue(xmlReader);
                                     break;
                                 }
-                            case "Check_Content":
+                            case "CheckContent":
                                 {
-                                    sqliteCommand.Parameters["Check_Content"].Value = ObtainAttributeDataNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["CheckContent"].Value = ObtainAttributeDataNodeValue(xmlReader);
                                     break;
                                 }
-                            case "Fix_Text":
+                            case "FixText":
                                 {
-                                    sqliteCommand.Parameters["Fix_Text"].Value = ObtainAttributeDataNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["FixText"].Value = ObtainAttributeDataNodeValue(xmlReader);
                                     break;
                                 }
-                            case "False_Positives":
+                            case "FalsePositives":
                                 {
-                                    sqliteCommand.Parameters["False_Positives"].Value = ObtainAttributeDataNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["FalsePositives"].Value = ObtainAttributeDataNodeValue(xmlReader);
                                     break;
                                 }
-                            case "False_Negatives":
+                            case "FalseNegatives":
                                 {
-                                    sqliteCommand.Parameters["False_Negatives"].Value = ObtainAttributeDataNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["FalseNegatives"].Value = ObtainAttributeDataNodeValue(xmlReader);
                                     break;
                                 }
                             case "Documentable":
@@ -409,28 +409,28 @@ namespace Vulnerator.Model.BusinessLogic
                                     sqliteCommand.Parameters["Mitigations"].Value = ObtainAttributeDataNodeValue(xmlReader);
                                     break;
                                 }
-                            case "Potential_Impacts":
+                            case "PotentialImpacts":
                                 {
-                                    sqliteCommand.Parameters["Potential_Impacts"].Value = ObtainAttributeDataNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["PotentialImpacts"].Value = ObtainAttributeDataNodeValue(xmlReader);
                                     break;
                                 }
-                            case "Third_Party_Tools":
+                            case "ThirdPartyTools":
                                 {
-                                    sqliteCommand.Parameters["Third_Party_Tools"].Value = ObtainAttributeDataNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["ThirdPartyTools"].Value = ObtainAttributeDataNodeValue(xmlReader);
                                     break;
                                 }
-                            case "Mitigation_Control":
+                            case "MitigationControl":
                                 {
-                                    sqliteCommand.Parameters["Mitigation_Control"].Value = ObtainAttributeDataNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["MitigationControl"].Value = ObtainAttributeDataNodeValue(xmlReader);
                                     break;
                                 }
                             case "Responsibility":
                                 {
                                     break;
                                 }
-                            case "Security_Override_Guidance":
+                            case "SecurityOverrideGuidance":
                                 {
-                                    sqliteCommand.Parameters["Security_Override_Guidance"].Value = ObtainAttributeDataNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["SecurityOverrideGuidance"].Value = ObtainAttributeDataNodeValue(xmlReader);
                                     break;
                                 }
                             case "CCI_REF":
@@ -466,7 +466,7 @@ namespace Vulnerator.Model.BusinessLogic
                             case "Existing Version Is Newer":
                                 {
                                     databaseInterface.UpdateVulnerabilityDates(sqliteCommand);
-                                    sqliteCommand.Parameters["Delta_Analysis_Required"].Value = "True";
+                                    sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "True";
                                     break;
                                 }
                             case "Identical Versions":
@@ -488,7 +488,7 @@ namespace Vulnerator.Model.BusinessLogic
                             }
                             ccis.Clear();
                         }
-                        
+
                         foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                         {
                             if (!persistentParameters.Contains(parameter.ParameterName))
@@ -522,13 +522,13 @@ namespace Vulnerator.Model.BusinessLogic
                                     string nodeValue = xmlReader.ObtainCurrentNodeValue(true);
                                     if (nodeValue.Contains("<cdf:"))
                                     {
-                                        sqliteCommand.Parameters["Tool_Generated_Output"].Value = nodeValue;
-                                        sqliteCommand.Parameters["Finding_Details"].Value = string.Empty;
+                                        sqliteCommand.Parameters["ToolGeneratedOutput"].Value = nodeValue;
+                                        sqliteCommand.Parameters["FindingDetails"].Value = string.Empty;
                                     }
                                     else
                                     {
-                                        sqliteCommand.Parameters["Finding_Details"].Value = nodeValue;
-                                        sqliteCommand.Parameters["Tool_Generated_Output"].Value = string.Empty;
+                                        sqliteCommand.Parameters["FindingDetails"].Value = nodeValue;
+                                        sqliteCommand.Parameters["ToolGeneratedOutput"].Value = string.Empty;
                                     }
                                     break;
                                 }
@@ -539,12 +539,12 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "SEVERITY_OVERRIDE":
                                 {
-                                    sqliteCommand.Parameters["Severity_Override"].Value = xmlReader.ObtainCurrentNodeValue(true);
+                                    sqliteCommand.Parameters["SeverityOverride"].Value = xmlReader.ObtainCurrentNodeValue(true);
                                     break;
                                 }
                             case "SEVERITY_JUSTIFICATION":
                                 {
-                                    sqliteCommand.Parameters["Severity_Override_Justification"].Value = xmlReader.ObtainCurrentNodeValue(true);
+                                    sqliteCommand.Parameters["SeverityOverrideJustification"].Value = xmlReader.ObtainCurrentNodeValue(true);
                                     break;
                                 }
                             default:
@@ -569,23 +569,23 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                sqliteCommand.Parameters["Technology_Area"].Value = techArea;
-                sqliteCommand.Parameters["Web_DB_Site"].Value = webDbSite;
-                sqliteCommand.Parameters["Web_DB_Instance"].Value = webDbInstance;
-                sqliteCommand.Parameters["Last_Observed"].Value = DateTime.Now.ToShortDateString();
-                if (string.IsNullOrWhiteSpace(sqliteCommand.Parameters["Delta_Analysis_Required"].Value.ToString()))
-                { sqliteCommand.Parameters["Delta_Analysis_Required"].Value = "False"; }
+                sqliteCommand.Parameters["TechnologyArea"].Value = techArea;
+                sqliteCommand.Parameters["WebDB_Site"].Value = webDbSite;
+                sqliteCommand.Parameters["WebDB_Instance"].Value = webDbInstance;
+                sqliteCommand.Parameters["LastObserved"].Value = DateTime.Now.ToShortDateString();
+                if (string.IsNullOrWhiteSpace(sqliteCommand.Parameters["DeltaAnalysisRequired"].Value.ToString()))
+                { sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "False"; }
                 sqliteCommand.Parameters["Approval_Status"].Value = "Not Approved";
-                sqliteCommand.Parameters["First_Discovered"].Value = DateTime.Now.ToShortDateString();
+                sqliteCommand.Parameters["FirstDiscovered"].Value = DateTime.Now.ToShortDateString();
                 sqliteCommand.Parameters["Classification"].Value = classification;
-                sqliteCommand.Parameters["Finding_Type"].Value = "CKL";
+                sqliteCommand.Parameters["FindingType"].Value = "CKL";
                 databaseInterface.UpdateUniqueFinding(sqliteCommand);
                 databaseInterface.InsertUniqueFinding(sqliteCommand);
             }
             catch (Exception exception)
             {
                 LogWriter.LogError(
-                    $"Unable to create a Unique Finding record for plugin '{sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value}'.");
+                    $"Unable to create a Unique Finding record for plugin '{sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value}'.");
                 throw exception;
             }
         }
@@ -664,7 +664,7 @@ namespace Vulnerator.Model.BusinessLogic
             webDbSite = string.Empty;
             webDbInstance = string.Empty;
             classification = string.Empty;
-    }
+        }
 
         public File ObtainIdentifiers(File file)
         {
@@ -702,7 +702,7 @@ namespace Vulnerator.Model.BusinessLogic
                         { break; }
                     }
                 }
-                bool hostname = IdentifierRequired("HostName", file);
+                bool hostname = IdentifierRequired("DiscoveredHostName", file);
                 bool ipAddress = IdentifierRequired("IpAddress", file);
                 bool macAddress = IdentifierRequired("MacAddress", file);
                 if (!hostname || !ipAddress || !macAddress)
@@ -722,7 +722,7 @@ namespace Vulnerator.Model.BusinessLogic
             bool value = true;
             switch (fieldName)
             {
-                case "HostName":
+                case "DiscoveredHostName":
                     {
                         if (Properties.Settings.Default.CklRequiresHostName)
                         {

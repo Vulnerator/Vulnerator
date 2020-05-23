@@ -13,10 +13,11 @@ namespace Vulnerator.Model.Entity
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long Finding_Type_ID { get; set; }
+        public long FindingType_ID { get; set; }
 
         [Required]
         [StringLength(25)]
+        [Column("FindingType")]
         public string Finding_Type { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

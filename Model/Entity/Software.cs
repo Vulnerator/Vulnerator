@@ -25,17 +25,17 @@ namespace Vulnerator.Model.Entity
 
         [Required]
         [StringLength(50)]
-        public string Discovered_Software_Name { get; set; }
+        public string DiscoveredSoftwareName { get; set; }
 
         [Required]
         [StringLength(100)]
-        public string Displayed_Software_Name { get; set; }
+        public string DisplayedSoftwareName { get; set; }
 
         [StringLength(25)]
-        public string Software_Acronym { get; set; }
+        public string SoftwareAcronym { get; set; }
 
         [StringLength(25)]
-        public string Software_Version { get; set; }
+        public string SoftwareVersion { get; set; }
 
         [StringLength(500)]
         public string Function { get; set; }
@@ -49,7 +49,7 @@ namespace Vulnerator.Model.Entity
         public DateTime? DADMS_LDA { get; set; }
 
         [StringLength(5)]
-        public string Has_Custom_Code { get; set; }
+        public string HasCustomCode { get; set; }
 
         [StringLength(5)]
         public string IaOrIa_Enabled { get; set; }
@@ -61,16 +61,16 @@ namespace Vulnerator.Model.Entity
         public string FAM_Accepted { get; set; }
 
         [StringLength(5)]
-        public string Externally_Authorized { get; set; }
+        public string ExternallyAuthorized { get; set; }
 
         [StringLength(5)]
-        public string ReportInAccreditation_Global { get; set; }
+        public string ReportInAccreditationGlobal { get; set; }
 
         [StringLength(5)]
-        public string ApprovedForBaseline_Global { get; set; }
+        public string ApprovedForBaselineGlobal { get; set; }
 
         [StringLength(50)]
-        public string BaselineApprover_Global { get; set; }
+        public string BaselineApproverGlobal { get; set; }
 
         [StringLength(25)]
         public string Instance { get; set; }

@@ -374,9 +374,9 @@ CREATE TABLE Groups (
                         Accreditation_eMASS_ID NVARCHAR (25),
                         IsPlatform NVARCHAR (5),
                         Organization_ID INTEGER,
-                        Confidentiality_ID INTEGER,
-                        Integrity_ID INTEGER,
-                        Availability_ID INTEGER,
+                        ConfidentialityLevel_ID INTEGER,
+                        IntegrityLevel_ID INTEGER,
+                        AvailabilityLevel_ID INTEGER,
                         SystemCategorization_ID INTEGER,
                         AccreditationVersion NVARCHAR (25),
                         CybersafeGrade CHAR (1),
@@ -388,9 +388,9 @@ CREATE TABLE Groups (
                         StepOneQuestionnaire_ID INTEGER,
                         SAP_ID INTEGER,
                         PIT_Determination_ID INTEGER,
-                        FOREIGN KEY (Confidentiality_ID) REFERENCES ConfidentialityLevels(ConfidentialityLevel_ID),
-                        FOREIGN KEY (Integrity_ID) REFERENCES IntegrityLevels(IntegrityLevel_ID),
-                        FOREIGN KEY (Availability_ID) REFERENCES AvailabilityLevels(AvailabilityLevel_ID),
+                        FOREIGN KEY (ConfidentialityLevel_ID) REFERENCES ConfidentialityLevels(ConfidentialityLevel_ID),
+                        FOREIGN KEY (IntegrityLevel_ID) REFERENCES IntegrityLevels(IntegrityLevel_ID),
+                        FOREIGN KEY (AvailabilityLevel_ID) REFERENCES AvailabilityLevels(AvailabilityLevel_ID),
                         FOREIGN KEY (SystemCategorization_ID) REFERENCES SystemCategorization(SystemCategorization_ID),
                         FOREIGN KEY (ControlSelection_ID) REFERENCES ControlSelection(ControlSelection_ID),
                         FOREIGN KEY (StepOneQuestionnaire_ID) REFERENCES StepOneQuestionnaire(StepOneQuestionnaire_ID),
@@ -480,7 +480,7 @@ CREATE TABLE GroupsContacts (
 CREATE TABLE Hardware (
                           Hardware_ID INTEGER PRIMARY KEY,
                           DisplayedHostName NVARCHAR (50),
-                          HostName NVARCHAR (50),
+                          DiscoveredHostName NVARCHAR (50),
                           FQDN NVARCHAR (100),
                           NetBIOS NVARCHAR (100),
                           ScanIP NVARCHAR (25),
@@ -496,7 +496,7 @@ CREATE TABLE Hardware (
                           LifecycleStatus_ID INTEGER,
                           OS NVARCHAR (100),
                           FOREIGN KEY (LifecycleStatus_ID) REFERENCES LifecycleStatuses(LifecycleStatus_ID),
-                          UNIQUE (ScanIP, HostName, FQDN, NetBIOS) ON CONFLICT IGNORE
+                          UNIQUE (ScanIP, DiscoveredHostName, FQDN, NetBIOS) ON CONFLICT IGNORE
 );
 
 CREATE TABLE HardwareMitigationsOrConditions (
@@ -518,7 +518,7 @@ CREATE TABLE HardwarePortsProtocols (
                                         BoundaryCrossed NVARCHAR (25),
                                         DoD_Compliant NVARCHAR (5),
                                         Classification NVARCHAR (25),
-                                        PRIMARY KEY (
+                                        UNIQUE (
                                                      Hardware_ID,
                                                      PortsProtocols_ID,
                                                      DiscoveredService
@@ -805,7 +805,8 @@ CREATE TABLE NIST_ControlsCAAs (
 );
 
 CREATE TABLE NIST_ControlsConfidentialityLevels (
-                                                    NIST_Control_ID INTEGER PRIMARY KEY,
+                                                    NIST_ControlConfidentialityLevel_ID INTEGER PRIMARY KEY,
+                                                    NIST_Control_ID INTEGER NOT NULL,
                                                     ConfidentialityLevel_ID INTEGER NOT NULL,
                                                     NSS_Systems_Only NVARCHAR (10) NOT NULL,
                                                     UNIQUE (NIST_Control_ID, ConfidentialityLevel_ID) ON CONFLICT IGNORE,
@@ -836,6 +837,7 @@ CREATE TABLE NIST_ControlsIntegrityLevels (
                                               NIST_Control_ID INTEGER NOT NULL,
                                               IntegrityLevel_ID INTEGER NOT NULL,
                                               NSS_Systems_Only NVARCHAR (10) NOT NULL,
+                                              UNIQUE (NIST_Control_ID, IntegrityLevel_ID) ON CONFLICT IGNORE,
                                               FOREIGN KEY (NIST_Control_ID) REFERENCES NIST_Controls(NIST_Control_ID),
                                               FOREIGN KEY (IntegrityLevel_ID) REFERENCES IntegrityLevels(IntegrityLevel_ID)
 );
@@ -1419,10 +1421,10 @@ CREATE TABLE VulnerabilitiesRoleResponsibilities (
 CREATE TABLE VulnerabilitiesVulnerabilitySources (
                                                      VulnerabilityVulnerabilitySource_ID INTEGER PRIMARY KEY,
                                                      Vulnerability_ID INTEGER NOT NULL,
-                                                     Vulnerability_Source_ID INTEGER NOT NULL,
-                                                     UNIQUE (Vulnerability_ID, Vulnerability_Source_ID) ON CONFLICT IGNORE,
+                                                     VulnerabilitySource_ID INTEGER NOT NULL,
+                                                     UNIQUE (Vulnerability_ID, VulnerabilitySource_ID) ON CONFLICT IGNORE,
                                                      FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID),
-                                                     FOREIGN KEY (Vulnerability_Source_ID) REFERENCES VulnerabilitySources(VulnerabilitySource_ID)
+                                                     FOREIGN KEY (VulnerabilitySource_ID) REFERENCES VulnerabilitySources(VulnerabilitySource_ID)
 );
 
 CREATE TABLE VulnerabilitiesVulnerabilityReferences (
@@ -1437,8 +1439,8 @@ CREATE TABLE VulnerabilitiesVulnerabilityReferences (
 CREATE TABLE VulnerabilityReferences (
                                          Reference_ID INTEGER PRIMARY KEY,
                                          Reference NVARCHAR (50),
-                                         Reference_Type NVARCHAR (10),
-                                         UNIQUE (Reference, Reference_Type) ON CONFLICT IGNORE
+                                         ReferenceType NVARCHAR (10),
+                                         UNIQUE (Reference, ReferenceType) ON CONFLICT IGNORE
 );
 
 CREATE TABLE VulnerabilitySources (

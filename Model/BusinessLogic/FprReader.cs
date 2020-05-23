@@ -22,8 +22,8 @@ namespace Vulnerator.Model.BusinessLogic
         private DatabaseInterface databaseInterface = new DatabaseInterface();
         private List<FprVulnerability> fprVulnerabilityList = new List<FprVulnerability>();
         string[] persistentParameters = new string[] {
-            "Source_Name", "Source_Version", "Discovered_Software_Name", "Displayed_Software_Name", "Finding_Source_File_Name",
-            "Finding_Type", "First_Discovered", "Last_Observed"
+            "SourceName", "SourceVersion", "DiscoveredSoftwareName", "DisplayedSoftwareName", "FindingSourceFileName",
+            "FindingType", "FirstDiscovered", "LastObserved"
         };
 
         public string ReadFpr(Object.File file)
@@ -70,36 +70,36 @@ namespace Vulnerator.Model.BusinessLogic
                                 { ParseAuditXmlWithXmlReader(auditXml); }
                             }
                         }
-                        sqliteCommand.Parameters["Source_Name"].Value = "HPE Fortify SCA";
-                        sqliteCommand.Parameters["Source_Version"].Value = version;
-                        sqliteCommand.Parameters["Discovered_Software_Name"].Value = softwareName;
-                        sqliteCommand.Parameters["Displayed_Software_Name"].Value = softwareName;
-                        sqliteCommand.Parameters["Finding_Source_File_Name"].Value = file.FileName;
-                        sqliteCommand.Parameters["Finding_Type"].Value = "Fortify";
-                        sqliteCommand.Parameters["First_Discovered"].Value = firstDiscovered;
-                        sqliteCommand.Parameters["Last_Observed"].Value = lastObserved;
+                        sqliteCommand.Parameters["SourceName"].Value = "HPE Fortify SCA";
+                        sqliteCommand.Parameters["SourceVersion"].Value = version;
+                        sqliteCommand.Parameters["DiscoveredSoftwareName"].Value = softwareName;
+                        sqliteCommand.Parameters["DisplayedSoftwareName"].Value = softwareName;
+                        sqliteCommand.Parameters["FindingSourceFileName"].Value = file.FileName;
+                        sqliteCommand.Parameters["FindingType"].Value = "Fortify";
+                        sqliteCommand.Parameters["FirstDiscovered"].Value = firstDiscovered;
+                        sqliteCommand.Parameters["LastObserved"].Value = lastObserved;
                         databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                         databaseInterface.InsertSoftware(sqliteCommand);
                         foreach (FprVulnerability fprVulnerability in fprVulnerabilityList)
                         {
-                            sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = fprVulnerability.ClassId;
-                            sqliteCommand.Parameters["Vulnerability_Group_Title"].Value = fprVulnerability.Kingdom;
+                            sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value = fprVulnerability.ClassId;
+                            sqliteCommand.Parameters["VulnerabilityGroup_Title"].Value = fprVulnerability.Kingdom;
                             sqliteCommand.Parameters["VulnerabilityFamilyOrClass"].Value = fprVulnerability.Type;
-                            sqliteCommand.Parameters["Vulnerability_Title"].Value = fprVulnerability.SubType;
-                            sqliteCommand.Parameters["Vulnerability_Description"].Value = fprVulnerability.Description;
-                            sqliteCommand.Parameters["Risk_Statement"].Value = fprVulnerability.RiskStatement;
-                            sqliteCommand.Parameters["Fix_Text"].Value = fprVulnerability.FixText;
-                            sqliteCommand.Parameters["Instance_Identifier"].Value = fprVulnerability.InstanceId;
-                            sqliteCommand.Parameters["Tool_Generated_Output"].Value = fprVulnerability.Output;
+                            sqliteCommand.Parameters["VulnerabilityTitle"].Value = fprVulnerability.SubType;
+                            sqliteCommand.Parameters["VulnerabilityDescription"].Value = fprVulnerability.Description;
+                            sqliteCommand.Parameters["RiskStatement"].Value = fprVulnerability.RiskStatement;
+                            sqliteCommand.Parameters["FixText"].Value = fprVulnerability.FixText;
+                            sqliteCommand.Parameters["InstanceIdentifier"].Value = fprVulnerability.InstanceId;
+                            sqliteCommand.Parameters["ToolGeneratedOutput"].Value = fprVulnerability.Output;
                             sqliteCommand.Parameters["Status"].Value = fprVulnerability.Status;
                             sqliteCommand.Parameters["Comments"].Value = fprVulnerability.Comments;
                             databaseInterface.InsertVulnerability(sqliteCommand);
                             databaseInterface.MapVulnerabilityToSource(sqliteCommand);
                             databaseInterface.InsertUniqueFinding(sqliteCommand);
-                            foreach (Tuple<string,string> reference in fprVulnerability.References)
+                            foreach (Tuple<string, string> reference in fprVulnerability.References)
                             {
                                 sqliteCommand.Parameters.Add(new SQLiteParameter("Reference", reference.Item2));
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("Reference_Type", reference.Item1));
+                                sqliteCommand.Parameters.Add(new SQLiteParameter("ReferenceType", reference.Item1));
                                 databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand);
                             }
                             foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
@@ -313,7 +313,7 @@ namespace Vulnerator.Model.BusinessLogic
                         return;
                     }
                 }
-                
+
             }
             catch (Exception exception)
             {
@@ -333,7 +333,7 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private Tuple<string,string> SanitizeAndParseAbstract(string unsanitizedAbstract)
+        private Tuple<string, string> SanitizeAndParseAbstract(string unsanitizedAbstract)
         {
             try
             {
@@ -762,46 +762,46 @@ namespace Vulnerator.Model.BusinessLogic
                 string[] parameters = new string[]
                 {
                     // Groups Table
-                    "Group_ID", "Name", "Is_Accreditation", "Accreditation_ID", "Organization_ID",
+                    "Group_ID", "Name", "IsAccreditation", "Accreditation_ID", "Organization_ID",
                     // FindingTypes Table
-                    "Finding_Type",
+                    "FindingType",
                     // Hardware Table
-                    "Hardware_ID", "Host_Name", "FQDN", "NetBIOS", "Is_Virtual_Server", "NIAP_Level", "Manufacturer", "ModelNumber",
-                    "Is_IA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID", "Scan_IP",
+                    "Hardware_ID", "DiscoveredHostName", "FQDN", "NetBIOS", "IsVirtualServer", "NIAP_Level", "Manufacturer", "ModelNumber",
+                    "IsIA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID", "ScanIP",
                     // IP_Addresses Table
                     "IP_Address_ID", "IP_Address",
                     // MAC_Addresses Table
                     "MAC_Address_ID", "MAC_Address",
                     // Software Table
-                    "Software_ID", "Discovered_Software_Name", "Displayed_Software_Name", "Software_Acronym", "Software_Version",
-                    "Function", "Install_Date", "DADMS_ID", "DADMS_Disposition", "DADMS_LDA", "Has_Custom_Code", "IaOrIa_Enabled",
-                    "Is_OS_Or_Firmware", "FAM_Accepted", "Externally_Authorized", "ReportInAccreditation_Global",
-                    "ApprovedForBaseline_Global", "BaselineApprover_Global", "Instance",
+                    "Software_ID", "DiscoveredSoftwareName", "DisplayedSoftwareName", "SoftwareAcronym", "SoftwareVersion",
+                    "Function", "InstallDate", "DADMS_ID", "DADMS_Disposition", "DADMS_LDA", "HasCustomCode", "IaOrIa_Enabled",
+                    "Is_OS_Or_Firmware", "FAM_Accepted", "ExternallyAuthorized", "ReportInAccreditationGlobal",
+                    "ApprovedForBaselineGlobal", "BaselineApproverGlobal", "Instance",
                     // UniqueFindings Table
-                    "Unique_Finding_ID", "", "Tool_Generated_Output", "Comments", "Finding_Details", "Technical_Mitigation",
-                    "Proposed_Mitigation", "Predisposing_Conditions", "Impact", "Likelihood", "Severity", "Risk", "Residual_Risk",
-                    "First_Discovered", "Last_Observed", "Approval_Status", "Approval_Date", "Approval_Expiration_Date",
-                    "Delta_Analysis_Required", "Finding_Type_ID", "Finding_Source_ID", "Status", "Vulnerability_ID", "Hardware_ID",
-                    "Severity_Override", "Severity_Override_Justification", "Technology_Area", "Web_DB_Site", "Web_DB_Instance",
-                    "Classification", "CVSS_Environmental_Score", "CVSS_Environmental_Vector",
+                    "UniqueFinding_ID", "", "ToolGeneratedOutput", "Comments", "FindingDetails", "TechnicalMitigation",
+                    "ProposedMitigation", "PredisposingConditions", "Impact", "Likelihood", "Severity", "Risk", "ResidualRisk",
+                    "FirstDiscovered", "LastObserved", "Approval_Status", "ApprovalDate", "Approval_Expiration_Date",
+                    "DeltaAnalysisRequired", "FindingType_ID", "Finding_Source_ID", "Status", "Vulnerability_ID", "Hardware_ID",
+                    "SeverityOverride", "SeverityOverrideJustification", "TechnologyArea", "WebDB_Site", "WebDB_Instance",
+                    "Classification", "CVSS_EnvironmentalScore", "CVSS_EnvironmentalVector",
                     // UniqueFindingSourceFiles Table
-                    "Finding_Source_File_ID", "Finding_Source_File_Name", 
+                    "FindingSourceFile_ID", "FindingSourceFileName", 
                     // Vulnerabilities Table
-                    "Vulnerability_ID", "Instance_Identifier", "Unique_Vulnerability_Identifier", "Vulnerability_Group_ID", "Vulnerability_Group_Title",
-                    "Secondary_Vulnerability_Identifier", "VulnerabilityFamilyOrClass", "Vulnerability_Version", "Vulnerability_Release",
-                    "Vulnerability_Title", "Vulnerability_Description", "Risk_Statement", "Fix_Text", "Published_Date", "Modified_Date",
-                    "Fix_Published_Date", "Raw_Risk", "CVSS_Base_Score", "CVSS_Base_Vector", "CVSS_Temporal_Score", "CVSS_Temporal_Vector",
-                    "Check_Content", "False_Positives", "False_Negatives", "Documentable", "Mitigations", "Mitigation_Control",
-                    "Potential_Impacts", "Third_Party_Tools", "Security_Override_Guidance", "Overflow",
+                    "Vulnerability_ID", "InstanceIdentifier", "UniqueVulnerabilityIdentifier", "VulnerabilityGroup_ID", "VulnerabilityGroup_Title",
+                    "SecondaryVulnerabilityIdentifier", "VulnerabilityFamilyOrClass", "VulnerabilityVersion", "VulnerabilityRelease",
+                    "VulnerabilityTitle", "VulnerabilityDescription", "RiskStatement", "FixText", "PublishedDate", "ModifiedDate",
+                    "FixPublishedDate", "RawRisk", "CVSS_BaseScore", "CVSS_BaseVector", "CVSS_TemporalScore", "CVSS_TemporalVector",
+                    "CheckContent", "FalsePositives", "FalseNegatives", "Documentable", "Mitigations", "MitigationControl",
+                    "PotentialImpacts", "ThirdPartyTools", "SecurityOverrideGuidance", "Overflow",
                     // VulnerabilityReferences Table
-                    "Reference_ID", "Reference", "Reference_Type",
+                    "Reference_ID", "Reference", "ReferenceType",
                     // VulnerabilitySources Table
-                    "Vulnerability_Source_ID", "Source_Name", "Source_Secondary_Identifier", "Vulnerability_Source_File_Name",
-                    "Source_Description", "Source_Version", "Source_Release",
+                    "VulnerabilitySource_ID", "SourceName", "SourceSecondaryIdentifier", "VulnerabilitySourceFileName",
+                    "SourceDescription", "SourceVersion", "SourceRelease",
                     // CCI Table
                     "CCI",
                     // ScapScores Table
-                    "Score", "Scan_Date"
+                    "Score", "ScanDate"
                 };
                 foreach (string parameter in parameters)
                 { sqliteCommand.Parameters.Add(new SQLiteParameter(parameter, string.Empty)); }

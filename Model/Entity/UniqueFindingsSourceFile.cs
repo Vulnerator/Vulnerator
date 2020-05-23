@@ -16,11 +16,11 @@ namespace Vulnerator.Model.Entity
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long Finding_Source_File_ID { get; set; }
+        public long FindingSourceFile_ID { get; set; }
 
         [Required]
         [StringLength(500)]
-        public string Finding_Source_File_Name { get; set; }
+        public string FindingSourceFileName { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UniqueFinding> UniqueFindings { get; set; }

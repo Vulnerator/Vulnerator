@@ -3,7 +3,7 @@
     public class AssetOverviewLineItem
     {
         public string AssetToReport = string.Empty;
-        public string HostName = string.Empty;
+        public string DiscoveredHostName = string.Empty;
         public string IpAddress = string.Empty;
         public string FileName = string.Empty;
         public string Credentialed = string.Empty;
@@ -22,7 +22,7 @@
         { AssetToReport = assetToReport; }
 
         public void IncreaseCatIAndTotalCounts()
-        { 
+        {
             CatI++;
             Total++;
         }
