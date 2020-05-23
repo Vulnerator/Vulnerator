@@ -32,11 +32,11 @@ namespace Vulnerator.Model.Entity
         public string Acronym { get; set; }
 
         [Required]
-        public long Group_Tier { get; set; }
+        public long GroupTier { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string Is_Accreditation { get; set; }
+        public string IsAccreditation { get; set; }
 
         [StringLength(25)]
         public string Accreditation_eMASS_ID { get; set; }
@@ -46,11 +46,11 @@ namespace Vulnerator.Model.Entity
 
         public long? Organization_ID { get; set; }
 
-        public long? Confidentiality_ID { get; set; }
+        public long? ConfidentialityLevel_ID { get; set; }
 
-        public long? Integrity_ID { get; set; }
+        public long? IntegrityLevel_ID { get; set; }
 
-        public long? Availability_ID { get; set; }
+        public long? AvailabilityLevel_ID { get; set; }
 
         public long? SystemCategorization_ID { get; set; }
 

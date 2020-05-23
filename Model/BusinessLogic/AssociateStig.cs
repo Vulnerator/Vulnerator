@@ -29,7 +29,7 @@ namespace Vulnerator.Model.BusinessLogic
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         PrepareUniqueFinding(sqliteCommand);
                         sqliteCommand.Parameters["Hardware_ID"].Value = hardwareId;
-                        sqliteCommand.Parameters["Vulnerability_Source_ID"].Value = vulnerabilitySourceId;
+                        sqliteCommand.Parameters["VulnerabilitySource_ID"].Value = vulnerabilitySourceId;
                         List<string> vulnerabilities = databaseInterface.SelectUniqueVulnerabilityIdentifiersBySource(sqliteCommand);
                         databaseInterface.SelectHardware(sqliteCommand);
                         databaseInterface.InsertParsedFileSource(sqliteCommand);
@@ -37,7 +37,7 @@ namespace Vulnerator.Model.BusinessLogic
                         databaseInterface.MapHardwareToVulnerabilitySource(sqliteCommand);
                         foreach (string vulnerability in vulnerabilities)
                         {
-                            sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = vulnerability;
+                            sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value = vulnerability;
                             databaseInterface.UpdateUniqueFinding(sqliteCommand);
                             databaseInterface.InsertUniqueFinding(sqliteCommand);
                         }
@@ -62,13 +62,13 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 sqliteCommand.Parameters["Status"].Value = "Not Reviewed";
-                sqliteCommand.Parameters["Last_Observed"].Value = DateTime.Now.ToShortDateString();
-                sqliteCommand.Parameters["Delta_Analysis_Required"].Value = "False";
+                sqliteCommand.Parameters["LastObserved"].Value = DateTime.Now.ToShortDateString();
+                sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "False";
                 sqliteCommand.Parameters["Approval_Status"].Value = "Not Approved";
-                sqliteCommand.Parameters["First_Discovered"].Value = DateTime.Now.ToShortDateString();
+                sqliteCommand.Parameters["FirstDiscovered"].Value = DateTime.Now.ToShortDateString();
                 sqliteCommand.Parameters["Classification"].Value = "Unclassified";
-                sqliteCommand.Parameters["Finding_Type"].Value = "CKL";
-                sqliteCommand.Parameters["Finding_Source_File_Name"].Value =
+                sqliteCommand.Parameters["FindingType"].Value = "CKL";
+                sqliteCommand.Parameters["FindingSourceFileName"].Value =
                     $"Vulnerator Associated - {DateTime.Now.ToShortDateString()}";
             }
             catch (Exception exception)

@@ -164,7 +164,7 @@ namespace Vulnerator.ViewModel
                 _selectedGroup = value;
                 RaisePropertyChanged("SelectedGroup");
             }
-            
+
         }
 
         private Group _newGroup;
@@ -195,7 +195,7 @@ namespace Vulnerator.ViewModel
         }
 
         public ConfigurationManagementViewModel()
-        { 
+        {
             try
             {
                 LogWriter.LogStatusUpdate("Begin instantiation of ConfigurationManagementViewModel.");
@@ -236,13 +236,13 @@ namespace Vulnerator.ViewModel
                         .Include(h => h.MAC_Addresses)
                         .Include(h => h.Groups)
                         .Include(h => h.Contacts)
-                        .Include(h => h.Hardware_PortsProtocols.Select(p => p.PP))
+                        .Include(h => h.HardwarePortsProtocols.Select(p => p.PP))
                         .Include(h => h.VulnerabilitySources)
-                        .OrderBy(h => h.Displayed_Host_Name)
+                        .OrderBy(h => h.DisplayedHostName)
                         .AsNoTracking().ToList();
                     Softwares = databaseContext.Softwares
                         .Include(s => s.SoftwareHardwares.Select(h => h.Hardware))
-                        .OrderBy(s => s.Displayed_Software_Name)
+                        .OrderBy(s => s.DisplayedSoftwareName)
                         .AsNoTracking().ToList();
                     Contacts = databaseContext.Contacts
                         .Include(c => c.Groups)
@@ -253,14 +253,14 @@ namespace Vulnerator.ViewModel
                         .Include(c => c.Title)
                         .AsNoTracking().ToList();
                     PortsProtocols = databaseContext.PortsProtocols
-                        .Include(p => p.Hardware_PortsProtocols.Select(h => h.Hardware))
+                        .Include(p => p.HardwarePortsProtocols.Select(h => h.Hardware))
                         .AsNoTracking().ToList();
                     Groups = databaseContext.Groups
                         .Include(g => g.Hardwares)
                         .AsNoTracking().ToList();
                     VulnerabilitySources = databaseContext.VulnerabilitySources
-                        .Where(vs => !vs.Source_Name.Contains("Nessus"))
-                        .OrderBy(vs => vs.Source_Name)
+                        .Where(vs => !vs.SourceName.Contains("Nessus"))
+                        .OrderBy(vs => vs.SourceName)
                         .AsNoTracking().ToList();
                     IpAddresses = databaseContext.IP_Addresses
                         .OrderBy(i => i.IP_Address)
@@ -317,7 +317,7 @@ namespace Vulnerator.ViewModel
         }
 
         private void generateCklBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        { 
+        {
             try
             {
                 GuiFeedback guiFeedback = new GuiFeedback();
@@ -325,8 +325,8 @@ namespace Vulnerator.ViewModel
                 CklCreator cklCreator = new CklCreator();
                 cklCreator.CreateCklFromHardware(hardware, vulnerabilitySource, saveDirectory);
                 guiFeedback.SetFields(
-                    $"{vulnerabilitySource.Source_Name} CKL created for {hardware.Displayed_Host_Name}", 
-                    "Collapsed", 
+                    $"{vulnerabilitySource.SourceName} CKL created for {hardware.DisplayedHostName}",
+                    "Collapsed",
                     true);
                 Messenger.Default.Send(guiFeedback);
                 vulnerabilitySource = null;
@@ -342,7 +342,7 @@ namespace Vulnerator.ViewModel
         public RelayCommand AssociateStigToHardwareCommand => new RelayCommand(AssociateStigToHardware);
 
         private void AssociateStigToHardware()
-        { 
+        {
             try
             {
                 BackgroundWorker backgroundWorker = new BackgroundWorker();
@@ -358,19 +358,19 @@ namespace Vulnerator.ViewModel
         }
 
         private void associateStigToHardwareBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        { 
+        {
             try
             {
                 Hardware hardware = SelectedHardware as Hardware;
                 int hardwareId = int.Parse(hardware.Hardware_ID.ToString());
-                int vulnerabilitySourceId = int.Parse(SelectedVulnerabilitySource.Vulnerability_Source_ID.ToString());
+                int vulnerabilitySourceId = int.Parse(SelectedVulnerabilitySource.VulnerabilitySource_ID.ToString());
                 AssociateStig associateStig = new AssociateStig();
                 associateStig.ToHardware(vulnerabilitySourceId, hardwareId);
                 Messenger.Default.Send(new NotificationMessage<string>("ModelUpdate", "AllModels"), MessengerToken.ModelUpdated);
             }
             catch (Exception exception)
             {
-                LogWriter.LogError($"Unable to associate STIG '{SelectedVulnerabilitySource.Vulnerability_Source_File_Name}' to Hardware.");
+                LogWriter.LogError($"Unable to associate STIG '{SelectedVulnerabilitySource.VulnerabilitySourceFileName}' to Hardware.");
                 throw exception;
             }
         }
@@ -414,8 +414,8 @@ namespace Vulnerator.ViewModel
                         sqliteCommand.Parameters["Group_ID"].Value = SelectedGroup.Group_ID;
                         sqliteCommand.Parameters["Name"].Value = SelectedGroup.Name;
                         sqliteCommand.Parameters["Acronym"].Value = SelectedGroup.Acronym;
-                        sqliteCommand.Parameters["Group_Tier"].Value = SelectedGroup.Group_Tier;
-                        sqliteCommand.Parameters["Is_Accreditation"].Value = SelectedGroup.Is_Accreditation ?? "False";
+                        sqliteCommand.Parameters["GroupTier"].Value = SelectedGroup.GroupTier;
+                        sqliteCommand.Parameters["IsAccreditation"].Value = SelectedGroup.IsAccreditation ?? "False";
                         sqliteCommand.Parameters["Accreditation_eMASS_ID"].Value = SelectedGroup.Accreditation_eMASS_ID;
                         sqliteCommand.Parameters["IsPlatform"].Value = SelectedGroup.IsPlatform ?? "False";
                         databaseInterface.UpdateGroup(sqliteCommand);
@@ -450,8 +450,8 @@ namespace Vulnerator.ViewModel
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters["Name"].Value = NewGroup.Name;
                         sqliteCommand.Parameters["Acronym"].Value = NewGroup.Acronym;
-                        sqliteCommand.Parameters["Group_Tier"].Value = NewGroup.Group_Tier;
-                        sqliteCommand.Parameters["Is_Accreditation"].Value = NewGroup.Is_Accreditation ?? "False";
+                        sqliteCommand.Parameters["GroupTier"].Value = NewGroup.GroupTier;
+                        sqliteCommand.Parameters["IsAccreditation"].Value = NewGroup.IsAccreditation ?? "False";
                         sqliteCommand.Parameters["Accreditation_eMASS_ID"].Value = NewGroup.Accreditation_eMASS_ID;
                         sqliteCommand.Parameters["IsPlatform"].Value = NewGroup.IsPlatform ?? "False";
                         databaseInterface.InsertGroup(sqliteCommand);

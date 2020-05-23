@@ -12,7 +12,7 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Hardware()
         {
-            Hardware_PortsProtocols = new ObservableCollection<Hardware_PortsProtocols>();
+            HardwarePortsProtocols = new ObservableCollection<HardwarePortsProtocols>();
             HardwareLocations = new ObservableCollection<HardwareLocation>();
             ScapScores = new ObservableCollection<ScapScore>();
             SoftwareHardwares = new ObservableCollection<SoftwareHardware>();
@@ -32,10 +32,10 @@ namespace Vulnerator.Model.Entity
         public long Hardware_ID { get; set; }
 
         [StringLength(50)]
-        public string Displayed_Host_Name { get; set; }
+        public string DisplayedHostName { get; set; }
 
         [StringLength(50)]
-        public string Host_Name { get; set; }
+        public string DiscoveredHostName { get; set; }
 
         [StringLength(100)]
         public string FQDN { get; set; }
@@ -44,16 +44,16 @@ namespace Vulnerator.Model.Entity
         public string NetBIOS { get; set; }
 
         [StringLength(25)]
-        public string Scan_IP { get; set; }
+        public string ScanIP { get; set; }
 
         [StringLength(5)]
-        public string Found_21745 { get; set; }
+        public string Found21745 { get; set; }
 
         [StringLength(5)]
-        public string Found_26917 { get; set; }
+        public string Found26917 { get; set; }
 
         [StringLength(5)]
-        public string Is_Virtual_Server { get; set; }
+        public string IsVirtualServer { get; set; }
 
         [StringLength(25)]
         public string NIAP_Level { get; set; }
@@ -65,7 +65,7 @@ namespace Vulnerator.Model.Entity
         public string ModelNumber { get; set; }
 
         [StringLength(5)]
-        public string Is_IA_Enabled { get; set; }
+        public string IsIA_Enabled { get; set; }
 
         [StringLength(50)]
         public string SerialNumber { get; set; }
@@ -81,7 +81,7 @@ namespace Vulnerator.Model.Entity
         public virtual LifecycleStatus LifecycleStatus { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Hardware_PortsProtocols> Hardware_PortsProtocols { get; set; }
+        public virtual ICollection<HardwarePortsProtocols> HardwarePortsProtocols { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<HardwareLocation> HardwareLocations { get; set; }

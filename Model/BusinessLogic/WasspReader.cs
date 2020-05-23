@@ -38,7 +38,7 @@ namespace Vulnerator.Model.BusinessLogic
                 {
                     ParseWasspWithXmlReader(wasspFile, file);
                     System.IO.File.Delete(wasspFile);
-                    return "Processed"; 
+                    return "Processed";
                 }
             }
             catch (Exception exception)
@@ -61,9 +61,9 @@ namespace Vulnerator.Model.BusinessLogic
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
-                        sqliteCommand.Parameters["Finding_Type"].Value = "WASSP";
+                        sqliteCommand.Parameters["FindingType"].Value = "WASSP";
                         sqliteCommand.Parameters["Name"].Value = "All";
-                        sqliteCommand.Parameters["Source_Name"].Value = "Windows Automated Security Scanning Program (WASSP)";
+                        sqliteCommand.Parameters["SourceName"].Value = "Windows Automated Security Scanning Program (WASSP)";
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         using (XmlReader xmlReader = XmlReader.Create(wasspFile, xmlReaderSettings))
                         {
@@ -79,30 +79,30 @@ namespace Vulnerator.Model.BusinessLogic
                                             {
                                                 case "MachineInfo":
                                                     {
-                                                        sqliteCommand.Parameters["Host_Name"].Value = ObtainItemValue(xmlReader);
+                                                        sqliteCommand.Parameters["DiscoveredHostName"].Value = ObtainItemValue(xmlReader);
                                                         break;
                                                     }
                                                 case "TestInfo":
                                                     {
-                                                        sqliteCommand.Parameters["Unique_Vulnerability_Identifier"].Value = ObtainItemValue(xmlReader);
+                                                        sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value = ObtainItemValue(xmlReader);
                                                         break;
                                                     }
                                                 case "DateInfo":
                                                     {
                                                         string dateTime = ObtainItemValue(xmlReader).Replace("\n", string.Empty);
-                                                        sqliteCommand.Parameters["First_Discovered"].Value = DateTime.ParseExact(
+                                                        sqliteCommand.Parameters["FirstDiscovered"].Value = DateTime.ParseExact(
                                                             dateTime, "ddd MMM dd HH:mm:ss yyyy", CultureInfo.InvariantCulture).ToShortDateString();
-                                                        sqliteCommand.Parameters["Last_Observed"].Value = sqliteCommand.Parameters["First_Discovered"].Value;
+                                                        sqliteCommand.Parameters["LastObserved"].Value = sqliteCommand.Parameters["FirstDiscovered"].Value;
                                                         break;
                                                     }
                                                 case "ValueInfo":
                                                     {
-                                                        sqliteCommand.Parameters["Vulnerability_Title"].Value = ObtainItemValue(xmlReader);
+                                                        sqliteCommand.Parameters["VulnerabilityTitle"].Value = ObtainItemValue(xmlReader);
                                                         break;
                                                     }
                                                 case "DescriptionInfo":
                                                     {
-                                                        sqliteCommand.Parameters["Vulnerability_Description"].Value = ObtainItemValue(xmlReader);
+                                                        sqliteCommand.Parameters["VulnerabilityDescription"].Value = ObtainItemValue(xmlReader);
                                                         break;
                                                     }
                                                 case "TestRes":
@@ -112,12 +112,12 @@ namespace Vulnerator.Model.BusinessLogic
                                                     }
                                                 case "VulnInfo":
                                                     {
-                                                        sqliteCommand.Parameters["Raw_Risk"].Value = ObtainItemValue(xmlReader).ToRawRisk();
+                                                        sqliteCommand.Parameters["RawRisk"].Value = ObtainItemValue(xmlReader).ToRawRisk();
                                                         break;
                                                     }
                                                 case "RecInfo":
                                                     {
-                                                        sqliteCommand.Parameters["Fix_Text"].Value = ObtainItemValue(xmlReader);
+                                                        sqliteCommand.Parameters["FixText"].Value = ObtainItemValue(xmlReader);
                                                         break;
                                                     }
                                                 default:

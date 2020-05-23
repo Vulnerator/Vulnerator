@@ -16,31 +16,31 @@ namespace Vulnerator.Model.Entity
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long Unique_Finding_ID { get; set; }
+        public long UniqueFinding_ID { get; set; }
 
         [StringLength(50)]
-        public string Instance_Identifier { get; set; }
+        public string InstanceIdentifier { get; set; }
 
         [StringLength(2147483647)]
-        public string Tool_Generated_Output { get; set; }
+        public string ToolGeneratedOutput { get; set; }
 
         [StringLength(2147483647)]
         public string Comments { get; set; }
 
         [StringLength(2147483647)]
-        public string Finding_Details { get; set; }
+        public string FindingDetails { get; set; }
 
-        public string First_Discovered { get; set; }
+        public string FirstDiscovered { get; set; }
 
-        public string Last_Observed { get; set; }
+        public string LastObserved { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string Delta_Analysis_Required { get; set; }
+        public string DeltaAnalysisRequired { get; set; }
 
-        public long Finding_Type_ID { get; set; }
+        public long FindingType_ID { get; set; }
 
-        public long Finding_Source_File_ID { get; set; }
+        public long FindingSourceFile_ID { get; set; }
 
         [CanBeNull]
         public long? MitigationOrCondition_ID { get; set; }
@@ -56,28 +56,28 @@ namespace Vulnerator.Model.Entity
         public long? Software_ID { get; set; }
 
         [StringLength(25)]
-        public string Severity_Override { get; set; }
+        public string SeverityOverride { get; set; }
 
         [StringLength(2000)]
-        public string Severity_Override_Justification { get; set; }
+        public string SeverityOverrideJustification { get; set; }
 
         [StringLength(100)]
-        public string Technology_Area { get; set; }
+        public string TechnologyArea { get; set; }
 
         [StringLength(500)]
-        public string Web_DB_Site { get; set; }
+        public string WebDB_Site { get; set; }
 
         [StringLength(100)]
-        public string Web_DB_Instance { get; set; }
+        public string WebDB_Instance { get; set; }
 
         [StringLength(25)]
         public string Classification { get; set; }
 
         [StringLength(5)]
-        public string CVSS_Environmental_Score { get; set; }
+        public string CVSS_EnvironmentalScore { get; set; }
 
         [StringLength(25)]
-        public string CVSS_Environmental_Vector { get; set; }
+        public string CVSS_EnvironmentalVector { get; set; }
 
         public virtual FindingType FindingType { get; set; }
 

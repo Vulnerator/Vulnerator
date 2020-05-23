@@ -53,7 +53,7 @@ namespace Vulnerator.Model.DataAccess
 
         public virtual DbSet<GroupsMitigationsOrConditions> GroupsMitigationsOrConditions { get; set; }
         public virtual DbSet<Hardware> Hardwares { get; set; }
-        public virtual DbSet<Hardware_PortsProtocols> Hardware_PortsProtocols { get; set; }
+        public virtual DbSet<HardwarePortsProtocols> HardwarePortsProtocols { get; set; }
         public virtual DbSet<IA_Controls> IA_Controls { get; set; }
         public virtual DbSet<IATA_Standards> IATA_Standards { get; set; }
         public virtual DbSet<ImpactAdjustment> ImpactAdjustments { get; set; }
@@ -71,7 +71,7 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<MitigationsOrCondition> MitigationsOrConditions { get; set; }
         public virtual DbSet<NavigationTransportationSystem> NavigationTransportationSystems { get; set; }
         public virtual DbSet<NetworkConnectionRule> NetworkConnectionRules { get; set; }
-        public virtual DbSet<NistControl> NistControls { get; set; }
+        public virtual DbSet<NistControl> NIST_Controls { get; set; }
         public virtual DbSet<NssQuestionnaire> NssQuestionnaires { get; set; }
         public virtual DbSet<Organization> Organizations { get; set; }
         public virtual DbSet<Overlay> Overlays { get; set; }
@@ -111,18 +111,18 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<GroupsWaivers> AccreditationsWaivers { get; set; }
         public virtual DbSet<HardwareLocation> HardwareLocations { get; set; }
         public virtual DbSet<InformationSystemOwner> InformationSystemOwners { get; set; }
-        public virtual DbSet<NistControlsAvailabilityLevel> NistControlsAvailabilityLevels { get; set; }
+        public virtual DbSet<NistControlsAvailabilityLevel> NIST_ControlsAvailabilityLevels { get; set; }
         public virtual DbSet<NistControlsCAA> NistControlsCAAs { get; set; }
         public virtual DbSet<NistControlsCCI> NistControlsCCIs { get; set; }
-        public virtual DbSet<NistControlsConfidentialityLevel> NistControlsConfidentialityLevels { get; set; }
-        public virtual DbSet<NistControlsIntegrityLevel> NistControlsIntegrityLevels { get; set; }
+        public virtual DbSet<NistControlsConfidentialityLevel> NIST_ControlsConfidentialityLevels { get; set; }
+        public virtual DbSet<NistControlsIntegrityLevel> NIST_ControlsIntegrityLevels { get; set; }
         public virtual DbSet<SoftwareHardware> SoftwareHardwares { get; set; }
         public virtual DbSet<SystemCategorizationInformationType> SystemCategorizationInformationTypes { get; set; }
 
         private static string ConnectionString()
         {
             SQLiteConnectionStringBuilder sqliteConnectionStringBuilder = new SQLiteConnectionStringBuilder
-                {DataSource = Settings.Default.Database.Split(';')[0]};
+            { DataSource = Settings.Default.Database.Split(';')[0] };
             return sqliteConnectionStringBuilder.ToString();
         }
 
@@ -172,7 +172,7 @@ namespace Vulnerator.Model.DataAccess
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<AvailabilityLevel>()
-                .HasMany(e => e.NistControlsAvailabilityLevels)
+                .HasMany(e => e.NIST_ControlsAvailabilityLevels)
                 .WithRequired(e => e.AvailabilityLevel)
                 .WillCascadeOnDelete(false);
 
@@ -192,7 +192,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(m => m.ToTable("VulnerabilitiesCCIs").MapLeftKey("CCI_ID").MapRightKey("Vulnerability_ID"));
 
             modelBuilder.Entity<CommonControlPackage>()
-                .HasMany(e => e.NistControls)
+                .HasMany(e => e.NIST_Controls)
                 .WithMany(e => e.CommonControlPackages)
                 .Map(m => m.ToTable("NistControlsCCPs").MapLeftKey("CCP_ID").MapRightKey("NIST_Control_ID"));
 
@@ -202,7 +202,7 @@ namespace Vulnerator.Model.DataAccess
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<ConfidentialityLevel>()
-                .HasMany(e => e.NistControlsConfidentialityLevels)
+                .HasMany(e => e.NIST_ControlsConfidentialityLevels)
                 .WithRequired(e => e.ConfidentialityLevel)
                 .WillCascadeOnDelete(false);
 
@@ -260,7 +260,7 @@ namespace Vulnerator.Model.DataAccess
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<ControlSet>()
-                .HasMany(e => e.NistControls)
+                .HasMany(e => e.NIST_Controls)
                 .WithMany(e => e.ControlSets)
                 .Map(m => m.ToTable("NistControlsControlSets").MapLeftKey("ControlSet_ID")
                     .MapRightKey("NIST_Control_ID"));
@@ -332,7 +332,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(m => m.ToTable("HardwareGroups").MapLeftKey("Group_ID").MapRightKey("Hardware_ID"));
 
             modelBuilder.Entity<GroupsMitigationsOrConditions>()
-                .HasKey(e => new {e.MitigationOrCondition_ID, e.Group_ID, e.Vulnerability_ID});
+                .HasKey(e => new { e.MitigationOrCondition_ID, e.Group_ID, e.Vulnerability_ID });
 
             modelBuilder.Entity<GroupsMitigationsOrConditions>()
                 .HasRequired(e => e.Group)
@@ -353,7 +353,7 @@ namespace Vulnerator.Model.DataAccess
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Hardware>()
-                .HasMany(e => e.Hardware_PortsProtocols)
+                .HasMany(e => e.HardwarePortsProtocols)
                 .WithRequired(e => e.Hardware)
                 .WillCascadeOnDelete(false);
 
@@ -376,13 +376,13 @@ namespace Vulnerator.Model.DataAccess
                 .HasMany(e => e.VulnerabilitySources)
                 .WithMany(e => e.Hardwares)
                 .Map(m => m.ToTable("Hardware_VulnerabilitySources").MapLeftKey("Hardware_ID")
-                    .MapRightKey("Vulnerability_Source_ID"));
+                    .MapRightKey("VulnerabilitySource_ID"));
 
             modelBuilder.Entity<IA_Controls>()
                 .HasMany(e => e.Vulnerabilities)
                 .WithMany(e => e.IA_Controls)
                 .Map(m => m.ToTable("Vulnerabilities_IA_Controls").MapLeftKey("IA_Control_ID")
-                    .MapRightKey("Vulnerability_Source_ID"));
+                    .MapRightKey("VulnerabilitySource_ID"));
 
             modelBuilder.Entity<IATA_Standards>()
                 .HasMany(e => e.Groups)
@@ -391,7 +391,7 @@ namespace Vulnerator.Model.DataAccess
                     .MapRightKey("Accreditation_ID"));
 
             modelBuilder.Entity<IATA_Standards>()
-                .HasMany(e => e.NistControls)
+                .HasMany(e => e.NIST_Controls)
                 .WithMany(e => e.IATA_Standards)
                 .Map(m => m.ToTable("NistControls_IATA_Standards").MapLeftKey("IATA_Standard_ID")
                     .MapRightKey("NIST_Control_ID"));
@@ -407,7 +407,7 @@ namespace Vulnerator.Model.DataAccess
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<IntegrityLevel>()
-                .HasMany(e => e.NistControlsIntegrityLevels)
+                .HasMany(e => e.NIST_ControlsIntegrityLevels)
                 .WithRequired(e => e.IntegrityLevel)
                 .WillCascadeOnDelete(false);
 
@@ -420,7 +420,7 @@ namespace Vulnerator.Model.DataAccess
             modelBuilder.Entity<IP_Addresses>()
                 .HasMany(e => e.Hardwares)
                 .WithMany(e => e.IP_Addresses)
-                .Map(m => m.ToTable("HardwareIpAddresses").MapLeftKey("IP_Address_ID").MapRightKey("Hardware_ID"));
+                .Map(m => m.ToTable("Hardware_IP_Addresses").MapLeftKey("IP_Address_ID").MapRightKey("Hardware_ID"));
 
             modelBuilder.Entity<JointAuthorizationOrganization>()
                 .HasMany(e => e.SystemCategorizations)
@@ -441,7 +441,7 @@ namespace Vulnerator.Model.DataAccess
             modelBuilder.Entity<MAC_Addresses>()
                 .HasMany(e => e.Hardwares)
                 .WithMany(e => e.MAC_Addresses)
-                .Map(m => m.ToTable("HardwareMacAddresses").MapLeftKey("MAC_Address_ID").MapRightKey("Hardware_ID"));
+                .Map(m => m.ToTable("Hardware_MAC_Addresses").MapLeftKey("MAC_Address_ID").MapRightKey("Hardware_ID"));
 
             modelBuilder.Entity<MissionArea>()
                 .HasMany(e => e.InformationTypes)
@@ -461,7 +461,7 @@ namespace Vulnerator.Model.DataAccess
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<NistControl>()
-                .HasMany(e => e.NistControlsAvailabilityLevels)
+                .HasMany(e => e.NIST_ControlsAvailabilityLevels)
                 .WithRequired(e => e.NistControl)
                 .WillCascadeOnDelete(false);
 
@@ -476,12 +476,12 @@ namespace Vulnerator.Model.DataAccess
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<NistControl>()
-                .HasMany(e => e.NistControlsConfidentialityLevels)
+                .HasMany(e => e.NIST_ControlsConfidentialityLevels)
                 .WithRequired(e => e.NistControl)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<NistControl>()
-                .HasMany(e => e.NistControlsIntegrityLevels)
+                .HasMany(e => e.NIST_ControlsIntegrityLevels)
                 .WithRequired(e => e.NistControl)
                 .WillCascadeOnDelete(false);
 
@@ -501,12 +501,12 @@ namespace Vulnerator.Model.DataAccess
                 .Map(m => m.ToTable("AccreditationsOverlays").MapLeftKey("Overlay_ID").MapRightKey("Accreditation_ID"));
 
             modelBuilder.Entity<Overlay>()
-                .HasMany(e => e.NistControls)
+                .HasMany(e => e.NIST_Controls)
                 .WithMany(e => e.Overlays)
                 .Map(m => m.ToTable("NistControlsOverlays").MapLeftKey("Overlay_ID").MapRightKey("NIST_Control_ID"));
 
             modelBuilder.Entity<PortsProtocols>()
-                .HasMany(e => e.Hardware_PortsProtocols)
+                .HasMany(e => e.HardwarePortsProtocols)
                 .WithRequired(e => e.PP)
                 .WillCascadeOnDelete(false);
 
@@ -593,7 +593,7 @@ namespace Vulnerator.Model.DataAccess
             modelBuilder.Entity<VulnerabilityReference>()
                 .HasMany(e => e.Vulnerabilities)
                 .WithMany(e => e.VulnerabilityReferences)
-                .Map(m => m.ToTable("Vulnerabilities_VulnerabilityReferences").MapLeftKey("Reference_ID")
+                .Map(m => m.ToTable("VulnerabilitiesVulnerabilityReferences").MapLeftKey("Reference_ID")
                     .MapRightKey("Vulnerability_ID"));
 
             modelBuilder.Entity<VulnerabilitySource>()
@@ -604,7 +604,7 @@ namespace Vulnerator.Model.DataAccess
             modelBuilder.Entity<VulnerabilitySource>()
                 .HasMany(e => e.Vulnerabilities)
                 .WithMany(e => e.VulnerabilitySources)
-                .Map(m => m.ToTable("Vulnerabilities_VulnerabilitySources").MapLeftKey("Vulnerability_Source_ID")
+                .Map(m => m.ToTable("VulnerabilitiesVulnerabilitySources").MapLeftKey("VulnerabilitySource_ID")
                     .MapRightKey("Vulnerability_ID"));
 
             modelBuilder.Entity<Waiver>()

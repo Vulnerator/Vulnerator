@@ -17,7 +17,7 @@ namespace Vulnerator.Model.Entity
 
         [Required]
         [StringLength(10)]
-        public string IA_Control_Number { get; set; }
+        public string IA_ControlNumber { get; set; }
 
         [Required]
         [StringLength(10)]
