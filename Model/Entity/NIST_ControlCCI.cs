@@ -4,7 +4,7 @@ namespace Vulnerator.Model.Entity
     using System.ComponentModel.DataAnnotations.Schema;
     using System.ComponentModel;
 
-    public partial class NistControlsCCI : INotifyPropertyChanged
+    public partial class NIST_ControlCCI : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -41,6 +41,6 @@ namespace Vulnerator.Model.Entity
 
         public virtual CCI CCI { get; set; }
 
-        public virtual NistControl NistControl { get; set; }
+        public virtual NIST_Control NistControl { get; set; }
     }
 }

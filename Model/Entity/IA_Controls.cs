@@ -25,27 +25,27 @@ namespace Vulnerator.Model.Entity
 
         [Required]
         [StringLength(50)]
-        public string Subject_Area { get; set; }
+        public string IA_ControlSubjectArea { get; set; }
 
         [Required]
         [StringLength(100)]
-        public string Name { get; set; }
+        public string IA_ControlName { get; set; }
 
         [Required]
         [StringLength(250)]
-        public string Description { get; set; }
+        public string IA_ControlDescription { get; set; }
 
         [Required]
         [StringLength(2000)]
-        public string Threat_Vuln_Countermeasures { get; set; }
+        public string IA_ControlThreatVulnerabilityCountermeasures { get; set; }
 
         [Required]
         [StringLength(2000)]
-        public string General_Implementation_Guidance { get; set; }
+        public string IA_ControlGeneralImplementationGuidance { get; set; }
 
         [Required]
         [StringLength(2000)]
-        public string System_Specific_Guidance_Resources { get; set; }
+        public string IA_ControlSystemSpecificGuidanceResources { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Vulnerability> Vulnerabilities { get; set; }

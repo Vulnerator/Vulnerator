@@ -10,7 +10,7 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public CCI()
         {
-            NistControlsCCIs = new ObservableCollection<NistControlsCCI>();
+            NIST_ControlsCCIs = new ObservableCollection<NIST_ControlCCI>();
             Vulnerabilities = new ObservableCollection<Vulnerability>();
             GroupsCCIs = new ObservableCollection<GroupsCCIs>();
         }
@@ -18,26 +18,25 @@ namespace Vulnerator.Model.Entity
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long CCI_ID { get; set; }
-
-        [Column("CCI")]
+        
         [Required]
         [StringLength(25)]
-        public string CCI1 { get; set; }
+        public string CCI_Number { get; set; }
 
         [Required]
         [StringLength(500)]
-        public string Definition { get; set; }
+        public string CCI_Definition { get; set; }
 
         [Required]
         [StringLength(25)]
-        public string Type { get; set; }
+        public string CCI_Type { get; set; }
 
         [Required]
         [StringLength(25)]
         public string CCI_Status { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NistControlsCCI> NistControlsCCIs { get; set; }
+        public virtual ICollection<NIST_ControlCCI> NIST_ControlsCCIs { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Vulnerability> Vulnerabilities { get; set; }

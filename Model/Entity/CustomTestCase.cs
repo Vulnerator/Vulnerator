@@ -4,12 +4,11 @@ namespace Vulnerator.Model.Entity
     using System.Collections.ObjectModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-
-    [Table("CustomTestCases")]
-    public partial class CustomTestCas
+    
+    public partial class CustomTestCase
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public CustomTestCas()
+        public CustomTestCase()
         { SAPs = new ObservableCollection<SAP>(); }
 
         [Key]

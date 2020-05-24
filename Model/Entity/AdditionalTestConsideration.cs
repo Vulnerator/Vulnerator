@@ -13,13 +13,13 @@ namespace Vulnerator.Model.Entity
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long Consideration_ID { get; set; }
+        public long AdditionalTestConsideration_ID { get; set; }
 
         [StringLength(25)]
-        public string ConsiderationTitle { get; set; }
+        public string AdditionalTestConsiderationTitle { get; set; }
 
         [StringLength(1000)]
-        public string ConsiderationDetails { get; set; }
+        public string AdditionalTestConsiderationDetails { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SAP> SAPs { get; set; }

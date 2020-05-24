@@ -33,7 +33,7 @@ namespace Vulnerator.Model.Entity
         public string Direction { get; set; }
 
         [StringLength(25)]
-        public string BoundaryCrossed { get; set; }
+        public string BoundariesCrossed { get; set; }
 
         [StringLength(5)]
         public string DoD_Compliant { get; set; }

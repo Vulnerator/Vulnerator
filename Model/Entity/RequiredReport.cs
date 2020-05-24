@@ -10,27 +10,25 @@ namespace Vulnerator.Model.Entity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long Required_Report_ID { get; set; }
+        public long RequiredReport_ID { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string Displayed_Report_Name { get; set; }
+        public string DisplayedReportName { get; set; }
 
         [Required]
         [StringLength(10)]
-        public string Report_Type { get; set; }
+        public string ReportType { get; set; }
 
         [Required]
-        public long Report_Category_ID { get; set; }
-
-        [Required]
-        [StringLength(5)]
-        public string Is_Report_Enabled { get; set; }
+        public string ReportCategory { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string Is_Report_Selected { get; set; }
+        public string IsReportEnabled { get; set; }
 
-        public virtual ReportCategory ReportCategory { get; set; }
+        [Required]
+        [StringLength(5)]
+        public string IsReportSelected { get; set; }
     }
 }

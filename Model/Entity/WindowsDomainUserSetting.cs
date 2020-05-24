@@ -16,31 +16,31 @@ namespace Vulnerator.Model.Entity
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long Domain_Settings_ID { get; set; }
+        public long WindowsDomainUserSettings_ID { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string Domain_Is_Disabled { get; set; }
+        public string WindowsDomainUserIsDisabled { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string Domain_Is_Disabled_Automatically { get; set; }
+        public string WindowsDomainUserIsDisabledAutomatically { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string Domain_Cant_Change_PW { get; set; }
+        public string WindowsDomainUserCantChangePW { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string Domain_Never_Changed_PW { get; set; }
+        public string WindowsDomainUserNeverChangedPW { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string Domain_Never_Logged_On { get; set; }
+        public string WindowsDomainUserNeverLoggedOn { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string Domain_PW_Never_Expires { get; set; }
+        public string WindowsDomainUserPW_NeverExpires { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EnumeratedWindowsUser> EnumeratedWindowsUsers { get; set; }

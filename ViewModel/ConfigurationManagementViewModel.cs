@@ -250,7 +250,6 @@ namespace Vulnerator.ViewModel
                         .Include(c => c.Groups)
                         .Include(c => c.Organization)
                         .Include(c => c.Softwares)
-                        .Include(c => c.Title)
                         .AsNoTracking().ToList();
                     PortsProtocols = databaseContext.PortsProtocols
                         .Include(p => p.HardwarePortsProtocols.Select(h => h.Hardware))
@@ -412,8 +411,8 @@ namespace Vulnerator.ViewModel
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters["Group_ID"].Value = SelectedGroup.Group_ID;
-                        sqliteCommand.Parameters["Name"].Value = SelectedGroup.Name;
-                        sqliteCommand.Parameters["Acronym"].Value = SelectedGroup.Acronym;
+                        sqliteCommand.Parameters["GroupName"].Value = SelectedGroup.GroupName;
+                        sqliteCommand.Parameters["GroupAcronym"].Value = SelectedGroup.GroupAcronym;
                         sqliteCommand.Parameters["GroupTier"].Value = SelectedGroup.GroupTier;
                         sqliteCommand.Parameters["IsAccreditation"].Value = SelectedGroup.IsAccreditation ?? "False";
                         sqliteCommand.Parameters["Accreditation_eMASS_ID"].Value = SelectedGroup.Accreditation_eMASS_ID;
@@ -426,7 +425,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                LogWriter.LogError($"Unable to update group '{NewGroup.Name}'.");
+                LogWriter.LogError($"Unable to update group '{NewGroup.GroupName}'.");
                 throw exception;
             }
             finally
@@ -448,8 +447,8 @@ namespace Vulnerator.ViewModel
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
-                        sqliteCommand.Parameters["Name"].Value = NewGroup.Name;
-                        sqliteCommand.Parameters["Acronym"].Value = NewGroup.Acronym;
+                        sqliteCommand.Parameters["Name"].Value = NewGroup.GroupName;
+                        sqliteCommand.Parameters["Acronym"].Value = NewGroup.GroupAcronym;
                         sqliteCommand.Parameters["GroupTier"].Value = NewGroup.GroupTier;
                         sqliteCommand.Parameters["IsAccreditation"].Value = NewGroup.IsAccreditation ?? "False";
                         sqliteCommand.Parameters["Accreditation_eMASS_ID"].Value = NewGroup.Accreditation_eMASS_ID;
@@ -462,7 +461,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                string error = $"Unable to insert group '{NewGroup.Name}'.";
+                string error = $"Unable to insert group '{NewGroup.GroupName}'.";
                 LogWriter.LogErrorWithDebug(error, exception);
             }
             finally
@@ -506,7 +505,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                string error = $"Unable to delete group '{SelectedGroup.Name}'.";
+                string error = $"Unable to delete group '{SelectedGroup.GroupName}'.";
                 LogWriter.LogErrorWithDebug(error, exception);
             }
         }

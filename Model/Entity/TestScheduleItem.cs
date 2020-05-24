@@ -21,11 +21,7 @@ namespace Vulnerator.Model.Entity
         [StringLength(100)]
         public string TestEvent { get; set; }
 
-        public long Category_ID { get; set; }
-
         public long DurationInDays { get; set; }
-
-        public virtual Category Category { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SAP> SAPs { get; set; }

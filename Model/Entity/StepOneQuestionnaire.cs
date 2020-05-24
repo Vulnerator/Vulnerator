@@ -55,7 +55,7 @@ namespace Vulnerator.Model.Entity
 
         [Required]
         [StringLength(25)]
-        public string PortsProtocolsM_RegistrationNumber { get; set; }
+        public string PortsProtocolsRegistrationNumber { get; set; }
 
         public long AuthorizationInformation_ID { get; set; }
 
@@ -67,16 +67,16 @@ namespace Vulnerator.Model.Entity
         [StringLength(2000)]
         public string SystemEnterpriseArchitecture { get; set; }
 
-        public long? ATC_ID { get; set; }
+        public long? AuthorizationToConnectOrInterim_ATC_ID { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string NistControlSet { get; set; }
+        public string NIST_ControlSet { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Group> Groups { get; set; }
 
-        public virtual ATC_IATC ATC_IATC { get; set; }
+        public virtual AuthorizationToConnectOrInterim_ATC AuthorizationToConnectOrInterim_ATC { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Connectivity> Connectivities { get; set; }

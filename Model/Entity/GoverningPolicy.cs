@@ -16,7 +16,7 @@ namespace Vulnerator.Model.Entity
         public long GoverningPolicy_ID { get; set; }
 
         [StringLength(50)]
-        public string GoverningPolicy_Name { get; set; }
+        public string GoverningPolicyName { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SystemCategorization> SystemCategorizations { get; set; }

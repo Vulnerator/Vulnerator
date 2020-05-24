@@ -6,18 +6,17 @@ namespace Vulnerator.Model.Entity
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("NssQuestionnaire")]
-    public partial class NssQuestionnaire
+    public partial class NSS_Questionnaire
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public NssQuestionnaire()
+        public NSS_Questionnaire()
         {
             SystemCategorizations = new HashSet<SystemCategorization>();
         }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long NssQuestionnaire_ID { get; set; }
+        public long NSS_Questionnaire_ID { get; set; }
 
         [Required]
         [StringLength(5)]

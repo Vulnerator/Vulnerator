@@ -22,7 +22,7 @@ namespace Vulnerator.Model.Entity
         [Column("LifecycleStatus")]
         [Required]
         [StringLength(25)]
-        public string LifecycleStatus1 { get; set; }
+        public string Lifecycle_Status { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Hardware> Hardwares { get; set; }

@@ -20,7 +20,7 @@ namespace Vulnerator.Model.Entity
 
         [Column("UserCategory")]
         [StringLength(25)]
-        public string UserCategory1 { get; set; }
+        public string User_Category { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StepOneQuestionnaire> StepOneQuestionnaires { get; set; }

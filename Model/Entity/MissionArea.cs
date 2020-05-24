@@ -21,7 +21,7 @@ namespace Vulnerator.Model.Entity
         [Column("MissionArea")]
         [Required]
         [StringLength(25)]
-        public string MissionArea1 { get; set; }
+        public string Mission_Area { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<InformationType> InformationTypes { get; set; }

@@ -52,13 +52,13 @@ namespace Vulnerator.Model.Entity
 
         [Required]
         [StringLength(5)]
-        public string HasAggergationImpact { get; set; }
+        public string HasAggregationImpact { get; set; }
 
         [Required]
         [StringLength(5)]
         public string IsJointAuthorization { get; set; }
 
-        public long NssQuestionnaire_ID { get; set; }
+        public long NSS_Questionnaire_ID { get; set; }
 
         [Required]
         [StringLength(5)]
@@ -67,7 +67,7 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Group> Groups { get; set; }
 
-        public virtual NssQuestionnaire NssQuestionnaire { get; set; }
+        public virtual NSS_Questionnaire NSS_Questionnaire { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SystemCategorizationInformationType> SystemCategorizationInformationTypes { get; set; }

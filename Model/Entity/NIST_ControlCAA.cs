@@ -6,7 +6,7 @@ namespace Vulnerator.Model.Entity
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class NistControlsIntegrityLevel
+    public partial class NIST_ControlCAA
     {
         [Key]
         [Column(Order = 0)]
@@ -16,15 +16,20 @@ namespace Vulnerator.Model.Entity
         [Key]
         [Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long IntegrityLevel_ID { get; set; }
+        public long CAA_ID { get; set; }
 
         [Key]
         [Column(Order = 2)]
         [StringLength(10)]
-        public string NSS_Systems_Only { get; set; }
+        public string LegacyDifficulty { get; set; }
 
-        public virtual IntegrityLevel IntegrityLevel { get; set; }
+        [Key]
+        [Column(Order = 3)]
+        [StringLength(25)]
+        public string Applicability { get; set; }
 
-        public virtual NistControl NistControl { get; set; }
+        public virtual ControlApplicabilityAssessment ControlApplicabilityAssessment { get; set; }
+
+        public virtual NIST_Control NistControl { get; set; }
     }
 }

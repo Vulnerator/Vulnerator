@@ -15,7 +15,7 @@ namespace Vulnerator.Model.Entity
         public IATA_Standards()
         {
             Groups = new ObservableCollection<Group>();
-            NIST_Controls = new ObservableCollection<NistControl>();
+            NIST_Controls = new ObservableCollection<NIST_Control>();
         }
 
         [Key]
@@ -24,16 +24,16 @@ namespace Vulnerator.Model.Entity
 
         [Required]
         [StringLength(50)]
-        public string Standard_Title { get; set; }
+        public string IATA_StandardTitle { get; set; }
 
         [Required]
         [StringLength(1000)]
-        public string Standard_Description { get; set; }
+        public string IATA_StandardDescription { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Group> Groups { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NistControl> NIST_Controls { get; set; }
+        public virtual ICollection<NIST_Control> NIST_Controls { get; set; }
     }
 }

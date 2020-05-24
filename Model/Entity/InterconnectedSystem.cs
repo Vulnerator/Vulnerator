@@ -17,7 +17,7 @@ namespace Vulnerator.Model.Entity
 
         [Required]
         [StringLength(50)]
-        public string InterconnectedSystem_Name { get; set; }
+        public string InterconnectedSystemName { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SystemCategorization> SystemCategorizations { get; set; }

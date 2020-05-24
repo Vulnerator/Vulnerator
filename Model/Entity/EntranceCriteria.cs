@@ -19,7 +19,7 @@ namespace Vulnerator.Model.Entity
         [Column("EntranceCriteria")]
         [Required]
         [StringLength(100)]
-        public string EntranceCriteria1 { get; set; }
+        public string Entrance_Criteria { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SAP> SAPs { get; set; }

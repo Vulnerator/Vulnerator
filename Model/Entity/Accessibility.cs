@@ -20,10 +20,10 @@ namespace Vulnerator.Model.Entity
 
         [Required]
         [StringLength(25)]
-        public string AvScan { get; set; }
+        public string AV_Scan { get; set; }
 
         [Required]
         [StringLength(25)]
-        public string DodinConnectionPeriodicity { get; set; }
+        public string DODIN_ConnectionPeriodicity { get; set; }
     }
 }

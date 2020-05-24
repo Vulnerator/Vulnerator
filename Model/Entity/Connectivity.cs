@@ -15,27 +15,26 @@ namespace Vulnerator.Model.Entity
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long Connectivity_ID { get; set; }
-
-        [Column("Connectivity")]
+        
         [Required]
         [StringLength(25)]
-        public string Connectivity1 { get; set; }
+        public string ConnectivityName { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string OwnCircuit { get; set; }
+        public string HasOwnCircuit { get; set; }
 
         [Required]
         [StringLength(25)]
-        public string CCSD_Number { get; set; }
+        public string CommandCommunicationsSecurityDesginatorNumber { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string CCSD_Location { get; set; }
+        public string CommandCommunicationsSecurityDesginatorLocation { get; set; }
 
         [Required]
         [StringLength(100)]
-        public string CCSD_Support { get; set; }
+        public string CommandCommunicationsSecurityDesginatorSupport { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StepOneQuestionnaire> StepOneQuestionnaires { get; set; }

@@ -9,7 +9,7 @@ namespace Vulnerator.Model.Entity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public CommonControlPackage()
-        { NIST_Controls = new ObservableCollection<NistControl>(); }
+        { NIST_Controls = new ObservableCollection<NIST_Control>(); }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -17,9 +17,9 @@ namespace Vulnerator.Model.Entity
 
         [Required]
         [StringLength(100)]
-        public string CCAP_Name { get; set; }
+        public string CCP_Name { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NistControl> NIST_Controls { get; set; }
+        public virtual ICollection<NIST_Control> NIST_Controls { get; set; }
     }
 }

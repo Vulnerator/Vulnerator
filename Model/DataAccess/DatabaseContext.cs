@@ -14,20 +14,15 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<Accessibility> Accessibilities { get; set; }
         public virtual DbSet<GroupsCCIs> AccreditationsNistControls { get; set; }
         public virtual DbSet<AdditionalTestConsideration> AdditionalTestConsiderations { get; set; }
-        public virtual DbSet<ATC_IATC> ATC_IATC { get; set; }
-        public virtual DbSet<ATC_IATC_PendingItems> ATC_IATC_PendingItems { get; set; }
+        public virtual DbSet<AuthorizationToConnectOrInterim_ATC> ATC_IATC { get; set; }
+        public virtual DbSet<AuthorizationToConnectOrInterim_ATC_PendingItems> ATC_IATC_PendingItems { get; set; }
         public virtual DbSet<AuthorizationCondition> AuthorizationConditions { get; set; }
         public virtual DbSet<AuthorizationInformation> AuthorizationInformations { get; set; }
         public virtual DbSet<AvailabilityLevel> AvailabilityLevels { get; set; }
-        public virtual DbSet<Building> Buildings { get; set; }
         public virtual DbSet<Business> Businesses { get; set; }
-        public virtual DbSet<CalibrationSystem> CalibrationSystems { get; set; }
-        public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<CCI> CCIs { get; set; }
         public virtual DbSet<Certification> Certifications { get; set; }
-        public virtual DbSet<CombatSystem> CombatSystems { get; set; }
         public virtual DbSet<CommonControlPackage> CommonControlPackages { get; set; }
-        public virtual DbSet<CommunicationSystem> CommunicationSystems { get; set; }
         public virtual DbSet<ConfidentialityLevel> ConfidentialityLevels { get; set; }
         public virtual DbSet<ConnectedSystem> ConnectedSystems { get; set; }
         public virtual DbSet<Connection> Connections { get; set; }
@@ -36,9 +31,8 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<ControlApplicabilityAssessment> ControlApplicabilityAssessments { get; set; }
         public virtual DbSet<ControlSelection> ControlSelections { get; set; }
         public virtual DbSet<ControlSet> ControlSets { get; set; }
-        public virtual DbSet<CustomTestCas> CustomTestCases { get; set; }
+        public virtual DbSet<CustomTestCase> CustomTestCases { get; set; }
         public virtual DbSet<DADMS_Networks> DADMS_Networks { get; set; }
-        public virtual DbSet<DiagnosticTestingSystem> DiagnosticTestingSystems { get; set; }
         public virtual DbSet<DitprDonNumber> DitprDonNumbers { get; set; }
         public virtual DbSet<EncryptionTechnique> EncryptionTechniques { get; set; }
         public virtual DbSet<EntranceCriteria> EntranceCriterias { get; set; }
@@ -66,13 +60,11 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<Limitation> Limitations { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<MAC_Addresses> MAC_Addresses { get; set; }
-        public virtual DbSet<MedicalTechnology> MedicalTechnologies { get; set; }
         public virtual DbSet<MissionArea> MissionAreas { get; set; }
         public virtual DbSet<MitigationsOrCondition> MitigationsOrConditions { get; set; }
-        public virtual DbSet<NavigationTransportationSystem> NavigationTransportationSystems { get; set; }
         public virtual DbSet<NetworkConnectionRule> NetworkConnectionRules { get; set; }
-        public virtual DbSet<NistControl> NIST_Controls { get; set; }
-        public virtual DbSet<NssQuestionnaire> NssQuestionnaires { get; set; }
+        public virtual DbSet<NIST_Control> NIST_Controls { get; set; }
+        public virtual DbSet<NSS_Questionnaire> NssQuestionnaires { get; set; }
         public virtual DbSet<Organization> Organizations { get; set; }
         public virtual DbSet<Overlay> Overlays { get; set; }
         public virtual DbSet<Overview> Overviews { get; set; }
@@ -80,42 +72,31 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<PortsProtocols> PortsProtocols { get; set; }
         public virtual DbSet<RelatedDocument> RelatedDocuments { get; set; }
         public virtual DbSet<RelatedTesting> RelatedTestings { get; set; }
-        public virtual DbSet<ReportCategory> ReportCategories { get; set; }
         public virtual DbSet<RequiredReport> RequiredReports { get; set; }
-        public virtual DbSet<ResearchWeaponsSystem> ResearchWeaponsSystems { get; set; }
         public virtual DbSet<ResponsibilityRole> ResponsibilityRoles { get; set; }
         public virtual DbSet<SAP> SAPs { get; set; }
         public virtual DbSet<ScapScore> ScapScores { get; set; }
-        public virtual DbSet<Sensor> Sensors { get; set; }
         public virtual DbSet<Software> Softwares { get; set; }
-        public virtual DbSet<SpecialPurposeConsole> SpecialPurposeConsoles { get; set; }
         public virtual DbSet<StepOneQuestionnaire> StepOneQuestionnaires { get; set; }
         public virtual DbSet<SystemCategorization> SystemCategorizations { get; set; }
         public virtual DbSet<SystemType> SystemTypes { get; set; }
-        public virtual DbSet<TacticalSupportDatabas> TacticalSupportDatabases { get; set; }
         public virtual DbSet<TestReference> TestReferences { get; set; }
         public virtual DbSet<TestScheduleItem> TestScheduleItems { get; set; }
-        public virtual DbSet<Title> Titles { get; set; }
-        public virtual DbSet<TrainingSimulationSystem> TrainingSimulationSystems { get; set; }
         public virtual DbSet<UniqueFinding> UniqueFindings { get; set; }
         public virtual DbSet<UniqueFindingsSourceFile> UniqueFindingsSourceFiles { get; set; }
         public virtual DbSet<UserCategory> UserCategories { get; set; }
-        public virtual DbSet<UtilityDistribution> UtilityDistributions { get; set; }
         public virtual DbSet<Vulnerability> Vulnerabilities { get; set; }
         public virtual DbSet<VulnerabilityReference> VulnerabilityReferences { get; set; }
         public virtual DbSet<VulnerabilitySource> VulnerabilitySources { get; set; }
         public virtual DbSet<Waiver> Waivers { get; set; }
-        public virtual DbSet<WeaponsSystem> WeaponsSystems { get; set; }
         public virtual DbSet<WindowsDomainUserSetting> WindowsDomainUserSettings { get; set; }
         public virtual DbSet<WindowsLocalUserSetting> WindowsLocalUserSettings { get; set; }
         public virtual DbSet<GroupsWaivers> AccreditationsWaivers { get; set; }
         public virtual DbSet<HardwareLocation> HardwareLocations { get; set; }
-        public virtual DbSet<InformationSystemOwner> InformationSystemOwners { get; set; }
-        public virtual DbSet<NistControlsAvailabilityLevel> NIST_ControlsAvailabilityLevels { get; set; }
-        public virtual DbSet<NistControlsCAA> NistControlsCAAs { get; set; }
-        public virtual DbSet<NistControlsCCI> NistControlsCCIs { get; set; }
-        public virtual DbSet<NistControlsConfidentialityLevel> NIST_ControlsConfidentialityLevels { get; set; }
-        public virtual DbSet<NistControlsIntegrityLevel> NIST_ControlsIntegrityLevels { get; set; }
+        public virtual DbSet<NIST_ControlCAA> NistControlsCAAs { get; set; }
+        public virtual DbSet<NIST_ControlCCI> NistControlsCCIs { get; set; }
+        public virtual DbSet<NIST_ControlConfidentialityLevel> NIST_ControlsConfidentialityLevels { get; set; }
+        public virtual DbSet<NIST_ControlIntegrityLevel> NIST_ControlsIntegrityLevels { get; set; }
         public virtual DbSet<SoftwareHardware> SoftwareHardwares { get; set; }
         public virtual DbSet<SystemCategorizationInformationType> SystemCategorizationInformationTypes { get; set; }
 
@@ -154,9 +135,9 @@ namespace Vulnerator.Model.DataAccess
                 .Map(m => m.ToTable("SAP_AdditionalTestConsiderations").MapLeftKey("Consideration_ID")
                     .MapRightKey("SAP_ID"));
 
-            modelBuilder.Entity<ATC_IATC_PendingItems>()
-                .HasMany(e => e.ATC_IATC)
-                .WithMany(e => e.ATC_IATC_PendingItems)
+            modelBuilder.Entity<AuthorizationToConnectOrInterim_ATC_PendingItems>()
+                .HasMany(e => e.AuthorizationToConnectOrInterim_ATC)
+                .WithMany(e => e.AuthorizationToConnectOrInterim_ATC_PendingItems)
                 .Map(m => m.ToTable("ATC_IATC_ATC_IATC_PendingItems").MapLeftKey("ATC_IATC_PendingItem_ID")
                     .MapRightKey("ATC_ID"));
 
@@ -176,13 +157,8 @@ namespace Vulnerator.Model.DataAccess
                 .WithRequired(e => e.AvailabilityLevel)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<Category>()
-                .HasMany(e => e.TestScheduleItems)
-                .WithRequired(e => e.Category)
-                .WillCascadeOnDelete(false);
-
             modelBuilder.Entity<CCI>()
-                .HasMany(e => e.NistControlsCCIs)
+                .HasMany(e => e.NIST_ControlsCCIs)
                 .WithRequired(e => e.CCI)
                 .WillCascadeOnDelete(false);
 
@@ -225,11 +201,6 @@ namespace Vulnerator.Model.DataAccess
                     .MapRightKey("StepOneQuestionnaire_ID"));
 
             modelBuilder.Entity<Contact>()
-                .HasMany(e => e.InformationSystemOwners)
-                .WithRequired(e => e.Contact)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Contact>()
                 .HasMany(e => e.Groups)
                 .WithMany(e => e.Contacts)
                 .Map(m => m.ToTable("AccreditationsContacts").MapLeftKey("Contact_ID").MapRightKey("Accreditation_ID"));
@@ -265,7 +236,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(m => m.ToTable("NistControlsControlSets").MapLeftKey("ControlSet_ID")
                     .MapRightKey("NIST_Control_ID"));
 
-            modelBuilder.Entity<CustomTestCas>()
+            modelBuilder.Entity<CustomTestCase>()
                 .HasMany(e => e.SAPs)
                 .WithMany(e => e.CustomTestCases)
                 .Map(m => m.ToTable("SAP_CustomTestCases").MapLeftKey("CustomTestCase_ID").MapRightKey("SAP_ID"));
@@ -460,34 +431,34 @@ namespace Vulnerator.Model.DataAccess
                 .WithRequired(e => e.CCI)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<NistControl>()
+            modelBuilder.Entity<NIST_Control>()
                 .HasMany(e => e.NIST_ControlsAvailabilityLevels)
-                .WithRequired(e => e.NistControl)
+                .WithRequired(e => e.NIST_Control)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<NistControl>()
+            modelBuilder.Entity<NIST_Control>()
                 .HasMany(e => e.NistControlsCAAs)
                 .WithRequired(e => e.NistControl)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<NistControl>()
+            modelBuilder.Entity<NIST_Control>()
                 .HasMany(e => e.NistControlsCCIs)
                 .WithRequired(e => e.NistControl)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<NistControl>()
+            modelBuilder.Entity<NIST_Control>()
                 .HasMany(e => e.NIST_ControlsConfidentialityLevels)
-                .WithRequired(e => e.NistControl)
+                .WithRequired(e => e.NIST_Control)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<NistControl>()
+            modelBuilder.Entity<NIST_Control>()
                 .HasMany(e => e.NIST_ControlsIntegrityLevels)
-                .WithRequired(e => e.NistControl)
+                .WithRequired(e => e.NIST_Control)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<NssQuestionnaire>()
+            modelBuilder.Entity<NSS_Questionnaire>()
                 .HasMany(e => e.SystemCategorizations)
-                .WithRequired(e => e.NssQuestionnaire)
+                .WithRequired(e => e.NSS_Questionnaire)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Organization>()
@@ -519,11 +490,6 @@ namespace Vulnerator.Model.DataAccess
                 .HasMany(e => e.SAPs)
                 .WithMany(e => e.RelatedTestings)
                 .Map(m => m.ToTable("SAP_RelatedTesting").MapLeftKey("RelatedTesting_ID").MapRightKey("SAP_ID"));
-
-            modelBuilder.Entity<ReportCategory>()
-                .HasMany(e => e.RequiredReports)
-                .WithRequired(e => e.ReportCategory)
-                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<ResponsibilityRole>()
                 .HasMany(e => e.Vulnerabilities)
@@ -565,11 +531,6 @@ namespace Vulnerator.Model.DataAccess
                 .HasMany(e => e.SAPs)
                 .WithMany(e => e.TestScheduleItems)
                 .Map(m => m.ToTable("SAP_TestScheduleItems").MapLeftKey("TestScheduleItem_ID").MapRightKey("SAP_ID"));
-
-            modelBuilder.Entity<Title>()
-                .HasMany(e => e.Contacts)
-                .WithRequired(e => e.Title)
-                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<UniqueFinding>()
                 .HasOptional(e => e.MitigationsOrCondition);

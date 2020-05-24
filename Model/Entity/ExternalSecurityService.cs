@@ -18,7 +18,7 @@ namespace Vulnerator.Model.Entity
         [Column("ExternalSecurityService")]
         [Required]
         [StringLength(50)]
-        public string ExternalSecurityService1 { get; set; }
+        public string External_Security_Service { get; set; }
 
         [Required]
         [StringLength(500)]

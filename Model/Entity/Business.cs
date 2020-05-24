@@ -40,5 +40,7 @@ namespace Vulnerator.Model.Entity
 
         [StringLength(2000)]
         public string OtherInformation { get; set; }
+        
+        public long StepOneQuestionnaire_ID { get; set; }
     }
 }

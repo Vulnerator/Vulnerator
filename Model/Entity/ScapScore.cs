@@ -25,5 +25,7 @@ namespace Vulnerator.Model.Entity
         public virtual Hardware Hardware { get; set; }
 
         public virtual VulnerabilitySource VulnerabilitySource { get; set; }
+        
+        public virtual UniqueFindingsSourceFile UniqueFindingsSourceFile { get; set; }
     }
 }

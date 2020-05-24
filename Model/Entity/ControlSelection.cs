@@ -22,122 +22,122 @@ namespace Vulnerator.Model.Entity
 
         [Required]
         [StringLength(5)]
-        public string TierOneApplied { get; set; }
+        public string IsTierOneApplied { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string TierOneJustification { get; set; }
+        public string TierOneAppliedJustification { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string TierTwoApplied { get; set; }
+        public string IsTierTwoApplied { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string TierTwoJustification { get; set; }
+        public string TierTwoAppliedJustification { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string TierThreeApplied { get; set; }
+        public string IsTierThreeApplied { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string TierThreeJustification { get; set; }
+        public string TierThreeAppliedJustification { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string CNSS_1253_Applied { get; set; }
+        public string IsCNSS_1253_Applied { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string CNSS_1253_Justification { get; set; }
+        public string CNSS_1253_AppliedJustification { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string SpaceApplied { get; set; }
+        public string IsSpaceApplied { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string SpaceJustification { get; set; }
+        public string SpaceAppliedJustification { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string CDS_Applied { get; set; }
+        public string IsCDS_Applied { get; set; }
 
         [StringLength(50)]
-        public string CDS_Justification { get; set; }
+        public string CDS_AppliedJustification { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string IntelligenceApplied { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string IntelligenceJustification { get; set; }
-
-        [Required]
-        [StringLength(5)]
-        public string ClassifiedApplied { get; set; }
+        public string IsIntelligenceApplied { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string ClassifiedJustification { get; set; }
+        public string IntelligenceAppliedJustification { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string OtherApplied { get; set; }
+        public string IsClassifiedApplied { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string OtherJustification { get; set; }
+        public string ClassifiedAppliedJustification { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string CompensatingControlsApplied { get; set; }
+        public string IsOtherApplied { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string CompensatingControlsJustification { get; set; }
+        public string OtherAppliedJustification { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string NA_BaselineControls { get; set; }
+        public string AreCompensatingControlsApplied { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string CompensatingControlsAppliedJustification { get; set; }
+
+        [Required]
+        [StringLength(5)]
+        public string HasNA_BaselineControls { get; set; }
 
         [Required]
         [StringLength(100)]
-        public string NA_BaselineControlsJustification { get; set; }
+        public string NA_BaselineControlsAppliedJustification { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string BaselineControlsModified { get; set; }
+        public string AreBaselineControlsModified { get; set; }
 
         [Required]
         [StringLength(100)]
-        public string ModifiedBaselineJustification { get; set; }
+        public string BaselineIsModifiedJustification { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string BaselineRiskModified { get; set; }
+        public string IsBaselineRiskModified { get; set; }
 
         [Required]
         [StringLength(100)]
-        public string BaselineRiskModificationJustification { get; set; }
+        public string BaselineRiskIsModificationJustification { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string BaselineScopeApproved { get; set; }
+        public string IsBaselineScopeApproved { get; set; }
 
         [Required]
         [StringLength(100)]
-        public string BaselineScopeJustification { get; set; }
+        public string BaselineScopeIsApprovedJustification { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string InheritableControlsDefined { get; set; }
+        public string AreInheritableControlsDefined { get; set; }
 
         [Required]
         [StringLength(100)]
-        public string InheritableControlsJustification { get; set; }
+        public string InheritableControlsAreDefinedJustification { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Group> Groups { get; set; }

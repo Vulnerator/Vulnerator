@@ -16,11 +16,11 @@ namespace Vulnerator.Model.Entity
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long Group_ID { get; set; }
+        public long EnumeratedWindowsGroup_ID { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string Name { get; set; }
+        public string EnumeratedWindowsGroupName { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EnumeratedWindowsUser> EnumeratedWindowsUsers { get; set; }

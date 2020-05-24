@@ -20,7 +20,7 @@ namespace Vulnerator.Model.Entity
 
         [Required]
         [StringLength(25)]
-        public string Role_Title { get; set; }
+        public string RoleTitle { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Vulnerability> Vulnerabilities { get; set; }

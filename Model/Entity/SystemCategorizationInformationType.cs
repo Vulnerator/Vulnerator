@@ -11,7 +11,7 @@ namespace Vulnerator.Model.Entity
         [Key]
         [Column(Order = 0)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long SystemCategorizationInformationTypes_ID { get; set; }
+        public long SystemCategorizationInformationType_ID { get; set; }
 
         [Key]
         [Column(Order = 1)]
@@ -36,5 +36,7 @@ namespace Vulnerator.Model.Entity
         public virtual InformationType InformationType { get; set; }
 
         public virtual SystemCategorization SystemCategorization { get; set; }
+        
+        public virtual ImpactAdjustment ImpactAdjustment { get; set; }
     }
 }

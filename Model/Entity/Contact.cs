@@ -14,7 +14,6 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Contact()
         {
-            InformationSystemOwners = new ObservableCollection<InformationSystemOwner>();
             Groups = new ObservableCollection<Group>();
             Hardwares = new ObservableCollection<Hardware>();
             Softwares = new ObservableCollection<Software>();
@@ -30,26 +29,27 @@ namespace Vulnerator.Model.Entity
 
         [Required]
         [StringLength(25)]
-        public string First_Name { get; set; }
+        public string ContactFirstName { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string Last_Name { get; set; }
+        public string ContactLastName { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string Email { get; set; }
+        public string ContactEmail { get; set; }
 
-        public long Title_ID { get; set; }
+        [StringLength(20)]
+        public string ContactPhone { get; set; }
+        
+        [StringLength(50)]
+        public string ContactTitle { get; set; }
 
         public long Organization_ID { get; set; }
 
         public virtual Organization Organization { get; set; }
 
-        public virtual Title Title { get; set; }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<InformationSystemOwner> InformationSystemOwners { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Certification> Certifications { get; set; }

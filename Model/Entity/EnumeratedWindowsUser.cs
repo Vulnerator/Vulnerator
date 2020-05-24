@@ -17,23 +17,23 @@ namespace Vulnerator.Model.Entity
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long User_ID { get; set; }
+        public long EnumeratedWindowsUser_ID { get; set; }
 
         [Required]
         [StringLength(25)]
-        public string User_Name { get; set; }
+        public string EnumeratedWindowsUserName { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string Is_Guest_Account { get; set; }
+        public string IsGuestAccount { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string Is_Domain_Account { get; set; }
+        public string IsDomainAccount { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string Is_Local_Acount { get; set; }
+        public string IsLocalAccount { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WindowsDomainUserSetting> WindowsDomainUserSettings { get; set; }

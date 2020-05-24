@@ -18,7 +18,7 @@ namespace Vulnerator.Model.Entity
         [Column("EncryptionTechnique")]
         [Required]
         [StringLength(100)]
-        public string EncryptionTechnique1 { get; set; }
+        public string Encryption_Technique { get; set; }
 
         [Required]
         [StringLength(500)]

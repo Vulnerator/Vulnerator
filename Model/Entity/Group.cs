@@ -26,10 +26,10 @@ namespace Vulnerator.Model.Entity
 
         [Required]
         [StringLength(50)]
-        public string Name { get; set; }
+        public string GroupName { get; set; }
 
         [StringLength(25)]
-        public string Acronym { get; set; }
+        public string GroupAcronym { get; set; }
 
         [Required]
         public long GroupTier { get; set; }
@@ -85,11 +85,15 @@ namespace Vulnerator.Model.Entity
         public long? SAP_ID { get; set; }
 
         public long? PIT_Determination_ID { get; set; }
+        
+        public long? InformationSystemOwner_ID { get; set; }
 
         [NotMapped]
         public bool IsChecked { get; set; }
 
         public virtual PIT_Determination PIT_Determination { get; set; }
+        
+        public virtual Contact InformationSystemOwner { get; set; }
 
         public virtual SAP SAP { get; set; }
 

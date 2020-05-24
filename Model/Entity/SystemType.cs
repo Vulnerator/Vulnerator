@@ -21,7 +21,7 @@ namespace Vulnerator.Model.Entity
         [Column("SystemType")]
         [Required]
         [StringLength(100)]
-        public string SystemType1 { get; set; }
+        public string System_Type { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Overview> Overviews { get; set; }

@@ -21,8 +21,6 @@ namespace Vulnerator.Model.Entity
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long MitigationOrCondition_ID { get; set; }
 
-        public virtual Vulnerability Vulnerability { get; set; }
-
         [StringLength(2000)]
         public string ImpactDescription { get; set; }
 

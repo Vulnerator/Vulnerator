@@ -14,11 +14,10 @@ namespace Vulnerator.Model.Entity
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long Certification_ID { get; set; }
-
-        [Column("Certification")]
+        
         [Required]
         [StringLength(50)]
-        public string Certification1 { get; set; }
+        public string CertificationName { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Contact> Contacts { get; set; }

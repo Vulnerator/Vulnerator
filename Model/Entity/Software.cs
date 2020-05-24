@@ -55,7 +55,7 @@ namespace Vulnerator.Model.Entity
         public string IaOrIa_Enabled { get; set; }
 
         [StringLength(5)]
-        public string Is_OS_Or_Firmware { get; set; }
+        public string IsOS_OrFirmware { get; set; }
 
         [StringLength(5)]
         public string FAM_Accepted { get; set; }

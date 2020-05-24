@@ -125,10 +125,8 @@ namespace Vulnerator.ViewModel
             try
             {
                 VulnerabilityReports = databaseContext.RequiredReports
-                    .Include(r => r.ReportCategory)
-                    .Where(r => r.ReportCategory.Report_Category_Name.Equals("Vulnerability Management") && !r.Is_Report_Enabled.Equals("False"))
-                    .OrderBy(r => r.ReportCategory.Report_Category_Name)
-                    .ThenBy(r => r.Displayed_Report_Name)
+                    .Where(r => r.ReportCategory.Equals("Vulnerability Management") && !r.IsReportEnabled.Equals("False"))
+                    .OrderBy(r => r.DisplayedReportName)
                     .AsNoTracking()
                     .ToList();
             }
@@ -211,15 +209,15 @@ namespace Vulnerator.ViewModel
                 { DatabaseBuilder.sqliteConnection.Open(); }
                 using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Required_Report_ID", SelectedReport.Required_Report_ID));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Is_Report_Selected", SelectedReport.Is_Report_Selected));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Required_Report_ID", SelectedReport.RequiredReport_ID));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Is_Report_Selected", SelectedReport.IsReportSelected));
                     databaseInterface.UpdateRequiredReportSelected(sqliteCommand);
                 }
                 DatabaseBuilder.sqliteConnection.Close();
             }
             catch (Exception exception)
             {
-                LogWriter.LogError($"Unable to update report selection criteria for {SelectedReport.Displayed_Report_Name}");
+                LogWriter.LogError($"Unable to update report selection criteria for {SelectedReport.DisplayedReportName}");
                 throw exception;
             }
         }

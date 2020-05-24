@@ -4,7 +4,7 @@ CREATE TABLE Accessibility (
                                Accessibility_ID INTEGER PRIMARY KEY,
                                LogicalAccess NVARCHAR (25) NOT NULL,
                                PhysicalAccess NVARCHAR (25) NOT NULL,
-                               AvScan NVARCHAR (25) NOT NULL,
+                               AV_Scan NVARCHAR (25) NOT NULL,
                                DODIN_ConnectionPeriodicity NVARCHAR (25) NOT NULL,
                                FOREIGN KEY (Accessibility_ID) REFERENCES StepOneQuestionnaire(Accessibility_ID)
 );
@@ -76,15 +76,6 @@ CREATE TABLE AvailabilityLevels (
                                     AvailabilityLevel NVARCHAR (25) NOT NULL
 );
 
-CREATE TABLE Buildings (
-                           Building_ID INTEGER PRIMARY KEY,
-                           HasRealTimeAccessControl INTEGER NOT NULL,
-                           HasHVAC INTEGER NOT NULL,
-                           HasRealTimeSecurityMonitoring INTEGER NOT NULL,
-                           PIT_Determination_ID INTEGER,
-                           FOREIGN KEY (Building_ID) REFERENCES PIT_Determination(PIT_Determination_ID)
-);
-
 CREATE TABLE Business (
                           Business_ID INTEGER PRIMARY KEY,
                           MissionCriticality NVARCHAR (25) NOT NULL,
@@ -95,15 +86,8 @@ CREATE TABLE Business (
                           SoftwareCategory NVARCHAR (25) NOT NULL,
                           SystemOwnershipAndControl NVARCHAR (50) NOT NULL,
                           OtherInformation NVARCHAR (2000),
-                          FOREIGN KEY (Business_ID) REFERENCES StepOneQuestionnaire(Business_ID)
-);
-
-CREATE TABLE CalibrationSystems (
-                                    Calibration_ID INTEGER PRIMARY KEY,
-                                    IsBuiltInCalibration INTEGER NOT NULL,
-                                    IsPortableCalibration INTEGER NOT NULL,
-                                    PIT_Determination_ID INTEGER,
-                                    FOREIGN KEY (Calibration_ID) REFERENCES PIT_Determination(PIT_Determination_ID)
+                          StepOneQuestionnaire_ID INTEGER,
+                          FOREIGN KEY (StepOneQuestionnaire_ID) REFERENCES StepOneQuestionnaire(StepOneQuestionnaire_ID)
 );
 
 CREATE TABLE CCIs (
@@ -119,32 +103,9 @@ CREATE TABLE Certifications (
                                 CertificationName NVARCHAR (50) NOT NULL
 );
 
-CREATE TABLE CombatSystems (
-                               CombatSystem_ID INTEGER PRIMARY KEY,
-                               IsCommandAndControl INTEGER NOT NULL,
-                               IsCombatIdentification INTEGER NOT NULL,
-                               HasRealTimeTrackManagement INTEGER NOT NULL,
-                               CanIssueForceOrders INTEGER NOT NULL,
-                               CanControlTroopMovement INTEGER NOT NULL,
-                               CanControlEngagementCoordination INTEGER NOT NULL,
-                               PIT_Determination_ID INTEGER,
-                               FOREIGN KEY (CombatSystem_ID) REFERENCES PIT_Determination(PIT_Determination_ID)
-);
-
 CREATE TABLE CommonControlPackages (
                                        CCP_ID INTEGER PRIMARY KEY,
                                        CCP_Name NVARCHAR (100) NOT NULL
-);
-
-CREATE TABLE CommunicationSystems (
-                                      CommunicationSystem_ID INTEGER PRIMARY KEY,
-                                      IsVoiceCommunication INTEGER NOT NULL,
-                                      IsSatelliteCommunication INTEGER NOT NULL,
-                                      IsTacticalCommunication INTEGER NOT NULL,
-                                      IsISDN_VTC_System INTEGER NOT NULL,
-                                      HasInterrogatorsTransponders INTEGER NOT NULL,
-                                      PIT_Determination_ID INTEGER,
-                                      FOREIGN KEY (CommunicationSystem_ID) REFERENCES PIT_Determination(PIT_Determination_ID)
 );
 
 CREATE TABLE ConfidentialityLevels (
@@ -183,8 +144,8 @@ CREATE TABLE Contacts (
                           ContactLastName NVARCHAR (50) NOT NULL,
                           ContactEmail NVARCHAR (50) NOT NULL,
                           ContactPhone NVARCHAR (20),
-                          ContactTitle NVARCHAR (50) NOT NULL,
-                          Organization_ID INTEGER NOT NULL,
+                          ContactTitle NVARCHAR (50),
+                          Organization_ID INTEGER,
                           FOREIGN KEY (Organization_ID) REFERENCES Organizations(Organization_ID)
 );
 
@@ -258,12 +219,6 @@ CREATE TABLE DADMS_Networks (
                                 DADMS_NetworkName NVARCHAR (50) NOT NULL
 );
 
-CREATE TABLE DiagnosticTestingSystems (
-                                          DiagnosticTesting_ID INTEGER PRIMARY KEY,
-                                          BuiltInTestingEquipment NVARCHAR (5) NOT NULL,
-                                          PortableTestingEquipment NVARCHAR (5) NOT NULL
-);
-
 CREATE TABLE DITPR_DON_Numbers (
                                    DITPR_DON_Number_ID INTEGER PRIMARY KEY,
                                    DITPR_DON_Number INTEGER NOT NULL
@@ -283,25 +238,25 @@ CREATE TABLE EntranceCriteria (
 CREATE TABLE EnumeratedDomainUsersSettings (
                                                EnumeratedDomainUsersSettings_ID Integer PRIMARY KEY,
                                                EnumeratedWindowsUser_ID INTEGER NOT NULL,
-                                               WindowsDomainSettings_ID INTEGER NOT NULL,
+                                               WindowsDomainUserSettings_ID INTEGER NOT NULL,
                                                UNIQUE (
                                                        EnumeratedWindowsUser_ID,
-                                                       WindowsDomainSettings_ID
+                                                       WindowsDomainUserSettings_ID
                                                    ) ON CONFLICT IGNORE,
                                                FOREIGN KEY (EnumeratedWindowsUser_ID) REFERENCES EnumeratedWindowsUsers(EnumeratedWindowsUser_ID),
-                                               FOREIGN KEY (WindowsDomainSettings_ID) REFERENCES WindowsDomainUserSettings(WindowsDomainSettings_ID)
+                                               FOREIGN KEY (WindowsDomainUserSettings_ID) REFERENCES WindowsDomainUserSettings(WindowsDomainUserSettings_ID)
 );
 
 CREATE TABLE EnumeratedLocalWindowsUsersSettings (
                                                      EnumeratedLocalWindowsUsersSettings_ID INTEGER PRIMARY KEY,
                                                      EnumeratedWindowsUser_ID INTEGER NOT NULL,
-                                                     WindowsLocalSettings_ID INTEGER NOT NULL,
+                                                     WindowsLocalUserSettings_ID INTEGER NOT NULL,
                                                      UNIQUE (
                                                              EnumeratedWindowsUser_ID,
-                                                             WindowsLocalSettings_ID
+                                                             WindowsLocalUserSettings_ID
                                                          ) ON CONFLICT IGNORE,
                                                      FOREIGN KEY (EnumeratedWindowsUser_ID) REFERENCES EnumeratedWindowsUsers(EnumeratedWindowsUser_ID),
-                                                     FOREIGN KEY (WindowsLocalSettings_ID) REFERENCES WindowsLocalUserSettings(WindowsLocalSettings_ID)
+                                                     FOREIGN KEY (WindowsLocalUserSettings_ID) REFERENCES WindowsLocalUserSettings(WindowsLocalUserSettings_ID)
 );
 
 CREATE TABLE EnumeratedWindowsGroups (
@@ -388,6 +343,7 @@ CREATE TABLE Groups (
                         StepOneQuestionnaire_ID INTEGER,
                         SAP_ID INTEGER,
                         PIT_Determination_ID INTEGER,
+                        InformationSystemOwner_ID INTEGER,
                         FOREIGN KEY (ConfidentialityLevel_ID) REFERENCES ConfidentialityLevels(ConfidentialityLevel_ID),
                         FOREIGN KEY (IntegrityLevel_ID) REFERENCES IntegrityLevels(IntegrityLevel_ID),
                         FOREIGN KEY (AvailabilityLevel_ID) REFERENCES AvailabilityLevels(AvailabilityLevel_ID),
@@ -396,14 +352,22 @@ CREATE TABLE Groups (
                         FOREIGN KEY (StepOneQuestionnaire_ID) REFERENCES StepOneQuestionnaire(StepOneQuestionnaire_ID),
                         FOREIGN KEY (SAP_ID) REFERENCES SAPs(SAP_ID),
                         FOREIGN KEY (PIT_Determination_ID) REFERENCES PIT_Determination(PIT_Determination_ID),
-                        FOREIGN KEY (Organization_ID) REFERENCES Organizations(Organization_ID)
+                        FOREIGN KEY (Organization_ID) REFERENCES Organizations(Organization_ID),
+                        FOREIGN KEY (InformationSystemOwner_ID) REFERENCES Contacts(Contact_ID)
 );
 
-CREATE TABLE GroupsIATA_Standards (
-                                      Group_ID INTEGER NOT NULL,
-                                      IATA_Standard_ID INTEGER NOT NULL,
-                                      FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
-                                      FOREIGN KEY (IATA_Standard_ID) REFERENCES IATA_Standards(IATA_Standard_ID)
+CREATE TABLE GroupsCCIs (
+                            GroupsCCIs_ID INTEGER PRIMARY KEY,
+                            Group_ID INTEGER NOT NULL,
+                            CCI_ID INTEGER NOT NULL,
+                            IsInherited NVARCHAR (5),
+                            InheritedFrom NVARCHAR (50),
+                            Inheritable NVARCHAR (5),
+                            ImplementationStatus NVARCHAR (25),
+                            ImplementationNotes NVARCHAR (500),
+                            UNIQUE (Group_ID, CCI_ID) ON CONFLICT IGNORE,
+                            FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
+                            FOREIGN KEY (CCI_ID) REFERENCES CCIs(CCI_ID)
 );
 
 CREATE TABLE GroupsConnectedSystems (
@@ -422,18 +386,34 @@ CREATE TABLE GroupsConnections (
                                    FOREIGN KEY (Connection_ID) REFERENCES Connections(Connection_ID)
 );
 
-CREATE TABLE GroupsCCIs (
-                            GroupsCCIs_ID INTEGER PRIMARY KEY,
-                            Group_ID INTEGER NOT NULL,
-                            CCI_ID INTEGER NOT NULL,
-                            IsInherited NVARCHAR (5),
-                            InheritedFrom NVARCHAR (50),
-                            Inheritable NVARCHAR (5),
-                            ImplementationStatus NVARCHAR (25),
-                            ImplementationNotes NVARCHAR (500),
-                            UNIQUE (Group_ID, CCI_ID) ON CONFLICT IGNORE,
-                            FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
-                            FOREIGN KEY (CCI_ID) REFERENCES CCIs(CCI_ID)
+CREATE TABLE GroupsContacts (
+                                GroupContact_ID INTEGER PRIMARY KEY,
+                                Group_ID INTEGER NOT NULL,
+                                Contact_ID INTEGER NOT NULL,
+                                FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
+                                FOREIGN KEY (Contact_ID) REFERENCES Contacts(Contact_ID)
+);
+
+CREATE TABLE GroupsIATA_Standards (
+                                      Group_ID INTEGER NOT NULL,
+                                      IATA_Standard_ID INTEGER NOT NULL,
+                                      FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
+                                      FOREIGN KEY (IATA_Standard_ID) REFERENCES IATA_Standards(IATA_Standard_ID)
+);
+
+CREATE TABLE GroupsMitigationsOrConditions (
+                                               GroupMitigationOrCondition_ID INTEGER PRIMARY KEY,
+                                               MitigationOrCondition_ID INTEGER NOT NULL,
+                                               Group_ID INTEGER NOT NULL,
+                                               Vulnerability_ID INTEGER NOT NULL,
+                                               UNIQUE (
+                                                       MitigationOrCondition_ID,
+                                                       Group_ID,
+                                                       Vulnerability_ID
+                                                   ) ON CONFLICT IGNORE,
+                                               FOREIGN KEY (MitigationOrCondition_ID) REFERENCES MitigationsOrConditions(MitigationOrCondition_ID),
+                                               FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
+                                               FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID)
 );
 
 CREATE TABLE GroupsOverlays (
@@ -452,29 +432,6 @@ CREATE TABLE GroupsWaivers (
                                WaiverExpirationDate DATE NOT NULL,
                                FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
                                FOREIGN KEY (Waiver_ID) REFERENCES Waivers(Waiver_ID)
-);
-
-CREATE TABLE GroupsMitigationsOrConditions (
-                                               GroupMitigationOrCondition_ID INTEGER PRIMARY KEY,
-                                               MitigationOrCondition_ID INTEGER NOT NULL,
-                                               Group_ID INTEGER NOT NULL,
-                                               Vulnerability_ID INTEGER NOT NULL,
-                                               UNIQUE (
-                                                       MitigationOrCondition_ID,
-                                                       Group_ID,
-                                                       Vulnerability_ID
-                                                   ) ON CONFLICT IGNORE,
-                                               FOREIGN KEY (MitigationOrCondition_ID) REFERENCES MitigationsOrConditions(MitigationOrCondition_ID),
-                                               FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
-                                               FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID)
-);
-
-CREATE TABLE GroupsContacts (
-                                GroupContact_ID INTEGER PRIMARY KEY,
-                                Group_ID INTEGER NOT NULL,
-                                Contact_ID INTEGER NOT NULL,
-                                FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
-                                FOREIGN KEY (Contact_ID) REFERENCES Contacts(Contact_ID)
 );
 
 CREATE TABLE Hardware (
@@ -497,34 +454,6 @@ CREATE TABLE Hardware (
                           OS NVARCHAR (100),
                           FOREIGN KEY (LifecycleStatus_ID) REFERENCES LifecycleStatuses(LifecycleStatus_ID),
                           UNIQUE (ScanIP, DiscoveredHostName, FQDN, NetBIOS) ON CONFLICT IGNORE
-);
-
-CREATE TABLE HardwareMitigationsOrConditions (
-                                                 HardwareMitigationOrCondition_ID INTEGER PRIMARY KEY,
-                                                 Hardware_ID INTEGER NOT NULL,
-                                                 MitigationOrCondition_ID INTEGER NOT NULL,
-                                                 FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
-                                                 FOREIGN KEY (MitigationOrCondition_ID) REFERENCES MitigationsOrConditions(MitigationOrCondition_ID)
-);
-
-CREATE TABLE HardwarePortsProtocols (
-                                        HardwarePortsProtocols_ID INTEGER PRIMARY KEY,
-                                        Hardware_ID INTEGER NOT NULL,
-                                        PortsProtocols_ID INTEGER NOT NULL,
-                                        ReportInAccreditation NVARCHAR (5),
-                                        DiscoveredService NVARCHAR (25),
-                                        DisplayService NVARCHAR (50),
-                                        Direction NVARCHAR (25),
-                                        BoundaryCrossed NVARCHAR (25),
-                                        DoD_Compliant NVARCHAR (5),
-                                        Classification NVARCHAR (25),
-                                        UNIQUE (
-                                                     Hardware_ID,
-                                                     PortsProtocols_ID,
-                                                     DiscoveredService
-                                            ) ON CONFLICT IGNORE,
-                                        FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
-                                        FOREIGN KEY (PortsProtocols_ID) REFERENCES PortsProtocols(PortsProtocols_ID)
 );
 
 CREATE TABLE HardwareContacts (
@@ -562,15 +491,6 @@ CREATE TABLE Hardware_IP_Addresses (
                                        FOREIGN KEY (IP_Address_ID) REFERENCES Ip_Addresses(IP_Address_ID)
 );
 
-CREATE TABLE Hardware_MAC_Addresses (
-                                        Hardware_MAC_Address_ID INTEGER PRIMARY KEY,
-                                        Hardware_ID INTEGER NOT NULL,
-                                        MAC_Address_ID INTEGER NOT NULL,
-                                        UNIQUE (Hardware_ID, MAC_Address_ID) ON CONFLICT IGNORE,
-                                        FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
-                                        FOREIGN KEY (MAC_Address_ID) REFERENCES MAC_Addresses(MAC_Address_ID)
-);
-
 CREATE TABLE HardwareLocation (
                                   HardwareLocation_ID INTEGER PRIMARY KEY,
                                   Hardware_ID INTEGER NOT NULL,
@@ -583,13 +503,33 @@ CREATE TABLE HardwareLocation (
                                   FOREIGN KEY (Location_ID) REFERENCES Locations(Location_ID)
 );
 
-CREATE TABLE HardwareVulnerabilitySources (
-                                              HardwareVulnerabilitySource_ID INTEGER PRIMARY KEY,
-                                              Hardware_ID INTEGER NOT NULL,
-                                              VulnerabilitySource_ID INTEGER NOT NULL,
-                                              FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
-                                              FOREIGN KEY (VulnerabilitySource_ID) REFERENCES VulnerabilitySources(VulnerabilitySource_ID),
-                                              UNIQUE (Hardware_ID, VulnerabilitySource_ID) ON CONFLICT IGNORE
+CREATE TABLE Hardware_MAC_Addresses (
+                                        Hardware_MAC_Address_ID INTEGER PRIMARY KEY,
+                                        Hardware_ID INTEGER NOT NULL,
+                                        MAC_Address_ID INTEGER NOT NULL,
+                                        UNIQUE (Hardware_ID, MAC_Address_ID) ON CONFLICT IGNORE,
+                                        FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
+                                        FOREIGN KEY (MAC_Address_ID) REFERENCES MAC_Addresses(MAC_Address_ID)
+);
+
+CREATE TABLE HardwarePortsProtocols (
+                                        HardwarePortsProtocols_ID INTEGER PRIMARY KEY,
+                                        Hardware_ID INTEGER NOT NULL,
+                                        PortsProtocols_ID INTEGER NOT NULL,
+                                        ReportInAccreditation NVARCHAR (5),
+                                        DiscoveredService NVARCHAR (25),
+                                        DisplayService NVARCHAR (50),
+                                        Direction NVARCHAR (25),
+                                        BoundariesCrossed NVARCHAR (25),
+                                        DoD_Compliant NVARCHAR (5),
+                                        Classification NVARCHAR (25),
+                                        UNIQUE (
+                                                     Hardware_ID,
+                                                     PortsProtocols_ID,
+                                                     DiscoveredService
+                                            ) ON CONFLICT IGNORE,
+                                        FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
+                                        FOREIGN KEY (PortsProtocols_ID) REFERENCES PortsProtocols(PortsProtocols_ID)
 );
 
 CREATE TABLE IA_Controls (
@@ -599,15 +539,15 @@ CREATE TABLE IA_Controls (
                              IA_ControlSubjectArea NVARCHAR (50) NOT NULL,
                              IA_ControlName NVARCHAR (100) NOT NULL,
                              IA_ControlDescription NVARCHAR (250) NOT NULL,
-                             ThreatVulnerabilityCountermeasures NVARCHAR (2000) NOT NULL,
-                             GeneralImplementationGuidance NVARCHAR (2000) NOT NULL,
-                             SystemSpecificGuidanceResources NVARCHAR (2000) NOT NULL
+                             IA_ControlThreatVulnerabilityCountermeasures NVARCHAR (2000) NOT NULL,
+                             IA_ControlGeneralImplementationGuidance NVARCHAR (2000) NOT NULL,
+                             IA_ControlSystemSpecificGuidanceResources NVARCHAR (2000) NOT NULL
 );
 
 CREATE TABLE IATA_Standards (
                                 IATA_Standard_ID INTEGER PRIMARY KEY,
-                                StandardTitle NVARCHAR (50) NOT NULL,
-                                StandardDescription NVARCHAR (1000) NOT NULL
+                                IATA_StandardTitle NVARCHAR (50) NOT NULL,
+                                IATA_StandardDescription NVARCHAR (1000) NOT NULL
 );
 
 CREATE TABLE ImpactAdjustments (
@@ -616,13 +556,6 @@ CREATE TABLE ImpactAdjustments (
                                    AdjustedIntegrity NVARCHAR (25) NOT NULL,
                                    AdjustedAvailability NVARCHAR (25) NOT NULL,
                                    FOREIGN KEY (ImpactAdjustment_ID) REFERENCES SystemCategorizationInformationTypes(ImpactAdjustment_ID)
-);
-
-CREATE TABLE InformationSystemOwners (
-                                         InformationSystemOwner_ID INTEGER NOT NULL,
-                                         Contact_ID INTEGER NOT NULL,
-                                         FOREIGN KEY (InformationSystemOwner_ID) REFERENCES Overview(InformationSystemOwner_ID),
-                                         FOREIGN KEY (Contact_ID) REFERENCES Contacts(Contact_ID)
 );
 
 CREATE TABLE InformationTypes (
@@ -701,12 +634,6 @@ CREATE TABLE MAC_Addresses (
                                MAC_Address NVARCHAR (50) NOT NULL UNIQUE ON CONFLICT IGNORE
 );
 
-CREATE TABLE MedicalTechnologies (
-                                     MedicalTechnology_ID INTEGER PRIMARY KEY,
-                                     MedicalImaging NVARCHAR (5) NOT NULL,
-                                     MedicalMonitoring NVARCHAR (5) NOT NULL
-);
-
 CREATE TABLE MissionAreas (
                               MissionArea_ID INTEGER PRIMARY KEY,
                               MissionArea NVARCHAR (25) NOT NULL
@@ -731,17 +658,6 @@ CREATE TABLE MitigationsOrConditions (
                                          ExpirationDate DATE,
                                          IsApproved NVARCHAR (5),
                                          Approver NVARCHAR (100)
-);
-
-CREATE TABLE NavigationTransportationSystems (
-                                                 NavigationSystem_ID INTEGER PRIMARY KEY,
-                                                 ShipAircraftControl NVARCHAR (5) NOT NULL,
-                                                 IntegratedBridge NVARCHAR (5) NOT NULL,
-                                                 ElectronicCharts NVARCHAR (5) NOT NULL,
-                                                 GPS NVARCHAR (5) NOT NULL,
-                                                 WSN NVARCHAR (5) NOT NULL,
-                                                 InertialNavigation NVARCHAR (5) NOT NULL,
-                                                 DeadReckoningDevice NVARCHAR (5) NOT NULL
 );
 
 CREATE TABLE NetworkConnectionRules (
@@ -870,7 +786,7 @@ CREATE TABLE Organizations (
 
 CREATE TABLE Overlays (
                           Overlay_ID INTEGER PRIMARY KEY,
-                          Overlay NVARCHAR (25) NOT NULL
+                          OverlayName NVARCHAR (25) NOT NULL
 );
 
 CREATE TABLE Overview (
@@ -879,7 +795,8 @@ CREATE TABLE Overview (
                           InformationSystemOwner_ID INTEGER NOT NULL,
                           SystemType_ID INTEGER NOT NULL,
                           DVS_Site NVARCHAR (100),
-                          FOREIGN KEY (Overview_ID) REFERENCES StepOneQuestionnaire(Overview_ID),
+                          FOREIGN KEY (InformationSystemOwner_ID) REFERENCES Contacts(Contact_ID),
+                          FOREIGN KEY (Overview_ID) REFERENCES StepOneQuestionnaire(StepOneQuestionnaire_ID),
                           FOREIGN KEY (SystemType_ID) REFERENCES SystemTypes(SystemType_ID)
 );
 
@@ -894,6 +811,70 @@ CREATE TABLE PIT_Determination (
                                    IsDedicatedSpecialPurposeSystem NVARCHAR (5) NOT NULL,
                                    IsEssentialSpecialPurposeSystem NVARCHAR (5) NOT NULL,
                                    PerformsGeneralServices NVARCHAR (5) NOT NULL,
+                                   IsFireControlOrTargetingSystem NVARCHAR (5),
+                                   IsMissileSystem NVARCHAR (5),
+                                   IsGunSystem NVARCHAR (5),
+                                   IsTorpedo NVARCHAR (5),
+                                   IsActiveElectronicsWarfareSystem NVARCHAR (5),
+                                   IsLauncher NVARCHAR (5),
+                                   IsDecoySystem NVARCHAR (5),
+                                   IsVehicle NVARCHAR (5),
+                                   IsTank NVARCHAR (5),
+                                   IsArtillery NVARCHAR (5),
+                                   IsManDeployableWeapon NVARCHAR (5),
+                                   IsFlightSimulator NVARCHAR (5),
+                                   IsBridgeSimulator NVARCHAR (5),
+                                   IsClassroomNetworkOther NVARCHAR (5),
+                                   IsEmbeddedTacticalTrainerAndSimulator NVARCHAR (5),
+                                   IsBuiltInTestOrMaintenanceEquipment NVARCHAR (5),
+                                   IsPortableTestOrMaintenanceEquipment NVARCHAR (5),
+                                   IsBuiltInCalibrationEquipment NVARCHAR (5),
+                                   IsPortableCalibrationEquipment NVARCHAR (5),
+                                   IsRDTE_Network NVARCHAR (5),
+                                   IsRDTE_SystemConnectedToRDTE_Network NVARCHAR (5),
+                                   IsMedicalImaging NVARCHAR (5),
+                                   IsMedicalMonitoring NVARCHAR (5),
+                                   IsShipOrAircraftControlSystem NVARCHAR (5),
+                                   IsIntegratedBridgeSystem NVARCHAR (5),
+                                   IsElectronicChart NVARCHAR (5),
+                                   IsGPS NVARCHAR (5),
+                                   IsWSN NVARCHAR (5),
+                                   IsInterialNavigation NVARCHAR (5),
+                                   IsDeadReckoningDevice NVARCHAR (5),
+                                   IsRealTimeAccessControlSystem NVARCHAR (5),
+                                   IsHVAC_System NVARCHAR (5),
+                                   IsRealTimeSecurityMonitoringSystem NVARCHAR (5),
+                                   IsSCADA_System NVARCHAR (5),
+                                   IsUtilitiesEngineeringManagement NVARCHAR (5),
+                                   IsMeteringAndControl NVARCHAR (5),
+                                   IsMechanicalMonitoring NVARCHAR (5),
+                                   IsDamageControlMonitoring NVARCHAR (5),
+                                   IsVoiceCommunicationSystem NVARCHAR (5),
+                                   IsSatelliteCommunitcationSystem NVARCHAR (5),
+                                   IsTacticalCommunication NVARCHAR (5),
+                                   IsISDN_VTC_System NVARCHAR (5),
+                                   IsInterrigatorOrTransponder NVARCHAR (5),
+                                   IsCommandAndControlOfForces NVARCHAR (5),
+                                   IsCombatIdentificationAndClassification NVARCHAR (5),
+                                   IsRealTimeTrackManagement NVARCHAR (5),
+                                   IsForceOrders NVARCHAR (5),
+                                   IsTroopMovement NVARCHAR (5),
+                                   IsEngagementCoordination NVARCHAR (5),
+                                   IsWarFightingDisplay NVARCHAR (5),
+                                   IsInputOutputConsole NVARCHAR (5),
+                                   IsRADAR_System NVARCHAR (5),
+                                   IsActiveOrPassiveAcousticSensor NVARCHAR (5),
+                                   IsVisualOrImagingSensor NVARCHAR (5),
+                                   IsRemoteVehicle NVARCHAR (5),
+                                   IsPassiveElectronicWarfareSensor NVARCHAR (5),
+                                   IsISR_Sensor NVARCHAR (5),
+                                   IsNationalSensor NVARCHAR (5),
+                                   IsNavigationAndControlSensor NVARCHAR (5),
+                                   IsElectronicWarfare NVARCHAR (5),
+                                   IsIntelligence NVARCHAR (5),
+                                   IsEnvironmental NVARCHAR (5),
+                                   IsAcoustic NVARCHAR (5),
+                                   IsGeographic NVARCHAR (5),
                                    IsTacticalDecisionAid NVARCHAR (5),
                                    OtherSystemTypeDescription NVARCHAR (100)
 );
@@ -918,14 +899,6 @@ CREATE TABLE RelatedTesting (
                                 RelatedSystemTested NVARCHAR (50) NOT NULL,
                                 ResponsibleOrganization NVARCHAR (100) NOT NULL,
                                 TestingImpact NVARCHAR (500) NOT NULL
-);
-
-CREATE TABLE ResearchWeaponsSystems (
-                                        ResearchWeaponsSystem_ID INTEGER PRIMARY KEY,
-                                        RDTE_Network NVARCHAR (5) NOT NULL,
-                                        RDTE_ConnectedSystem NVARCHAR (5) NOT NULL,
-                                        PIT_Determination_ID INTEGER,
-                                        FOREIGN KEY (PIT_Determination_ID) REFERENCES PIT_Determination(PIT_Determination_ID)
 );
 
 CREATE TABLE ResponsibilityRoles (
@@ -1040,20 +1013,6 @@ CREATE TABLE ScapScores (
                             FOREIGN KEY (VulnerabilitySource_ID) REFERENCES VulnerabilitySources(VulnerabilitySource_ID)
 );
 
-CREATE TABLE Sensors (
-                         Sensor_ID INTEGER PRIMARY KEY,
-                         RADAR NVARCHAR (5) NOT NULL,
-                         Acoustic NVARCHAR (5) NOT NULL,
-                         VisualAndImaging NVARCHAR (5) NOT NULL,
-                         RemoteVehicle NVARCHAR (5) NOT NULL,
-                         PassiveElectronicWarfare NVARCHAR (5) NOT NULL,
-                         ISR NVARCHAR (5) NOT NULL,
-                         National NVARCHAR (5) NOT NULL,
-                         NavigationAndControl NVARCHAR (5) NOT NULL,
-                         PIT_Determination_ID INTEGER NOT NULL,
-                         FOREIGN KEY (PIT_Determination_ID) REFERENCES PIT_Determination(PIT_Determination_ID)
-);
-
 CREATE TABLE PortServices (
                               PortService_ID INTEGER PRIMARY KEY,
                               PortServiceName NVARCHAR (100) NOT NULL UNIQUE ON CONFLICT IGNORE,
@@ -1125,14 +1084,6 @@ CREATE TABLE SoftwareHardware (
                                   UNIQUE (Software_ID, Hardware_ID) ON CONFLICT IGNORE
 );
 
-CREATE TABLE SpecialPurposeConsoles (
-                                        SpecialPurposeConsole_ID INTEGER PRIMARY KEY,
-                                        WarFighting NVARCHAR (5) NOT NULL,
-                                        InputOutputConsole NVARCHAR (5) NOT NULL,
-                                        PIT_Determination_ID INTEGER,
-                                        FOREIGN KEY (PIT_Determination_ID) REFERENCES PIT_Determination(PIT_Determination_ID)
-);
-
 CREATE TABLE StepOneQuestionnaire (
                                       StepOneQuestionnaire_ID INTEGER PRIMARY KEY,
                                       SystemDescription NVARCHAR (2000) NOT NULL,
@@ -1148,7 +1099,7 @@ CREATE TABLE StepOneQuestionnaire (
                                       Business_ID INTEGER NOT NULL,
                                       SystemEnterpriseArchitecture NVARCHAR (2000) NOT NULL,
                                       AuthorizationToConnectOrInterim_ATC_ID INTEGER,
-                                      NistControlSet NVARCHAR (50) NOT NULL,
+                                      NIST_ControlSet NVARCHAR (50) NOT NULL,
                                       FOREIGN KEY (AuthorizationToConnectOrInterim_ATC_ID) REFERENCES AuthorizationToConnectOrInterim_ATC(AuthorizationToConnectOrInterim_ATC_ID)
 );
 
@@ -1239,7 +1190,8 @@ CREATE TABLE SystemCategorizationInformationTypes (
                                                       ImpactAdjustment_ID INTEGER NOT NULL,
                                                       UNIQUE (SystemCategorization_ID, InformationType_ID) ON CONFLICT IGNORE,
                                                       FOREIGN KEY (SystemCategorization_ID) REFERENCES SystemCategorization(SystemCategorization_ID),
-                                                      FOREIGN KEY (InformationType_ID) REFERENCES InformationTypes(InformationType_ID)
+                                                      FOREIGN KEY (InformationType_ID) REFERENCES InformationTypes(InformationType_ID),
+                                                      FOREIGN KEY (ImpactAdjustment_ID) REFERENCES ImpactAdjustments(ImpactAdjustment_ID)
 );
 
 CREATE TABLE SystemCategorizationInterconnectedSystems (
@@ -1265,17 +1217,6 @@ CREATE TABLE SystemTypes (
                              SystemType NVARCHAR (100) NOT NULL
 );
 
-CREATE TABLE TacticalSupportDatabases (
-                                          TacticalSupportDatabase_ID INTEGER PRIMARY KEY,
-                                          ElectronicWarfare NVARCHAR (5) NOT NULL,
-                                          Intelligence NVARCHAR (5) NOT NULL,
-                                          Environmental NVARCHAR (5) NOT NULL,
-                                          Acoustic NVARCHAR (5) NOT NULL,
-                                          Geographic NVARCHAR (5) NOT NULL,
-                                          PIT_Determination_ID INTEGER,
-                                          FOREIGN KEY (PIT_Determination_ID) REFERENCES PIT_Determination(PIT_Determination_ID)
-);
-
 CREATE TABLE TestReferences (
                                 TestReference_ID INTEGER PRIMARY KEY,
                                 TestReferenceName NVARCHAR (100)
@@ -1286,16 +1227,6 @@ CREATE TABLE TestScheduleItems (
                                    TestEvent NVARCHAR (100),
                                    TestScheduleCategory NVARCHAR (25) NOT NULL,
                                    DurationInDays INTEGER NOT NULL
-);
-
-CREATE TABLE TrainingSimulationSystems (
-                                           TrainingSimulationSystem_ID INTEGER PRIMARY KEY,
-                                           FlightSimulator NVARCHAR (5) NOT NULL,
-                                           BridgeSimulator NVARCHAR (5) NOT NULL,
-                                           ClassroomNetworkOther NVARCHAR (5) NOT NULL,
-                                           EmbeddedTactical NVARCHAR (5) NOT NULL,
-                                           PIT_Determination_ID INTEGER,
-                                           FOREIGN KEY (PIT_Determination_ID) REFERENCES PIT_Determination(PIT_Determination_ID)
 );
 
 CREATE TABLE UniqueFindings (
@@ -1344,17 +1275,6 @@ CREATE TABLE UniqueFindingsSourceFiles (
 CREATE TABLE UserCategories (
                                 UserCategory_ID INTEGER PRIMARY KEY,
                                 UserCategory NVARCHAR (25)
-);
-
-CREATE TABLE UtilityDistribution (
-                                     UtilityDistribution_ID INTEGER PRIMARY KEY,
-                                     SCADA NVARCHAR (5) NOT NULL,
-                                     UtilitiesEngineering NVARCHAR (5) NOT NULL,
-                                     MeteringAndControl NVARCHAR (5) NOT NULL,
-                                     MechanicalMonitoring NVARCHAR (5) NOT NULL,
-                                     DamageControlMonitoring NVARCHAR (5) NOT NULL,
-                                     PIT_Determination_ID INTEGER,
-                                     FOREIGN KEY (PIT_Determination_ID) REFERENCES PIT_Determination(PIT_Determination_ID)
 );
 
 CREATE TABLE VulnerabilitiesCCIs (
@@ -1459,41 +1379,24 @@ CREATE TABLE Waivers (
                          WaiverName NVARCHAR (100) NOT NULL
 );
 
-CREATE TABLE WeaponsSystems (
-                                WeaponsSystem_ID INTEGER PRIMARY KEY,
-                                FireControlAndTargeting NVARCHAR (5) NOT NULL,
-                                Missile NVARCHAR (5) NOT NULL,
-                                Gun NVARCHAR (5) NOT NULL,
-                                Torpedoes NVARCHAR (5) NOT NULL,
-                                ActiveElectronicWarfare NVARCHAR (5) NOT NULL,
-                                Launchers NVARCHAR (5) NOT NULL,
-                                Decoy NVARCHAR (5) NOT NULL,
-                                Vehicles NVARCHAR (5) NOT NULL,
-                                Tanks NVARCHAR (5) NOT NULL,
-                                Artillery NVARCHAR (5) NOT NULL,
-                                ManDeployableWeapons NVARCHAR (5) NOT NULL,
-                                PIT_Determination_ID INTEGER,
-                                FOREIGN KEY (PIT_Determination_ID) REFERENCES PIT_Determination(PIT_Determination_ID)
-);
-
 CREATE TABLE WindowsDomainUserSettings (
-                                           WindowsDomainSettings_ID INTEGER PRIMARY KEY,
-                                           DomainIsDisabled NVARCHAR (5) NOT NULL,
-                                           DomainIsDisabledAutomatically NVARCHAR (5) NOT NULL,
-                                           DomainCantChangePW NVARCHAR (5) NOT NULL,
-                                           DomainNeverChangedPW NVARCHAR (5) NOT NULL,
-                                           DomainNeverLoggedOn NVARCHAR (5) NOT NULL,
-                                           DomainPW_NeverExpires NVARCHAR (5) NOT NULL
+                                           WindowsDomainUserSettings_ID INTEGER PRIMARY KEY,
+                                           WindowsDomainUserIsDisabled NVARCHAR (5) NOT NULL,
+                                           WindowsDomainUserIsDisabledAutomatically NVARCHAR (5) NOT NULL,
+                                           WindowsDomainUserCantChangePW NVARCHAR (5) NOT NULL,
+                                           WindowsDomainUserNeverChangedPW NVARCHAR (5) NOT NULL,
+                                           WindowsDomainUserNeverLoggedOn NVARCHAR (5) NOT NULL,
+                                           WindowsDomainUserPW_NeverExpires NVARCHAR (5) NOT NULL
 );
 
 CREATE TABLE WindowsLocalUserSettings (
-                                          WindowsLocalSettings_ID INTEGER PRIMARY KEY,
-                                          LocalIsDisabled NVARCHAR (5) NOT NULL,
-                                          LocalIsDisabledAutomatically NVARCHAR (5) NOT NULL,
-                                          LocalCantChangePW NVARCHAR (5) NOT NULL,
-                                          LocalNeverChangedPW NVARCHAR (5) NOT NULL,
-                                          LocalNeverLoggedOn NVARCHAR (5) NOT NULL,
-                                          LocalPW_NeverExpires NVARCHAR (5) NOT NULL
+                                          WindowsLocalUserSettings_ID INTEGER PRIMARY KEY,
+                                          WindowsLocalUserIsDisabled NVARCHAR (5) NOT NULL,
+                                          WindowsLocalUserIsDisabledAutomatically NVARCHAR (5) NOT NULL,
+                                          WindowsLocalUserCantChangePW NVARCHAR (5) NOT NULL,
+                                          WindowsLocalUserNeverChangedPW NVARCHAR (5) NOT NULL,
+                                          WindowsLocalUserNeverLoggedOn NVARCHAR (5) NOT NULL,
+                                          WindowsLocalUserPW_NeverExpires NVARCHAR (5) NOT NULL
 );
 
 CREATE TABLE RequiredReports (
@@ -1546,6 +1449,7 @@ VALUES
     'False',
     NULL,
     'False',
+    NULL,
     NULL,
     NULL,
     NULL,

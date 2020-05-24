@@ -17,7 +17,7 @@ namespace Vulnerator.Model.Entity
         {
             Groups = new HashSet<Group>();
             AdditionalTestConsiderations = new HashSet<AdditionalTestConsideration>();
-            CustomTestCases = new HashSet<CustomTestCas>();
+            CustomTestCases = new HashSet<CustomTestCase>();
             EntranceCriterias = new HashSet<EntranceCriteria>();
             ExitCriterias = new HashSet<ExitCriteria>();
             Limitations1 = new HashSet<Limitation>();
@@ -58,7 +58,7 @@ namespace Vulnerator.Model.Entity
         public virtual ICollection<AdditionalTestConsideration> AdditionalTestConsiderations { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CustomTestCas> CustomTestCases { get; set; }
+        public virtual ICollection<CustomTestCase> CustomTestCases { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EntranceCriteria> EntranceCriterias { get; set; }

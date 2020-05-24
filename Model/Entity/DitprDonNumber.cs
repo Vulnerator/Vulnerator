@@ -5,6 +5,7 @@ namespace Vulnerator.Model.Entity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    [Table("DITPR_DON_Numbers")]
     public partial class DitprDonNumber
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

@@ -20,7 +20,7 @@ namespace Vulnerator.Model.Entity
 
         [Required]
         [StringLength(50)]
-        public string Location_Name { get; set; }
+        public string LocationName { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -55,13 +55,13 @@ namespace Vulnerator.Model.Entity
         public DateTime? OSS_AccreditationDate { get; set; }
 
         [StringLength(5)]
-        public string IsBaselineLocation_Global { get; set; }
+        public string IsBaselineLocationGlobal { get; set; }
 
         [StringLength(5)]
-        public string IsDeploymentLocation_Global { get; set; }
+        public string IsDeploymentLocationGlobal { get; set; }
 
         [StringLength(5)]
-        public string IsTestLocation_Global { get; set; }
+        public string IsTestLocationGlobal { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<HardwareLocation> HardwareLocations { get; set; }

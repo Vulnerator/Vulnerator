@@ -23,6 +23,8 @@ namespace Vulnerator.Model.Entity
 
         [StringLength(100)]
         public string DVS_Site { get; set; }
+        
+        public virtual Contact InformationSystemOwner { get; set; }
 
         public virtual SystemType SystemType { get; set; }
     }

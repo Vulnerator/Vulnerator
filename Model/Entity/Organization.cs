@@ -17,11 +17,13 @@ namespace Vulnerator.Model.Entity
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long Organization_ID { get; set; }
-
-        [Column("Organization")]
+        
         [Required]
         [StringLength(50)]
-        public string Organization1 { get; set; }
+        public string OrganizationName { get; set; }
+        
+        [StringLength(50)]
+        public string OrganizationAcronym { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Contact> Contacts { get; set; }

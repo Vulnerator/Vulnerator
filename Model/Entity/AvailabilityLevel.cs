@@ -15,7 +15,7 @@ namespace Vulnerator.Model.Entity
         public AvailabilityLevel()
         {
             Groups = new ObservableCollection<Group>();
-            NIST_ControlsAvailabilityLevels = new ObservableCollection<NistControlsAvailabilityLevel>();
+            NIST_ControlsAvailabilityLevels = new ObservableCollection<NIST_ControlAvailabilityLevel>();
         }
 
         [Key]
@@ -31,6 +31,6 @@ namespace Vulnerator.Model.Entity
         public virtual ICollection<Group> Groups { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NistControlsAvailabilityLevel> NIST_ControlsAvailabilityLevels { get; set; }
+        public virtual ICollection<NIST_ControlAvailabilityLevel> NIST_ControlsAvailabilityLevels { get; set; }
     }
 }
