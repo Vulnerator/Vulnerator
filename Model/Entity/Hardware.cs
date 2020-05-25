@@ -14,7 +14,7 @@ namespace Vulnerator.Model.Entity
         {
             HardwarePortsProtocols = new ObservableCollection<HardwarePortsProtocols>();
             HardwareLocations = new ObservableCollection<HardwareLocation>();
-            ScapScores = new ObservableCollection<ScapScore>();
+            ScapScores = new ObservableCollection<SCAP_Score>();
             SoftwareHardwares = new ObservableCollection<SoftwareHardware>();
             UniqueFindings = new ObservableCollection<UniqueFinding>();
             Contacts = new ObservableCollection<Contact>();
@@ -87,7 +87,7 @@ namespace Vulnerator.Model.Entity
         public virtual ICollection<HardwareLocation> HardwareLocations { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ScapScore> ScapScores { get; set; }
+        public virtual ICollection<SCAP_Score> ScapScores { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SoftwareHardware> SoftwareHardwares { get; set; }

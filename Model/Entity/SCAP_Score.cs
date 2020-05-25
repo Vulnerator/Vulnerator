@@ -6,7 +6,7 @@ namespace Vulnerator.Model.Entity
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class ScapScore
+    public partial class SCAP_Score
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

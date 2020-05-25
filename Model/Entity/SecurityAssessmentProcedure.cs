@@ -15,12 +15,11 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SecurityAssessmentProcedure()
         {
-            Groups = new HashSet<Group>();
             AdditionalTestConsiderations = new HashSet<AdditionalTestConsideration>();
             CustomTestCases = new HashSet<CustomTestCase>();
             EntranceCriterias = new HashSet<EntranceCriteria>();
             ExitCriterias = new HashSet<ExitCriteria>();
-            Limitations1 = new HashSet<Limitation>();
+            Limitations = new HashSet<Limitation>();
             RelatedDocuments = new HashSet<RelatedDocument>();
             RelatedTestings = new HashSet<RelatedTesting>();
             TestReferences = new HashSet<TestReference>();
@@ -36,23 +35,21 @@ namespace Vulnerator.Model.Entity
         public string Scope { get; set; }
 
         [Required]
-        [StringLength(500)]
-        public string Limitations { get; set; }
-
-        [Required]
         [StringLength(2000)]
         public string TestConfiguration { get; set; }
 
         [Required]
         [StringLength(1000)]
-        public string LogisiticsSupport { get; set; }
+        public string LogisticsSupport { get; set; }
 
         [Required]
         [StringLength(1000)]
         public string Security { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Group> Groups { get; set; }
+        
+        [Required]
+        public long Group_ID { get; set; }
+        
+        public virtual Group Group { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AdditionalTestConsideration> AdditionalTestConsiderations { get; set; }
@@ -67,7 +64,7 @@ namespace Vulnerator.Model.Entity
         public virtual ICollection<ExitCriteria> ExitCriterias { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Limitation> Limitations1 { get; set; }
+        public virtual ICollection<Limitation> Limitations { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RelatedDocument> RelatedDocuments { get; set; }
