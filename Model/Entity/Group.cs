@@ -95,7 +95,7 @@ namespace Vulnerator.Model.Entity
         
         public virtual Contact InformationSystemOwner { get; set; }
 
-        public virtual SAP SAP { get; set; }
+        public virtual SecurityAssessmentProcedure SecurityAssessmentProcedure { get; set; }
 
         public virtual StepOneQuestionnaire StepOneQuestionnaire { get; set; }
 

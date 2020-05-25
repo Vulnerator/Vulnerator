@@ -74,7 +74,7 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<RelatedTesting> RelatedTestings { get; set; }
         public virtual DbSet<RequiredReport> RequiredReports { get; set; }
         public virtual DbSet<ResponsibilityRole> ResponsibilityRoles { get; set; }
-        public virtual DbSet<SAP> SAPs { get; set; }
+        public virtual DbSet<SecurityAssessmentProcedure> SAPs { get; set; }
         public virtual DbSet<ScapScore> ScapScores { get; set; }
         public virtual DbSet<Software> Softwares { get; set; }
         public virtual DbSet<StepOneQuestionnaire> StepOneQuestionnaires { get; set; }

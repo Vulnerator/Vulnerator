@@ -8,12 +8,12 @@ namespace Vulnerator.Model.Entity
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class SAP : INotifyPropertyChanged
+    public partial class SecurityAssessmentProcedure : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public SAP()
+        public SecurityAssessmentProcedure()
         {
             Groups = new HashSet<Group>();
             AdditionalTestConsiderations = new HashSet<AdditionalTestConsideration>();
@@ -29,7 +29,7 @@ namespace Vulnerator.Model.Entity
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long SAP_ID { get; set; }
+        public long SecurityAssessmentProcedure_ID { get; set; }
 
         [Required]
         [StringLength(50)]

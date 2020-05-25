@@ -12,7 +12,7 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public RelatedTesting()
         {
-            SAPs = new HashSet<SAP>();
+            SAPs = new HashSet<SecurityAssessmentProcedure>();
         }
 
         [Key]
@@ -38,6 +38,6 @@ namespace Vulnerator.Model.Entity
         public string TestingImpact { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SAP> SAPs { get; set; }
+        public virtual ICollection<SecurityAssessmentProcedure> SAPs { get; set; }
     }
 }

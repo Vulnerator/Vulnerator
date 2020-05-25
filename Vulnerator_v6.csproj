@@ -383,7 +383,7 @@
     <Compile Include="Model\Entity\RelatedTesting.cs" />
     <Compile Include="Model\Entity\RequiredReport.cs" />
     <Compile Include="Model\Entity\ResponsibilityRole.cs" />
-    <Compile Include="Model\Entity\SAP.cs" />
+    <Compile Include="Model\Entity\SecurityAssessmentProcedure.cs" />
     <Compile Include="Model\Entity\ScapScore.cs" />
     <Compile Include="Model\Entity\Software.cs" />
     <Compile Include="Model\Entity\SoftwareHardware.cs" />
