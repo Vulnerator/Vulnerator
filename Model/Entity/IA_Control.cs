@@ -5,10 +5,10 @@ namespace Vulnerator.Model.Entity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    public partial class IA_Controls
+    public partial class IA_Control
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public IA_Controls()
+        public IA_Control()
         { Vulnerabilities = new ObservableCollection<Vulnerability>(); }
 
         [Key]

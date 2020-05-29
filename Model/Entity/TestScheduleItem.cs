@@ -11,7 +11,7 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public TestScheduleItem()
         {
-            SAPs = new HashSet<SecurityAssessmentProcedure>();
+            SecurityAssessmentProcedures = new HashSet<SecurityAssessmentProcedure>();
         }
 
         [Key]
@@ -24,6 +24,6 @@ namespace Vulnerator.Model.Entity
         public long DurationInDays { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SecurityAssessmentProcedure> SAPs { get; set; }
+        public virtual ICollection<SecurityAssessmentProcedure> SecurityAssessmentProcedures { get; set; }
     }
 }

@@ -26,6 +26,6 @@ namespace Vulnerator.Model.Entity
 
         public virtual VulnerabilitySource VulnerabilitySource { get; set; }
         
-        public virtual UniqueFindingsSourceFile UniqueFindingsSourceFile { get; set; }
+        public virtual UniqueFindingSourceFile UniqueFindingSourceFile { get; set; }
     }
 }

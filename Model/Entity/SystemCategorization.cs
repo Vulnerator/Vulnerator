@@ -16,8 +16,6 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SystemCategorization()
         {
-            Groups = new HashSet<Group>();
-            SystemCategorizationInformationTypes = new HashSet<SystemCategorizationInformationType>();
             GoverningPolicies = new HashSet<GoverningPolicy>();
             InterconnectedSystems = new HashSet<InterconnectedSystem>();
             JointAuthorizationOrganizations = new HashSet<JointAuthorizationOrganization>();
@@ -64,13 +62,7 @@ namespace Vulnerator.Model.Entity
         [StringLength(5)]
         public string CategorizationIsApproved { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Group> Groups { get; set; }
-
-        public virtual NSS_Questionnaire NSS_Questionnaire { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SystemCategorizationInformationType> SystemCategorizationInformationTypes { get; set; }
+        public virtual Group Group { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GoverningPolicy> GoverningPolicies { get; set; }

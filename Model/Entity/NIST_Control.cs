@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+
 namespace Vulnerator.Model.Entity
 {
     using System;
@@ -11,16 +13,15 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public NIST_Control()
         {
-            GroupsCCIs = new HashSet<GroupsCCIs>();
-            NIST_ControlsAvailabilityLevels = new HashSet<NIST_ControlAvailabilityLevel>();
-            NistControlsCAAs = new HashSet<NIST_ControlCAA>();
-            NistControlsCCIs = new HashSet<NIST_ControlCCI>();
-            NIST_ControlsConfidentialityLevels = new HashSet<NIST_ControlConfidentialityLevel>();
-            NIST_ControlsIntegrityLevels = new HashSet<NIST_ControlIntegrityLevel>();
             IATA_Standards = new HashSet<IATA_Standards>();
             CommonControlPackages = new HashSet<CommonControlPackage>();
             ControlSets = new HashSet<ControlSet>();
             Overlays = new HashSet<Overlay>();
+            AvailabilityLevels = new ObservableCollection<AvailabilityLevel>();
+            CCIs = new ObservableCollection<CCI>();
+            ControlApplicabilityAssessments = new ObservableCollection<ControlApplicabilityAssessment>();
+            ConfidentialityLevels = new ObservableCollection<ConfidentialityLevel>();
+            IntegrityLevels = new ObservableCollection<IntegrityLevel>();
         }
 
         [Key]
@@ -51,24 +52,6 @@ namespace Vulnerator.Model.Entity
         public string MonitoringFrequency { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GroupsCCIs> GroupsCCIs { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NIST_ControlAvailabilityLevel> NIST_ControlsAvailabilityLevels { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NIST_ControlCAA> NistControlsCAAs { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NIST_ControlCCI> NistControlsCCIs { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NIST_ControlConfidentialityLevel> NIST_ControlsConfidentialityLevels { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NIST_ControlIntegrityLevel> NIST_ControlsIntegrityLevels { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<IATA_Standards> IATA_Standards { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -79,5 +62,21 @@ namespace Vulnerator.Model.Entity
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Overlay> Overlays { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AvailabilityLevel> AvailabilityLevels { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CCI> CCIs { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ControlApplicabilityAssessment> ControlApplicabilityAssessments { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ConfidentialityLevel> ConfidentialityLevels { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<IntegrityLevel> IntegrityLevels { get; set; }
+        
     }
 }

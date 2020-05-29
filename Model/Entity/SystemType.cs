@@ -10,9 +10,7 @@ namespace Vulnerator.Model.Entity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SystemType()
-        {
-            Overviews = new HashSet<Overview>();
-        }
+        { }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -22,8 +20,5 @@ namespace Vulnerator.Model.Entity
         [Required]
         [StringLength(100)]
         public string System_Type { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Overview> Overviews { get; set; }
     }
 }

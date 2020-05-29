@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+
 namespace Vulnerator.Model.Entity
 {
     using System;
@@ -12,9 +14,9 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Software()
         {
-            SoftwareHardwares = new HashSet<SoftwareHardware>();
             DADMS_Networks = new HashSet<DADMS_Networks>();
             Contacts = new HashSet<Contact>();
+            PortServices = new ObservableCollection<PortService>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -76,12 +78,12 @@ namespace Vulnerator.Model.Entity
         public string Instance { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SoftwareHardware> SoftwareHardwares { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DADMS_Networks> DADMS_Networks { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Contact> Contacts { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PortService> PortServices { get; set; }
     }
 }

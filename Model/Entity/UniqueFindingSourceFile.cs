@@ -6,23 +6,23 @@ namespace Vulnerator.Model.Entity
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class MAC_Addresses
+    public partial class UniqueFindingSourceFile
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public MAC_Addresses()
+        public UniqueFindingSourceFile()
         {
-            Hardwares = new HashSet<Hardware>();
+            UniqueFindings = new HashSet<UniqueFinding>();
         }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long MAC_Address_ID { get; set; }
+        public long FindingSourceFile_ID { get; set; }
 
         [Required]
-        [StringLength(50)]
-        public string MAC_Address { get; set; }
+        [StringLength(500)]
+        public string FindingSourceFileName { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Hardware> Hardwares { get; set; }
+        public virtual ICollection<UniqueFinding> UniqueFindings { get; set; }
     }
 }

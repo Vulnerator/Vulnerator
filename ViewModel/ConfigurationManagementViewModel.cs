@@ -97,8 +97,8 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private List<PortsProtocols> _pps;
-        public List<PortsProtocols> PortsProtocols
+        private List<PortProtocol> _pps;
+        public List<PortProtocol> PortsProtocols
         {
             get => _pps;
             set
@@ -111,8 +111,8 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private List<IP_Addresses> _ipAddresses;
-        public List<IP_Addresses> IpAddresses
+        private List<IP_Address> _ipAddresses;
+        public List<IP_Address> IpAddresses
         {
             get => _ipAddresses;
             set
@@ -125,8 +125,8 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private List<MAC_Addresses> _macAddresses;
-        public List<MAC_Addresses> MacAddresses
+        private List<MAC_Address> _macAddresses;
+        public List<MAC_Address> MacAddresses
         {
             get => _macAddresses;
             set
@@ -230,46 +230,46 @@ namespace Vulnerator.ViewModel
             {
                 using (DatabaseContext databaseContext = new DatabaseContext())
                 {
-                    Hardwares = databaseContext.Hardwares
-                        .Include(h => h.SoftwareHardwares.Select(s => s.Software))
-                        .Include(h => h.IP_Addresses)
-                        .Include(h => h.MAC_Addresses)
-                        .Include(h => h.Groups)
-                        .Include(h => h.Contacts)
-                        .Include(h => h.HardwarePortsProtocols.Select(p => p.PP))
-                        .Include(h => h.VulnerabilitySources)
-                        .OrderBy(h => h.DisplayedHostName)
-                        .AsNoTracking().ToList();
-                    Softwares = databaseContext.Softwares
-                        .Include(s => s.SoftwareHardwares.Select(h => h.Hardware))
-                        .OrderBy(s => s.DisplayedSoftwareName)
-                        .AsNoTracking().ToList();
-                    Contacts = databaseContext.Contacts
-                        .Include(c => c.Groups)
-                        .Include(c => c.Certifications)
-                        .Include(c => c.Groups)
-                        .Include(c => c.Organization)
-                        .Include(c => c.Softwares)
-                        .AsNoTracking().ToList();
-                    PortsProtocols = databaseContext.PortsProtocols
-                        .Include(p => p.HardwarePortsProtocols.Select(h => h.Hardware))
-                        .AsNoTracking().ToList();
-                    Groups = databaseContext.Groups
-                        .Include(g => g.Hardwares)
-                        .AsNoTracking().ToList();
-                    VulnerabilitySources = databaseContext.VulnerabilitySources
-                        .Where(vs => !vs.SourceName.Contains("Nessus"))
-                        .OrderBy(vs => vs.SourceName)
-                        .AsNoTracking().ToList();
-                    IpAddresses = databaseContext.IP_Addresses
-                        .OrderBy(i => i.IP_Address)
-                        .AsNoTracking()
-                        .ToList();
-                    MacAddresses = databaseContext.MAC_Addresses
-                        .OrderBy(m => m.MAC_Address)
-                        .AsNoTracking()
-                        .ToList();
-                    NewGroup = new Group();
+                    // Hardwares = databaseContext.Hardwares
+                    //     .Include(h => h.SoftwareHardwares.Select(s => s.Software))
+                    //     .Include(h => h.IP_Addresses)
+                    //     .Include(h => h.MAC_Addresses)
+                    //     .Include(h => h.Groups)
+                    //     .Include(h => h.Contacts)
+                    //     .Include(h => h.HardwarePortsProtocols.Select(p => p.PP))
+                    //     .Include(h => h.VulnerabilitySources)
+                    //     .OrderBy(h => h.DisplayedHostName)
+                    //     .AsNoTracking().ToList();
+                    // Softwares = databaseContext.Softwares
+                    //     .Include(s => s.SoftwareHardwares.Select(h => h.Hardware))
+                    //     .OrderBy(s => s.DisplayedSoftwareName)
+                    //     .AsNoTracking().ToList();
+                    // Contacts = databaseContext.Contacts
+                    //     .Include(c => c.Groups)
+                    //     .Include(c => c.Certifications)
+                    //     .Include(c => c.Groups)
+                    //     .Include(c => c.Organization)
+                    //     .Include(c => c.Softwares)
+                    //     .AsNoTracking().ToList();
+                    // PortsProtocols = databaseContext.PortsProtocols
+                    //     .Include(p => p.HardwarePortsProtocols.Select(h => h.Hardware))
+                    //     .AsNoTracking().ToList();
+                    // Groups = databaseContext.Groups
+                    //     .Include(g => g.Hardwares)
+                    //     .AsNoTracking().ToList();
+                    // VulnerabilitySources = databaseContext.VulnerabilitySources
+                    //     .Where(vs => !vs.SourceName.Contains("Nessus"))
+                    //     .OrderBy(vs => vs.SourceName)
+                    //     .AsNoTracking().ToList();
+                    // IpAddresses = databaseContext.IP_Addresses
+                    //     .OrderBy(i => i.IP_Address)
+                    //     .AsNoTracking()
+                    //     .ToList();
+                    // MacAddresses = databaseContext.MAC_Addresses
+                    //     .OrderBy(m => m.MAC_Address)
+                    //     .AsNoTracking()
+                    //     .ToList();
+                    // NewGroup = new Group();
                 }
             }
             catch (Exception exception)

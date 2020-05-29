@@ -13,9 +13,11 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Group()
         {
-            GroupsMitigationsOrConditions = new ObservableCollection<GroupsMitigationsOrConditions>();
+            CCIs = new ObservableCollection<CCI>();
+            MitigationsOrConditions = new ObservableCollection<MitigationOrCondition>();
             Contacts = new ObservableCollection<Contact>();
             Hardwares = new ObservableCollection<Hardware>();
+            Waivers = new ObservableCollection<Waiver>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -80,9 +82,10 @@ namespace Vulnerator.Model.Entity
         [CanBeNull]
         public string RDTE_Zone { get; set; }
 
+        [CanBeNull]
         public long? StepOneQuestionnaire_ID { get; set; }
 
-        public long? SAP_ID { get; set; }
+        public long? SecurityAssessmentProcedure_ID { get; set; }
 
         public long? PIT_Determination_ID { get; set; }
         
@@ -95,9 +98,9 @@ namespace Vulnerator.Model.Entity
         
         public virtual Contact InformationSystemOwner { get; set; }
 
-        public virtual SecurityAssessmentProcedure SecurityAssessmentProcedure { get; set; }
-
         public virtual StepOneQuestionnaire StepOneQuestionnaire { get; set; }
+        
+        public virtual SecurityAssessmentProcedure SecurityAssessmentProcedure { get; set; }
 
         public virtual ControlSelection ControlSelection { get; set; }
 
@@ -108,21 +111,20 @@ namespace Vulnerator.Model.Entity
         public virtual IntegrityLevel IntegrityLevel { get; set; }
 
         public virtual ConfidentialityLevel ConfidentialityLevel { get; set; }
+        
+        public virtual Organization Organization { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GroupsMitigationsOrConditions> GroupsMitigationsOrConditions { get; set; }
+        public virtual ICollection<MitigationOrCondition> MitigationsOrConditions { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CCI> CCIs { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Contact> Contacts { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Hardware> Hardwares { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GroupsCCIs> GroupsCCIs { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GroupsWaivers> GroupsWaivers { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ConnectedSystem> ConnectedSystems { get; set; }
@@ -135,5 +137,9 @@ namespace Vulnerator.Model.Entity
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Overlay> Overlays { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Waiver> Waivers { get; set; }
+
     }
 }

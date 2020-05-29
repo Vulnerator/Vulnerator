@@ -10,7 +10,6 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public InformationType()
         {
-            SystemCategorizationInformationTypes = new ObservableCollection<SystemCategorizationInformationType>();
             MissionAreas = new ObservableCollection<MissionArea>();
         }
 
@@ -43,9 +42,6 @@ namespace Vulnerator.Model.Entity
 
         [StringLength(2147483647)]
         public string EnhancedAvailability { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SystemCategorizationInformationType> SystemCategorizationInformationTypes { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MissionArea> MissionAreas { get; set; }

@@ -14,9 +14,7 @@ namespace Vulnerator.Model.Entity
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PIT_Determination()
-        {
-            Groups = new HashSet<Group>();
-        }
+        { }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -256,7 +254,6 @@ namespace Vulnerator.Model.Entity
         [StringLength(100)]
         public string OtherSystemTypeDescription { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Group> Groups { get; set; }
+        public virtual Group Group { get; set; }
     }
 }

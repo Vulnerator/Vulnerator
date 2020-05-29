@@ -15,7 +15,7 @@ namespace Vulnerator.Model.Entity
         public IntegrityLevel()
         {
             Groups = new ObservableCollection<Group>();
-            NIST_ControlsIntegrityLevels = new ObservableCollection<NIST_ControlIntegrityLevel>();
+            NIST_Controls = new ObservableCollection<NIST_Control>();
         }
 
         [Key]
@@ -29,8 +29,8 @@ namespace Vulnerator.Model.Entity
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Group> Groups { get; set; }
-
+        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NIST_ControlIntegrityLevel> NIST_ControlsIntegrityLevels { get; set; }
+        public virtual ICollection<NIST_Control> NIST_Controls { get; set; }
     }
 }

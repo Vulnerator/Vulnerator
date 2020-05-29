@@ -9,11 +9,11 @@ namespace Vulnerator.Model.Entity
     using System.ComponentModel;
 
     [AddINotifyPropertyChangedInterface]
-    public partial class MitigationsOrCondition : INotifyPropertyChanged
+    public partial class MitigationOrCondition : INotifyPropertyChanged
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public MitigationsOrCondition()
-        { GroupsMitigationsOrConditions = new ObservableCollection<GroupsMitigationsOrConditions>(); }
+        public MitigationOrCondition()
+        { Groups = new ObservableCollection<Group>(); }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -73,6 +73,6 @@ namespace Vulnerator.Model.Entity
         public bool IsChecked { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GroupsMitigationsOrConditions> GroupsMitigationsOrConditions { get; set; }
+        public virtual ICollection<Group> Groups { get; set; }
     }
 }

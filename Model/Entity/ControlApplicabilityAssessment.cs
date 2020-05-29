@@ -10,7 +10,7 @@ namespace Vulnerator.Model.Entity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ControlApplicabilityAssessment()
-        { NistControlsCAAs = new ObservableCollection<NIST_ControlCAA>(); }
+        { NIST_Controls = new ObservableCollection<NIST_Control>(); }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -19,8 +19,8 @@ namespace Vulnerator.Model.Entity
         [Required]
         [StringLength(50)]
         public string CAA_Name { get; set; }
-
+        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NIST_ControlCAA> NistControlsCAAs { get; set; }
+        public virtual ICollection<NIST_Control> NIST_Controls { get; set; }
     }
 }

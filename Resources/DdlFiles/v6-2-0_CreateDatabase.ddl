@@ -1,35 +1,23 @@
 PRAGMA user_version = 1;
 
-CREATE TABLE Accessibility (
-                               Accessibility_ID INTEGER PRIMARY KEY,
-                               LogicalAccess NVARCHAR (25) NOT NULL,
-                               PhysicalAccess NVARCHAR (25) NOT NULL,
-                               AV_Scan NVARCHAR (25) NOT NULL,
-                               DODIN_ConnectionPeriodicity NVARCHAR (25) NOT NULL,
-                               FOREIGN KEY (Accessibility_ID) REFERENCES StepOneQuestionnaire(Accessibility_ID)
-);
-
 CREATE TABLE AdditionalTestConsiderations (
                                               AdditionalTestConsideration_ID INTEGER PRIMARY KEY,
                                               AdditionalTestConsiderationTitle NVARCHAR (25),
                                               AdditionalTestConsiderationDetails NVARCHAR (1000)
 );
 
-CREATE TABLE AuthorizationToConnectOrInterim_ATC_PendingItems (
-                                                                  AuthorizationToConnectOrInterim_ATC_PendingItem_ID INTEGER PRIMARY KEY,
-                                                                  AuthorizationToConnectOrInterim_ATC_PendingItem NVARCHAR (50) NOT NULL,
-                                                                  AuthorizationToConnectOrInterim_ATC_PendingItemDueDate DATE NOT NULL,
-                                                                  StepOneQuestionnaire_ID INTEGER NOT NULL,
-                                                                  FOREIGN KEY (StepOneQuestionnaire_ID) REFERENCES StepOneQuestionnaire(StepOneQuestionnaire_ID)
-);
-
 CREATE TABLE AuthorizationConditions (
                                          AuthorizationCondition_ID INTEGER PRIMARY KEY,
                                          AuthorizationCondition NVARCHAR (500) NOT NULL,
                                          AuthorizationConditionCompletionDate DATE NOT NULL,
-                                         AuthorizationConditionIsCompleted INTEGER NOT NULL,
-                                         StepOneQuestionnaire_ID INTEGER NOT NULL,
-                                         FOREIGN KEY (StepOneQuestionnaire_ID) REFERENCES StepOneQuestionnaire(StepOneQuestionnaire_ID)
+                                         AuthorizationConditionIsCompleted INTEGER NOT NULL
+);
+
+CREATE TABLE AuthorizationToConnectOrInterim_ATC_PendingItems
+(
+    AuthorizationToConnectOrInterim_ATC_PendingItem_ID     INTEGER PRIMARY KEY,
+    AuthorizationToConnectOrInterim_ATC_PendingItem        NVARCHAR(50) NOT NULL,
+    AuthorizationToConnectOrInterim_ATC_PendingItemDueDate DATE         NOT NULL
 );
 
 CREATE TABLE AvailabilityLevels (
@@ -60,12 +48,6 @@ CREATE TABLE ConfidentialityLevels (
                                        ConfidentialityLevel NVARCHAR (25) NOT NULL
 );
 
-CREATE TABLE ConnectedSystems (
-                                  ConnectedSystem_ID INTEGER PRIMARY KEY,
-                                  ConnectedSystemName NVARCHAR (100) NOT NULL,
-                                  IsAuthorized INTEGER NOT NULL
-);
-
 CREATE TABLE Connections (
                              Connection_ID INTEGER PRIMARY KEY,
                              IsInternetConnected INTEGER,
@@ -74,6 +56,12 @@ CREATE TABLE Connections (
                              IsVPN_Connected INTEGER,
                              IsCND_ServiceProvider INTEGER,
                              IsEnterpriseServicesProvider INTEGER
+);
+
+CREATE TABLE ConnectedSystems (
+                                  ConnectedSystem_ID INTEGER PRIMARY KEY,
+                                  ConnectedSystemName NVARCHAR (100) NOT NULL,
+                                  IsAuthorized INTEGER NOT NULL
 );
 
 CREATE TABLE Connectivity (
@@ -91,7 +79,6 @@ CREATE TABLE Contacts (
                           ContactLastName NVARCHAR (50) NOT NULL,
                           ContactEmail NVARCHAR (50) NOT NULL,
                           ContactPhone NVARCHAR (20),
-                          ContactTitle NVARCHAR (50),
                           Organization_ID INTEGER,
                           FOREIGN KEY (Organization_ID) REFERENCES Organizations(Organization_ID)
 );
@@ -177,8 +164,8 @@ CREATE TABLE EntranceCriteria (
                                   EntranceCriteria NVARCHAR (100) NOT NULL
 );
 
-CREATE TABLE EnumeratedDomainUsersSettings (
-                                               EnumeratedDomainUsersSettings_ID Integer PRIMARY KEY,
+CREATE TABLE EnumeratedDomainWindowsUsersSettings (
+                                               EnumeratedDomainWindowsUsersSettings_ID Integer PRIMARY KEY,
                                                EnumeratedWindowsUser_ID INTEGER NOT NULL,
                                                WindowsDomainUserSettings_ID INTEGER NOT NULL,
                                                UNIQUE (
@@ -268,7 +255,6 @@ CREATE TABLE Groups (
                         StepOneQuestionnaire_ID INTEGER,
                         SecurityAssessmentProcedure_ID INTEGER,
                         PIT_Determination_ID INTEGER,
-                        InformationSystemOwner_ID INTEGER,
                         FOREIGN KEY (ConfidentialityLevel_ID) REFERENCES ConfidentialityLevels(ConfidentialityLevel_ID),
                         FOREIGN KEY (IntegrityLevel_ID) REFERENCES IntegrityLevels(IntegrityLevel_ID),
                         FOREIGN KEY (AvailabilityLevel_ID) REFERENCES AvailabilityLevels(AvailabilityLevel_ID),
@@ -277,8 +263,7 @@ CREATE TABLE Groups (
                         FOREIGN KEY (StepOneQuestionnaire_ID) REFERENCES StepOneQuestionnaire(StepOneQuestionnaire_ID),
                         FOREIGN KEY (SecurityAssessmentProcedure_ID) REFERENCES SecurityAssessmentProcedures(SecurityAssessmentProcedure_ID),
                         FOREIGN KEY (PIT_Determination_ID) REFERENCES PIT_Determination(PIT_Determination_ID),
-                        FOREIGN KEY (Organization_ID) REFERENCES Organizations(Organization_ID),
-                        FOREIGN KEY (InformationSystemOwner_ID) REFERENCES Contacts(Contact_ID)
+                        FOREIGN KEY (Organization_ID) REFERENCES Organizations(Organization_ID)
 );
 
 CREATE TABLE GroupsCCIs (
@@ -311,12 +296,15 @@ CREATE TABLE GroupsConnections (
                                    FOREIGN KEY (Connection_ID) REFERENCES Connections(Connection_ID)
 );
 
-CREATE TABLE GroupsContacts (
+CREATE TABLE GroupsContactsTitles (
                                 GroupContact_ID INTEGER PRIMARY KEY,
                                 Group_ID INTEGER NOT NULL,
                                 Contact_ID INTEGER NOT NULL,
+                                Title_ID INTEGER NOT NULL,
+                                UNIQUE (Group_ID, Contact_ID, Title_ID) ON CONFLICT IGNORE ,
                                 FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
-                                FOREIGN KEY (Contact_ID) REFERENCES Contacts(Contact_ID)
+                                FOREIGN KEY (Contact_ID) REFERENCES Contacts(Contact_ID),
+                                FOREIGN KEY (Title_ID) REFERENCES  Titles(Title_ID)
 );
 
 CREATE TABLE GroupsIATA_Standards (
@@ -326,7 +314,7 @@ CREATE TABLE GroupsIATA_Standards (
                                       FOREIGN KEY (IATA_Standard_ID) REFERENCES IATA_Standards(IATA_Standard_ID)
 );
 
-CREATE TABLE GroupsMitigationsOrConditions (
+CREATE TABLE GroupsMitigationsOrConditionsVulnerabilities (
                                                GroupMitigationOrCondition_ID INTEGER PRIMARY KEY,
                                                MitigationOrCondition_ID INTEGER NOT NULL,
                                                Group_ID INTEGER NOT NULL,
@@ -392,10 +380,10 @@ CREATE TABLE HardwareContacts (
 CREATE TABLE HardwareEnumeratedWindowsGroups (
                                                  HardwareEnumeratedWindowGroup_ID INTEGER PRIMARY KEY,
                                                  Hardware_ID INTEGER NOT NULL,
-                                                 Group_ID INTEGER NOT NULL,
-                                                 UNIQUE (Hardware_ID, Group_ID) ON CONFLICT IGNORE,
+                                                 EnumeratedWindowsGroup_ID INTEGER NOT NULL,
+                                                 UNIQUE (Hardware_ID, EnumeratedWindowsGroup_ID) ON CONFLICT IGNORE,
                                                  FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
-                                                 FOREIGN KEY (Group_ID) REFERENCES EnumeratedWindowsGroups(EnumeratedWindowsGroup_ID)
+                                                 FOREIGN KEY (EnumeratedWindowsGroup_ID) REFERENCES EnumeratedWindowsGroups(EnumeratedWindowsGroup_ID)
 );
 
 CREATE TABLE HardwareGroups (
@@ -446,7 +434,7 @@ CREATE TABLE HardwarePortsProtocols (
                                         DisplayService NVARCHAR (50),
                                         Direction NVARCHAR (25),
                                         BoundariesCrossed NVARCHAR (25),
-                                        DoD_Compliant NVARCHAR (5),
+                                        DOD_Compliant NVARCHAR (5),
                                         Classification NVARCHAR (25),
                                         UNIQUE (
                                                      Hardware_ID,
@@ -479,8 +467,7 @@ CREATE TABLE ImpactAdjustments (
                                    ImpactAdjustment_ID INTEGER PRIMARY KEY,
                                    AdjustedConfidentiality NVARCHAR (25) NOT NULL,
                                    AdjustedIntegrity NVARCHAR (25) NOT NULL,
-                                   AdjustedAvailability NVARCHAR (25) NOT NULL,
-                                   FOREIGN KEY (ImpactAdjustment_ID) REFERENCES SystemCategorizationInformationTypes(ImpactAdjustment_ID)
+                                   AdjustedAvailability NVARCHAR (25) NOT NULL
 );
 
 CREATE TABLE InformationTypes (
@@ -549,9 +536,9 @@ CREATE TABLE Locations (
                            ZipCode INTEGER,
                            APO_FPO NVARCHAR (50),
                            OSS_AccreditationDate DATE,
-                           IsBaselineLocationGlobal NVARCHAR (5),
-                           IsDeploymentLocationGlobal NVARCHAR (5),
-                           IsTestLocationGlobal NVARCHAR (5)
+                           IsBaselineLocation NVARCHAR (5),
+                           IsDeploymentLocation NVARCHAR (5),
+                           IsTestLocation NVARCHAR (5)
 );
 
 CREATE TABLE MAC_Addresses (
@@ -784,20 +771,20 @@ CREATE TABLE PIT_Determination (
 );
 
 CREATE TABLE PortsProtocols (
-                                PortsProtocols_ID INTEGER PRIMARY KEY,
+                                PortProtocol_ID INTEGER PRIMARY KEY,
                                 Port INTEGER NOT NULL,
                                 Protocol NVARCHAR (25) NOT NULL,
                                 UNIQUE (Port, Protocol) ON CONFLICT IGNORE
 );
 
 
-CREATE TABLE PortServices (
+CREATE TABLE PortsServices (
                               PortService_ID INTEGER PRIMARY KEY,
                               PortServiceName NVARCHAR (100) NOT NULL UNIQUE ON CONFLICT IGNORE,
                               PortServiceAcronym NVARCHAR (50),
-                              PortsProtocols_ID INTEGER NOT NULL,
-                              UNIQUE (PortServiceName, PortsProtocols_ID) ON CONFLICT IGNORE,
-                              FOREIGN KEY (PortsProtocols_ID) REFERENCES PortsProtocols(PortsProtocols_ID)
+                              PortProtocol_ID INTEGER NOT NULL,
+                              UNIQUE (PortServiceName, PortProtocol_ID) ON CONFLICT IGNORE,
+                              FOREIGN KEY (PortProtocol_ID) REFERENCES PortsProtocols(PortProtocol_ID)
 );
 
 CREATE TABLE PortServicesSoftware (
@@ -805,7 +792,7 @@ CREATE TABLE PortServicesSoftware (
                                       PortService_ID INTEGER NOT NULL,
                                       Software_ID INTEGER NOT NULL,
                                       UNIQUE (PortService_ID, Software_ID) ON CONFLICT IGNORE,
-                                      FOREIGN KEY (PortService_ID) REFERENCES PortServices(PortService_ID),
+                                      FOREIGN KEY (PortService_ID) REFERENCES PortsServices(PortService_ID),
                                       FOREIGN KEY (Software_ID) REFERENCES Software(Software_ID)
 );
 
@@ -835,9 +822,7 @@ CREATE TABLE SecurityAssessmentProcedures (
                       Scope NVARCHAR (50) NOT NULL,
                       TestConfiguration NVARCHAR (2000) NOT NULL,
                       LogisticsSupport NVARCHAR (1000) NOT NULL,
-                      Security NVARCHAR (1000) NOT NULL,
-                      Group_ID INTEGER NOT NULL ,
-                      FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID)
+                      Security NVARCHAR (1000) NOT NULL
 );
 
 CREATE TABLE SecurityAssessmentProcedureAdditionalTestConsiderations (
@@ -993,21 +978,50 @@ CREATE TABLE SoftwareHardware (
 
 CREATE TABLE StepOneQuestionnaire (
                                       StepOneQuestionnaire_ID INTEGER PRIMARY KEY,
+                                      LogicalAccess NVARCHAR (25) NOT NULL,
+                                      PhysicalAccess NVARCHAR (25) NOT NULL,
+                                      AV_Scan NVARCHAR (25) NOT NULL,
+                                      DODIN_ConnectionPeriodicity NVARCHAR (25) NOT NULL,
+                                      RegistrationType NVARCHAR (25) NOT NULL,
+                                      SystemType NVARCHAR (100) NOT NULL,
+                                      IsNationalSecuritySystem NVARCHAR (5) NOT NULL,
+                                      HasPublicFacingPresence NVARCHAR (5) NOT NULL ,
                                       SystemDescription NVARCHAR (2000) NOT NULL,
                                       MissionDescription NVARCHAR (2000) NOT NULL,
                                       CONOPS_Statement NVARCHAR (2000) NOT NULL,
-                                      IsTypeAuthorization NVARCHAR (5) NOT NULL,
                                       DITPR_DON_Number INTEGER NOT NULL,
-                                      AuthorizationToConnectOrInterim_ATC_GrantedDate DATE NOT NULL,
-                                      AuthorizationToConnectOrInterim_ATC_ExpirationDate DATE NOT NULL,
-                                      AuthorizationToConnectOrInterim_ATC_CND_ServiceProvider NVARCHAR (25),
-                                      SecurityPlanApprovalStatus NVARCHAR (25) NOT NULL,
+                                      DOD_IT_RegistrationNumber NVARCHAR (200) ,
+                                      DVS_Site NVARCHAR (100),
+                                      PPSM_RegistrationNumber NVARCHAR (25) NOT NULL,
+                                      SystemAuthorizationBoundary NVARCHAR (2000) NOT NULL,
+                                      HardwareSoftwareFirmware NVARCHAR (2000) NOT NULL,
+                                      SystemEnterpriseArchitecture NVARCHAR (2000) NOT NULL,
+                                      InformationFlowsAndPaths NVARCHAR (2000) NOT NULL,
+                                      SystemLocation NVARCHAR (25) NOT NULL,
+                                      IsTypeAuthorization NVARCHAR (5) NOT NULL ,
+                                      BaselineLocation_ID INTEGER NOT NULL,
+                                      InstallationNameOrOwningOrganization NVARCHAR (500),
+                                      SecurityPlanApprovalStatus NVARCHAR (50) NOT NULL,
                                       SecurityPlanApprovalDate DATE,
                                       AuthorizationStatus NVARCHAR (25) NOT NULL,
                                       HasAuthorizationDocumentation INTEGER NOT NULL,
                                       AssessmentCompletionDate DATE,
                                       AuthorizationDate DATE,
                                       AuthorizationTerminationDate DATE,
+                                      RMF_Activity NVARCHAR (25) NOT NULL,
+                                      AuthorizationTermsAndConditions NVARCHAR (2000) ,
+                                      IsSecurityReviewCompleted NVARCHAR (5) NOT NULL,
+                                      SecurityReviewDate DATE,
+                                      IsContingencyPlanRequired NVARCHAR (5) NOT NULL,
+                                      IsContingencyPlanTested NVARCHAR (5),
+                                      ContingencyPlanTestDate DATE,
+                                      IsPIA_Required NVARCHAR (5) NOT NULL,
+                                      PIA_Date DATE,
+                                      IsPrivacyActNoticeRequired NVARCHAR (5) NOT NULL,
+                                      Is_eAuthenticationRiskAssessmentRequired NVARCHAR (5) NOT NULL,
+                                      eAuthenticationRiskAssessmentDate DATE,
+                                      IsReportableToFISMA NVARCHAR (5) NOT NULL,
+                                      IsReportableToERS NVARCHAR (5) NOT NULL,
                                       MissionCriticality NVARCHAR (25) NOT NULL,
                                       GoverningMissionArea NVARCHAR (25) NOT NULL,
                                       DOD_Component NVARCHAR (25) NOT NULL,
@@ -1016,31 +1030,31 @@ CREATE TABLE StepOneQuestionnaire (
                                       SoftwareCategory NVARCHAR (25) NOT NULL,
                                       SystemOwnershipAndControl NVARCHAR (50) NOT NULL,
                                       OtherInformation NVARCHAR (2000),
-                                      RMF_Activity NVARCHAR (25) NOT NULL,
-                                      Accessibility_ID INTEGER NOT NULL,
-                                      Overview_ID INTEGER NOT NULL,
-                                      PortsProtocolsRegistrationNumber NVARCHAR (25) NOT NULL,
-                                      AuthorizationInformation_ID INTEGER NOT NULL,
-                                      IsSecurityReviewCompleted NVARCHAR (5) NOT NULL,
-                                      SecurityReviewDate DATE,
-                                      IsContingencyPlanRequired NVARCHAR (5) NOT NULL,
-                                      ContingencyPlanTested NVARCHAR (5),
-                                      ContingencyPlanTestDate DATE,
-                                      IsPIA_Required NVARCHAR (5) NOT NULL,
-                                      PIA_Date DATE,
-                                      RegistrationType NVARCHAR (25) NOT NULL,
-                                      InformationSystemOwner_ID INTEGER NOT NULL,
-                                      SystemType NVARCHAR (100) NOT NULL,
-                                      DVS_Site NVARCHAR (100),
-                                      IsPrivacyActNoticeRequired NVARCHAR (5) NOT NULL,
-                                      Is_eAuthenticationRiskAssessmentRequired NVARCHAR (5) NOT NULL,
-                                      eAuthenticationRiskAssessmentDate DATE,
-                                      IsReportableToFISMA NVARCHAR (5) NOT NULL,
-                                      IsReportableToERS NVARCHAR (5) NOT NULL,
-                                      SystemEnterpriseArchitecture NVARCHAR (2000) NOT NULL,
-                                      AuthorizationToConnectOrInterim_ATC_ID INTEGER,
-                                      NIST_ControlSet NVARCHAR (50) NOT NULL,
-                                      FOREIGN KEY (InformationSystemOwner_ID) REFERENCES Contacts(Contact_ID)
+                                      AuthorizationToConnectOrInterim_ATC_GrantedDate DATE NOT NULL,
+                                      AuthorizationToConnectOrInterim_ATC_ExpirationDate DATE NOT NULL,
+                                      AuthorizationToConnectOrInterim_ATC_CND_ServiceProvider NVARCHAR (25),
+                                      AdditionalAuthorizationRequirements NVARCHAR (2000) NOT NULL,
+                                      InformationTypeEvidence NVARCHAR (2000),
+                                      RationaleForCategorization NVARCHAR (2000) NOT NULL,
+                                      FOREIGN KEY (BaselineLocation_ID) REFERENCES Locations(Location_ID)
+);
+
+CREATE TABLE StepOneQuestionnaireAuthorizationConditions (
+    StepOneQuestionnaireAuthorizationCondition_ID INTEGER PRIMARY KEY ,
+    StepOneQuestionnaire_ID INTEGER NOT NULL ,
+    AuthorizationCondition_ID INTEGER NOT NULL ,
+    UNIQUE (StepOneQuestionnaire_ID, AuthorizationCondition_ID) ON CONFLICT IGNORE ,
+    FOREIGN KEY (StepOneQuestionnaire_ID) REFERENCES StepOneQuestionnaire(StepOneQuestionnaire_ID),
+    FOREIGN KEY (AuthorizationCondition_ID) REFERENCES AuthorizationConditions(AuthorizationCondition_ID)
+);
+
+CREATE TABLE StepOneQuestionnaireAuthorizationToConnectOrInterim_ATC_PendingItems (
+    StepOneQuestionnaireAuthorizationToConnectOrInterim_ATC_PendingItems_ID INTEGER PRIMARY KEY ,
+    StepOneQuestionnaire_ID INTEGER NOT NULL ,
+    AuthorizationToConnectOrInterim_ATC_PendingItem_ID INTEGER NOT NULL ,
+    UNIQUE (StepOneQuestionnaire_ID, AuthorizationToConnectOrInterim_ATC_PendingItem_ID) ON CONFLICT IGNORE ,
+    FOREIGN KEY (StepOneQuestionnaire_ID) REFERENCES StepOneQuestionnaire(StepOneQuestionnaire_ID),
+    FOREIGN KEY (AuthorizationToConnectOrInterim_ATC_PendingItem_ID) REFERENCES AuthorizationToConnectOrInterim_ATC_PendingItems(AuthorizationToConnectOrInterim_ATC_PendingItem_ID)
 );
 
 CREATE TABLE StepOneQuestionnaireConnectivity (
@@ -1060,12 +1074,21 @@ CREATE TABLE StepOneQuestionnaire_ExternalSecurityServices (
 );
 
 CREATE TABLE StepOneQuestionnaireEncryptionTechniques (
-                                                          StepOneQuestionnaire_ExternalSecurityService INTEGER PRIMARY KEY,
+                                                          StepOneQuestionnaireExternalSecurityService_ID INTEGER PRIMARY KEY,
                                                           StepOneQuestionnaire_ID INTEGER NOT NULL,
                                                           EncryptionTechnique_ID INTEGER NOT NULL,
                                                           UNIQUE (StepOneQuestionnaire_ID, EncryptionTechnique_ID) ON CONFLICT IGNORE,
                                                           FOREIGN KEY (StepOneQuestionnaire_ID) REFERENCES StepOneQuestionnaire(StepOneQuestionnaire_ID),
                                                           FOREIGN KEY (EncryptionTechnique_ID) REFERENCES EncryptionTechniques(EncryptionTechnique_ID)
+);
+
+CREATE TABLE StepOneQuestionnaireDeploymentLocations (
+                                                          StepOneQuestionnaireDeploymentLocation_ID INTEGER PRIMARY KEY,
+                                                          StepOneQuestionnaire_ID INTEGER NOT NULL,
+                                                          Location_ID INTEGER NOT NULL,
+                                                          UNIQUE (StepOneQuestionnaire_ID, Location_ID) ON CONFLICT IGNORE,
+                                                          FOREIGN KEY (StepOneQuestionnaire_ID) REFERENCES StepOneQuestionnaire(StepOneQuestionnaire_ID),
+                                                          FOREIGN KEY (Location_ID) REFERENCES Locations(Location_ID)
 );
 
 CREATE TABLE StepOneQuestionnaireNetworkConnectionRules (
@@ -1106,7 +1129,9 @@ CREATE TABLE SystemCategorization (
                                       IsBusinessInfo NVARCHAR (5) NOT NULL,
                                       HasExecutiveOrderProtections NVARCHAR (5) NOT NULL,
                                       IsNss NVARCHAR (5) NOT NULL,
-                                      CategorizationIsApproved NVARCHAR (5) NOT NULL
+                                      CategorizationIsApproved NVARCHAR (5) NOT NULL,
+                                      ImpactAdjustment_ID INTEGER NOT NULL ,
+                                      FOREIGN KEY (ImpactAdjustment_ID) REFERENCES ImpactAdjustments(ImpactAdjustment_ID)
 );
 
 CREATE TABLE SystemCategorizationGoverningPolicies (
@@ -1158,6 +1183,13 @@ CREATE TABLE TestScheduleItems (
                                    TestEvent NVARCHAR (100),
                                    TestScheduleCategory NVARCHAR (25) NOT NULL,
                                    DurationInDays INTEGER NOT NULL
+);
+
+CREATE TABLE Titles (
+                                Title_ID INTEGER PRIMARY KEY,
+                                TitleName NVARCHAR (100) NOT NULL ,
+                                TitleAcronym NVARCHAR (25),
+                                UNIQUE (TitleName) ON CONFLICT IGNORE
 );
 
 CREATE TABLE UniqueFindings (
@@ -1380,7 +1412,6 @@ VALUES
     'False',
     NULL,
     'False',
-    NULL,
     NULL,
     NULL,
     NULL,

@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+
 namespace Vulnerator.Model.Entity
 {
     using System;
@@ -11,8 +13,7 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Waiver()
         {
-            AccreditationsWaivers = new HashSet<GroupsWaivers>();
-        }
+            Groups = new ObservableCollection<Group>(); }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -21,8 +22,8 @@ namespace Vulnerator.Model.Entity
         [Required]
         [StringLength(100)]
         public string WaiverName { get; set; }
-
+        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GroupsWaivers> AccreditationsWaivers { get; set; }
+        public virtual ICollection<Group> Groups { get; set; }
     }
 }

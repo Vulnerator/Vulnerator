@@ -16,7 +16,6 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public StepOneQuestionnaire()
         {
-            Groups = new HashSet<Group>();
             Connectivities = new HashSet<Connectivity>();
             ExternalSecurityServices = new HashSet<ExternalSecurityService>();
             EncryptionTechniques = new HashSet<EncryptionTechnique>();
@@ -181,10 +180,7 @@ namespace Vulnerator.Model.Entity
         [StringLength(50)]
         public string NIST_ControlSet { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Group> Groups { get; set; }
-
-        public virtual AuthorizationToConnectOrInterim_ATC AuthorizationToConnectOrInterim_ATC { get; set; }
+        public virtual Group Group { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Connectivity> Connectivities { get; set; }

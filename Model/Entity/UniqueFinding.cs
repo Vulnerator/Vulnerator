@@ -86,9 +86,9 @@ namespace Vulnerator.Model.Entity
         public virtual Software Software { get; set; }
 
         [CanBeNull]
-        public virtual MitigationsOrCondition MitigationsOrCondition { get; set; }
+        public virtual MitigationOrCondition MitigationOrCondition { get; set; }
 
-        public virtual UniqueFindingsSourceFile UniqueFindingsSourceFile { get; set; }
+        public virtual UniqueFindingSourceFile UniqueFindingSourceFile { get; set; }
 
         public virtual Vulnerability Vulnerability { get; set; }
     }

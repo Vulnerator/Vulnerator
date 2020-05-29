@@ -24,6 +24,8 @@ namespace Vulnerator.Model.Entity
         
         [StringLength(50)]
         public string OrganizationAcronym { get; set; }
+        
+        public virtual Group Group { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Contact> Contacts { get; set; }
