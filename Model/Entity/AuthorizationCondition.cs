@@ -8,9 +8,13 @@ namespace Vulnerator.Model.Entity
 
     public partial class AuthorizationCondition
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+            "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AuthorizationCondition()
-        { AuthorizationInformations = new ObservableCollection<AuthorizationInformation>(); }
+        {
+            AuthorizationInformations = new ObservableCollection<AuthorizationInformation>();
+            StepOneQuestionnaires = new ObservableCollection<StepOneQuestionnaire>();
+        }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -29,5 +33,8 @@ namespace Vulnerator.Model.Entity
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AuthorizationInformation> AuthorizationInformations { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<StepOneQuestionnaire> StepOneQuestionnaires { get; set; }
     }
 }

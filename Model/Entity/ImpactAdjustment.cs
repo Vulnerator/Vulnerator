@@ -20,5 +20,7 @@ namespace Vulnerator.Model.Entity
         [Required]
         [StringLength(25)]
         public string AdjustedAvailability { get; set; }
+        
+        public virtual SystemCategorization SystemCategorization { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Hardware()
         {
-            ScapScores = new ObservableCollection<SCAP_Score>();
+            SCAP_Scores = new ObservableCollection<SCAP_Score>();
             UniqueFindings = new ObservableCollection<UniqueFinding>();
             Contacts = new ObservableCollection<Contact>();
             EnumeratedWindowsGroups = new ObservableCollection<EnumeratedWindowsGroup>();
@@ -22,6 +22,7 @@ namespace Vulnerator.Model.Entity
             VulnerabilitySources = new ObservableCollection<VulnerabilitySource>();
             Locations = new ObservableCollection<Location>();
             PortsProtocols = new ObservableCollection<PortProtocol>();
+            Softwares = new ObservableCollection<Software>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -80,7 +81,7 @@ namespace Vulnerator.Model.Entity
         public virtual LifecycleStatus LifecycleStatus { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SCAP_Score> ScapScores { get; set; }
+        public virtual ICollection<SCAP_Score> SCAP_Scores { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UniqueFinding> UniqueFindings { get; set; }
@@ -108,5 +109,8 @@ namespace Vulnerator.Model.Entity
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PortProtocol> PortsProtocols { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Software> Softwares { get; set; }
     }
 }

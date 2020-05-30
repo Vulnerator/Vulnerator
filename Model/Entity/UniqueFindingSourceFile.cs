@@ -24,5 +24,7 @@ namespace Vulnerator.Model.Entity
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UniqueFinding> UniqueFindings { get; set; }
+        
+        public virtual SCAP_Score SCAP_Score { get; set; }
     }
 }

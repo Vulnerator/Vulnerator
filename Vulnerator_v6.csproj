@@ -331,7 +331,7 @@
     <Compile Include="Model\Entity\ControlSelection.cs" />
     <Compile Include="Model\Entity\ControlSet.cs" />
     <Compile Include="Model\Entity\CustomTestCase.cs" />
-    <Compile Include="Model\Entity\DADMS_Networks.cs" />
+    <Compile Include="Model\Entity\DADMS_Network.cs" />
     <Compile Include="Model\Entity\EncryptionTechnique.cs" />
     <Compile Include="Model\Entity\EntranceCriteria.cs" />
     <Compile Include="Model\Entity\EnumeratedWindowsGroup.cs" />
@@ -342,6 +342,8 @@
     <Compile Include="Model\Entity\GoverningPolicy.cs" />
     <Compile Include="Model\Entity\Group.cs" />
     <Compile Include="Model\Entity\GroupContactTitle.cs" />
+    <Compile Include="Model\Entity\GroupsContactsTitles.cs" />
+    <Compile Include="Model\Entity\GroupsMitigationsOrConditionsVulnerabilities.cs" />
     <Compile Include="Model\Entity\Hardware.cs" />
     <Compile Include="Model\Entity\IATA_Standards.cs" />
     <Compile Include="Model\Entity\IA_Control.cs" />
@@ -366,7 +368,8 @@
     <Compile Include="Model\Entity\PortProtocol.cs" />
     <Compile Include="Model\Entity\RelatedDocument.cs" />
     <Compile Include="Model\Entity\RelatedTesting.cs" />
-    <Compile Include="Model\Entity\ReportSeverity.cs" />
+    <Compile Include="Model\Entity\ReportFindingTypeUserSettings.cs" />
+    <Compile Include="Model\Entity\ReportSeverityUserSettings.cs" />
     <Compile Include="Model\Entity\RequiredReport.cs" />
     <Compile Include="Model\Entity\ResponsibilityRole.cs" />
     <Compile Include="Model\Entity\SecurityAssessmentProcedure.cs" />
@@ -374,6 +377,7 @@
     <Compile Include="Model\Entity\Software.cs" />
     <Compile Include="Model\Entity\StepOneQuestionnaire.cs" />
     <Compile Include="Model\Entity\SystemCategorization.cs" />
+    <Compile Include="Model\Entity\SystemCategorizationInformationTypesImpactAdjustments.cs" />
     <Compile Include="Model\Entity\SystemType.cs" />
     <Compile Include="Model\Entity\TestReference.cs" />
     <Compile Include="Model\Entity\TestScheduleItem.cs" />

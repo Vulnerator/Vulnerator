@@ -10,7 +10,7 @@ namespace Vulnerator.Model.Entity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntranceCriteria()
-        { SAPs = new ObservableCollection<SecurityAssessmentProcedure>(); }
+        { SecurityAssessmentProcedures = new ObservableCollection<SecurityAssessmentProcedure>(); }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -22,6 +22,6 @@ namespace Vulnerator.Model.Entity
         public string Entrance_Criteria { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SecurityAssessmentProcedure> SAPs { get; set; }
+        public virtual ICollection<SecurityAssessmentProcedure> SecurityAssessmentProcedures { get; set; }
     }
 }

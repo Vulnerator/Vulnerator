@@ -8,14 +8,11 @@ namespace Vulnerator.Model.DataAccess
     public class DatabaseContext : DbContext
     {
         public DatabaseContext() : base(DatabaseBuilder.sqliteConnection, false)
-        {
-        }
+        { }
 
         public virtual DbSet<AdditionalTestConsideration> AdditionalTestConsiderations { get; set; }
         public virtual DbSet<AuthorizationCondition> AuthorizationConditions { get; set; }
         public virtual DbSet<AuthorizationToConnectOrInterim_ATC_PendingItem> AuthorizationToConnectOrInterim_ATC_PendingItems { get; set; }
-        
-        
         public virtual DbSet<AvailabilityLevel> AvailabilityLevels { get; set; }
         public virtual DbSet<CCI> CCIs { get; set; }
         public virtual DbSet<Certification> Certifications { get; set; }
@@ -29,7 +26,7 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<ControlSelection> ControlSelections { get; set; }
         public virtual DbSet<ControlSet> ControlSets { get; set; }
         public virtual DbSet<CustomTestCase> CustomTestCases { get; set; }
-        public virtual DbSet<DADMS_Networks> DADMS_Networks { get; set; }
+        public virtual DbSet<DADMS_Network> DADMS_Networks { get; set; }
         public virtual DbSet<EncryptionTechnique> EncryptionTechniques { get; set; }
         public virtual DbSet<EntranceCriteria> EntranceCriterias { get; set; }
         public virtual DbSet<EnumeratedWindowsGroup> EnumeratedWindowsGroups { get; set; }
@@ -63,7 +60,7 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<PortService> PortsServices { get; set; }
         public virtual DbSet<RelatedDocument> RelatedDocuments { get; set; }
         public virtual DbSet<RelatedTesting> RelatedTestings { get; set; }
-        public virtual DbSet<ReportSeverity> ReportSeverities { get; set; }
+        public virtual DbSet<ReportSeverityUserSettings> ReportSeverities { get; set; }
         public virtual DbSet<RequiredReport> RequiredReports { get; set; }
         public virtual DbSet<ResponsibilityRole> ResponsibilityRoles { get; set; }
         public virtual DbSet<SecurityAssessmentProcedure> SecurityAssessmentProcedures { get; set; }
@@ -94,7 +91,6 @@ namespace Vulnerator.Model.DataAccess
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            // * Verified
             modelBuilder.Entity<Contact>()
                 .HasMany(e => e.Certifications)
                 .WithMany(e => e.Contacts)
@@ -280,7 +276,8 @@ namespace Vulnerator.Model.DataAccess
                     .MapLeftKey("Hardware_ID")
                     .MapRightKey("EnumeratedWindowsGroup_ID"));
 
-            modelBuilder.Entity<EnumeratedWindowsGroup>().HasMany(e => e.Hardwares).WithMany(e => e.EnumeratedWindowsGroups)
+            modelBuilder.Entity<EnumeratedWindowsGroup>().HasMany(e => e.Hardwares)
+                .WithMany(e => e.EnumeratedWindowsGroups)
                 .Map(e => e.ToTable("HardwareEnumeratedWindowsGroups")
                     .MapLeftKey("EnumeratedWindowsGroup_ID")
                     .MapRightKey("Hardware_ID"));
@@ -365,12 +362,14 @@ namespace Vulnerator.Model.DataAccess
                     .MapLeftKey("CCI_ID")
                     .MapRightKey("NIST_Control_ID"));
             
-            modelBuilder.Entity<NIST_Control>().HasMany(e => e.ControlApplicabilityAssessments).WithMany(e => e.NIST_Controls)
+            modelBuilder.Entity<NIST_Control>().HasMany(e => e.ControlApplicabilityAssessments)
+                .WithMany(e => e.NIST_Controls)
                 .Map(e => e.ToTable("NIST_ControlsCAAs")
                     .MapLeftKey("NIST_Control_ID")
                     .MapRightKey("CAA_ID"));
 
-            modelBuilder.Entity<ControlApplicabilityAssessment>().HasMany(e => e.NIST_Controls).WithMany(e => e.ControlApplicabilityAssessments)
+            modelBuilder.Entity<ControlApplicabilityAssessment>().HasMany(e => e.NIST_Controls)
+                .WithMany(e => e.ControlApplicabilityAssessments)
                 .Map(e => e.ToTable("NIST_ControlsCAAs")
                     .MapLeftKey("CAA_ID")
                     .MapRightKey("NIST_Control_ID"));
@@ -380,7 +379,8 @@ namespace Vulnerator.Model.DataAccess
                     .MapLeftKey("NIST_Control_ID")
                     .MapRightKey("ConfidentialityLevel_ID"));
 
-            modelBuilder.Entity<ConfidentialityLevel>().HasMany(e => e.NIST_Controls).WithMany(e => e.ConfidentialityLevels)
+            modelBuilder.Entity<ConfidentialityLevel>().HasMany(e => e.NIST_Controls)
+                .WithMany(e => e.ConfidentialityLevels)
                 .Map(e => e.ToTable("NIST_ControlsConfidentialityLevels")
                     .MapLeftKey("ConfidentialityLevel_ID")
                     .MapRightKey("NIST_Control_ID"));
@@ -400,7 +400,8 @@ namespace Vulnerator.Model.DataAccess
                     .MapLeftKey("NIST_Control_ID")
                     .MapRightKey("CCP_ID"));
 
-            modelBuilder.Entity<CommonControlPackage>().HasMany(e => e.NIST_Controls).WithMany(e => e.CommonControlPackages)
+            modelBuilder.Entity<CommonControlPackage>().HasMany(e => e.NIST_Controls)
+                .WithMany(e => e.CommonControlPackages)
                 .Map(e => e.ToTable("NIST_ControlsCCPs")
                     .MapLeftKey("CCP_ID")
                     .MapRightKey("NIST_Control_ID"));
@@ -437,318 +438,333 @@ namespace Vulnerator.Model.DataAccess
                     .MapLeftKey("Software_ID")
                     .MapRightKey("PortService_ID"));
             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            // TODO: Still needs to be verified
-            modelBuilder.Entity<AdditionalTestConsideration>()
-                .HasMany(e => e.SAPs)
+            modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.AdditionalTestConsiderations)
+                .WithMany(e => e.SecurityAssessmentProcedures)
+                .Map(e => e.ToTable("SecurityAssessmentProcedureAdditionalTestConsiderations")
+                    .MapLeftKey("SecurityAssessmentProcedure_ID")
+                    .MapRightKey("AdditionalTestConsideration_ID"));
+
+            modelBuilder.Entity<AdditionalTestConsideration>().HasMany(e => e.SecurityAssessmentProcedures)
                 .WithMany(e => e.AdditionalTestConsiderations)
-                .Map(e => e.ToTable("SAP_AdditionalTestConsiderations").MapLeftKey("Consideration_ID")
-                    .MapRightKey("SAP_ID"));
-
-            modelBuilder.Entity<AuthorizationCondition>()
-                .HasMany(e => e.AuthorizationInformations)
-                .WithMany(e => e.AuthorizationConditions)
-                .Map(e => e.ToTable("AuthorizationInformation_AuthorizationConditions")
-                    .MapLeftKey("AuthorizationCondition_ID").MapRightKey("AuthorizationInformation_ID"));
-
-            modelBuilder.Entity<AvailabilityLevel>()
-                .HasMany(e => e.Groups)
-                .WithRequired(e => e.AvailabilityLevel)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<CCI>()
-                .HasMany(e => e.Vulnerabilities)
-                .WithMany(e => e.CCIs)
-                .Map(e => e.ToTable("VulnerabilitiesCCIs").MapLeftKey("CCI_ID").MapRightKey("Vulnerability_ID"));
-
-            modelBuilder.Entity<CommonControlPackage>()
-                .HasMany(e => e.NIST_Controls)
-                .WithMany(e => e.CommonControlPackages)
-                .Map(e => e.ToTable("NistControlsCCPs").MapLeftKey("CCP_ID").MapRightKey("NIST_Control_ID"));
-
-            modelBuilder.Entity<ConfidentialityLevel>()
-                .HasMany(e => e.Groups)
-                .WithRequired(e => e.ConfidentialityLevel)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<ConnectedSystem>()
-                .HasMany(e => e.Groups)
-                .WithMany(e => e.ConnectedSystems)
-                .Map(e => e.ToTable("AccreditationsConnectedSystems").MapLeftKey("ConnectedSystem_ID")
-                    .MapRightKey("Accreditation_ID"));
-
-            modelBuilder.Entity<Connection>()
-                .HasMany(e => e.Groups)
-                .WithMany(e => e.Connections)
-                .Map(e => e.ToTable("AccreditationsConnections").MapLeftKey("Connection_ID")
-                    .MapRightKey("Accreditation_ID"));
-
-            modelBuilder.Entity<Connectivity>()
-                .HasMany(e => e.StepOneQuestionnaires)
-                .WithMany(e => e.Connectivities)
-                .Map(e => e.ToTable("StepOneQuestionnaire_Connectivity").MapLeftKey("Connectivity_ID")
-                    .MapRightKey("StepOneQuestionnaire_ID"));
-
-            modelBuilder.Entity<Contact>()
-                .HasMany(e => e.Groups)
-                .WithMany(e => e.Contacts)
-                .Map(e => e.ToTable("GroupsContacts").MapLeftKey("Contact_ID").MapRightKey("Group_ID"));
-
-            modelBuilder.Entity<Contact>()
-                .HasMany(e => e.Hardwares)
-                .WithMany(e => e.Contacts)
-                .Map(e => e.ToTable("HardwareContacts").MapLeftKey("Contact_ID").MapRightKey("Hardware_ID"));
-
+                .Map(e => e.ToTable("SecurityAssessmentProcedureAdditionalTestConsiderations")
+                    .MapLeftKey("AdditionalTestConsideration_ID")
+                    .MapRightKey("SecurityAssessmentProcedure_ID"));
             
+            modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.CustomTestCases)
+                .WithMany(e => e.SecurityAssessmentProcedures)
+                .Map(e => e.ToTable("SecurityAssessmentProcedureCustomTestCases")
+                    .MapLeftKey("SecurityAssessmentProcedure_ID")
+                    .MapRightKey("CustomTestCase_ID"));
 
-            modelBuilder.Entity<Contact>()
-                .HasMany(e => e.Softwares)
-                .WithMany(e => e.Contacts)
-                .Map(e => e.ToTable("SoftwareContacts").MapLeftKey("Contact_ID").MapRightKey("Software_ID"));
-
-            modelBuilder.Entity<ControlSet>()
-                .HasMany(e => e.NIST_Controls)
-                .WithMany(e => e.ControlSets)
-                .Map(e => e.ToTable("NistControlsControlSets").MapLeftKey("ControlSet_ID")
-                    .MapRightKey("NIST_Control_ID"));
-
-            modelBuilder.Entity<CustomTestCase>()
-                .HasMany(e => e.SAPs)
+            modelBuilder.Entity<CustomTestCase>().HasMany(e => e.SecurityAssessmentProcedures)
                 .WithMany(e => e.CustomTestCases)
-                .Map(e => e.ToTable("SAP_CustomTestCases").MapLeftKey("CustomTestCase_ID").MapRightKey("SAP_ID"));
+                .Map(e => e.ToTable("SecurityAssessmentProcedureCustomTestCases")
+                    .MapLeftKey("CustomTestCase_ID")
+                    .MapRightKey("SecurityAssessmentProcedure_ID"));
+            
+            modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.EntranceCriterias)
+                .WithMany(e => e.SecurityAssessmentProcedures)
+                .Map(e => e.ToTable("SecurityAssessmentProcedureEntranceCriteria")
+                    .MapLeftKey("SecurityAssessmentProcedure_ID")
+                    .MapRightKey("EntranceCriteria_ID"));
 
-            modelBuilder.Entity<DADMS_Networks>()
-                .HasMany(e => e.Softwares)
-                .WithMany(e => e.DADMS_Networks)
-                .Map(e => e.ToTable("Software_DADMS_Networks").MapLeftKey("DADMS_Network_ID")
+            modelBuilder.Entity<EntranceCriteria>().HasMany(e => e.SecurityAssessmentProcedures)
+                .WithMany(e => e.EntranceCriterias)
+                .Map(e => e.ToTable("SecurityAssessmentProcedureEntranceCriteria")
+                    .MapLeftKey("EntranceCriteria_ID")
+                    .MapRightKey("SecurityAssessmentProcedure_ID"));
+            
+            modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.ExitCriterias)
+                .WithMany(e => e.SecurityAssessmentProcedures)
+                .Map(e => e.ToTable("SecurityAssessmentProcedureExitCriteria")
+                    .MapLeftKey("SecurityAssessmentProcedure_ID")
+                    .MapRightKey("ExitCriteria_ID"));
+
+            modelBuilder.Entity<ExitCriteria>().HasMany(e => e.SecurityAssessmentProcedures)
+                .WithMany(e => e.ExitCriterias)
+                .Map(e => e.ToTable("SecurityAssessmentProcedureExitCriteria")
+                    .MapLeftKey("ExitCriteria_ID")
+                    .MapRightKey("SecurityAssessmentProcedure_ID"));
+            
+            modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.Limitations)
+                .WithMany(e => e.SecurityAssessmentProcedures)
+                .Map(e => e.ToTable("SecurityAssessmentProcedureLimitiations")
+                    .MapLeftKey("SecurityAssessmentProcedure_ID")
+                    .MapRightKey("Limitation_ID"));
+
+            modelBuilder.Entity<Limitation>().HasMany(e => e.SecurityAssessmentProcedures)
+                .WithMany(e => e.Limitations)
+                .Map(e => e.ToTable("SecurityAssessmentProcedureLimitiations")
+                    .MapLeftKey("Limitation_ID")
+                    .MapRightKey("SecurityAssessmentProcedure_ID"));
+            
+            modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.RelatedDocuments)
+                .WithMany(e => e.SecurityAssessmentProcedures)
+                .Map(e => e.ToTable("SecurityAssessmentProcedureRelatedDocuments")
+                    .MapLeftKey("SecurityAssessmentProcedure_ID")
+                    .MapRightKey("RelatedDocument_ID"));
+
+            modelBuilder.Entity<RelatedDocument>().HasMany(e => e.SecurityAssessmentProcedures)
+                .WithMany(e => e.RelatedDocuments)
+                .Map(e => e.ToTable("SecurityAssessmentProcedureRelatedDocuments")
+                    .MapLeftKey("RelatedDocument_ID")
+                    .MapRightKey("SecurityAssessmentProcedure_ID"));
+            
+            modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.RelatedTestings)
+                .WithMany(e => e.SecurityAssessmentProcedures)
+                .Map(e => e.ToTable("SecurityAssessmentProcedureRelatedTesting")
+                    .MapLeftKey("SecurityAssessmentProcedure_ID")
+                    .MapRightKey("RelatedTesting_ID"));
+
+            modelBuilder.Entity<RelatedTesting>().HasMany(e => e.SecurityAssessmentProcedures)
+                .WithMany(e => e.RelatedTestings)
+                .Map(e => e.ToTable("SecurityAssessmentProcedureRelatedTesting")
+                    .MapLeftKey("RelatedTesting_ID")
+                    .MapRightKey("SecurityAssessmentProcedure_ID"));
+            
+            modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.TestReferences)
+                .WithMany(e => e.SecurityAssessmentProcedures)
+                .Map(e => e.ToTable("SecurityAssessmentProcedureTestReferences")
+                    .MapLeftKey("SecurityAssessmentProcedure_ID")
+                    .MapRightKey("TestReference_ID"));
+
+            modelBuilder.Entity<TestReference>().HasMany(e => e.SecurityAssessmentProcedures)
+                .WithMany(e => e.TestReferences)
+                .Map(e => e.ToTable("SecurityAssessmentProcedureTestReferences")
+                    .MapLeftKey("TestReference_ID")
+                    .MapRightKey("SecurityAssessmentProcedure_ID"));
+            
+            modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.TestScheduleItems)
+                .WithMany(e => e.SecurityAssessmentProcedures)
+                .Map(e => e.ToTable("SecurityAssessmentProcedureTestScheduleItems")
+                    .MapLeftKey("SecurityAssessmentProcedure_ID")
+                    .MapRightKey("TestScheduleItem_ID"));
+
+            modelBuilder.Entity<TestScheduleItem>().HasMany(e => e.SecurityAssessmentProcedures)
+                .WithMany(e => e.TestScheduleItems)
+                .Map(e => e.ToTable("SecurityAssessmentProcedureTestScheduleItems")
+                    .MapLeftKey("TestScheduleItem_ID")
+                    .MapRightKey("SecurityAssessmentProcedure_ID"));
+
+            modelBuilder.Entity<SCAP_Score>().HasRequired(e => e.Hardware).WithMany(e => e.SCAP_Scores);
+
+            modelBuilder.Entity<Hardware>().HasMany(e => e.SCAP_Scores).WithOptional(e => e.Hardware);
+            
+            modelBuilder.Entity<SCAP_Score>().HasRequired(e => e.UniqueFindingSourceFile)
+                .WithOptional(e => e.SCAP_Score);
+
+            modelBuilder.Entity<UniqueFindingSourceFile>().HasOptional(e => e.SCAP_Score)
+                .WithRequired(e => e.UniqueFindingSourceFile);
+            
+            modelBuilder.Entity<SCAP_Score>().HasRequired(e => e.VulnerabilitySource)
+                .WithMany(e => e.SCAP_Scores);
+
+            modelBuilder.Entity<VulnerabilitySource>().HasMany(e => e.SCAP_Scores)
+                .WithRequired(e => e.VulnerabilitySource);
+            
+            modelBuilder.Entity<Software>().HasMany(e => e.DADMS_Networks).WithMany(e => e.Softwares)
+                .Map(e => e.ToTable("SoftwareDADMS_Networks")
+                    .MapLeftKey("Software_ID")
+                    .MapRightKey("DADMS_Network_ID"));
+
+            modelBuilder.Entity<DADMS_Network>().HasMany(e => e.Softwares).WithMany(e => e.DADMS_Networks)
+                .Map(e => e.ToTable("SoftwareDADMS_Networks")
+                    .MapLeftKey("DADMS_Network_ID")
+                    .MapRightKey("Software_ID"));
+            
+            modelBuilder.Entity<Software>().HasMany(e => e.Contacts).WithMany(e => e.Softwares)
+                .Map(e => e.ToTable("SoftwareContacts")
+                    .MapLeftKey("Software_ID")
+                    .MapRightKey("Contact_ID"));
+
+            modelBuilder.Entity<Contact>().HasMany(e => e.Softwares).WithMany(e => e.Contacts)
+                .Map(e => e.ToTable("SoftwareContacts")
+                    .MapLeftKey("Contact_ID")
+                    .MapRightKey("Software_ID"));
+            
+            modelBuilder.Entity<Software>().HasMany(e => e.Hardwares).WithMany(e => e.Softwares)
+                .Map(e => e.ToTable("SoftwareContacts")
+                    .MapLeftKey("Software_ID")
+                    .MapRightKey("Contact_ID"));
+
+            modelBuilder.Entity<Hardware>().HasMany(e => e.Softwares).WithMany(e => e.Hardwares)
+                .Map(e => e.ToTable("SoftwareContacts")
+                    .MapLeftKey("Contact_ID")
                     .MapRightKey("Software_ID"));
 
-            modelBuilder.Entity<EncryptionTechnique>()
-                .HasMany(e => e.StepOneQuestionnaires)
-                .WithMany(e => e.EncryptionTechniques)
-                .Map(e => e.ToTable("StepOneQuestionnaireEncryptionTechniques").MapLeftKey("EncryptionTechnique_ID")
-                    .MapRightKey("StepOneQuestionnaire_ID"));
-
-            modelBuilder.Entity<EntranceCriteria>()
-                .HasMany(e => e.SAPs)
-                .WithMany(e => e.EntranceCriterias)
-                .Map(e => e.ToTable("SAP_EntranceCriteria").MapLeftKey("EntranceCriteria_ID").MapRightKey("SAP_ID"));
-
-            modelBuilder.Entity<EnumeratedWindowsGroup>()
-                .HasMany(e => e.Hardwares)
-                .WithMany(e => e.EnumeratedWindowsGroups)
-                .Map(e => e.ToTable("HardwareEnumeratedWindowsGroups").MapLeftKey("Group_ID")
-                    .MapRightKey("Hardware_ID"));
-
-            modelBuilder.Entity<EnumeratedWindowsUser>()
-                .HasMany(e => e.EnumeratedWindowsGroups)
-                .WithMany(e => e.EnumeratedWindowsUsers)
-                .Map(e => e.ToTable("EnumeratedWindowsGroupsUsers").MapLeftKey("User_ID").MapRightKey("Group_ID"));
-
-            modelBuilder.Entity<ExitCriteria>()
-                .HasMany(e => e.SAPs)
-                .WithMany(e => e.ExitCriterias)
-                .Map(e => e.ToTable("SAP_ExitCriteria").MapLeftKey("ExitCriteria_ID").MapRightKey("SAP_ID"));
-
-            modelBuilder.Entity<ExternalSecurityService>()
-                .HasMany(e => e.StepOneQuestionnaires)
-                .WithMany(e => e.ExternalSecurityServices)
-                .Map(e => e.ToTable("StepOneQuestionnaire_ExternalSecurityServices")
-                    .MapLeftKey("ExternalSecurityServices_ID").MapRightKey("StepOneQuestionnaire_ID"));
-
-            modelBuilder.Entity<FindingType>()
-                .HasMany(e => e.UniqueFindings)
-                .WithRequired(e => e.FindingType)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<GoverningPolicy>()
-                .HasMany(e => e.SystemCategorizations)
-                .WithMany(e => e.GoverningPolicies)
-                .Map(e => e.ToTable("SystemCategorizationGoverningPolicies").MapLeftKey("GoverningPolicy_ID")
-                    .MapRightKey("SystemCategorization_ID"));
-
-            modelBuilder.Entity<Group>()
-                .HasMany(e => e.Hardwares)
-                .WithMany(e => e.Groups)
-                .Map(e => e.ToTable("HardwareGroups").MapLeftKey("Group_ID").MapRightKey("Hardware_ID"));
+            modelBuilder.Entity<StepOneQuestionnaire>().HasOptional(e => e.BaselineLocation);
             
-            modelBuilder.Entity<Group>()
-                .HasMany(e => e.MitigationsOrConditions)
-                .WithMany(e => e.Groups)
-                .Map(e => e.ToTable("GroupsMitigationsOrConditions").MapLeftKey("Group_ID").MapRightKey("MitigationOrCondition_ID"));
+            modelBuilder.Entity<StepOneQuestionnaire>().HasMany(e => e.AuthorizationConditions)
+                .WithMany(e => e.StepOneQuestionnaires)
+                .Map(e => e.ToTable("StepOneQuestionnaireAuthorizationConditions")
+                    .MapLeftKey("StepOneQuestionnaire_ID")
+                    .MapRightKey("AuthorizationCondition_ID"));
 
-            modelBuilder.Entity<Hardware>()
-                .HasMany(e => e.ScapScores)
-                .WithRequired(e => e.Hardware)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Hardware>()
-                .HasMany(e => e.VulnerabilitySources)
-                .WithMany(e => e.Hardwares)
-                .Map(e => e.ToTable("Hardware_VulnerabilitySources").MapLeftKey("Hardware_ID")
-                    .MapRightKey("VulnerabilitySource_ID"));
-
-            modelBuilder.Entity<IA_Control>()
-                .HasMany(e => e.Vulnerabilities)
-                .WithMany(e => e.IA_Controls)
-                .Map(e => e.ToTable("Vulnerabilities_IA_Controls").MapLeftKey("IA_Control_ID")
-                    .MapRightKey("VulnerabilitySource_ID"));
-
-            modelBuilder.Entity<IATA_Standards>()
-                .HasMany(e => e.Groups)
-                .WithMany(e => e.IATA_Standards)
-                .Map(e => e.ToTable("Accreditations_IATA_Standards").MapLeftKey("IATA_Standard_ID")
-                    .MapRightKey("Accreditation_ID"));
-
-            modelBuilder.Entity<IATA_Standards>()
-                .HasMany(e => e.NIST_Controls)
-                .WithMany(e => e.IATA_Standards)
-                .Map(e => e.ToTable("NistControls_IATA_Standards").MapLeftKey("IATA_Standard_ID")
-                    .MapRightKey("NIST_Control_ID"));
-
-            modelBuilder.Entity<IntegrityLevel>()
-                .HasMany(e => e.Groups)
-                .WithRequired(e => e.IntegrityLevel)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<InterconnectedSystem>()
-                .HasMany(e => e.SystemCategorizations)
-                .WithMany(e => e.InterconnectedSystems)
-                .Map(e => e.ToTable("SystemCategorizationInterconnectedSystems").MapLeftKey("InterconnectedSystem_ID")
-                    .MapRightKey("SystemCategorization_ID"));
-
-            modelBuilder.Entity<IP_Address>()
-                .HasMany(e => e.Hardwares)
-                .WithMany(e => e.IP_Addresses)
-                .Map(e => e.ToTable("Hardware_IP_Addresses").MapLeftKey("IP_Address_ID").MapRightKey("Hardware_ID"));
-
-            modelBuilder.Entity<JointAuthorizationOrganization>()
-                .HasMany(e => e.SystemCategorizations)
-                .WithMany(e => e.JointAuthorizationOrganizations)
-                .Map(e => e.ToTable("SystemCategorizationJointOrganizations").MapLeftKey("JointOrganization_ID")
-                    .MapRightKey("SystemCategorization_ID"));
-
-            modelBuilder.Entity<MAC_Address>()
-                .HasMany(e => e.Hardwares)
-                .WithMany(e => e.MAC_Addresses)
-                .Map(e => e.ToTable("Hardware_MAC_Addresses").MapLeftKey("MAC_Address_ID").MapRightKey("Hardware_ID"));
-
-            modelBuilder.Entity<MissionArea>()
-                .HasMany(e => e.InformationTypes)
-                .WithMany(e => e.MissionAreas)
-                .Map(e => e.ToTable("InformationTypesMissionAreas").MapLeftKey("MissionArea_ID")
-                    .MapRightKey("InformationType_ID"));
-
-            modelBuilder.Entity<NetworkConnectionRule>()
-                .HasMany(e => e.StepOneQuestionnaires)
-                .WithMany(e => e.NetworkConnectionRules)
-                .Map(e => e.ToTable("StepOneQuestionnaireNetworkConnectionRules").MapLeftKey("NetworkConnectionRule_ID")
+            modelBuilder.Entity<AuthorizationCondition>().HasMany(e => e.StepOneQuestionnaires)
+                .WithMany(e => e.AuthorizationConditions)
+                .Map(e => e.ToTable("StepOneQuestionnaireAuthorizationConditions")
+                    .MapLeftKey("AuthorizationCondition_ID")
                     .MapRightKey("StepOneQuestionnaire_ID"));
+            
+            modelBuilder.Entity<StepOneQuestionnaire>().HasMany(e => e.AuthorizationToConnectOrInterim_ATC_PendingItems)
+                .WithMany(e => e.StepOneQuestionnaires)
+                .Map(e => e.ToTable("StepOneQuestionnaireAuthorizationToConnectOrInterim_ATC_PendingItems")
+                    .MapLeftKey("StepOneQuestionnaire_ID")
+                    .MapRightKey("AuthorizationToConnectOrInterim_ATC_PendingItem_ID"));
+
+            modelBuilder.Entity<AuthorizationToConnectOrInterim_ATC_PendingItem>().HasMany(e => e.StepOneQuestionnaires)
+                .WithMany(e => e.AuthorizationToConnectOrInterim_ATC_PendingItems)
+                .Map(e => e.ToTable("StepOneQuestionnaireAuthorizationToConnectOrInterim_ATC_PendingItems")
+                    .MapLeftKey("AuthorizationToConnectOrInterim_ATC_PendingItem_ID")
+                    .MapRightKey("StepOneQuestionnaire_ID"));
+            
+            modelBuilder.Entity<StepOneQuestionnaire>().HasMany(e => e.Connectivities)
+                .WithMany(e => e.StepOneQuestionnaires)
+                .Map(e => e.ToTable("StepOneQuestionnaireConnectivity")
+                    .MapLeftKey("StepOneQuestionnaire_ID")
+                    .MapRightKey("Connectivity_ID"));
+
+            modelBuilder.Entity<StepOneQuestionnaire>().HasMany(e => e.ExternalSecurityServices)
+                .WithMany(e => e.StepOneQuestionnaires)
+                .Map(e => e.ToTable("StepOneQuestionnaireExternalSecurityServices")
+                    .MapLeftKey("StepOneQuestionnaire_ID")
+                    .MapRightKey("ExternalSecurityServices_ID"));
+
+            modelBuilder.Entity<StepOneQuestionnaire>().HasMany(e => e.EncryptionTechniques)
+                .WithMany(e => e.StepOneQuestionnaires)
+                .Map(e => e.ToTable("StepOneQuestionnaireEncryptionTechniques")
+                    .MapLeftKey("StepOneQuestionnaire_ID")
+                    .MapRightKey("EncryptionTechnique_ID"));
+            
+            modelBuilder.Entity<StepOneQuestionnaire>().HasMany(e => e.DeploymentLocations)
+                .WithMany(e => e.StepOneQuestionnaires)
+                .Map(e => e.ToTable("StepOneQuestionnaireEncryptionTechniques")
+                    .MapLeftKey("StepOneQuestionnaire_ID")
+                    .MapRightKey("EncryptionTechnique_ID"));
+
+            modelBuilder.Entity<StepOneQuestionnaire>().HasMany(e => e.NetworkConnectionRules)
+                .WithMany(e => e.StepOneQuestionnaires)
+                .Map(e => e.ToTable("StepOneQuestionnaireNetworkConnectionRules")
+                    .MapLeftKey("StepOneQuestionnaire_ID")
+                    .MapRightKey("NetworkConnectionRule_ID"));
+            
+            modelBuilder.Entity<StepOneQuestionnaire>().HasMany(e => e.UserCategories)
+                .WithMany(e => e.StepOneQuestionnaires)
+                .Map(e => e.ToTable("StepOneQuestionnaireUserCategories")
+                    .MapLeftKey("StepOneQuestionnaire_ID")
+                    .MapRightKey("UserCategory_ID"));
 
             
+            modelBuilder.Entity<SystemCategorization>().HasMany(e => e.GoverningPolicies)
+                .WithMany(e => e.SystemCategorizations)
+                .Map(e => e.ToTable("SystemCategorizationGoverningPolicies")
+                    .MapLeftKey("SystemCategorization_ID")
+                    .MapRightKey("GoverningPolicy_ID"));
+            
+            // TODO: SystemCategorizationInformationTypesImpactAdjustments
+            
+            modelBuilder.Entity<SystemCategorization>().HasMany(e => e.InterconnectedSystems)
+                .WithMany(e => e.SystemCategorizations)
+                .Map(e => e.ToTable("SystemCategorizationInterconnectedSystems")
+                    .MapLeftKey("SystemCategorization_ID")
+                    .MapRightKey("InterconnectedSystem_ID"));
+            
+            modelBuilder.Entity<SystemCategorization>().HasMany(e => e.JointAuthorizationOrganizations)
+                .WithMany(e => e.SystemCategorizations)
+                .Map(e => e.ToTable("SystemCategorizationJointAuthorizationOrganizations")
+                    .MapLeftKey("SystemCategorization_ID")
+                    .MapRightKey("JointAuthorizationOrganization_ID"));
 
-            modelBuilder.Entity<Overlay>()
-                .HasMany(e => e.Groups)
-                .WithMany(e => e.Overlays)
-                .Map(e => e.ToTable("AccreditationsOverlays").MapLeftKey("Overlay_ID").MapRightKey("Accreditation_ID"));
+            modelBuilder.Entity<UniqueFinding>().HasRequired(e => e.FindingType).WithMany(e => e.UniqueFindings);
 
-            modelBuilder.Entity<Overlay>()
-                .HasMany(e => e.NIST_Controls)
-                .WithMany(e => e.Overlays)
-                .Map(e => e.ToTable("NistControlsOverlays").MapLeftKey("Overlay_ID").MapRightKey("NIST_Control_ID"));
+            modelBuilder.Entity<FindingType>().HasMany(e => e.UniqueFindings).WithRequired(e => e.FindingType);
+            
+            modelBuilder.Entity<UniqueFinding>().HasRequired(e => e.Vulnerability).WithMany(e => e.UniqueFindings);
 
-            modelBuilder.Entity<RelatedDocument>()
-                .HasMany(e => e.SecurityAssessmentProcedures)
-                .WithMany(e => e.RelatedDocuments)
-                .Map(e => e.ToTable("SAP_RelatedDocuments").MapLeftKey("RelatedDocument_ID").MapRightKey("SAP_ID"));
+            modelBuilder.Entity<Vulnerability>().HasMany(e => e.UniqueFindings).WithRequired(e => e.Vulnerability);
+            
+            modelBuilder.Entity<UniqueFinding>().HasOptional(e => e.Hardware).WithMany(e => e.UniqueFindings);
 
-            modelBuilder.Entity<RelatedTesting>()
-                .HasMany(e => e.SecurityAssessmentProcedures)
-                .WithMany(e => e.RelatedTestings)
-                .Map(e => e.ToTable("SAP_RelatedTesting").MapLeftKey("RelatedTesting_ID").MapRightKey("SAP_ID"));
+            modelBuilder.Entity<Hardware>().HasMany(e => e.UniqueFindings).WithOptional(e => e.Hardware);
+            
+            modelBuilder.Entity<UniqueFinding>().HasOptional(e => e.Software).WithMany(e => e.UniqueFindings);
 
-            modelBuilder.Entity<ResponsibilityRole>()
-                .HasMany(e => e.Vulnerabilities)
+            modelBuilder.Entity<Software>().HasMany(e => e.UniqueFindings).WithOptional(e => e.Software);
+            
+            modelBuilder.Entity<UniqueFinding>().HasRequired(e => e.UniqueFindingSourceFile)
+                .WithMany(e => e.UniqueFindings);
+
+            modelBuilder.Entity<UniqueFindingSourceFile>().HasMany(e => e.UniqueFindings)
+                .WithRequired(e => e.UniqueFindingSourceFile);
+            
+            modelBuilder.Entity<UniqueFinding>().HasOptional(e => e.MitigationOrCondition)
+                .WithRequired(e => e.UniqueFinding);
+
+            modelBuilder.Entity<MitigationOrCondition>().HasRequired(e => e.UniqueFinding)
+                .WithOptional(e => e.MitigationOrCondition);
+            
+            modelBuilder.Entity<Vulnerability>().HasMany(e => e.CCIs).WithMany(e => e.Vulnerabilities)
+                .Map(e => e.ToTable("VulnerabilitiesCCIs")
+                    .MapLeftKey("Vulnerability_ID")
+                    .MapRightKey("CCI_ID"));
+
+            modelBuilder.Entity<CCI>().HasMany(e => e.Vulnerabilities).WithMany(e => e.CCIs)
+                .Map(e => e.ToTable("VulnerabilitiesCCIs")
+                    .MapLeftKey("CCI_ID")
+                    .MapRightKey("Vulnerability_ID"));
+            
+            modelBuilder.Entity<Vulnerability>().HasMany(e => e.IA_Controls).WithMany(e => e.Vulnerabilities)
+                .Map(e => e.ToTable("VulnerabilitiesIA_Controls")
+                    .MapLeftKey("Vulnerability_ID")
+                    .MapRightKey("IA_Control_ID"));
+
+            modelBuilder.Entity<IA_Control>().HasMany(e => e.Vulnerabilities).WithMany(e => e.IA_Controls)
+                .Map(e => e.ToTable("VulnerabilitiesIA_Controls")
+                    .MapLeftKey("IA_Control_ID")
+                    .MapRightKey("Vulnerability_ID"));
+            
+            modelBuilder.Entity<Vulnerability>().HasMany(e => e.ResponsibilityRoles).WithMany(e => e.Vulnerabilities)
+                .Map(e => e.ToTable("VulnerabilitiesResponsibilityRoles")
+                    .MapLeftKey("Vulnerability_ID")
+                    .MapRightKey("Role_ID"));
+
+            modelBuilder.Entity<ResponsibilityRole>().HasMany(e => e.Vulnerabilities)
                 .WithMany(e => e.ResponsibilityRoles)
-                .Map(e => e.ToTable("Vulnerabilities_RoleResponsibilities").MapLeftKey("Role_ID")
+                .Map(e => e.ToTable("VulnerabilitiesResponsibilityRoles")
+                    .MapLeftKey("Role_ID")
                     .MapRightKey("Vulnerability_ID"));
+            
+            modelBuilder.Entity<Vulnerability>().HasMany(e => e.VulnerabilitySources).WithMany(e => e.Vulnerabilities)
+                .Map(e => e.ToTable("VulnerabilitiesVulnerabilitySources")
+                    .MapLeftKey("Vulnerability_ID")
+                    .MapRightKey("VulnerabilitySource_ID"));
 
-            modelBuilder.Entity<Group>()
-                .HasOptional(e => e.SecurityAssessmentProcedure)
-                .WithRequired(e => e.Group);
-
-            modelBuilder.Entity<TestReference>()
-                .HasMany(e => e.SecurityAssessmentProcedures)
-                .WithMany(e => e.TestReferences)
-                .Map(e => e.ToTable("SAP_TestReferences").MapLeftKey("TestReference_ID").MapRightKey("SAP_ID"));
-
-            modelBuilder.Entity<TestScheduleItem>()
-                .HasMany(e => e.SecurityAssessmentProcedures)
-                .WithMany(e => e.TestScheduleItems)
-                .Map(e => e.ToTable("SAP_TestScheduleItems").MapLeftKey("TestScheduleItem_ID").MapRightKey("SAP_ID"));
-
-            modelBuilder.Entity<UniqueFinding>()
-                .HasOptional(e => e.MitigationOrCondition);
-
-            modelBuilder.Entity<UniqueFindingSourceFile>()
-                .HasMany(e => e.UniqueFindings)
-                .WithRequired(e => e.UniqueFindingSourceFile)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<UserCategory>()
-                .HasMany(e => e.StepOneQuestionnaires)
-                .WithMany(e => e.UserCategories)
-                .Map(e => e.ToTable("StepOneQuestionnaireUserCategories").MapLeftKey("UserCategory_ID")
-                    .MapRightKey("StepOneQuestionnaire_ID"));
-
-            modelBuilder.Entity<Vulnerability>()
-                .HasMany(e => e.UniqueFindings)
-                .WithRequired(e => e.Vulnerability)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<VulnerabilityReference>()
-                .HasMany(e => e.Vulnerabilities)
-                .WithMany(e => e.VulnerabilityReferences)
-                .Map(e => e.ToTable("VulnerabilitiesVulnerabilityReferences").MapLeftKey("Reference_ID")
-                    .MapRightKey("Vulnerability_ID"));
-
-            modelBuilder.Entity<VulnerabilitySource>()
-                .HasMany(e => e.SCAP_Scores)
-                .WithRequired(e => e.VulnerabilitySource)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<VulnerabilitySource>()
-                .HasMany(e => e.Vulnerabilities)
+            modelBuilder.Entity<VulnerabilitySource>().HasMany(e => e.Vulnerabilities)
                 .WithMany(e => e.VulnerabilitySources)
-                .Map(e => e.ToTable("VulnerabilitiesVulnerabilitySources").MapLeftKey("VulnerabilitySource_ID")
+                .Map(e => e.ToTable("VulnerabilitiesVulnerabilitySources")
+                    .MapLeftKey("VulnerabilitySource_ID")
                     .MapRightKey("Vulnerability_ID"));
+            
+            modelBuilder.Entity<Vulnerability>().HasMany(e => e.VulnerabilityReferences)
+                .WithMany(e => e.Vulnerabilities)
+                .Map(e => e.ToTable("VulnerabilitiesVulnerabilityReferences")
+                    .MapLeftKey("Vulnerability_ID")
+                    .MapRightKey("Reference_ID"));
 
-            modelBuilder.Entity<WindowsDomainUserSetting>()
-                .HasMany(e => e.EnumeratedWindowsUsers)
-                .WithMany(e => e.WindowsDomainUserSettings)
-                .Map(e => e.ToTable("EnumeratedDomainUsersSettings").MapLeftKey("Domain_Settings_ID")
-                    .MapRightKey("User_ID"));
+            modelBuilder.Entity<VulnerabilityReference>().HasMany(e => e.Vulnerabilities)
+                .WithMany(e => e.VulnerabilityReferences)
+                .Map(e => e.ToTable("VulnerabilitiesVulnerabilityReferences")
+                    .MapLeftKey("Reference_ID")
+                    .MapRightKey("Vulnerability_ID"));
+            
+            modelBuilder.Entity<ReportFindingTypeUserSettings>().HasRequired(e => e.RequiredReport)
+                .WithMany(e => e.ReportFindingTypeUserSettings);
+            
+            modelBuilder.Entity<ReportFindingTypeUserSettings>().HasRequired(e => e.FindingType)
+                .WithMany(e => e.ReportFindingTypeUserSettings);
 
-            modelBuilder.Entity<WindowsLocalUserSetting>()
-                .HasMany(e => e.EnumeratedWindowsUsers)
-                .WithMany(e => e.WindowsLocalUserSettings)
-                .Map(e => e.ToTable("EnumeratedLocalWindowsUsersSettings").MapLeftKey("Local_Settings_ID")
-                    .MapRightKey("User_ID"));
+            modelBuilder.Entity<ReportSeverityUserSettings>().HasRequired(e => e.RequiredReport)
+                .WithMany(e => e.ReportSeverityUserSettings);
         }
     }
 }

@@ -7,9 +7,13 @@ namespace Vulnerator.Model.Entity
 
     public partial class FindingType
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+            "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public FindingType()
-        { UniqueFindings = new ObservableCollection<UniqueFinding>(); }
+        {
+            UniqueFindings = new ObservableCollection<UniqueFinding>();
+            ReportFindingTypeUserSettings = new ObservableCollection<ReportFindingTypeUserSettings>();
+        }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -22,5 +26,8 @@ namespace Vulnerator.Model.Entity
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UniqueFinding> UniqueFindings { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ReportFindingTypeUserSettings> ReportFindingTypeUserSettings { get; set; }
     }
 }

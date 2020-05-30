@@ -9,7 +9,7 @@ namespace Vulnerator.Model.Entity
     public partial class AuthorizationToConnectOrInterim_ATC_PendingItem
     {
         public AuthorizationToConnectOrInterim_ATC_PendingItem()
-        { }
+        { StepOneQuestionnaires = new ObservableCollection<StepOneQuestionnaire>(); }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -26,6 +26,7 @@ namespace Vulnerator.Model.Entity
         [Required]
         public long StepOneQuestionnaire_ID { get; set; }
         
-        public StepOneQuestionnaire StepOneQuestionnaire { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<StepOneQuestionnaire> StepOneQuestionnaires { get; set; }
     }
 }

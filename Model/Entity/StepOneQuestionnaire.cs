@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace Vulnerator.Model.Entity
@@ -21,6 +22,9 @@ namespace Vulnerator.Model.Entity
             EncryptionTechniques = new HashSet<EncryptionTechnique>();
             NetworkConnectionRules = new HashSet<NetworkConnectionRule>();
             UserCategories = new HashSet<UserCategory>();
+            AuthorizationConditions = new ObservableCollection<AuthorizationCondition>();
+            AuthorizationToConnectOrInterim_ATC_PendingItems = new ObservableCollection<AuthorizationToConnectOrInterim_ATC_PendingItem>();
+            DeploymentLocations = new ObservableCollection<Location>();
         }
 
         [Key]
@@ -180,7 +184,7 @@ namespace Vulnerator.Model.Entity
         [StringLength(50)]
         public string NIST_ControlSet { get; set; }
 
-        public virtual Group Group { get; set; }
+        public long? BaselineLocation_ID { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Connectivity> Connectivities { get; set; }
@@ -196,5 +200,18 @@ namespace Vulnerator.Model.Entity
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserCategory> UserCategories { get; set; }
+        
+        public virtual Location BaselineLocation { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AuthorizationCondition> AuthorizationConditions { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AuthorizationToConnectOrInterim_ATC_PendingItem> AuthorizationToConnectOrInterim_ATC_PendingItems { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Location> DeploymentLocations { get; set; }
+        
+        public virtual Group Group { get; set; }
     }
 }

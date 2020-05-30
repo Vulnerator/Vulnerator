@@ -505,8 +505,8 @@ CREATE TABLE IP_Addresses (
 );
 
 CREATE TABLE JointAuthorizationOrganizations (
-                                                 JointOrganization_ID INTEGER PRIMARY KEY,
-                                                 JointOrganizationName NVARCHAR (50) NOT NULL
+                                                 JointAuthorizationOrganization_ID INTEGER PRIMARY KEY,
+                                                 JointAuthorizationOrganizationName NVARCHAR (50) NOT NULL
 );
 
 CREATE TABLE LifecycleStatuses (
@@ -944,7 +944,7 @@ CREATE TABLE Software (
                           Instance NVARCHAR (25)
 );
 
-CREATE TABLE Software_DADMS_Networks (
+CREATE TABLE SoftwareDADMS_Networks (
                                          Software_DADMS_Network_ID INTEGER PRIMARY KEY,
                                          Software_ID INTEGER NOT NULL,
                                          DADMS_Network_ID INTEGER NOT NULL,
@@ -1066,7 +1066,7 @@ CREATE TABLE StepOneQuestionnaireConnectivity (
                                                   FOREIGN KEY (Connectivity_ID) REFERENCES Connectivity(Connectivity_ID)
 );
 
-CREATE TABLE StepOneQuestionnaire_ExternalSecurityServices (
+CREATE TABLE StepOneQuestionnaireExternalSecurityServices (
                                                                StepOneQuestionnaire_ID INTEGER NOT NULL,
                                                                ExternalSecurityServices_ID INTEGER NOT NULL,
                                                                FOREIGN KEY (StepOneQuestionnaire_ID) REFERENCES StepOneQuestionnaire(StepOneQuestionnaire_ID),
@@ -1129,9 +1129,7 @@ CREATE TABLE SystemCategorization (
                                       IsBusinessInfo NVARCHAR (5) NOT NULL,
                                       HasExecutiveOrderProtections NVARCHAR (5) NOT NULL,
                                       IsNss NVARCHAR (5) NOT NULL,
-                                      CategorizationIsApproved NVARCHAR (5) NOT NULL,
-                                      ImpactAdjustment_ID INTEGER NOT NULL ,
-                                      FOREIGN KEY (ImpactAdjustment_ID) REFERENCES ImpactAdjustments(ImpactAdjustment_ID)
+                                      CategorizationIsApproved NVARCHAR (5) NOT NULL
 );
 
 CREATE TABLE SystemCategorizationGoverningPolicies (
@@ -1143,7 +1141,7 @@ CREATE TABLE SystemCategorizationGoverningPolicies (
                                                        FOREIGN KEY (GoverningPolicy_ID) REFERENCES GoverningPolicies(GoverningPolicy_ID)
 );
 
-CREATE TABLE SystemCategorizationInformationTypes (
+CREATE TABLE SystemCategorizationInformationTypesImpactAdjustments (
                                                       SystemCategorizationInformationType_ID INTEGER NOT NULL,
                                                       SystemCategorization_ID INTEGER NOT NULL,
                                                       Description NVARCHAR (500) NOT NULL,
@@ -1164,13 +1162,13 @@ CREATE TABLE SystemCategorizationInterconnectedSystems (
                                                            FOREIGN KEY (InterconnectedSystem_ID) REFERENCES InterconnectedSystems(InterconnectedSystem_ID)
 );
 
-CREATE TABLE SystemCategorizationJointOrganizations (
+CREATE TABLE SystemCategorizationJointAuthorizationOrganizations (
                                                         SystemCategorizationJointOrganization_ID INTEGER PRIMARY KEY,
                                                         SystemCategorization_ID INTEGER NOT NULL,
-                                                        JointOrganization_ID INTEGER NOT NULL,
-                                                        UNIQUE (SystemCategorization_ID, JointOrganization_ID) ON CONFLICT IGNORE,
+                                                        JointAuthorizationOrganization_ID INTEGER NOT NULL,
+                                                        UNIQUE (SystemCategorization_ID, JointAuthorizationOrganization_ID) ON CONFLICT IGNORE,
                                                         FOREIGN KEY (SystemCategorization_ID) REFERENCES SystemCategorization(SystemCategorization_ID),
-                                                        FOREIGN KEY (JointOrganization_ID) REFERENCES JointAuthorizationOrganizations(JointOrganization_ID)
+                                                        FOREIGN KEY (JointAuthorizationOrganization_ID) REFERENCES JointAuthorizationOrganizations(JointAuthorizationOrganization_ID)
 );
 
 CREATE TABLE TestReferences (
@@ -1249,7 +1247,7 @@ CREATE TABLE VulnerabilitiesCCIs (
                                      FOREIGN KEY (CCI_ID) REFERENCES CCIs(CCI_ID)
 );
 
-CREATE TABLE Vulnerabilities_IA_Controls (
+CREATE TABLE VulnerabilitiesIA_Controls (
                                              Vulnerability_IA_Control_ID INTEGER PRIMARY KEY,
                                              Vulnerability_ID INTEGER NOT NULL,
                                              IA_Control_ID INTEGER NOT NULL,
@@ -1292,7 +1290,7 @@ CREATE TABLE Vulnerabilities (
                                  IsActive NVARCHAR (5)
 );
 
-CREATE TABLE VulnerabilitiesRoleResponsibilities (
+CREATE TABLE VulnerabilitiesResponsibilityRoles (
                                                      VulnerabilityRoleResponsibility_ID INTEGER PRIMARY KEY,
                                                      Vulnerability_ID INTEGER NOT NULL,
                                                      Role_ID INTEGER NOT NULL,
@@ -1365,13 +1363,14 @@ CREATE TABLE WindowsLocalUserSettings (
 CREATE TABLE RequiredReports (
                                  RequiredReport_ID INTEGER PRIMARY KEY,
                                  DisplayedReportName NVARCHAR (50) NOT NULL,
-                                 ReportType NVARCHAR (10) NOT NULL,
+                                 ReportType NVARCHAR (50) NOT NULL,
                                  IsReportEnabled NVARCHAR (5) NOT NULL,
                                  IsReportSelected NVARCHAR (5) NOT NULL,
                                  ReportCategory NVARCHAR (50) NOT NULL
 );
 
-CREATE TABLE ReportFindingTypes (
+CREATE TABLE ReportFindingTypeUserSettings (
+                                    ReportFindingTypeUserSettings_ID INTEGER PRIMARY KEY ,
                                     RequiredReport_ID INTEGER NOT NULL,
                                     FindingType_ID INTEGER NOT NULL,
                                     UserName NVARCHAR (50) NOT NULL,
@@ -1380,7 +1379,8 @@ CREATE TABLE ReportFindingTypes (
                                     UNIQUE (RequiredReport_ID, FindingType_ID, UserName) ON CONFLICT IGNORE
 );
 
-CREATE TABLE ReportSeverities (
+CREATE TABLE ReportSeverityUserSettings (
+                                  ReportSeverityUserSettings_ID INTEGER PRIMARY KEY,
                                   RequiredReport_ID INTEGER NOT NULL,
                                   UserName NVARCHAR (50) NOT NULL,
                                   ReportCatI INTEGER NOT NULL,

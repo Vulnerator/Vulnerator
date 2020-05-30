@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+
 namespace Vulnerator.Model.Entity
 {
     using System;
@@ -8,6 +10,12 @@ namespace Vulnerator.Model.Entity
 
     public partial class RequiredReport
     {
+        public RequiredReport()
+        {
+            ReportFindingTypeUserSettings = new ObservableCollection<ReportFindingTypeUserSettings>();
+            ReportSeverityUserSettings = new ObservableCollection<ReportSeverityUserSettings>();
+        }
+        
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long RequiredReport_ID { get; set; }
@@ -17,7 +25,7 @@ namespace Vulnerator.Model.Entity
         public string DisplayedReportName { get; set; }
 
         [Required]
-        [StringLength(10)]
+        [StringLength(50)]
         public string ReportType { get; set; }
 
         [Required]
@@ -30,5 +38,11 @@ namespace Vulnerator.Model.Entity
         [Required]
         [StringLength(5)]
         public string IsReportSelected { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ReportFindingTypeUserSettings> ReportFindingTypeUserSettings { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ReportSeverityUserSettings> ReportSeverityUserSettings { get; set; }
     }
 }
