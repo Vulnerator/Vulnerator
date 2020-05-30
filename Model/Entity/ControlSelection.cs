@@ -1,20 +1,12 @@
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    [Table("ControlSelection")]
-    public partial class ControlSelection : INotifyPropertyChanged
+    public class ControlSelection : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public ControlSelection()
-        { }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

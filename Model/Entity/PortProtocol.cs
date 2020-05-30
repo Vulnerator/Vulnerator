@@ -1,17 +1,15 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
-    [Table("PortsProtocols")]
-    public partial class PortProtocol : INotifyPropertyChanged
+    public class PortProtocol : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
             "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PortProtocol()
@@ -20,12 +18,11 @@ namespace Vulnerator.Model.Entity
             PortServices = new ObservableCollection<PortService>();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long PortProtocol_ID { get; set; }
 
+        [Required]
         public long Port { get; set; }
 
         [Required]

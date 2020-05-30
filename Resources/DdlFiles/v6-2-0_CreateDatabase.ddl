@@ -1,31 +1,31 @@
 PRAGMA user_version = 1;
 
-CREATE TABLE AdditionalTestConsiderations (
+CREATE TABLE IF NOT EXISTS AdditionalTestConsiderations (
                                               AdditionalTestConsideration_ID INTEGER PRIMARY KEY,
-                                              AdditionalTestConsiderationTitle NVARCHAR (25),
-                                              AdditionalTestConsiderationDetails NVARCHAR (1000)
+                                              AdditionalTestConsiderationTitle NVARCHAR (25) NOT NULL ,
+                                              AdditionalTestConsiderationDetails NVARCHAR (1000) NOT NULL 
 );
 
-CREATE TABLE AuthorizationConditions (
+CREATE TABLE IF NOT EXISTS AuthorizationConditions (
                                          AuthorizationCondition_ID INTEGER PRIMARY KEY,
                                          AuthorizationCondition NVARCHAR (500) NOT NULL,
-                                         AuthorizationConditionCompletionDate DATE NOT NULL,
+                                         AuthorizationConditionCompletionDate DATETIME NOT NULL,
                                          AuthorizationConditionIsCompleted INTEGER NOT NULL
 );
 
-CREATE TABLE AuthorizationToConnectOrInterim_ATC_PendingItems
+CREATE TABLE IF NOT EXISTS AuthorizationToConnectOrInterim_ATC_PendingItems
 (
     AuthorizationToConnectOrInterim_ATC_PendingItem_ID     INTEGER PRIMARY KEY,
     AuthorizationToConnectOrInterim_ATC_PendingItem        NVARCHAR(50) NOT NULL,
-    AuthorizationToConnectOrInterim_ATC_PendingItemDueDate DATE         NOT NULL
+    AuthorizationToConnectOrInterim_ATC_PendingItemDueDate DATETIME NOT NULL
 );
 
-CREATE TABLE AvailabilityLevels (
+CREATE TABLE IF NOT EXISTS AvailabilityLevels (
                                     AvailabilityLevel_ID INTEGER PRIMARY KEY,
                                     AvailabilityLevel NVARCHAR (25) NOT NULL
 );
 
-CREATE TABLE CCIs (
+CREATE TABLE IF NOT EXISTS CCIs (
                       CCI_ID INTEGER PRIMARY KEY,
                       CCI_Number NVARCHAR (25) NOT NULL,
                       CCI_Definition NVARCHAR (500) NOT NULL,
@@ -33,57 +33,57 @@ CREATE TABLE CCIs (
                       CCI_Status NVARCHAR (25) NOT NULL
 );
 
-CREATE TABLE Certifications (
+CREATE TABLE IF NOT EXISTS Certifications (
                                 Certification_ID INTEGER PRIMARY KEY,
                                 CertificationName NVARCHAR (50) NOT NULL
 );
 
-CREATE TABLE CommonControlPackages (
-                                       CCP_ID INTEGER PRIMARY KEY,
-                                       CCP_Name NVARCHAR (100) NOT NULL
+CREATE TABLE IF NOT EXISTS CommonControlPackages (
+                                       CommonControlPackage_ID INTEGER PRIMARY KEY,
+                                       CommonControlPackageName NVARCHAR (100) NOT NULL
 );
 
-CREATE TABLE ConfidentialityLevels (
+CREATE TABLE IF NOT EXISTS ConfidentialityLevels (
                                        ConfidentialityLevel_ID INTEGER PRIMARY KEY,
                                        ConfidentialityLevel NVARCHAR (25) NOT NULL
 );
 
-CREATE TABLE Connections (
-                             Connection_ID INTEGER PRIMARY KEY,
-                             IsInternetConnected INTEGER,
-                             IsDODIN_Connected INTEGER,
-                             IsDMZ_Connected INTEGER,
-                             IsVPN_Connected INTEGER,
-                             IsCND_ServiceProvider INTEGER,
-                             IsEnterpriseServicesProvider INTEGER
-);
-
-CREATE TABLE ConnectedSystems (
+CREATE TABLE IF NOT EXISTS ConnectedSystems (
                                   ConnectedSystem_ID INTEGER PRIMARY KEY,
                                   ConnectedSystemName NVARCHAR (100) NOT NULL,
-                                  IsAuthorized INTEGER NOT NULL
+                                  IsAuthorized NVARCHAR (5) NOT NULL
 );
 
-CREATE TABLE Connectivity (
+CREATE TABLE IF NOT EXISTS Connections (
+                             Connection_ID INTEGER PRIMARY KEY,
+                             IsInternetConnected NVARCHAR (5),
+                             IsDODIN_Connected NVARCHAR (5),
+                             IsDMZ_Connected NVARCHAR (5),
+                             IsVPN_Connected NVARCHAR (5),
+                             IsCND_ServiceProvider NVARCHAR (5),
+                             IsEnterpriseServicesProvider NVARCHAR (5)
+);
+
+CREATE TABLE IF NOT EXISTS Connectivity (
                               Connectivity_ID INTEGER PRIMARY KEY,
                               ConnectivityName NVARCHAR (25) NOT NULL,
-                              HasOwnCircuit INTEGER NOT NULL,
+                              HasOwnCircuit NVARCHAR (5) NOT NULL,
                               CommandCommunicationsSecurityDesignatorNumber NVARCHAR (25) NOT NULL,
                               CommandCommunicationsSecurityDesignatorLocation NVARCHAR (50) NOT NULL,
-                              CommandCommunicationsSecurityDesignatorSupport NVARCHAR (100) NOT NULL
+                              CommandCommunicationsSecurityDesignatorSupport NVARCHAR (2000) NOT NULL
 );
 
-CREATE TABLE Contacts (
+CREATE TABLE IF NOT EXISTS Contacts (
                           Contact_ID INTEGER PRIMARY KEY,
                           ContactFirstName NVARCHAR (50) NOT NULL,
                           ContactLastName NVARCHAR (50) NOT NULL,
-                          ContactEmail NVARCHAR (50) NOT NULL,
+                          ContactEmail NVARCHAR (100) NOT NULL,
                           ContactPhone NVARCHAR (20),
                           Organization_ID INTEGER,
                           FOREIGN KEY (Organization_ID) REFERENCES Organizations(Organization_ID)
 );
 
-CREATE TABLE ContactsCertifications (
+CREATE TABLE IF NOT EXISTS ContactsCertifications (
                                         ContactsCertifications_ID INTEGER PRIMARY KEY,
                                         Contact_ID INTEGER NOT NULL,
                                         Certification_ID INTEGER NOT NULL,
@@ -92,51 +92,51 @@ CREATE TABLE ContactsCertifications (
                                         FOREIGN KEY (Certification_ID) REFERENCES Certifications(Certification_ID)
 );
 
-CREATE TABLE ControlApplicabilityAssessment (
-                                                CAA_ID INTEGER PRIMARY KEY,
-                                                CAA_Name NVARCHAR (50) NOT NULL
+CREATE TABLE IF NOT EXISTS ControlApplicabilityAssessment (
+                                                ControlApplicabilityAssessment_ID INTEGER PRIMARY KEY,
+                                                ControlApplicabilityAssessmentName NVARCHAR (50) NOT NULL
 );
 
-CREATE TABLE ControlSelection (
+CREATE TABLE IF NOT EXISTS ControlSelection (
                                   ControlSelection_ID INTEGER PRIMARY KEY,
-                                  IsTierOneApplied INTEGER NOT NULL,
+                                  IsTierOneApplied NVARCHAR (5) NOT NULL,
                                   TierOneAppliedJustification NVARCHAR (50) NOT NULL,
-                                  IsTierTwoApplied INTEGER NOT NULL,
+                                  IsTierTwoApplied NVARCHAR (5) NOT NULL,
                                   TierTwoAppliedJustification NVARCHAR (50) NOT NULL,
-                                  IsTierThreeApplied INTEGER NOT NULL,
+                                  IsTierThreeApplied NVARCHAR (5) NOT NULL,
                                   TierThreeAppliedJustification NVARCHAR (50) NOT NULL,
-                                  IsCNSS_1253_Applied INTEGER NOT NULL,
+                                  IsCNSS_1253_Applied NVARCHAR (5) NOT NULL,
                                   CNSS_1253_AppliedJustification NVARCHAR (50) NOT NULL,
-                                  IsSpaceApplied INTEGER NOT NULL,
+                                  IsSpaceApplied NVARCHAR (5) NOT NULL,
                                   SpaceAppliedJustification NVARCHAR (50) NOT NULL,
-                                  IsCDS_Applied INTEGER NOT NULL,
+                                  IsCDS_Applied NVARCHAR (5) NOT NULL,
                                   CDS_AppliedJustification NVARCHAR (50),
-                                  IsIntelligenceApplied INTEGER NOT NULL,
+                                  IsIntelligenceApplied NVARCHAR (5) NOT NULL,
                                   IntelligenceAppliedJustification NVARCHAR (50) NOT NULL,
-                                  IsClassifiedApplied INTEGER NOT NULL,
+                                  IsClassifiedApplied NVARCHAR (5) NOT NULL,
                                   ClassifiedAppliedJustification NVARCHAR (50) NOT NULL,
-                                  IsOtherApplied INTEGER NOT NULL,
+                                  IsOtherApplied NVARCHAR (5) NOT NULL,
                                   OtherAppliedJustification NVARCHAR (50) NOT NULL,
-                                  AreCompensatingControlsApplied INTEGER NOT NULL,
+                                  AreCompensatingControlsApplied NVARCHAR (5) NOT NULL,
                                   CompensatingControlsAppliedJustification NVARCHAR (50) NOT NULL,
-                                  HasNA_BaselineControls INTEGER NOT NULL,
+                                  HasNA_BaselineControls NVARCHAR (5) NOT NULL,
                                   NA_BaselineControlsAppliedJustification NVARCHAR (100) NOT NULL,
-                                  AreBaselineControlsModified INTEGER NOT NULL,
+                                  AreBaselineControlsModified NVARCHAR (5) NOT NULL,
                                   BaselineIsModifiedJustification NVARCHAR (100) NOT NULL,
-                                  IsBaselineRiskModified INTEGER NOT NULL,
+                                  IsBaselineRiskModified NVARCHAR (5) NOT NULL,
                                   BaselineRiskIsModificationJustification NVARCHAR (100) NOT NULL,
-                                  IsBaselineScopeApproved INTEGER NOT NULL,
+                                  IsBaselineScopeApproved NVARCHAR (5) NOT NULL,
                                   BaselineScopeIsApprovedJustification NVARCHAR (100) NOT NULL,
-                                  AreInheritableControlsDefined INTEGER NOT NULL,
+                                  AreInheritableControlsDefined NVARCHAR (5) NOT NULL,
                                   InheritableControlsAreDefinedJustification NVARCHAR (100) NOT NULL
 );
 
-CREATE TABLE ControlSets (
+CREATE TABLE IF NOT EXISTS ControlSets (
                              ControlSet_ID INTEGER PRIMARY KEY,
                              ControlSetName NVARCHAR (50) NOT NULL
 );
 
-CREATE TABLE CustomTestCases (
+CREATE TABLE IF NOT EXISTS CustomTestCases (
                                  CustomTestCase_ID INTEGER PRIMARY KEY,
                                  TestCaseName NVARCHAR (25) NOT NULL,
                                  TestCaseDescription NVARCHAR (500) NOT NULL,
@@ -144,27 +144,27 @@ CREATE TABLE CustomTestCases (
                                  TestCaseClassification NVARCHAR (25) NOT NULL,
                                  TestCaseSeverity NVARCHAR (25) NOT NULL,
                                  TestCaseAssessmentProcedure NVARCHAR (500) NOT NULL,
-                                 TestCase_CCI NVARCHAR (25) NOT NULL,
-                                 TestCase_NIST_Control NVARCHAR (25) NOT NULL
+                                 TestCase_CCI_ID INTEGER NOT NULL,
+                                 FOREIGN KEY (TestCase_CCI_ID) REFERENCES CCIs(CCI_ID)
 );
 
-CREATE TABLE DADMS_Networks (
+CREATE TABLE IF NOT EXISTS DADMS_Networks (
                                 DADMS_Network_ID INTEGER PRIMARY KEY,
-                                DADMS_NetworkName NVARCHAR (50) NOT NULL
+                                DADMS_NetworkName NVARCHAR (100) NOT NULL
 );
 
-CREATE TABLE EncryptionTechniques (
+CREATE TABLE IF NOT EXISTS EncryptionTechniques (
                                       EncryptionTechnique_ID INTEGER PRIMARY KEY,
                                       EncryptionTechnique NVARCHAR (100) NOT NULL,
                                       KeyManagement NVARCHAR (500) NOT NULL
 );
 
-CREATE TABLE EntranceCriteria (
+CREATE TABLE IF NOT EXISTS EntranceCriteria (
                                   EntranceCriteria_ID INTEGER PRIMARY KEY,
                                   EntranceCriteria NVARCHAR (100) NOT NULL
 );
 
-CREATE TABLE EnumeratedDomainWindowsUsersSettings (
+CREATE TABLE IF NOT EXISTS EnumeratedDomainWindowsUsersSettings (
                                                EnumeratedDomainWindowsUsersSettings_ID Integer PRIMARY KEY,
                                                EnumeratedWindowsUser_ID INTEGER NOT NULL,
                                                WindowsDomainUserSettings_ID INTEGER NOT NULL,
@@ -176,7 +176,7 @@ CREATE TABLE EnumeratedDomainWindowsUsersSettings (
                                                FOREIGN KEY (WindowsDomainUserSettings_ID) REFERENCES WindowsDomainUserSettings(WindowsDomainUserSettings_ID)
 );
 
-CREATE TABLE EnumeratedLocalWindowsUsersSettings (
+CREATE TABLE IF NOT EXISTS EnumeratedLocalWindowsUsersSettings (
                                                      EnumeratedLocalWindowsUsersSettings_ID INTEGER PRIMARY KEY,
                                                      EnumeratedWindowsUser_ID INTEGER NOT NULL,
                                                      WindowsLocalUserSettings_ID INTEGER NOT NULL,
@@ -188,19 +188,19 @@ CREATE TABLE EnumeratedLocalWindowsUsersSettings (
                                                      FOREIGN KEY (WindowsLocalUserSettings_ID) REFERENCES WindowsLocalUserSettings(WindowsLocalUserSettings_ID)
 );
 
-CREATE TABLE EnumeratedWindowsGroups (
+CREATE TABLE IF NOT EXISTS EnumeratedWindowsGroups (
                                          EnumeratedWindowsGroup_ID INTEGER PRIMARY KEY,
                                          EnumeratedWindowsGroupName NVARCHAR (50) NOT NULL
 );
 
-CREATE TABLE EnumeratedWindowsGroupsUsers (
+CREATE TABLE IF NOT EXISTS EnumeratedWindowsGroupsUsers (
                                               EnumeratedWindowsGroup_ID INTEGER NOT NULL,
                                               EnumeratedWindowsUser_ID INTEGER NOT NULL,
                                               FOREIGN KEY (EnumeratedWindowsGroup_ID) REFERENCES EnumeratedWindowsGroups(EnumeratedWindowsGroup_ID),
                                               FOREIGN KEY (EnumeratedWindowsUser_ID) REFERENCES EnumeratedWindowsUsers(EnumeratedWindowsUser_ID)
 );
 
-CREATE TABLE EnumeratedWindowsUsers (
+CREATE TABLE IF NOT EXISTS EnumeratedWindowsUsers (
                                         EnumeratedWindowsUser_ID INTEGER PRIMARY KEY,
                                         EnumeratedWindowsUserName NVARCHAR (25) NOT NULL,
                                         IsGuestAccount NVARCHAR (5) NOT NULL,
@@ -209,12 +209,12 @@ CREATE TABLE EnumeratedWindowsUsers (
                                         UNIQUE (EnumeratedWindowsUserName) ON CONFLICT IGNORE
 );
 
-CREATE TABLE ExitCriteria (
+CREATE TABLE IF NOT EXISTS ExitCriteria (
                               ExitCriteria_ID INTEGER PRIMARY KEY,
                               ExitCriteria NVARCHAR (100) NOT NULL
 );
 
-CREATE TABLE ExternalSecurityServices (
+CREATE TABLE IF NOT EXISTS ExternalSecurityServices (
                                           ExternalSecurityServices_ID INTEGER PRIMARY KEY,
                                           ExternalSecurityService NVARCHAR (50) NOT NULL,
                                           ServiceDescription NVARCHAR (500) NOT NULL,
@@ -222,17 +222,17 @@ CREATE TABLE ExternalSecurityServices (
                                           RiskDetermination NVARCHAR (100) NOT NULL
 );
 
-CREATE TABLE FindingTypes (
+CREATE TABLE IF NOT EXISTS FindingTypes (
                               FindingType_ID INTEGER PRIMARY KEY,
-                              FindingType NVARCHAR (25) NOT NULL
+                              FindingType NVARCHAR (50) NOT NULL
 );
 
-CREATE TABLE GoverningPolicies (
+CREATE TABLE IF NOT EXISTS GoverningPolicies (
                                    GoverningPolicy_ID INTEGER PRIMARY KEY,
                                    GoverningPolicyName NVARCHAR (50)
 );
 
-CREATE TABLE Groups (
+CREATE TABLE IF NOT EXISTS Groups (
                         Group_ID INTEGER PRIMARY KEY,
                         GroupName NVARCHAR (50) NOT NULL UNIQUE ON CONFLICT IGNORE,
                         GroupAcronym NVARCHAR (25),
@@ -266,7 +266,7 @@ CREATE TABLE Groups (
                         FOREIGN KEY (Organization_ID) REFERENCES Organizations(Organization_ID)
 );
 
-CREATE TABLE GroupsCCIs (
+CREATE TABLE IF NOT EXISTS GroupsCCIs (
                             GroupsCCIs_ID INTEGER PRIMARY KEY,
                             Group_ID INTEGER NOT NULL,
                             CCI_ID INTEGER NOT NULL,
@@ -280,7 +280,7 @@ CREATE TABLE GroupsCCIs (
                             FOREIGN KEY (CCI_ID) REFERENCES CCIs(CCI_ID)
 );
 
-CREATE TABLE GroupsConnectedSystems (
+CREATE TABLE IF NOT EXISTS GroupsConnectedSystems (
                                         GroupsConnectedSystems_ID INTEGER PRIMARY KEY,
                                         Group_ID INTEGER NOT NULL,
                                         ConnectedSystem_ID INTEGER NOT NULL,
@@ -288,7 +288,7 @@ CREATE TABLE GroupsConnectedSystems (
                                         FOREIGN KEY (ConnectedSystem_ID) REFERENCES ConnectedSystems(ConnectedSystem_ID)
 );
 
-CREATE TABLE GroupsConnections (
+CREATE TABLE IF NOT EXISTS GroupsConnections (
                                    GroupsConnections_ID INTEGER PRIMARY KEY,
                                    Group_ID INTEGER NOT NULL,
                                    Connection_ID INTEGER NOT NULL,
@@ -296,8 +296,8 @@ CREATE TABLE GroupsConnections (
                                    FOREIGN KEY (Connection_ID) REFERENCES Connections(Connection_ID)
 );
 
-CREATE TABLE GroupsContactsTitles (
-                                GroupContact_ID INTEGER PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS GroupsContactsTitles (
+                                GroupContactTitle_ID INTEGER PRIMARY KEY,
                                 Group_ID INTEGER NOT NULL,
                                 Contact_ID INTEGER NOT NULL,
                                 Title_ID INTEGER NOT NULL,
@@ -307,15 +307,15 @@ CREATE TABLE GroupsContactsTitles (
                                 FOREIGN KEY (Title_ID) REFERENCES  Titles(Title_ID)
 );
 
-CREATE TABLE GroupsIATA_Standards (
+CREATE TABLE IF NOT EXISTS GroupsIATA_Standards (
                                       Group_ID INTEGER NOT NULL,
                                       IATA_Standard_ID INTEGER NOT NULL,
                                       FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
                                       FOREIGN KEY (IATA_Standard_ID) REFERENCES IATA_Standards(IATA_Standard_ID)
 );
 
-CREATE TABLE GroupsMitigationsOrConditionsVulnerabilities (
-                                               GroupMitigationOrCondition_ID INTEGER PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS GroupsMitigationsOrConditionsVulnerabilities (
+                                               GroupMitigationOrConditionVulnerability_ID INTEGER PRIMARY KEY,
                                                MitigationOrCondition_ID INTEGER NOT NULL,
                                                Group_ID INTEGER NOT NULL,
                                                Vulnerability_ID INTEGER NOT NULL,
@@ -329,7 +329,7 @@ CREATE TABLE GroupsMitigationsOrConditionsVulnerabilities (
                                                FOREIGN KEY (Vulnerability_ID) REFERENCES Vulnerabilities(Vulnerability_ID)
 );
 
-CREATE TABLE GroupsOverlays (
+CREATE TABLE IF NOT EXISTS GroupsOverlays (
                                 GroupOverlay_ID INTEGER PRIMARY KEY,
                                 Group_ID INTEGER NOT NULL,
                                 Overlay_ID INTEGER NOT NULL,
@@ -337,23 +337,23 @@ CREATE TABLE GroupsOverlays (
                                 FOREIGN KEY (Overlay_ID) REFERENCES Overlays(Overlay_ID)
 );
 
-CREATE TABLE GroupsWaivers (
+CREATE TABLE IF NOT EXISTS GroupsWaivers (
                                GroupWaiver_ID INTEGER PRIMARY KEY,
                                Group_ID INTEGER NOT NULL,
                                Waiver_ID INTEGER NOT NULL,
-                               WaiverGrantedDate DATE NOT NULL,
-                               WaiverExpirationDate DATE NOT NULL,
+                               WaiverGrantedDate DATETIME NOT NULL,
+                               WaiverExpirationDate DATETIME NOT NULL,
                                FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
                                FOREIGN KEY (Waiver_ID) REFERENCES Waivers(Waiver_ID)
 );
 
-CREATE TABLE Hardware (
+CREATE TABLE IF NOT EXISTS Hardware (
                           Hardware_ID INTEGER PRIMARY KEY,
                           DisplayedHostName NVARCHAR (50),
                           DiscoveredHostName NVARCHAR (50),
-                          FQDN NVARCHAR (100),
-                          NetBIOS NVARCHAR (100),
-                          ScanIP NVARCHAR (25),
+                          FQDN NVARCHAR (500),
+                          NetBIOS NVARCHAR (300),
+                          ScanIP NVARCHAR (50),
                           Found21745 NVARCHAR (5),
                           Found26917 NVARCHAR (5),
                           IsVirtualServer NVARCHAR (5),
@@ -364,12 +364,12 @@ CREATE TABLE Hardware (
                           SerialNumber NVARCHAR (50),
                           Role NVARCHAR (25),
                           LifecycleStatus_ID INTEGER,
-                          OS NVARCHAR (100),
+                          OperatingSystem NVARCHAR (100),
                           FOREIGN KEY (LifecycleStatus_ID) REFERENCES LifecycleStatuses(LifecycleStatus_ID),
                           UNIQUE (ScanIP, DiscoveredHostName, FQDN, NetBIOS) ON CONFLICT IGNORE
 );
 
-CREATE TABLE HardwareContacts (
+CREATE TABLE IF NOT EXISTS HardwareContacts (
                                   HardwareContact_ID INTEGER PRIMARY KEY,
                                   Hardware_ID INTEGER NOT NULL,
                                   Contact_ID INTEGER NOT NULL,
@@ -377,7 +377,7 @@ CREATE TABLE HardwareContacts (
                                   FOREIGN KEY (Contact_ID) REFERENCES Contacts(Contact_ID)
 );
 
-CREATE TABLE HardwareEnumeratedWindowsGroups (
+CREATE TABLE IF NOT EXISTS HardwareEnumeratedWindowsGroups (
                                                  HardwareEnumeratedWindowGroup_ID INTEGER PRIMARY KEY,
                                                  Hardware_ID INTEGER NOT NULL,
                                                  EnumeratedWindowsGroup_ID INTEGER NOT NULL,
@@ -386,7 +386,7 @@ CREATE TABLE HardwareEnumeratedWindowsGroups (
                                                  FOREIGN KEY (EnumeratedWindowsGroup_ID) REFERENCES EnumeratedWindowsGroups(EnumeratedWindowsGroup_ID)
 );
 
-CREATE TABLE HardwareGroups (
+CREATE TABLE IF NOT EXISTS HardwareGroups (
                                 HardwareGroup_ID INTEGER PRIMARY KEY,
                                 Hardware_ID INTEGER NOT NULL,
                                 Group_ID INTEGER NOT NULL,
@@ -395,7 +395,7 @@ CREATE TABLE HardwareGroups (
                                 FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID)
 );
 
-CREATE TABLE Hardware_IP_Addresses (
+CREATE TABLE IF NOT EXISTS Hardware_IP_Addresses (
                                        Hardware_IP_Address_ID INTEGER PRIMARY KEY,
                                        Hardware_ID INTEGER NOT NULL,
                                        IP_Address_ID INTEGER NOT NULL,
@@ -404,7 +404,7 @@ CREATE TABLE Hardware_IP_Addresses (
                                        FOREIGN KEY (IP_Address_ID) REFERENCES Ip_Addresses(IP_Address_ID)
 );
 
-CREATE TABLE HardwareLocation (
+CREATE TABLE IF NOT EXISTS HardwareLocation (
                                   HardwareLocation_ID INTEGER PRIMARY KEY,
                                   Hardware_ID INTEGER NOT NULL,
                                   Location_ID INTEGER NOT NULL,
@@ -416,7 +416,7 @@ CREATE TABLE HardwareLocation (
                                   FOREIGN KEY (Location_ID) REFERENCES Locations(Location_ID)
 );
 
-CREATE TABLE Hardware_MAC_Addresses (
+CREATE TABLE IF NOT EXISTS Hardware_MAC_Addresses (
                                         Hardware_MAC_Address_ID INTEGER PRIMARY KEY,
                                         Hardware_ID INTEGER NOT NULL,
                                         MAC_Address_ID INTEGER NOT NULL,
@@ -425,7 +425,7 @@ CREATE TABLE Hardware_MAC_Addresses (
                                         FOREIGN KEY (MAC_Address_ID) REFERENCES MAC_Addresses(MAC_Address_ID)
 );
 
-CREATE TABLE HardwarePortsProtocols (
+CREATE TABLE IF NOT EXISTS HardwarePortsProtocols (
                                         HardwarePortsProtocols_ID INTEGER PRIMARY KEY,
                                         Hardware_ID INTEGER NOT NULL,
                                         PortsProtocols_ID INTEGER NOT NULL,
@@ -442,10 +442,10 @@ CREATE TABLE HardwarePortsProtocols (
                                                      DiscoveredService
                                             ) ON CONFLICT IGNORE,
                                         FOREIGN KEY (Hardware_ID) REFERENCES Hardware(Hardware_ID),
-                                        FOREIGN KEY (PortsProtocols_ID) REFERENCES PortsProtocols(PortsProtocols_ID)
+                                        FOREIGN KEY (PortsProtocols_ID) REFERENCES PortsProtocols(PortProtocol_ID)
 );
 
-CREATE TABLE IA_Controls (
+CREATE TABLE IF NOT EXISTS IA_Controls (
                              IA_Control_ID INTEGER PRIMARY KEY,
                              IA_ControlNumber NVARCHAR (10) NOT NULL,
                              Impact NVARCHAR (10) NOT NULL,
@@ -457,64 +457,67 @@ CREATE TABLE IA_Controls (
                              IA_ControlSystemSpecificGuidanceResources NVARCHAR (2000) NOT NULL
 );
 
-CREATE TABLE IATA_Standards (
+CREATE TABLE IF NOT EXISTS IATA_Standards (
                                 IATA_Standard_ID INTEGER PRIMARY KEY,
                                 IATA_StandardTitle NVARCHAR (50) NOT NULL,
                                 IATA_StandardDescription NVARCHAR (1000) NOT NULL
 );
 
-CREATE TABLE ImpactAdjustments (
+CREATE TABLE IF NOT EXISTS ImpactAdjustments (
                                    ImpactAdjustment_ID INTEGER PRIMARY KEY,
-                                   AdjustedConfidentiality NVARCHAR (25) NOT NULL,
-                                   AdjustedIntegrity NVARCHAR (25) NOT NULL,
-                                   AdjustedAvailability NVARCHAR (25) NOT NULL
+                                   AdjustedConfidentiality NVARCHAR (25),
+                                   AdjustedConfidentialityJustification NVARCHAR (200),
+                                   AdjustedIntegrity NVARCHAR (25),
+                                   AdjustedIntegrityJustification NVARCHAR (200),
+                                   AdjustedAvailability NVARCHAR (25),
+                                   AdjustedAvailabilityJustification NVARCHAR (200)
 );
 
-CREATE TABLE InformationTypes (
+CREATE TABLE IF NOT EXISTS InformationTypes (
                                   InformationType_ID INTEGER PRIMARY KEY,
-                                  InfoTypeId NVARCHAR (25) NOT NULL,
+                                  InfoTypeIdentifier NVARCHAR (25) NOT NULL,
                                   InfoTypeName NVARCHAR (50) NOT NULL,
-                                  BaselineConfidentiality NVARCHAR,
-                                  BaselineIntegrity NVARCHAR,
-                                  BaselineAvailability NVARCHAR,
-                                  EnhancedConfidentiality NVARCHAR,
-                                  EnhancedIntegrity NVARCHAR,
-                                  EnhancedAvailability NVARCHAR
+                                  BaselineConfidentiality NVARCHAR (25),
+                                  BaselineIntegrity NVARCHAR (25),
+                                  BaselineAvailability NVARCHAR (25),
+                                  EnhancedConfidentiality NVARCHAR (25),
+                                  EnhancedIntegrity NVARCHAR (25),
+                                  EnhancedAvailability NVARCHAR (25)
 );
 
-CREATE TABLE InformationTypesMissionAreas (
+CREATE TABLE IF NOT EXISTS InformationTypesMissionAreas (
                                               InformationType_ID INTEGER NOT NULL,
                                               MissionArea_ID INTEGER NOT NULL,
                                               FOREIGN KEY (InformationType_ID) REFERENCES InformationTypes(InformationType_ID),
                                               FOREIGN KEY (MissionArea_ID) REFERENCES MissionAreas(MissionArea_ID)
 );
 
-CREATE TABLE IntegrityLevels (
+CREATE TABLE IF NOT EXISTS IntegrityLevels (
                                  IntegrityLevel_ID INTEGER PRIMARY KEY,
                                  IntegrityLevel NVARCHAR (25) NOT NULL
 );
 
-CREATE TABLE InterconnectedSystems (
+CREATE TABLE IF NOT EXISTS InterconnectedSystems (
                                        InterconnectedSystem_ID INTEGER PRIMARY KEY,
-                                       InterconnectedSystemName NVARCHAR (50) NOT NULL
+                                       InterconnectedSystemName NVARCHAR (200) NOT NULL
 );
 
-CREATE TABLE IP_Addresses (
+CREATE TABLE IF NOT EXISTS IP_Addresses (
                               IP_Address_ID INTEGER PRIMARY KEY,
                               IP_Address NVARCHAR (25) NOT NULL UNIQUE ON CONFLICT IGNORE
 );
 
-CREATE TABLE JointAuthorizationOrganizations (
+CREATE TABLE IF NOT EXISTS JointAuthorizationOrganizations (
                                                  JointAuthorizationOrganization_ID INTEGER PRIMARY KEY,
-                                                 JointAuthorizationOrganizationName NVARCHAR (50) NOT NULL
+                                                 JointAuthorizationOrganizationName NVARCHAR (200) NOT NULL
 );
 
-CREATE TABLE LifecycleStatuses (
+CREATE TABLE IF NOT EXISTS LifecycleStatuses (
                                    LifecycleStatus_ID INTEGER PRIMARY KEY,
                                    LifecycleStatus NVARCHAR (25) NOT NULL
 );
 
-CREATE TABLE Limitations (
+CREATE TABLE IF NOT EXISTS Limitations (
                              Limitation_ID INTEGER PRIMARY KEY,
                              LimitationSummary NVARCHAR (100) NOT NULL,
                              LimitationBackground NVARCHAR (500) NOT NULL,
@@ -522,36 +525,33 @@ CREATE TABLE Limitations (
                              IsTestException NVARCHAR (5) NOT NULL
 );
 
-CREATE TABLE Locations (
+CREATE TABLE IF NOT EXISTS Locations (
                            Location_ID INTEGER PRIMARY KEY,
-                           LocationName NVARCHAR (50) NOT NULL,
-                           StreetAddressOne NVARCHAR (50) NOT NULL,
-                           StreeAddressTwo NVARCHAR (50) NOT NULL,
+                           LocationName NVARCHAR (200) NOT NULL,
+                           StreetAddressOne NVARCHAR (200) NOT NULL,
+                           StreeAddressTwo NVARCHAR (200) NOT NULL,
                            BuildingNumber NVARCHAR (25),
                            FloorNumber INTEGER,
                            RoomNumber INTEGER,
-                           City NVARCHAR (25),
+                           City NVARCHAR (50),
                            State NVARCHAR (25),
-                           Country NVARCHAR (25) NOT NULL,
+                           Country NVARCHAR (100) NOT NULL,
                            ZipCode INTEGER,
-                           APO_FPO NVARCHAR (50),
-                           OSS_AccreditationDate DATE,
-                           IsBaselineLocation NVARCHAR (5),
-                           IsDeploymentLocation NVARCHAR (5),
-                           IsTestLocation NVARCHAR (5)
+                           APO_FPO NVARCHAR (200),
+                           OSS_AccreditationDate DATETIME
 );
 
-CREATE TABLE MAC_Addresses (
+CREATE TABLE IF NOT EXISTS MAC_Addresses (
                                MAC_Address_ID INTEGER PRIMARY KEY,
-                               MAC_Address NVARCHAR (50) NOT NULL UNIQUE ON CONFLICT IGNORE
+                               MAC_Address NVARCHAR (100) NOT NULL UNIQUE ON CONFLICT IGNORE
 );
 
-CREATE TABLE MissionAreas (
+CREATE TABLE IF NOT EXISTS MissionAreas (
                               MissionArea_ID INTEGER PRIMARY KEY,
                               MissionArea NVARCHAR (25) NOT NULL
 );
 
-CREATE TABLE MitigationsOrConditions (
+CREATE TABLE IF NOT EXISTS MitigationsOrConditions (
                                          MitigationOrCondition_ID INTEGER PRIMARY KEY,
                                          ImpactDescription NVARCHAR (2000),
                                          PredisposingConditions NVARCHAR (2000),
@@ -565,32 +565,32 @@ CREATE TABLE MitigationsOrConditions (
                                          ResidualRisk NVARCHAR (10),
                                          ResidualRiskAfterProposed NVARCHAR (10),
                                          MitigatedStatus NVARCHAR (25),
-                                         EstimatedCompletionDate DATE,
-                                         ApprovalDate DATE,
-                                         ExpirationDate DATE,
+                                         EstimatedCompletionDate DATETIME,
+                                         ApprovalDate DATETIME,
+                                         ExpirationDate DATETIME,
                                          IsApproved NVARCHAR (5),
                                          Approver NVARCHAR (100)
 );
 
-CREATE TABLE NetworkConnectionRules (
+CREATE TABLE IF NOT EXISTS NetworkConnectionRules (
                                         NetworkConnectionRule_ID INTEGER PRIMARY KEY,
-                                        NetworkConnectionName NVARCHAR (25) NOT NULL,
-                                        NetworkConnectionRule NVARCHAR (100) NOT NULL,
+                                        NetworkConnectionName NVARCHAR (50) NOT NULL,
+                                        NetworkConnectionRule NVARCHAR (200) NOT NULL,
                                         UNIQUE (NetworkConnectionName, NetworkConnectionRule) ON CONFLICT IGNORE 
 );
 
-CREATE TABLE NIST_Controls (
+CREATE TABLE IF NOT EXISTS NIST_Controls (
                                NIST_Control_ID INTEGER PRIMARY KEY,
                                ControlFamily NVARCHAR (25) NOT NULL,
                                ControlNumber INTEGER NOT NULL,
                                ControlEnhancement INTEGER,
                                ControlTitle NVARCHAR (50) NOT NULL,
-                               ControlText NVARCHAR (500) NOT NULL,
-                               SupplementalGuidance NVARCHAR (500) NOT NULL,
+                               ControlText NVARCHAR (2000) NOT NULL,
+                               SupplementalGuidance NVARCHAR (2000) NOT NULL,
                                MonitoringFrequency NVARCHAR (10)
 );
 
-CREATE TABLE NIST_Controls_IATA_Standards (
+CREATE TABLE IF NOT EXISTS NIST_Controls_IATA_Standards (
                                               NIST_ControlIATA_Standard_ID INTEGER PRIMARY KEY,
                                               NIST_Control_ID INTEGER NOT NULL,
                                               IATA_Standard_ID INTEGER NOT NULL,
@@ -599,7 +599,7 @@ CREATE TABLE NIST_Controls_IATA_Standards (
                                               FOREIGN KEY (IATA_Standard_ID) REFERENCES IATA_Standards(IATA_Standard_ID)
 );
 
-CREATE TABLE NIST_ControlsAvailabilityLevels (
+CREATE TABLE IF NOT EXISTS NIST_ControlsAvailabilityLevels (
                                                  NIST_ControlAvailabilityLevel_ID INTEGER PRIMARY KEY,
                                                  NIST_Control_ID INTEGER NOT NULL,
                                                  AvailabilityLevel_ID INTEGER NOT NULL,
@@ -609,7 +609,7 @@ CREATE TABLE NIST_ControlsAvailabilityLevels (
                                                  FOREIGN KEY (AvailabilityLevel_ID) REFERENCES AvailabilityLevels(AvailabilityLevel_ID)
 );
 
-CREATE TABLE NIST_ControlsCCIs (
+CREATE TABLE IF NOT EXISTS NIST_ControlsCCIs (
                                    NIST_ControlCCI_ID INTEGER PRIMARY KEY,
                                    NIST_Control_ID INTEGER NOT NULL,
                                    CCI_ID INTEGER NOT NULL,
@@ -622,18 +622,18 @@ CREATE TABLE NIST_ControlsCCIs (
                                    FOREIGN KEY (CCI_ID) REFERENCES CCIs(CCI_ID)
 );
 
-CREATE TABLE NIST_ControlsCAAs (
+CREATE TABLE IF NOT EXISTS NIST_ControlsCAAs (
                                    NIST_ControlCAA_ID INTEGER PRIMARY KEY,
                                    NIST_Control_ID INTEGER NOT NULL,
-                                   CAA_ID INTEGER NOT NULL,
+                                   ControlApplicabilityAssessment_ID INTEGER NOT NULL,
                                    LegacyDifficulty NVARCHAR (10) NOT NULL,
                                    Applicability NVARCHAR (25) NOT NULL,
-                                   UNIQUE (NIST_Control_ID, CAA_ID) ON CONFLICT IGNORE,
+                                   UNIQUE (NIST_Control_ID, ControlApplicabilityAssessment_ID) ON CONFLICT IGNORE,
                                    FOREIGN KEY (NIST_Control_ID) REFERENCES NIST_Controls(NIST_Control_ID),
-                                   FOREIGN KEY (CAA_ID) REFERENCES ControlApplicabilityAssessment(CAA_ID)
+                                   FOREIGN KEY (ControlApplicabilityAssessment_ID) REFERENCES ControlApplicabilityAssessment(ControlApplicabilityAssessment_ID)
 );
 
-CREATE TABLE NIST_ControlsConfidentialityLevels (
+CREATE TABLE IF NOT EXISTS NIST_ControlsConfidentialityLevels (
                                                     NIST_ControlConfidentialityLevel_ID INTEGER PRIMARY KEY,
                                                     NIST_Control_ID INTEGER NOT NULL,
                                                     ConfidentialityLevel_ID INTEGER NOT NULL,
@@ -643,7 +643,7 @@ CREATE TABLE NIST_ControlsConfidentialityLevels (
                                                     FOREIGN KEY (ConfidentialityLevel_ID) REFERENCES ConfidentialityLevels(ConfidentialityLevel_ID)
 );
 
-CREATE TABLE NIST_ControlsControlSets (
+CREATE TABLE IF NOT EXISTS NIST_ControlsControlSets (
                                           NIST_ControlsControlSet_ID INTEGER PRIMARY KEY,
                                           NIST_Control_ID INTEGER NOT NULL,
                                           ControlSet_ID INTEGER NOT NULL,
@@ -652,16 +652,16 @@ CREATE TABLE NIST_ControlsControlSets (
                                           FOREIGN KEY (ControlSet_ID) REFERENCES ControlSets(ControlSet_ID)
 );
 
-CREATE TABLE NIST_ControlsCCPs (
+CREATE TABLE IF NOT EXISTS NIST_ControlsCCPs (
                                    NIST_ControlCCP_ID INTEGER PRIMARY KEY,
                                    NIST_Control_ID INTEGER NOT NULL,
-                                   CCP_ID INTEGER NOT NULL,
-                                   UNIQUE (NIST_Control_ID, CCP_ID) ON CONFLICT IGNORE,
+                                   CommonControlPackage_ID INTEGER NOT NULL,
+                                   UNIQUE (NIST_Control_ID, CommonControlPackage_ID) ON CONFLICT IGNORE,
                                    FOREIGN KEY (NIST_Control_ID) REFERENCES NIST_Controls(NIST_Control_ID),
-                                   FOREIGN KEY (CCP_ID) REFERENCES CommonControlPackages(CCP_ID)
+                                   FOREIGN KEY (CommonControlPackage_ID) REFERENCES CommonControlPackages(CommonControlPackage_ID)
 );
 
-CREATE TABLE NIST_ControlsIntegrityLevels (
+CREATE TABLE IF NOT EXISTS NIST_ControlsIntegrityLevels (
                                               NIST_ControlIntegrityLevel_ID INTEGER PRIMARY KEY,
                                               NIST_Control_ID INTEGER NOT NULL,
                                               IntegrityLevel_ID INTEGER NOT NULL,
@@ -671,7 +671,7 @@ CREATE TABLE NIST_ControlsIntegrityLevels (
                                               FOREIGN KEY (IntegrityLevel_ID) REFERENCES IntegrityLevels(IntegrityLevel_ID)
 );
 
-CREATE TABLE NIST_ControlsOverlays (
+CREATE TABLE IF NOT EXISTS NIST_ControlsOverlays (
                                        NIST_ControlOverlay_ID INTEGER PRIMARY KEY,
                                        NIST_Control_ID INTEGER NOT NULL,
                                        Overlay_ID INTEGER NOT NULL,
@@ -680,18 +680,18 @@ CREATE TABLE NIST_ControlsOverlays (
                                        FOREIGN KEY (Overlay_ID) REFERENCES Overlays(Overlay_ID)
 );
 
-CREATE TABLE Organizations (
+CREATE TABLE IF NOT EXISTS Organizations (
                                Organization_ID INTEGER PRIMARY KEY,
                                OrganizationName NVARCHAR (100) NOT NULL,
                                OrganizationAcronym NVARCHAR (100)
 );
 
-CREATE TABLE Overlays (
+CREATE TABLE IF NOT EXISTS Overlays (
                           Overlay_ID INTEGER PRIMARY KEY,
-                          OverlayName NVARCHAR (25) NOT NULL
+                          OverlayName NVARCHAR (100) NOT NULL
 );
 
-CREATE TABLE PIT_Determination (
+CREATE TABLE IF NOT EXISTS PIT_Determination (
                                    PIT_Determination_ID INTEGER PRIMARY KEY,
                                    ReceivesInfo NVARCHAR (5) NOT NULL,
                                    TransmitsInfo NVARCHAR (5) NOT NULL,
@@ -767,10 +767,10 @@ CREATE TABLE PIT_Determination (
                                    IsAcoustic NVARCHAR (5),
                                    IsGeographic NVARCHAR (5),
                                    IsTacticalDecisionAid NVARCHAR (5),
-                                   OtherSystemTypeDescription NVARCHAR (100)
+                                   OtherSystemTypeDescription NVARCHAR (500)
 );
 
-CREATE TABLE PortsProtocols (
+CREATE TABLE IF NOT EXISTS PortsProtocols (
                                 PortProtocol_ID INTEGER PRIMARY KEY,
                                 Port INTEGER NOT NULL,
                                 Protocol NVARCHAR (25) NOT NULL,
@@ -778,16 +778,16 @@ CREATE TABLE PortsProtocols (
 );
 
 
-CREATE TABLE PortsServices (
+CREATE TABLE IF NOT EXISTS PortsServices (
                               PortService_ID INTEGER PRIMARY KEY,
-                              PortServiceName NVARCHAR (100) NOT NULL UNIQUE ON CONFLICT IGNORE,
-                              PortServiceAcronym NVARCHAR (50),
+                              ServiceName NVARCHAR (100) NOT NULL UNIQUE ON CONFLICT IGNORE,
+                              ServiceAcronym NVARCHAR (50),
                               PortProtocol_ID INTEGER NOT NULL,
-                              UNIQUE (PortServiceName, PortProtocol_ID) ON CONFLICT IGNORE,
+                              UNIQUE (ServiceName, PortProtocol_ID) ON CONFLICT IGNORE,
                               FOREIGN KEY (PortProtocol_ID) REFERENCES PortsProtocols(PortProtocol_ID)
 );
 
-CREATE TABLE PortServicesSoftware (
+CREATE TABLE IF NOT EXISTS PortServicesSoftware (
                                       PortServiceSoftware_ID INTEGER PRIMARY KEY,
                                       PortService_ID INTEGER NOT NULL,
                                       Software_ID INTEGER NOT NULL,
@@ -797,27 +797,27 @@ CREATE TABLE PortServicesSoftware (
 );
 
 
-CREATE TABLE RelatedDocuments (
+CREATE TABLE IF NOT EXISTS RelatedDocuments (
                                   RelatedDocument_ID INTEGER PRIMARY KEY,
                                   RelatedDocumentName NVARCHAR (50) NOT NULL,
                                   RelationshipDescription NVARCHAR (100) NOT NULL
 );
 
-CREATE TABLE RelatedTesting (
+CREATE TABLE IF NOT EXISTS RelatedTesting (
                                 RelatedTesting_ID INTEGER PRIMARY KEY,
-                                TestTitle NVARCHAR (50) NOT NULL,
-                                DateConducted DATE NOT NULL,
-                                RelatedSystemTested NVARCHAR (50) NOT NULL,
-                                ResponsibleOrganization NVARCHAR (100) NOT NULL,
+                                TestTitle NVARCHAR (200) NOT NULL,
+                                DateConducted DATETIME NOT NULL,
+                                RelatedSystemTested NVARCHAR (200) NOT NULL,
+                                ResponsibleOrganization NVARCHAR (200) NOT NULL,
                                 TestingImpact NVARCHAR (500) NOT NULL
 );
 
-CREATE TABLE ResponsibilityRoles (
+CREATE TABLE IF NOT EXISTS ResponsibilityRoles (
                                      Role_ID INTEGER PRIMARY KEY,
                                      RoleTitle NVARCHAR (25) NOT NULL
 );
 
-CREATE TABLE SecurityAssessmentProcedures (
+CREATE TABLE IF NOT EXISTS SecurityAssessmentProcedures (
                       SecurityAssessmentProcedure_ID INTEGER PRIMARY KEY,
                       Scope NVARCHAR (50) NOT NULL,
                       TestConfiguration NVARCHAR (2000) NOT NULL,
@@ -825,7 +825,7 @@ CREATE TABLE SecurityAssessmentProcedures (
                       Security NVARCHAR (1000) NOT NULL
 );
 
-CREATE TABLE SecurityAssessmentProcedureAdditionalTestConsiderations (
+CREATE TABLE IF NOT EXISTS SecurityAssessmentProcedureAdditionalTestConsiderations (
                                                   SecurityAssessmentProcedureAdditionalTestConsiderations_ID INTEGER PRIMARY KEY,
                                                   SecurityAssessmentProcedure_ID INTEGER NOT NULL,
                                                   AdditionalTestConsideration_ID INTEGER NOT NULL,
@@ -834,7 +834,7 @@ CREATE TABLE SecurityAssessmentProcedureAdditionalTestConsiderations (
                                                   FOREIGN KEY (AdditionalTestConsideration_ID) REFERENCES AdditionalTestConsiderations(AdditionalTestConsideration_ID)
 );
 
-CREATE TABLE SecurityAssessmentProcedureCustomTestCases (
+CREATE TABLE IF NOT EXISTS SecurityAssessmentProcedureCustomTestCases (
                                      SecurityAssessmentProcedureCustomTestCase_ID INTEGER PRIMARY KEY,
                                      SecurityAssessmentProcedure_ID INTEGER NOT NULL,
                                      CustomTestCase_ID INTEGER NOT NULL,
@@ -843,7 +843,7 @@ CREATE TABLE SecurityAssessmentProcedureCustomTestCases (
                                      FOREIGN KEY (CustomTestCase_ID) REFERENCES CustomTestCases(CustomTestCase_ID)
 );
 
-CREATE TABLE SecurityAssessmentProcedureEntranceCriteria (
+CREATE TABLE IF NOT EXISTS SecurityAssessmentProcedureEntranceCriteria (
                                       SecurityAssessmentProcedureEntranceCriteria_ID INTEGER PRIMARY KEY,
                                       SecurityAssessmentProcedure_ID INTEGER NOT NULL,
                                       EntranceCriteria_ID INTEGER NOT NULL,
@@ -852,7 +852,7 @@ CREATE TABLE SecurityAssessmentProcedureEntranceCriteria (
                                       FOREIGN KEY (EntranceCriteria_ID) REFERENCES EntranceCriteria(EntranceCriteria_ID)
 );
 
-CREATE TABLE SecurityAssessmentProcedureExitCriteria (
+CREATE TABLE IF NOT EXISTS SecurityAssessmentProcedureExitCriteria (
                                   SecurityAssessmentProcedureExitCriteria_ID INTEGER PRIMARY KEY,
                                   SecurityAssessmentProcedure_ID INTEGER NOT NULL,
                                   ExitCriteria_ID INTEGER NOT NULL,
@@ -861,7 +861,7 @@ CREATE TABLE SecurityAssessmentProcedureExitCriteria (
                                   FOREIGN KEY (ExitCriteria_ID) REFERENCES ExitCriteria(ExitCriteria_ID)
 );
 
-CREATE TABLE SecurityAssessmentProcedureLimitiations (
+CREATE TABLE IF NOT EXISTS SecurityAssessmentProcedureLimitiations (
                                   SecurityAssessmentProcedureLimitation_ID INTEGER PRIMARY KEY,
                                   SecurityAssessmentProcedure_ID INTEGER NOT NULL,
                                   Limitation_ID INTEGER NOT NULL,
@@ -870,7 +870,7 @@ CREATE TABLE SecurityAssessmentProcedureLimitiations (
                                   FOREIGN KEY (Limitation_ID) REFERENCES Limitations(Limitation_ID)
 );
 
-CREATE TABLE SecurityAssessmentProcedureRelatedDocuments (
+CREATE TABLE IF NOT EXISTS SecurityAssessmentProcedureRelatedDocuments (
                                       SecurityAssessmentProcedureRelatedDocuments_ID INTEGER PRIMARY KEY,
                                       SecurityAssessmentProcedure_ID INTEGER NOT NULL,
                                       RelatedDocument_ID INTEGER NOT NULL,
@@ -879,7 +879,7 @@ CREATE TABLE SecurityAssessmentProcedureRelatedDocuments (
                                       FOREIGN KEY (RelatedDocument_ID) REFERENCES RelatedDocuments(RelatedDocument_ID)
 );
 
-CREATE TABLE SecurityAssessmentProcedureRelatedTesting (
+CREATE TABLE IF NOT EXISTS SecurityAssessmentProcedureRelatedTesting (
                                     SecurityAssessmentProcedureRelatedTesting_ID INTEGER PRIMARY KEY,
                                     SecurityAssessmentProcedure_ID INTEGER NOT NULL,
                                     RelatedTesting_ID INTEGER NOT NULL,
@@ -888,7 +888,7 @@ CREATE TABLE SecurityAssessmentProcedureRelatedTesting (
                                     FOREIGN KEY (RelatedTesting_ID) REFERENCES RelatedTesting(RelatedTesting_ID)
 );
 
-CREATE TABLE SecurityAssessmentProcedureTestReferences (
+CREATE TABLE IF NOT EXISTS SecurityAssessmentProcedureTestReferences (
                                     SecurityAssessmentProcedureTestReference_ID INTEGER PRIMARY KEY,
                                     SecurityAssessmentProcedure_ID INTEGER NOT NULL,
                                     TestReference_ID INTEGER NOT NULL,
@@ -897,7 +897,7 @@ CREATE TABLE SecurityAssessmentProcedureTestReferences (
                                     FOREIGN KEY (TestReference_ID) REFERENCES TestReferences(TestReference_ID)
 );
 
-CREATE TABLE SecurityAssessmentProcedureTestScheduleItems (
+CREATE TABLE IF NOT EXISTS SecurityAssessmentProcedureTestScheduleItems (
                                        SecurityAssessmentProcedureTestScheduleItem_ID INTEGER PRIMARY KEY,
                                        SecurityAssessmentProcedure_ID INTEGER NOT NULL,
                                        TestScheduleItem_ID INTEGER NOT NULL,
@@ -906,13 +906,13 @@ CREATE TABLE SecurityAssessmentProcedureTestScheduleItems (
                                        FOREIGN KEY (TestScheduleItem_ID) REFERENCES TestScheduleItems(TestScheduleItem_ID)
 );
 
-CREATE TABLE SCAP_Scores (
+CREATE TABLE IF NOT EXISTS SCAP_Scores (
                             SCAP_Score_ID INTEGER PRIMARY KEY,
                             Score INTEGER NOT NULL,
                             Hardware_ID INTEGER NOT NULL,
                             FindingSourceFile_ID INTEGER NOT NULL,
                             VulnerabilitySource_ID INTEGER NOT NULL,
-                            ScanDate DATE NOT NULL,
+                            ScanDate DATETIME NOT NULL,
                             UNIQUE (
                                     Hardware_ID,
                                     FindingSourceFile_ID,
@@ -923,16 +923,16 @@ CREATE TABLE SCAP_Scores (
                             FOREIGN KEY (VulnerabilitySource_ID) REFERENCES VulnerabilitySources(VulnerabilitySource_ID)
 );
 
-CREATE TABLE Software (
+CREATE TABLE IF NOT EXISTS Software (
                           Software_ID INTEGER PRIMARY KEY,
-                          DiscoveredSoftwareName NVARCHAR (50) NOT NULL UNIQUE ON CONFLICT IGNORE,
-                          DisplayedSoftwareName NVARCHAR (100) NOT NULL,
-                          SoftwareAcronym NVARCHAR (25),
+                          DiscoveredSoftwareName NVARCHAR (200) NOT NULL UNIQUE ON CONFLICT IGNORE,
+                          DisplayedSoftwareName NVARCHAR (200) NOT NULL,
+                          SoftwareAcronym NVARCHAR (50),
                           SoftwareVersion NVARCHAR (25),
                           Function NVARCHAR (500),
                           DADMS_ID NVARCHAR (25),
                           DADMS_Disposition NVARCHAR (25),
-                          DADMS_LDA DATE,
+                          DADMS_LastDateAuthorized DATETIME,
                           HasCustomCode NVARCHAR (5),
                           IA_OrIA_Enabled NVARCHAR (5),
                           IsOS_OrFirmware NVARCHAR (5),
@@ -944,7 +944,7 @@ CREATE TABLE Software (
                           Instance NVARCHAR (25)
 );
 
-CREATE TABLE SoftwareDADMS_Networks (
+CREATE TABLE IF NOT EXISTS SoftwareDADMS_Networks (
                                          Software_DADMS_Network_ID INTEGER PRIMARY KEY,
                                          Software_ID INTEGER NOT NULL,
                                          DADMS_Network_ID INTEGER NOT NULL,
@@ -953,7 +953,7 @@ CREATE TABLE SoftwareDADMS_Networks (
                                          FOREIGN KEY (DADMS_Network_ID) REFERENCES DADMS_Networks(DADMS_Network_ID)
 );
 
-CREATE TABLE SoftwareContacts (
+CREATE TABLE IF NOT EXISTS SoftwareContacts (
                                   SoftwareContact_ID INTEGER PRIMARY KEY,
                                   Software_ID INTEGER NOT NULL,
                                   Contact_ID INTEGER NOT NULL,
@@ -962,11 +962,11 @@ CREATE TABLE SoftwareContacts (
                                   FOREIGN KEY (Contact_ID) REFERENCES Contacts(Contact_ID)
 );
 
-CREATE TABLE SoftwareHardware (
+CREATE TABLE IF NOT EXISTS SoftwareHardware (
                                   SoftwareHardware_ID INTEGER PRIMARY KEY,
                                   Software_ID INTEGER NOT NULL,
                                   Hardware_ID INTEGER NOT NULL,
-                                  InstallDate DATE NOT NULL,
+                                  InstallDate DATETIME NOT NULL,
                                   ReportInAccreditation NVARCHAR (5),
                                   ApprovedForBaseline NVARCHAR (5),
                                   BaselineApprover NVARCHAR (50),
@@ -976,7 +976,7 @@ CREATE TABLE SoftwareHardware (
                                   UNIQUE (Software_ID, Hardware_ID) ON CONFLICT IGNORE
 );
 
-CREATE TABLE StepOneQuestionnaire (
+CREATE TABLE IF NOT EXISTS StepOneQuestionnaire (
                                       StepOneQuestionnaire_ID INTEGER PRIMARY KEY,
                                       LogicalAccess NVARCHAR (25) NOT NULL,
                                       PhysicalAccess NVARCHAR (25) NOT NULL,
@@ -992,7 +992,7 @@ CREATE TABLE StepOneQuestionnaire (
                                       DITPR_DON_Number INTEGER NOT NULL,
                                       DOD_IT_RegistrationNumber NVARCHAR (200) ,
                                       DVS_Site NVARCHAR (100),
-                                      PPSM_RegistrationNumber NVARCHAR (25) NOT NULL,
+                                      PPSM_RegistrationNumber NVARCHAR (200) NOT NULL,
                                       SystemAuthorizationBoundary NVARCHAR (2000) NOT NULL,
                                       HardwareSoftwareFirmware NVARCHAR (2000) NOT NULL,
                                       SystemEnterpriseArchitecture NVARCHAR (2000) NOT NULL,
@@ -1002,24 +1002,24 @@ CREATE TABLE StepOneQuestionnaire (
                                       BaselineLocation_ID INTEGER NOT NULL,
                                       InstallationNameOrOwningOrganization NVARCHAR (500),
                                       SecurityPlanApprovalStatus NVARCHAR (50) NOT NULL,
-                                      SecurityPlanApprovalDate DATE,
+                                      SecurityPlanApprovalDate DATETIME,
                                       AuthorizationStatus NVARCHAR (25) NOT NULL,
-                                      HasAuthorizationDocumentation INTEGER NOT NULL,
-                                      AssessmentCompletionDate DATE,
-                                      AuthorizationDate DATE,
-                                      AuthorizationTerminationDate DATE,
+                                      HasAuthorizationDocumentation NVARCHAR (5) NOT NULL,
+                                      AssessmentCompletionDate DATETIME,
+                                      AuthorizationDate DATETIME,
+                                      AuthorizationTerminationDate DATETIME,
                                       RMF_Activity NVARCHAR (25) NOT NULL,
                                       AuthorizationTermsAndConditions NVARCHAR (2000) ,
                                       IsSecurityReviewCompleted NVARCHAR (5) NOT NULL,
-                                      SecurityReviewDate DATE,
+                                      SecurityReviewDate DATETIME,
                                       IsContingencyPlanRequired NVARCHAR (5) NOT NULL,
                                       IsContingencyPlanTested NVARCHAR (5),
-                                      ContingencyPlanTestDate DATE,
+                                      ContingencyPlanTestDate DATETIME,
                                       IsPIA_Required NVARCHAR (5) NOT NULL,
-                                      PIA_Date DATE,
+                                      PIA_Date DATETIME,
                                       IsPrivacyActNoticeRequired NVARCHAR (5) NOT NULL,
                                       Is_eAuthenticationRiskAssessmentRequired NVARCHAR (5) NOT NULL,
-                                      eAuthenticationRiskAssessmentDate DATE,
+                                      eAuthenticationRiskAssessmentDate DATETIME,
                                       IsReportableToFISMA NVARCHAR (5) NOT NULL,
                                       IsReportableToERS NVARCHAR (5) NOT NULL,
                                       MissionCriticality NVARCHAR (25) NOT NULL,
@@ -1030,16 +1030,17 @@ CREATE TABLE StepOneQuestionnaire (
                                       SoftwareCategory NVARCHAR (25) NOT NULL,
                                       SystemOwnershipAndControl NVARCHAR (50) NOT NULL,
                                       OtherInformation NVARCHAR (2000),
-                                      AuthorizationToConnectOrInterim_ATC_GrantedDate DATE NOT NULL,
-                                      AuthorizationToConnectOrInterim_ATC_ExpirationDate DATE NOT NULL,
+                                      AuthorizationToConnectOrInterim_ATC_GrantedDate DATETIME NOT NULL,
+                                      AuthorizationToConnectOrInterim_ATC_ExpirationDate DATETIME NOT NULL,
                                       AuthorizationToConnectOrInterim_ATC_CND_ServiceProvider NVARCHAR (25),
                                       AdditionalAuthorizationRequirements NVARCHAR (2000) NOT NULL,
+                                      PrimaryNIST_ControlSet NVARCHAR (5) NOT NULL,
                                       InformationTypeEvidence NVARCHAR (2000),
                                       RationaleForCategorization NVARCHAR (2000) NOT NULL,
                                       FOREIGN KEY (BaselineLocation_ID) REFERENCES Locations(Location_ID)
 );
 
-CREATE TABLE StepOneQuestionnaireAuthorizationConditions (
+CREATE TABLE IF NOT EXISTS StepOneQuestionnaireAuthorizationConditions (
     StepOneQuestionnaireAuthorizationCondition_ID INTEGER PRIMARY KEY ,
     StepOneQuestionnaire_ID INTEGER NOT NULL ,
     AuthorizationCondition_ID INTEGER NOT NULL ,
@@ -1048,7 +1049,7 @@ CREATE TABLE StepOneQuestionnaireAuthorizationConditions (
     FOREIGN KEY (AuthorizationCondition_ID) REFERENCES AuthorizationConditions(AuthorizationCondition_ID)
 );
 
-CREATE TABLE StepOneQuestionnaireAuthorizationToConnectOrInterim_ATC_PendingItems (
+CREATE TABLE IF NOT EXISTS StepOneQuestionnaireAuthorizationToConnectOrInterim_ATC_PendingItems (
     StepOneQuestionnaireAuthorizationToConnectOrInterim_ATC_PendingItems_ID INTEGER PRIMARY KEY ,
     StepOneQuestionnaire_ID INTEGER NOT NULL ,
     AuthorizationToConnectOrInterim_ATC_PendingItem_ID INTEGER NOT NULL ,
@@ -1057,7 +1058,7 @@ CREATE TABLE StepOneQuestionnaireAuthorizationToConnectOrInterim_ATC_PendingItem
     FOREIGN KEY (AuthorizationToConnectOrInterim_ATC_PendingItem_ID) REFERENCES AuthorizationToConnectOrInterim_ATC_PendingItems(AuthorizationToConnectOrInterim_ATC_PendingItem_ID)
 );
 
-CREATE TABLE StepOneQuestionnaireConnectivity (
+CREATE TABLE IF NOT EXISTS StepOneQuestionnaireConnectivity (
                                                   StepOneQuestionnaireConnectivity_ID INTEGER PRIMARY KEY,
                                                   StepOneQuestionnaire_ID INTEGER NOT NULL,
                                                   Connectivity_ID INTEGER NOT NULL,
@@ -1066,14 +1067,14 @@ CREATE TABLE StepOneQuestionnaireConnectivity (
                                                   FOREIGN KEY (Connectivity_ID) REFERENCES Connectivity(Connectivity_ID)
 );
 
-CREATE TABLE StepOneQuestionnaireExternalSecurityServices (
+CREATE TABLE IF NOT EXISTS StepOneQuestionnaireExternalSecurityServices (
                                                                StepOneQuestionnaire_ID INTEGER NOT NULL,
                                                                ExternalSecurityServices_ID INTEGER NOT NULL,
                                                                FOREIGN KEY (StepOneQuestionnaire_ID) REFERENCES StepOneQuestionnaire(StepOneQuestionnaire_ID),
                                                                FOREIGN KEY (ExternalSecurityServices_ID) REFERENCES ExternalSecurityServices(ExternalSecurityServices_ID)
 );
 
-CREATE TABLE StepOneQuestionnaireEncryptionTechniques (
+CREATE TABLE IF NOT EXISTS StepOneQuestionnaireEncryptionTechniques (
                                                           StepOneQuestionnaireExternalSecurityService_ID INTEGER PRIMARY KEY,
                                                           StepOneQuestionnaire_ID INTEGER NOT NULL,
                                                           EncryptionTechnique_ID INTEGER NOT NULL,
@@ -1082,7 +1083,7 @@ CREATE TABLE StepOneQuestionnaireEncryptionTechniques (
                                                           FOREIGN KEY (EncryptionTechnique_ID) REFERENCES EncryptionTechniques(EncryptionTechnique_ID)
 );
 
-CREATE TABLE StepOneQuestionnaireDeploymentLocations (
+CREATE TABLE IF NOT EXISTS StepOneQuestionnaireDeploymentLocations (
                                                           StepOneQuestionnaireDeploymentLocation_ID INTEGER PRIMARY KEY,
                                                           StepOneQuestionnaire_ID INTEGER NOT NULL,
                                                           Location_ID INTEGER NOT NULL,
@@ -1091,7 +1092,7 @@ CREATE TABLE StepOneQuestionnaireDeploymentLocations (
                                                           FOREIGN KEY (Location_ID) REFERENCES Locations(Location_ID)
 );
 
-CREATE TABLE StepOneQuestionnaireNetworkConnectionRules (
+CREATE TABLE IF NOT EXISTS StepOneQuestionnaireNetworkConnectionRules (
                                                             StepOneQuestionnaireNetworkConnectionRule_ID INTEGER PRIMARY KEY,
                                                             StepOneQuestionnaire_ID INTEGER NOT NULL,
                                                             NetworkConnectionRule_ID INTEGER NOT NULL,
@@ -1103,7 +1104,7 @@ CREATE TABLE StepOneQuestionnaireNetworkConnectionRules (
                                                             FOREIGN KEY (NetworkConnectionRule_ID) REFERENCES NetworkConnectionRules(NetworkConnectionRule_ID)
 );
 
-CREATE TABLE StepOneQuestionnaireUserCategories (
+CREATE TABLE IF NOT EXISTS StepOneQuestionnaireUserCategories (
                                                     StepOneQuestionnaireUserCategory_ID INTEGER PRIMARY KEY,
                                                     StepOneQuestionnaire_ID INTEGER NOT NULL,
                                                     UserCategory_ID INTEGER NOT NULL,
@@ -1112,14 +1113,14 @@ CREATE TABLE StepOneQuestionnaireUserCategories (
                                                     FOREIGN KEY (UserCategory_ID) REFERENCES UserCategories(UserCategory_ID)
 );
 
-CREATE TABLE SystemCategorization (
+CREATE TABLE IF NOT EXISTS SystemCategorization (
                                       SystemCategorization_ID INTEGER PRIMARY KEY,
                                       SystemClassification NVARCHAR (25) NOT NULL,
                                       InformationClassification NVARCHAR (25) NOT NULL,
                                       InformationReleasability NVARCHAR (25) NOT NULL,
                                       HasGoverningPolicy NVARCHAR (5) NOT NULL,
                                       VaryingClearanceRequirements NVARCHAR (5) NOT NULL,
-                                      ClearanceRequirementDescription NVARCHAR (500),
+                                      ClearanceRequirementDescription NVARCHAR (2000),
                                       HasAggregationImpact NVARCHAR (5) NOT NULL,
                                       IsJointAuthorization NVARCHAR (5) NOT NULL,
                                       InvolvesIntelligenceActivities NVARCHAR (5) NOT NULL,
@@ -1132,7 +1133,7 @@ CREATE TABLE SystemCategorization (
                                       CategorizationIsApproved NVARCHAR (5) NOT NULL
 );
 
-CREATE TABLE SystemCategorizationGoverningPolicies (
+CREATE TABLE IF NOT EXISTS SystemCategorizationGoverningPolicies (
                                                        SystemCategorizationGoverningPolicy_ID INTEGER PRIMARY KEY,
                                                        SystemCategorization_ID INTEGER NOT NULL,
                                                        GoverningPolicy_ID INTEGER NOT NULL,
@@ -1141,10 +1142,19 @@ CREATE TABLE SystemCategorizationGoverningPolicies (
                                                        FOREIGN KEY (GoverningPolicy_ID) REFERENCES GoverningPolicies(GoverningPolicy_ID)
 );
 
-CREATE TABLE SystemCategorizationInformationTypesImpactAdjustments (
-                                                      SystemCategorizationInformationType_ID INTEGER NOT NULL,
+CREATE TABLE IF NOT EXISTS SystemCategorizationInformationTypes (
+                                                                                     SystemCategorizationInformationTypeImpactAdjustment_ID INTEGER NOT NULL,
+                                                                                     SystemCategorization_ID INTEGER NOT NULL,
+                                                                                     InformationType_ID INTEGER NOT NULL,
+                                                                                     Description NVARCHAR (500) NOT NULL,
+                                                                                     UNIQUE (SystemCategorization_ID, InformationType_ID) ON CONFLICT IGNORE,
+                                                                                     FOREIGN KEY (SystemCategorization_ID) REFERENCES SystemCategorization(SystemCategorization_ID),
+                                                                                     FOREIGN KEY (InformationType_ID) REFERENCES InformationTypes(InformationType_ID)
+);
+
+CREATE TABLE IF NOT EXISTS SystemCategorizationInformationTypesImpactAdjustments (
+                                                      SystemCategorizationInformationTypeImpactAdjustment_ID INTEGER NOT NULL,
                                                       SystemCategorization_ID INTEGER NOT NULL,
-                                                      Description NVARCHAR (500) NOT NULL,
                                                       InformationType_ID INTEGER NOT NULL,
                                                       ImpactAdjustment_ID INTEGER NOT NULL,
                                                       UNIQUE (SystemCategorization_ID, InformationType_ID) ON CONFLICT IGNORE,
@@ -1153,7 +1163,7 @@ CREATE TABLE SystemCategorizationInformationTypesImpactAdjustments (
                                                       FOREIGN KEY (ImpactAdjustment_ID) REFERENCES ImpactAdjustments(ImpactAdjustment_ID)
 );
 
-CREATE TABLE SystemCategorizationInterconnectedSystems (
+CREATE TABLE IF NOT EXISTS SystemCategorizationInterconnectedSystems (
                                                            SystemCategorizationInterconnectedSystem_ID INTEGER PRIMARY KEY,
                                                            SystemCategorization_ID INTEGER NOT NULL,
                                                            InterconnectedSystem_ID INTEGER NOT NULL,
@@ -1162,7 +1172,7 @@ CREATE TABLE SystemCategorizationInterconnectedSystems (
                                                            FOREIGN KEY (InterconnectedSystem_ID) REFERENCES InterconnectedSystems(InterconnectedSystem_ID)
 );
 
-CREATE TABLE SystemCategorizationJointAuthorizationOrganizations (
+CREATE TABLE IF NOT EXISTS SystemCategorizationJointAuthorizationOrganizations (
                                                         SystemCategorizationJointOrganization_ID INTEGER PRIMARY KEY,
                                                         SystemCategorization_ID INTEGER NOT NULL,
                                                         JointAuthorizationOrganization_ID INTEGER NOT NULL,
@@ -1171,34 +1181,34 @@ CREATE TABLE SystemCategorizationJointAuthorizationOrganizations (
                                                         FOREIGN KEY (JointAuthorizationOrganization_ID) REFERENCES JointAuthorizationOrganizations(JointAuthorizationOrganization_ID)
 );
 
-CREATE TABLE TestReferences (
+CREATE TABLE IF NOT EXISTS TestReferences (
                                 TestReference_ID INTEGER PRIMARY KEY,
                                 TestReferenceName NVARCHAR (100)
 );
 
-CREATE TABLE TestScheduleItems (
+CREATE TABLE IF NOT EXISTS TestScheduleItems (
                                    TestScheduleItem_ID INTEGER PRIMARY KEY,
-                                   TestEvent NVARCHAR (100),
+                                   TestEvent NVARCHAR (200) NOT NULL,
                                    TestScheduleCategory NVARCHAR (25) NOT NULL,
                                    DurationInDays INTEGER NOT NULL
 );
 
-CREATE TABLE Titles (
+CREATE TABLE IF NOT EXISTS Titles (
                                 Title_ID INTEGER PRIMARY KEY,
-                                TitleName NVARCHAR (100) NOT NULL ,
-                                TitleAcronym NVARCHAR (25),
+                                TitleName NVARCHAR (200) NOT NULL ,
+                                TitleAcronym NVARCHAR (50),
                                 UNIQUE (TitleName) ON CONFLICT IGNORE
 );
 
-CREATE TABLE UniqueFindings (
+CREATE TABLE IF NOT EXISTS UniqueFindings (
                                 UniqueFinding_ID INTEGER PRIMARY KEY,
                                 InstanceIdentifier NVARCHAR(50),
                                 ToolGeneratedOutput NVARCHAR,
                                 Comments NVARCHAR,
                                 FindingDetails NVARCHAR,
-                                FirstDiscovered DATE NOT NULL,
-                                LastObserved DATE NOT NULL,
-                                DeltaAnalysisRequired NVARCHAR (5) NOT NULL,
+                                FirstDiscovered DATETIME NOT NULL,
+                                LastObserved DATETIME NOT NULL,
+                                DeltaAnalysisIsRequired NVARCHAR (5) NOT NULL,
                                 FindingType_ID INTEGER NOT NULL,
                                 FindingSourceFile_ID INTEGER NOT NULL,
                                 Status NVARCHAR (25) NOT NULL,
@@ -1228,17 +1238,17 @@ CREATE TABLE UniqueFindings (
                                     ) ON CONFLICT IGNORE
 );
 
-CREATE TABLE UniqueFindingsSourceFiles (
+CREATE TABLE IF NOT EXISTS UniqueFindingsSourceFiles (
                                            FindingSourceFile_ID INTEGER PRIMARY KEY,
                                            FindingSourceFileName NVARCHAR (500) NOT NULL UNIQUE ON CONFLICT IGNORE
 );
 
-CREATE TABLE UserCategories (
+CREATE TABLE IF NOT EXISTS UserCategories (
                                 UserCategory_ID INTEGER PRIMARY KEY,
                                 UserCategory NVARCHAR (25)
 );
 
-CREATE TABLE VulnerabilitiesCCIs (
+CREATE TABLE IF NOT EXISTS VulnerabilitiesCCIs (
                                      VulnerabilityCCI_ID INTEGER PRIMARY KEY,
                                      Vulnerability_ID INTEGER NOT NULL,
                                      CCI_ID INTEGER NOT NULL,
@@ -1247,7 +1257,7 @@ CREATE TABLE VulnerabilitiesCCIs (
                                      FOREIGN KEY (CCI_ID) REFERENCES CCIs(CCI_ID)
 );
 
-CREATE TABLE VulnerabilitiesIA_Controls (
+CREATE TABLE IF NOT EXISTS VulnerabilitiesIA_Controls (
                                              Vulnerability_IA_Control_ID INTEGER PRIMARY KEY,
                                              Vulnerability_ID INTEGER NOT NULL,
                                              IA_Control_ID INTEGER NOT NULL,
@@ -1256,10 +1266,10 @@ CREATE TABLE VulnerabilitiesIA_Controls (
                                              FOREIGN KEY (IA_Control_ID) REFERENCES IA_Controls(IA_Control_ID)
 );
 
-CREATE TABLE Vulnerabilities (
+CREATE TABLE IF NOT EXISTS Vulnerabilities (
                                  Vulnerability_ID INTEGER PRIMARY KEY,
-                                 UniqueVulnerabilityIdentifier NVARCHAR (50) UNIQUE ON CONFLICT IGNORE NOT NULL,
-                                 VulnerabilityGroup_ID NVARCHAR (25),
+                                 UniqueVulnerabilityIdentifier NVARCHAR (100) UNIQUE ON CONFLICT IGNORE NOT NULL,
+                                 VulnerabilityGroupIdentifier NVARCHAR (100),
                                  VulnerabilityGroupTitle NVARCHAR (100),
                                  SecondaryVulnerabilityIdentifier NVARCHAR (25),
                                  VulnerabilityFamilyOrClass NVARCHAR (100),
@@ -1269,9 +1279,9 @@ CREATE TABLE Vulnerabilities (
                                  VulnerabilityDescription NVARCHAR,
                                  RiskStatement NVARCHAR,
                                  FixText NVARCHAR,
-                                 PublishedDate DATE,
-                                 ModifiedDate DATE,
-                                 FixPublishedDate DATE,
+                                 PublishedDate DATETIME,
+                                 ModifiedDate DATETIME,
+                                 FixPublishedDate DATETIME,
                                  RawRisk NVARCHAR (25) NOT NULL,
                                  CVSS_BaseScore NVARCHAR (5),
                                  CVSS_BaseVector NVARCHAR (25),
@@ -1290,7 +1300,7 @@ CREATE TABLE Vulnerabilities (
                                  IsActive NVARCHAR (5)
 );
 
-CREATE TABLE VulnerabilitiesResponsibilityRoles (
+CREATE TABLE IF NOT EXISTS VulnerabilitiesResponsibilityRoles (
                                                      VulnerabilityRoleResponsibility_ID INTEGER PRIMARY KEY,
                                                      Vulnerability_ID INTEGER NOT NULL,
                                                      Role_ID INTEGER NOT NULL,
@@ -1299,7 +1309,7 @@ CREATE TABLE VulnerabilitiesResponsibilityRoles (
                                                      FOREIGN KEY (Role_ID) REFERENCES ResponsibilityRoles(Role_ID)
 );
 
-CREATE TABLE VulnerabilitiesVulnerabilitySources (
+CREATE TABLE IF NOT EXISTS VulnerabilitiesVulnerabilitySources (
                                                      VulnerabilityVulnerabilitySource_ID INTEGER PRIMARY KEY,
                                                      Vulnerability_ID INTEGER NOT NULL,
                                                      VulnerabilitySource_ID INTEGER NOT NULL,
@@ -1308,7 +1318,7 @@ CREATE TABLE VulnerabilitiesVulnerabilitySources (
                                                      FOREIGN KEY (VulnerabilitySource_ID) REFERENCES VulnerabilitySources(VulnerabilitySource_ID)
 );
 
-CREATE TABLE VulnerabilitiesVulnerabilityReferences (
+CREATE TABLE IF NOT EXISTS VulnerabilitiesVulnerabilityReferences (
                                                         VulnerabilityVulnerabilityReference_ID INTEGER PRIMARY KEY,
                                                         Vulnerability_ID INTEGER NOT NULL,
                                                         Reference_ID INTEGER NOT NULL,
@@ -1317,14 +1327,14 @@ CREATE TABLE VulnerabilitiesVulnerabilityReferences (
                                                         FOREIGN KEY (Reference_ID) REFERENCES VulnerabilityReferences(Reference_ID)
 );
 
-CREATE TABLE VulnerabilityReferences (
+CREATE TABLE IF NOT EXISTS VulnerabilityReferences (
                                          Reference_ID INTEGER PRIMARY KEY,
                                          Reference NVARCHAR (50),
                                          ReferenceType NVARCHAR (10),
                                          UNIQUE (Reference, ReferenceType) ON CONFLICT IGNORE
 );
 
-CREATE TABLE VulnerabilitySources (
+CREATE TABLE IF NOT EXISTS VulnerabilitySources (
                                       VulnerabilitySource_ID INTEGER PRIMARY KEY,
                                       SourceName NVARCHAR (100) NOT NULL,
                                       SourceSecondaryIdentifier NVARCHAR (100),
@@ -1335,12 +1345,12 @@ CREATE TABLE VulnerabilitySources (
                                       UNIQUE (SourceName, SourceVersion, SourceRelease) ON CONFLICT IGNORE
 );
 
-CREATE TABLE Waivers (
+CREATE TABLE IF NOT EXISTS Waivers (
                          Waiver_ID INTEGER PRIMARY KEY,
                          WaiverName NVARCHAR (100) NOT NULL
 );
 
-CREATE TABLE WindowsDomainUserSettings (
+CREATE TABLE IF NOT EXISTS WindowsDomainUserSettings (
                                            WindowsDomainUserSettings_ID INTEGER PRIMARY KEY,
                                            WindowsDomainUserIsDisabled NVARCHAR (5) NOT NULL,
                                            WindowsDomainUserIsDisabledAutomatically NVARCHAR (5) NOT NULL,
@@ -1350,7 +1360,7 @@ CREATE TABLE WindowsDomainUserSettings (
                                            WindowsDomainUserPW_NeverExpires NVARCHAR (5) NOT NULL
 );
 
-CREATE TABLE WindowsLocalUserSettings (
+CREATE TABLE IF NOT EXISTS WindowsLocalUserSettings (
                                           WindowsLocalUserSettings_ID INTEGER PRIMARY KEY,
                                           WindowsLocalUserIsDisabled NVARCHAR (5) NOT NULL,
                                           WindowsLocalUserIsDisabledAutomatically NVARCHAR (5) NOT NULL,
@@ -1360,26 +1370,35 @@ CREATE TABLE WindowsLocalUserSettings (
                                           WindowsLocalUserPW_NeverExpires NVARCHAR (5) NOT NULL
 );
 
-CREATE TABLE RequiredReports (
+CREATE TABLE IF NOT EXISTS RequiredReports (
                                  RequiredReport_ID INTEGER PRIMARY KEY,
                                  DisplayedReportName NVARCHAR (50) NOT NULL,
                                  ReportType NVARCHAR (50) NOT NULL,
                                  IsReportEnabled NVARCHAR (5) NOT NULL,
-                                 IsReportSelected NVARCHAR (5) NOT NULL,
                                  ReportCategory NVARCHAR (50) NOT NULL
 );
 
-CREATE TABLE ReportFindingTypeUserSettings (
+CREATE TABLE IF NOT EXISTS RequiredReportUserSelections (
+    RequiredReportUserSelection_ID INTEGER PRIMARY KEY ,                                          
+    RequiredReport_ID INTEGER NOT NULL ,
+    UserName NVARCHAR (100) NOT NULL,
+    IsReportSelected NVARCHAR (5) NOT NULL,
+    UNIQUE (RequiredReport_ID, UserName) ON CONFLICT IGNORE ,
+    FOREIGN KEY (RequiredReport_ID) REFERENCES RequiredReports(RequiredReport_ID)
+);
+
+CREATE TABLE IF NOT EXISTS ReportFindingTypeUserSettings (
                                     ReportFindingTypeUserSettings_ID INTEGER PRIMARY KEY ,
                                     RequiredReport_ID INTEGER NOT NULL,
                                     FindingType_ID INTEGER NOT NULL,
                                     UserName NVARCHAR (50) NOT NULL,
+                                    IsSelected NVARCHAR (5) NOT NULL,
                                     FOREIGN KEY (RequiredReport_ID) REFERENCES RequiredReports(RequiredReport_ID),
                                     FOREIGN KEY (FindingType_ID) REFERENCES FindingTypes(FindingType_ID),
                                     UNIQUE (RequiredReport_ID, FindingType_ID, UserName) ON CONFLICT IGNORE
 );
 
-CREATE TABLE ReportSeverityUserSettings (
+CREATE TABLE IF NOT EXISTS ReportSeverityUserSettings (
                                   ReportSeverityUserSettings_ID INTEGER PRIMARY KEY,
                                   RequiredReport_ID INTEGER NOT NULL,
                                   UserName NVARCHAR (50) NOT NULL,
@@ -1582,7 +1601,6 @@ VALUES
     'Excel Summary',
     'Excel',
     'True',
-    'True',
     'Vulnerability Management'
 );
 
@@ -1593,7 +1611,6 @@ VALUES
     NULL,
     'POA&M / RAR',
     'Excel',
-    'True',
     'True',
     'Vulnerability Management'
 );
@@ -1606,7 +1623,6 @@ VALUES
     'SCAP & STIG Discrepancies',
     'Excel',
     'True',
-    'True',
     'Vulnerability Management'
 );
 
@@ -1617,7 +1633,6 @@ VALUES
     NULL,
     'Vulnerability Deep Dive (By Finding Type)',
     'Excel',
-    'True',
     'True',
     'Vulnerability Management'
 );
@@ -1630,7 +1645,6 @@ VALUES
     'Test Plan',
     'Excel',
     'True',
-    'True',
     'Vulnerability Management'
 );
 
@@ -1641,7 +1655,6 @@ VALUES
     NULL,
     'OS Breakdown',
     'Excel',
-    'False',
     'False',
     'Configuration Management'
 );
@@ -1654,7 +1667,6 @@ VALUES
     'User Breakdown',
     'Excel',
     'False',
-    'False',
     'Configuration Management'
 );
 
@@ -1665,7 +1677,6 @@ VALUES
     NULL,
     'PDF Summary',
     'PDF',
-    'False',
     'False',
     'Vulnerability Management'
 );

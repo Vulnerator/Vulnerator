@@ -1,41 +1,39 @@
 using System.Collections.ObjectModel;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    [Table("Software")]
-    public partial class Software : INotifyPropertyChanged
+    public class Software : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Software()
         {
-            DADMS_Networks = new HashSet<DADMS_Network>();
-            Contacts = new HashSet<Contact>();
+            DADMS_Networks = new ObservableCollection<DADMS_Network>();
+            Contacts = new ObservableCollection<Contact>();
             PortServices = new ObservableCollection<PortService>();
             Hardwares = new ObservableCollection<Hardware>();
             UniqueFindings = new ObservableCollection<UniqueFinding>();
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long Software_ID { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(200)]
         public string DiscoveredSoftwareName { get; set; }
 
         [Required]
-        [StringLength(100)]
+        [StringLength(200)]
         public string DisplayedSoftwareName { get; set; }
 
-        [StringLength(25)]
+        [StringLength(50)]
         public string SoftwareAcronym { get; set; }
 
         [StringLength(25)]
@@ -50,7 +48,7 @@ namespace Vulnerator.Model.Entity
         [StringLength(25)]
         public string DADMS_Disposition { get; set; }
 
-        public DateTime? DADMS_LDA { get; set; }
+        public DateTime? DADMS_LastDateAuthorized { get; set; }
 
         [StringLength(5)]
         public string HasCustomCode { get; set; }

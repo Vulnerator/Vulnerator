@@ -1,19 +1,20 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
-    public partial class RequiredReport
+    public class RequiredReport : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public RequiredReport()
         {
             ReportFindingTypeUserSettings = new ObservableCollection<ReportFindingTypeUserSettings>();
             ReportSeverityUserSettings = new ObservableCollection<ReportSeverityUserSettings>();
+            RequiredReportUserSelections = new ObservableCollection<RequiredReportUserSelection>();
         }
         
         [Key]
@@ -35,14 +36,13 @@ namespace Vulnerator.Model.Entity
         [StringLength(5)]
         public string IsReportEnabled { get; set; }
 
-        [Required]
-        [StringLength(5)]
-        public string IsReportSelected { get; set; }
-        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ReportFindingTypeUserSettings> ReportFindingTypeUserSettings { get; set; }
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ReportSeverityUserSettings> ReportSeverityUserSettings { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<RequiredReportUserSelection> RequiredReportUserSelections { get; set; }
     }
 }

@@ -1,13 +1,12 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class Contact : INotifyPropertyChanged
+    public class Contact : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -28,7 +27,7 @@ namespace Vulnerator.Model.Entity
         public long Contact_ID { get; set; }
 
         [Required]
-        [StringLength(25)]
+        [StringLength(50)]
         public string ContactFirstName { get; set; }
 
         [Required]
@@ -36,7 +35,7 @@ namespace Vulnerator.Model.Entity
         public string ContactLastName { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(100)]
         public string ContactEmail { get; set; }
 
         [StringLength(20)]
@@ -45,7 +44,7 @@ namespace Vulnerator.Model.Entity
         [StringLength(50)]
         public string ContactTitle { get; set; }
 
-        public long Organization_ID { get; set; }
+        public long? Organization_ID { get; set; }
 
         public virtual Organization Organization { get; set; }
 

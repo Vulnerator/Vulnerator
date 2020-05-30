@@ -1,13 +1,12 @@
 using JetBrains.Annotations;
+using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
-    using System;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.ComponentModel;
-
-    public partial class UniqueFinding : INotifyPropertyChanged
+    public class UniqueFinding : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -30,20 +29,27 @@ namespace Vulnerator.Model.Entity
         [StringLength(2147483647)]
         public string FindingDetails { get; set; }
 
-        public string FirstDiscovered { get; set; }
+        public DateTime FirstDiscovered { get; set; }
 
-        public string LastObserved { get; set; }
+        public DateTime LastObserved { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string DeltaAnalysisRequired { get; set; }
+        public string DeltaAnalysisIsRequired { get; set; }
 
         public long FindingType_ID { get; set; }
+        
+        public virtual FindingType FindingType { get; set; }
 
         public long FindingSourceFile_ID { get; set; }
 
+        public virtual UniqueFindingSourceFile UniqueFindingSourceFile { get; set; }
+
         [CanBeNull]
         public long? MitigationOrCondition_ID { get; set; }
+        
+        [CanBeNull]
+        public virtual MitigationOrCondition MitigationOrCondition { get; set; }
 
         [Required]
         [StringLength(25)]
@@ -51,9 +57,15 @@ namespace Vulnerator.Model.Entity
 
         public long Vulnerability_ID { get; set; }
 
+        public virtual Vulnerability Vulnerability { get; set; }
+        
         public long? Hardware_ID { get; set; }
 
+        public virtual Hardware Hardware { get; set; }
+
         public long? Software_ID { get; set; }
+
+        public virtual Software Software { get; set; }
 
         [StringLength(25)]
         public string SeverityOverride { get; set; }
@@ -79,17 +91,5 @@ namespace Vulnerator.Model.Entity
         [StringLength(25)]
         public string CVSS_EnvironmentalVector { get; set; }
 
-        public virtual FindingType FindingType { get; set; }
-
-        public virtual Hardware Hardware { get; set; }
-
-        public virtual Software Software { get; set; }
-
-        [CanBeNull]
-        public virtual MitigationOrCondition MitigationOrCondition { get; set; }
-
-        public virtual UniqueFindingSourceFile UniqueFindingSourceFile { get; set; }
-
-        public virtual Vulnerability Vulnerability { get; set; }
     }
 }

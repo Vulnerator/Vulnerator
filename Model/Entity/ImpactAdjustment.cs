@@ -1,26 +1,33 @@
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Vulnerator.Model.Entity
 {
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class ImpactAdjustment
+    public class ImpactAdjustment : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long ImpactAdjustment_ID { get; set; }
-
-        [Required]
+        
         [StringLength(25)]
         public string AdjustedConfidentiality { get; set; }
+        
+        [StringLength(200)]
+        public string AdjustedConfidentialityJustification { get; set; }
 
-        [Required]
         [StringLength(25)]
         public string AdjustedIntegrity { get; set; }
+        
+        [StringLength(200)]
+        public string AdjustedIntegrityJustification { get; set; }
 
-        [Required]
         [StringLength(25)]
         public string AdjustedAvailability { get; set; }
         
-        public virtual SystemCategorization SystemCategorization { get; set; }
+        [StringLength(200)]
+        public string AdjustedAvailabilityJustification { get; set; }
     }
 }

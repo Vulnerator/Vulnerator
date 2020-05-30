@@ -1,12 +1,15 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Vulnerator.Model.Entity
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class InformationType
+    public class InformationType : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public InformationType()
         {
@@ -19,28 +22,28 @@ namespace Vulnerator.Model.Entity
 
         [Required]
         [StringLength(25)]
-        public string InfoTypeId { get; set; }
+        public string InfoTypeIdentifier { get; set; }
 
         [Required]
         [StringLength(50)]
         public string InfoTypeName { get; set; }
 
-        [StringLength(2147483647)]
+        [StringLength(25)]
         public string BaselineConfidentiality { get; set; }
 
-        [StringLength(2147483647)]
+        [StringLength(25)]
         public string BaselineIntegrity { get; set; }
 
-        [StringLength(2147483647)]
+        [StringLength(25)]
         public string BaselineAvailability { get; set; }
 
-        [StringLength(2147483647)]
+        [StringLength(25)]
         public string EnhancedConfidentiality { get; set; }
 
-        [StringLength(2147483647)]
+        [StringLength(25)]
         public string EnhancedIntegrity { get; set; }
 
-        [StringLength(2147483647)]
+        [StringLength(25)]
         public string EnhancedAvailability { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

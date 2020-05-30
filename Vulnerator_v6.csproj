@@ -317,7 +317,6 @@
     <Compile Include="Model\Entity\AdditionalTestConsideration.cs" />
     <Compile Include="Model\Entity\AuthorizationToConnectOrInterim_ATC_PendingItem.cs" />
     <Compile Include="Model\Entity\AuthorizationCondition.cs" />
-    <Compile Include="Model\Entity\AuthorizationInformation.cs" />
     <Compile Include="Model\Entity\AvailabilityLevel.cs" />
     <Compile Include="Model\Entity\CCI.cs" />
     <Compile Include="Model\Entity\Certification.cs" />
@@ -342,10 +341,9 @@
     <Compile Include="Model\Entity\GoverningPolicy.cs" />
     <Compile Include="Model\Entity\Group.cs" />
     <Compile Include="Model\Entity\GroupContactTitle.cs" />
-    <Compile Include="Model\Entity\GroupsContactsTitles.cs" />
-    <Compile Include="Model\Entity\GroupsMitigationsOrConditionsVulnerabilities.cs" />
+    <Compile Include="Model\Entity\GroupMitigationOrConditionVulnerability.cs" />
     <Compile Include="Model\Entity\Hardware.cs" />
-    <Compile Include="Model\Entity\IATA_Standards.cs" />
+    <Compile Include="Model\Entity\IATA_Standard.cs" />
     <Compile Include="Model\Entity\IA_Control.cs" />
     <Compile Include="Model\Entity\ImpactAdjustment.cs" />
     <Compile Include="Model\Entity\InformationType.cs" />
@@ -371,14 +369,14 @@
     <Compile Include="Model\Entity\ReportFindingTypeUserSettings.cs" />
     <Compile Include="Model\Entity\ReportSeverityUserSettings.cs" />
     <Compile Include="Model\Entity\RequiredReport.cs" />
+    <Compile Include="Model\Entity\RequiredReportUserSelection.cs" />
     <Compile Include="Model\Entity\ResponsibilityRole.cs" />
     <Compile Include="Model\Entity\SecurityAssessmentProcedure.cs" />
     <Compile Include="Model\Entity\SCAP_Score.cs" />
     <Compile Include="Model\Entity\Software.cs" />
     <Compile Include="Model\Entity\StepOneQuestionnaire.cs" />
     <Compile Include="Model\Entity\SystemCategorization.cs" />
-    <Compile Include="Model\Entity\SystemCategorizationInformationTypesImpactAdjustments.cs" />
-    <Compile Include="Model\Entity\SystemType.cs" />
+    <Compile Include="Model\Entity\SystemCategorizationInformationTypesImpactAdjustment.cs" />
     <Compile Include="Model\Entity\TestReference.cs" />
     <Compile Include="Model\Entity\TestScheduleItem.cs" />
     <Compile Include="Model\Entity\Title.cs" />

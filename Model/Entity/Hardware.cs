@@ -1,14 +1,15 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Vulnerator.Model.Entity
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    [Table("Hardware")]
-    public partial class Hardware : INotifyPropertyChanged
+    public class Hardware : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Hardware()
         {
@@ -25,8 +26,6 @@ namespace Vulnerator.Model.Entity
             Softwares = new ObservableCollection<Software>();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long Hardware_ID { get; set; }
@@ -37,13 +36,13 @@ namespace Vulnerator.Model.Entity
         [StringLength(50)]
         public string DiscoveredHostName { get; set; }
 
-        [StringLength(100)]
+        [StringLength(500)]
         public string FQDN { get; set; }
 
-        [StringLength(100)]
+        [StringLength(300)]
         public string NetBIOS { get; set; }
 
-        [StringLength(25)]
+        [StringLength(50)]
         public string ScanIP { get; set; }
 
         [StringLength(5)]
@@ -73,12 +72,12 @@ namespace Vulnerator.Model.Entity
         [StringLength(25)]
         public string Role { get; set; }
 
-        [StringLength(100)]
-        public string OS { get; set; }
-
         public long? LifecycleStatus_ID { get; set; }
 
         public virtual LifecycleStatus LifecycleStatus { get; set; }
+
+        [StringLength(100)]
+        public string OperatingSystem { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SCAP_Score> SCAP_Scores { get; set; }

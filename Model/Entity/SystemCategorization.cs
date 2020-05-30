@@ -1,15 +1,14 @@
 using System.ComponentModel;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
-    [Table("SystemCategorization")]
-    public partial class SystemCategorization : INotifyPropertyChanged
+    public class SystemCategorization : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -45,7 +44,7 @@ namespace Vulnerator.Model.Entity
         [StringLength(5)]
         public string VaryingClearanceRequirements { get; set; }
 
-        [StringLength(500)]
+        [StringLength(2000)]
         public string ClearanceRequirementDescription { get; set; }
 
         [Required]
@@ -55,17 +54,41 @@ namespace Vulnerator.Model.Entity
         [Required]
         [StringLength(5)]
         public string IsJointAuthorization { get; set; }
-
-        public long NSS_Questionnaire_ID { get; set; }
-
+        
+        [Required]
+        [StringLength(5)]
+        public string InvolvesIntelligenceActivities { get; set; }
+        
+        [Required]
+        [StringLength(5)]
+        public string InvolvesCryptoActivities { get; set; }
+        
+        [Required]
+        [StringLength(5)]
+        public string InvolvesCommandAndControl { get; set; }
+        
+        [Required]
+        [StringLength(5)]
+        public string IsMilitaryCritical { get; set; }
+        
+        [Required]
+        [StringLength(5)]
+        public string IsBusinessInfo { get; set; }
+        
+        [Required]
+        [StringLength(5)]
+        public string HasExecutiveOrderProtections { get; set; }
+        
+        [Required]
+        [StringLength(5)]
+        public string IsNss { get; set; }
+ 
         [Required]
         [StringLength(5)]
         public string CategorizationIsApproved { get; set; }
 
         public virtual Group Group { get; set; }
         
-        public virtual ImpactAdjustment ImpactAdjustment { get; set; }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GoverningPolicy> GoverningPolicies { get; set; }
 

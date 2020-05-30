@@ -1,22 +1,23 @@
 using System.Collections.ObjectModel;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
-    public partial class NIST_Control
+    public class NIST_Control : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public NIST_Control()
         {
-            IATA_Standards = new HashSet<IATA_Standards>();
-            CommonControlPackages = new HashSet<CommonControlPackage>();
-            ControlSets = new HashSet<ControlSet>();
-            Overlays = new HashSet<Overlay>();
+            IATA_Standards = new ObservableCollection<IATA_Standard>();
+            CommonControlPackages = new ObservableCollection<CommonControlPackage>();
+            ControlSets = new ObservableCollection<ControlSet>();
+            Overlays = new ObservableCollection<Overlay>();
             AvailabilityLevels = new ObservableCollection<AvailabilityLevel>();
             CCIs = new ObservableCollection<CCI>();
             ControlApplicabilityAssessments = new ObservableCollection<ControlApplicabilityAssessment>();
@@ -34,25 +35,25 @@ namespace Vulnerator.Model.Entity
 
         public long ControlNumber { get; set; }
 
-        public long? Enhancement { get; set; }
+        public long? ControlEnhancement { get; set; }
 
         [Required]
         [StringLength(50)]
         public string ControlTitle { get; set; }
 
         [Required]
-        [StringLength(500)]
+        [StringLength(2000)]
         public string ControlText { get; set; }
 
         [Required]
-        [StringLength(500)]
+        [StringLength(2000)]
         public string SupplementalGuidance { get; set; }
 
         [StringLength(10)]
         public string MonitoringFrequency { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<IATA_Standards> IATA_Standards { get; set; }
+        public virtual ICollection<IATA_Standard> IATA_Standards { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CommonControlPackage> CommonControlPackages { get; set; }

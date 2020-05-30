@@ -1,15 +1,16 @@
 using JetBrains.Annotations;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class Group : INotifyPropertyChanged
+    public class Group : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Group()
         {
@@ -19,8 +20,6 @@ namespace Vulnerator.Model.Entity
             Hardwares = new ObservableCollection<Hardware>();
             Waivers = new ObservableCollection<Waiver>();
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -47,14 +46,24 @@ namespace Vulnerator.Model.Entity
         public string IsPlatform { get; set; }
 
         public long? Organization_ID { get; set; }
+        
+        public virtual Organization Organization { get; set; }
 
         public long? ConfidentialityLevel_ID { get; set; }
+        
+        public virtual ConfidentialityLevel ConfidentialityLevel { get; set; }
 
         public long? IntegrityLevel_ID { get; set; }
+        
+        public virtual IntegrityLevel IntegrityLevel { get; set; }
 
         public long? AvailabilityLevel_ID { get; set; }
+        
+        public virtual AvailabilityLevel AvailabilityLevel { get; set; }
 
         public long? SystemCategorization_ID { get; set; }
+        
+        public virtual SystemCategorization SystemCategorization { get; set; }
 
         [StringLength(25)]
         [CanBeNull]
@@ -69,6 +78,8 @@ namespace Vulnerator.Model.Entity
         public string FISCAM_Applies { get; set; }
 
         public long? ControlSelection_ID { get; set; }
+        
+        public virtual ControlSelection ControlSelection { get; set; }
 
         [StringLength(5)]
         [CanBeNull]
@@ -84,35 +95,19 @@ namespace Vulnerator.Model.Entity
 
         [CanBeNull]
         public long? StepOneQuestionnaire_ID { get; set; }
+        
+        public virtual StepOneQuestionnaire StepOneQuestionnaire { get; set; }
 
         public long? SecurityAssessmentProcedure_ID { get; set; }
-
-        public long? PIT_Determination_ID { get; set; }
-        
-        public long? InformationSystemOwner_ID { get; set; }
-
-        [NotMapped]
-        public bool IsChecked { get; set; }
-
-        public virtual PIT_Determination PIT_Determination { get; set; }
-        
-        public virtual Contact InformationSystemOwner { get; set; }
-
-        public virtual StepOneQuestionnaire StepOneQuestionnaire { get; set; }
         
         public virtual SecurityAssessmentProcedure SecurityAssessmentProcedure { get; set; }
 
-        public virtual ControlSelection ControlSelection { get; set; }
-
-        public virtual SystemCategorization SystemCategorization { get; set; }
-
-        public virtual AvailabilityLevel AvailabilityLevel { get; set; }
-
-        public virtual IntegrityLevel IntegrityLevel { get; set; }
-
-        public virtual ConfidentialityLevel ConfidentialityLevel { get; set; }
+        public long? PIT_Determination_ID { get; set; }
         
-        public virtual Organization Organization { get; set; }
+        public virtual PIT_Determination PIT_Determination { get; set; }
+
+        [NotMapped]
+        public bool IsChecked { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MitigationOrCondition> MitigationsOrConditions { get; set; }
@@ -133,7 +128,7 @@ namespace Vulnerator.Model.Entity
         public virtual ICollection<Connection> Connections { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<IATA_Standards> IATA_Standards { get; set; }
+        public virtual ICollection<IATA_Standard> IATA_Standards { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Overlay> Overlays { get; set; }

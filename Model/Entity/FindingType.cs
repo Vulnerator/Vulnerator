@@ -1,12 +1,15 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Vulnerator.Model.Entity
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class FindingType
+    public class FindingType : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
             "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public FindingType()
@@ -20,7 +23,7 @@ namespace Vulnerator.Model.Entity
         public long FindingType_ID { get; set; }
 
         [Required]
-        [StringLength(25)]
+        [StringLength(50)]
         [Column("FindingType")]
         public string Finding_Type { get; set; }
 

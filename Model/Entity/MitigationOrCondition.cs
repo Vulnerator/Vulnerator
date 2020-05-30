@@ -1,21 +1,18 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Vulnerator.Model.Entity
 {
-    using PropertyChanged;
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.ComponentModel;
-
-    [AddINotifyPropertyChangedInterface]
-    public partial class MitigationOrCondition : INotifyPropertyChanged
+    public class MitigationOrCondition : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public MitigationOrCondition()
         { Groups = new ObservableCollection<Group>(); }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -57,9 +54,9 @@ namespace Vulnerator.Model.Entity
         [StringLength(25)]
         public string MitigatedStatus { get; set; }
 
-        public string ApprovalDate { get; set; }
-
         public string EstimatedCompletionDate { get; set; }
+
+        public string ApprovalDate { get; set; }
 
         public string ExpirationDate { get; set; }
 

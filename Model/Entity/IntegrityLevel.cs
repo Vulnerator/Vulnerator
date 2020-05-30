@@ -1,13 +1,12 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class IntegrityLevel : INotifyPropertyChanged
+    public class IntegrityLevel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

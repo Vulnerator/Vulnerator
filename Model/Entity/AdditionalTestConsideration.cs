@@ -1,12 +1,16 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+
 namespace Vulnerator.Model.Entity
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class AdditionalTestConsideration
+    public class AdditionalTestConsideration : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AdditionalTestConsideration()
         { SecurityAssessmentProcedures = new ObservableCollection<SecurityAssessmentProcedure>(); }
@@ -15,9 +19,11 @@ namespace Vulnerator.Model.Entity
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long AdditionalTestConsideration_ID { get; set; }
 
+        [Required]
         [StringLength(25)]
         public string AdditionalTestConsiderationTitle { get; set; }
 
+        [Required]
         [StringLength(1000)]
         public string AdditionalTestConsiderationDetails { get; set; }
 

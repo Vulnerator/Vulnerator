@@ -210,7 +210,7 @@ namespace Vulnerator.ViewModel
                 using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("Required_Report_ID", SelectedReport.RequiredReport_ID));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("Is_Report_Selected", SelectedReport.IsReportSelected));
+                    //sqliteCommand.Parameters.Add(new SQLiteParameter("Is_Report_Selected", SelectedReport.IsReportSelected));
                     databaseInterface.UpdateRequiredReportSelected(sqliteCommand);
                 }
                 DatabaseBuilder.sqliteConnection.Close();

@@ -1,18 +1,20 @@
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Vulnerator.Model.Entity
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
-    [Table("RelatedTesting")]
-    public partial class RelatedTesting
+    public class RelatedTesting : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public RelatedTesting()
         {
-            SecurityAssessmentProcedures = new HashSet<SecurityAssessmentProcedure>();
+            SecurityAssessmentProcedures = new ObservableCollection<SecurityAssessmentProcedure>();
         }
 
         [Key]
@@ -20,17 +22,18 @@ namespace Vulnerator.Model.Entity
         public long RelatedTesting_ID { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(200)]
         public string TestTitle { get; set; }
 
+        [Required]
         public DateTime DateConducted { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(200)]
         public string RelatedSystemTested { get; set; }
 
         [Required]
-        [StringLength(100)]
+        [StringLength(200)]
         public string ResponsibleOrganization { get; set; }
 
         [Required]

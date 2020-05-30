@@ -1,14 +1,10 @@
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
-    public partial class PIT_Determination : INotifyPropertyChanged
+    public class PIT_Determination : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -251,7 +247,7 @@ namespace Vulnerator.Model.Entity
         [StringLength(5)]
         public string IsTacticalDecisionAid { get; set; }
 
-        [StringLength(100)]
+        [StringLength(500)]
         public string OtherSystemTypeDescription { get; set; }
 
         public virtual Group Group { get; set; }

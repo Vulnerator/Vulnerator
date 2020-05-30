@@ -1,17 +1,19 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Vulnerator.Model.Entity
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
-    public partial class MAC_Address
+    public class MAC_Address : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public MAC_Address()
         {
-            Hardwares = new HashSet<Hardware>();
+            Hardwares = new ObservableCollection<Hardware>();
         }
 
         [Key]
@@ -19,7 +21,7 @@ namespace Vulnerator.Model.Entity
         public long MAC_Address_ID { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(100)]
         [Column("MAC_Address")]
         public string MacAddress { get; set; }
 
