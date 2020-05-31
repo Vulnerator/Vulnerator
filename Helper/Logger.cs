@@ -33,7 +33,8 @@ namespace Vulnerator.Helper
                     Type = typeof(FileNameNoPathConverter)
                 }
                 );
-                patternLayout.ConversionPattern = "%-30d %-15level %-40fileNameNoPath %-20L %m%n";
+                // patternLayout.ConversionPattern = "%-30d %-15level %-40fileNameNoPath %-20L %m%n";
+                patternLayout.ConversionPattern = "%-30d %-15level %m%n";
                 patternLayout.ActivateOptions();
                 RollingFileAppender rollingFileAppender = GenerateRollingFileAppender(patternLayout);
                 hierarchy.Root.AddAppender(rollingFileAppender);

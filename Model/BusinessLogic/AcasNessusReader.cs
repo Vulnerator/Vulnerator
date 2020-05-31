@@ -77,7 +77,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters["FindingType"].Value = "ACAS";
-                        sqliteCommand.Parameters["Name"].Value = "All";
+                        sqliteCommand.Parameters["GroupName"].Value = "All";
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
                         using (XmlReader xmlReader = XmlReader.Create(file.FilePath, xmlReaderSettings))
@@ -146,7 +146,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     string operatingSystem = xmlReader.ObtainCurrentNodeValue(true);
                                     sqliteCommand.Parameters["DiscoveredSoftwareName"].Value = operatingSystem;
                                     sqliteCommand.Parameters["DisplayedSoftwareName"].Value = operatingSystem;
-                                    sqliteCommand.Parameters["OS"].Value = operatingSystem;
+                                    sqliteCommand.Parameters["OperatingSystem"].Value = operatingSystem;
                                     sqliteCommand.Parameters["Is_OS_Or_Firmware"].Value = "True";
                                     break;
                                 }

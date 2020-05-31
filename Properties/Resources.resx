@@ -59,76 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" 
-    xmlns="" 
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-    xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" 
-      msdata:IsDataSet="true">
+    <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" 
-                  type="xsd:string" 
-                  minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" 
-                use="required" 
-                type="xsd:string" />
-              <xsd:attribute name="type" 
-                type="xsd:string" />
-              <xsd:attribute name="mimetype" 
-                type="xsd:string" />
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
               <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" 
-                type="xsd:string" />
-              <xsd:attribute name="name" 
-                type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" 
-                  type="xsd:string" 
-                  minOccurs="0" 
-                  msdata:Ordinal="1" />
-                <xsd:element name="comment" 
-                  type="xsd:string" 
-                  minOccurs="0" 
-                  msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" 
-                type="xsd:string" 
-                use="required" 
-                msdata:Ordinal="1" />
-              <xsd:attribute name="type" 
-                type="xsd:string" 
-                msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" 
-                type="xsd:string" 
-                msdata:Ordinal="4" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
               <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" 
-                  type="xsd:string" 
-                  minOccurs="0" 
-                  msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" 
-                type="xsd:string" 
-                use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -147,85 +117,67 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DeleteAcasVulnerabilitiesMappedToUnknownVersion" 
-    xml:space="preserve">
+  <data name="DeleteAcasVulnerabilitiesMappedToUnknownVersion" xml:space="preserve">
     <value>DELETE FROM VulnerabilitiesVulnerabilitySources WHERE VulnerabilitySource_ID = (SELECT VulnerabilitySource_ID FROM VulnerabilitySources WHERE SourceVersion = 'Version Unknown');</value>
   </data>
-  <data name="DeleteGroup" 
-    xml:space="preserve">
+  <data name="DeleteGroup" xml:space="preserve">
     <value>DELETE FROM Groups WHERE Group_ID = @Group_ID;</value>
   </data>
-  <data name="DeleteGroupsCCIsMappingByGroup" 
-    xml:space="preserve">
+  <data name="DeleteGroupsCCIsMappingByGroup" xml:space="preserve">
     <value>DELETE FROM GroupsCCIs WHERE Group_ID = @Group_ID;</value>
   </data>
-  <data name="DeleteGroupsConnectedSystemsMappingByGroup" 
-    xml:space="preserve">
+  <data name="DeleteGroupsConnectedSystemsMappingByGroup" xml:space="preserve">
     <value>DELETE FROM GroupsConnectedSystems WHERE Group_ID = @Group_ID;</value>
   </data>
-  <data name="DeleteGroupsConnectionsMappingByGroup" 
-    xml:space="preserve">
+  <data name="DeleteGroupsConnectionsMappingByGroup" xml:space="preserve">
     <value>DELETE FROM GroupsConnections WHERE Group_ID = @Group_ID;</value>
   </data>
-  <data name="DeleteGroupsContactsMappingByGroup" 
-    xml:space="preserve">
+  <data name="DeleteGroupsContactsMappingByGroup" xml:space="preserve">
     <value>DELETE FROM GroupsContacts WHERE Group_ID = @Group_ID;</value>
   </data>
-  <data name="DeleteGroupsMitigationsOrConditionsMappingByGroup" 
-    xml:space="preserve">
+  <data name="DeleteGroupsMitigationsOrConditionsMappingByGroup" xml:space="preserve">
     <value>DELETE FROM GroupsMitigationsOrConditions WHERE Group_ID = @Group_ID;</value>
   </data>
-  <data name="DeleteGroupsOverlaysMappingByGroup" 
-    xml:space="preserve">
+  <data name="DeleteGroupsOverlaysMappingByGroup" xml:space="preserve">
     <value>DELETE FROM GroupsOverlays WHERE Group_ID = @Group_ID;</value>
   </data>
-  <data name="DeleteGroupsWaiversMappingByGroup" 
-    xml:space="preserve">
+  <data name="DeleteGroupsWaiversMappingByGroup" xml:space="preserve">
     <value>DELETE FROM GroupsWaivers WHERE Group_ID = @Group_ID;</value>
   </data>
-  <data name="DeleteGroups_IATA_StandardsMappingByGroup" 
-    xml:space="preserve">
+  <data name="DeleteGroups_IATA_StandardsMappingByGroup" xml:space="preserve">
     <value>DELETE FROM GroupsIATA_Standards WHERE Group_ID = @Group_ID;</value>
   </data>
-  <data name="DeleteHardwareGroupsMappingByGroup" 
-    xml:space="preserve">
+  <data name="DeleteHardwareGroupsMappingByGroup" xml:space="preserve">
     <value>DELETE FROM HardwareGroups WHERE Group_ID = @Group_ID;</value>
   </data>
-  <data name="DeleteMitigation" 
-    xml:space="preserve">
+  <data name="DeleteMitigation" xml:space="preserve">
     <value>DELETE FROM
 	MitigationsOrConditions
 WHERE
 	MitigationOrCondition_ID = @MitigationOrCondition_ID;</value>
   </data>
-  <data name="DeleteMitigationGroupMappingByMitigation" 
-    xml:space="preserve">
+  <data name="DeleteMitigationGroupMappingByMitigation" xml:space="preserve">
     <value>DELETE FROM
 	GroupsMitigationsOrConditions
 WHERE
 	MitigationOrCondition_ID = @MitigationOrCondition_ID;</value>
   </data>
-  <data name="DeleteUniqueFinding" 
-    xml:space="preserve">
+  <data name="DeleteUniqueFinding" xml:space="preserve">
     <value>DELETE FROM UniqueFindings WHERE UniqueFinding_ID = @UniqueFinding_ID;</value>
   </data>
-  <data name="DeleteVulnerability" 
-    xml:space="preserve">
+  <data name="DeleteVulnerability" xml:space="preserve">
     <value>DELETE FROM 
 		Vulnerabilities
 WHERE 
 		Vulnerability_ID IS @Vulnerability_ID;</value>
   </data>
-  <data name="DeleteVulnerabilityCciMapping" 
-    xml:space="preserve">
+  <data name="DeleteVulnerabilityCciMapping" xml:space="preserve">
     <value>DELETE FROM VulnerabilitiesCCIs WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier) AND CCI_ID = (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI);</value>
   </data>
-  <data name="InsertDataEntryDate" 
-    xml:space="preserve">
+  <data name="InsertDataEntryDate" xml:space="preserve">
     <value>INSERT INTO DataEntryDates VALUES (NULL, @EntryDate);</value>
   </data>
-  <data name="InsertGroup" 
-    xml:space="preserve">
+  <data name="InsertGroup" xml:space="preserve">
     <value>INSERT INTO
     Groups
 VALUES (
@@ -252,20 +204,16 @@ VALUES (
         @SAP_ID,
         @PIT_Determination_ID);</value>
   </data>
-  <data name="InsertHardware" 
-    xml:space="preserve">
+  <data name="InsertHardware" xml:space="preserve">
     <value>INSERT INTO Hardware VALUES (NULL,@DisplayedHostName, @DiscoveredHostName,@FQDN,@NetBIOS,@ScanIP, @Found21745, @Found26917,@IsVirtualServer,@NIAP_Level,@Manufacturer,@ModelNumber,@IsIA_Enabled,@SerialNumber,@Role,(SELECT LifecycleStatus_ID FROM LifecycleStatuses WHERE LifecycleStatus = 'Uncategorized'), @OS);</value>
   </data>
-  <data name="InsertIpAddress" 
-    xml:space="preserve">
+  <data name="InsertIpAddress" xml:space="preserve">
     <value>INSERT INTO IP_Addresses VALUES (NULL, @IP_Address);</value>
   </data>
-  <data name="InsertMacAddress" 
-    xml:space="preserve">
+  <data name="InsertMacAddress" xml:space="preserve">
     <value>INSERT INTO MAC_Addresses VALUES (NULL, @MAC_Address);</value>
   </data>
-  <data name="InsertMitigationOrCondition" 
-    xml:space="preserve">
+  <data name="InsertMitigationOrCondition" xml:space="preserve">
     <value>INSERT INTO MitigationsOrConditions 
 VALUES (
 	NULL, 
@@ -287,20 +235,16 @@ VALUES (
 	@IsApproved, 
 	@Approver);</value>
   </data>
-  <data name="InsertMitigationsOrConditionsDefaultValues" 
-    xml:space="preserve">
+  <data name="InsertMitigationsOrConditionsDefaultValues" xml:space="preserve">
     <value>INSERT INTO MitigationsOrConditions DEFAULT VALUES;</value>
   </data>
-  <data name="InsertPortsProtocols" 
-    xml:space="preserve">
+  <data name="InsertPortsProtocols" xml:space="preserve">
     <value>INSERT INTO PortsProtocols VALUES (NULL, @Port, @Protocol);</value>
   </data>
-  <data name="InsertScapScore" 
-    xml:space="preserve">
+  <data name="InsertScapScore" xml:space="preserve">
     <value>INSERT INTO ScapScores VALUES (NULL, @Score, (SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP), (SELECT FindingSourceFile_ID FROM UniqueFindingsSourceFiles WHERE FindingSourceFileName = @FindingSourceFileName), (SELECT VulnerabilitySource_ID FROM VulnerabilitySources WHERE SourceName = @SourceName), @ScanDate);</value>
   </data>
-  <data name="InsertSoftware" 
-    xml:space="preserve">
+  <data name="InsertSoftware" xml:space="preserve">
     <value>INSERT INTO Software VALUES (
 	NULL, 
 	@DiscoveredSoftwareName, 
@@ -322,8 +266,7 @@ VALUES (
 	@Instance
 );</value>
   </data>
-  <data name="InsertUniqueFinding" 
-    xml:space="preserve">
+  <data name="InsertUniqueFinding" xml:space="preserve">
     <value>INSERT INTO UniqueFindings VALUES (
 	NULL, 
 	@InstanceIdentifier,
@@ -349,152 +292,115 @@ VALUES (
 	@CVSS_EnvironmentalVector,
 	NULL);</value>
   </data>
-  <data name="InsertUniqueFindingSource" 
-    xml:space="preserve">
+  <data name="InsertUniqueFindingSource" xml:space="preserve">
     <value>INSERT INTO UniqueFindingsSourceFiles VALUES (NULL, @FindingSourceFileName);</value>
   </data>
-  <data name="InsertVulnerability" 
-    xml:space="preserve">
+  <data name="InsertVulnerability" xml:space="preserve">
     <value>INSERT INTO Vulnerabilities VALUES (NULL, @UniqueVulnerabilityIdentifier, @VulnerabilityGroup_ID, @VulnerabilityGroup_Title, @SecondaryVulnerabilityIdentifier, @VulnerabilityFamilyOrClass, @VulnerabilityVersion, @VulnerabilityRelease, @VulnerabilityTitle, @VulnerabilityDescription, @RiskStatement, @FixText, @PublishedDate, @ModifiedDate, @FixPublishedDate, @RawRisk, @CVSS_BaseScore, @CVSS_BaseVector, @CVSS_TemporalScore, @CVSS_TemporalVector, @CheckContent, @FalsePositives, @FalseNegatives, @Documentable, @Mitigations, @MitigationControl, @PotentialImpacts, @ThirdPartyTools, @SecurityOverrideGuidance, @Overflow, @IsActive);</value>
   </data>
-  <data name="InsertVulnerabilityReference" 
-    xml:space="preserve">
+  <data name="InsertVulnerabilityReference" xml:space="preserve">
     <value>INSERT INTO VulnerabilityReferences VALUES (NULL, @Reference, @ReferenceType);</value>
   </data>
-  <data name="InsertVulnerabilitySource" 
-    xml:space="preserve">
+  <data name="InsertVulnerabilitySource" xml:space="preserve">
     <value>INSERT OR IGNORE INTO VulnerabilitySources VALUES (NULL, @SourceName, @SourceSecondaryIdentifier, @VulnerabilitySourceFileName, @SourceDescription, @SourceVersion, @SourceRelease);</value>
   </data>
-  <data name="MapHardwareToGroup" 
-    xml:space="preserve">
-    <value>INSERT INTO HardwareGroups VALUES ((SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP AND DiscoveredHostName = @DiscoveredHostName AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT Group_ID FROM Groups WHERE GroupName = @GroupName));</value>
+  <data name="MapHardwareToGroup" xml:space="preserve">
+    <value>INSERT INTO HardwareGroups VALUES (NULL, (SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP AND DiscoveredHostName = @DiscoveredHostName AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT Group_ID FROM Groups WHERE GroupName = @GroupName));</value>
   </data>
-  <data name="MapHardwareToSoftware" 
-    xml:space="preserve">
+  <data name="MapHardwareToSoftware" xml:space="preserve">
     <value>INSERT INTO SoftwareHardware VALUES ((SELECT Software_ID FROM Software WHERE DiscoveredSoftwareName = @DiscoveredSoftwareName), (SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP),@InstallDate  ,(SELECT ReportInAccreditationGlobal FROM Software WHERE DiscoveredSoftwareName = @DiscoveredSoftwareName), (SELECT ApprovedForBaselineGlobal FROM Software WHERE DiscoveredSoftwareName = @DiscoveredSoftwareName), @BaselineApprover);</value>
   </data>
-  <data name="MapHardwareToVulnerabilitySource" 
-    xml:space="preserve">
+  <data name="MapHardwareToVulnerabilitySource" xml:space="preserve">
     <value>INSERT INTO Hardware_VulnerabilitySources VALUES ((SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP AND DiscoveredHostName = @DiscoveredHostName AND FQDN = @FQDN AND NetBIOS = @NetBIOS),(SELECT VulnerabilitySource_ID FROM VulnerabilitySources WHERE SourceName = @SourceName));</value>
   </data>
-  <data name="MapIpToHardware" 
-    xml:space="preserve">
-    <value>INSERT INTO Hardware_IP_Addresses VALUES ((SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP AND DiscoveredHostName = @DiscoveredHostName), (SELECT IP_Address_ID FROM IP_Addresses WHERE IP_Address = @IP_Address));</value>
+  <data name="MapIpToHardware" xml:space="preserve">
+    <value>INSERT INTO Hardware_IP_Addresses VALUES (NULL, (SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP AND DiscoveredHostName = @DiscoveredHostName), (SELECT IP_Address_ID FROM IP_Addresses WHERE IP_Address = @IP_Address));</value>
   </data>
-  <data name="MapMacToHardware" 
-    xml:space="preserve">
-    <value>INSERT INTO Hardware_MAC_Addresses VALUES ((SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP AND DiscoveredHostName = @DiscoveredHostName), (SELECT MAC_Address_ID FROM MAC_Addresses WHERE MAC_Address = @MAC_Address));</value>
+  <data name="MapMacToHardware" xml:space="preserve">
+    <value>INSERT INTO Hardware_MAC_Addresses VALUES (NULL, (SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP AND DiscoveredHostName = @DiscoveredHostName), (SELECT MAC_Address_ID FROM MAC_Addresses WHERE MAC_Address = @MAC_Address));</value>
   </data>
-  <data name="MapMitigationToGroup" 
-    xml:space="preserve">
+  <data name="MapMitigationToGroup" xml:space="preserve">
     <value>INSERT INTO GroupsMitigationsOrConditions VALUES (@MitigationOrCondition_ID, @Group_ID, @Vulnerability_ID);</value>
   </data>
-  <data name="MapPortToHardware" 
-    xml:space="preserve">
+  <data name="MapPortToHardware" xml:space="preserve">
     <value>INSERT INTO HardwarePortsProtocols (Hardware_ID, PortsProtocols_ID, DiscoveredService, DisplayService) VALUES ((SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP AND DiscoveredHostName = @DiscoveredHostName AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT PortsProtocols_ID FROM PortsProtocols WHERE Port = @Port AND Protocol = @Protocol), @DiscoveredService, @DisplayService);</value>
   </data>
-  <data name="MapReferenceToVulnerability" 
-    xml:space="preserve">
+  <data name="MapReferenceToVulnerability" xml:space="preserve">
     <value>INSERT INTO VulnerabilitiesVulnerabilityReferences VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier), (SELECT Reference_ID FROM VulnerabilityReferences WHERE Reference = @Reference AND ReferenceType = @ReferenceType));</value>
   </data>
-  <data name="MapVulnerabilityToCci" 
-    xml:space="preserve">
+  <data name="MapVulnerabilityToCci" xml:space="preserve">
     <value>INSERT OR REPLACE INTO VulnerabilitiesCCIs VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier), (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI));</value>
   </data>
-  <data name="MapVulnerabilityToIAControl" 
-    xml:space="preserve">
+  <data name="MapVulnerabilityToIAControl" xml:space="preserve">
     <value>INSERT OR REPLACE INTO Vulnerabilities_IA_Controls VALUES (@Vulnerablity_ID, (SELECT IA_Control_ID FROM IA_Controls WHERE IA_ControlNumber = @IA_Control));</value>
   </data>
-  <data name="MapVulnerabilityToSource" 
-    xml:space="preserve">
+  <data name="MapVulnerabilityToSource" xml:space="preserve">
     <value>INSERT INTO VulnerabilitiesVulnerabilitySources VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier), (SELECT VulnerabilitySource_ID FROM VulnerabilitySources WHERE SourceName = @SourceName));</value>
   </data>
-  <data name="RegexAcasDebianSoftwareName" 
-    xml:space="preserve">
+  <data name="RegexAcasDebianSoftwareName" xml:space="preserve">
     <value>(?&lt;=(?:\w{2})\s{2})(?:\w+(?:-?\.?\+*)*)+</value>
   </data>
-  <data name="RegexAcasDebianSoftwareVersion" 
-    xml:space="preserve">
+  <data name="RegexAcasDebianSoftwareVersion" xml:space="preserve">
     <value>(?:\s{10,})(?:\d+(?:\w*(?:-?\.?\+*\:?\~?)*)*)+</value>
   </data>
-  <data name="RegexAcasLinuxSoftwareName" 
-    xml:space="preserve">
+  <data name="RegexAcasLinuxSoftwareName" xml:space="preserve">
     <value>^(\w)+(-?\.?[A-Za-z]+)*</value>
   </data>
-  <data name="RegexAcasLinuxSoftwareVersion" 
-    xml:space="preserve">
+  <data name="RegexAcasLinuxSoftwareVersion" xml:space="preserve">
     <value>(?:(?:\d+\.?-?)+(?:(?:\w+)?\.?-?)+)+(?=\|)</value>
   </data>
-  <data name="RegexAcasSoftwareInstallDate" 
-    xml:space="preserve">
+  <data name="RegexAcasSoftwareInstallDate" xml:space="preserve">
     <value>(?&lt;=\[installed on\s)(?:\d{2,4}\/\d{1,2}\/\d{1,2})(?=\])</value>
   </data>
-  <data name="RegexAcasSolarisSoftwareName" 
-    xml:space="preserve">
+  <data name="RegexAcasSolarisSoftwareName" xml:space="preserve">
     <value>^(?:\w)+(?:-?(?:\w?)+)+</value>
   </data>
-  <data name="RegexAcasSolarisSoftwareVersion" 
-    xml:space="preserve">
+  <data name="RegexAcasSolarisSoftwareVersion" xml:space="preserve">
     <value>(?:\d+\.?)+,?(?:REV=(?:\d+\.?)+)?</value>
   </data>
-  <data name="RegexAcasWindowsSoftwareName" 
-    xml:space="preserve">
+  <data name="RegexAcasWindowsSoftwareName" xml:space="preserve">
     <value>^.+?((?=\[)|(?=\r?\n))</value>
   </data>
-  <data name="RegexAcasWindowsSoftwareVersion" 
-    xml:space="preserve">
+  <data name="RegexAcasWindowsSoftwareVersion" xml:space="preserve">
     <value>(?&lt;=\[version\s)(?:\d+(?:(?:(?:\.|-?)\d*)*)|(?:\w+))(?=\])</value>
   </data>
-  <data name="RegexCatText" 
-    xml:space="preserve">
+  <data name="RegexCatText" xml:space="preserve">
     <value>CAT\s(?:I{1,3}(?:V)?)(?:,\s)*</value>
   </data>
-  <data name="RegexCciSelector" 
-    xml:space="preserve">
+  <data name="RegexCciSelector" xml:space="preserve">
     <value>(?:CCI-\d*)</value>
   </data>
-  <data name="RegexExcessiveNewLineAndTab" 
-    xml:space="preserve">
+  <data name="RegexExcessiveNewLineAndTab" xml:space="preserve">
     <value>(?:(\r?)\n){2,}(?:\t){2,}</value>
   </data>
-  <data name="RegexIndentedMidlineNewLine" 
-    xml:space="preserve">
+  <data name="RegexIndentedMidlineNewLine" xml:space="preserve">
     <value>(?:\r)*\n\s{4,}</value>
   </data>
-  <data name="RegexIPv4" 
-    xml:space="preserve">
+  <data name="RegexIPv4" xml:space="preserve">
     <value>(?:(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]){1,3}</value>
   </data>
-  <data name="RegexIPv6" 
-    xml:space="preserve">
+  <data name="RegexIPv6" xml:space="preserve">
     <value>(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))</value>
   </data>
-  <data name="RegexMAC" 
-    xml:space="preserve">
+  <data name="RegexMAC" xml:space="preserve">
     <value>(?:[0-9A-Fa-f]{1,2}[:-]){5}(?:[0-9A-Fa-f]{2})</value>
   </data>
-  <data name="RegexMidlineNewLine" 
-    xml:space="preserve">
+  <data name="RegexMidlineNewLine" xml:space="preserve">
     <value>(?:(?&lt;!\r\n)(?&lt;=[^(\r)])(?:\r\n)(?=[a-z0-9])|(?:(?&lt;!\r)\n)(?=[a-z0-9]))</value>
   </data>
-  <data name="RegexRawStigRelease" 
-    xml:space="preserve">
+  <data name="RegexRawStigRelease" xml:space="preserve">
     <value>(?&lt;=Release: )\d+(?=\s)</value>
   </data>
-  <data name="RegexStigDate" 
-    xml:space="preserve">
+  <data name="RegexStigDate" xml:space="preserve">
     <value>\d{2}\s\D{3}\s\d{4}</value>
   </data>
-  <data name="RegexStigId" 
-    xml:space="preserve">
+  <data name="RegexStigId" xml:space="preserve">
     <value>(?:(?:\w)+(?:-|\.|_)?)+</value>
   </data>
-  <data name="RegexTrailingNewLine" 
-    xml:space="preserve">
+  <data name="RegexTrailingNewLine" xml:space="preserve">
     <value>(?:(?&lt;=\s)\n(?=\s|$))</value>
   </data>
-  <data name="SelectAnsibleTowerData" 
-    xml:space="preserve">
+  <data name="SelectAnsibleTowerData" xml:space="preserve">
     <value>SELECT SourceName,
 		Vulnerabilities.Vulnerability_ID,
 		VulnerabilityGroup_ID,
@@ -515,8 +421,7 @@ WHERE SourceName LIKE @SourceName
 GROUP BY UniqueVulnerabilityIdentifier
 ORDER BY VulnerabilityGroup_ID</value>
   </data>
-  <data name="SelectGroupedPoamVulnerabilities" 
-    xml:space="preserve">
+  <data name="SelectGroupedPoamVulnerabilities" xml:space="preserve">
     <value>SELECT
 		UniqueVulnerabilityIdentifier,
 		VulnerabilityVersion,
@@ -550,8 +455,7 @@ WHERE FindingType = @FindingType
 GROUP BY Status, UniqueVulnerabilityIdentifier, SourceVersion, SourceRelease
 ORDER BY UniqueVulnerabilityIdentifier</value>
   </data>
-  <data name="SelectHardware" 
-    xml:space="preserve">
+  <data name="SelectHardware" xml:space="preserve">
     <value>SELECT 
 		DiscoveredHostName,
 		FQDN,
@@ -560,8 +464,7 @@ ORDER BY UniqueVulnerabilityIdentifier</value>
 FROM Hardware
 WHERE Hardware_ID = @Hardware_ID;</value>
   </data>
-  <data name="SelectHardwareCklCreationData" 
-    xml:space="preserve">
+  <data name="SelectHardwareCklCreationData" xml:space="preserve">
     <value>SELECT 
 		UniqueFindings.Hardware_ID,
 		Hardware.Role,
@@ -617,12 +520,10 @@ LEFT JOIN CCIs ON VulnerabilitiesCCIs.CCI_ID = CCIs.CCI_ID
 WHERE VulnerabilitySources.VulnerabilitySource_ID = @VulnerabilitySource_ID AND (UniqueFindings.Hardware_ID IS NULL OR UniqueFindings.Hardware_ID = @Hardware_ID)
 GROUP BY Vulnerabilities.Vulnerability_ID;</value>
   </data>
-  <data name="SelectIndexes" 
-    xml:space="preserve">
+  <data name="SelectIndexes" xml:space="preserve">
     <value>SELECT name FROM sqlite_master WHERE type == 'index';</value>
   </data>
-  <data name="SelectUngroupedVulnerabilities" 
-    xml:space="preserve">
+  <data name="SelectUngroupedVulnerabilities" xml:space="preserve">
     <value>SELECT
 			 VulnerabilityTitle,
 			 VulnerabilityDescription,
@@ -659,15 +560,13 @@ LEFT JOIN VulnerabilitiesCCIs ON Vulnerabilities.Vulnerability_ID = Vulnerabilit
 LEFT JOIN CCIs ON VulnerabilitiesCCIs.CCI_ID = CCIs.CCI_ID
 LEFT JOIN NistControlsCCIs ON CCIs.CCI_ID = NistControlsCCIs.CCI_ID</value>
   </data>
-  <data name="SelectUniqueVulnerabilityIdentiferBySource" 
-    xml:space="preserve">
+  <data name="SelectUniqueVulnerabilityIdentiferBySource" xml:space="preserve">
     <value>SELECT UniqueVulnerabilityIdentifier
 FROM Vulnerabilities
 LEFT JOIN VulnerabilitiesVulnerabilitySources ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesVulnerabilitySources.Vulnerability_ID
 WHERE VulnerabilitySource_ID = @VulnerabilitySource_ID;</value>
   </data>
-  <data name="SelectVulnerabilitiesForDeletion" 
-    xml:space="preserve">
+  <data name="SelectVulnerabilitiesForDeletion" xml:space="preserve">
     <value>SELECT
 		Vulnerabilities.Vulnerability_ID
 FROM
@@ -679,8 +578,7 @@ WHERE
 AND
 		SourceName IS @SourceName</value>
   </data>
-  <data name="SelectVulnerabilityIdentifiersAndVersions" 
-    xml:space="preserve">
+  <data name="SelectVulnerabilityIdentifiersAndVersions" xml:space="preserve">
     <value>SELECT 
 		UniqueVulnerabilityIdentifier, 
 		VulnerabilityVersion 
@@ -692,22 +590,18 @@ WHERE
 AND SourceVersion = @SourceVersion 
 AND SourceRelease = @SourceRelease;</value>
   </data>
-  <data name="SelectVulnerabilitySourceName" 
-    xml:space="preserve">
+  <data name="SelectVulnerabilitySourceName" xml:space="preserve">
     <value>SELECT SourceName
 FROM VulnerabilitySources
 WHERE VulnerabilitySource_ID = @VulnerabilitySource_ID;</value>
   </data>
-  <data name="SelectVulnerabilitySourceVersionAndRelease" 
-    xml:space="preserve">
+  <data name="SelectVulnerabilitySourceVersionAndRelease" xml:space="preserve">
     <value>SELECT SourceVersion, SourceRelease FROM VulnerabilitySources WHERE SourceName = @SourceName;</value>
   </data>
-  <data name="SelectVulnerabilityVersionAndRelease" 
-    xml:space="preserve">
+  <data name="SelectVulnerabilityVersionAndRelease" xml:space="preserve">
     <value>SELECT VulnerabilityVersion, VulnerabilityRelease FROM Vulnerabilities WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier;</value>
   </data>
-  <data name="SelectVunerabilityIndexes" 
-    xml:space="preserve">
+  <data name="SelectVunerabilityIndexes" xml:space="preserve">
     <value>SELECT
 		Vulnerabilities.Vulnerability_ID
 FROM Vulnerabilities
@@ -715,12 +609,10 @@ LEFT JOIN VulnerabilitiesVulnerabilitySources ON Vulnerabilities.Vulnerability_I
 LEFT JOIN VulnerabilitySources ON VulnerabilitiesVulnerabilitySources.VulnerabilitySource_ID = VulnerabilitySources.VulnerabilitySource_ID
 WHERE VulnerabilitySources.VulnerabilitySource_ID = @VulnerabilitySource_ID;</value>
   </data>
-  <data name="SetCredentialedScanStatus" 
-    xml:space="preserve">
+  <data name="SetCredentialedScanStatus" xml:space="preserve">
     <value>UPDATE Hardware SET Found21745 = @Found21745, Found26917 = @Found26917 WHERE ScanIP = @ScanIP AND DiscoveredHostName=@DiscoveredHostName;</value>
   </data>
-  <data name="TempStorage" 
-    xml:space="preserve">
+  <data name="TempStorage" xml:space="preserve">
     <value>SELECT 
 		Hardware.Role,
 		Hardware.DisplayedHostName,
@@ -775,12 +667,10 @@ LEFT JOIN CCIs ON VulnerabilitiesCCIs.CCI_ID = CCIs.CCI_ID
 WHERE VulnerabilitySources.VulnerabilitySource_ID = 337
 GROUP BY Vulnerabilities.Vulnerability_ID;</value>
   </data>
-  <data name="UpdateDeltaAnalysisFlag" 
-    xml:space="preserve">
+  <data name="UpdateDeltaAnalysisFlag" xml:space="preserve">
     <value>UPDATE UniqueFindings SET DeltaAnalysisRequired = 'True' WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier);</value>
   </data>
-  <data name="UpdateGroup" 
-    xml:space="preserve">
+  <data name="UpdateGroup" xml:space="preserve">
     <value>UPDATE Groups SET
                   Name = @Name,
                   Acronym = @Acronym,
@@ -805,8 +695,7 @@ GROUP BY Vulnerabilities.Vulnerability_ID;</value>
                   PIT_Determination_ID = @PIT_Determination_ID
 WHERE Group_ID = @Group_ID;</value>
   </data>
-  <data name="UpdateMitigationOrCondition" 
-    xml:space="preserve">
+  <data name="UpdateMitigationOrCondition" xml:space="preserve">
     <value>UPDATE MitigationsOrConditions 
 SET 
 	ImpactDescription = @ImpactDescription,
@@ -828,18 +717,15 @@ ResidualRiskAfterProposed = @ResidualRiskAfterProposed,
 	Approver = @Approver
 WHERE MitigationOrCondition_ID = @MitigationOrCondition_ID;</value>
   </data>
-  <data name="UpdateRequiredReportIsSelected" 
-    xml:space="preserve">
+  <data name="UpdateRequiredReportIsSelected" xml:space="preserve">
     <value>UPDATE RequiredReports SET 
 		Is_Report_Selected = @Is_Report_Selected
 WHERE Required_Report_ID = @Required_Report_ID;</value>
   </data>
-  <data name="UpdateUniqueFindingFromAcas" 
-    xml:space="preserve">
+  <data name="UpdateUniqueFindingFromAcas" xml:space="preserve">
     <value>UPDATE UniqueFindings SET LastObserved = @LastObserved, Status = @Status, ToolGeneratedOutput = @ToolGeneratedOutput WHERE Hardware_ID = (SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP) AND Software_ID = (SELECT Software_ID FROM Software WHERE DiscoveredSoftwareName = @DiscoveredSoftwareName) AND Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier) AND LastObserved &lt; @LastObserved;</value>
   </data>
-  <data name="UpdateUniqueFindingFromCkl" 
-    xml:space="preserve">
+  <data name="UpdateUniqueFindingFromCkl" xml:space="preserve">
     <value>UPDATE UniqueFindings SET 
 	FindingDetails = @FindingDetails, 
 	Comments = @Comments, 
@@ -859,20 +745,17 @@ AND
 AND 
 	LastObserved &lt; @LastObserved;</value>
   </data>
-  <data name="UpdateUniqueFindingMitigationOrCondition" 
-    xml:space="preserve">
+  <data name="UpdateUniqueFindingMitigationOrCondition" xml:space="preserve">
     <value>UPDATE UniqueFindings
 SET
 	MitigationOrCondition_ID = @MitigationOrCondition_ID
 WHERE
 	UniqueFinding_ID = @UniqueFinding_ID;</value>
   </data>
-  <data name="UpdateVulnerability" 
-    xml:space="preserve">
+  <data name="UpdateVulnerability" xml:space="preserve">
     <value>UPDATE Vulnerabilities SET VulnerabilityTitle=@VulnerabilityTitle, VulnerabilityDescription = @VulnerabilityDescription, RiskStatement = @RiskStatement, FixText = @FixText, ModifiedDate = @ModifiedDate, FixPublishedDate = @FixPublishedDate, RawRisk = @RawRisk, VulnerabilityVersion = @VulnerabilityVersion, VulnerabilityRelease = @VulnerabilityRelease WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier;</value>
   </data>
-  <data name="UpdateVulnerabilityDates" 
-    xml:space="preserve">
+  <data name="UpdateVulnerabilityDates" xml:space="preserve">
     <value>UPDATE
 		Vulnerabilities
 SET
@@ -881,8 +764,7 @@ SET
 WHERE
 		Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier AND VulnerabilityVersion = @VulnerabilityVersion AND VulnerabilityRelease = @VulnerabilityRelease)</value>
   </data>
-  <data name="UpdateVulnerabilityFromAcas" 
-    xml:space="preserve">
+  <data name="UpdateVulnerabilityFromAcas" xml:space="preserve">
     <value>UPDATE UniqueFindings SET 
 	LastObserved = @LastObserved, 
 	Status = @Status, 
@@ -895,8 +777,7 @@ AND
 AND 
 	LastObserved &lt; @LastObserved;</value>
   </data>
-  <data name="UpdateVulnerabilitySource" 
-    xml:space="preserve">
+  <data name="UpdateVulnerabilitySource" xml:space="preserve">
     <value>UPDATE 
 	VulnerabilitySources 
 SET 
@@ -909,8 +790,7 @@ SET
 WHERE 
 	VulnerabilitySource_ID = (SELECT VulnerabilitySource_ID FROM VulnerabilitySources WHERE SourceName = @SourceName);</value>
   </data>
-  <data name="UpdateVulnerabilitySourceFromAcas" 
-    xml:space="preserve">
+  <data name="UpdateVulnerabilitySourceFromAcas" xml:space="preserve">
     <value>UPDATE 
 		VulnerabilitiesVulnerabilitySources 
 SET 

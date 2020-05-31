@@ -313,54 +313,57 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                string[] parameters = new string[]
-                {
+                string[] parameters = {
                     // CCI Table
-                    "CCI",
-                    // Groups Table
-                    "Group_ID", "Name", "Acronym", "GroupTier", "IsAccreditation", "Accreditation_eMASS_ID", "IsPlatform", "Organization_ID",
-                    "ConfidentialityLevel_ID", "IntegrityLevel_ID", "AvailabilityLevel_ID", "SystemCategorization_ID", "AccreditationVersion", "CybersafeGrade",
-                    "FISCAM_Applies", "ControlSelection_ID", "HasForeignNationals", "SystemType", "RDTE_Zone", "StepOneQuestionnaire_ID", "SAP_ID",
-                    "PIT_Determination_ID",
+                    "CCI_Number",
                     // FindingTypes Table
                     "FindingType",
+                    // Groups Table
+                    "Group_ID", "GroupName", "GroupAcronym", "GroupTier", "IsAccreditation", "Accreditation_eMASS_ID", "IsPlatform", "Organization_ID",
+                    "ConfidentialityLevel_ID", "IntegrityLevel_ID", "AvailabilityLevel_ID", "SystemCategorization_ID", "AccreditationVersion", "CybersafeGrade",
+                    "FISCAM_Applies", "ControlSelection_ID", "HasForeignNationals", "SystemType", "RDTE_Zone", "StepOneQuestionnaire_ID", "SecurityAssessmentProcedure_ID",
+                    "PIT_Determination_ID",
                     // Hardware Table
-                    "Hardware_ID", "DiscoveredHostName", "FQDN", "NetBIOS", "IsVirtualServer", "NIAP_Level", "Manufacturer", "ModelNumber", "OS",
-                    "IsIA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID", "ScanIP", "Found21745", "Found26917", "DisplayedHostName",
+                    "Hardware_ID", "DisplayedHostName", "DiscoveredHostName", "FQDN", "NetBIOS", "ScanIP", "Found21745", "Found26917", "IsVirtualServer", "NIAP_Level",
+                    "Manufacturer", "ModelNumber", "IsIA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID",  "OperatingSystem",
                     // IP_Addresses Table
                     "IP_Address_ID", "IP_Address",
                     // MAC_Addresses Table
                     "MAC_Address_ID", "MAC_Address",
+                    // MitigationsOrConditions Table
+                    "MitigationOrCondition_ID", "ImpactDescription",  "PredisposingConditions", "TechnicalMitigation", "ProposedMitigation",
+                    "ThreatRelevance", "SeverityPervasiveness", "Likelihood", "Impact", "Risk", "ResidualRisk", "ResidualRiskAfterProposed",
+                    "MitigatedStatus", "EstimatedCompletionDate", "ApprovalDate", "ExpirationDate", "IsApproved", "Approver",
                     // PortsProtocols Table
                     "PortsProtocols_ID", "Port", "Protocol", "DiscoveredService", "DisplayService",
+                    // PortsServices Table
+                    "PortService_ID", "DiscoveredServiceName", "DisplayedServiceName", "ServiceAcronym",
                     // Software Table
                     "Software_ID", "DiscoveredSoftwareName", "DisplayedSoftwareName", "SoftwareAcronym", "SoftwareVersion",
-                    "Function", "InstallDate", "DADMS_ID", "DADMS_Disposition", "DADMS_LDA", "HasCustomCode", "IaOrIa_Enabled",
-                    "Is_OS_Or_Firmware", "FAM_Accepted", "ExternallyAuthorized", "ReportInAccreditationGlobal",
+                    "Function", "InstallDate", "DADMS_ID", "DADMS_Disposition", "DADMS_LastDateAuthorized", "HasCustomCode", "IA_OrIA_Enabled",
+                    "IsOS_OrFirmware", "FAM_Accepted", "ExternallyAuthorized", "ReportInAccreditationGlobal",
                     "ApprovedForBaselineGlobal", "BaselineApproverGlobal", "Instance",
                     // UniqueFindings Table
-                    "UniqueFinding_ID", "InstanceIdentifier", "ToolGeneratedOutput", "Comments", "FindingDetails", "TechnicalMitigation",
-                    "ProposedMitigation", "PredisposingConditions", "Impact", "Likelihood", "Severity", "Risk", "ResidualRisk",
-                    "FirstDiscovered", "LastObserved", "Approval_Status", "ApprovalDate", "Approval_Expiration_Date", "Approved_By",
-                    "DeltaAnalysisRequired", "FindingType_ID", "Finding_Source_ID", "Status", "Vulnerability_ID", "Hardware_ID",
+                    "UniqueFinding_ID", "InstanceIdentifier", "ToolGeneratedOutput", "Comments", "FindingDetails",  "FirstDiscovered",  "LastObserved",
+                    "DeltaAnalysisRequired", "FindingType_ID", "FindingSourceFile_ID", "Status", "Vulnerability_ID", "Hardware_ID",  "Software_ID",
                     "SeverityOverride", "SeverityOverrideJustification", "TechnologyArea", "WebDB_Site", "WebDB_Instance",
                     "Classification", "CVSS_EnvironmentalScore", "CVSS_EnvironmentalVector",
                     // UniqueFindingSourceFiles Table
                     "FindingSourceFile_ID", "FindingSourceFileName", 
                     // Vulnerabilities Table
-                    "Vulnerability_ID", "UniqueVulnerabilityIdentifier", "VulnerabilityGroup_ID", "VulnerabilityGroup_Title",
+                    "Vulnerability_ID", "UniqueVulnerabilityIdentifier", "VulnerabilityGroupIdentifier", "VulnerabilityGroupTitle",
                     "SecondaryVulnerabilityIdentifier", "VulnerabilityFamilyOrClass", "VulnerabilityVersion", "VulnerabilityRelease",
                     "VulnerabilityTitle", "VulnerabilityDescription", "RiskStatement", "FixText", "PublishedDate", "ModifiedDate",
                     "FixPublishedDate", "RawRisk", "CVSS_BaseScore", "CVSS_BaseVector", "CVSS_TemporalScore", "CVSS_TemporalVector",
-                    "CheckContent", "FalsePositives", "FalseNegatives", "Documentable", "Mitigations", "MitigationControl", "IsActive",
-                    "PotentialImpacts", "ThirdPartyTools", "SecurityOverrideGuidance", "Overflow", "Severity_Override_Guidance", "Overflow",
+                    "CheckContent", "FalsePositives", "FalseNegatives", "IsDocumentable", "Mitigations", "MitigationControl", "IsActive",
+                    "PotentialImpacts", "ThirdPartyTools", "SecurityOverrideGuidance", "Overflow", "SeverityOverrideGuidance", "Overflow",
                     // VulnerabilityReferences Table
                     "Reference_ID", "Reference", "ReferenceType",
                     // VulnerabilitySources Table
                     "VulnerabilitySource_ID", "SourceName", "SourceSecondaryIdentifier", "VulnerabilitySourceFileName",
                     "SourceDescription", "SourceVersion", "SourceRelease",
-                    // ScapScores Table
-                    "Score", "ScanDate"
+                    // SCAP_Scores Table
+                    "SCAP_Score_ID", "Score", "ScanDate", "Hardware_ID"
                 };
                 foreach (string parameter in parameters)
                 { sqliteCommand.Parameters.Add(new SQLiteParameter(parameter, DBNull.Value)); }

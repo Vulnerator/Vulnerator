@@ -19,11 +19,15 @@ namespace Vulnerator.Model.Entity
         public long PortsService_ID { get; set; }
 
         [Required]
-        [StringLength(100)]
-        public string ServiceName { get; set; }
+        [StringLength(500)]
+        public string DiscoveredServiceName { get; set; }
+        
+        [Required]
+        [StringLength(500)]
+        public string DisplayedServiceName { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(100)]
         public string ServiceAcronym { get; set; }
         
         [Required]
