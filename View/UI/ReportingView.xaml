@@ -59,7 +59,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <DataGridTemplateColumn Width="Auto"
-                                                    SortMemberPath="Displayed_Report_Name">
+                                                    SortMemberPath="DisplayedReportName">
                                 <DataGridTemplateColumn.HeaderStyle>
                                     <Style BasedOn="{StaticResource MetroDataGridColumnHeader}"
                                            TargetType="{x:Type DataGridColumnHeader}">
@@ -73,10 +73,10 @@
                                 </DataGridTemplateColumn.Header>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Displayed_Report_Name}"
+                                        <TextBlock Text="{Binding DisplayedReportName}"
                                                    TextTrimming="CharacterEllipsis"
                                                    TextWrapping="NoWrap"
-                                                   ToolTip="{Binding Displayed_Report_Name}" />
+                                                   ToolTip="{Binding DisplayedReportName}" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -115,19 +115,19 @@
                                          vh:DependencyProperties.FloatingWatermark="Report Name (Read Only)"
                                          IsReadOnly="True"
                                          Style="{StaticResource ResponsiveGridReportingTextBoxStyle}"
-                                         Text="{Binding SelectedReport.Displayed_Report_Name}" />
+                                         Text="{Binding SelectedReport.DisplayedReportName}" />
                                 <TextBox Margin="5,0"
                                          Controls:TextBoxHelper.Watermark="Selected Report Type"
                                          vh:DependencyProperties.FloatingWatermark="Report Type (Read Only)"
                                          IsReadOnly="True"
                                          Style="{StaticResource ResponsiveGridReportingTextBoxStyle}"
-                                         Text="{Binding SelectedReport.Report_Type}" />
+                                         Text="{Binding SelectedReport.ReportType}" />
                                 <TextBox Margin="5,0"
                                          Controls:TextBoxHelper.Watermark="Selected Report Category"
                                          vh:DependencyProperties.FloatingWatermark="Report Category (Read Only)"
                                          IsReadOnly="True"
                                          Style="{StaticResource ResponsiveGridReportingTextBoxStyle}"
-                                         Text="{Binding SelectedReport.ReportCategory.Report_Category_Name}" />
+                                         Text="{Binding SelectedReport.ReportCategory}" />
                             </GridExtra:ResponsiveGrid>
                         </Grid>
                     </ScrollViewer>
