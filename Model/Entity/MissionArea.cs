@@ -1,17 +1,19 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Vulnerator.Model.Entity
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
-    public partial class MissionArea
+    public class MissionArea : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public MissionArea()
         {
-            InformationTypes = new HashSet<InformationType>();
+            InformationTypes = new ObservableCollection<InformationType>();
         }
 
         [Key]
@@ -21,7 +23,7 @@ namespace Vulnerator.Model.Entity
         [Column("MissionArea")]
         [Required]
         [StringLength(25)]
-        public string MissionArea1 { get; set; }
+        public string Mission_Area { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<InformationType> InformationTypes { get; set; }

@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS PortsProtocols (
+    PortProtocol_ID INTEGER PRIMARY KEY,
+    Port INTEGER NOT NULL,
+    Protocol NVARCHAR (25) NOT NULL,
+    UNIQUE (Port, Protocol) ON CONFLICT IGNORE
+);

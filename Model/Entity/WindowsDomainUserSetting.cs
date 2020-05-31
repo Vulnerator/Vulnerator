@@ -1,46 +1,48 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Vulnerator.Model.Entity
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
-    public partial class WindowsDomainUserSetting
+    public class WindowsDomainUserSetting : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public WindowsDomainUserSetting()
         {
-            EnumeratedWindowsUsers = new HashSet<EnumeratedWindowsUser>();
+            EnumeratedWindowsUsers = new ObservableCollection<EnumeratedWindowsUser>();
         }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long Domain_Settings_ID { get; set; }
+        public long WindowsDomainUserSettings_ID { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string Domain_Is_Disabled { get; set; }
+        public string WindowsDomainUserIsDisabled { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string Domain_Is_Disabled_Automatically { get; set; }
+        public string WindowsDomainUserIsDisabledAutomatically { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string Domain_Cant_Change_PW { get; set; }
+        public string WindowsDomainUserCantChangePW { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string Domain_Never_Changed_PW { get; set; }
+        public string WindowsDomainUserNeverChangedPW { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string Domain_Never_Logged_On { get; set; }
+        public string WindowsDomainUserNeverLoggedOn { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string Domain_PW_Never_Expires { get; set; }
+        public string WindowsDomainUserPW_NeverExpires { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EnumeratedWindowsUser> EnumeratedWindowsUsers { get; set; }

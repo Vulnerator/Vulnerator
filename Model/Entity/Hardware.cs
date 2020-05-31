@@ -1,31 +1,30 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Vulnerator.Model.Entity
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    [Table("Hardware")]
-    public partial class Hardware : INotifyPropertyChanged
+    public class Hardware : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Hardware()
         {
-            HardwarePortsProtocols = new ObservableCollection<HardwarePortsProtocols>();
-            HardwareLocations = new ObservableCollection<HardwareLocation>();
-            ScapScores = new ObservableCollection<ScapScore>();
-            SoftwareHardwares = new ObservableCollection<SoftwareHardware>();
+            SCAP_Scores = new ObservableCollection<SCAP_Score>();
             UniqueFindings = new ObservableCollection<UniqueFinding>();
             Contacts = new ObservableCollection<Contact>();
             EnumeratedWindowsGroups = new ObservableCollection<EnumeratedWindowsGroup>();
             Groups = new ObservableCollection<Group>();
-            IP_Addresses = new ObservableCollection<IP_Addresses>();
-            MAC_Addresses = new ObservableCollection<MAC_Addresses>();
+            IP_Addresses = new ObservableCollection<IP_Address>();
+            MAC_Addresses = new ObservableCollection<MAC_Address>();
             VulnerabilitySources = new ObservableCollection<VulnerabilitySource>();
+            Locations = new ObservableCollection<Location>();
+            PortsProtocols = new ObservableCollection<PortProtocol>();
+            Softwares = new ObservableCollection<Software>();
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -37,13 +36,13 @@ namespace Vulnerator.Model.Entity
         [StringLength(50)]
         public string DiscoveredHostName { get; set; }
 
-        [StringLength(100)]
+        [StringLength(500)]
         public string FQDN { get; set; }
 
-        [StringLength(100)]
+        [StringLength(300)]
         public string NetBIOS { get; set; }
 
-        [StringLength(25)]
+        [StringLength(50)]
         public string ScanIP { get; set; }
 
         [StringLength(5)]
@@ -73,24 +72,15 @@ namespace Vulnerator.Model.Entity
         [StringLength(25)]
         public string Role { get; set; }
 
-        [StringLength(100)]
-        public string OS { get; set; }
-
         public long? LifecycleStatus_ID { get; set; }
 
         public virtual LifecycleStatus LifecycleStatus { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<HardwarePortsProtocols> HardwarePortsProtocols { get; set; }
+        [StringLength(100)]
+        public string OperatingSystem { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<HardwareLocation> HardwareLocations { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ScapScore> ScapScores { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SoftwareHardware> SoftwareHardwares { get; set; }
+        public virtual ICollection<SCAP_Score> SCAP_Scores { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UniqueFinding> UniqueFindings { get; set; }
@@ -105,12 +95,21 @@ namespace Vulnerator.Model.Entity
         public virtual ICollection<Group> Groups { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<IP_Addresses> IP_Addresses { get; set; }
+        public virtual ICollection<IP_Address> IP_Addresses { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MAC_Addresses> MAC_Addresses { get; set; }
+        public virtual ICollection<MAC_Address> MAC_Addresses { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<VulnerabilitySource> VulnerabilitySources { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Location> Locations { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PortProtocol> PortsProtocols { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Software> Softwares { get; set; }
     }
 }

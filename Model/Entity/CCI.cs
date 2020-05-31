@@ -1,47 +1,54 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Vulnerator.Model.Entity
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class CCI
+    public class CCI : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public CCI()
         {
-            NistControlsCCIs = new ObservableCollection<NistControlsCCI>();
             Vulnerabilities = new ObservableCollection<Vulnerability>();
-            GroupsCCIs = new ObservableCollection<GroupsCCIs>();
+            Groups = new ObservableCollection<Group>();
+            NIST_Controls = new ObservableCollection<NIST_Control>();
+            CustomTestCases = new ObservableCollection<CustomTestCase>();
         }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long CCI_ID { get; set; }
-
-        [Column("CCI")]
+        
         [Required]
         [StringLength(25)]
-        public string CCI1 { get; set; }
+        public string CCI_Number { get; set; }
 
         [Required]
         [StringLength(500)]
-        public string Definition { get; set; }
+        public string CCI_Definition { get; set; }
 
         [Required]
         [StringLength(25)]
-        public string Type { get; set; }
+        public string CCI_Type { get; set; }
 
         [Required]
         [StringLength(25)]
         public string CCI_Status { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NistControlsCCI> NistControlsCCIs { get; set; }
-
+        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Vulnerability> Vulnerabilities { get; set; }
+        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GroupsCCIs> GroupsCCIs { get; set; }
+        public virtual ICollection<Group> Groups { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<NIST_Control> NIST_Controls { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CustomTestCase> CustomTestCases { get; set; }
     }
 }

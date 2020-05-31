@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS NIST_ControlsOverlays (
+    NIST_ControlOverlay_ID INTEGER PRIMARY KEY,
+    NIST_Control_ID INTEGER NOT NULL,
+    Overlay_ID INTEGER NOT NULL,
+    UNIQUE (NIST_Control_ID, Overlay_ID) ON CONFLICT IGNORE,
+    FOREIGN KEY (NIST_Control_ID) REFERENCES NIST_Controls(NIST_Control_ID),
+    FOREIGN KEY (Overlay_ID) REFERENCES Overlays(Overlay_ID)
+);

@@ -1,13 +1,12 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class Connection : INotifyPropertyChanged
+    public class Connection : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -20,22 +19,22 @@ namespace Vulnerator.Model.Entity
         public long Connection_ID { get; set; }
 
         [StringLength(5)]
-        public string Internet { get; set; }
+        public string IsInternetConnected { get; set; }
 
         [StringLength(5)]
-        public string DODIN { get; set; }
+        public string IsDODIN_Connected { get; set; }
 
         [StringLength(5)]
-        public string DMZ { get; set; }
+        public string IsDMZ_Connected { get; set; }
 
         [StringLength(5)]
-        public string VPN { get; set; }
+        public string IsVPN_Connected { get; set; }
 
         [StringLength(5)]
-        public string CNSDP { get; set; }
+        public string IsCND_ServiceProvider { get; set; }
 
         [StringLength(5)]
-        public string EnterpriseServicesProvider { get; set; }
+        public string IsEnterpriseServicesProvider { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Group> Groups { get; set; }

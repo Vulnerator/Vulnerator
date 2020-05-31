@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS Software (
+    Software_ID INTEGER PRIMARY KEY,
+    DiscoveredSoftwareName NVARCHAR (200) NOT NULL UNIQUE ON CONFLICT IGNORE,
+    DisplayedSoftwareName NVARCHAR (200) NOT NULL,
+    SoftwareAcronym NVARCHAR (50),
+    SoftwareVersion NVARCHAR (25),
+    Function NVARCHAR (500),
+    DADMS_ID NVARCHAR (25),
+    DADMS_Disposition NVARCHAR (25),
+    DADMS_LastDateAuthorized DATETIME,
+    HasCustomCode NVARCHAR (5),
+    IA_OrIA_Enabled NVARCHAR (5),
+    IsOS_OrFirmware NVARCHAR (5),
+    FAM_Accepted NVARCHAR (5),
+    ExternallyAuthorized NVARCHAR (5),
+    ReportInAccreditationGlobal NVARCHAR (5),
+    ApprovedForBaselineGlobal NVARCHAR (5),
+    BaselineApproverGlobal NVARCHAR (50),
+    Instance NVARCHAR (25)
+);

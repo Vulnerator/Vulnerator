@@ -1,17 +1,19 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Vulnerator.Model.Entity
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
-    public partial class NetworkConnectionRule
+    public class NetworkConnectionRule : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public NetworkConnectionRule()
         {
-            StepOneQuestionnaires = new HashSet<StepOneQuestionnaire>();
+            StepOneQuestionnaires = new ObservableCollection<StepOneQuestionnaire>();
         }
 
         [Key]
@@ -19,11 +21,12 @@ namespace Vulnerator.Model.Entity
         public long NetworkConnectionRule_ID { get; set; }
 
         [Required]
-        [StringLength(25)]
-        public string NewtorkConnectionName { get; set; }
+        [StringLength(50)]
+        public string NetworkConnectionName { get; set; }
 
         [Required]
-        [StringLength(100)]
+        [StringLength(200)]
+        [Column("NetworkConnectionRule")]
         public string ConnectionRule { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

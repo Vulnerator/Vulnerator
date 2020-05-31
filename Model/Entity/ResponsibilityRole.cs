@@ -1,17 +1,19 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Vulnerator.Model.Entity
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
-    public partial class ResponsibilityRole
+    public class ResponsibilityRole : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ResponsibilityRole()
         {
-            Vulnerabilities = new HashSet<Vulnerability>();
+            Vulnerabilities = new ObservableCollection<Vulnerability>();
         }
 
         [Key]
@@ -20,7 +22,7 @@ namespace Vulnerator.Model.Entity
 
         [Required]
         [StringLength(25)]
-        public string Role_Title { get; set; }
+        public string RoleTitle { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Vulnerability> Vulnerabilities { get; set; }

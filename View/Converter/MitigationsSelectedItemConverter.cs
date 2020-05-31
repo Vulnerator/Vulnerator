@@ -14,7 +14,7 @@ namespace Vulnerator.View.Converter
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is MitigationsOrCondition)
+            if (value is MitigationOrCondition)
                 return value;
             return null;
         }

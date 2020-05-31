@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS Titles (
+    Title_ID INTEGER PRIMARY KEY,
+    TitleName NVARCHAR (200) NOT NULL ,
+    TitleAcronym NVARCHAR (50),
+    UNIQUE (TitleName) ON CONFLICT IGNORE
+);

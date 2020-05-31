@@ -1,26 +1,28 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Vulnerator.Model.Entity
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    [Table("ControlApplicabilityAssessment")]
-    public partial class ControlApplicabilityAssessment
+    public class ControlApplicabilityAssessment : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ControlApplicabilityAssessment()
-        { NistControlsCAAs = new ObservableCollection<NistControlsCAA>(); }
+        { NIST_Controls = new ObservableCollection<NIST_Control>(); }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long CAA_ID { get; set; }
+        public long ControlApplicabilityAssessment_ID { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string CAA_Name { get; set; }
-
+        public string ControlApplicabilityAssessmentName { get; set; }
+        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NistControlsCAA> NistControlsCAAs { get; set; }
+        public virtual ICollection<NIST_Control> NIST_Controls { get; set; }
     }
 }
