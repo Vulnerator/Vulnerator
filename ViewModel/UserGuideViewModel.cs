@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System;
 using log4net.Appender;
 
-
 namespace Vulnerator.ViewModel
 {
     public class UserGuideViewModel : ViewModelBase

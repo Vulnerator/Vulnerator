@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS GroupsIATA_Standards (
+    Group_ID INTEGER NOT NULL,
+    IATA_Standard_ID INTEGER NOT NULL,
+    FOREIGN KEY (Group_ID) REFERENCES Groups(Group_ID),
+    FOREIGN KEY (IATA_Standard_ID) REFERENCES IATA_Standards(IATA_Standard_ID)
+);

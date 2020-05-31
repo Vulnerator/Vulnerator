@@ -442,109 +442,109 @@ namespace Vulnerator.Model.DataAccess
             
             modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.AdditionalTestConsiderations)
                 .WithMany(e => e.SecurityAssessmentProcedures)
-                .Map(e => e.ToTable("SecurityAssessmentProcedureAdditionalTestConsiderations")
+                .Map(e => e.ToTable("SecurityAssessmentProceduresAdditionalTestConsiderations")
                     .MapLeftKey("SecurityAssessmentProcedure_ID")
                     .MapRightKey("AdditionalTestConsideration_ID"));
 
             modelBuilder.Entity<AdditionalTestConsideration>().HasMany(e => e.SecurityAssessmentProcedures)
                 .WithMany(e => e.AdditionalTestConsiderations)
-                .Map(e => e.ToTable("SecurityAssessmentProcedureAdditionalTestConsiderations")
+                .Map(e => e.ToTable("SecurityAssessmentProceduresAdditionalTestConsiderations")
                     .MapLeftKey("AdditionalTestConsideration_ID")
                     .MapRightKey("SecurityAssessmentProcedure_ID"));
             
             modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.CustomTestCases)
                 .WithMany(e => e.SecurityAssessmentProcedures)
-                .Map(e => e.ToTable("SecurityAssessmentProcedureCustomTestCases")
+                .Map(e => e.ToTable("SecurityAssessmentProceduresCustomTestCases")
                     .MapLeftKey("SecurityAssessmentProcedure_ID")
                     .MapRightKey("CustomTestCase_ID"));
 
             modelBuilder.Entity<CustomTestCase>().HasMany(e => e.SecurityAssessmentProcedures)
                 .WithMany(e => e.CustomTestCases)
-                .Map(e => e.ToTable("SecurityAssessmentProcedureCustomTestCases")
+                .Map(e => e.ToTable("SecurityAssessmentProceduresCustomTestCases")
                     .MapLeftKey("CustomTestCase_ID")
                     .MapRightKey("SecurityAssessmentProcedure_ID"));
             
             modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.EntranceCriterias)
                 .WithMany(e => e.SecurityAssessmentProcedures)
-                .Map(e => e.ToTable("SecurityAssessmentProcedureEntranceCriteria")
+                .Map(e => e.ToTable("SecurityAssessmentProceduresEntranceCriteria")
                     .MapLeftKey("SecurityAssessmentProcedure_ID")
                     .MapRightKey("EntranceCriteria_ID"));
 
             modelBuilder.Entity<EntranceCriteria>().HasMany(e => e.SecurityAssessmentProcedures)
                 .WithMany(e => e.EntranceCriterias)
-                .Map(e => e.ToTable("SecurityAssessmentProcedureEntranceCriteria")
+                .Map(e => e.ToTable("SecurityAssessmentProceduresEntranceCriteria")
                     .MapLeftKey("EntranceCriteria_ID")
                     .MapRightKey("SecurityAssessmentProcedure_ID"));
             
             modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.ExitCriterias)
                 .WithMany(e => e.SecurityAssessmentProcedures)
-                .Map(e => e.ToTable("SecurityAssessmentProcedureExitCriteria")
+                .Map(e => e.ToTable("SecurityAssessmentProceduresExitCriteria")
                     .MapLeftKey("SecurityAssessmentProcedure_ID")
                     .MapRightKey("ExitCriteria_ID"));
 
             modelBuilder.Entity<ExitCriteria>().HasMany(e => e.SecurityAssessmentProcedures)
                 .WithMany(e => e.ExitCriterias)
-                .Map(e => e.ToTable("SecurityAssessmentProcedureExitCriteria")
+                .Map(e => e.ToTable("SecurityAssessmentProceduresExitCriteria")
                     .MapLeftKey("ExitCriteria_ID")
                     .MapRightKey("SecurityAssessmentProcedure_ID"));
             
             modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.Limitations)
                 .WithMany(e => e.SecurityAssessmentProcedures)
-                .Map(e => e.ToTable("SecurityAssessmentProcedureLimitiations")
+                .Map(e => e.ToTable("SecurityAssessmentProceduresLimitiations")
                     .MapLeftKey("SecurityAssessmentProcedure_ID")
                     .MapRightKey("Limitation_ID"));
 
             modelBuilder.Entity<Limitation>().HasMany(e => e.SecurityAssessmentProcedures)
                 .WithMany(e => e.Limitations)
-                .Map(e => e.ToTable("SecurityAssessmentProcedureLimitiations")
+                .Map(e => e.ToTable("SecurityAssessmentProceduresLimitiations")
                     .MapLeftKey("Limitation_ID")
                     .MapRightKey("SecurityAssessmentProcedure_ID"));
             
             modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.RelatedDocuments)
                 .WithMany(e => e.SecurityAssessmentProcedures)
-                .Map(e => e.ToTable("SecurityAssessmentProcedureRelatedDocuments")
+                .Map(e => e.ToTable("SecurityAssessmentProceduresRelatedDocuments")
                     .MapLeftKey("SecurityAssessmentProcedure_ID")
                     .MapRightKey("RelatedDocument_ID"));
 
             modelBuilder.Entity<RelatedDocument>().HasMany(e => e.SecurityAssessmentProcedures)
                 .WithMany(e => e.RelatedDocuments)
-                .Map(e => e.ToTable("SecurityAssessmentProcedureRelatedDocuments")
+                .Map(e => e.ToTable("SecurityAssessmentProceduresRelatedDocuments")
                     .MapLeftKey("RelatedDocument_ID")
                     .MapRightKey("SecurityAssessmentProcedure_ID"));
             
             modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.RelatedTestings)
                 .WithMany(e => e.SecurityAssessmentProcedures)
-                .Map(e => e.ToTable("SecurityAssessmentProcedureRelatedTesting")
+                .Map(e => e.ToTable("SecurityAssessmentProceduresRelatedTesting")
                     .MapLeftKey("SecurityAssessmentProcedure_ID")
                     .MapRightKey("RelatedTesting_ID"));
 
             modelBuilder.Entity<RelatedTesting>().HasMany(e => e.SecurityAssessmentProcedures)
                 .WithMany(e => e.RelatedTestings)
-                .Map(e => e.ToTable("SecurityAssessmentProcedureRelatedTesting")
+                .Map(e => e.ToTable("SecurityAssessmentProceduresRelatedTesting")
                     .MapLeftKey("RelatedTesting_ID")
                     .MapRightKey("SecurityAssessmentProcedure_ID"));
             
             modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.TestReferences)
                 .WithMany(e => e.SecurityAssessmentProcedures)
-                .Map(e => e.ToTable("SecurityAssessmentProcedureTestReferences")
+                .Map(e => e.ToTable("SecurityAssessmentProceduresTestReferences")
                     .MapLeftKey("SecurityAssessmentProcedure_ID")
                     .MapRightKey("TestReference_ID"));
 
             modelBuilder.Entity<TestReference>().HasMany(e => e.SecurityAssessmentProcedures)
                 .WithMany(e => e.TestReferences)
-                .Map(e => e.ToTable("SecurityAssessmentProcedureTestReferences")
+                .Map(e => e.ToTable("SecurityAssessmentProceduresTestReferences")
                     .MapLeftKey("TestReference_ID")
                     .MapRightKey("SecurityAssessmentProcedure_ID"));
             
             modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.TestScheduleItems)
                 .WithMany(e => e.SecurityAssessmentProcedures)
-                .Map(e => e.ToTable("SecurityAssessmentProcedureTestScheduleItems")
+                .Map(e => e.ToTable("SecurityAssessmentProceduresTestScheduleItems")
                     .MapLeftKey("SecurityAssessmentProcedure_ID")
                     .MapRightKey("TestScheduleItem_ID"));
 
             modelBuilder.Entity<TestScheduleItem>().HasMany(e => e.SecurityAssessmentProcedures)
                 .WithMany(e => e.TestScheduleItems)
-                .Map(e => e.ToTable("SecurityAssessmentProcedureTestScheduleItems")
+                .Map(e => e.ToTable("SecurityAssessmentProceduresTestScheduleItems")
                     .MapLeftKey("TestScheduleItem_ID")
                     .MapRightKey("SecurityAssessmentProcedure_ID"));
 

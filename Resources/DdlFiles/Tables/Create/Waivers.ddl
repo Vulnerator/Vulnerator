@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS Waivers (
+    Waiver_ID INTEGER PRIMARY KEY,
+    WaiverName NVARCHAR (100) NOT NULL
+);

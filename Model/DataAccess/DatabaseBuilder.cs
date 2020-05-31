@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -22,25 +23,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                if (!System.IO.File.Exists(Properties.Settings.Default.Database))
-                {
-                    CreateDatabase();
-                    return;
-                }
-                if (!sqliteConnection.State.ToString().Equals("Open"))
-                { sqliteConnection.Open(); }
-                using (SQLiteTransaction sqliteTransaction = sqliteConnection.BeginTransaction())
-                {
-                    using (SQLiteCommand sqliteCommand = sqliteConnection.CreateCommand())
-                    {
-                        sqliteCommand.CommandText = "PRAGMA user_version";
-                        int latestVersion = int.Parse(sqliteCommand.ExecuteScalar().ToString());
-                        for (int i = 0; i <= latestVersion; i++)
-                        { UpdateDatabase(i, sqliteCommand); }
-                    }
-                    sqliteTransaction.Commit();
-                }
-
+                CreateDatabase();
             }
             catch (Exception exception)
             {
@@ -50,29 +33,11 @@ namespace Vulnerator.Model.DataAccess
             finally
             { sqliteConnection.Close(); }
         }
-
-        private void UpdateDatabase(int version, SQLiteCommand sqlitecommand)
-        {
-            try
-            {
-                switch (version)
-                {
-                    default:
-                        { break; }
-                }
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to update the Vulnerator Database.");
-                throw exception;
-            }
-        }
-
         private void CreateDatabase()
         {
             try
             {
-                LogWriter.LogStatusUpdate($"Begin creating database '{Properties.Settings.Default.Database}'.");
+                LogWriter.LogStatusUpdate($"Begin verifying and, if needed, creating and / or updating database '{Properties.Settings.Default.Database}'.");
                 SQLiteConnection.CreateFile(Properties.Settings.Default.Database);
                 if (!sqliteConnection.State.ToString().Equals("Open"))
                 { sqliteConnection.Open(); }
@@ -80,7 +45,19 @@ namespace Vulnerator.Model.DataAccess
                 {
                     using (SQLiteCommand sqliteCommand = sqliteConnection.CreateCommand())
                     {
-                        sqliteCommand.CommandText = ReadDdl("Vulnerator.Resources.DdlFiles.v6-2-0_CreateDatabase.ddl");
+                        string[] resourceNames = Assembly.GetExecutingAssembly().GetManifestResourceNames();
+                        foreach (string name in resourceNames.Where(x => x.Contains("Vulnerator.Resources.DdlFiles.Tables.Create.")))
+                        {
+                            LogWriter.LogStatusUpdate($"Verifying / Creating table '{name.Replace("Vulnerator.Resources.DdlFiles.Tables.Create.", "").Replace(".ddl", "")}'.");
+                            sqliteCommand.CommandText = ReadDdl(name);
+                            sqliteCommand.ExecuteNonQuery();
+                        }
+                        foreach (string name in resourceNames.Where(x => x.Contains("Vulnerator.Resources.DdlFiles.Tables.Insert.Data.")).AsEnumerable())
+                        {
+                            LogWriter.LogStatusUpdate($"Inserting base data into table '{name.Replace("Vulnerator.Resources.DdlFiles.Tables.Insert.Data.", "").Replace(".ddl", "")}', if missing.");
+                            sqliteCommand.CommandText = ReadDdl(name);
+                            sqliteCommand.ExecuteNonQuery();
+                        }
                         sqliteCommand.ExecuteNonQuery();
                         PopulateIaControlData(sqliteCommand);
                         PopulateCciData(sqliteCommand);

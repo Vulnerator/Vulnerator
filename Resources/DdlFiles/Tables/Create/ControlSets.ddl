@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS ControlSets (
+    ControlSet_ID INTEGER PRIMARY KEY,
+    ControlSetName NVARCHAR (50) NOT NULL
+);
