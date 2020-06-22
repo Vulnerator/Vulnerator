@@ -1001,7 +1001,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteGroupsMitigationsOrConditionsMappingByGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.GroupMitigationOrConditionMappingByGroup.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -1015,7 +1015,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteGroupsConnectionsMappingByGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.GroupConnectionMappingByGroup.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -1029,7 +1029,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteHardwareGroupsMappingByGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.HardwareGroupMappingByGroup.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -1043,12 +1043,12 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteGroups_IATA_StandardsMappingByGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.GroupIATA_StandardMappingByGroup.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
             {
-                LogWriter.LogError($"Unable to delete GroupsIATA_Standards mapping for Group with Group_ID '{sqliteCommand.Parameters["Group_ID"].Value}'.");
+                LogWriter.LogError($"Unable to delete Group / IATA_Standard mapping for Group with Group_ID '{sqliteCommand.Parameters["Group_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -1057,7 +1057,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteGroupsContactsMappingByGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.GroupContactMappingByGroup.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -1082,7 +1082,7 @@ namespace Vulnerator.Model.DataAccess
                 DeleteGroups_IATA_StandardsMappingByGroup(sqliteCommand);
                 DeleteGroupsContactsMappingByGroup(sqliteCommand);
                 // Execute DeleteGroup Command
-                sqliteCommand.CommandText = Properties.Resources.DeleteGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.Group.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
