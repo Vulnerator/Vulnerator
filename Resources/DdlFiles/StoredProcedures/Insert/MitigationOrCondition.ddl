@@ -1,0 +1,20 @@
+﻿INSERT INTO MitigationsOrConditions 
+VALUES (
+	NULL, 
+	@ImpactDescription, 
+	@PredisposingConditions, 
+	@TechnicalMitigation, 
+	@ProposedMitigation, 
+	@ThreatRelevance, 
+	@SeverityPervasiveness, 
+	@Likelihood, 
+	@Impact, 
+	@Risk, 
+	@ResidualRisk, 
+	@ResidualRiskAfterProposed,
+	@MitigatedStatus, 
+	@EstimatedCompletionDate,
+	@ApprovalDate,
+	@ExpirationDate, 
+	@IsApproved, 
+	@Approver);

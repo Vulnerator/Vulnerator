@@ -1,0 +1,1 @@
+﻿DELETE FROM GroupsIATA_Standards WHERE Group_ID = @Group_ID;

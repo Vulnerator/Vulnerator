@@ -1,0 +1,1 @@
+﻿DELETE FROM GroupsConnections WHERE Group_ID = @Group_ID;

@@ -1,0 +1,35 @@
+﻿SELECT
+			 VulnerabilityTitle,
+			 VulnerabilityDescription,
+			 InstanceIdentifier,
+			 DOD_AssessmentProcedureMapping,
+			 UniqueVulnerabilityIdentifier,
+			 EstimatedCompletionDate,
+			 SourceName,
+			 MitigatedStatus,
+			 RawRisk,
+			 DisplayedHostName,
+			 DisplayedSoftwareName,
+			 Comments,
+			 FindingDetails,
+			 TechnicalMitigation,
+			 PredisposingConditions,
+			 SeverityPervasiveness,
+			 ThreatRelevance,
+			 RiskStatement,
+			 Likelihood,
+			 Impact,
+			 ImpactDescription,
+			 Risk,
+			 ProposedMitigation,
+			 ResidualRiskAfterProposed
+FROM UniqueFindings
+LEFT JOIN Vulnerabilities ON UniqueFindings.Vulnerability_ID = Vulnerabilities.Vulnerability_ID
+LEFT JOIN Hardware ON UniqueFindings.Hardware_ID = Hardware.Hardware_ID
+LEFT JOIN Software ON UniqueFindings.Software_ID = Software.Software_ID
+LEFT JOIN MitigationsOrConditions ON UniqueFindings.MitigationOrCondition_ID = MitigationsOrConditions.MitigationOrCondition_ID
+LEFT JOIN VulnerabilitiesVulnerabilitySources ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesVulnerabilitySources.Vulnerability_ID
+LEFT JOIN VulnerabilitySources ON VulnerabilitiesVulnerabilitySources.VulnerabilitySource_ID = VulnerabilitySources.VulnerabilitySource_ID
+LEFT JOIN VulnerabilitiesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesCCIs.Vulnerability_ID
+LEFT JOIN CCIs ON VulnerabilitiesCCIs.CCI_ID = CCIs.CCI_ID
+LEFT JOIN NistControlsCCIs ON CCIs.CCI_ID = NistControlsCCIs.CCI_ID

@@ -1,0 +1,1 @@
+﻿INSERT INTO ScapScores VALUES (NULL, @Score, (SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP), (SELECT FindingSourceFile_ID FROM UniqueFindingsSourceFiles WHERE FindingSourceFileName = @FindingSourceFileName), (SELECT VulnerabilitySource_ID FROM VulnerabilitySources WHERE SourceName = @SourceName), @ScanDate);

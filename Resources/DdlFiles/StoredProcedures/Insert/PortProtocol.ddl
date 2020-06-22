@@ -1,0 +1,1 @@
+﻿INSERT INTO PortsProtocols VALUES (NULL, @Port, @Protocol);

@@ -1,0 +1,1 @@
+﻿DELETE FROM GroupsContacts WHERE Group_ID = @Group_ID;

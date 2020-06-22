@@ -1,0 +1,1 @@
+﻿INSERT INTO MAC_Addresses VALUES (NULL, @MAC_Address);

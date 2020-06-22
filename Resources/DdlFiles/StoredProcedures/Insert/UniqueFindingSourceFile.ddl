@@ -1,0 +1,1 @@
+﻿INSERT INTO UniqueFindingsSourceFiles VALUES (NULL, @FindingSourceFileName);

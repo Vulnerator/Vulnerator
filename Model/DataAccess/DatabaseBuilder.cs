@@ -1,11 +1,9 @@
-﻿using log4net;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Xml;
 using Vulnerator.Helper;
 using Vulnerator.Model.Object;
@@ -14,6 +12,7 @@ namespace Vulnerator.Model.DataAccess
 {
     public class DatabaseBuilder
     {
+        private DdlReader _ddlReader = new DdlReader();
         private Assembly assembly = Assembly.GetExecutingAssembly();
         public static string databaseConnection =
             $@"Data Source = {Properties.Settings.Default.Database}; Version=3;datetimeformat=Ticks;";
@@ -49,13 +48,13 @@ namespace Vulnerator.Model.DataAccess
                         foreach (string name in resourceNames.Where(x => x.Contains("Vulnerator.Resources.DdlFiles.Tables.Create.")))
                         {
                             LogWriter.LogStatusUpdate($"Verifying table '{name.Replace("Vulnerator.Resources.DdlFiles.Tables.Create.", "").Replace(".ddl", "")}'.");
-                            sqliteCommand.CommandText = ReadDdl(name);
+                            sqliteCommand.CommandText = _ddlReader.ReadDdl(name, assembly);
                             sqliteCommand.ExecuteNonQuery();
                         }
                         foreach (string name in resourceNames.Where(x => x.Contains("Vulnerator.Resources.DdlFiles.Tables.Insert.Data.")).AsEnumerable())
                         {
                             LogWriter.LogStatusUpdate($"Verifying table '{name.Replace("Vulnerator.Resources.DdlFiles.Tables.Insert.Data.", "").Replace(".ddl", "")}' base data exists.");
-                            sqliteCommand.CommandText = ReadDdl(name);
+                            sqliteCommand.CommandText = _ddlReader.ReadDdl(name, assembly);
                             sqliteCommand.ExecuteNonQuery();
                         }
                         sqliteCommand.ExecuteNonQuery();
@@ -73,25 +72,6 @@ namespace Vulnerator.Model.DataAccess
             catch (Exception exception)
             {
                 LogWriter.LogError($"Database '{Properties.Settings.Default.Database}' verification failed.");
-                throw exception;
-            }
-        }
-
-        private string ReadDdl(string ddlResourceFile)
-        {
-            try
-            {
-                string ddlText = string.Empty;
-                using (Stream stream = assembly.GetManifestResourceStream(ddlResourceFile))
-                {
-                    using (StreamReader streamReader = new StreamReader(stream))
-                    { ddlText = streamReader.ReadToEnd(); }
-                }
-                return ddlText;
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError($"Unable to read DDL Resource File '{ddlResourceFile}'.");
                 throw exception;
             }
         }

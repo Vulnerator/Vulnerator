@@ -1,0 +1,1 @@
+﻿DELETE FROM UniqueFindings WHERE UniqueFinding_ID = @UniqueFinding_ID;

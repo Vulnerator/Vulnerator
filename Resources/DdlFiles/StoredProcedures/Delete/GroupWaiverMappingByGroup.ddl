@@ -1,0 +1,1 @@
+﻿DELETE FROM GroupsWaivers WHERE Group_ID = @Group_ID;

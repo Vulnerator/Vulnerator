@@ -1,0 +1,1 @@
+﻿DELETE FROM GroupsOverlays WHERE Group_ID = @Group_ID;

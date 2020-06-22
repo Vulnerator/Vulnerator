@@ -1,0 +1,1 @@
+﻿INSERT INTO GroupsMitigationsOrConditions VALUES (@MitigationOrCondition_ID, @Group_ID, @Vulnerability_ID);

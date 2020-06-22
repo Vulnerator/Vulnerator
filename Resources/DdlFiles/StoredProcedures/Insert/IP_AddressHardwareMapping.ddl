@@ -1,0 +1,1 @@
+﻿INSERT INTO Hardware_IP_Addresses VALUES (NULL, (SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP AND DiscoveredHostName = @DiscoveredHostName), (SELECT IP_Address_ID FROM IP_Addresses WHERE IP_Address = @IP_Address));

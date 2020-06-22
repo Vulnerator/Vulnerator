@@ -12,6 +12,8 @@ namespace Vulnerator.Model.DataAccess
 {
     public class DatabaseInterface
     {
+        DdlReader _ddlReader = new DdlReader();
+        Assembly assembly = Assembly.GetExecutingAssembly();
         public void CreateVulnerabilityRelatedIndices()
         {
             try
@@ -28,7 +30,7 @@ namespace Vulnerator.Model.DataAccess
                         {
                             case 0:
                                 {
-                                    sqliteCommand.CommandText = ReadDdl("Vulnerator.Resources.DdlFiles.v6-2-0_CreateVulnerabilityRelatedIndices.ddl");
+                                    sqliteCommand.CommandText = _ddlReader.ReadDdl("Vulnerator.Resources.DdlFiles.v6-2-0_CreateVulnerabilityRelatedIndices.ddl", assembly);
                                     break;
                                 }
                             default:
@@ -150,7 +152,7 @@ namespace Vulnerator.Model.DataAccess
                         {
                             case 0:
                                 {
-                                    sqliteCommand.CommandText = ReadDdl("Vulnerator.Resources.DdlFiles.v6-2-0_DropVulnerabilityRelatedIndices.ddl");
+                                    sqliteCommand.CommandText = _ddlReader.ReadDdl("Vulnerator.Resources.DdlFiles.v6-2-0_DropVulnerabilityRelatedIndices.ddl", assembly);
                                     break;
 
                                 }
@@ -325,7 +327,7 @@ namespace Vulnerator.Model.DataAccess
                     "PIT_Determination_ID",
                     // Hardware Table
                     "Hardware_ID", "DisplayedHostName", "DiscoveredHostName", "FQDN", "NetBIOS", "ScanIP", "Found21745", "Found26917", "IsVirtualServer", "NIAP_Level",
-                    "Manufacturer", "ModelNumber", "IsIA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID",  "OperatingSystem",
+                    "Manufacturer", "ModelNumber", "IsIA_Enabled", "SerialNumber", "Role", "LifecycleStatus_ID",  "OperatingSystem",
                     // IP_Addresses Table
                     "IP_Address_ID", "IP_Address",
                     // MAC_Addresses Table
@@ -335,7 +337,7 @@ namespace Vulnerator.Model.DataAccess
                     "ThreatRelevance", "SeverityPervasiveness", "Likelihood", "Impact", "Risk", "ResidualRisk", "ResidualRiskAfterProposed",
                     "MitigatedStatus", "EstimatedCompletionDate", "ApprovalDate", "ExpirationDate", "IsApproved", "Approver",
                     // PortsProtocols Table
-                    "PortsProtocols_ID", "Port", "Protocol", "DiscoveredService", "DisplayService",
+                    "PortProtocol_ID", "Port", "Protocol",
                     // PortsServices Table
                     "PortService_ID", "DiscoveredServiceName", "DisplayedServiceName", "ServiceAcronym",
                     // Software Table
@@ -356,14 +358,14 @@ namespace Vulnerator.Model.DataAccess
                     "VulnerabilityTitle", "VulnerabilityDescription", "RiskStatement", "FixText", "PublishedDate", "ModifiedDate",
                     "FixPublishedDate", "RawRisk", "CVSS_BaseScore", "CVSS_BaseVector", "CVSS_TemporalScore", "CVSS_TemporalVector",
                     "CheckContent", "FalsePositives", "FalseNegatives", "IsDocumentable", "Mitigations", "MitigationControl", "IsActive",
-                    "PotentialImpacts", "ThirdPartyTools", "SecurityOverrideGuidance", "Overflow", "SeverityOverrideGuidance", "Overflow",
+                    "PotentialImpacts", "ThirdPartyTools", "SecurityOverrideGuidance", "SeverityOverrideGuidance", "Overflow",
                     // VulnerabilityReferences Table
                     "Reference_ID", "Reference", "ReferenceType",
                     // VulnerabilitySources Table
                     "VulnerabilitySource_ID", "SourceName", "SourceSecondaryIdentifier", "VulnerabilitySourceFileName",
                     "SourceDescription", "SourceVersion", "SourceRelease",
                     // SCAP_Scores Table
-                    "SCAP_Score_ID", "Score", "ScanDate", "Hardware_ID"
+                    "SCAP_Score_ID", "Score", "ScanDate"
                 };
                 foreach (string parameter in parameters)
                 { sqliteCommand.Parameters.Add(new SQLiteParameter(parameter, DBNull.Value)); }
@@ -805,26 +807,6 @@ namespace Vulnerator.Model.DataAccess
             catch (Exception exception)
             {
                 LogWriter.LogError("Unable to vulnerability to IA Control.");
-                throw exception;
-            }
-        }
-
-        private string ReadDdl(string ddlResourceFile)
-        {
-            try
-            {
-                Assembly assembly = Assembly.GetExecutingAssembly();
-                string ddlText = string.Empty;
-                using (Stream stream = assembly.GetManifestResourceStream(ddlResourceFile))
-                {
-                    using (StreamReader streamReader = new StreamReader(stream))
-                    { ddlText = streamReader.ReadToEnd(); }
-                }
-                return ddlText;
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError($"Unable to read DDL Resource File '{ddlResourceFile}'.");
                 throw exception;
             }
         }

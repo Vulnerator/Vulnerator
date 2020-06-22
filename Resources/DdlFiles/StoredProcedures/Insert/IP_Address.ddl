@@ -1,0 +1,1 @@
+﻿INSERT INTO IP_Addresses VALUES (NULL, @IP_Address);
