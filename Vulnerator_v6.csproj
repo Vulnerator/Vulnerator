@@ -757,8 +757,8 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\GroupOverlayMappingByGroup.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\GroupWaiverMappingByGroup.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwareGroupMappingByGroup.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\Mitigation.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\MitigationGroupMappingByGroup.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\MitigationOrCondition.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\MitigationOrConditionGroupMappingByGroup.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\UniqueFinding.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\Vulnerability.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\VulnerabilityCCI_Mapping.dml" />
@@ -776,8 +776,8 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\HardwareVulnerabilitySourceMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\IP_AddressHardwareMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\MAC_AddressHardwareMapping.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\MitigationGroupMapping.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\PortHardwareMapping.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\MitigationOrConditionGroupMapping.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\PortProtocolHardwareMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\VulnerabilityReferenceVulnerabilityMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\VulnerabilityCCI_Mapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\VulnerabilityIA_ControlMapping.dml" />
@@ -799,7 +799,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\MitigationOrCondition.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\RequiredReportIsSelected.dml" />
     <Content Include="Resources\DdlFiles\StoredProcedures\Update\AcasUniqueFinding.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\CklUniqueFinding.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\CklUniqueFinding.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\UniqueFindingMitigationOrCondition.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\Vulnerability.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\VulnerabilityDates.dml" />
