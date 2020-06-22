@@ -1,14 +1,14 @@
 INSERT INTO
     ConfidentialityLevels
 VALUES
-(NULL, 'High');
+    (NULL, 'High');
 
 INSERT INTO
     ConfidentialityLevels
 VALUES
-(NULL, 'Moderate');
+    (NULL, 'Moderate');
 
 INSERT INTO
     ConfidentialityLevels
 VALUES
-(NULL, 'Low');
+    (NULL, 'Low');

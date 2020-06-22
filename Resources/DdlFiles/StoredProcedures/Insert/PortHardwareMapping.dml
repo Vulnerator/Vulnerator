@@ -1,0 +1,32 @@
+﻿INSERT INTO
+  HardwarePortsProtocols (
+    Hardware_ID,
+    PortsProtocols_ID,
+    DiscoveredService,
+    DisplayService
+  )
+VALUES
+  (
+    (
+      SELECT
+        Hardware_ID
+      FROM
+        Hardware
+      WHERE
+        ScanIP = @ScanIP
+        AND DiscoveredHostName = @DiscoveredHostName
+        AND FQDN = @FQDN
+        AND NetBIOS = @NetBIOS
+    ),
+    (
+      SELECT
+        PortsProtocols_ID
+      FROM
+        PortsProtocols
+      WHERE
+        Port = @Port
+        AND Protocol = @Protocol
+    ),
+    @DiscoveredService,
+    @DisplayService
+  );

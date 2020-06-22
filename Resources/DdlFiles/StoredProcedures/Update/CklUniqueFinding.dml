@@ -1,7 +1,22 @@
 ﻿UPDATE
   UniqueFindings
 SET
+  FindingDetails = @FindingDetails,
+  Comments = @Comments,
+  SeverityOverride = @SeverityOverride,
+  SeverityOverrideJustification = @SeverityOverrideJustification,
   LastObserved = @LastObserved,
+  TechnologyArea = @TechnologyArea,
+  WebDB_Site = @WebDB_Site,
+  WebDB_Instance = @WebDB_Instance,
+  FindingSourceFile_ID = (
+    SELECT
+      FindingSourceFile_ID
+    FROM
+      UniqueFindingsSourceFiles
+    WHERE
+      FindingSourceFileName = @FindingSourceFileName
+  ),
   STATUS = @Status,
   ToolGeneratedOutput = @ToolGeneratedOutput
 WHERE
@@ -12,14 +27,6 @@ WHERE
       Hardware
     WHERE
       ScanIP = @ScanIP
-  )
-  AND Software_ID = (
-    SELECT
-      Software_ID
-    FROM
-      Software
-    WHERE
-      DiscoveredSoftwareName = @DiscoveredSoftwareName
   )
   AND Vulnerability_ID = (
     SELECT

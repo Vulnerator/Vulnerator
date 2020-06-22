@@ -1,19 +1,19 @@
 INSERT INTO
     LifecycleStatuses
 VALUES
-(NULL, 'Uncategorized');
+    (NULL, 'Uncategorized');
 
 INSERT INTO
     LifecycleStatuses
 VALUES
-(NULL, 'Pending');
+    (NULL, 'Pending');
 
 INSERT INTO
     LifecycleStatuses
 VALUES
-(NULL, 'Active');
+    (NULL, 'Active');
 
 INSERT INTO
     LifecycleStatuses
 VALUES
-(NULL, 'Decommissioned');
+    (NULL, 'Decommissioned');

@@ -1,1 +1,0 @@
-﻿DELETE FROM HardwareGroups WHERE Group_ID = @Group_ID;

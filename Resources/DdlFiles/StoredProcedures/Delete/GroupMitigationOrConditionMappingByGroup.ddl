@@ -1,1 +1,0 @@
-﻿DELETE FROM GroupsMitigationsOrConditions WHERE Group_ID = @Group_ID;

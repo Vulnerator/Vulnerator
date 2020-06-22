@@ -1,24 +1,24 @@
 INSERT INTO
     FindingTypes
 VALUES
-(NULL, 'ACAS');
+    (NULL, 'ACAS');
 
 INSERT INTO
     FindingTypes
 VALUES
-(NULL, 'Fortify');
+    (NULL, 'Fortify');
 
 INSERT INTO
     FindingTypes
 VALUES
-(NULL, 'CKL');
+    (NULL, 'CKL');
 
 INSERT INTO
     FindingTypes
 VALUES
-(NULL, 'XCCDF');
+    (NULL, 'XCCDF');
 
 INSERT INTO
     FindingTypes
 VALUES
-(NULL, 'WASSP');
+    (NULL, 'WASSP');

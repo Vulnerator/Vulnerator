@@ -1,1 +1,0 @@
-﻿UPDATE UniqueFindings SET DeltaAnalysisRequired = 'True' WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier);

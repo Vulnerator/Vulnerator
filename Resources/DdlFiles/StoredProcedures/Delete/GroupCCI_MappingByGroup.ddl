@@ -1,1 +1,0 @@
-﻿DELETE FROM GroupsCCIs WHERE Group_ID = @Group_ID;

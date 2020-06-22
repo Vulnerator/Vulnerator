@@ -1,1 +1,0 @@
-﻿DELETE FROM Groups WHERE Group_ID = @Group_ID;

@@ -1,1 +1,0 @@
-﻿DELETE FROM VulnerabilitiesVulnerabilitySources WHERE VulnerabilitySource_ID = (SELECT VulnerabilitySource_ID FROM VulnerabilitySources WHERE SourceVersion = 'Version Unknown');

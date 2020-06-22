@@ -14,6 +14,7 @@ namespace Vulnerator.Model.DataAccess
     {
         DdlReader _ddlReader = new DdlReader();
         Assembly assembly = Assembly.GetExecutingAssembly();
+        private string _storedProcedureBase = "Vulnerator.Resources.DdlFiles.StoredProcedures.";
         public void CreateVulnerabilityRelatedIndices()
         {
             try
@@ -51,7 +52,6 @@ namespace Vulnerator.Model.DataAccess
             finally
             { DatabaseBuilder.sqliteConnection.Close(); }
         }
-
         public void DeleteVulnerabilityToCciMapping(SQLiteCommand sqliteCommand)
         {
             try

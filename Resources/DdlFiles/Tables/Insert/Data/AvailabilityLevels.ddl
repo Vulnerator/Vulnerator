@@ -1,14 +1,14 @@
 INSERT INTO
     AvailabilityLevels
 VALUES
-(NULL, 'High');
+    (NULL, 'High');
 
 INSERT INTO
     AvailabilityLevels
 VALUES
-(NULL, 'Moderate');
+    (NULL, 'Moderate');
 
 INSERT INTO
     AvailabilityLevels
 VALUES
-(NULL, 'Low');
+    (NULL, 'Low');
