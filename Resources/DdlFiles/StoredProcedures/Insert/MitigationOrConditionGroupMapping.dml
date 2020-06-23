@@ -1,7 +1,8 @@
 ﻿INSERT INTO
-    GroupsMitigationsOrConditions
+    GroupsMitigationsOrConditionsVulnerabilities
 VALUES
     (
+        NULL,
         @MitigationOrCondition_ID,
         @Group_ID,
         @Vulnerability_ID

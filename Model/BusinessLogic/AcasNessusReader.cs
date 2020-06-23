@@ -147,7 +147,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     sqliteCommand.Parameters["DiscoveredSoftwareName"].Value = operatingSystem;
                                     sqliteCommand.Parameters["DisplayedSoftwareName"].Value = operatingSystem;
                                     sqliteCommand.Parameters["OperatingSystem"].Value = operatingSystem;
-                                    sqliteCommand.Parameters["Is_OS_Or_Firmware"].Value = "True";
+                                    sqliteCommand.Parameters["IsOS_OrFirmware"].Value = "True";
                                     break;
                                 }
                             case "host-fqdn":
@@ -226,7 +226,7 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["SourceRelease"].Value = string.Empty;
                 sqliteCommand.Parameters["Port"].Value = xmlReader.GetAttribute("port");
                 sqliteCommand.Parameters["Protocol"].Value = xmlReader.GetAttribute("protocol");
-                sqliteCommand.Parameters["DiscoveredService"].Value = sqliteCommand.Parameters["DisplayService"].Value = xmlReader.GetAttribute("svc_name");
+                sqliteCommand.Parameters["DiscoveredServiceName"].Value = sqliteCommand.Parameters["DisplayServiceName"].Value = xmlReader.GetAttribute("svc_name");
                 sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value = pluginId;
                 sqliteCommand.Parameters["VulnerabilityTitle"].Value = xmlReader.GetAttribute("pluginName");
                 sqliteCommand.Parameters["VulnerabilityFamilyOrClass"].Value = xmlReader.GetAttribute("pluginFamily");

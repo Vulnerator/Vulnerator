@@ -11,11 +11,11 @@ SET
     Impact = @Impact,
     Risk = @Risk,
     ResidualRisk = @ResidualRisk,
+    ResidualRiskAfterProposed = @ResidualRiskAfterProposed,
     MitigatedStatus = @MitigatedStatus,
     ExpirationDate = @ExpirationDate,
     EstimatedCompletionDate = @EstimatedCompletionDate,
     ApprovalDate = @ApprovalDate,
-    ResidualRiskAfterProposed = @ResidualRiskAfterProposed,
     IsApproved = @IsApproved,
     Approver = @Approver
 WHERE

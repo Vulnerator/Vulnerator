@@ -1,0 +1,11 @@
+INSERT INTO PortsServices
+VALUES (NULL,
+        @DiscoveredServiceName,
+        @DisplayedServiceName,
+        NULL,
+        (
+            SELECT PortProtocol_ID
+            FROM PortsProtocols
+            WHERE Port = @Port
+              AND Protocol = @Protocol
+        ));

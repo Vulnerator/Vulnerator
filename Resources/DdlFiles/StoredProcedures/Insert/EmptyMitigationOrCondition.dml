@@ -1,5 +1,4 @@
-﻿
-INSERT INTO
+﻿INSERT INTO
     MitigationsOrConditions DEFAULT
 VALUES
 ;

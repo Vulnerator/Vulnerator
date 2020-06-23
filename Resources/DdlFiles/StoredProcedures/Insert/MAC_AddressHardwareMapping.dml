@@ -11,6 +11,8 @@ VALUES
                         WHERE
                                 ScanIP = @ScanIP
                                 AND DiscoveredHostName = @DiscoveredHostName
+                                AND FQDN = @FQDN
+                                AND NetBIOS = @NetBIOS
                 ),
                 (
                         SELECT

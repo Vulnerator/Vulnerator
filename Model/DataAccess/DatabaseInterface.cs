@@ -98,7 +98,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.MitigationOrConditionGroupMappingByGroup.dml", assembly);
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.GroupMitigationOrConditionVulnerabilityMappingByMitigationOrCondition.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -327,9 +327,9 @@ namespace Vulnerator.Model.DataAccess
                     "PortService_ID", "DiscoveredServiceName", "DisplayedServiceName", "ServiceAcronym",
                     // Software Table
                     "Software_ID", "DiscoveredSoftwareName", "DisplayedSoftwareName", "SoftwareAcronym", "SoftwareVersion",
-                    "Function", "InstallDate", "DADMS_ID", "DADMS_Disposition", "DADMS_LastDateAuthorized", "HasCustomCode", "IA_OrIA_Enabled",
+                    "Function", "DADMS_ID", "DADMS_Disposition", "DADMS_LastDateAuthorized", "HasCustomCode", "IA_OrIA_Enabled",
                     "IsOS_OrFirmware", "FAM_Accepted", "ExternallyAuthorized", "ReportInAccreditationGlobal",
-                    "ApprovedForBaselineGlobal", "BaselineApproverGlobal", "Instance",
+                    "ApprovedForBaselineGlobal", "BaselineApproverGlobal", "Instance", "InstallDate",
                     // UniqueFindings Table
                     "UniqueFinding_ID", "InstanceIdentifier", "ToolGeneratedOutput", "Comments", "FindingDetails",  "FirstDiscovered",  "LastObserved",
                     "DeltaAnalysisRequired", "FindingType_ID", "FindingSourceFile_ID", "Status", "Vulnerability_ID", "Hardware_ID",  "Software_ID",
@@ -497,7 +497,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.HardwareoftwareMapping.dml", assembly);
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.HardwareSoftwareMapping.dml", assembly);
                 sqliteCommand.Parameters.Add(new SQLiteParameter("ReportInAccreditation", "False"));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("ApprovedForBaseline", "False"));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("BaselineApprover", DBNull.Value));
@@ -1001,7 +1001,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.GroupMitigationOrConditionMappingByGroup.dml", assembly);
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.GroupMitigationOrConditionVulnerabilityMappingByGroup.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)

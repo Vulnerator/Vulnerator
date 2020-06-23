@@ -1,9 +1,7 @@
 ﻿INSERT INTO
   HardwarePortsProtocols (
     Hardware_ID,
-    PortsProtocols_ID,
-    DiscoveredService,
-    DisplayService
+    PortsProtocols_ID
   )
 VALUES
   (
@@ -26,7 +24,5 @@ VALUES
       WHERE
         Port = @Port
         AND Protocol = @Protocol
-    ),
-    @DiscoveredService,
-    @DisplayService
+    )
   );

@@ -1,8 +1,8 @@
 ﻿UPDATE
     Groups
 SET
-    Name = @Name,
-    Acronym = @Acronym,
+    GroupName = @GroupName,
+    GroupAcronym = @GroupAcronym,
     GroupTier = @GroupTier,
     IsAccreditation = @IsAccreditation,
     Accreditation_eMASS_ID = @Accreditation_eMASS_ID,

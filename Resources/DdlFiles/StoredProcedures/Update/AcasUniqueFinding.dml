@@ -2,7 +2,7 @@
   UniqueFindings
 SET
   LastObserved = @LastObserved,
-  STATUS = @Status,
+  Status = @Status,
   ToolGeneratedOutput = @ToolGeneratedOutput
 WHERE
   Hardware_ID = (
@@ -12,6 +12,9 @@ WHERE
       Hardware
     WHERE
       ScanIP = @ScanIP
+      AND DiscoveredHostName = @DiscoveredHostName
+      AND FQDN = @FQDN
+      AND NetBIOS = @NetBIOS
   )
   AND Software_ID = (
     SELECT

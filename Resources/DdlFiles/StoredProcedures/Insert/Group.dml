@@ -3,8 +3,8 @@
 VALUES
         (
                 NULL,
-                @Name,
-                @Acronym,
+                @GroupName,
+                @GroupAcronym,
                 @GroupTier,
                 @IsAccreditation,
                 @Accreditation_eMASS_ID,
@@ -22,6 +22,6 @@ VALUES
                 @SystemType,
                 @RDTE_Zone,
                 @StepOneQuestionnaire_ID,
-                @SAP_ID,
+                @SecurityAssessmentProcedure_ID,
                 @PIT_Determination_ID
         );

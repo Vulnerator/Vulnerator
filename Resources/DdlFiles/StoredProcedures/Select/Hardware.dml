@@ -1,4 +1,5 @@
 ﻿SELECT
+    DisplayedHostName,
     DiscoveredHostName,
     FQDN,
     NetBIOS,

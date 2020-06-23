@@ -25,5 +25,5 @@ VALUES
                         WHERE
                                 LifecycleStatus = 'Uncategorized'
                 ),
-                @OS
+                @OperatingSystem
         );

@@ -2,6 +2,7 @@
         SoftwareHardware
 VALUES
         (
+                NULL,
                 (
                         SELECT
                                 Software_ID

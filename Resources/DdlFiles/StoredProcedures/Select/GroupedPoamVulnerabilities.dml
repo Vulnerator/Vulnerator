@@ -9,7 +9,7 @@
     Comments,
     FindingDetails,
     RawRisk,
-    STATUS,
+    Status,
     DisplayedSoftwareName,
     GROUP_CONCAT(DISTINCT Reference) AS Reference,
     GROUP_CONCAT(DISTINCT ScanIP) AS IPs,
@@ -35,7 +35,7 @@ FROM
 WHERE
     FindingType = @FindingType
 GROUP BY
-    STATUS,
+    Status,
     UniqueVulnerabilityIdentifier,
     SourceVersion,
     SourceRelease

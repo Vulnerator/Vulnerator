@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Vulnerator.Helper;
 using Vulnerator.Model.DataAccess;
@@ -36,6 +37,9 @@ namespace Vulnerator.Model.BusinessLogic
         private UInt32Value sheetIndex = 1;
         private string[] delimiter = new string[] { ",\r\n" };
         string doubleCarriageReturn = Environment.NewLine + Environment.NewLine;
+        private DdlReader _ddlReader = new DdlReader();
+        private Assembly assembly = Assembly.GetExecutingAssembly();
+        private string _storedProcedureBase = "Vulnerator.Resources.DdlFiles.StoredProcedures.";
 
         private OpenXmlWriter assetOverviewOpenXmlWriter;
         private OpenXmlWriter poamOpenXmlWriter;
@@ -175,7 +179,7 @@ namespace Vulnerator.Model.BusinessLogic
                 using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
-                    sqliteCommand.CommandText = Properties.Resources.SelectGroupedPoamVulnerabilities;
+                    sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.GroupedPoamVulnerabilities.dml", assembly);
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
                         while (sqliteDataReader.Read())
