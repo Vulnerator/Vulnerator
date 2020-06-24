@@ -1,0 +1,2 @@
+﻿INSERT INTO PortsProtocolsServices
+VALUES (NULL, @Port, @Protocol, @DiscoveredServiceName, @DisplayedServiceName, @ServiceAcronym);

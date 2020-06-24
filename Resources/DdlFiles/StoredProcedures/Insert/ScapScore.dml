@@ -1,35 +1,22 @@
-﻿INSERT INTO
-    ScapScores
-VALUES
-    (
-        NULL,
+﻿INSERT INTO ScapScores
+VALUES (NULL,
         @Score,
         (
-            SELECT
-                Hardware_ID
-            FROM
-                Hardware
-            WHERE
-                ScanIP = @ScanIP
-                AND DiscoveredHostName = @DiscoveredHostName
-                AND FQDN = @FQDN
-                AND NetBIOS = @NetBIOS
+            SELECT Hardware_ID
+            FROM Hardware
+            WHERE ScanIP = @ScanIP
+              AND DiscoveredHostName = @DiscoveredHostName
+              AND FQDN = @FQDN
+              AND NetBIOS = @NetBIOS
         ),
         (
-            SELECT
-                FindingSourceFile_ID
-            FROM
-                UniqueFindingsSourceFiles
-            WHERE
-                FindingSourceFileName = @FindingSourceFileName
+            SELECT FindingSourceFile_ID
+            FROM UniqueFindingsSourceFiles
+            WHERE FindingSourceFileName = @FindingSourceFileName
         ),
         (
-            SELECT
-                VulnerabilitySource_ID
-            FROM
-                VulnerabilitySources
-            WHERE
-                SourceName = @SourceName
+            SELECT VulnerabilitySource_ID
+            FROM VulnerabilitySources
+            WHERE SourceName = @SourceName
         ),
-        @ScanDate
-    );
+        @ScanDate);

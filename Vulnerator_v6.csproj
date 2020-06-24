@@ -759,7 +759,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\VulnerabilityCCI_Mapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\MitigationOrCondition.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\EmptyMitigationOrCondition.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\PortProtocol.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\PortProtocolService.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\ScapScore.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\Software.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\UniqueFinding.dml" />
@@ -767,12 +767,11 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\Vulnerability.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\VulnerabilityReference.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\HardwareGroupMapping.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\HardwareSoftwareMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\HardwareVulnerabilitySourceMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\IP_AddressHardwareMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\MAC_AddressHardwareMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\MitigationOrConditionGroupMapping.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\PortProtocolHardwareMapping.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\HardwarePortProtocolServiceMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\VulnerabilityReferenceVulnerabilityMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\VulnerabilityCCI_Mapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\VulnerabilityIA_ControlMapping.dml" />
@@ -793,7 +792,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\Group.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\MitigationOrCondition.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\RequiredReportIsSelected.dml" />
-    <Content Include="Resources\DdlFiles\StoredProcedures\Insert\PortService.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\HardwareSoftwareMapping.dml" />
     <Content Include="Resources\DdlFiles\StoredProcedures\Update\AcasUniqueFinding.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\CklUniqueFinding.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\UniqueFindingMitigationOrCondition.dml" />
@@ -877,7 +876,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\Hardware_IP_Addresses.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwareLocation.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\Hardware_MAC_Addresses.ddl" />
-    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwarePortsProtocols.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwarePortsProtocolsServices.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Insert\Data\Groups.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Insert\Data\FindingTypes.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Insert\Data\AvailabilityLevels.ddl" />
@@ -915,9 +914,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\Organizations.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\Overlays.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\PIT_Determination.ddl" />
-    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\PortsProtocols.ddl" />
-    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\PortsServices.ddl" />
-    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\PortServicesSoftware.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\PortsProtocolsServices.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\RelatedDocuments.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\RelatedTesting.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ResponsibilityRoles.ddl" />

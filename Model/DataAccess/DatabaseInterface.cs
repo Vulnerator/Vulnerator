@@ -211,9 +211,10 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.PortProtocol.dml", assembly);
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.PortProtocolService.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.PortProtocolHardwareMapping.dml", assembly);;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.HardwarePortProtocolServiceMapping.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -497,10 +498,10 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.HardwareSoftwareMapping.dml", assembly);
                 sqliteCommand.Parameters.Add(new SQLiteParameter("ReportInAccreditation", "False"));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("ApprovedForBaseline", "False"));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("BaselineApprover", DBNull.Value));
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.HardwareSoftwareMapping.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
