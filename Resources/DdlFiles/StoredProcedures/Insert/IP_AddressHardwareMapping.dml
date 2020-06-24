@@ -1,25 +1,13 @@
-﻿INSERT INTO
-        Hardware_IP_Addresses
-VALUES
+﻿INSERT INTO Hardware_IP_Addresses
+VALUES (NULL,
         (
-                NULL,
-                (
-                        SELECT
-                                Hardware_ID
-                        FROM
-                                Hardware
-                        WHERE
-                                ScanIP = @ScanIP
-                                AND DiscoveredHostName = @DiscoveredHostName
-                                AND FQDN = @FQDN
-                                AND NetBIOS = @NetBIOS
-                ),
-                (
-                        SELECT
-                                IP_Address_ID
-                        FROM
-                                IP_Addresses
-                        WHERE
-                                IP_Address = @IP_Address
-                )
-        );
+            SELECT Hardware_ID
+            FROM Hardware
+            WHERE ScanIP = @ScanIP
+              AND DiscoveredHostName = @DiscoveredHostName
+        ),
+        (
+            SELECT IP_Address_ID
+            FROM IP_Addresses
+            WHERE IP_Address = @IP_Address
+        ));

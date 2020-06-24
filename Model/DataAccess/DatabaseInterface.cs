@@ -197,7 +197,7 @@ namespace Vulnerator.Model.DataAccess
             {
                 sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.MAC_Address.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.MAC_AddressHardwareMapping.dml", assembly);;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.MAC_AddressHardwareMapping.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -855,7 +855,7 @@ namespace Vulnerator.Model.DataAccess
                 bool ingestedReleaseIsNewer = false;
                 bool existingVersionIsNewer = false;
                 bool existingReleaseIsNewer = false;
-                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.VulnerabilitySourceVersionAndRelease.dml", assembly);
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.VulnerabilityVersionAndRelease.dml", assembly);
                 using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
                     if (!sqliteDataReader.HasRows) return "Record Not Found";

@@ -28,7 +28,7 @@ namespace Vulnerator.Model.BusinessLogic
         private string classification = string.Empty;
         private List<string> ccis = new List<string>();
         private string[] persistentParameters = new string[] {
-            "Name", "FindingSourceFileName", "SourceName", "SourceVersion", "SourceRelease", "DiscoveredHostName", "ScanIP", "FQDN", "NetBIOS", "FindingType"
+            "GroupName", "FindingSourceFileName", "SourceName", "SourceVersion", "SourceRelease", "DiscoveredHostName", "ScanIP", "FQDN", "NetBIOS", "FindingType"
         };
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Vulnerator.Model.BusinessLogic
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
-                        sqliteCommand.Parameters["Name"].Value = "All";
+                        sqliteCommand.Parameters["GroupName"].Value = "All";
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
                         using (XmlReader xmlReader = XmlReader.Create(file.FilePath, xmlReaderSettings))
@@ -166,7 +166,6 @@ namespace Vulnerator.Model.BusinessLogic
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ASSET"))
                     {
                         sqliteCommand.Parameters["IsVirtualServer"].Value = "False";
-                        databaseInterface.InsertHardware(sqliteCommand);
                         if (!string.IsNullOrWhiteSpace(ip) && !ip.Equals("IP"))
                         { ParseIpAndMacAddress(sqliteCommand, ip); }
                         if (!string.IsNullOrWhiteSpace(mac) && !mac.Equals("MAC"))
@@ -228,12 +227,14 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 if (table.Equals("IP_Addresses"))
                 {
-                    sqliteCommand.Parameters["IP_Address"].Value = item;
+                    sqliteCommand.Parameters["IP_Address"].Value = sqliteCommand.Parameters["ScanIP"].Value = item;
+                    databaseInterface.InsertHardware(sqliteCommand);
                     databaseInterface.InsertAndMapIpAddress(sqliteCommand);
                 }
                 else
                 {
                     sqliteCommand.Parameters["MAC_Address"].Value = item;
+                    databaseInterface.InsertHardware(sqliteCommand);
                     databaseInterface.InsertAndMapMacAddress(sqliteCommand);
                 }
             }
@@ -309,7 +310,6 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             databaseInterface.UpdateVulnerabilitySource(sqliteCommand);
                             databaseInterface.InsertVulnerabilitySource(sqliteCommand);
-                            databaseInterface.MapHardwareToVulnerabilitySource(sqliteCommand);
                             return;
                         }
                     }
@@ -336,7 +336,7 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "Vuln_Num":
                                 {
-                                    sqliteCommand.Parameters["VulnerabilityGroup_ID"].Value = ObtainAttributeDataNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["VulnerabilityGroupIdentifier"].Value = ObtainAttributeDataNodeValue(xmlReader);
                                     break;
                                 }
                             case "Severity":
@@ -346,7 +346,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "Group_Title":
                                 {
-                                    sqliteCommand.Parameters["VulnerabilityGroup_Title"].Value = ObtainAttributeDataNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["VulnerabilityGroupTitle"].Value = ObtainAttributeDataNodeValue(xmlReader);
                                     break;
                                 }
                             case "Rule_ID":
@@ -401,7 +401,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "Documentable":
                                 {
-                                    sqliteCommand.Parameters["Documentable"].Value = ObtainAttributeDataNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["IsDocumentable"].Value = ObtainAttributeDataNodeValue(xmlReader);
                                     break;
                                 }
                             case "Mitigations":
@@ -482,9 +482,9 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             foreach (string cci in ccis)
                             {
-                                sqliteCommand.Parameters["CCI"].Value = cci;
+                                sqliteCommand.Parameters["CCI_Number"].Value = cci;
                                 databaseInterface.MapVulnerabilityToCci(sqliteCommand);
-                                sqliteCommand.Parameters["CCI"].Value = string.Empty;
+                                sqliteCommand.Parameters["CCI_Number"].Value = string.Empty;
                             }
                             ccis.Clear();
                         }
@@ -575,7 +575,6 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["LastObserved"].Value = DateTime.Now.ToShortDateString();
                 if (string.IsNullOrWhiteSpace(sqliteCommand.Parameters["DeltaAnalysisRequired"].Value.ToString()))
                 { sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "False"; }
-                sqliteCommand.Parameters["Approval_Status"].Value = "Not Approved";
                 sqliteCommand.Parameters["FirstDiscovered"].Value = DateTime.Now.ToShortDateString();
                 sqliteCommand.Parameters["Classification"].Value = classification;
                 sqliteCommand.Parameters["FindingType"].Value = "CKL";
