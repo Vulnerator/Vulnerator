@@ -180,4 +180,10 @@
   <data name="RegexTrailingNewLine" xml:space="preserve">
     <value>(?:(?&lt;=\s)\n(?=\s|$))</value>
   </data>
+  <data name="RegexVulnerabilityGroupIdentifier" xml:space="preserve">
+    <value>V-\d*</value>
+  </data>
+  <data name="RegexXccdfRule" xml:space="preserve">
+    <value>SV-\d*r\d*</value>
+  </data>
 </root>

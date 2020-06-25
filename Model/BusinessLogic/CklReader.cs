@@ -166,6 +166,8 @@ namespace Vulnerator.Model.BusinessLogic
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ASSET"))
                     {
                         sqliteCommand.Parameters["IsVirtualServer"].Value = "False";
+                        databaseInterface.InsertHardware(sqliteCommand);
+                        databaseInterface.MapHardwareToGroup(sqliteCommand);
                         if (!string.IsNullOrWhiteSpace(ip) && !ip.Equals("IP"))
                         { ParseIpAndMacAddress(sqliteCommand, ip); }
                         if (!string.IsNullOrWhiteSpace(mac) && !mac.Equals("MAC"))
@@ -227,14 +229,12 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 if (table.Equals("IP_Addresses"))
                 {
-                    sqliteCommand.Parameters["IP_Address"].Value = sqliteCommand.Parameters["ScanIP"].Value = item;
-                    databaseInterface.InsertHardware(sqliteCommand);
+                    sqliteCommand.Parameters["IP_Address"].Value = item;
                     databaseInterface.InsertAndMapIpAddress(sqliteCommand);
                 }
                 else
                 {
                     sqliteCommand.Parameters["MAC_Address"].Value = item;
-                    databaseInterface.InsertHardware(sqliteCommand);
                     databaseInterface.InsertAndMapMacAddress(sqliteCommand);
                 }
             }

@@ -3,8 +3,7 @@ VALUES (NULL,
         (
             SELECT Hardware_ID
             FROM Hardware
-            WHERE ScanIP = @ScanIP
-              AND DiscoveredHostName = @DiscoveredHostName
+            WHERE DiscoveredHostName = @DiscoveredHostName
         ),
         (
             SELECT MAC_Address_ID

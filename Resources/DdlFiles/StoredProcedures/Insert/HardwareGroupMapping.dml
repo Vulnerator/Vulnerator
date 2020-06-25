@@ -3,10 +3,7 @@ VALUES (NULL,
         (
             SELECT Hardware_ID
             FROM Hardware
-            WHERE ScanIP = @ScanIP
-              AND DiscoveredHostName = @DiscoveredHostName
-              AND FQDN = @FQDN
-              AND NetBIOS = @NetBIOS
+            WHERE DiscoveredHostName = @DiscoveredHostName
         ),
         (
             SELECT Group_ID

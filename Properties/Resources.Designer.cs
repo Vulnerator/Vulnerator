@@ -19,7 +19,7 @@ namespace Vulnerator.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -246,6 +246,24 @@ namespace Vulnerator.Properties {
         internal static string RegexTrailingNewLine {
             get {
                 return ResourceManager.GetString("RegexTrailingNewLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to V-\d*.
+        /// </summary>
+        internal static string RegexVulnerabilityGroupIdentifier {
+            get {
+                return ResourceManager.GetString("RegexVulnerabilityGroupIdentifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SV-\d*r\d*.
+        /// </summary>
+        internal static string RegexXccdfRule {
+            get {
+                return ResourceManager.GetString("RegexXccdfRule", resourceCulture);
             }
         }
     }

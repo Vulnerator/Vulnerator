@@ -1,13 +1,10 @@
-﻿INSERT INTO ScapScores
+﻿INSERT INTO SCAP_Scores
 VALUES (NULL,
         @Score,
         (
             SELECT Hardware_ID
             FROM Hardware
-            WHERE ScanIP = @ScanIP
-              AND DiscoveredHostName = @DiscoveredHostName
-              AND FQDN = @FQDN
-              AND NetBIOS = @NetBIOS
+            WHERE DiscoveredHostName = @DiscoveredHostName
         ),
         (
             SELECT FindingSourceFile_ID

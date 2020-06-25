@@ -489,7 +489,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                LogWriter.LogError($"Unable to map host '{sqliteCommand.Parameters["DiscoveredHostName"].Value}' to group '{sqliteCommand.Parameters["Name"].Value}'.");
+                LogWriter.LogError($"Unable to map host '{sqliteCommand.Parameters["DiscoveredHostName"].Value}' to group '{sqliteCommand.Parameters["GroupName"].Value}'.");
                 throw exception;
             }
         }
