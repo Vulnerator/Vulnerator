@@ -22,8 +22,16 @@ namespace Vulnerator.Model.BusinessLogic
         private DatabaseInterface databaseInterface = new DatabaseInterface();
         private List<FprVulnerability> fprVulnerabilityList = new List<FprVulnerability>();
         string[] persistentParameters = new string[] {
-            "SourceName", "SourceVersion", "DiscoveredSoftwareName", "DisplayedSoftwareName", "FindingSourceFileName",
-            "FindingType", "FirstDiscovered", "LastObserved"
+            "SourceName", "SourceVersion", "SourceRelease", "DiscoveredSoftwareName", "DisplayedSoftwareName", "FindingSourceFileName",
+            "FindingType", "FirstDiscovered", "LastObserved", "GroupName"
+        };
+        
+        private List<FortifySeverity> _fortifySeverities = new List<FortifySeverity>
+        {
+            new FortifySeverity() { Impact = "Low", Probability = "Low", Severity = "IV" },
+            new FortifySeverity() { Impact = "Low", Probability = "High", Severity = "III" },
+            new FortifySeverity() { Impact = "High", Probability = "Low", Severity = "II" },
+            new FortifySeverity() { Impact = "High", Probability = "High", Severity = "I" },
         };
 
         public string ReadFpr(Object.File file)
@@ -56,8 +64,8 @@ namespace Vulnerator.Model.BusinessLogic
                 {
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
-                        InsertParameterPlaceholders(sqliteCommand);
-                        sqliteCommand.Parameters["Name"].Value = "All";
+                        databaseInterface.InsertParameterPlaceholders(sqliteCommand);
+                        sqliteCommand.Parameters["GroupName"].Value = "All";
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         using (Stream stream = System.IO.File.OpenRead(file.FilePath))
                         {
@@ -72,6 +80,7 @@ namespace Vulnerator.Model.BusinessLogic
                         }
                         sqliteCommand.Parameters["SourceName"].Value = "HPE Fortify SCA";
                         sqliteCommand.Parameters["SourceVersion"].Value = version;
+                        sqliteCommand.Parameters["SourceRelease"].Value = string.Empty;
                         sqliteCommand.Parameters["DiscoveredSoftwareName"].Value = softwareName;
                         sqliteCommand.Parameters["DisplayedSoftwareName"].Value = softwareName;
                         sqliteCommand.Parameters["FindingSourceFileName"].Value = file.FileName;
@@ -83,7 +92,7 @@ namespace Vulnerator.Model.BusinessLogic
                         foreach (FprVulnerability fprVulnerability in fprVulnerabilityList)
                         {
                             sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value = fprVulnerability.ClassId;
-                            sqliteCommand.Parameters["VulnerabilityGroup_Title"].Value = fprVulnerability.Kingdom;
+                            sqliteCommand.Parameters["VulnerabilityGroupTitle"].Value = fprVulnerability.Kingdom;
                             sqliteCommand.Parameters["VulnerabilityFamilyOrClass"].Value = fprVulnerability.Type;
                             sqliteCommand.Parameters["VulnerabilityTitle"].Value = fprVulnerability.SubType;
                             sqliteCommand.Parameters["VulnerabilityDescription"].Value = fprVulnerability.Description;
@@ -93,15 +102,17 @@ namespace Vulnerator.Model.BusinessLogic
                             sqliteCommand.Parameters["ToolGeneratedOutput"].Value = fprVulnerability.Output;
                             sqliteCommand.Parameters["Status"].Value = fprVulnerability.Status;
                             sqliteCommand.Parameters["Comments"].Value = fprVulnerability.Comments;
+                            sqliteCommand.Parameters["RawRisk"].Value = fprVulnerability.RawRisk;
+                            sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "False";
                             databaseInterface.InsertVulnerability(sqliteCommand);
                             databaseInterface.MapVulnerabilityToSource(sqliteCommand);
                             databaseInterface.InsertUniqueFinding(sqliteCommand);
-                            foreach (Tuple<string, string> reference in fprVulnerability.References)
-                            {
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("Reference", reference.Item2));
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("ReferenceType", reference.Item1));
-                                databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand);
-                            }
+                            // foreach (Tuple<string, string> reference in fprVulnerability.References)
+                            // {
+                            //     sqliteCommand.Parameters.Add(new SQLiteParameter("Reference", reference.Item2));
+                            //     sqliteCommand.Parameters.Add(new SQLiteParameter("ReferenceType", reference.Item1));
+                            //     databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand);
+                            // }
                             foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                             {
                                 if (!persistentParameters.Contains(parameter.ParameterName))
@@ -278,23 +289,28 @@ namespace Vulnerator.Model.BusinessLogic
                                     recommendationsNode = SanitizeAndParseRecommendations(recommendationsNode);
                                     break;
                                 }
-                            case "Reference":
-                                {
-                                    string value = ObtainReferencesValue(xmlReader);
-                                    string key = ObtainReferencesKey(xmlReader);
-                                    if (key.Equals("Discard"))
-                                    { break; }
-                                    Regex regex = new Regex(Properties.Resources.RegexCatText);
-                                    value = regex.Replace(value, string.Empty);
-                                    regex = new Regex(Properties.Resources.RegexStigId);
-                                    foreach (Match match in regex.Matches(value))
-                                    {
-                                        Tuple<string, string> reference = new Tuple<string, string>(key, match.ToString());
-                                        if (!references.Contains(reference))
-                                        { references.Add(reference); }
-                                    }
-                                    break;
-                                }
+                            case "Rule":
+                            {
+                                ParseFvdlRuleNode(xmlReader);
+                                break;
+                            }
+                            // case "Reference":
+                            //     {
+                            //         string value = ObtainReferencesValue(xmlReader);
+                            //         string key = ObtainReferencesKey(xmlReader);
+                            //         if (key.Equals("Discard"))
+                            //         { break; }
+                            //         Regex regex = new Regex(Properties.Resources.RegexCatText);
+                            //         value = regex.Replace(value, string.Empty);
+                            //         regex = new Regex(Properties.Resources.RegexStigId);
+                            //         foreach (Match match in regex.Matches(value))
+                            //         {
+                            //             Tuple<string, string> reference = new Tuple<string, string>(key, match.ToString());
+                            //             if (!references.Contains(reference))
+                            //             { references.Add(reference); }
+                            //         }
+                            //         break;
+                            //     }
                             default:
                                 { break; }
                         }
@@ -307,8 +323,8 @@ namespace Vulnerator.Model.BusinessLogic
                             fprVulnerability.FixText = recommendationsNode;
                             fprVulnerability.Output = InjectDefinitionValues(abstractOutput.Item1, fprVulnerability);
                             fprVulnerability.RiskStatement = abstractOutput.Item2;
-                            foreach (Tuple<string, string> reference in references)
-                            { fprVulnerability.References.Add(reference); }
+                            // foreach (Tuple<string, string> reference in references)
+                            // { fprVulnerability.References.Add(reference); }
                         }
                         return;
                     }
@@ -319,6 +335,86 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 LogWriter.LogError("Unable to parse FVDL 'Description' node.");
                 throw exception;
+            }
+        }
+
+        private void ParseFvdlRuleNode(XmlReader xmlReader)
+        {
+            try
+            {
+                string classId = xmlReader.GetAttribute("id");
+                string impact = string.Empty;
+                string probability = string.Empty;
+                string[] ccis = { };
+                
+                while (xmlReader.Read())
+                {
+                    if (xmlReader.IsStartElement() && xmlReader.Name.Equals("Group"))
+                    {
+                        switch (xmlReader.GetAttribute("name"))
+                        {
+                            case "altcategoryDISACCI2":
+                            {
+                                ccis = ParseCciValues(xmlReader.ObtainCurrentNodeValue(false));
+                                break;
+                            }
+                            case "Impact":
+                            {
+                                impact = xmlReader.ObtainCurrentNodeValue(false).ToFortifyThreshold();
+                                break;
+                            }
+                            case "Probability":
+                            {
+                                probability = xmlReader.ObtainCurrentNodeValue(false).ToFortifyThreshold();
+                                break;
+                            }
+                        }
+                    }
+                    else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name == "Rule")
+                    {
+                        foreach (FprVulnerability fprVulnerability in fprVulnerabilityList.Where(x =>
+                            x.ClassId.Equals(classId)))
+                        {
+                            fprVulnerability.RawRisk = ObtainRawRisk(impact, probability);
+                            fprVulnerability.CCIs = ccis;
+                        }
+                        return;
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to parse the FVDL 'Rule' Node.");
+                throw exception;
+            }
+        }
+
+        private string[] ParseCciValues(string rawText)
+        {
+            try
+            {
+                string sanitized = rawText.Replace("CCI-", "");
+                string[] delimiter = {", "};
+                return sanitized.Split(delimiter, StringSplitOptions.None);
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to parse CCI values from the FVDL 'Rule' Node.");
+                throw exception;
+            }
+        }
+
+        private string ObtainRawRisk(string impact, string probability)
+        {
+            try
+            {
+                return _fortifySeverities
+                    .FirstOrDefault(x => x.Impact.Equals(impact) && x.Probability.Equals(probability)).Severity;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
             }
         }
 
@@ -751,64 +847,6 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 LogWriter.LogError("Unable to generate a Stream from the provided string.");
-                throw exception;
-            }
-        }
-
-        private void InsertParameterPlaceholders(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                string[] parameters = new string[]
-                {
-                    // Groups Table
-                    "Group_ID", "Name", "IsAccreditation", "Accreditation_ID", "Organization_ID",
-                    // FindingTypes Table
-                    "FindingType",
-                    // Hardware Table
-                    "Hardware_ID", "DiscoveredHostName", "FQDN", "NetBIOS", "IsVirtualServer", "NIAP_Level", "Manufacturer", "ModelNumber",
-                    "IsIA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID", "ScanIP",
-                    // IP_Addresses Table
-                    "IP_Address_ID", "IP_Address",
-                    // MAC_Addresses Table
-                    "MAC_Address_ID", "MAC_Address",
-                    // Software Table
-                    "Software_ID", "DiscoveredSoftwareName", "DisplayedSoftwareName", "SoftwareAcronym", "SoftwareVersion",
-                    "Function", "InstallDate", "DADMS_ID", "DADMS_Disposition", "DADMS_LDA", "HasCustomCode", "IaOrIa_Enabled",
-                    "Is_OS_Or_Firmware", "FAM_Accepted", "ExternallyAuthorized", "ReportInAccreditationGlobal",
-                    "ApprovedForBaselineGlobal", "BaselineApproverGlobal", "Instance",
-                    // UniqueFindings Table
-                    "UniqueFinding_ID", "", "ToolGeneratedOutput", "Comments", "FindingDetails", "TechnicalMitigation",
-                    "ProposedMitigation", "PredisposingConditions", "Impact", "Likelihood", "Severity", "Risk", "ResidualRisk",
-                    "FirstDiscovered", "LastObserved", "Approval_Status", "ApprovalDate", "Approval_Expiration_Date",
-                    "DeltaAnalysisRequired", "FindingType_ID", "Finding_Source_ID", "Status", "Vulnerability_ID", "Hardware_ID",
-                    "SeverityOverride", "SeverityOverrideJustification", "TechnologyArea", "WebDB_Site", "WebDB_Instance",
-                    "Classification", "CVSS_EnvironmentalScore", "CVSS_EnvironmentalVector",
-                    // UniqueFindingSourceFiles Table
-                    "FindingSourceFile_ID", "FindingSourceFileName", 
-                    // Vulnerabilities Table
-                    "Vulnerability_ID", "InstanceIdentifier", "UniqueVulnerabilityIdentifier", "VulnerabilityGroup_ID", "VulnerabilityGroup_Title",
-                    "SecondaryVulnerabilityIdentifier", "VulnerabilityFamilyOrClass", "VulnerabilityVersion", "VulnerabilityRelease",
-                    "VulnerabilityTitle", "VulnerabilityDescription", "RiskStatement", "FixText", "PublishedDate", "ModifiedDate",
-                    "FixPublishedDate", "RawRisk", "CVSS_BaseScore", "CVSS_BaseVector", "CVSS_TemporalScore", "CVSS_TemporalVector",
-                    "CheckContent", "FalsePositives", "FalseNegatives", "Documentable", "Mitigations", "MitigationControl",
-                    "PotentialImpacts", "ThirdPartyTools", "SecurityOverrideGuidance", "Overflow",
-                    // VulnerabilityReferences Table
-                    "Reference_ID", "Reference", "ReferenceType",
-                    // VulnerabilitySources Table
-                    "VulnerabilitySource_ID", "SourceName", "SourceSecondaryIdentifier", "VulnerabilitySourceFileName",
-                    "SourceDescription", "SourceVersion", "SourceRelease",
-                    // CCI Table
-                    "CCI",
-                    // ScapScores Table
-                    "Score", "ScanDate"
-                };
-                foreach (string parameter in parameters)
-                { sqliteCommand.Parameters.Add(new SQLiteParameter(parameter, string.Empty)); }
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to insert SQLiteParameter placeholders into SQLiteCommand");
                 throw exception;
             }
         }

@@ -62,7 +62,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters["FindingType"].Value = "WASSP";
-                        sqliteCommand.Parameters["Name"].Value = "All";
+                        sqliteCommand.Parameters["GroupName"].Value = "All";
                         sqliteCommand.Parameters["SourceName"].Value = "Windows Automated Security Scanning Program (WASSP)";
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         using (XmlReader xmlReader = XmlReader.Create(wasspFile, xmlReaderSettings))
@@ -126,6 +126,7 @@ namespace Vulnerator.Model.BusinessLogic
                                         }
                                         else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("table"))
                                         {
+                                            sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "False";
                                             databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                                             databaseInterface.InsertHardware(sqliteCommand);
                                             databaseInterface.InsertVulnerability(sqliteCommand);
