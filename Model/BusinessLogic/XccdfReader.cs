@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -15,6 +16,7 @@ using Vulnerator.Model.DataAccess;
 using Vulnerator.Helper;
 using Vulnerator.Model.Object;
 using Vulnerator.ViewModel;
+using PropertyAttributes = System.Reflection.PropertyAttributes;
 
 namespace Vulnerator.Model.BusinessLogic
 {
@@ -25,14 +27,8 @@ namespace Vulnerator.Model.BusinessLogic
     /// </summary>
     public class XccdfReader
     {
-        private Assembly assembly = Assembly.GetExecutingAssembly();
         DatabaseInterface databaseInterface = new DatabaseInterface();
         private string fileNameWithoutPath = string.Empty;
-        private string xccdfTitle = string.Empty;
-        private string versionInfo = string.Empty;
-        private string releaseInfo = string.Empty;
-        private string acasXccdfHostName = string.Empty;
-        private string acasXccdfHostIp = string.Empty;
         private string firstDiscovered = DateTime.Now.ToShortDateString();
         private string lastObserved = DateTime.Now.ToShortDateString();
         private bool incorrectFileType = false;
@@ -81,7 +77,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "XCCDF"));
-                        sqliteCommand.Parameters["Name"].Value = "All";
+                        sqliteCommand.Parameters["GroupName"].Value = "All";
                         sqliteCommand.Parameters.Add(new SQLiteParameter("FileName", fileNameWithoutPath));
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         using (XmlReader xmlReader = XmlReader.Create(file.FilePath, xmlReaderSettings))
@@ -235,7 +231,11 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                sqliteCommand.Parameters["VulnerabilityGroup_ID"].Value = xmlReader.GetAttribute("id");
+                string vulnerabilityGroupIdentifier = xmlReader.GetAttribute("id");
+                Regex regexVulnerabilityGroupIdentifier = new Regex(Properties.Resources.RegexVulnerabilityGroupIdentifier);
+                vulnerabilityGroupIdentifier =
+                    regexVulnerabilityGroupIdentifier.Match(vulnerabilityGroupIdentifier).Value;
+                sqliteCommand.Parameters["VulnerabilityGroupIdentifier"].Value = vulnerabilityGroupIdentifier;
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -244,7 +244,7 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "cdf:title":
                                 {
-                                    sqliteCommand.Parameters["VulnerabilityGroup_Title"].Value = ObtainCurrentNodeValue(xmlReader);
+                                    sqliteCommand.Parameters["VulnerabilityGroupTitle"].Value = ObtainCurrentNodeValue(xmlReader);
                                     break;
                                 }
                             case "cdf:Rule":
@@ -272,8 +272,8 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 string rule = xmlReader.GetAttribute("id");
                 string ruleVersion = string.Empty;
-                if (rule.Contains("_"))
-                { rule = rule.Split('_')[0]; }
+                Regex xccdfRuleRegex = new Regex(Properties.Resources.RegexXccdfRule);
+                rule = xccdfRuleRegex.Match(rule).Value;
                 if (rule.Contains("r"))
                 {
                     ruleVersion = rule.Split('r')[1];
@@ -322,9 +322,9 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             foreach (string cci in ccis)
                             {
-                                sqliteCommand.Parameters["CCI"].Value = cci;
+                                sqliteCommand.Parameters["CCI_Number"].Value = cci;
                                 databaseInterface.MapVulnerabilityToCci(sqliteCommand);
-                                sqliteCommand.Parameters["CCI"].Value = string.Empty;
+                                sqliteCommand.Parameters["CCI_Number"].Value = string.Empty;
                             }
                         }
                         return;
@@ -369,7 +369,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     }
                                 case "Documentable":
                                     {
-                                        sqliteCommand.Parameters["Documentable"].Value = ObtainCurrentNodeValue(xmlReader);
+                                        sqliteCommand.Parameters["IsDocumentable"].Value = ObtainCurrentNodeValue(xmlReader);
                                         break;
                                     }
                                 case "Mitigations":
@@ -379,7 +379,7 @@ namespace Vulnerator.Model.BusinessLogic
                                     }
                                 case "SeverityOverrideGuidance":
                                     {
-                                        sqliteCommand.Parameters["Severity_Override_Guidance"].Value = ObtainCurrentNodeValue(xmlReader);
+                                        sqliteCommand.Parameters["SeverityOverrideGuidance"].Value = ObtainCurrentNodeValue(xmlReader);
                                         break;
                                     }
                                 case "PotentialImpacts":
@@ -506,7 +506,6 @@ namespace Vulnerator.Model.BusinessLogic
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("cdf:target-facts"))
                     {
                         databaseInterface.InsertHardware(sqliteCommand);
-                        databaseInterface.InsertAndMapIpAddress(sqliteCommand);
                         databaseInterface.MapHardwareToGroup(sqliteCommand);
                         if (ips.Count > 0)
                         {
@@ -521,7 +520,7 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             foreach (string mac in macs)
                             {
-                                sqliteCommand.Parameters["IP_Address"].Value = mac;
+                                sqliteCommand.Parameters["MAC_Address"].Value = mac;
                                 databaseInterface.InsertAndMapMacAddress(sqliteCommand);
                                 sqliteCommand.Parameters["MAC_Address"].Value = string.Empty;
                             }
@@ -543,8 +542,8 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 string rule = xmlReader.GetAttribute("idref");
                 string ruleVersion = string.Empty;
-                if (rule.Contains("_"))
-                { rule = rule.Split('_')[0]; }
+                Regex xccdfRuleRegex = new Regex(Properties.Resources.RegexXccdfRule);
+                rule = xccdfRuleRegex.Match(rule).Value;
                 if (rule.Contains("r"))
                 {
                     ruleVersion = rule.Split('r')[1];
@@ -581,7 +580,6 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 sqliteCommand.Parameters["LastObserved"].Value = lastObserved;
                 sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "False";
-                sqliteCommand.Parameters["Approval_Status"].Value = "Not Approved";
                 sqliteCommand.Parameters["FirstDiscovered"].Value = firstDiscovered;
                 sqliteCommand.Parameters["FindingType"].Value = "XCCDF";
                 databaseInterface.UpdateUniqueFinding(sqliteCommand);
@@ -697,8 +695,8 @@ namespace Vulnerator.Model.BusinessLogic
                 xmlReaderSettings.ValidationType = ValidationType.Schema;
                 if (NetworkInterface.GetIsNetworkAvailable())
                 {
-                    xmlReaderSettings.ValidationFlags = XmlSchemaValidationFlags.ProcessInlineSchema;
-                    xmlReaderSettings.ValidationFlags = XmlSchemaValidationFlags.ProcessSchemaLocation;
+                    xmlReaderSettings.ValidationFlags |= XmlSchemaValidationFlags.ProcessInlineSchema;
+                    //xmlReaderSettings.ValidationFlags |= XmlSchemaValidationFlags.ProcessSchemaLocation;
                 }
                 return xmlReaderSettings;
             }

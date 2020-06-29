@@ -1,0 +1,19 @@
+﻿INSERT INTO SCAP_Scores
+VALUES (NULL,
+        @Score,
+        (
+            SELECT Hardware_ID
+            FROM Hardware
+            WHERE DiscoveredHostName = @DiscoveredHostName
+        ),
+        (
+            SELECT FindingSourceFile_ID
+            FROM UniqueFindingsSourceFiles
+            WHERE FindingSourceFileName = @FindingSourceFileName
+        ),
+        (
+            SELECT VulnerabilitySource_ID
+            FROM VulnerabilitySources
+            WHERE SourceName = @SourceName
+        ),
+        @ScanDate);

@@ -22,12 +22,13 @@ CREATE TABLE IF NOT EXISTS Vulnerabilities (
     CheckContent NVARCHAR (2000),
     FalsePositives NVARCHAR (2000),
     FalseNegatives NVARCHAR (2000),
-    Documentable NVARCHAR (5),
+    IsDocumentable NVARCHAR (5),
     Mitigations NVARCHAR (2000),
     MitigationControl NVARCHAR (2000),
     PotentialImpacts NVARCHAR (2000),
     ThirdPartyTools NVARCHAR (500),
     SecurityOverrideGuidance NVARCHAR (2000),
+    SeverityOverrideGuidance NVARCHAR (2000),
     Overflow NVARCHAR (2000),
     IsActive NVARCHAR (5)
 );

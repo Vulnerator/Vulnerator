@@ -17,5 +17,5 @@ CREATE TABLE IF NOT EXISTS Hardware (
     LifecycleStatus_ID INTEGER,
     OperatingSystem NVARCHAR (100),
     FOREIGN KEY (LifecycleStatus_ID) REFERENCES LifecycleStatuses(LifecycleStatus_ID),
-    UNIQUE (ScanIP, DiscoveredHostName, FQDN, NetBIOS) ON CONFLICT IGNORE
+    UNIQUE (DiscoveredHostName) ON CONFLICT IGNORE
 );

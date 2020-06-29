@@ -1,0 +1,63 @@
+﻿SELECT
+  UniqueFindings.Hardware_ID,
+  Hardware.Role,
+  Hardware.DisplayedHostName,
+  Hardware.FQDN,
+  GROUP_CONCAT(DISTINCT IP_Address) AS IpAddresses,
+  GROUP_CONCAT(DISTINCT MAC_Address) AS MacAddresses,
+  UniqueFindings.Classification,
+  UniqueFindings.TechnologyArea,
+  UniqueFindings.WebDB_Site,
+  UniqueFindings.WebDB_Instance,
+  VulnerabilitySources.SourceName,
+  VulnerabilitySources.SourceVersion,
+  VulnerabilitySources.SourceRelease,
+  VulnerabilitySources.SourceSecondaryIdentifier,
+  VulnerabilitySources.SourceDescription,
+  VulnerabilitySources.VulnerabilitySourceFileName,
+  Vulnerabilities.VulnerabilityGroupIdentifier,
+  Vulnerabilities.RawRisk,
+  Vulnerabilities.VulnerabilityGroupTitle,
+  Vulnerabilities.UniqueVulnerabilityIdentifier,
+  Vulnerabilities.SecondaryVulnerabilityIdentifier,
+  Vulnerabilities.VulnerabilityVersion,
+  Vulnerabilities.VulnerabilityTitle,
+  Vulnerabilities.VulnerabilityDescription,
+  Vulnerabilities.CheckContent,
+  Vulnerabilities.FixText,
+  Vulnerabilities.FalsePositives,
+  Vulnerabilities.FalseNegatives,
+  Vulnerabilities.IsDocumentable,
+  Vulnerabilities.Mitigations,
+  Vulnerabilities.PotentialImpacts,
+  Vulnerabilities.ThirdPartyTools,
+  Vulnerabilities.MitigationControl,
+  Vulnerabilities.SecurityOverrideGuidance,
+  Vulnerabilities.SeverityOverrideGuidance,
+  GROUP_CONCAT(DISTINCT CCI_Number) AS CCIs,
+  UniqueFindings.Status,
+  UniqueFindings.FindingDetails,
+  UniqueFindings.Comments,
+  UniqueFindings.SeverityOverride,
+  UniqueFindings.SeverityOverrideJustification,
+  UniqueFindings.ToolGeneratedOutput
+FROM
+  VulnerabilitySources
+  LEFT JOIN VulnerabilitiesVulnerabilitySources ON VulnerabilitySources.VulnerabilitySource_ID = VulnerabilitiesVulnerabilitySources.VulnerabilitySource_ID
+  LEFT JOIN Vulnerabilities ON VulnerabilitiesVulnerabilitySources.Vulnerability_ID = Vulnerabilities.Vulnerability_ID
+  LEFT JOIN UniqueFindings ON Vulnerabilities.Vulnerability_ID = UniqueFindings.Vulnerability_ID
+  LEFT JOIN Hardware ON UniqueFindings.Hardware_ID = Hardware.Hardware_ID
+  LEFT JOIN Hardware_IP_Addresses ON Hardware.Hardware_ID = Hardware_IP_Addresses.Hardware_ID
+  LEFT JOIN IP_Addresses ON Hardware_IP_Addresses.IP_Address_ID = IP_Addresses.IP_Address_ID
+  LEFT JOIN Hardware_MAC_Addresses ON Hardware.Hardware_ID = Hardware_MAC_Addresses.Hardware_ID
+  LEFT JOIN MAC_Addresses ON Hardware_MAC_Addresses.MAC_Address_ID = MAC_Addresses.MAC_Address_ID
+  LEFT JOIN VulnerabilitiesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesCCIs.Vulnerability_ID
+  LEFT JOIN CCIs ON VulnerabilitiesCCIs.CCI_ID = CCIs.CCI_ID
+WHERE
+  VulnerabilitySources.VulnerabilitySource_ID = @VulnerabilitySource_ID
+  AND (
+    UniqueFindings.Hardware_ID IS NULL
+    OR UniqueFindings.Hardware_ID = @Hardware_ID
+  )
+GROUP BY
+  Vulnerabilities.Vulnerability_ID;

@@ -1,11 +1,9 @@
-﻿using log4net;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Xml;
 using Vulnerator.Helper;
 using Vulnerator.Model.Object;
@@ -14,6 +12,7 @@ namespace Vulnerator.Model.DataAccess
 {
     public class DatabaseBuilder
     {
+        private DdlReader _ddlReader = new DdlReader();
         private Assembly assembly = Assembly.GetExecutingAssembly();
         public static string databaseConnection =
             $@"Data Source = {Properties.Settings.Default.Database}; Version=3;datetimeformat=Ticks;";
@@ -48,14 +47,14 @@ namespace Vulnerator.Model.DataAccess
                         string[] resourceNames = Assembly.GetExecutingAssembly().GetManifestResourceNames();
                         foreach (string name in resourceNames.Where(x => x.Contains("Vulnerator.Resources.DdlFiles.Tables.Create.")))
                         {
-                            LogWriter.LogStatusUpdate($"Verifying / Creating table '{name.Replace("Vulnerator.Resources.DdlFiles.Tables.Create.", "").Replace(".ddl", "")}'.");
-                            sqliteCommand.CommandText = ReadDdl(name);
+                            LogWriter.LogStatusUpdate($"Verifying table '{name.Replace("Vulnerator.Resources.DdlFiles.Tables.Create.", "").Replace(".ddl", "")}'.");
+                            sqliteCommand.CommandText = _ddlReader.ReadDdl(name, assembly);
                             sqliteCommand.ExecuteNonQuery();
                         }
                         foreach (string name in resourceNames.Where(x => x.Contains("Vulnerator.Resources.DdlFiles.Tables.Insert.Data.")).AsEnumerable())
                         {
-                            LogWriter.LogStatusUpdate($"Inserting base data into table '{name.Replace("Vulnerator.Resources.DdlFiles.Tables.Insert.Data.", "").Replace(".ddl", "")}', if missing.");
-                            sqliteCommand.CommandText = ReadDdl(name);
+                            LogWriter.LogStatusUpdate($"Verifying table '{name.Replace("Vulnerator.Resources.DdlFiles.Tables.Insert.Data.", "").Replace(".ddl", "")}' base data exists.");
+                            sqliteCommand.CommandText = _ddlReader.ReadDdl(name, assembly);
                             sqliteCommand.ExecuteNonQuery();
                         }
                         sqliteCommand.ExecuteNonQuery();
@@ -63,34 +62,16 @@ namespace Vulnerator.Model.DataAccess
                         PopulateCciData(sqliteCommand);
                         PopulateNistControls(sqliteCommand);
                         MapControlsToCci(sqliteCommand);
+                        MapControlsToCnssOverlays(sqliteCommand);
                         MapControlsToMonitoringFrequency(sqliteCommand);
                     }
                     sqliteTransaction.Commit();
                 }
-                LogWriter.LogStatusUpdate($"Database '{Properties.Settings.Default.Database}' created successfully.");
+                LogWriter.LogStatusUpdate($"Database '{Properties.Settings.Default.Database}' verified successfully.");
             }
             catch (Exception exception)
             {
-                LogWriter.LogError($"Database '{Properties.Settings.Default.Database}' creation failed.");
-                throw exception;
-            }
-        }
-
-        private string ReadDdl(string ddlResourceFile)
-        {
-            try
-            {
-                string ddlText = string.Empty;
-                using (Stream stream = assembly.GetManifestResourceStream(ddlResourceFile))
-                {
-                    using (StreamReader streamReader = new StreamReader(stream))
-                    { ddlText = streamReader.ReadToEnd(); }
-                }
-                return ddlText;
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError($"Unable to read DDL Resource File '{ddlResourceFile}'.");
+                LogWriter.LogError($"Database '{Properties.Settings.Default.Database}' verification failed.");
                 throw exception;
             }
         }
@@ -99,6 +80,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
+                LogWriter.LogStatusUpdate("Verifying IA Controls are populated.");
                 using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.IAControls_Mapping.xml"))
                 {
                     sqliteCommand.CommandText = "INSERT INTO IA_Controls VALUES (NULL, @Number, @Impact, @Area, @Name, @Description, @Threat, @Implementation, @Resources);";
@@ -157,7 +139,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Unable to populate IA Control List.");
+                LogWriter.LogError("Unable to verify IA Control table data.");
                 throw exception;
             }
         }
@@ -166,6 +148,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
+                LogWriter.LogStatusUpdate("Verifying CCIs are populated.");
                 Cci cci = new Cci();
                 using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.U_CCI_List.xml"))
                 {
@@ -215,7 +198,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Unable to populate CCI List.");
+                LogWriter.LogError("Unable to verify CCI table data.");
                 throw exception;
             }
         }
@@ -234,7 +217,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Unable to insert CCI Item into database.");
+                LogWriter.LogError($"Unable to insert CCI item '{cci.CciItem}' into database.");
                 throw exception;
             }
         }
@@ -243,19 +226,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                // Set Initial C-I-A triad flags
-                //string highConfidentiality = string.Empty;
-                //string moderateConfidentiality = string.Empty;
-                //string lowConfidentiality = string.Empty;
-
-                //string highIntegrity = string.Empty;
-                //string moderateIntegrity = string.Empty;
-                //string lowIntegrity = string.Empty;
-
-                //string highAvailability = string.Empty;
-                //string moderateAvailability = string.Empty;
-                //string lowAvailability = string.Empty;
-
+                LogWriter.LogStatusUpdate("Verifying NIST Controls are populated.");
                 Dictionary<string, string> ciaTriadFlags = new Dictionary<string, string>();
 
                 using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.NIST_800-53_CNSS_Mapping.xml"))
@@ -323,9 +294,6 @@ namespace Vulnerator.Model.DataAccess
                                 MapControlsToCia(sqliteCommand, ciaTriadFlags);
                                 sqliteCommand.CommandText = string.Empty;
                                 sqliteCommand.Parameters.Clear();
-                                //highConfidentiality = moderateConfidentiality = lowConfidentiality = string.Empty;
-                                //highIntegrity = moderateIntegrity = lowIntegrity = string.Empty;
-                                //highAvailability = moderateAvailability = lowAvailability = string.Empty;
                             }
                         }
                     }
@@ -405,7 +373,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Unable to map NIST Controls to CIA Triad.");
+                LogWriter.LogError("Unable to map NIST Controls to CIA triad.");
                 throw exception;
             }
         }
@@ -414,6 +382,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
+                LogWriter.LogStatusUpdate("Verifying NIST Controls are mapped to CCIs.");
                 using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.NIST_800-53_CCI_Mapping.xml"))
                 {
                     using (XmlReader xmlReader = XmlReader.Create(stream))
@@ -488,6 +457,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
+                LogWriter.LogStatusUpdate("Verifying NIST Controls are mapped to CNSS Overlays.");
                 Dictionary<string, string> overlayApplicability = new Dictionary<string, string>();
                 using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.NIST_800-53_CNSS-Overlay_Mapping.xml"))
                 {
@@ -540,6 +510,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
+                LogWriter.LogStatusUpdate("Verifying NIST Controls are mapped to monitoring frequencies.");
                 using (Stream stream = assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.NIST_800-53_MonitoringFrequency_Mapping.xml"))
                 {
                     using (XmlReader xmlReader = XmlReader.Create(stream))

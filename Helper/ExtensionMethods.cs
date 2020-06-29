@@ -249,6 +249,17 @@ namespace Vulnerator.Helper
             }
         }
 
+        public static string ToFortifyThreshold(this string _string)
+        {
+            try
+            { return int.Parse(_string) >= 2.5 ? "High" : "Low"; }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to convert raw status '{_string}' to a Fortify threshold.");
+                throw exception;
+            }
+        }
+
         public static string ToSanitizedSource(this string _string)
         {
             try

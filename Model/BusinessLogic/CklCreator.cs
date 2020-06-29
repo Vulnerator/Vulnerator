@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -15,6 +16,9 @@ namespace Vulnerator.Model.BusinessLogic
 {
     public class CklCreator
     {
+        private DdlReader _ddlReader = new DdlReader();
+        private Assembly assembly = Assembly.GetExecutingAssembly();
+        private string _storedProcedureBase = "Vulnerator.Resources.DdlFiles.StoredProcedures.";
         public void CreateCklFromHardware(Hardware hardware, VulnerabilitySource vulnerabilitySource, string saveDirectory)
         {
             try
@@ -25,7 +29,7 @@ namespace Vulnerator.Model.BusinessLogic
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("Hardware_ID", hardware.Hardware_ID));
                     sqliteCommand.Parameters.Add(new SQLiteParameter("VulnerabilitySource_ID", vulnerabilitySource.VulnerabilitySource_ID));
-                    sqliteCommand.CommandText = Properties.Resources.SelectHardwareCklCreationData;
+                    sqliteCommand.CommandText = sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.HardwareCklCreationData.dml", assembly);;
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
                         string stigName = vulnerabilitySource.SourceName

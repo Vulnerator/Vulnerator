@@ -8,11 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Vulnerator.Properties
-{
+namespace Vulnerator.Properties {
     using System;
-
-
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -20,1304 +19,251 @@ namespace Vulnerator.Properties
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources
-    {
-
+    internal class Resources {
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources()
-        {
+        internal Resources() {
         }
-
+        
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager
-        {
-            get
-            {
-                if (object.ReferenceEquals(resourceMan, null))
-                {
+        internal static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Vulnerator.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture
-        {
-            get
-            {
+        internal static global::System.Globalization.CultureInfo Culture {
+            get {
                 return resourceCulture;
             }
-            set
-            {
+            set {
                 resourceCulture = value;
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM VulnerabilitiesVulnerabilitySources WHERE VulnerabilitySource_ID = (SELECT VulnerabilitySource_ID FROM VulnerabilitySources WHERE SourceVersion = &apos;Version Unknown&apos;);.
-        /// </summary>
-        internal static string DeleteAcasVulnerabilitiesMappedToUnknownVersion
-        {
-            get
-            {
-                return ResourceManager.GetString("DeleteAcasVulnerabilitiesMappedToUnknownVersion", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM Groups WHERE Group_ID = @Group_ID;.
-        /// </summary>
-        internal static string DeleteGroup
-        {
-            get
-            {
-                return ResourceManager.GetString("DeleteGroup", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM GroupsIATA_Standards WHERE Group_ID = @Group_ID;.
-        /// </summary>
-        internal static string DeleteGroups_IATA_StandardsMappingByGroup
-        {
-            get
-            {
-                return ResourceManager.GetString("DeleteGroups_IATA_StandardsMappingByGroup", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM GroupsCCIs WHERE Group_ID = @Group_ID;.
-        /// </summary>
-        internal static string DeleteGroupsCCIsMappingByGroup
-        {
-            get
-            {
-                return ResourceManager.GetString("DeleteGroupsCCIsMappingByGroup", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM GroupsConnectedSystems WHERE Group_ID = @Group_ID;.
-        /// </summary>
-        internal static string DeleteGroupsConnectedSystemsMappingByGroup
-        {
-            get
-            {
-                return ResourceManager.GetString("DeleteGroupsConnectedSystemsMappingByGroup", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM GroupsConnections WHERE Group_ID = @Group_ID;.
-        /// </summary>
-        internal static string DeleteGroupsConnectionsMappingByGroup
-        {
-            get
-            {
-                return ResourceManager.GetString("DeleteGroupsConnectionsMappingByGroup", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM GroupsContacts WHERE Group_ID = @Group_ID;.
-        /// </summary>
-        internal static string DeleteGroupsContactsMappingByGroup
-        {
-            get
-            {
-                return ResourceManager.GetString("DeleteGroupsContactsMappingByGroup", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM GroupsMitigationsOrConditions WHERE Group_ID = @Group_ID;.
-        /// </summary>
-        internal static string DeleteGroupsMitigationsOrConditionsMappingByGroup
-        {
-            get
-            {
-                return ResourceManager.GetString("DeleteGroupsMitigationsOrConditionsMappingByGroup", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM GroupsOverlays WHERE Group_ID = @Group_ID;.
-        /// </summary>
-        internal static string DeleteGroupsOverlaysMappingByGroup
-        {
-            get
-            {
-                return ResourceManager.GetString("DeleteGroupsOverlaysMappingByGroup", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM GroupsWaivers WHERE Group_ID = @Group_ID;.
-        /// </summary>
-        internal static string DeleteGroupsWaiversMappingByGroup
-        {
-            get
-            {
-                return ResourceManager.GetString("DeleteGroupsWaiversMappingByGroup", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM HardwareGroups WHERE Group_ID = @Group_ID;.
-        /// </summary>
-        internal static string DeleteHardwareGroupsMappingByGroup
-        {
-            get
-            {
-                return ResourceManager.GetString("DeleteHardwareGroupsMappingByGroup", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM
-        ///	MitigationsOrConditions
-        ///WHERE
-        ///	MitigationOrCondition_ID = @MitigationOrCondition_ID;.
-        /// </summary>
-        internal static string DeleteMitigation
-        {
-            get
-            {
-                return ResourceManager.GetString("DeleteMitigation", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM
-        ///	GroupsMitigationsOrConditions
-        ///WHERE
-        ///	MitigationOrCondition_ID = @MitigationOrCondition_ID;.
-        /// </summary>
-        internal static string DeleteMitigationGroupMappingByMitigation
-        {
-            get
-            {
-                return ResourceManager.GetString("DeleteMitigationGroupMappingByMitigation", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM UniqueFindings WHERE UniqueFinding_ID = @UniqueFinding_ID;.
-        /// </summary>
-        internal static string DeleteUniqueFinding
-        {
-            get
-            {
-                return ResourceManager.GetString("DeleteUniqueFinding", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM 
-        ///		Vulnerabilities
-        ///WHERE 
-        ///		Vulnerability_ID IS @Vulnerability_ID;.
-        /// </summary>
-        internal static string DeleteVulnerability
-        {
-            get
-            {
-                return ResourceManager.GetString("DeleteVulnerability", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM VulnerabilitiesCCIs WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier) AND CCI_ID = (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI);.
-        /// </summary>
-        internal static string DeleteVulnerabilityCciMapping
-        {
-            get
-            {
-                return ResourceManager.GetString("DeleteVulnerabilityCciMapping", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO DataEntryDates VALUES (NULL, @EntryDate);.
-        /// </summary>
-        internal static string InsertDataEntryDate
-        {
-            get
-            {
-                return ResourceManager.GetString("InsertDataEntryDate", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO
-        ///    Groups
-        ///VALUES (
-        ///        NULL,
-        ///        @Name,
-        ///        @Acronym,
-        ///        @GroupTier,
-        ///        @IsAccreditation,
-        ///        @Accreditation_eMASS_ID,
-        ///        @IsPlatform,
-        ///        @Organization_ID,
-        ///        @ConfidentialityLevel_ID,
-        ///        @IntegrityLevel_ID,
-        ///        @AvailabilityLevel_ID,
-        ///        @SystemCategorization_ID,
-        ///        @AccreditationVersion,
-        ///        @CybersafeGrade,
-        ///        @FISCAM_Applies,
-        ///        @ControlSelection_ID,
-        ///        @HasForeignNationals,
-        ///        @SystemType,
-        ///        @R [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string InsertGroup
-        {
-            get
-            {
-                return ResourceManager.GetString("InsertGroup", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Hardware VALUES (NULL,@DisplayedHostName, @DiscoveredHostName,@FQDN,@NetBIOS,@ScanIP, @Found21745, @Found26917,@IsVirtualServer,@NIAP_Level,@Manufacturer,@ModelNumber,@IsIA_Enabled,@SerialNumber,@Role,(SELECT LifecycleStatus_ID FROM LifecycleStatuses WHERE LifecycleStatus = &apos;Uncategorized&apos;), @OS);.
-        /// </summary>
-        internal static string InsertHardware
-        {
-            get
-            {
-                return ResourceManager.GetString("InsertHardware", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO IP_Addresses VALUES (NULL, @IP_Address);.
-        /// </summary>
-        internal static string InsertIpAddress
-        {
-            get
-            {
-                return ResourceManager.GetString("InsertIpAddress", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO MAC_Addresses VALUES (NULL, @MAC_Address);.
-        /// </summary>
-        internal static string InsertMacAddress
-        {
-            get
-            {
-                return ResourceManager.GetString("InsertMacAddress", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO MitigationsOrConditions 
-        ///VALUES (
-        ///	NULL, 
-        ///	@ImpactDescription, 
-        ///	@PredisposingConditions, 
-        ///	@TechnicalMitigation, 
-        ///	@ProposedMitigation, 
-        ///	@ThreatRelevance, 
-        ///	@SeverityPervasiveness, 
-        ///	@Likelihood, 
-        ///	@Impact, 
-        ///	@Risk, 
-        ///	@ResidualRisk, 
-        ///	@ResidualRiskAfterProposed,
-        ///	@MitigatedStatus, 
-        ///	@EstimatedCompletionDate,
-        ///	@ApprovalDate,
-        ///	@ExpirationDate, 
-        ///	@IsApproved, 
-        ///	@Approver);.
-        /// </summary>
-        internal static string InsertMitigationOrCondition
-        {
-            get
-            {
-                return ResourceManager.GetString("InsertMitigationOrCondition", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO MitigationsOrConditions DEFAULT VALUES;.
-        /// </summary>
-        internal static string InsertMitigationsOrConditionsDefaultValues
-        {
-            get
-            {
-                return ResourceManager.GetString("InsertMitigationsOrConditionsDefaultValues", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO PortsProtocols VALUES (NULL, @Port, @Protocol);.
-        /// </summary>
-        internal static string InsertPortsProtocols
-        {
-            get
-            {
-                return ResourceManager.GetString("InsertPortsProtocols", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO ScapScores VALUES (NULL, @Score, (SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP), (SELECT FindingSourceFile_ID FROM UniqueFindingsSourceFiles WHERE FindingSourceFileName = @FindingSourceFileName), (SELECT VulnerabilitySource_ID FROM VulnerabilitySources WHERE SourceName = @SourceName), @ScanDate);.
-        /// </summary>
-        internal static string InsertScapScore
-        {
-            get
-            {
-                return ResourceManager.GetString("InsertScapScore", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Software VALUES (
-        ///	NULL, 
-        ///	@DiscoveredSoftwareName, 
-        ///	@DisplayedSoftwareName, 
-        ///	@SoftwareAcronym, 
-        ///	@SoftwareVersion, 
-        ///	@Function, 
-        ///	@DADMS_ID, 
-        ///	@DADMS_Disposition, 
-        ///	@DADMS_LDA, 
-        ///	@HasCustomCode, 
-        ///	@IaOrIa_Enabled, 
-        ///	@Is_OS_Or_Firmware, 
-        ///	@FAM_Accepted, 
-        ///	@ExternallyAuthorized, 
-        ///	@ReportInAccreditationGlobal, 
-        ///	@ApprovedForBaselineGlobal, 
-        ///	@BaselineApproverGlobal, 
-        ///	@Instance
-        ///);.
-        /// </summary>
-        internal static string InsertSoftware
-        {
-            get
-            {
-                return ResourceManager.GetString("InsertSoftware", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO UniqueFindings VALUES (
-        ///	NULL, 
-        ///	@InstanceIdentifier,
-        ///	@ToolGeneratedOutput, 
-        ///	@Comments, 
-        ///	@FindingDetails, 
-        ///	@FirstDiscovered, 
-        ///	@LastObserved, 
-        ///	@DeltaAnalysisRequired, 
-        ///	(SELECT FindingType_ID FROM FindingTypes WHERE FindingType = @FindingType), 
-        ///	(SELECT FindingSourceFile_ID FROM UniqueFindingsSourceFiles WHERE FindingSourceFileName = @FindingSourceFileName), 
-        ///	@Status, 
-        ///	(SELECT Vulnerability_ID FROM Vulnerabilities WHERE UniqueVulnerabilityIdentifier= @Uni [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string InsertUniqueFinding
-        {
-            get
-            {
-                return ResourceManager.GetString("InsertUniqueFinding", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO UniqueFindingsSourceFiles VALUES (NULL, @FindingSourceFileName);.
-        /// </summary>
-        internal static string InsertUniqueFindingSource
-        {
-            get
-            {
-                return ResourceManager.GetString("InsertUniqueFindingSource", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Vulnerabilities VALUES (NULL, @UniqueVulnerabilityIdentifier, @VulnerabilityGroup_ID, @VulnerabilityGroup_Title, @SecondaryVulnerabilityIdentifier, @VulnerabilityFamilyOrClass, @VulnerabilityVersion, @VulnerabilityRelease, @VulnerabilityTitle, @VulnerabilityDescription, @RiskStatement, @FixText, @PublishedDate, @ModifiedDate, @FixPublishedDate, @RawRisk, @CVSS_BaseScore, @CVSS_BaseVector, @CVSS_TemporalScore, @CVSS_TemporalVector, @CheckContent, @FalsePositives, @False_Neg [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string InsertVulnerability
-        {
-            get
-            {
-                return ResourceManager.GetString("InsertVulnerability", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO VulnerabilityReferences VALUES (NULL, @Reference, @ReferenceType);.
-        /// </summary>
-        internal static string InsertVulnerabilityReference
-        {
-            get
-            {
-                return ResourceManager.GetString("InsertVulnerabilityReference", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT OR IGNORE INTO VulnerabilitySources VALUES (NULL, @SourceName, @SourceSecondaryIdentifier, @VulnerabilitySourceFileName, @SourceDescription, @SourceVersion, @SourceRelease);.
-        /// </summary>
-        internal static string InsertVulnerabilitySource
-        {
-            get
-            {
-                return ResourceManager.GetString("InsertVulnerabilitySource", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO HardwareGroups VALUES ((SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP AND DiscoveredHostName = @DiscoveredHostName AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT Group_ID FROM Groups WHERE Name = @Name));.
-        /// </summary>
-        internal static string MapHardwareToGroup
-        {
-            get
-            {
-                return ResourceManager.GetString("MapHardwareToGroup", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO SoftwareHardware VALUES ((SELECT Software_ID FROM Software WHERE DiscoveredSoftwareName = @DiscoveredSoftwareName), (SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP),@InstallDate  ,(SELECT ReportInAccreditationGlobal FROM Software WHERE DiscoveredSoftwareName = @DiscoveredSoftwareName), (SELECT ApprovedForBaselineGlobal FROM Software WHERE DiscoveredSoftwareName = @DiscoveredSoftwareName), @BaselineApprover);.
-        /// </summary>
-        internal static string MapHardwareToSoftware
-        {
-            get
-            {
-                return ResourceManager.GetString("MapHardwareToSoftware", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Hardware_VulnerabilitySources VALUES ((SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP AND DiscoveredHostName = @DiscoveredHostName AND FQDN = @FQDN AND NetBIOS = @NetBIOS),(SELECT VulnerabilitySource_ID FROM VulnerabilitySources WHERE SourceName = @SourceName));.
-        /// </summary>
-        internal static string MapHardwareToVulnerabilitySource
-        {
-            get
-            {
-                return ResourceManager.GetString("MapHardwareToVulnerabilitySource", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Hardware_IP_Addresses VALUES ((SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP AND DiscoveredHostName = @DiscoveredHostName), (SELECT IP_Address_ID FROM IP_Addresses WHERE IP_Address = @IP_Address));.
-        /// </summary>
-        internal static string MapIpToHardware
-        {
-            get
-            {
-                return ResourceManager.GetString("MapIpToHardware", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Hardware_MAC_Addresses VALUES ((SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP AND DiscoveredHostName = @DiscoveredHostName), (SELECT MAC_Address_ID FROM MAC_Addresses WHERE MAC_Address = @MAC_Address));.
-        /// </summary>
-        internal static string MapMacToHardware
-        {
-            get
-            {
-                return ResourceManager.GetString("MapMacToHardware", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO GroupsMitigationsOrConditions VALUES (@MitigationOrCondition_ID, @Group_ID, @Vulnerability_ID);.
-        /// </summary>
-        internal static string MapMitigationToGroup
-        {
-            get
-            {
-                return ResourceManager.GetString("MapMitigationToGroup", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO HardwarePortsProtocols (Hardware_ID, PortsProtocols_ID, DiscoveredService, DisplayService) VALUES ((SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP AND DiscoveredHostName = @DiscoveredHostName AND FQDN = @FQDN AND NetBIOS = @NetBIOS), (SELECT PortsProtocols_ID FROM PortsProtocols WHERE Port = @Port AND Protocol = @Protocol), @DiscoveredService, @DisplayService);.
-        /// </summary>
-        internal static string MapPortToHardware
-        {
-            get
-            {
-                return ResourceManager.GetString("MapPortToHardware", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO VulnerabilitiesVulnerabilityReferences VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier), (SELECT Reference_ID FROM VulnerabilityReferences WHERE Reference = @Reference AND ReferenceType = @ReferenceType));.
-        /// </summary>
-        internal static string MapReferenceToVulnerability
-        {
-            get
-            {
-                return ResourceManager.GetString("MapReferenceToVulnerability", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT OR REPLACE INTO VulnerabilitiesCCIs VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier), (SELECT CCI_ID FROM CCIs WHERE CCI = @CCI));.
-        /// </summary>
-        internal static string MapVulnerabilityToCci
-        {
-            get
-            {
-                return ResourceManager.GetString("MapVulnerabilityToCci", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT OR REPLACE INTO Vulnerabilities_IA_Controls VALUES (@Vulnerablity_ID, (SELECT IA_Control_ID FROM IA_Controls WHERE IA_ControlNumber = @IA_Control));.
-        /// </summary>
-        internal static string MapVulnerabilityToIAControl
-        {
-            get
-            {
-                return ResourceManager.GetString("MapVulnerabilityToIAControl", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO VulnerabilitiesVulnerabilitySources VALUES ((SELECT Vulnerability_ID FROM Vulnerabilities WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier), (SELECT VulnerabilitySource_ID FROM VulnerabilitySources WHERE SourceName = @SourceName));.
-        /// </summary>
-        internal static string MapVulnerabilityToSource
-        {
-            get
-            {
-                return ResourceManager.GetString("MapVulnerabilityToSource", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to (?&lt;=(?:\w{2})\s{2})(?:\w+(?:-?\.?\+*)*)+.
         /// </summary>
-        internal static string RegexAcasDebianSoftwareName
-        {
-            get
-            {
+        internal static string RegexAcasDebianSoftwareName {
+            get {
                 return ResourceManager.GetString("RegexAcasDebianSoftwareName", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to (?:\s{10,})(?:\d+(?:\w*(?:-?\.?\+*\:?\~?)*)*)+.
         /// </summary>
-        internal static string RegexAcasDebianSoftwareVersion
-        {
-            get
-            {
+        internal static string RegexAcasDebianSoftwareVersion {
+            get {
                 return ResourceManager.GetString("RegexAcasDebianSoftwareVersion", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ^(\w)+(-?\.?[A-Za-z]+)*.
         /// </summary>
-        internal static string RegexAcasLinuxSoftwareName
-        {
-            get
-            {
+        internal static string RegexAcasLinuxSoftwareName {
+            get {
                 return ResourceManager.GetString("RegexAcasLinuxSoftwareName", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to (?:(?:\d+\.?-?)+(?:(?:\w+)?\.?-?)+)+(?=\|).
         /// </summary>
-        internal static string RegexAcasLinuxSoftwareVersion
-        {
-            get
-            {
+        internal static string RegexAcasLinuxSoftwareVersion {
+            get {
                 return ResourceManager.GetString("RegexAcasLinuxSoftwareVersion", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to (?&lt;=\[installed on\s)(?:\d{2,4}\/\d{1,2}\/\d{1,2})(?=\]).
         /// </summary>
-        internal static string RegexAcasSoftwareInstallDate
-        {
-            get
-            {
+        internal static string RegexAcasSoftwareInstallDate {
+            get {
                 return ResourceManager.GetString("RegexAcasSoftwareInstallDate", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ^(?:\w)+(?:-?(?:\w?)+)+.
         /// </summary>
-        internal static string RegexAcasSolarisSoftwareName
-        {
-            get
-            {
+        internal static string RegexAcasSolarisSoftwareName {
+            get {
                 return ResourceManager.GetString("RegexAcasSolarisSoftwareName", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to (?:\d+\.?)+,?(?:REV=(?:\d+\.?)+)?.
         /// </summary>
-        internal static string RegexAcasSolarisSoftwareVersion
-        {
-            get
-            {
+        internal static string RegexAcasSolarisSoftwareVersion {
+            get {
                 return ResourceManager.GetString("RegexAcasSolarisSoftwareVersion", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ^.+?((?=\[)|(?=\r?\n)).
         /// </summary>
-        internal static string RegexAcasWindowsSoftwareName
-        {
-            get
-            {
+        internal static string RegexAcasWindowsSoftwareName {
+            get {
                 return ResourceManager.GetString("RegexAcasWindowsSoftwareName", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to (?&lt;=\[version\s)(?:\d+(?:(?:(?:\.|-?)\d*)*)|(?:\w+))(?=\]).
         /// </summary>
-        internal static string RegexAcasWindowsSoftwareVersion
-        {
-            get
-            {
+        internal static string RegexAcasWindowsSoftwareVersion {
+            get {
                 return ResourceManager.GetString("RegexAcasWindowsSoftwareVersion", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CAT\s(?:I{1,3}(?:V)?)(?:,\s)*.
         /// </summary>
-        internal static string RegexCatText
-        {
-            get
-            {
+        internal static string RegexCatText {
+            get {
                 return ResourceManager.GetString("RegexCatText", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to (?:CCI-\d*).
         /// </summary>
-        internal static string RegexCciSelector
-        {
-            get
-            {
+        internal static string RegexCciSelector {
+            get {
                 return ResourceManager.GetString("RegexCciSelector", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to (?:(\r?)\n){2,}(?:\t){2,}.
         /// </summary>
-        internal static string RegexExcessiveNewLineAndTab
-        {
-            get
-            {
+        internal static string RegexExcessiveNewLineAndTab {
+            get {
                 return ResourceManager.GetString("RegexExcessiveNewLineAndTab", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to (?:\r)*\n\s{4,}.
         /// </summary>
-        internal static string RegexIndentedMidlineNewLine
-        {
-            get
-            {
+        internal static string RegexIndentedMidlineNewLine {
+            get {
                 return ResourceManager.GetString("RegexIndentedMidlineNewLine", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to (?:(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]){1,3}.
         /// </summary>
-        internal static string RegexIPv4
-        {
-            get
-            {
+        internal static string RegexIPv4 {
+            get {
                 return ResourceManager.GetString("RegexIPv4", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to (([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]| [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string RegexIPv6
-        {
-            get
-            {
+        internal static string RegexIPv6 {
+            get {
                 return ResourceManager.GetString("RegexIPv6", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to (?:[0-9A-Fa-f]{1,2}[:-]){5}(?:[0-9A-Fa-f]{2}).
         /// </summary>
-        internal static string RegexMAC
-        {
-            get
-            {
+        internal static string RegexMAC {
+            get {
                 return ResourceManager.GetString("RegexMAC", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to (?:(?&lt;!\r\n)(?&lt;=[^(\r)])(?:\r\n)(?=[a-z0-9])|(?:(?&lt;!\r)\n)(?=[a-z0-9])).
         /// </summary>
-        internal static string RegexMidlineNewLine
-        {
-            get
-            {
+        internal static string RegexMidlineNewLine {
+            get {
                 return ResourceManager.GetString("RegexMidlineNewLine", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to (?&lt;=Release: )\d+(?=\s).
         /// </summary>
-        internal static string RegexRawStigRelease
-        {
-            get
-            {
+        internal static string RegexRawStigRelease {
+            get {
                 return ResourceManager.GetString("RegexRawStigRelease", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to \d{2}\s\D{3}\s\d{4}.
         /// </summary>
-        internal static string RegexStigDate
-        {
-            get
-            {
+        internal static string RegexStigDate {
+            get {
                 return ResourceManager.GetString("RegexStigDate", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to (?:(?:\w)+(?:-|\.|_)?)+.
         /// </summary>
-        internal static string RegexStigId
-        {
-            get
-            {
+        internal static string RegexStigId {
+            get {
                 return ResourceManager.GetString("RegexStigId", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to (?:(?&lt;=\s)\n(?=\s|$)).
         /// </summary>
-        internal static string RegexTrailingNewLine
-        {
-            get
-            {
+        internal static string RegexTrailingNewLine {
+            get {
                 return ResourceManager.GetString("RegexTrailingNewLine", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to SELECT SourceName,
-        ///		Vulnerabilities.Vulnerability_ID,
-        ///		VulnerabilityGroup_ID,
-        ///		UniqueVulnerabilityIdentifier,
-        ///		VulnerabilityVersion,
-        ///		RawRisk,
-        ///		VulnerabilityTitle,
-        ///		VulnerabilityDescription,
-        ///		CheckContent,
-        ///		FixText,
-        ///		GROUP_CONCAT(DISTINCT CCI) AS CCIs
-        ///FROM Vulnerabilities
-        ///LEFT JOIN VulnerabilitiesVulnerabilitySources ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesVulnerabilitySources.Vulnerability_ID
-        ///LEFT JOIN VulnerabilitySources ON Vulnerabilities_VulnerabilitySourc [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to V-\d*.
         /// </summary>
-        internal static string SelectAnsibleTowerData
-        {
-            get
-            {
-                return ResourceManager.GetString("SelectAnsibleTowerData", resourceCulture);
+        internal static string RegexVulnerabilityGroupIdentifier {
+            get {
+                return ResourceManager.GetString("RegexVulnerabilityGroupIdentifier", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to SELECT
-        ///		UniqueVulnerabilityIdentifier,
-        ///		VulnerabilityVersion,
-        ///		VulnerabilityTitle,
-        ///		VulnerabilityDescription,
-        ///		SourceName,
-        ///		SourceVersion,
-        ///		SourceRelease, 
-        ///		Comments, 
-        ///		FindingDetails,
-        ///		RawRisk, 
-        ///		Status,
-        ///		DisplayedSoftwareName,
-        ///		GROUP_CONCAT(DISTINCt Reference) AS Reference,
-        ///		GROUP_CONCAT(DISTINCT ScanIP) AS IPs,
-        ///		GROUP_CONCAT(DISTINCT (Control_Family || &apos;-&apos; || Control_Number || &apos;.&apos; || Enhancement)) AS NIST_Controls
-        ///FROM Vulnerabilities
-        ///LEFT JOIN UniqueFindings  [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to SV-\d*r\d*.
         /// </summary>
-        internal static string SelectGroupedPoamVulnerabilities
-        {
-            get
-            {
-                return ResourceManager.GetString("SelectGroupedPoamVulnerabilities", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT 
-        ///		DiscoveredHostName,
-        ///		FQDN,
-        ///		NetBIOS,
-        ///		ScanIP
-        ///FROM Hardware
-        ///WHERE Hardware_ID = @Hardware_ID;.
-        /// </summary>
-        internal static string SelectHardware
-        {
-            get
-            {
-                return ResourceManager.GetString("SelectHardware", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT 
-        ///		UniqueFindings.Hardware_ID,
-        ///		Hardware.Role,
-        ///		Hardware.DisplayedHostName,
-        ///		Hardware.FQDN,
-        ///		GROUP_CONCAT(DISTINCT IP_Address) AS IpAddresses,
-        ///		GROUP_CONCAT(DISTINCT MAC_Address) AS MacAddresses,
-        ///		UniqueFindings.Classification,
-        ///		UniqueFindings.TechnologyArea,
-        ///		UniqueFindings.WebDB_Site,
-        ///		UniqueFindings.WebDB_Instance,
-        ///		VulnerabilitySources.SourceName,
-        ///		VulnerabilitySources.SourceVersion,
-        ///		VulnerabilitySources.SourceRelease,
-        ///		VulnerabilitySources.Source_Secondary_Ide [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string SelectHardwareCklCreationData
-        {
-            get
-            {
-                return ResourceManager.GetString("SelectHardwareCklCreationData", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT name FROM sqlite_master WHERE type == &apos;index&apos;;.
-        /// </summary>
-        internal static string SelectIndexes
-        {
-            get
-            {
-                return ResourceManager.GetString("SelectIndexes", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT
-        ///			 VulnerabilityTitle,
-        ///			 VulnerabilityDescription,
-        ///			 InstanceIdentifier,
-        ///			 DOD_AssessmentProcedureMapping,
-        ///			 UniqueVulnerabilityIdentifier,
-        ///			 EstimatedCompletionDate,
-        ///			 SourceName,
-        ///			 MitigatedStatus,
-        ///			 RawRisk,
-        ///			 DisplayedHostName,
-        ///			 DisplayedSoftwareName,
-        ///			 Comments,
-        ///			 FindingDetails,
-        ///			 TechnicalMitigation,
-        ///			 PredisposingConditions,
-        ///			 SeverityPervasiveness,
-        ///			 ThreatRelevance,
-        ///			 RiskStatement,
-        ///			 Likelihood,
-        ///			 Impact,
-        ///			  [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string SelectUngroupedVulnerabilities
-        {
-            get
-            {
-                return ResourceManager.GetString("SelectUngroupedVulnerabilities", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT UniqueVulnerabilityIdentifier
-        ///FROM Vulnerabilities
-        ///LEFT JOIN VulnerabilitiesVulnerabilitySources ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesVulnerabilitySources.Vulnerability_ID
-        ///WHERE VulnerabilitySource_ID = @VulnerabilitySource_ID;.
-        /// </summary>
-        internal static string SelectUniqueVulnerabilityIdentiferBySource
-        {
-            get
-            {
-                return ResourceManager.GetString("SelectUniqueVulnerabilityIdentiferBySource", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT
-        ///		Vulnerabilities.Vulnerability_ID
-        ///FROM
-        ///		Vulnerabilities
-        ///JOIN VulnerabilitiesVulnerabilitySources ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesVulnerabilitySources.Vulnerability_ID
-        ///JOIN VulnerabilitySources ON VulnerabilitiesVulnerabilitySources.VulnerabilitySource_ID = VulnerabilitySources.VulnerabilitySource_ID
-        ///WHERE 
-        ///		PublishedDate IS NOT @PublishedDate
-        ///AND
-        ///		SourceName IS @SourceName.
-        /// </summary>
-        internal static string SelectVulnerabilitiesForDeletion
-        {
-            get
-            {
-                return ResourceManager.GetString("SelectVulnerabilitiesForDeletion", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT 
-        ///		UniqueVulnerabilityIdentifier, 
-        ///		VulnerabilityVersion 
-        ///FROM Vulnerabilities 
-        ///LEFT JOIN VulnerabilitiesVulnerabilitySources ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesVulnerabilitySources.Vulnerability_ID
-        ///LEFT JOIN VulnerabilitySources ON VulnerabilitiesVulnerabilitySources.VulnerabilitySource_ID = VulnerabilitySources.VulnerabilitySource_ID
-        ///WHERE 
-        ///		SourceName = @SourceName 
-        ///AND SourceVersion = @SourceVersion 
-        ///AND SourceRelease = @SourceRelease;.
-        /// </summary>
-        internal static string SelectVulnerabilityIdentifiersAndVersions
-        {
-            get
-            {
-                return ResourceManager.GetString("SelectVulnerabilityIdentifiersAndVersions", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT SourceName
-        ///FROM VulnerabilitySources
-        ///WHERE VulnerabilitySource_ID = @VulnerabilitySource_ID;.
-        /// </summary>
-        internal static string SelectVulnerabilitySourceName
-        {
-            get
-            {
-                return ResourceManager.GetString("SelectVulnerabilitySourceName", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT SourceVersion, SourceRelease FROM VulnerabilitySources WHERE SourceName = @SourceName;.
-        /// </summary>
-        internal static string SelectVulnerabilitySourceVersionAndRelease
-        {
-            get
-            {
-                return ResourceManager.GetString("SelectVulnerabilitySourceVersionAndRelease", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT VulnerabilityVersion, VulnerabilityRelease FROM Vulnerabilities WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier;.
-        /// </summary>
-        internal static string SelectVulnerabilityVersionAndRelease
-        {
-            get
-            {
-                return ResourceManager.GetString("SelectVulnerabilityVersionAndRelease", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT
-        ///		Vulnerabilities.Vulnerability_ID
-        ///FROM Vulnerabilities
-        ///LEFT JOIN VulnerabilitiesVulnerabilitySources ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesVulnerabilitySources.Vulnerability_ID
-        ///LEFT JOIN VulnerabilitySources ON VulnerabilitiesVulnerabilitySources.VulnerabilitySource_ID = VulnerabilitySources.VulnerabilitySource_ID
-        ///WHERE VulnerabilitySources.VulnerabilitySource_ID = @VulnerabilitySource_ID;.
-        /// </summary>
-        internal static string SelectVunerabilityIndexes
-        {
-            get
-            {
-                return ResourceManager.GetString("SelectVunerabilityIndexes", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to UPDATE Hardware SET Found21745 = @Found21745, Found26917 = @Found26917 WHERE ScanIP = @ScanIP AND DiscoveredHostName=@DiscoveredHostName;.
-        /// </summary>
-        internal static string SetCredentialedScanStatus
-        {
-            get
-            {
-                return ResourceManager.GetString("SetCredentialedScanStatus", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT 
-        ///		Hardware.Role,
-        ///		Hardware.DisplayedHostName,
-        ///		Hardware.FQDN,
-        ///		GROUP_CONCAT(DISTINCT IP_Address) AS IpAddresses,
-        ///		GROUP_CONCAT(DISTINCT MAC_Address) AS MacAddresses,
-        ///		UniqueFindings.Classification,
-        ///		UniqueFindings.TechnologyArea,
-        ///		UniqueFindings.WebDB_Site,
-        ///		UniqueFindings.WebDB_Instance,
-        ///		VulnerabilitySources.SourceName,
-        ///		VulnerabilitySources.SourceVersion,
-        ///		VulnerabilitySources.SourceRelease,
-        ///		VulnerabilitySources.SourceSecondaryIdentifier,
-        ///		VulnerabilitySource [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string TempStorage
-        {
-            get
-            {
-                return ResourceManager.GetString("TempStorage", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to UPDATE UniqueFindings SET DeltaAnalysisRequired = &apos;True&apos; WHERE Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier);.
-        /// </summary>
-        internal static string UpdateDeltaAnalysisFlag
-        {
-            get
-            {
-                return ResourceManager.GetString("UpdateDeltaAnalysisFlag", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to UPDATE Groups SET
-        ///                  Name = @Name,
-        ///                  Acronym = @Acronym,
-        ///                  GroupTier = @GroupTier,
-        ///                  IsAccreditation = @IsAccreditation,
-        ///                  Accreditation_eMASS_ID = @Accreditation_eMASS_ID,
-        ///                  IsPlatform = @IsPlatform,
-        ///                  Organization_ID = @Organization_ID,
-        ///                  ConfidentialityLevel_ID = @ConfidentialityLevel_ID,
-        ///                  IntegrityLevel_ID = @IntegrityLevel_ID,
-        ///                  AvailabilityLevel_ID = @Ava [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string UpdateGroup
-        {
-            get
-            {
-                return ResourceManager.GetString("UpdateGroup", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to UPDATE MitigationsOrConditions 
-        ///SET 
-        ///	ImpactDescription = @ImpactDescription,
-        ///	PredisposingConditions = @PredisposingConditions,
-        ///	TechnicalMitigation = @TechnicalMitigation,
-        ///	ProposedMitigation = @ProposedMitigation,
-        ///	ThreatRelevance = @ThreatRelevance,
-        ///	SeverityPervasiveness = @SeverityPervasiveness,
-        ///	Likelihood = @Likelihood,
-        ///	Impact = @Impact,
-        ///	Risk = @Risk,
-        ///	ResidualRisk = @ResidualRisk,
-        ///	MitigatedStatus = @MitigatedStatus,
-        ///	ExpirationDate = @ExpirationDate,
-        ///Estimated_Com [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string UpdateMitigationOrCondition
-        {
-            get
-            {
-                return ResourceManager.GetString("UpdateMitigationOrCondition", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to UPDATE RequiredReports SET 
-        ///		Is_Report_Selected = @Is_Report_Selected
-        ///WHERE Required_Report_ID = @Required_Report_ID;.
-        /// </summary>
-        internal static string UpdateRequiredReportIsSelected
-        {
-            get
-            {
-                return ResourceManager.GetString("UpdateRequiredReportIsSelected", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to UPDATE UniqueFindings SET LastObserved = @LastObserved, Status = @Status, ToolGeneratedOutput = @ToolGeneratedOutput WHERE Hardware_ID = (SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP) AND Software_ID = (SELECT Software_ID FROM Software WHERE DiscoveredSoftwareName = @DiscoveredSoftwareName) AND Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier) AND LastObserved &lt; @LastObserved;.
-        /// </summary>
-        internal static string UpdateUniqueFindingFromAcas
-        {
-            get
-            {
-                return ResourceManager.GetString("UpdateUniqueFindingFromAcas", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to UPDATE UniqueFindings SET 
-        ///	FindingDetails = @FindingDetails, 
-        ///	Comments = @Comments, 
-        ///	SeverityOverride = @SeverityOverride, 
-        ///	SeverityOverrideJustification = @SeverityOverrideJustification, 
-        ///	LastObserved = @LastObserved, 
-        ///	TechnologyArea = @TechnologyArea, 
-        ///	WebDB_Site = @WebDB_Site, 
-        ///	WebDB_Instance = @WebDB_Instance, 
-        ///	FindingSourceFile_ID = (SELECT FindingSourceFile_ID FROM UniqueFindingsSourceFiles WHERE FindingSourceFileName = @FindingSourceFileName), 
-        ///	Status = @ [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string UpdateUniqueFindingFromCkl
-        {
-            get
-            {
-                return ResourceManager.GetString("UpdateUniqueFindingFromCkl", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to UPDATE UniqueFindings
-        ///SET
-        ///	MitigationOrCondition_ID = @MitigationOrCondition_ID
-        ///WHERE
-        ///	UniqueFinding_ID = @UniqueFinding_ID;.
-        /// </summary>
-        internal static string UpdateUniqueFindingMitigationOrCondition
-        {
-            get
-            {
-                return ResourceManager.GetString("UpdateUniqueFindingMitigationOrCondition", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to UPDATE Vulnerabilities SET VulnerabilityTitle=@VulnerabilityTitle, VulnerabilityDescription = @VulnerabilityDescription, RiskStatement = @RiskStatement, FixText = @FixText, ModifiedDate = @ModifiedDate, FixPublishedDate = @FixPublishedDate, RawRisk = @RawRisk, VulnerabilityVersion = @VulnerabilityVersion, VulnerabilityRelease = @VulnerabilityRelease WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier;.
-        /// </summary>
-        internal static string UpdateVulnerability
-        {
-            get
-            {
-                return ResourceManager.GetString("UpdateVulnerability", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to UPDATE
-        ///		Vulnerabilities
-        ///SET
-        ///		ModifiedDate = @ModifiedDate,
-        ///		PublishedDate = @PublishedDate
-        ///WHERE
-        ///		Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier AND VulnerabilityVersion = @VulnerabilityVersion AND VulnerabilityRelease = @VulnerabilityRelease).
-        /// </summary>
-        internal static string UpdateVulnerabilityDates
-        {
-            get
-            {
-                return ResourceManager.GetString("UpdateVulnerabilityDates", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to UPDATE UniqueFindings SET 
-        ///	LastObserved = @LastObserved, 
-        ///	Status = @Status, 
-        ///	FindingSourceFile_ID = (SELECT FindingSourceFile_ID FROM UniqueFindingsSourceFiles WHERE FindingSourceFileName = @FindingSourceFileName),
-        ///	ToolGeneratedOutput = @ToolGeneratedOutput 
-        ///WHERE 
-        ///	Hardware_ID = (SELECT Hardware_ID FROM Hardware WHERE ScanIP = @ScanIP) 
-        ///AND 
-        ///	Vulnerability_ID = (SELECT Vulnerability_ID FROM Vulnerabilities WHERE UniqueVulnerabilityIdentifier = @Unique_Vulnerability_Identifie [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string UpdateVulnerabilityFromAcas
-        {
-            get
-            {
-                return ResourceManager.GetString("UpdateVulnerabilityFromAcas", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to UPDATE 
-        ///	VulnerabilitySources 
-        ///SET 
-        ///	SourceName = @SourceName, 
-        ///	SourceSecondaryIdentifier = @SourceSecondaryIdentifier, 
-        ///	VulnerabilitySourceFileName = @VulnerabilitySourceFileName, 
-        ///	SourceDescription = @SourceDescription, 
-        ///	SourceVersion = @SourceVersion, 
-        ///	SourceRelease = @SourceRelease 
-        ///WHERE 
-        ///	VulnerabilitySource_ID = (SELECT VulnerabilitySource_ID FROM VulnerabilitySources WHERE SourceName = @SourceName);.
-        /// </summary>
-        internal static string UpdateVulnerabilitySource
-        {
-            get
-            {
-                return ResourceManager.GetString("UpdateVulnerabilitySource", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to UPDATE 
-        ///		VulnerabilitiesVulnerabilitySources 
-        ///SET 
-        ///		VulnerabilitySource_ID = (SELECT VulnerabilitySource_ID FROM VulnerabilitySources WHERE SourceName = @SourceName AND SourceVersion = @SourceVersion AND SourceRelease = @SourceRelease)
-        ///WHERE
-        ///		VulnerabilitySource_ID = (SELECT VulnerabilitySource_ID FROM VulnerabilitySources WHERE SourceName = @SourceName AND SourceVersion = &apos;Version Unknown&apos;);.
-        /// </summary>
-        internal static string UpdateVulnerabilitySourceFromAcas
-        {
-            get
-            {
-                return ResourceManager.GetString("UpdateVulnerabilitySourceFromAcas", resourceCulture);
+        internal static string RegexXccdfRule {
+            get {
+                return ResourceManager.GetString("RegexXccdfRule", resourceCulture);
             }
         }
     }

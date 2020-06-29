@@ -1,0 +1,27 @@
+﻿INSERT INTO SoftwareHardware
+VALUES (NULL,
+        (
+            SELECT Software_ID
+            FROM Software
+            WHERE DiscoveredSoftwareName = @DiscoveredSoftwareName
+        ),
+        (
+            SELECT Hardware_ID
+            FROM Hardware
+            WHERE ScanIP = @ScanIP
+              AND DiscoveredHostName = @DiscoveredHostName
+              AND NetBIOS = @NetBIOS
+              AND FQDN = @FQDN
+        ),
+        @InstallDate,
+        (
+            SELECT ReportInAccreditationGlobal
+            FROM Software
+            WHERE DiscoveredSoftwareName = @DiscoveredSoftwareName
+        ),
+        (
+            SELECT ApprovedForBaselineGlobal
+            FROM Software
+            WHERE DiscoveredSoftwareName = @DiscoveredSoftwareName
+        ),
+        @BaselineApprover);

@@ -34,7 +34,7 @@ namespace Vulnerator.Model.BusinessLogic
         List<VulnerabilityReference> references = new List<VulnerabilityReference>();
         private string[] persistentParameters = new string[]
         {
-            "Name", "FindingSourceFileName", "SourceName", "ScanIP", "DiscoveredHostName", "FindingType", "FQDN", "NetBIOS"
+            "GroupName", "FindingSourceFileName", "SourceName", "ScanIP", "DiscoveredHostName", "FindingType", "FQDN", "NetBIOS"
         };
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters["FindingType"].Value = "ACAS";
-                        sqliteCommand.Parameters["Name"].Value = "All";
+                        sqliteCommand.Parameters["GroupName"].Value = "All";
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
                         using (XmlReader xmlReader = XmlReader.Create(file.FilePath, xmlReaderSettings))
@@ -146,8 +146,8 @@ namespace Vulnerator.Model.BusinessLogic
                                     string operatingSystem = xmlReader.ObtainCurrentNodeValue(true);
                                     sqliteCommand.Parameters["DiscoveredSoftwareName"].Value = operatingSystem;
                                     sqliteCommand.Parameters["DisplayedSoftwareName"].Value = operatingSystem;
-                                    sqliteCommand.Parameters["OS"].Value = operatingSystem;
-                                    sqliteCommand.Parameters["Is_OS_Or_Firmware"].Value = "True";
+                                    sqliteCommand.Parameters["OperatingSystem"].Value = operatingSystem;
+                                    sqliteCommand.Parameters["IsOS_OrFirmware"].Value = "True";
                                     break;
                                 }
                             case "host-fqdn":
@@ -226,7 +226,7 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["SourceRelease"].Value = string.Empty;
                 sqliteCommand.Parameters["Port"].Value = xmlReader.GetAttribute("port");
                 sqliteCommand.Parameters["Protocol"].Value = xmlReader.GetAttribute("protocol");
-                sqliteCommand.Parameters["DiscoveredService"].Value = sqliteCommand.Parameters["DisplayService"].Value = xmlReader.GetAttribute("svc_name");
+                sqliteCommand.Parameters["DiscoveredServiceName"].Value = sqliteCommand.Parameters["DisplayedServiceName"].Value = xmlReader.GetAttribute("svc_name");
                 sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value = pluginId;
                 sqliteCommand.Parameters["VulnerabilityTitle"].Value = xmlReader.GetAttribute("pluginName");
                 sqliteCommand.Parameters["VulnerabilityFamilyOrClass"].Value = xmlReader.GetAttribute("pluginFamily");
@@ -405,7 +405,7 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                sqliteCommand.Parameters["Is_OS_Or_Firmware"].Value = "False";
+                sqliteCommand.Parameters["IsOS_OrFirmware"].Value = "False";
                 string[] regexArray = new string[]
                 {
                     Properties.Resources.RegexAcasWindowsSoftwareName,
@@ -637,7 +637,6 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["Status"].Value = "Ongoing";
                 sqliteCommand.Parameters["UniqueFinding_ID"].Value = DBNull.Value;
                 sqliteCommand.Parameters["FirstDiscovered"].Value = firstDiscovered;
-                sqliteCommand.Parameters["Approval_Status"].Value = "Not Approved";
                 sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "False";
                 sqliteCommand.Parameters["FindingSourceFileName"].Value = fileName;
                 databaseInterface.InsertUniqueFinding(sqliteCommand);
@@ -645,7 +644,7 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 LogWriter.LogError(
-                    $"Unable to create a uniqueFinding record for plugin '{sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value}'.");
+                    $"Unable to create a UniqueFinding record for plugin '{sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value}'.");
                 throw exception;
             }
         }

@@ -42,19 +42,26 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
                 if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
-                { DatabaseBuilder.sqliteConnection.Open(); }
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
                 using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
                 {
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters["FindingType"].Value = "WASSP";
-                        sqliteCommand.Parameters["Name"].Value = "All";
-                        sqliteCommand.Parameters["SourceName"].Value = "Windows Automated Security Scanning Program (WASSP)";
+                        sqliteCommand.Parameters["GroupName"].Value = "All";
+                        sqliteCommand.Parameters["SourceName"].Value =
+                            "Windows Automated Security Scanning Program (WASSP)";
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         using (XmlReader xmlReader = XmlReader.Create(file.FilePath, xmlReaderSettings))
-                        { ParseVulnerabilityInfoFromWassp(sqliteCommand, xmlReader); }
+                        {
+                            ParseVulnerabilityInfoFromWassp(sqliteCommand, xmlReader);
+                        }
                     }
+
                     sqliteTransaction.Commit();
                 }
             }
@@ -64,7 +71,9 @@ namespace Vulnerator.Model.BusinessLogic
                 throw exception;
             }
             finally
-            { DatabaseBuilder.sqliteConnection.Close(); }
+            {
+                DatabaseBuilder.sqliteConnection.Close();
+            }
         }
 
         private void ParseVulnerabilityInfoFromWassp(SQLiteCommand sqliteCommand, XmlReader xmlReader)
@@ -78,67 +87,83 @@ namespace Vulnerator.Model.BusinessLogic
                         switch (xmlReader.Name)
                         {
                             case "date":
-                                {
-                                    sqliteCommand.Parameters["FirstDiscovered"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                    sqliteCommand.Parameters["LastObserved"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                    break;
-                                }
+                            {
+                                sqliteCommand.Parameters["FirstDiscovered"].Value =
+                                    sqliteCommand.Parameters["LastObserved"].Value =
+                                        xmlReader.ObtainCurrentNodeValue(false);
+                                break;
+                            }
                             case "host":
-                                {
-                                    sqliteCommand.Parameters["IP_Address"].Value = xmlReader.GetAttribute("ip");
-                                    sqliteCommand.Parameters["DiscoveredHostName"].Value = xmlReader.GetAttribute("name");
-                                    sqliteCommand.Parameters["MAC_Address"].Value = xmlReader.GetAttribute("mac");
-                                    break;
-                                }
+                            {
+                                sqliteCommand.Parameters["IP_Address"].Value = xmlReader.GetAttribute("ip");
+                                sqliteCommand.Parameters["DiscoveredHostName"].Value = xmlReader.GetAttribute("name");
+                                sqliteCommand.Parameters["MAC_Address"].Value = xmlReader.GetAttribute("mac");
+                                break;
+                            }
                             case "test":
-                                {
-                                    sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value = xmlReader.GetAttribute("id");
-                                    break;
-                                }
+                            {
+                                sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value =
+                                    xmlReader.GetAttribute("id");
+                                break;
+                            }
                             case "check":
-                                {
-                                    sqliteCommand.Parameters["VulnerabilityTitle"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                    break;
-                                }
+                            {
+                                sqliteCommand.Parameters["VulnerabilityTitle"].Value =
+                                    xmlReader.ObtainCurrentNodeValue(false);
+                                break;
+                            }
                             case "description":
-                                {
-                                    sqliteCommand.Parameters["VulnerabilityDescription"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                    break;
-                                }
+                            {
+                                sqliteCommand.Parameters["VulnerabilityDescription"].Value =
+                                    xmlReader.ObtainCurrentNodeValue(false);
+                                break;
+                            }
                             case "vulnerability":
-                                {
-                                    sqliteCommand.Parameters["RawRisk"].Value = xmlReader.ObtainCurrentNodeValue(false).ToRawRisk();
-                                    break;
-                                }
+                            {
+                                sqliteCommand.Parameters["RawRisk"].Value =
+                                    xmlReader.ObtainCurrentNodeValue(false).ToRawRisk();
+                                break;
+                            }
                             case "control":
+                            {
+                                switch (xmlReader.GetAttribute("regulation"))
                                 {
-                                    switch (xmlReader.GetAttribute("regulation"))
+                                    case "NIST":
                                     {
-                                        case "NIST":
-                                            { break; }
-                                        case "DOD":
-                                            { break; }
-                                        default:
-                                            { break; }
+                                        break;
                                     }
-                                    break;
+                                    case "DOD":
+                                    {
+                                        break;
+                                    }
+                                    default:
+                                    {
+                                        break;
+                                    }
                                 }
+
+                                break;
+                            }
                             case "result":
-                                {
-                                    sqliteCommand.Parameters["Status"].Value = xmlReader.ObtainCurrentNodeValue(false).ToVulneratorStatus();
-                                    break;
-                                }
+                            {
+                                sqliteCommand.Parameters["Status"].Value =
+                                    xmlReader.ObtainCurrentNodeValue(false).ToVulneratorStatus();
+                                break;
+                            }
                             case "recommendation":
-                                {
-                                    sqliteCommand.Parameters["FixText"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                    break;
-                                }
+                            {
+                                sqliteCommand.Parameters["FixText"].Value = xmlReader.ObtainCurrentNodeValue(false);
+                                break;
+                            }
                             default:
-                                { break; }
+                            {
+                                break;
+                            }
                         }
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("test"))
                     {
+                        sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "False";
                         databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                         databaseInterface.InsertHardware(sqliteCommand);
                         databaseInterface.InsertAndMapIpAddress(sqliteCommand);

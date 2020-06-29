@@ -12,6 +12,9 @@ namespace Vulnerator.Model.DataAccess
 {
     public class DatabaseInterface
     {
+        DdlReader _ddlReader = new DdlReader();
+        Assembly assembly = Assembly.GetExecutingAssembly();
+        private string _storedProcedureBase = "Vulnerator.Resources.DdlFiles.StoredProcedures.";
         public void CreateVulnerabilityRelatedIndices()
         {
             try
@@ -28,7 +31,7 @@ namespace Vulnerator.Model.DataAccess
                         {
                             case 0:
                                 {
-                                    sqliteCommand.CommandText = ReadDdl("Vulnerator.Resources.DdlFiles.v6-2-0_CreateVulnerabilityRelatedIndices.ddl");
+                                    sqliteCommand.CommandText = _ddlReader.ReadDdl("Vulnerator.Resources.DdlFiles.v6-2-0_CreateVulnerabilityRelatedIndices.ddl", assembly);
                                     break;
                                 }
                             default:
@@ -49,12 +52,11 @@ namespace Vulnerator.Model.DataAccess
             finally
             { DatabaseBuilder.sqliteConnection.Close(); }
         }
-
         public void DeleteVulnerabilityToCciMapping(SQLiteCommand sqliteCommand)
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteVulnerabilityCciMapping;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.VulnerabilityCCI_Mapping.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -68,7 +70,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.SelectVulnerabilitiesForDeletion;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.VulnerabilitiesForDeletion.dml", assembly);
                 using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
                     if (!sqliteDataReader.HasRows)
@@ -76,7 +78,7 @@ namespace Vulnerator.Model.DataAccess
 
                     using (SQLiteCommand deleteVulnsCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
-                        deleteVulnsCommand.CommandText = Properties.Resources.DeleteVulnerability;
+                        deleteVulnsCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.Vulnerability.dml", assembly);
                         while (sqliteDataReader.Read())
                         {
                             deleteVulnsCommand.Parameters.Add(new SQLiteParameter("Vulnerability_ID", sqliteDataReader["Vulnerability_ID"].ToString()));
@@ -96,7 +98,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteMitigationGroupMappingByMitigation;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.GroupMitigationOrConditionVulnerabilityMappingByMitigationOrCondition.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -110,7 +112,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteMitigation;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.MitigationOrCondition.dml", assembly);;
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -124,7 +126,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteUniqueFinding;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.UniqueFinding.dml", assembly);;
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -150,7 +152,7 @@ namespace Vulnerator.Model.DataAccess
                         {
                             case 0:
                                 {
-                                    sqliteCommand.CommandText = ReadDdl("Vulnerator.Resources.DdlFiles.v6-2-0_DropVulnerabilityRelatedIndices.ddl");
+                                    sqliteCommand.CommandText = _ddlReader.ReadDdl("Vulnerator.Resources.DdlFiles.v6-2-0_DropVulnerabilityRelatedIndices.ddl", assembly);
                                     break;
 
                                 }
@@ -177,9 +179,9 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.InsertIpAddress;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.IP_Address.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.CommandText = Properties.Resources.MapIpToHardware;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.IP_AddressHardwareMapping.dml", assembly);;
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -193,9 +195,9 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.InsertMacAddress;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.MAC_Address.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.CommandText = Properties.Resources.MapMacToHardware;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.MAC_AddressHardwareMapping.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -209,9 +211,10 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.InsertPortsProtocols;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.PortProtocolService.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.CommandText = Properties.Resources.MapPortToHardware;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.HardwarePortProtocolServiceMapping.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -225,9 +228,9 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.InsertVulnerabilityReference;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.VulnerabilityReference.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.CommandText = Properties.Resources.MapReferenceToVulnerability;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.VulnerabilityReferenceVulnerabilityMapping.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -237,26 +240,11 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public void InsertDataEntryDate(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                sqliteCommand.CommandText = Properties.Resources.InsertDataEntryDate;
-                sqliteCommand.Parameters.Add(new SQLiteParameter("EntryDate", DateTime.Now.ToShortDateString()));
-                sqliteCommand.ExecuteNonQuery();
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to insert a new data entry date.");
-                throw exception;
-            }
-        }
-
         public void InsertGroup(SQLiteCommand sqliteCommand)
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.InsertGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.Group.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -271,7 +259,7 @@ namespace Vulnerator.Model.DataAccess
             try
             {
                 sqliteCommand.Parameters.Add(new SQLiteParameter("IsVirtualServer", "False"));
-                sqliteCommand.CommandText = Properties.Resources.InsertHardware;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.Hardware.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -285,7 +273,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.InsertMitigationsOrConditionsDefaultValues;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.EmptyMitigationOrCondition.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -299,7 +287,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.InsertMitigationOrCondition;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.MitigationOrCondition.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -313,54 +301,57 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                string[] parameters = new string[]
-                {
+                string[] parameters = {
                     // CCI Table
-                    "CCI",
-                    // Groups Table
-                    "Group_ID", "Name", "Acronym", "GroupTier", "IsAccreditation", "Accreditation_eMASS_ID", "IsPlatform", "Organization_ID",
-                    "ConfidentialityLevel_ID", "IntegrityLevel_ID", "AvailabilityLevel_ID", "SystemCategorization_ID", "AccreditationVersion", "CybersafeGrade",
-                    "FISCAM_Applies", "ControlSelection_ID", "HasForeignNationals", "SystemType", "RDTE_Zone", "StepOneQuestionnaire_ID", "SAP_ID",
-                    "PIT_Determination_ID",
+                    "CCI_Number",
                     // FindingTypes Table
                     "FindingType",
+                    // Groups Table
+                    "Group_ID", "GroupName", "GroupAcronym", "GroupTier", "IsAccreditation", "Accreditation_eMASS_ID", "IsPlatform", "Organization_ID",
+                    "ConfidentialityLevel_ID", "IntegrityLevel_ID", "AvailabilityLevel_ID", "SystemCategorization_ID", "AccreditationVersion", "CybersafeGrade",
+                    "FISCAM_Applies", "ControlSelection_ID", "HasForeignNationals", "SystemType", "RDTE_Zone", "StepOneQuestionnaire_ID", "SecurityAssessmentProcedure_ID",
+                    "PIT_Determination_ID",
                     // Hardware Table
-                    "Hardware_ID", "DiscoveredHostName", "FQDN", "NetBIOS", "IsVirtualServer", "NIAP_Level", "Manufacturer", "ModelNumber", "OS",
-                    "IsIA_Enabled", "SerialNumber", "Role", "Lifecycle_Status_ID", "ScanIP", "Found21745", "Found26917", "DisplayedHostName",
+                    "Hardware_ID", "DisplayedHostName", "DiscoveredHostName", "FQDN", "NetBIOS", "ScanIP", "Found21745", "Found26917", "IsVirtualServer", "NIAP_Level",
+                    "Manufacturer", "ModelNumber", "IsIA_Enabled", "SerialNumber", "Role", "LifecycleStatus_ID",  "OperatingSystem",
                     // IP_Addresses Table
                     "IP_Address_ID", "IP_Address",
                     // MAC_Addresses Table
                     "MAC_Address_ID", "MAC_Address",
+                    // MitigationsOrConditions Table
+                    "MitigationOrCondition_ID", "ImpactDescription",  "PredisposingConditions", "TechnicalMitigation", "ProposedMitigation",
+                    "ThreatRelevance", "SeverityPervasiveness", "Likelihood", "Impact", "Risk", "ResidualRisk", "ResidualRiskAfterProposed",
+                    "MitigatedStatus", "EstimatedCompletionDate", "ApprovalDate", "ExpirationDate", "IsApproved", "Approver",
                     // PortsProtocols Table
-                    "PortsProtocols_ID", "Port", "Protocol", "DiscoveredService", "DisplayService",
+                    "PortProtocol_ID", "Port", "Protocol",
+                    // PortsServices Table
+                    "PortService_ID", "DiscoveredServiceName", "DisplayedServiceName", "ServiceAcronym",
                     // Software Table
                     "Software_ID", "DiscoveredSoftwareName", "DisplayedSoftwareName", "SoftwareAcronym", "SoftwareVersion",
-                    "Function", "InstallDate", "DADMS_ID", "DADMS_Disposition", "DADMS_LDA", "HasCustomCode", "IaOrIa_Enabled",
-                    "Is_OS_Or_Firmware", "FAM_Accepted", "ExternallyAuthorized", "ReportInAccreditationGlobal",
-                    "ApprovedForBaselineGlobal", "BaselineApproverGlobal", "Instance",
+                    "Function", "DADMS_ID", "DADMS_Disposition", "DADMS_LastDateAuthorized", "HasCustomCode", "IA_OrIA_Enabled",
+                    "IsOS_OrFirmware", "FAM_Accepted", "ExternallyAuthorized", "ReportInAccreditationGlobal",
+                    "ApprovedForBaselineGlobal", "BaselineApproverGlobal", "Instance", "InstallDate",
                     // UniqueFindings Table
-                    "UniqueFinding_ID", "InstanceIdentifier", "ToolGeneratedOutput", "Comments", "FindingDetails", "TechnicalMitigation",
-                    "ProposedMitigation", "PredisposingConditions", "Impact", "Likelihood", "Severity", "Risk", "ResidualRisk",
-                    "FirstDiscovered", "LastObserved", "Approval_Status", "ApprovalDate", "Approval_Expiration_Date", "Approved_By",
-                    "DeltaAnalysisRequired", "FindingType_ID", "Finding_Source_ID", "Status", "Vulnerability_ID", "Hardware_ID",
+                    "UniqueFinding_ID", "InstanceIdentifier", "ToolGeneratedOutput", "Comments", "FindingDetails",  "FirstDiscovered",  "LastObserved",
+                    "DeltaAnalysisRequired", "FindingType_ID", "FindingSourceFile_ID", "Status", "Vulnerability_ID", "Hardware_ID",  "Software_ID",
                     "SeverityOverride", "SeverityOverrideJustification", "TechnologyArea", "WebDB_Site", "WebDB_Instance",
                     "Classification", "CVSS_EnvironmentalScore", "CVSS_EnvironmentalVector",
                     // UniqueFindingSourceFiles Table
                     "FindingSourceFile_ID", "FindingSourceFileName", 
                     // Vulnerabilities Table
-                    "Vulnerability_ID", "UniqueVulnerabilityIdentifier", "VulnerabilityGroup_ID", "VulnerabilityGroup_Title",
+                    "Vulnerability_ID", "UniqueVulnerabilityIdentifier", "VulnerabilityGroupIdentifier", "VulnerabilityGroupTitle",
                     "SecondaryVulnerabilityIdentifier", "VulnerabilityFamilyOrClass", "VulnerabilityVersion", "VulnerabilityRelease",
                     "VulnerabilityTitle", "VulnerabilityDescription", "RiskStatement", "FixText", "PublishedDate", "ModifiedDate",
                     "FixPublishedDate", "RawRisk", "CVSS_BaseScore", "CVSS_BaseVector", "CVSS_TemporalScore", "CVSS_TemporalVector",
-                    "CheckContent", "FalsePositives", "FalseNegatives", "Documentable", "Mitigations", "MitigationControl", "IsActive",
-                    "PotentialImpacts", "ThirdPartyTools", "SecurityOverrideGuidance", "Overflow", "Severity_Override_Guidance", "Overflow",
+                    "CheckContent", "FalsePositives", "FalseNegatives", "IsDocumentable", "Mitigations", "MitigationControl", "IsActive",
+                    "PotentialImpacts", "ThirdPartyTools", "SecurityOverrideGuidance", "SeverityOverrideGuidance", "Overflow",
                     // VulnerabilityReferences Table
                     "Reference_ID", "Reference", "ReferenceType",
                     // VulnerabilitySources Table
                     "VulnerabilitySource_ID", "SourceName", "SourceSecondaryIdentifier", "VulnerabilitySourceFileName",
                     "SourceDescription", "SourceVersion", "SourceRelease",
-                    // ScapScores Table
-                    "Score", "ScanDate"
+                    // SCAP_Scores Table
+                    "SCAP_Score_ID", "Score", "ScanDate"
                 };
                 foreach (string parameter in parameters)
                 { sqliteCommand.Parameters.Add(new SQLiteParameter(parameter, DBNull.Value)); }
@@ -377,7 +368,7 @@ namespace Vulnerator.Model.DataAccess
             try
             {
                 sqliteCommand.Parameters.Add(new SQLiteParameter("FindingSourceFileName", file.FileName));
-                sqliteCommand.CommandText = Properties.Resources.InsertUniqueFindingSource;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.UniqueFindingSourceFile.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -391,7 +382,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.InsertUniqueFindingSource;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.UniqueFindingSourceFile.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -405,7 +396,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.InsertScapScore;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.ScapScore.dml", assembly);;
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -423,7 +414,7 @@ namespace Vulnerator.Model.DataAccess
                 { sqliteCommand.Parameters["HasCustomCode"].Value = "True"; }
                 else
                 { sqliteCommand.Parameters["HasCustomCode"].Value = "False"; }
-                sqliteCommand.CommandText = Properties.Resources.InsertSoftware;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.Software.dml", assembly);;
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -437,7 +428,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.InsertUniqueFinding;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.UniqueFinding.dml", assembly);;
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -451,7 +442,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.InsertVulnerability;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.Vulnerability.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -465,7 +456,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.InsertVulnerabilitySource;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.VulnerabilitySource.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -479,7 +470,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.MapMitigationToGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.MitigationOrConditionGroupMapping.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -493,12 +484,12 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.MapHardwareToGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.HardwareGroupMapping.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
             {
-                LogWriter.LogError($"Unable to map host '{sqliteCommand.Parameters["DiscoveredHostName"].Value}' to group '{sqliteCommand.Parameters["Name"].Value}'.");
+                LogWriter.LogError($"Unable to map host '{sqliteCommand.Parameters["DiscoveredHostName"].Value}' to group '{sqliteCommand.Parameters["GroupName"].Value}'.");
                 throw exception;
             }
         }
@@ -507,10 +498,10 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.MapHardwareToSoftware;
                 sqliteCommand.Parameters.Add(new SQLiteParameter("ReportInAccreditation", "False"));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("ApprovedForBaseline", "False"));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("BaselineApprover", DBNull.Value));
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.HardwareSoftwareMapping.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -524,7 +515,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.MapHardwareToVulnerabilitySource;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.HardwareVulnerabilitySourceMapping.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -538,7 +529,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.MapVulnerabilityToCci;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.VulnerabilityCCI_Mapping.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -552,7 +543,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.MapVulnerabilityToSource;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.VulnerabilitySourceVulnerabilityMapping.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -581,7 +572,7 @@ namespace Vulnerator.Model.DataAccess
             try
             {
                 List<string> vulnerabilityIds = new List<string>();
-                sqliteCommand.CommandText = Properties.Resources.SelectUniqueVulnerabilityIdentiferBySource;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.UniqueVulnerabilityIdentifiersBySource.dml", assembly);
                 using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
                     if (sqliteDataReader.HasRows)
@@ -603,7 +594,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.SelectVulnerabilitySourceName;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.VulnerabilitySourceName.dml", assembly);
                 using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
                     if (sqliteDataReader.HasRows)
@@ -624,7 +615,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.SelectHardware;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.Hardware.dml", assembly);
                 using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
                     if (sqliteDataReader.HasRows)
@@ -650,7 +641,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.SetCredentialedScanStatus;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.CredentialedScanStatus.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -664,7 +655,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.UpdateMitigationOrCondition;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.MitigationOrCondition.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -682,13 +673,13 @@ namespace Vulnerator.Model.DataAccess
                 {
                     case "ACAS":
                         {
-                            sqliteCommand.CommandText = Properties.Resources.UpdateUniqueFindingFromAcas;
+                            sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.UniqueFinding.dml", assembly);
                             sqliteCommand.ExecuteNonQuery();
                             break;
                         }
                     case "CKL":
                         {
-                            sqliteCommand.CommandText = Properties.Resources.UpdateUniqueFindingFromCkl;
+                            sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.CklUniqueFinding.dml", assembly);
                             sqliteCommand.ExecuteNonQuery();
                             break;
                         }
@@ -707,7 +698,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.UpdateUniqueFindingMitigationOrCondition;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.UniqueFindingMitigationOrCondition.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -721,7 +712,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.UpdateVulnerability;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.Vulnerability.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -735,7 +726,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.UpdateDeltaAnalysisFlag;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.DeltaAnalysisFlag.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -753,9 +744,9 @@ namespace Vulnerator.Model.DataAccess
                 {
                     case "ACAS":
                         {
-                            sqliteCommand.CommandText = Properties.Resources.UpdateVulnerabilitySourceFromAcas;
+                            sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.AcasVulnerabilitySource.dml", assembly);
                             sqliteCommand.ExecuteNonQuery();
-                            sqliteCommand.CommandText = Properties.Resources.DeleteAcasVulnerabilitiesMappedToUnknownVersion;
+                            sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.AcasVulnerabilitiesMappedToUnknownVersion.dml", assembly);
                             sqliteCommand.ExecuteNonQuery();
                             return;
                         }
@@ -763,7 +754,7 @@ namespace Vulnerator.Model.DataAccess
                         {
                             if (VulnerabilitySourceUpdateRequired(sqliteCommand))
                             {
-                                sqliteCommand.CommandText = Properties.Resources.UpdateVulnerabilitySource;
+                                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.VulnerabilitySource.dml", assembly);
                                 sqliteCommand.ExecuteNonQuery();
                             }
                             return;
@@ -783,7 +774,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.UpdateRequiredReportIsSelected;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.RequiredReportIsSelected.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -806,26 +797,6 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        private string ReadDdl(string ddlResourceFile)
-        {
-            try
-            {
-                Assembly assembly = Assembly.GetExecutingAssembly();
-                string ddlText = string.Empty;
-                using (Stream stream = assembly.GetManifestResourceStream(ddlResourceFile))
-                {
-                    using (StreamReader streamReader = new StreamReader(stream))
-                    { ddlText = streamReader.ReadToEnd(); }
-                }
-                return ddlText;
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError($"Unable to read DDL Resource File '{ddlResourceFile}'.");
-                throw exception;
-            }
-        }
-
         private bool VulnerabilitySourceUpdateRequired(SQLiteCommand sqliteCommand)
         {
             try
@@ -833,7 +804,7 @@ namespace Vulnerator.Model.DataAccess
                 bool versionUpdated = false;
                 bool versionSame = false;
                 bool releaseUpdated = false;
-                sqliteCommand.CommandText = Properties.Resources.SelectVulnerabilitySourceVersionAndRelease;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.VulnerabilitySourceVersionAndRelease.dml", assembly);
                 using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
                     if (sqliteDataReader.HasRows)
@@ -884,7 +855,7 @@ namespace Vulnerator.Model.DataAccess
                 bool ingestedReleaseIsNewer = false;
                 bool existingVersionIsNewer = false;
                 bool existingReleaseIsNewer = false;
-                sqliteCommand.CommandText = Properties.Resources.SelectVulnerabilityVersionAndRelease;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.VulnerabilityVersionAndRelease.dml", assembly);
                 using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
                     if (!sqliteDataReader.HasRows) return "Record Not Found";
@@ -946,7 +917,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.UpdateVulnerabilityDates;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.VulnerabilityDates.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -961,7 +932,7 @@ namespace Vulnerator.Model.DataAccess
 
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.UpdateGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.Group.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -975,7 +946,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteGroupsCCIsMappingByGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.GroupCCI_MappingByGroup.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -989,7 +960,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteGroupsWaiversMappingByGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.GroupWaiverMappingByGroup.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -1003,7 +974,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteGroupsOverlaysMappingByGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.GroupOverlayMappingByGroup.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -1017,7 +988,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteGroupsConnectedSystemsMappingByGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.GroupConnectedSystemByGroup.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -1031,7 +1002,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteGroupsMitigationsOrConditionsMappingByGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.GroupMitigationOrConditionVulnerabilityMappingByGroup.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -1045,7 +1016,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteGroupsConnectionsMappingByGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.GroupConnectionMappingByGroup.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -1059,7 +1030,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteHardwareGroupsMappingByGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.HardwareGroupMappingByGroup.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -1073,12 +1044,12 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteGroups_IATA_StandardsMappingByGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.GroupIATA_StandardMappingByGroup.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
             {
-                LogWriter.LogError($"Unable to delete GroupsIATA_Standards mapping for Group with Group_ID '{sqliteCommand.Parameters["Group_ID"].Value}'.");
+                LogWriter.LogError($"Unable to delete Group / IATA_Standard mapping for Group with Group_ID '{sqliteCommand.Parameters["Group_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -1087,7 +1058,7 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = Properties.Resources.DeleteGroupsContactsMappingByGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.GroupContactMappingByGroup.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -1112,7 +1083,7 @@ namespace Vulnerator.Model.DataAccess
                 DeleteGroups_IATA_StandardsMappingByGroup(sqliteCommand);
                 DeleteGroupsContactsMappingByGroup(sqliteCommand);
                 // Execute DeleteGroup Command
-                sqliteCommand.CommandText = Properties.Resources.DeleteGroup;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.Group.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)

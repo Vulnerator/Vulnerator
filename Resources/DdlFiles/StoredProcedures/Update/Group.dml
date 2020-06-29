@@ -1,0 +1,26 @@
+﻿UPDATE
+    Groups
+SET
+    GroupName = @GroupName,
+    GroupAcronym = @GroupAcronym,
+    GroupTier = @GroupTier,
+    IsAccreditation = @IsAccreditation,
+    Accreditation_eMASS_ID = @Accreditation_eMASS_ID,
+    IsPlatform = @IsPlatform,
+    Organization_ID = @Organization_ID,
+    ConfidentialityLevel_ID = @ConfidentialityLevel_ID,
+    IntegrityLevel_ID = @IntegrityLevel_ID,
+    AvailabilityLevel_ID = @AvailabilityLevel_ID,
+    SystemCategorization_ID = @SystemCategorization_ID,
+    AccreditationVersion = @AccreditationVersion,
+    CybersafeGrade = @CybersafeGrade,
+    FISCAM_Applies = @FISCAM_Applies,
+    ControlSelection_ID = @ControlSelection_ID,
+    HasForeignNationals = @HasForeignNationals,
+    SystemType = @SystemType,
+    RDTE_Zone = @RDTE_Zone,
+    StepOneQuestionnaire_ID = @StepOneQuestionnaire_ID,
+    SAP_ID = @SAP_ID,
+    PIT_Determination_ID = @PIT_Determination_ID
+WHERE
+    Group_ID = @Group_ID;

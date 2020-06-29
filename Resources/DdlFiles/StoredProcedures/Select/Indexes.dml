@@ -1,0 +1,6 @@
+﻿SELECT
+    name
+FROM
+    sqlite_master
+WHERE
+    TYPE == 'index';

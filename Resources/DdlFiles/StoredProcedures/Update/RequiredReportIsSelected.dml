@@ -1,0 +1,7 @@
+﻿UPDATE
+    RequiredReportUserSelections
+SET
+    IsReportSelected = @IsReportSelected
+WHERE
+    RequiredReport_ID = @RequiredReport_ID
+    AND UserName = @UserName;

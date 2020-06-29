@@ -1,14 +1,14 @@
 INSERT INTO
     IntegrityLevels
 VALUES
-(NULL, 'High');
+    (NULL, 'High');
 
 INSERT INTO
     IntegrityLevels
 VALUES
-(NULL, 'Moderate');
+    (NULL, 'Moderate');
 
 INSERT INTO
     IntegrityLevels
 VALUES
-(NULL, 'Low');
+    (NULL, 'Low');

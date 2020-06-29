@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS SoftwareHardware (
     SoftwareHardware_ID INTEGER PRIMARY KEY,
     Software_ID INTEGER NOT NULL,
     Hardware_ID INTEGER NOT NULL,
-    InstallDate DATETIME NOT NULL,
+    InstallDate DATETIME,
     ReportInAccreditation NVARCHAR (5),
     ApprovedForBaseline NVARCHAR (5),
     BaselineApprover NVARCHAR (50),
