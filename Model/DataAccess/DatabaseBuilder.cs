@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Xml;
 using Vulnerator.Helper;
 using Vulnerator.Model.Object;
+using File = System.IO.File;
 
 namespace Vulnerator.Model.DataAccess
 {
@@ -37,7 +38,8 @@ namespace Vulnerator.Model.DataAccess
             try
             {
                 LogWriter.LogStatusUpdate($"Begin verifying and, if needed, creating and / or updating database '{Properties.Settings.Default.Database}'.");
-                SQLiteConnection.CreateFile(Properties.Settings.Default.Database);
+                if (!File.Exists(Properties.Settings.Default.Database))
+                { SQLiteConnection.CreateFile(Properties.Settings.Default.Database); }
                 if (!sqliteConnection.State.ToString().Equals("Open"))
                 { sqliteConnection.Open(); }
                 using (SQLiteTransaction sqliteTransaction = sqliteConnection.BeginTransaction())

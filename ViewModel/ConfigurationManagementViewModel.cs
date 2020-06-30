@@ -97,8 +97,8 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private List<PortProtocol> _pps;
-        public List<PortProtocol> PortsProtocols
+        private List<PortProtocolService> _pps;
+        public List<PortProtocolService> PortsProtocols
         {
             get => _pps;
             set
@@ -254,9 +254,9 @@ namespace Vulnerator.ViewModel
                     // PortsProtocols = databaseContext.PortsProtocols
                     //     .Include(p => p.HardwarePortsProtocols.Select(h => h.Hardware))
                     //     .AsNoTracking().ToList();
-                    // Groups = databaseContext.Groups
-                    //     .Include(g => g.Hardwares)
-                    //     .AsNoTracking().ToList();
+                    Groups = databaseContext.Groups
+                        .Include(g => g.Hardwares)
+                        .AsNoTracking().ToList();
                     // VulnerabilitySources = databaseContext.VulnerabilitySources
                     //     .Where(vs => !vs.SourceName.Contains("Nessus"))
                     //     .OrderBy(vs => vs.SourceName)

@@ -326,6 +326,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 databaseInterface.MapVulnerabilityToCci(sqliteCommand);
                                 sqliteCommand.Parameters["CCI_Number"].Value = string.Empty;
                             }
+                            ccis.Clear();
                         }
                         return;
                     }

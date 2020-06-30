@@ -1,43 +1,86 @@
-﻿SELECT
-    UniqueVulnerabilityIdentifier,
-    VulnerabilityVersion,
-    VulnerabilityTitle,
-    VulnerabilityDescription,
-    SourceName,
-    SourceVersion,
-    SourceRelease,
-    Comments,
-    FindingDetails,
-    RawRisk,
-    Status,
-    DisplayedSoftwareName,
-    GROUP_CONCAT(DISTINCT Reference) AS Reference,
-    GROUP_CONCAT(DISTINCT ScanIP) AS IPs,
-    GROUP_CONCAT(
-        DISTINCT (
-            Control_Family || '-' || Control_Number || '.' || Enhancement
-        )
-    ) AS NIST_Controls
-FROM
-    Vulnerabilities
-    LEFT JOIN UniqueFindings ON Vulnerabilities.Vulnerability_ID = UniqueFindings.Vulnerability_ID
-    LEFT JOIN Software ON UniqueFindings.Software_ID = Software.Software_ID
-    LEFT JOIN Hardware ON UniqueFindings.Hardware_ID = Hardware.Hardware_ID
-    LEFT JOIN FindingTypes ON UniqueFindings.FindingType_ID = FindingTypes.FindingType_ID
-    LEFT JOIN VulnerabilitiesCCIs ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesCCIs.Vulnerability_ID
-    LEFT JOIN CCIs ON VulnerabilitiesCCIs.CCI_ID = CCIs.CCI_ID
-    LEFT JOIN NistControlsCCIs ON CCIs.CCI_ID = NistControlsCCIs.CCI_ID
-    LEFT JOIN NIST_Controls ON NistControlsCCIs.NIST_Control_ID = NIST_Controls.NIST_Control_ID
-    LEFT JOIN VulnerabilitiesVulnerabilitySources ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesVulnerabilitySources.Vulnerability_ID
-    LEFT JOIN VulnerabilitySources ON VulnerabilitiesVulnerabilitySources.VulnerabilitySource_ID = VulnerabilitySources.VulnerabilitySource_ID
-    LEFT JOIN VulnerabilitiesVulnerabilityReferences ON Vulnerabilities.Vulnerability_ID = VulnerabilitiesVulnerabilityReferences.Vulnerability_ID
-    LEFT JOIN VulnerabilityReferences ON VulnerabilitiesVulnerabilityReferences.Reference_ID = VulnerabilityReferences.Reference_ID
-WHERE
-    FindingType = @FindingType
-GROUP BY
-    Status,
-    UniqueVulnerabilityIdentifier,
-    SourceVersion,
-    SourceRelease
-ORDER BY
-    UniqueVulnerabilityIdentifier
+﻿SELECT UF.Vulnerability_ID                                                    as Vulnerability_ID,
+       V.VulnerabilityGroupTitle,
+       V.VulnerabilityTitle,
+       V.VulnerabilityDescription,
+       FT.FindingType,
+       GROUP_CONCAT(DISTINCT
+                    NC.ControlFamily || '-' || NC.ControlNumber || '.' ||
+                    NC.ControlEnhancement)                                    as NistControl,
+       GROUP_CONCAT(DISTINCT CI.CCI_Number)                                   as CCIs,
+       UF.InstanceIdentifier,
+       V.UniqueVulnerabilityIdentifier,
+       V.SecondaryVulnerabilityIdentifier,
+       V.VulnerabilityGroupIdentifier,
+       V.VulnerabilityVersion                                                 as VulnVerison,
+       V.VulnerabilityRelease                                                 as VulnRelease,
+       UFMOC.EstimatedCompletionDate                                          as UniqueEstimatedCompletionDate,
+       VS.SourceName                                                          as VulnSourceName,
+       VS.SourceVersion                                                       as VulnSourceVersion,
+       VS.SourceRelease                                                       as VulnSourceRelease,
+       Status                                                                 as RawStatus,
+       GroupsMitigationsOrConditionsVulnerabilities.MitigatedStatus           as GroupMitigatedStatus,
+       UFMOC.MitigatedStatus                                                  as UniqueMitigatedStatus,
+       Comments,
+       FindingDetails,
+       ToolGeneratedOutput,
+       V.RawRisk,
+       GROUP_CONCAT(DISTINCT H.DisplayedHostName)                             as HostName,
+       GROUP_CONCAT(DISTINCT S.DisplayedSoftwareName)                         as DisplayedSoftwareName,
+       UFMOC.TechnicalMitigation                                              as UniqueTechnicalMitigation,
+       GroupsMitigationsOrConditionsVulnerabilities.TechnicalMitigation       as GroupTechnicalMitigation,
+       UFMOC.PredisposingConditions                                           as UniquePredisposingConditions,
+       GroupsMitigationsOrConditionsVulnerabilities.PredisposingConditions    as GroupPredisposingConditions,
+       UFMOC.SeverityPervasiveness                                            as UniqueSeverityPervasiveness,
+       GroupsMitigationsOrConditionsVulnerabilities.SeverityPervasiveness     as GroupSeverityPervasiveness,
+       UFMOC.ThreatRelevance                                                  as UniqueThreatRelevance,
+       GroupsMitigationsOrConditionsVulnerabilities.ThreatRelevance           as GroupThreatRelevance,
+       UFMOC.ThreatDescription                                                as UniqueThreatDescription,
+       GroupsMitigationsOrConditionsVulnerabilities.ThreatDescription         as GroupThreatDescription,
+       UFMOC.Likelihood                                                       as UniqueLikelihood,
+       GroupsMitigationsOrConditionsVulnerabilities.Likelihood                as GroupLikelihood,
+       UFMOC.Impact                                                           as UniqueImpact,
+       GroupsMitigationsOrConditionsVulnerabilities.Impact                    as GroupImpact,
+       UFMOC.ImpactDescription                                                as UniqueImpactDescription,
+       GroupsMitigationsOrConditionsVulnerabilities.ImpactDescription         as GroupImpactDescription,
+       UFMOC.ResidualRisk                                                     as UniqueResidualRisk,
+       GroupsMitigationsOrConditionsVulnerabilities.ResidualRisk              as GroupResidualRisk,
+       UFMOC.ProposedMitigation                                               as UniqueProposedMitigation,
+       GroupsMitigationsOrConditionsVulnerabilities.ProposedMitigation        as GroupProposedMitigation,
+       UFMOC.ResidualRiskAfterProposed                                        as UniqueResidualRiskAfterProposed,
+       GroupsMitigationsOrConditionsVulnerabilities.ResidualRiskAfterProposed as GroupResidualRiskAfterProposed
+FROM UniqueFindings UF
+         LEFT JOIN Hardware H on UF.Hardware_ID = H.Hardware_ID
+         LEFT JOIN Software S on UF.Software_ID = S.Software_ID
+         LEFT JOIN (SELECT GMOCV.Group_ID,
+                           GMOCV.Vulnerability_ID,
+                           GMOCV.MitigationOrCondition_ID,
+                           GROUP_CONCAT(DISTINCT MitigatedStatus)           as MitigatedStatus,
+                           GROUP_CONCAT(DISTINCT TechnicalMitigation)       as TechnicalMitigation,
+                           GROUP_CONCAT(DISTINCT PredisposingConditions)    as PredisposingConditions,
+                           GROUP_CONCAT(DISTINCT SeverityPervasiveness)     as SeverityPervasiveness,
+                           GROUP_CONCAT(DISTINCT ThreatRelevance)           as ThreatRelevance,
+                           GROUP_CONCAT(DISTINCT ThreatDescription)         as ThreatDescription,
+                           GROUP_CONCAT(DISTINCT Likelihood)                as Likelihood,
+                           GROUP_CONCAT(DISTINCT Impact)                    as Impact,
+                           GROUP_CONCAT(DISTINCT ImpactDescription)         as ImpactDescription,
+                           GROUP_CONCAT(DISTINCT ResidualRisk)              as ResidualRisk,
+                           GROUP_CONCAT(DISTINCT ProposedMitigation)        as ProposedMitigation,
+                           GROUP_CONCAT(DISTINCT ResidualRiskAfterProposed) as ResidualRiskAfterProposed
+                    FROM GroupsMitigationsOrConditionsVulnerabilities GMOCV
+                             LEFT JOIN MitigationsOrConditions MOC
+                                       on GMOCV.MitigationOrCondition_ID = MOC.MitigationOrCondition_ID
+                             LEFT JOIN Groups G2 on GMOCV.Group_ID = G2.Group_ID
+                    ORDER BY GMOCV.Vulnerability_ID, G2.GroupTier) GroupsMitigationsOrConditionsVulnerabilities
+                   on UF.Vulnerability_ID = GroupsMitigationsOrConditionsVulnerabilities.Vulnerability_ID
+         LEFT JOIN FindingTypes FT on UF.FindingType_ID = FT.FindingType_ID
+         LEFT JOIN Vulnerabilities V on UF.Vulnerability_ID = V.Vulnerability_ID
+         LEFT JOIN VulnerabilitiesVulnerabilitySources VVS on V.Vulnerability_ID = VVS.Vulnerability_ID
+         LEFT JOIN VulnerabilitySources VS on VVS.VulnerabilitySource_ID = VS.VulnerabilitySource_ID
+         LEFT JOIN VulnerabilitiesCCIs VCI on V.Vulnerability_ID = VCI.Vulnerability_ID
+         LEFT JOIN CCIs CI on VCI.CCI_ID = CI.CCI_ID
+         LEFT JOIN NIST_ControlsCCIs NCCI on CI.CCI_ID = NCCI.CCI_ID
+         LEFT JOIN NIST_Controls NC on NCCI.NIST_Control_ID = NC.NIST_Control_ID
+         LEFT JOIN MitigationsOrConditions UFMOC
+                   on UF.MitigationOrCondition_ID = UFMOC.MitigationOrCondition_ID
+GROUP BY FT.FindingType, VS.SourceName, UF.InstanceIdentifier, V.UniqueVulnerabilityIdentifier, Status
+ORDER BY FT.FindingType, VS.SourceName, V.UniqueVulnerabilityIdentifier, Status

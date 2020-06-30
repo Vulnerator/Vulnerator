@@ -8,12 +8,10 @@ CREATE TABLE IF NOT EXISTS HardwarePortsProtocolsServices
     BoundariesCrossed              NVARCHAR(25),
     DOD_Compliant                  NVARCHAR(5),
     Classification                 NVARCHAR(25),
-    Software_ID                    INTEGER,
     UNIQUE (
             Hardware_ID,
             PortProtocolService_ID
         ) ON CONFLICT IGNORE,
     FOREIGN KEY (Hardware_ID) REFERENCES Hardware (Hardware_ID),
-    FOREIGN KEY (PortProtocolService_ID) REFERENCES PortsProtocolsServices (PortProtocolService_ID),
-    FOREIGN KEY (Software_ID) REFERENCES  Software(Software_ID)
+    FOREIGN KEY (PortProtocolService_ID) REFERENCES PortsProtocolsServices (PortProtocolService_ID)
 );

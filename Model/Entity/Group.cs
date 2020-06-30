@@ -15,7 +15,7 @@ namespace Vulnerator.Model.Entity
         public Group()
         {
             CCIs = new ObservableCollection<CCI>();
-            MitigationsOrConditions = new ObservableCollection<MitigationOrCondition>();
+            GroupsMitigationsOrConditionsVulnerabilities = new ObservableCollection<GroupMitigationOrConditionVulnerability>();
             Contacts = new ObservableCollection<Contact>();
             Hardwares = new ObservableCollection<Hardware>();
             Waivers = new ObservableCollection<Waiver>();
@@ -110,7 +110,7 @@ namespace Vulnerator.Model.Entity
         public bool IsChecked { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MitigationOrCondition> MitigationsOrConditions { get; set; }
+        public virtual ICollection<GroupMitigationOrConditionVulnerability> GroupsMitigationsOrConditionsVulnerabilities { get; set; }
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CCI> CCIs { get; set; }

@@ -360,11 +360,11 @@
     <Compile Include="Model\Entity\MitigationOrCondition.cs" />
     <Compile Include="Model\Entity\NetworkConnectionRule.cs" />
     <Compile Include="Model\Entity\NIST_Control.cs" />
+    <Compile Include="Model\Entity\NIST_ControlCCI.cs" />
     <Compile Include="Model\Entity\Organization.cs" />
     <Compile Include="Model\Entity\Overlay.cs" />
     <Compile Include="Model\Entity\PIT_Determination.cs" />
-    <Compile Include="Model\Entity\PortService.cs" />
-    <Compile Include="Model\Entity\PortProtocol.cs" />
+    <Compile Include="Model\Entity\PortProtocolService.cs" />
     <Compile Include="Model\Entity\RelatedDocument.cs" />
     <Compile Include="Model\Entity\RelatedTesting.cs" />
     <Compile Include="Model\Entity\ReportFindingTypeUserSettings.cs" />
@@ -970,6 +970,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\RequiredReportUserSelections.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ReportFindingTypeUserSettings.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ReportSeverityUserSettings.ddl" />
+    <Content Include="Resources\DdlFiles\Tables\Create\HardwareSoftwarePortsProtocolsServices.ddl" />
     <Content Include="Resources\UserGuide\Images\ThemeFlyout.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

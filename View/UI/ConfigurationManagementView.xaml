@@ -862,7 +862,7 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Width="*" Binding="{Binding Name}" Header="Name" HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                <DataGridTextColumn Width="*" Binding="{Binding GroupName}" Header="Name" HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBlock}" TargetType="TextBlock">
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
@@ -870,7 +870,7 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="*" Binding="{Binding Acronym}" Header="Acronym" HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                <DataGridTextColumn Width="*" Binding="{Binding GroupAcronym}" Header="Acronym" HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style BasedOn="{StaticResource MetroTextBlock}" TargetType="TextBlock">
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />

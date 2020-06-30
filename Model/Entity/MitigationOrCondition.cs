@@ -6,13 +6,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
+    [Table("MitigationsOrConditions")]
     public class MitigationOrCondition : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public MitigationOrCondition()
-        { Groups = new ObservableCollection<Group>(); }
+        { GroupsMitigationsOrConditionsVulnerabilities = new ObservableCollection<GroupMitigationOrConditionVulnerability>(); }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -29,6 +30,9 @@ namespace Vulnerator.Model.Entity
 
         [StringLength(2000)]
         public string ProposedMitigation { get; set; }
+        
+        [StringLength(2000)]
+        public string ThreatDescription { get; set; }
 
         [StringLength(10)]
         public string ThreatRelevance { get; set; }
@@ -70,7 +74,7 @@ namespace Vulnerator.Model.Entity
         public bool IsChecked { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Group> Groups { get; set; }
+        public virtual ICollection<GroupMitigationOrConditionVulnerability> GroupsMitigationsOrConditionsVulnerabilities { get; set; }
         
         public virtual UniqueFinding UniqueFinding { get; set; }
     }

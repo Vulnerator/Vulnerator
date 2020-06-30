@@ -15,8 +15,8 @@ namespace Vulnerator.Model.Entity
         {
             Vulnerabilities = new ObservableCollection<Vulnerability>();
             Groups = new ObservableCollection<Group>();
-            NIST_Controls = new ObservableCollection<NIST_Control>();
             CustomTestCases = new ObservableCollection<CustomTestCase>();
+            NIST_ControlsCCIs = new ObservableCollection<NIST_ControlCCI>();
         }
 
         [Key]
@@ -44,11 +44,11 @@ namespace Vulnerator.Model.Entity
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Group> Groups { get; set; }
-        
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NIST_Control> NIST_Controls { get; set; }
-        
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CustomTestCase> CustomTestCases { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<NIST_ControlCCI> NIST_ControlsCCIs { get; set; }
     }
 }

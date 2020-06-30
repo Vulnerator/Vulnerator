@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
+    [Table("UniqueFindingsSourceFiles")]
     public class UniqueFindingSourceFile : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;

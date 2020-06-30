@@ -8,11 +8,15 @@ namespace Vulnerator.Model.DataAccess
     public class DatabaseContext : DbContext
     {
         public DatabaseContext() : base(DatabaseBuilder.sqliteConnection, false)
-        { }
+        {
+        }
 
         public virtual DbSet<AdditionalTestConsideration> AdditionalTestConsiderations { get; set; }
         public virtual DbSet<AuthorizationCondition> AuthorizationConditions { get; set; }
-        public virtual DbSet<AuthorizationToConnectOrInterim_ATC_PendingItem> AuthorizationToConnectOrInterim_ATC_PendingItems { get; set; }
+
+        public virtual DbSet<AuthorizationToConnectOrInterim_ATC_PendingItem>
+            AuthorizationToConnectOrInterim_ATC_PendingItems { get; set; }
+
         public virtual DbSet<AvailabilityLevel> AvailabilityLevels { get; set; }
         public virtual DbSet<CCI> CCIs { get; set; }
         public virtual DbSet<Certification> Certifications { get; set; }
@@ -36,6 +40,11 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<FindingType> FindingTypes { get; set; }
         public virtual DbSet<GoverningPolicy> GoverningPolicies { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
+        public virtual DbSet<GroupMitigationOrConditionVulnerability> GroupsMitigationsOrConditionsVulnerabilities
+        {
+            get;
+            set;
+        }
         public virtual DbSet<Hardware> Hardwares { get; set; }
         public virtual DbSet<IA_Control> IA_Controls { get; set; }
         public virtual DbSet<IATA_Standard> IATA_Standards { get; set; }
@@ -53,11 +62,11 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<MitigationOrCondition> MitigationsOrConditions { get; set; }
         public virtual DbSet<NetworkConnectionRule> NetworkConnectionRules { get; set; }
         public virtual DbSet<NIST_Control> NIST_Controls { get; set; }
+        public virtual DbSet<NIST_ControlCCI> NIST_ControlsCCIs { get; set; }
         public virtual DbSet<Organization> Organizations { get; set; }
         public virtual DbSet<Overlay> Overlays { get; set; }
         public virtual DbSet<PIT_Determination> PIT_Determinations { get; set; }
-        public virtual DbSet<PortProtocol> PortsProtocols { get; set; }
-        public virtual DbSet<PortService> PortsServices { get; set; }
+        public virtual DbSet<PortProtocolService> PortsProtocolsServices { get; set; }
         public virtual DbSet<RelatedDocument> RelatedDocuments { get; set; }
         public virtual DbSet<RelatedTesting> RelatedTestings { get; set; }
         public virtual DbSet<ReportSeverityUserSettings> ReportSeverities { get; set; }
@@ -84,7 +93,7 @@ namespace Vulnerator.Model.DataAccess
         private static string ConnectionString()
         {
             SQLiteConnectionStringBuilder sqliteConnectionStringBuilder = new SQLiteConnectionStringBuilder
-            { DataSource = Settings.Default.Database.Split(';')[0] };
+                {DataSource = Settings.Default.Database.Split(';')[0]};
             return sqliteConnectionStringBuilder.ToString();
         }
 
@@ -96,7 +105,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("ContactsCertifications")
                     .MapLeftKey("Contact_ID")
                     .MapRightKey("Certification_ID"));
-            
+
             modelBuilder.Entity<Certification>()
                 .HasMany(e => e.Contacts)
                 .WithMany(e => e.Certifications)
@@ -105,7 +114,7 @@ namespace Vulnerator.Model.DataAccess
                     .MapRightKey("Contact_ID"));
 
             modelBuilder.Entity<Contact>().HasOptional(e => e.Organization).WithMany(e => e.Contacts);
-            
+
             modelBuilder.Entity<Organization>()
                 .HasMany(e => e.Contacts)
                 .WithOptional(e => e.Organization);
@@ -113,7 +122,7 @@ namespace Vulnerator.Model.DataAccess
             modelBuilder.Entity<CustomTestCase>().HasRequired(e => e.CCI).WithMany(e => e.CustomTestCases);
 
             modelBuilder.Entity<CCI>().HasMany(e => e.CustomTestCases).WithRequired(e => e.CCI);
-            
+
             modelBuilder.Entity<EnumeratedWindowsUser>().HasMany(e => e.WindowsDomainUserSettings)
                 .WithMany(e => e.EnumeratedWindowsUsers)
                 .Map(e => e.ToTable("EnumeratedDomainWindowsUsersSettings")
@@ -125,25 +134,25 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("EnumeratedDomainWindowsUsersSettings")
                     .MapLeftKey("WindowsDomainUserSettings_ID")
                     .MapRightKey("EnumeratedWindowsUser_ID"));
-            
+
             modelBuilder.Entity<EnumeratedWindowsUser>().HasMany(e => e.WindowsLocalUserSettings)
                 .WithMany(e => e.EnumeratedWindowsUsers)
                 .Map(e => e.ToTable("EnumeratedLocalWindowsUsersSettings")
                     .MapLeftKey("EnumeratedWindowsUser_ID")
                     .MapRightKey("WindowsLocalUserSettings_ID"));
-            
+
             modelBuilder.Entity<WindowsLocalUserSetting>().HasMany(e => e.EnumeratedWindowsUsers)
                 .WithMany(e => e.WindowsLocalUserSettings)
                 .Map(e => e.ToTable("EnumeratedLocalWindowsUsersSettings")
                     .MapLeftKey("WindowsLocalUserSettings_ID")
                     .MapRightKey("EnumeratedWindowsUser_ID"));
-            
+
             modelBuilder.Entity<EnumeratedWindowsUser>().HasMany(e => e.EnumeratedWindowsGroups)
                 .WithMany(e => e.EnumeratedWindowsUsers)
                 .Map(e => e.ToTable("EnumeratedWindowsGroupsUsers")
                     .MapLeftKey("EnumeratedWindowsUser_ID")
                     .MapRightKey("EnumeratedWindowsGroup_ID"));
-            
+
             modelBuilder.Entity<EnumeratedWindowsGroup>().HasMany(e => e.EnumeratedWindowsUsers)
                 .WithMany(e => e.EnumeratedWindowsGroups)
                 .Map(e => e.ToTable("EnumeratedWindowsGroupsUsers")
@@ -154,42 +163,42 @@ namespace Vulnerator.Model.DataAccess
 
             modelBuilder.Entity<ConfidentialityLevel>().HasMany(e => e.Groups)
                 .WithOptional(e => e.ConfidentialityLevel);
-            
+
             modelBuilder.Entity<Group>().HasOptional(e => e.IntegrityLevel).WithMany(e => e.Groups);
 
             modelBuilder.Entity<IntegrityLevel>().HasMany(e => e.Groups)
                 .WithOptional(e => e.IntegrityLevel);
-            
+
             modelBuilder.Entity<Group>().HasOptional(e => e.AvailabilityLevel).WithMany(e => e.Groups);
 
             modelBuilder.Entity<AvailabilityLevel>().HasMany(e => e.Groups)
                 .WithOptional(e => e.AvailabilityLevel);
-            
+
             modelBuilder.Entity<Group>().HasOptional(e => e.SystemCategorization).WithRequired(e => e.Group);
 
             modelBuilder.Entity<SystemCategorization>().HasRequired(e => e.Group)
                 .WithOptional(e => e.SystemCategorization);
-            
+
             modelBuilder.Entity<Group>().HasOptional(e => e.ControlSelection).WithRequired(e => e.Group);
 
             modelBuilder.Entity<ControlSelection>().HasRequired(e => e.Group)
                 .WithOptional(e => e.ControlSelection);
-            
+
             modelBuilder.Entity<Group>().HasOptional(e => e.StepOneQuestionnaire).WithRequired(e => e.Group);
 
             modelBuilder.Entity<StepOneQuestionnaire>().HasRequired(e => e.Group)
                 .WithOptional(e => e.StepOneQuestionnaire);
-            
+
             modelBuilder.Entity<Group>().HasOptional(e => e.SecurityAssessmentProcedure).WithRequired(e => e.Group);
 
             modelBuilder.Entity<SecurityAssessmentProcedure>().HasRequired(e => e.Group)
                 .WithOptional(e => e.SecurityAssessmentProcedure);
-            
+
             modelBuilder.Entity<Group>().HasOptional(e => e.PIT_Determination).WithRequired(e => e.Group);
 
             modelBuilder.Entity<PIT_Determination>().HasRequired(e => e.Group)
                 .WithOptional(e => e.PIT_Determination);
-            
+
             modelBuilder.Entity<Group>().HasOptional(e => e.Organization).WithRequired(e => e.Group);
 
             modelBuilder.Entity<Organization>().HasRequired(e => e.Group)
@@ -204,7 +213,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("GroupsCCIs")
                     .MapLeftKey("CCI_ID")
                     .MapRightKey("Group_ID"));
-            
+
             modelBuilder.Entity<Group>().HasMany(e => e.ConnectedSystems).WithMany(e => e.Groups)
                 .Map(e => e.ToTable("GroupsConnectedSystems")
                     .MapLeftKey("Group_ID")
@@ -214,7 +223,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("GroupsConnectedSystems")
                     .MapLeftKey("ConnectedSystem_ID")
                     .MapRightKey("Group_ID"));
-            
+
             modelBuilder.Entity<Group>().HasMany(e => e.Connections).WithMany(e => e.Groups)
                 .Map(e => e.ToTable("GroupsConnections")
                     .MapLeftKey("Group_ID")
@@ -224,9 +233,9 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("GroupsConnections")
                     .MapLeftKey("Connection_ID")
                     .MapRightKey("Group_ID"));
-            
+
             // TODO: GroupsContactsTitles
-            
+
             modelBuilder.Entity<Group>().HasMany(e => e.IATA_Standards).WithMany(e => e.Groups)
                 .Map(e => e.ToTable("GroupsIATA_Standards")
                     .MapLeftKey("Group_ID")
@@ -236,9 +245,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("GroupsIATA_Standards")
                     .MapLeftKey("IATA_Standard_ID")
                     .MapRightKey("Group_ID"));
-            
-            // TODO: GroupsMitigationsOrConditionsVulnerabilities
-            
+
             modelBuilder.Entity<Group>().HasMany(e => e.Overlays).WithMany(e => e.Groups)
                 .Map(e => e.ToTable("GroupsOverlays")
                     .MapLeftKey("Group_ID")
@@ -248,7 +255,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("GroupsOverlays")
                     .MapLeftKey("Overlay_ID")
                     .MapRightKey("Group_ID"));
-            
+
             modelBuilder.Entity<Group>().HasMany(e => e.Waivers).WithMany(e => e.Groups)
                 .Map(e => e.ToTable("GroupsWaivers")
                     .MapLeftKey("Group_ID")
@@ -258,9 +265,27 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("GroupsWaivers")
                     .MapLeftKey("Waiver_ID")
                     .MapRightKey("Group_ID"));
+            
+            modelBuilder.Entity<GroupMitigationOrConditionVulnerability>().HasRequired(e => e.Group)
+                .WithMany(e => e.GroupsMitigationsOrConditionsVulnerabilities);
+
+            modelBuilder.Entity<Group>().HasMany(e => e.GroupsMitigationsOrConditionsVulnerabilities)
+                .WithRequired(e => e.Group);
+            
+            modelBuilder.Entity<GroupMitigationOrConditionVulnerability>().HasRequired(e => e.Vulnerability)
+                .WithMany(e => e.GroupsMitigationsOrConditionsVulnerabilities);
+
+            modelBuilder.Entity<Vulnerability>().HasMany(e => e.GroupsMitigationsOrConditionsVulnerabilities)
+                .WithRequired(e => e.Vulnerability);
+            
+            modelBuilder.Entity<GroupMitigationOrConditionVulnerability>().HasRequired(e => e.MitigationOrCondition)
+                .WithMany(e => e.GroupsMitigationsOrConditionsVulnerabilities);
+
+            modelBuilder.Entity<MitigationOrCondition>().HasMany(e => e.GroupsMitigationsOrConditionsVulnerabilities)
+                .WithRequired(e => e.MitigationOrCondition);
 
             modelBuilder.Entity<Hardware>().HasOptional(e => e.LifecycleStatus).WithMany(e => e.Hardwares);
-            
+
             modelBuilder.Entity<LifecycleStatus>().HasMany(e => e.Hardwares).WithOptional(e => e.LifecycleStatus);
 
             modelBuilder.Entity<Hardware>().HasMany(e => e.Contacts).WithMany(e => e.Hardwares)
@@ -272,7 +297,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("HardwareContacts")
                     .MapLeftKey("Contact_ID")
                     .MapRightKey("Hardware_ID"));
-            
+
             modelBuilder.Entity<Hardware>().HasMany(e => e.EnumeratedWindowsGroups).WithMany(e => e.Hardwares)
                 .Map(e => e.ToTable("HardwareEnumeratedWindowsGroups")
                     .MapLeftKey("Hardware_ID")
@@ -283,7 +308,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("HardwareEnumeratedWindowsGroups")
                     .MapLeftKey("EnumeratedWindowsGroup_ID")
                     .MapRightKey("Hardware_ID"));
-            
+
             modelBuilder.Entity<Hardware>().HasMany(e => e.Groups).WithMany(e => e.Hardwares)
                 .Map(e => e.ToTable("HardwareGroups")
                     .MapLeftKey("Hardware_ID")
@@ -293,7 +318,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("HardwareGroups")
                     .MapLeftKey("Group_ID")
                     .MapRightKey("Hardware_ID"));
-            
+
             modelBuilder.Entity<Hardware>().HasMany(e => e.IP_Addresses).WithMany(e => e.Hardwares)
                 .Map(e => e.ToTable("Hardware_IP_Addresses")
                     .MapLeftKey("Hardware_ID")
@@ -303,7 +328,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("Hardware_IP_Addresses")
                     .MapLeftKey("IP_Address_ID")
                     .MapRightKey("Hardware_ID"));
-            
+
             modelBuilder.Entity<Hardware>().HasMany(e => e.Locations).WithMany(e => e.Hardwares)
                 .Map(e => e.ToTable("HardwareLocation")
                     .MapLeftKey("Hardware_ID")
@@ -313,17 +338,17 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("HardwareLocation")
                     .MapLeftKey("Location_ID")
                     .MapRightKey("Hardware_ID"));
-            
-            modelBuilder.Entity<Hardware>().HasMany(e => e.PortsProtocols).WithMany(e => e.Hardwares)
-                .Map(e => e.ToTable("HardwarePortsProtocols")
-                    .MapLeftKey("Hardware_ID")
-                    .MapRightKey("PortsProtocols_ID"));
 
-            modelBuilder.Entity<PortProtocol>().HasMany(e => e.Hardwares).WithMany(e => e.PortsProtocols)
-                .Map(e => e.ToTable("HardwarePortsProtocols")
-                    .MapLeftKey("PortsProtocols_ID")
+            modelBuilder.Entity<Hardware>().HasMany(e => e.PortsProtocolsServices).WithMany(e => e.Hardwares)
+                .Map(e => e.ToTable("HardwarePortsProtocolsServices")
+                    .MapLeftKey("Hardware_ID")
+                    .MapRightKey("PortProtocolService_ID"));
+
+            modelBuilder.Entity<PortProtocolService>().HasMany(e => e.Hardwares).WithMany(e => e.PortsProtocolsServices)
+                .Map(e => e.ToTable("HardwarePortsProtocolsServices")
+                    .MapLeftKey("PortProtocolService_ID")
                     .MapRightKey("Hardware_ID"));
-            
+
             modelBuilder.Entity<InformationType>().HasMany(e => e.MissionAreas).WithMany(e => e.InformationTypes)
                 .Map(e => e.ToTable("InformationTypesMissionAreas")
                     .MapLeftKey("InformationType_ID")
@@ -333,7 +358,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("InformationTypesMissionAreas")
                     .MapLeftKey("MissionArea_ID")
                     .MapRightKey("InformationType_ID"));
-            
+
             modelBuilder.Entity<NIST_Control>().HasMany(e => e.IATA_Standards).WithMany(e => e.NIST_Controls)
                 .Map(e => e.ToTable("NIST_Controls_IATA_Standards")
                     .MapLeftKey("NIST_Control_ID")
@@ -343,7 +368,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("NIST_Controls_IATA_Standards")
                     .MapLeftKey("IATA_Standard_ID")
                     .MapRightKey("NIST_Control_ID"));
-            
+
             modelBuilder.Entity<NIST_Control>().HasMany(e => e.AvailabilityLevels).WithMany(e => e.NIST_Controls)
                 .Map(e => e.ToTable("NIST_ControlsAvailabilityLevels")
                     .MapLeftKey("NIST_Control_ID")
@@ -353,17 +378,15 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("NIST_ControlsAvailabilityLevels")
                     .MapLeftKey("AvailabilityLevel_ID")
                     .MapRightKey("NIST_Control_ID"));
-            
-            modelBuilder.Entity<NIST_Control>().HasMany(e => e.CCIs).WithMany(e => e.NIST_Controls)
-                .Map(e => e.ToTable("NIST_ControlsCCIs")
-                    .MapLeftKey("NIST_Control_ID")
-                    .MapRightKey("CCI_ID"));
 
-            modelBuilder.Entity<CCI>().HasMany(e => e.NIST_Controls).WithMany(e => e.CCIs)
-                .Map(e => e.ToTable("NIST_ControlsCCIs")
-                    .MapLeftKey("CCI_ID")
-                    .MapRightKey("NIST_Control_ID"));
-            
+            modelBuilder.Entity<NIST_ControlCCI>().HasRequired(e => e.NIST_Control).WithMany(e => e.NIST_ControlsCCIs);
+
+            modelBuilder.Entity<NIST_Control>().HasMany(e => e.NIST_ControlsCCIs).WithRequired(e => e.NIST_Control);
+
+            modelBuilder.Entity<NIST_ControlCCI>().HasRequired(e => e.CCI).WithMany(e => e.NIST_ControlsCCIs);
+
+            modelBuilder.Entity<CCI>().HasMany(e => e.NIST_ControlsCCIs).WithRequired(e => e.CCI);
+
             modelBuilder.Entity<NIST_Control>().HasMany(e => e.ControlApplicabilityAssessments)
                 .WithMany(e => e.NIST_Controls)
                 .Map(e => e.ToTable("NIST_ControlsCAAs")
@@ -375,7 +398,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("NIST_ControlsCAAs")
                     .MapLeftKey("ControlApplicabilityAssessment_ID")
                     .MapRightKey("NIST_Control_ID"));
-            
+
             modelBuilder.Entity<NIST_Control>().HasMany(e => e.ConfidentialityLevels).WithMany(e => e.NIST_Controls)
                 .Map(e => e.ToTable("NIST_ControlsConfidentialityLevels")
                     .MapLeftKey("NIST_Control_ID")
@@ -386,7 +409,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("NIST_ControlsConfidentialityLevels")
                     .MapLeftKey("ConfidentialityLevel_ID")
                     .MapRightKey("NIST_Control_ID"));
-            
+
             modelBuilder.Entity<NIST_Control>().HasMany(e => e.ControlSets).WithMany(e => e.NIST_Controls)
                 .Map(e => e.ToTable("NIST_ControlsControlSets")
                     .MapLeftKey("NIST_Control_ID")
@@ -396,7 +419,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("NIST_ControlsControlSets")
                     .MapLeftKey("ControlSet_ID")
                     .MapRightKey("NIST_Control_ID"));
-            
+
             modelBuilder.Entity<NIST_Control>().HasMany(e => e.CommonControlPackages).WithMany(e => e.NIST_Controls)
                 .Map(e => e.ToTable("NIST_ControlsCCPs")
                     .MapLeftKey("NIST_Control_ID")
@@ -407,7 +430,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("NIST_ControlsCCPs")
                     .MapLeftKey("CommonControlPackage_ID")
                     .MapRightKey("NIST_Control_ID"));
-            
+
             modelBuilder.Entity<NIST_Control>().HasMany(e => e.IntegrityLevels).WithMany(e => e.NIST_Controls)
                 .Map(e => e.ToTable("NIST_ControlsIntegrityLevels")
                     .MapLeftKey("NIST_Control_ID")
@@ -417,7 +440,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("NIST_ControlsIntegrityLevels")
                     .MapLeftKey("IntegrityLevel_ID")
                     .MapRightKey("NIST_Control_ID"));
-            
+
             modelBuilder.Entity<NIST_Control>().HasMany(e => e.Overlays).WithMany(e => e.NIST_Controls)
                 .Map(e => e.ToTable("NIST_ControlsOverlays")
                     .MapLeftKey("NIST_Control_ID")
@@ -428,18 +451,6 @@ namespace Vulnerator.Model.DataAccess
                     .MapLeftKey("Overlay_ID")
                     .MapRightKey("NIST_Control_ID"));
 
-            modelBuilder.Entity<PortService>().HasRequired(e => e.PortProtocol).WithMany(e => e.PortServices);
-            
-            modelBuilder.Entity<PortService>().HasMany(e => e.Softwares).WithMany(e => e.PortServices)
-                .Map(e => e.ToTable("PortServicesSoftware")
-                    .MapLeftKey("PortService_ID")
-                    .MapRightKey("Software_ID"));
-
-            modelBuilder.Entity<Software>().HasMany(e => e.PortServices).WithMany(e => e.Softwares)
-                .Map(e => e.ToTable("PortServicesSoftware")
-                    .MapLeftKey("Software_ID")
-                    .MapRightKey("PortService_ID"));
-            
             modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.AdditionalTestConsiderations)
                 .WithMany(e => e.SecurityAssessmentProcedures)
                 .Map(e => e.ToTable("SecurityAssessmentProceduresAdditionalTestConsiderations")
@@ -451,7 +462,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("SecurityAssessmentProceduresAdditionalTestConsiderations")
                     .MapLeftKey("AdditionalTestConsideration_ID")
                     .MapRightKey("SecurityAssessmentProcedure_ID"));
-            
+
             modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.CustomTestCases)
                 .WithMany(e => e.SecurityAssessmentProcedures)
                 .Map(e => e.ToTable("SecurityAssessmentProceduresCustomTestCases")
@@ -463,7 +474,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("SecurityAssessmentProceduresCustomTestCases")
                     .MapLeftKey("CustomTestCase_ID")
                     .MapRightKey("SecurityAssessmentProcedure_ID"));
-            
+
             modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.EntranceCriterias)
                 .WithMany(e => e.SecurityAssessmentProcedures)
                 .Map(e => e.ToTable("SecurityAssessmentProceduresEntranceCriteria")
@@ -475,7 +486,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("SecurityAssessmentProceduresEntranceCriteria")
                     .MapLeftKey("EntranceCriteria_ID")
                     .MapRightKey("SecurityAssessmentProcedure_ID"));
-            
+
             modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.ExitCriterias)
                 .WithMany(e => e.SecurityAssessmentProcedures)
                 .Map(e => e.ToTable("SecurityAssessmentProceduresExitCriteria")
@@ -487,7 +498,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("SecurityAssessmentProceduresExitCriteria")
                     .MapLeftKey("ExitCriteria_ID")
                     .MapRightKey("SecurityAssessmentProcedure_ID"));
-            
+
             modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.Limitations)
                 .WithMany(e => e.SecurityAssessmentProcedures)
                 .Map(e => e.ToTable("SecurityAssessmentProceduresLimitiations")
@@ -499,7 +510,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("SecurityAssessmentProceduresLimitiations")
                     .MapLeftKey("Limitation_ID")
                     .MapRightKey("SecurityAssessmentProcedure_ID"));
-            
+
             modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.RelatedDocuments)
                 .WithMany(e => e.SecurityAssessmentProcedures)
                 .Map(e => e.ToTable("SecurityAssessmentProceduresRelatedDocuments")
@@ -511,7 +522,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("SecurityAssessmentProceduresRelatedDocuments")
                     .MapLeftKey("RelatedDocument_ID")
                     .MapRightKey("SecurityAssessmentProcedure_ID"));
-            
+
             modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.RelatedTestings)
                 .WithMany(e => e.SecurityAssessmentProcedures)
                 .Map(e => e.ToTable("SecurityAssessmentProceduresRelatedTesting")
@@ -523,7 +534,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("SecurityAssessmentProceduresRelatedTesting")
                     .MapLeftKey("RelatedTesting_ID")
                     .MapRightKey("SecurityAssessmentProcedure_ID"));
-            
+
             modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.TestReferences)
                 .WithMany(e => e.SecurityAssessmentProcedures)
                 .Map(e => e.ToTable("SecurityAssessmentProceduresTestReferences")
@@ -535,7 +546,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("SecurityAssessmentProceduresTestReferences")
                     .MapLeftKey("TestReference_ID")
                     .MapRightKey("SecurityAssessmentProcedure_ID"));
-            
+
             modelBuilder.Entity<SecurityAssessmentProcedure>().HasMany(e => e.TestScheduleItems)
                 .WithMany(e => e.SecurityAssessmentProcedures)
                 .Map(e => e.ToTable("SecurityAssessmentProceduresTestScheduleItems")
@@ -551,19 +562,19 @@ namespace Vulnerator.Model.DataAccess
             modelBuilder.Entity<SCAP_Score>().HasRequired(e => e.Hardware).WithMany(e => e.SCAP_Scores);
 
             modelBuilder.Entity<Hardware>().HasMany(e => e.SCAP_Scores).WithRequired(e => e.Hardware);
-            
+
             modelBuilder.Entity<SCAP_Score>().HasRequired(e => e.UniqueFindingSourceFile)
                 .WithOptional(e => e.SCAP_Score);
 
             modelBuilder.Entity<UniqueFindingSourceFile>().HasOptional(e => e.SCAP_Score)
                 .WithRequired(e => e.UniqueFindingSourceFile);
-            
+
             modelBuilder.Entity<SCAP_Score>().HasRequired(e => e.VulnerabilitySource)
                 .WithMany(e => e.SCAP_Scores);
 
             modelBuilder.Entity<VulnerabilitySource>().HasMany(e => e.SCAP_Scores)
                 .WithRequired(e => e.VulnerabilitySource);
-            
+
             modelBuilder.Entity<Software>().HasMany(e => e.DADMS_Networks).WithMany(e => e.Softwares)
                 .Map(e => e.ToTable("SoftwareDADMS_Networks")
                     .MapLeftKey("Software_ID")
@@ -573,7 +584,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("SoftwareDADMS_Networks")
                     .MapLeftKey("DADMS_Network_ID")
                     .MapRightKey("Software_ID"));
-            
+
             modelBuilder.Entity<Software>().HasMany(e => e.Contacts).WithMany(e => e.Softwares)
                 .Map(e => e.ToTable("SoftwareContacts")
                     .MapLeftKey("Software_ID")
@@ -583,7 +594,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("SoftwareContacts")
                     .MapLeftKey("Contact_ID")
                     .MapRightKey("Software_ID"));
-            
+
             modelBuilder.Entity<Software>().HasMany(e => e.Hardwares).WithMany(e => e.Softwares)
                 .Map(e => e.ToTable("SoftwareHardware")
                     .MapLeftKey("Software_ID")
@@ -595,7 +606,7 @@ namespace Vulnerator.Model.DataAccess
                     .MapRightKey("Software_ID"));
 
             modelBuilder.Entity<StepOneQuestionnaire>().HasOptional(e => e.BaselineLocation);
-            
+
             modelBuilder.Entity<StepOneQuestionnaire>().HasMany(e => e.AuthorizationConditions)
                 .WithMany(e => e.StepOneQuestionnaires)
                 .Map(e => e.ToTable("StepOneQuestionnaireAuthorizationConditions")
@@ -607,7 +618,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("StepOneQuestionnaireAuthorizationConditions")
                     .MapLeftKey("AuthorizationCondition_ID")
                     .MapRightKey("StepOneQuestionnaire_ID"));
-            
+
             modelBuilder.Entity<StepOneQuestionnaire>().HasMany(e => e.AuthorizationToConnectOrInterim_ATC_PendingItems)
                 .WithMany(e => e.StepOneQuestionnaires)
                 .Map(e => e.ToTable("StepOneQuestionnaireAuthorizationToConnectOrInterim_ATC_PendingItems")
@@ -619,7 +630,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("StepOneQuestionnaireAuthorizationToConnectOrInterim_ATC_PendingItems")
                     .MapLeftKey("AuthorizationToConnectOrInterim_ATC_PendingItem_ID")
                     .MapRightKey("StepOneQuestionnaire_ID"));
-            
+
             modelBuilder.Entity<StepOneQuestionnaire>().HasMany(e => e.Connectivities)
                 .WithMany(e => e.StepOneQuestionnaires)
                 .Map(e => e.ToTable("StepOneQuestionnaireConnectivity")
@@ -637,7 +648,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("StepOneQuestionnaireEncryptionTechniques")
                     .MapLeftKey("StepOneQuestionnaire_ID")
                     .MapRightKey("EncryptionTechnique_ID"));
-            
+
             modelBuilder.Entity<StepOneQuestionnaire>().HasMany(e => e.DeploymentLocations)
                 .WithMany(e => e.StepOneQuestionnaires)
                 .Map(e => e.ToTable("StepOneQuestionnaireDeploymentLocations")
@@ -649,28 +660,28 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("StepOneQuestionnaireNetworkConnectionRules")
                     .MapLeftKey("StepOneQuestionnaire_ID")
                     .MapRightKey("NetworkConnectionRule_ID"));
-            
+
             modelBuilder.Entity<StepOneQuestionnaire>().HasMany(e => e.UserCategories)
                 .WithMany(e => e.StepOneQuestionnaires)
                 .Map(e => e.ToTable("StepOneQuestionnaireUserCategories")
                     .MapLeftKey("StepOneQuestionnaire_ID")
                     .MapRightKey("UserCategory_ID"));
 
-            
+
             modelBuilder.Entity<SystemCategorization>().HasMany(e => e.GoverningPolicies)
                 .WithMany(e => e.SystemCategorizations)
                 .Map(e => e.ToTable("SystemCategorizationGoverningPolicies")
                     .MapLeftKey("SystemCategorization_ID")
                     .MapRightKey("GoverningPolicy_ID"));
-            
+
             // TODO: SystemCategorizationInformationTypesImpactAdjustments
-            
+
             modelBuilder.Entity<SystemCategorization>().HasMany(e => e.InterconnectedSystems)
                 .WithMany(e => e.SystemCategorizations)
                 .Map(e => e.ToTable("SystemCategorizationInterconnectedSystems")
                     .MapLeftKey("SystemCategorization_ID")
                     .MapRightKey("InterconnectedSystem_ID"));
-            
+
             modelBuilder.Entity<SystemCategorization>().HasMany(e => e.JointAuthorizationOrganizations)
                 .WithMany(e => e.SystemCategorizations)
                 .Map(e => e.ToTable("SystemCategorizationJointAuthorizationOrganizations")
@@ -680,31 +691,31 @@ namespace Vulnerator.Model.DataAccess
             modelBuilder.Entity<UniqueFinding>().HasRequired(e => e.FindingType).WithMany(e => e.UniqueFindings);
 
             modelBuilder.Entity<FindingType>().HasMany(e => e.UniqueFindings).WithRequired(e => e.FindingType);
-            
+
             modelBuilder.Entity<UniqueFinding>().HasRequired(e => e.Vulnerability).WithMany(e => e.UniqueFindings);
 
             modelBuilder.Entity<Vulnerability>().HasMany(e => e.UniqueFindings).WithRequired(e => e.Vulnerability);
-            
+
             modelBuilder.Entity<UniqueFinding>().HasOptional(e => e.Hardware).WithMany(e => e.UniqueFindings);
 
             modelBuilder.Entity<Hardware>().HasMany(e => e.UniqueFindings).WithOptional(e => e.Hardware);
-            
+
             modelBuilder.Entity<UniqueFinding>().HasOptional(e => e.Software).WithMany(e => e.UniqueFindings);
 
             modelBuilder.Entity<Software>().HasMany(e => e.UniqueFindings).WithOptional(e => e.Software);
-            
+
             modelBuilder.Entity<UniqueFinding>().HasRequired(e => e.UniqueFindingSourceFile)
                 .WithMany(e => e.UniqueFindings);
 
             modelBuilder.Entity<UniqueFindingSourceFile>().HasMany(e => e.UniqueFindings)
                 .WithRequired(e => e.UniqueFindingSourceFile);
-            
+
             modelBuilder.Entity<UniqueFinding>().HasOptional(e => e.MitigationOrCondition)
                 .WithRequired(e => e.UniqueFinding);
 
             modelBuilder.Entity<MitigationOrCondition>().HasRequired(e => e.UniqueFinding)
                 .WithOptional(e => e.MitigationOrCondition);
-            
+
             modelBuilder.Entity<Vulnerability>().HasMany(e => e.CCIs).WithMany(e => e.Vulnerabilities)
                 .Map(e => e.ToTable("VulnerabilitiesCCIs")
                     .MapLeftKey("Vulnerability_ID")
@@ -714,7 +725,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("VulnerabilitiesCCIs")
                     .MapLeftKey("CCI_ID")
                     .MapRightKey("Vulnerability_ID"));
-            
+
             modelBuilder.Entity<Vulnerability>().HasMany(e => e.IA_Controls).WithMany(e => e.Vulnerabilities)
                 .Map(e => e.ToTable("VulnerabilitiesIA_Controls")
                     .MapLeftKey("Vulnerability_ID")
@@ -724,7 +735,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("VulnerabilitiesIA_Controls")
                     .MapLeftKey("IA_Control_ID")
                     .MapRightKey("Vulnerability_ID"));
-            
+
             modelBuilder.Entity<Vulnerability>().HasMany(e => e.ResponsibilityRoles).WithMany(e => e.Vulnerabilities)
                 .Map(e => e.ToTable("VulnerabilitiesResponsibilityRoles")
                     .MapLeftKey("Vulnerability_ID")
@@ -735,7 +746,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("VulnerabilitiesResponsibilityRoles")
                     .MapLeftKey("Role_ID")
                     .MapRightKey("Vulnerability_ID"));
-            
+
             modelBuilder.Entity<Vulnerability>().HasMany(e => e.VulnerabilitySources).WithMany(e => e.Vulnerabilities)
                 .Map(e => e.ToTable("VulnerabilitiesVulnerabilitySources")
                     .MapLeftKey("Vulnerability_ID")
@@ -746,7 +757,7 @@ namespace Vulnerator.Model.DataAccess
                 .Map(e => e.ToTable("VulnerabilitiesVulnerabilitySources")
                     .MapLeftKey("VulnerabilitySource_ID")
                     .MapRightKey("Vulnerability_ID"));
-            
+
             modelBuilder.Entity<Vulnerability>().HasMany(e => e.VulnerabilityReferences)
                 .WithMany(e => e.Vulnerabilities)
                 .Map(e => e.ToTable("VulnerabilitiesVulnerabilityReferences")
@@ -761,10 +772,10 @@ namespace Vulnerator.Model.DataAccess
 
             modelBuilder.Entity<RequiredReportUserSelection>().HasRequired(e => e.RequiredReport)
                 .WithMany(e => e.RequiredReportUserSelections);
-            
+
             modelBuilder.Entity<ReportFindingTypeUserSettings>().HasRequired(e => e.RequiredReport)
                 .WithMany(e => e.ReportFindingTypeUserSettings);
-            
+
             modelBuilder.Entity<ReportFindingTypeUserSettings>().HasRequired(e => e.FindingType)
                 .WithMany(e => e.ReportFindingTypeUserSettings);
 

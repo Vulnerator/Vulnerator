@@ -107,12 +107,12 @@ namespace Vulnerator.Model.BusinessLogic
                             databaseInterface.InsertVulnerability(sqliteCommand);
                             databaseInterface.MapVulnerabilityToSource(sqliteCommand);
                             databaseInterface.InsertUniqueFinding(sqliteCommand);
-                            // foreach (Tuple<string, string> reference in fprVulnerability.References)
-                            // {
-                            //     sqliteCommand.Parameters.Add(new SQLiteParameter("Reference", reference.Item2));
-                            //     sqliteCommand.Parameters.Add(new SQLiteParameter("ReferenceType", reference.Item1));
-                            //     databaseInterface.InsertAndMapVulnerabilityReferences(sqliteCommand);
-                            // }
+                            foreach (string cci in fprVulnerability.CCIs)
+                            {
+                                sqliteCommand.Parameters["CCI_Number"].Value = cci;
+                                databaseInterface.MapVulnerabilityToCci(sqliteCommand);
+                                sqliteCommand.Parameters["CCI_Number"].Value = DBNull.Value;
+                            }
                             foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                             {
                                 if (!persistentParameters.Contains(parameter.ParameterName))
@@ -170,6 +170,11 @@ namespace Vulnerator.Model.BusinessLogic
                                         version = xmlReader.ObtainCurrentNodeValue(false);
                                         break;
                                     }
+                                case "Rule":
+                                {
+                                    ParseFvdlRuleNode(xmlReader);
+                                    break;
+                                }
                                 default:
                                     { break; }
                             }
@@ -289,28 +294,6 @@ namespace Vulnerator.Model.BusinessLogic
                                     recommendationsNode = SanitizeAndParseRecommendations(recommendationsNode);
                                     break;
                                 }
-                            case "Rule":
-                            {
-                                ParseFvdlRuleNode(xmlReader);
-                                break;
-                            }
-                            // case "Reference":
-                            //     {
-                            //         string value = ObtainReferencesValue(xmlReader);
-                            //         string key = ObtainReferencesKey(xmlReader);
-                            //         if (key.Equals("Discard"))
-                            //         { break; }
-                            //         Regex regex = new Regex(Properties.Resources.RegexCatText);
-                            //         value = regex.Replace(value, string.Empty);
-                            //         regex = new Regex(Properties.Resources.RegexStigId);
-                            //         foreach (Match match in regex.Matches(value))
-                            //         {
-                            //             Tuple<string, string> reference = new Tuple<string, string>(key, match.ToString());
-                            //             if (!references.Contains(reference))
-                            //             { references.Add(reference); }
-                            //         }
-                            //         break;
-                            //     }
                             default:
                                 { break; }
                         }
@@ -323,8 +306,6 @@ namespace Vulnerator.Model.BusinessLogic
                             fprVulnerability.FixText = recommendationsNode;
                             fprVulnerability.Output = InjectDefinitionValues(abstractOutput.Item1, fprVulnerability);
                             fprVulnerability.RiskStatement = abstractOutput.Item2;
-                            // foreach (Tuple<string, string> reference in references)
-                            // { fprVulnerability.References.Add(reference); }
                         }
                         return;
                     }
@@ -393,6 +374,8 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
+                if (rawText.Equals("None"))
+                { return new string[] {} ;}
                 string sanitized = rawText.Replace("CCI-", "");
                 string[] delimiter = {", "};
                 return sanitized.Split(delimiter, StringSplitOptions.None);
