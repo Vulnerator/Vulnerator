@@ -21,17 +21,20 @@ namespace Vulnerator.Model.BusinessLogic
         private string version = string.Empty;
         private DatabaseInterface databaseInterface = new DatabaseInterface();
         private List<FprVulnerability> fprVulnerabilityList = new List<FprVulnerability>();
-        string[] persistentParameters = new string[] {
-            "SourceName", "SourceVersion", "SourceRelease", "DiscoveredSoftwareName", "DisplayedSoftwareName", "FindingSourceFileName",
+
+        string[] persistentParameters = new string[]
+        {
+            "SourceName", "SourceVersion", "SourceRelease", "DiscoveredSoftwareName", "DisplayedSoftwareName",
+            "FindingSourceFileName",
             "FindingType", "FirstDiscovered", "LastObserved", "GroupName"
         };
-        
+
         private List<FortifySeverity> _fortifySeverities = new List<FortifySeverity>
         {
-            new FortifySeverity() { Impact = "Low", Probability = "Low", Severity = "IV" },
-            new FortifySeverity() { Impact = "Low", Probability = "High", Severity = "III" },
-            new FortifySeverity() { Impact = "High", Probability = "Low", Severity = "II" },
-            new FortifySeverity() { Impact = "High", Probability = "High", Severity = "I" },
+            new FortifySeverity() {Impact = "Low", Probability = "Low", Severity = "IV"},
+            new FortifySeverity() {Impact = "Low", Probability = "High", Severity = "III"},
+            new FortifySeverity() {Impact = "High", Probability = "Low", Severity = "II"},
+            new FortifySeverity() {Impact = "High", Probability = "High", Severity = "I"},
         };
 
         public string ReadFpr(Object.File file)
@@ -43,6 +46,7 @@ namespace Vulnerator.Model.BusinessLogic
                     LogWriter.LogError($"'{file.FileName}' is in use; please close any open instances and try again.");
                     return "Failed; File In Use";
                 }
+
                 ReadFprArchive(file);
                 return "Processed";
             }
@@ -59,7 +63,10 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
-                { DatabaseBuilder.sqliteConnection.Open(); }
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
                 using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
                 {
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
@@ -71,13 +78,18 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             using (ZipArchive zipArchive = new ZipArchive(stream, ZipArchiveMode.Read))
                             {
-                                ZipArchiveEntry auditFvdl = zipArchive.Entries.FirstOrDefault(x => x.Name.Equals("audit.fvdl"));
+                                ZipArchiveEntry auditFvdl =
+                                    zipArchive.Entries.FirstOrDefault(x => x.Name.Equals("audit.fvdl"));
                                 ParseAuditFvdlWithXmlReader(auditFvdl, sqliteCommand);
-                                ZipArchiveEntry auditXml = zipArchive.Entries.FirstOrDefault(x => x.Name.Equals("audit.xml"));
+                                ZipArchiveEntry auditXml =
+                                    zipArchive.Entries.FirstOrDefault(x => x.Name.Equals("audit.xml"));
                                 if (auditXml != null)
-                                { ParseAuditXmlWithXmlReader(auditXml); }
+                                {
+                                    ParseAuditXmlWithXmlReader(auditXml);
+                                }
                             }
                         }
+
                         sqliteCommand.Parameters["SourceName"].Value = "HPE Fortify SCA";
                         sqliteCommand.Parameters["SourceVersion"].Value = version;
                         sqliteCommand.Parameters["SourceRelease"].Value = string.Empty;
@@ -100,10 +112,20 @@ namespace Vulnerator.Model.BusinessLogic
                             sqliteCommand.Parameters["FixText"].Value = fprVulnerability.FixText;
                             sqliteCommand.Parameters["InstanceIdentifier"].Value = fprVulnerability.InstanceId;
                             sqliteCommand.Parameters["ToolGeneratedOutput"].Value = fprVulnerability.Output;
-                            sqliteCommand.Parameters["Status"].Value = fprVulnerability.Status;
+                            
                             sqliteCommand.Parameters["Comments"].Value = fprVulnerability.Comments;
                             sqliteCommand.Parameters["RawRisk"].Value = fprVulnerability.RawRisk;
                             sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "False";
+                            foreach (FprVulnerability.AuditComment comment in fprVulnerability.AuditComments.OrderBy(x => x.EditTime))
+                            {
+                                string concatenatedComment =
+                                    $"{comment.EditTime.ToShortDateString()}{Environment.NewLine}{comment.UserName}: {comment.Content}";
+                                sqliteCommand.Parameters["Comments"].Value =
+                                    string.IsNullOrEmpty(sqliteCommand.Parameters["Comments"].Value.ToString())
+                                        ? concatenatedComment
+                                        : $"{sqliteCommand.Parameters["Comments"].Value}{Environment.NewLine}{Environment.NewLine}{concatenatedComment}";
+                            }
+                            sqliteCommand.Parameters["Status"].Value = fprVulnerability.Status;
                             databaseInterface.InsertVulnerability(sqliteCommand);
                             databaseInterface.MapVulnerabilityToSource(sqliteCommand);
                             databaseInterface.InsertUniqueFinding(sqliteCommand);
@@ -113,13 +135,17 @@ namespace Vulnerator.Model.BusinessLogic
                                 databaseInterface.MapVulnerabilityToCci(sqliteCommand);
                                 sqliteCommand.Parameters["CCI_Number"].Value = DBNull.Value;
                             }
+
                             foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
                             {
                                 if (!persistentParameters.Contains(parameter.ParameterName))
-                                { sqliteCommand.Parameters[parameter.ParameterName].Value = string.Empty; }
+                                {
+                                    sqliteCommand.Parameters[parameter.ParameterName].Value = string.Empty;
+                                }
                             }
                         }
                     }
+
                     sqliteTransaction.Commit();
                 }
             }
@@ -129,7 +155,9 @@ namespace Vulnerator.Model.BusinessLogic
                 throw exception;
             }
             finally
-            { DatabaseBuilder.sqliteConnection.Close(); }
+            {
+                DatabaseBuilder.sqliteConnection.Close();
+            }
         }
 
         private void ParseAuditFvdlWithXmlReader(ZipArchiveEntry zipArchiveEntry, SQLiteCommand sqliteCommand)
@@ -143,40 +171,50 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         if (xmlReader.IsStartElement())
                         {
+                            Console.WriteLine(xmlReader.Name);
                             switch (xmlReader.Name)
                             {
                                 case "CreatedTS":
-                                    {
-                                        firstDiscovered = lastObserved = DateTime.Parse(xmlReader.GetAttribute("date")).ToShortDateString();
-                                        break;
-                                    }
+                                {
+                                    firstDiscovered = lastObserved = DateTime.Parse(xmlReader.GetAttribute("date"))
+                                        .ToShortDateString();
+                                    break;
+                                }
                                 case "BuildID":
-                                    {
-                                        softwareName = xmlReader.ObtainCurrentNodeValue(false);
-                                        break;
-                                    }
+                                {
+                                    softwareName = xmlReader.ObtainCurrentNodeValue(false);
+                                    break;
+                                }
                                 case "Vulnerability":
+                                {
+                                    ParseFvdlVulnerablityNode(xmlReader);
+                                    break;
+                                }
+                                case "UnifiedNodePool":
+                                {
+                                    while (!(xmlReader.NodeType == XmlNodeType.EndElement &&
+                                          xmlReader.Name.Equals("UnifiedNodePool")))
                                     {
-                                        ParseFvdlVulnerablityNode(xmlReader);
-                                        break;
+                                        xmlReader.Read();
                                     }
+
+                                    break;
+                                }
                                 case "Description":
-                                    {
-                                        ParseFvdlDescriptionNode(xmlReader);
-                                        break;
-                                    }
+                                {
+                                    ParseFvdlDescriptionNode(xmlReader);
+                                    break;
+                                }
                                 case "EngineVersion":
-                                    {
-                                        version = xmlReader.ObtainCurrentNodeValue(false);
-                                        break;
-                                    }
+                                {
+                                    version = xmlReader.ObtainCurrentNodeValue(false);
+                                    break;
+                                }
                                 case "Rule":
                                 {
                                     ParseFvdlRuleNode(xmlReader);
                                     break;
                                 }
-                                default:
-                                    { break; }
                             }
                         }
                     }
@@ -202,48 +240,51 @@ namespace Vulnerator.Model.BusinessLogic
                         switch (xmlReader.Name)
                         {
                             case "ClassID":
-                                {
-                                    fprVulnerability.ClassId = xmlReader.ObtainCurrentNodeValue(false);
-                                    break;
-                                }
+                            {
+                                fprVulnerability.ClassId = xmlReader.ObtainCurrentNodeValue(false);
+                                break;
+                            }
                             case "Kingdom":
-                                {
-                                    fprVulnerability.Kingdom = xmlReader.ObtainCurrentNodeValue(false);
-                                    break;
-                                }
+                            {
+                                fprVulnerability.Kingdom = xmlReader.ObtainCurrentNodeValue(false);
+                                break;
+                            }
                             case "Type":
-                                {
-                                    fprVulnerability.Type = xmlReader.ObtainCurrentNodeValue(false);
-                                    break;
-                                }
+                            {
+                                fprVulnerability.Type = xmlReader.ObtainCurrentNodeValue(false);
+                                break;
+                            }
                             case "Subtype":
-                                {
-                                    fprVulnerability.SubType = xmlReader.ObtainCurrentNodeValue(false);
-                                    break;
-                                }
+                            {
+                                fprVulnerability.SubType = xmlReader.ObtainCurrentNodeValue(false);
+                                break;
+                            }
                             case "InstanceID":
-                                {
-                                    fprVulnerability.InstanceId = xmlReader.ObtainCurrentNodeValue(false);
-                                    break;
-                                }
+                            {
+                                fprVulnerability.InstanceId = xmlReader.ObtainCurrentNodeValue(false);
+                                break;
+                            }
                             case "Def":
-                                {
-                                    fprVulnerability.ReplacementDefinitions.Add(xmlReader.GetAttribute("key"), xmlReader.GetAttribute("value"));
-                                    break;
-                                }
+                            {
+                                fprVulnerability.ReplacementDefinitions.Add(xmlReader.GetAttribute("key"),
+                                    xmlReader.GetAttribute("value"));
+                                break;
+                            }
                             case "LocationDef":
-                                {
-                                    FprVulnerability.LocationDef locationDef = new FprVulnerability.LocationDef();
-                                    locationDef.Path = xmlReader.GetAttribute("path");
-                                    locationDef.Line = xmlReader.GetAttribute("line");
-                                    locationDef.LineEnd = xmlReader.GetAttribute("lineEnd");
-                                    locationDef.ColumnStart = xmlReader.GetAttribute("colStart");
-                                    locationDef.ColumnEnd = xmlReader.GetAttribute("colEnd");
-                                    fprVulnerability.LocationDefinitions.Add(locationDef);
-                                    break;
-                                }
+                            {
+                                FprVulnerability.LocationDef locationDef = new FprVulnerability.LocationDef();
+                                locationDef.Path = xmlReader.GetAttribute("path");
+                                locationDef.Line = xmlReader.GetAttribute("line");
+                                locationDef.LineEnd = xmlReader.GetAttribute("lineEnd");
+                                locationDef.ColumnStart = xmlReader.GetAttribute("colStart");
+                                locationDef.ColumnEnd = xmlReader.GetAttribute("colEnd");
+                                fprVulnerability.LocationDefinitions.Add(locationDef);
+                                break;
+                            }
                             default:
-                                { break; }
+                            {
+                                break;
+                            }
                         }
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Vulnerability"))
@@ -277,40 +318,43 @@ namespace Vulnerator.Model.BusinessLogic
                         switch (xmlReader.Name)
                         {
                             case "Abstract":
-                                {
-                                    abstractNode = xmlReader.ObtainCurrentNodeValue(false);
-                                    abstractOutput = SanitizeAndParseAbstract(abstractNode);
-                                    break;
-                                }
+                            {
+                                abstractNode = xmlReader.ObtainCurrentNodeValue(false);
+                                abstractOutput = SanitizeAndParseAbstract(abstractNode);
+                                break;
+                            }
                             case "Explanation":
-                                {
-                                    explanationNode = xmlReader.ObtainCurrentNodeValue(false);
-                                    explanationNode = SanitizeAndParseExplanation(explanationNode);
-                                    break;
-                                }
+                            {
+                                explanationNode = xmlReader.ObtainCurrentNodeValue(false);
+                                explanationNode = SanitizeAndParseExplanation(explanationNode);
+                                break;
+                            }
                             case "Recommendations":
-                                {
-                                    recommendationsNode = xmlReader.ObtainCurrentNodeValue(false);
-                                    recommendationsNode = SanitizeAndParseRecommendations(recommendationsNode);
-                                    break;
-                                }
+                            {
+                                recommendationsNode = xmlReader.ObtainCurrentNodeValue(false);
+                                recommendationsNode = SanitizeAndParseRecommendations(recommendationsNode);
+                                break;
+                            }
                             default:
-                                { break; }
+                            {
+                                break;
+                            }
                         }
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name == "Description")
                     {
-                        foreach (FprVulnerability fprVulnerability in fprVulnerabilityList.Where(x => x.ClassId.Equals(classId)))
+                        foreach (FprVulnerability fprVulnerability in fprVulnerabilityList.Where(x =>
+                            x.ClassId.Equals(classId)))
                         {
                             fprVulnerability.Description = explanationNode;
                             fprVulnerability.FixText = recommendationsNode;
                             fprVulnerability.Output = InjectDefinitionValues(abstractOutput.Item1, fprVulnerability);
                             fprVulnerability.RiskStatement = abstractOutput.Item2;
                         }
+
                         return;
                     }
                 }
-
             }
             catch (Exception exception)
             {
@@ -327,7 +371,7 @@ namespace Vulnerator.Model.BusinessLogic
                 string impact = string.Empty;
                 string probability = string.Empty;
                 string[] ccis = { };
-                
+
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement() && xmlReader.Name.Equals("Group"))
@@ -359,6 +403,7 @@ namespace Vulnerator.Model.BusinessLogic
                             fprVulnerability.RawRisk = ObtainRawRisk(impact, probability);
                             fprVulnerability.CCIs = ccis;
                         }
+
                         return;
                     }
                 }
@@ -375,7 +420,10 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 if (rawText.Equals("None"))
-                { return new string[] {} ;}
+                {
+                    return new string[] { };
+                }
+
                 string sanitized = rawText.Replace("CCI-", "");
                 string[] delimiter = {", "};
                 return sanitized.Split(delimiter, StringSplitOptions.None);
@@ -404,7 +452,9 @@ namespace Vulnerator.Model.BusinessLogic
         private string SantizeNodeContent(string content)
         {
             try
-            { return content.Replace("&lt;", "<").Replace("&gt;", ">"); }
+            {
+                return content.Replace("&lt;", "<").Replace("&gt;", ">");
+            }
             catch (Exception exception)
             {
                 LogWriter.LogError("Unable to sanitize the FPR node content.");
@@ -419,11 +469,15 @@ namespace Vulnerator.Model.BusinessLogic
                 string sanitizedAbstract = SantizeNodeContent(unsanitizedAbstract);
                 string riskStatement = string.Empty;
                 string output = string.Empty;
-                string[] stringsToRemove = new string[] {
+                string[] stringsToRemove = new string[]
+                {
                     "<b>", "</b>", "<pre>", "</pre>", "<code>", "</code>", "&lt;", "&gt;"
                 };
                 foreach (string item in stringsToRemove)
-                { sanitizedAbstract = sanitizedAbstract.Replace(item, string.Empty); }
+                {
+                    sanitizedAbstract = sanitizedAbstract.Replace(item, string.Empty);
+                }
+
                 sanitizedAbstract = sanitizedAbstract.Replace("<Replace", "&lt;Replace").Replace("/>", "/&gt;");
                 Stream stream = GenerateStreamFromString(sanitizedAbstract);
                 using (XmlReader xmlReader = XmlReader.Create(stream))
@@ -435,23 +489,28 @@ namespace Vulnerator.Model.BusinessLogic
                             switch (xmlReader.Name)
                             {
                                 case "Paragraph":
-                                    {
-                                        output = xmlReader.ObtainCurrentNodeValue(false);
-                                        break;
-                                    }
+                                {
+                                    output = xmlReader.ObtainCurrentNodeValue(false);
+                                    break;
+                                }
                                 case "AltParagraph":
-                                    {
-                                        riskStatement = xmlReader.ObtainCurrentNodeValue(false);
-                                        break;
-                                    }
+                                {
+                                    riskStatement = xmlReader.ObtainCurrentNodeValue(false);
+                                    break;
+                                }
                                 default:
-                                    { break; }
+                                {
+                                    break;
+                                }
                             }
                         }
                         else if (xmlReader.NodeType == XmlNodeType.Text)
-                        { riskStatement = xmlReader.Value; }
+                        {
+                            riskStatement = xmlReader.Value;
+                        }
                     }
                 }
+
                 return new Tuple<string, string>(output, riskStatement);
             }
             catch (Exception exception)
@@ -468,7 +527,8 @@ namespace Vulnerator.Model.BusinessLogic
                 string sanitizedExplanation = unsanitizedExplanation;
                 string doubleCarriageReturn = Environment.NewLine + Environment.NewLine;
                 string description = string.Empty;
-                string[] stringsToRemove = new string[] {
+                string[] stringsToRemove = new string[]
+                {
                     "<b>", "</b>", "<pre>", "</pre>", "<code>", "</code>", "&lt;", "&gt;"
                 };
                 foreach (string item in stringsToRemove)
@@ -476,27 +536,28 @@ namespace Vulnerator.Model.BusinessLogic
                     switch (item)
                     {
                         case "<b>":
-                            {
-                                sanitizedExplanation = unsanitizedExplanation.Replace(item, doubleCarriageReturn);
-                                break;
-                            }
+                        {
+                            sanitizedExplanation = unsanitizedExplanation.Replace(item, doubleCarriageReturn);
+                            break;
+                        }
                         case "</b>":
-                            {
-                                sanitizedExplanation = unsanitizedExplanation.Replace(item, Environment.NewLine);
-                                break;
-                            }
+                        {
+                            sanitizedExplanation = unsanitizedExplanation.Replace(item, Environment.NewLine);
+                            break;
+                        }
                         case "<pre>":
-                            {
-                                sanitizedExplanation = unsanitizedExplanation.Replace(item, doubleCarriageReturn);
-                                break;
-                            }
+                        {
+                            sanitizedExplanation = unsanitizedExplanation.Replace(item, doubleCarriageReturn);
+                            break;
+                        }
                         default:
-                            {
-                                sanitizedExplanation = unsanitizedExplanation.Replace(item, "");
-                                break;
-                            }
+                        {
+                            sanitizedExplanation = unsanitizedExplanation.Replace(item, "");
+                            break;
+                        }
                     }
                 }
+
                 Stream stream = GenerateStreamFromString(sanitizedExplanation);
                 using (XmlReader xmlReader = XmlReader.Create(stream))
                 {
@@ -507,16 +568,23 @@ namespace Vulnerator.Model.BusinessLogic
                             description = string.Concat(description, xmlReader.Value);
                             continue;
                         }
+
                         if (xmlReader.IsStartElement())
                         {
                             if (xmlReader.Name.Equals("Content"))
-                            { continue; }
+                            {
+                                continue;
+                            }
+
                             string nodeName = xmlReader.Name;
                             while (xmlReader.NodeType != XmlNodeType.EndElement && !xmlReader.Name.Equals(nodeName))
-                            { xmlReader.Read(); }
+                            {
+                                xmlReader.Read();
+                            }
                         }
                     }
                 }
+
                 return description;
             }
             catch (Exception exception)
@@ -532,40 +600,43 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 string sanitizedRecommendations = unsanitizedRecommendations;
                 string doubleCarriageReturn = Environment.NewLine + Environment.NewLine;
-                string[] stringsToRemove = new string[] {
-                "<Content>", "<Paragraph>", "</Paragraph>", "</Content>", "<b>", "</b>", "<pre>", "</pre>", "<code>", "</code>", "&lt;", "&gt;"
-            };
+                string[] stringsToRemove = new string[]
+                {
+                    "<Content>", "<Paragraph>", "</Paragraph>", "</Content>", "<b>", "</b>", "<pre>", "</pre>",
+                    "<code>", "</code>", "&lt;", "&gt;"
+                };
                 foreach (string trash in stringsToRemove)
                 {
                     switch (trash)
                     {
                         case "<Paragraph>":
-                            {
-                                sanitizedRecommendations = sanitizedRecommendations.Replace(trash, doubleCarriageReturn);
-                                break;
-                            }
+                        {
+                            sanitizedRecommendations = sanitizedRecommendations.Replace(trash, doubleCarriageReturn);
+                            break;
+                        }
                         case "<b>":
-                            {
-                                sanitizedRecommendations = sanitizedRecommendations.Replace(trash, doubleCarriageReturn);
-                                break;
-                            }
+                        {
+                            sanitizedRecommendations = sanitizedRecommendations.Replace(trash, doubleCarriageReturn);
+                            break;
+                        }
                         case "</b>":
-                            {
-                                sanitizedRecommendations = sanitizedRecommendations.Replace(trash, Environment.NewLine);
-                                break;
-                            }
+                        {
+                            sanitizedRecommendations = sanitizedRecommendations.Replace(trash, Environment.NewLine);
+                            break;
+                        }
                         case "<pre>":
-                            {
-                                sanitizedRecommendations = sanitizedRecommendations.Replace(trash, doubleCarriageReturn);
-                                break;
-                            }
+                        {
+                            sanitizedRecommendations = sanitizedRecommendations.Replace(trash, doubleCarriageReturn);
+                            break;
+                        }
                         default:
-                            {
-                                sanitizedRecommendations = sanitizedRecommendations.Replace(trash, "");
-                                break;
-                            }
+                        {
+                            sanitizedRecommendations = sanitizedRecommendations.Replace(trash, "");
+                            break;
+                        }
                     }
                 }
+
                 return sanitizedRecommendations;
             }
             catch (Exception exception)
@@ -583,85 +654,60 @@ namespace Vulnerator.Model.BusinessLogic
                 string placeholder = string.Empty;
                 foreach (string key in fprVulnerability.ReplacementDefinitions.Keys)
                 {
-                    string[] locationDefArray = new string[] { "SourceFunction", "SinkFunction", "PrimaryCall.name" };
+                    string[] locationDefArray = new string[] {"SourceFunction", "SinkFunction", "PrimaryCall.name"};
                     placeholder = "<Replace key=\"" + key + "\"/>";
                     if (output.Contains(placeholder))
-                    { output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]); }
+                    {
+                        output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]);
+                    }
+
                     if (locationDefArray.Contains(key))
                     {
                         switch (key)
                         {
                             case "SourceFunction":
+                            {
+                                placeholder = "<Replace key=\"" + key + "\" link=\"SourceLocation\"/>";
+                                if (output.Contains(placeholder))
                                 {
-                                    placeholder = "<Replace key=\"" + key + "\" link=\"SourceLocation\"/>";
-                                    if (output.Contains(placeholder))
-                                    { output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]); }
-                                    break;
+                                    output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]);
                                 }
+
+                                break;
+                            }
                             case "SinkFunction":
+                            {
+                                placeholder = "<Replace key=\"" + key + "\" link=\"SinkLocation\"/>";
+                                if (output.Contains(placeholder))
                                 {
-                                    placeholder = "<Replace key=\"" + key + "\" link=\"SinkLocation\"/>";
-                                    if (output.Contains(placeholder))
-                                    { output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]); }
-                                    break;
+                                    output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]);
                                 }
+
+                                break;
+                            }
                             case "PrimaryCall.name":
+                            {
+                                placeholder = "<Replace key=\"" + key + "\" link=\"PrimaryLocation\"/>";
+                                if (output.Contains(placeholder))
                                 {
-                                    placeholder = "<Replace key=\"" + key + "\" link=\"PrimaryLocation\"/>";
-                                    if (output.Contains(placeholder))
-                                    { output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]); }
-                                    break;
+                                    output = output.Replace(placeholder, fprVulnerability.ReplacementDefinitions[key]);
                                 }
+
+                                break;
+                            }
                             default:
-                                { break; }
+                            {
+                                break;
+                            }
                         }
                     }
                 }
+
                 return output;
             }
             catch (Exception exception)
             {
                 LogWriter.LogError("Unable to inject definition values into FPR vulnerability.");
-                throw exception;
-            }
-        }
-
-        private string ObtainReferencesValue(XmlReader xmlReader)
-        {
-            try
-            {
-                string value = string.Empty;
-                while (!xmlReader.Name.Equals("Title"))
-                { xmlReader.Read(); }
-                xmlReader.Read();
-                value = xmlReader.Value;
-                return value;
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to obtain FPR 'References' value.");
-                throw exception;
-            }
-        }
-
-        private string ObtainReferencesKey(XmlReader xmlReader)
-        {
-            try
-            {
-                string key = string.Empty;
-                while (xmlReader.Read())
-                {
-                    if (xmlReader.Name.Equals("Author") || xmlReader.Name.Equals("Publisher"))
-                    { break; }
-                }
-                xmlReader.Read();
-                if (!xmlReader.Value.Contains("Security Technical Implementation"))
-                { return "Discard"; }
-                return "STIG";
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to obtain FPR 'References' key.");
                 throw exception;
             }
         }
@@ -675,7 +721,7 @@ namespace Vulnerator.Model.BusinessLogic
                 {
                     string instanceId = string.Empty;
                     string analysisValue = string.Empty;
-                    Dictionary<DateTime, string> commentsDictionary = new Dictionary<DateTime, string>();
+                    List<FprVulnerability.AuditComment> auditComments = new List<FprVulnerability.AuditComment>();
                     while (xmlReader.Read())
                     {
                         if (xmlReader.IsStartElement())
@@ -683,34 +729,29 @@ namespace Vulnerator.Model.BusinessLogic
                             switch (xmlReader.Name)
                             {
                                 case "ns2:Issue":
-                                    {
-                                        instanceId = xmlReader.GetAttribute("instanceId");
-                                        analysisValue = ObtainAnalysisValue(xmlReader);
-                                        break;
-                                    }
+                                {
+                                    instanceId = xmlReader.GetAttribute("instanceId");
+                                    analysisValue = ObtainAnalysisValue(xmlReader);
+                                    break;
+                                }
                                 case "ns2:ThreadedComments":
-                                    {
-                                        PopulateCommentsDictionary(xmlReader, commentsDictionary);
-                                        break;
-                                    }
-                                default:
-                                    { break; }
+                                {
+                                    auditComments = PopulateCommentsList(xmlReader);
+                                    break;
+                                }
                             }
                         }
                         else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ns2:Issue"))
                         {
-                            FprVulnerability fprVulnerability = fprVulnerabilityList.FirstOrDefault(x => x.InstanceId.Equals(instanceId));
+                            FprVulnerability fprVulnerability =
+                                fprVulnerabilityList.FirstOrDefault(x => x.InstanceId.Equals(instanceId));
                             if (fprVulnerability != null)
                             {
                                 fprVulnerability.Status = analysisValue.ToVulneratorStatus();
-                                if (commentsDictionary.Count > 0)
-                                {
-                                    commentsDictionary.OrderByDescending(x => x.Key);
-                                    fprVulnerability.Comments =
-                                        $"{commentsDictionary.Last().Key.ToShortDateString()}:{Environment.NewLine}{commentsDictionary.Last().Value}";
-                                }
+                                fprVulnerability.AuditComments = auditComments;
                             }
-                            commentsDictionary.Clear();
+
+                            auditComments = new List<FprVulnerability.AuditComment>();
                             instanceId = string.Empty;
                             analysisValue = string.Empty;
                         }
@@ -732,12 +773,15 @@ namespace Vulnerator.Model.BusinessLogic
                 if (xmlReader.Name.Equals("ns2:Tag"))
                 {
                     while (!xmlReader.Name.Equals("ns2:Value"))
-                    { xmlReader.Read(); }
+                    {
+                        xmlReader.Read();
+                    }
+
                     xmlReader.Read();
                     return xmlReader.Value;
                 }
-                else
-                { return "Analysis Not Set"; }
+
+                return "Analysis Not Set";
             }
             catch (Exception exception)
             {
@@ -746,13 +790,13 @@ namespace Vulnerator.Model.BusinessLogic
             }
         }
 
-        private void PopulateCommentsDictionary(XmlReader xmlReader, Dictionary<DateTime, string> commentsDictionary)
+        private List<FprVulnerability.AuditComment> PopulateCommentsList(XmlReader xmlReader)
         {
             try
             {
-                string comment = string.Empty;
-                DateTime timestamp = new DateTime();
-                string username = string.Empty;
+                List<FprVulnerability.AuditComment> auditComments = new List<FprVulnerability.AuditComment>();
+                FprVulnerability.AuditComment auditComment = new FprVulnerability.AuditComment();
+
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -760,35 +804,34 @@ namespace Vulnerator.Model.BusinessLogic
                         switch (xmlReader.Name)
                         {
                             case "ns2:Content":
-                                {
-                                    comment = xmlReader.ObtainCurrentNodeValue(false);
-                                    break;
-                                }
+                            {
+                                auditComment.Content = xmlReader.ObtainCurrentNodeValue(false);
+                                break;
+                            }
                             case "ns2:Username":
-                                {
-                                    username = xmlReader.ObtainCurrentNodeValue(false);
-                                    break;
-                                }
+                            {
+                                auditComment.UserName = xmlReader.ObtainCurrentNodeValue(false);
+                                break;
+                            }
                             case "ns2:Timestamp":
-                                {
-                                    timestamp = DateTime.Parse(xmlReader.ObtainCurrentNodeValue(false));
-                                    break;
-                                }
-                            default:
-                                { break; }
+                            {
+                                auditComment.EditTime = DateTime.Parse(xmlReader.ObtainCurrentNodeValue(false));
+                                break;
+                            }
                         }
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ns2:Comment"))
                     {
-                        string keyCheck;
-                        if (!commentsDictionary.TryGetValue(timestamp, out keyCheck))
-                        { commentsDictionary.Add(timestamp, $"{username}: {comment}"); }
-                        comment = string.Empty;
-                        timestamp = new DateTime();
+                        auditComments.Add(auditComment);
+                        auditComment = new FprVulnerability.AuditComment();
                     }
-                    else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ns2:ThreadedComments"))
-                    { return; }
+                    else if (xmlReader.NodeType == XmlNodeType.EndElement &&
+                             xmlReader.Name.Equals("ns2:ThreadedComments"))
+                    {
+                        return auditComments;
+                    }
                 }
+                return auditComments;
             }
             catch (Exception exception)
             {
