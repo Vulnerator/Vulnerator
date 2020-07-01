@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
+    [Table("Software")]
     public class Software : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -53,7 +54,7 @@ namespace Vulnerator.Model.Entity
         public string HasCustomCode { get; set; }
 
         [StringLength(5)]
-        public string IaOrIa_Enabled { get; set; }
+        public string IA_OrIA_Enabled { get; set; }
 
         [StringLength(5)]
         public string IsOS_OrFirmware { get; set; }

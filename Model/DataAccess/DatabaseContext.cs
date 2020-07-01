@@ -710,11 +710,7 @@ namespace Vulnerator.Model.DataAccess
             modelBuilder.Entity<UniqueFindingSourceFile>().HasMany(e => e.UniqueFindings)
                 .WithRequired(e => e.UniqueFindingSourceFile);
 
-            modelBuilder.Entity<UniqueFinding>().HasOptional(e => e.MitigationOrCondition)
-                .WithRequired(e => e.UniqueFinding);
-
-            modelBuilder.Entity<MitigationOrCondition>().HasRequired(e => e.UniqueFinding)
-                .WithOptional(e => e.MitigationOrCondition);
+            modelBuilder.Entity<UniqueFinding>().HasOptional(e => e.MitigationOrCondition).WithMany();
 
             modelBuilder.Entity<Vulnerability>().HasMany(e => e.CCIs).WithMany(e => e.Vulnerabilities)
                 .Map(e => e.ToTable("VulnerabilitiesCCIs")

@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using JetBrains.Annotations;
 
 namespace Vulnerator.Model.Entity
 {
@@ -76,6 +77,7 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GroupMitigationOrConditionVulnerability> GroupsMitigationsOrConditionsVulnerabilities { get; set; }
         
+        [CanBeNull]
         public virtual UniqueFinding UniqueFinding { get; set; }
     }
 }

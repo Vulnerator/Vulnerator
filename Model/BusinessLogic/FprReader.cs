@@ -16,8 +16,8 @@ namespace Vulnerator.Model.BusinessLogic
     class FprReader
     {
         private string softwareName = string.Empty;
-        private string firstDiscovered = DateTime.Now.ToShortDateString();
-        private string lastObserved = DateTime.Now.ToShortDateString();
+        private DateTime firstDiscovered = DateTime.Now;
+        private DateTime lastObserved = DateTime.Now;
         private string version = string.Empty;
         private DatabaseInterface databaseInterface = new DatabaseInterface();
         private List<FprVulnerability> fprVulnerabilityList = new List<FprVulnerability>();
@@ -176,8 +176,7 @@ namespace Vulnerator.Model.BusinessLogic
                             {
                                 case "CreatedTS":
                                 {
-                                    firstDiscovered = lastObserved = DateTime.Parse(xmlReader.GetAttribute("date"))
-                                        .ToShortDateString();
+                                    firstDiscovered = lastObserved = DateTime.Parse(xmlReader.GetAttribute("date"));
                                     break;
                                 }
                                 case "BuildID":
