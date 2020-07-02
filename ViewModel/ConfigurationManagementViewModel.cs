@@ -269,7 +269,7 @@ namespace Vulnerator.ViewModel
                     //     .OrderBy(m => m.MAC_Address)
                     //     .AsNoTracking()
                     //     .ToList();
-                    // NewGroup = new Group();
+                    NewGroup = new Group();
                 }
             }
             catch (Exception exception)
@@ -447,8 +447,8 @@ namespace Vulnerator.ViewModel
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
-                        sqliteCommand.Parameters["Name"].Value = NewGroup.GroupName;
-                        sqliteCommand.Parameters["Acronym"].Value = NewGroup.GroupAcronym;
+                        sqliteCommand.Parameters["GroupName"].Value = NewGroup.GroupName;
+                        sqliteCommand.Parameters["GroupAcronym"].Value = NewGroup.GroupAcronym;
                         sqliteCommand.Parameters["GroupTier"].Value = NewGroup.GroupTier;
                         sqliteCommand.Parameters["IsAccreditation"].Value = NewGroup.IsAccreditation ?? "False";
                         sqliteCommand.Parameters["Accreditation_eMASS_ID"].Value = NewGroup.Accreditation_eMASS_ID;

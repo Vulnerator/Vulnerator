@@ -137,9 +137,6 @@ namespace Vulnerator.ViewModel
             }
         }
 
-
-
-
         public RelayCommand ExecuteExportCommand => new RelayCommand(ExecuteExport);
 
         private void ExecuteExport()
@@ -220,6 +217,13 @@ namespace Vulnerator.ViewModel
                 LogWriter.LogError($"Unable to update report selection criteria for {SelectedReport.DisplayedReportName}");
                 throw exception;
             }
+        }
+
+        public RelayCommand<object> GenerateSingleReportCommand => new RelayCommand<object>(GenerateSingleReport);
+
+        private void GenerateSingleReport(object parameter)
+        {
+            Console.Write(parameter.ToString());
         }
 
         // TODO: Rework this for the actual reports

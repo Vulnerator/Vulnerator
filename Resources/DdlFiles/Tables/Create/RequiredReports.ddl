@@ -3,5 +3,6 @@ CREATE TABLE IF NOT EXISTS RequiredReports (
     DisplayedReportName NVARCHAR (50) NOT NULL,
     ReportType NVARCHAR (50) NOT NULL,
     IsReportEnabled NVARCHAR (5) NOT NULL,
-    ReportCategory NVARCHAR (50) NOT NULL
+    ReportCategory NVARCHAR (50) NOT NULL,
+    UNIQUE (DisplayedReportName, ReportType) ON CONFLICT IGNORE
 );
