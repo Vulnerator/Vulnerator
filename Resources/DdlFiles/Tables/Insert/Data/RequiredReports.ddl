@@ -14,7 +14,18 @@ INSERT INTO
 VALUES
     (
         NULL,
-        'POA&M / RAR',
+        'POA&M',
+        'Excel',
+        'True',
+        'Vulnerability Management'
+    );
+
+INSERT INTO
+    RequiredReports
+VALUES
+    (
+        NULL,
+        'RAR',
         'Excel',
         'True',
         'Vulnerability Management'

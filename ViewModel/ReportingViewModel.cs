@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Linq;
@@ -17,6 +18,7 @@ using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Win32;
 using Vulnerator.Helper;
 using Vulnerator.Model.BusinessLogic;
+using Vulnerator.Model.BusinessLogic.Reports;
 using Vulnerator.ViewModel.ViewModelHelper;
 
 namespace Vulnerator.ViewModel
@@ -223,7 +225,43 @@ namespace Vulnerator.ViewModel
 
         private void GenerateSingleReport(object parameter)
         {
-            Console.Write(parameter.ToString());
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += GenerateSingleReportBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerAsync(parameter);
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                string error = $"Unable to generate single report with ID {parameter}.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+            
+        }
+
+        private void GenerateSingleReportBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                switch (e.Argument.ToString())
+                {
+                    case "2":
+                    {
+                        if ((bool) GetExcelReportName())
+                        {
+                            OpenXmlEmassPoamReportCreator openXmlEmassPoamReportCreator = new OpenXmlEmassPoamReportCreator();
+                            openXmlEmassPoamReportCreator.CreateEmassPoam(saveExcelFile.FileName);
+                        }
+                        return;
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Error while attempting to create requested report.");
+                throw exception;
+            }
         }
 
         // TODO: Rework this for the actual reports

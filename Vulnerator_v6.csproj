@@ -310,8 +310,11 @@
     <Compile Include="Model\BusinessLogic\AcasNessusReader.cs" />
     <Compile Include="Model\BusinessLogic\AcasCsvReader.cs" />
     <Compile Include="Model\BusinessLogic\CklCreator.cs" />
+    <Compile Include="Model\BusinessLogic\Reports\OpenXmlCellDataHandler.cs" />
+    <Compile Include="Model\BusinessLogic\Reports\OpenXmlEmassPoamReportCreator.cs" />
     <Compile Include="Model\BusinessLogic\RawStigReader.cs" />
     <Compile Include="Model\BusinessLogic\AssociateStig.cs" />
+    <Compile Include="Model\BusinessLogic\Reports\OpenXmlStylesheetCreator.cs" />
     <Compile Include="Model\DataAccess\DatabaseBuilder.cs" />
     <Compile Include="Model\DataAccess\DatabaseContext.cs" />
     <Compile Include="Model\DataAccess\DatabaseInterface.cs" />
