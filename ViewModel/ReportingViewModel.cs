@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Vulnerator.Model.Entity;
@@ -15,6 +16,7 @@ using log4net;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Object;
 using GalaSoft.MvvmLight.Messaging;
+using MahApps.Metro;
 using Microsoft.Win32;
 using Vulnerator.Helper;
 using Vulnerator.Model.BusinessLogic;
@@ -229,6 +231,7 @@ namespace Vulnerator.ViewModel
             {
                 backgroundWorker = new BackgroundWorker();
                 backgroundWorker.DoWork += GenerateSingleReportBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerCompleted += GenerateSingleReportBackgroundWorker_RunWorkerCompleted;
                 backgroundWorker.RunWorkerAsync(parameter);
                 backgroundWorker.Dispose();
             }
@@ -250,8 +253,18 @@ namespace Vulnerator.ViewModel
                     {
                         if ((bool) GetExcelReportName())
                         {
+                            GuiFeedback guiFeedback = new GuiFeedback();
+                            guiFeedback.SetFields("Creating report...", "Visible", false);
+                            Messenger.Default.Send(guiFeedback);
                             OpenXmlEmassPoamReportCreator openXmlEmassPoamReportCreator = new OpenXmlEmassPoamReportCreator();
                             openXmlEmassPoamReportCreator.CreateEmassPoam(saveExcelFile.FileName);
+                            e.Result = "Success";
+                            guiFeedback.SetFields("Report creation complete", "Collapsed", true);
+                            Messenger.Default.Send(guiFeedback);
+                        }
+                        else
+                        {
+                            e.Result = "Cancelled";
                         }
                         return;
                     }
@@ -259,7 +272,62 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Error while attempting to create requested report.");
+                e.Result = exception;
+            }
+        }
+
+        private void GenerateSingleReportBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            try
+            {
+                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
+                Notification notification = new Notification();
+                notification.Background = appStyle.Item1.Resources["GrayBrush10"].ToString();
+                notification.Foreground = appStyle.Item1.Resources["TextBrush"].ToString();
+                if (e.Result != null)
+                {
+                    if (e.Result is Exception)
+                    {
+                        notification.Accent = "Red";
+                        notification.Badge = "Failure";
+                        notification.Header = "Report Creation";
+                        notification.Message = "Requested report(s) failed to create; see log for details.";
+                        Exception exception = e.Result as Exception;
+                        string error = "Unable to create requested report(s).";
+                        LogWriter.LogErrorWithDebug(error, exception);
+                    }
+                    else
+                    {
+                        switch (e.Result.ToString())
+                        {
+                            case "Success":
+                            {
+                                notification.Accent = "Green";
+                                notification.Badge = "Success";
+                                notification.Header = "Report Creation";
+                                notification.Message = "Requested reports created successfully.";
+                                break;
+                            }
+                            case "Cancelled":
+                            {
+                                notification.Accent = "Orange";
+                                notification.Badge = "Warning";
+                                notification.Header = "Report Creation";
+                                notification.Message = "Report creation cancelled by user.";
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                Messenger.Default.Send(notification);
+                GuiFeedback guiFeedback = new GuiFeedback();
+                guiFeedback.SetFields("File ingestion complete", "Collapsed", true);
+                Messenger.Default.Send(guiFeedback);
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to handle file ingestion background worker completion events.");
                 throw exception;
             }
         }
