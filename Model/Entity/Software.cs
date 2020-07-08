@@ -17,7 +17,8 @@ namespace Vulnerator.Model.Entity
         {
             DADMS_Networks = new ObservableCollection<DADMS_Network>();
             Contacts = new ObservableCollection<Contact>();
-            Hardwares = new ObservableCollection<Hardware>();
+            HardwareSoftwarePortsProtocolsServices = new ObservableCollection<HardwareSoftwarePortProtocolService>();
+            SoftwareHardwares = new ObservableCollection<SoftwareHardware>();
             UniqueFindings = new ObservableCollection<UniqueFinding>();
         }
 
@@ -84,9 +85,12 @@ namespace Vulnerator.Model.Entity
         public virtual ICollection<Contact> Contacts { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Hardware> Hardwares { get; set; }
+        public virtual ICollection<SoftwareHardware> SoftwareHardwares { get; set; }
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UniqueFinding> UniqueFindings { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<HardwareSoftwarePortProtocolService> HardwareSoftwarePortsProtocolsServices { get; set; }
     }
 }

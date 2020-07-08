@@ -5,9 +5,9 @@ CREATE TABLE IF NOT EXISTS HardwareSoftwarePortsProtocolsServices
     Software_ID                    INTEGER NOT NULL,
     ReportInAccreditation          NVARCHAR(5),
     Direction                      NVARCHAR(25),
-    BoundariesCrossed              NVARCHAR(25),
+    BoundariesCrossed              NVARCHAR(100),
     DOD_Compliant                  NVARCHAR(5),
-    Classification                 NVARCHAR(25),
+    Classification                 NVARCHAR(100),
     UNIQUE (
             HardwarePortProtocolService_ID,
             Software_ID

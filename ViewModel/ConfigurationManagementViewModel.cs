@@ -28,6 +28,7 @@ namespace Vulnerator.ViewModel
         private DatabaseInterface databaseInterface = new DatabaseInterface();
 
         private List<Hardware> _hardwares;
+
         public List<Hardware> Hardwares
         {
             get => _hardwares;
@@ -42,6 +43,7 @@ namespace Vulnerator.ViewModel
         }
 
         private List<Software> _softwares;
+
         public List<Software> Softwares
         {
             get => _softwares;
@@ -56,6 +58,7 @@ namespace Vulnerator.ViewModel
         }
 
         private List<Contact> _contacts;
+
         public List<Contact> Contacts
         {
             get => _contacts;
@@ -70,6 +73,7 @@ namespace Vulnerator.ViewModel
         }
 
         private List<Group> _groups;
+
         public List<Group> Groups
         {
             get => _groups;
@@ -84,6 +88,7 @@ namespace Vulnerator.ViewModel
         }
 
         private List<VulnerabilitySource> _vulnerabilitySources;
+
         public List<VulnerabilitySource> VulnerabilitySources
         {
             get => _vulnerabilitySources;
@@ -97,21 +102,23 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private List<PortProtocolService> _pps;
-        public List<PortProtocolService> PortsProtocols
+        private List<PortProtocolService> _portsProtocolsServices;
+
+        public List<PortProtocolService> PortsProtocolsServices
         {
-            get => _pps;
+            get => _portsProtocolsServices;
             set
             {
-                if (_pps != value)
+                if (_portsProtocolsServices != value)
                 {
-                    _pps = value;
-                    RaisePropertyChanged("PortsProtocols");
+                    _portsProtocolsServices = value;
+                    RaisePropertyChanged("PortsProtocolsServices");
                 }
             }
         }
 
         private List<IP_Address> _ipAddresses;
+
         public List<IP_Address> IpAddresses
         {
             get => _ipAddresses;
@@ -126,6 +133,7 @@ namespace Vulnerator.ViewModel
         }
 
         private List<MAC_Address> _macAddresses;
+
         public List<MAC_Address> MacAddresses
         {
             get => _macAddresses;
@@ -139,8 +147,9 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private object _selectedHardware;
-        public object SelectedHardware
+        private Hardware _selectedHardware;
+
+        public Hardware SelectedHardware
         {
             get => _selectedHardware;
             set
@@ -149,6 +158,51 @@ namespace Vulnerator.ViewModel
                 {
                     _selectedHardware = value;
                     RaisePropertyChanged("SelectedHardware");
+                }
+            }
+        }
+
+        private Hardware _selectedHardwareForGroupMapping;
+
+        public Hardware SelectedHardwareForGroupMapping
+        {
+            get => _selectedHardwareForGroupMapping;
+            set
+            {
+                if (_selectedHardwareForGroupMapping != value)
+                {
+                    _selectedHardwareForGroupMapping = value;
+                    RaisePropertyChanged("SelectedHardwareForGroupMapping");
+                }
+            }
+        }
+
+        private Software _selectedSoftware;
+
+        public Software SelectedSoftware
+        {
+            get => _selectedSoftware;
+            set
+            {
+                if (_selectedSoftware != value)
+                {
+                    _selectedSoftware = value;
+                    RaisePropertyChanged("SelectedSoftware");
+                }
+            }
+        }
+
+        private PortProtocolService _selectedPPS;
+
+        public PortProtocolService SelectedPPS
+        {
+            get => _selectedPPS;
+            set
+            {
+                if (_selectedPPS != value)
+                {
+                    _selectedPPS = value;
+                    RaisePropertyChanged("SelectedPPS");
                 }
             }
         }
@@ -164,7 +218,19 @@ namespace Vulnerator.ViewModel
                 _selectedGroup = value;
                 RaisePropertyChanged("SelectedGroup");
             }
+        }
 
+        private Group _selectedGroupForHardwareMapping;
+
+        public Group SelectedGroupForHardwareMapping
+        {
+            get => _selectedGroupForHardwareMapping;
+            set
+            {
+                if (_selectedGroupForHardwareMapping == value) return;
+                _selectedGroupForHardwareMapping = value;
+                RaisePropertyChanged("SelectedGroupForHardwareMapping");
+            }
         }
 
         private Group _newGroup;
@@ -181,6 +247,7 @@ namespace Vulnerator.ViewModel
         }
 
         private VulnerabilitySource _selectedVulnerabilitySource;
+
         public VulnerabilitySource SelectedVulnerabilitySource
         {
             get => _selectedVulnerabilitySource;
@@ -200,7 +267,8 @@ namespace Vulnerator.ViewModel
             {
                 LogWriter.LogStatusUpdate("Begin instantiation of ConfigurationManagementViewModel.");
                 PopulateGui();
-                Messenger.Default.Register<NotificationMessage<string>>(this, MessengerToken.ModelUpdated, (msg) => HandleModelUpdate(msg.Notification));
+                Messenger.Default.Register<NotificationMessage<string>>(this, MessengerToken.ModelUpdated,
+                    (msg) => HandleModelUpdate(msg.Notification));
                 LogWriter.LogStatusUpdate("ConfigurationManagementViewModel instantiated successfully.");
             }
             catch (Exception exception)
@@ -215,7 +283,9 @@ namespace Vulnerator.ViewModel
             try
             {
                 if (modelUpdated.Equals("ConfigurationManagementModel") || modelUpdated.Equals("AllModels"))
-                { PopulateGui(); }
+                {
+                    PopulateGui();
+                }
             }
             catch (Exception exception)
             {
@@ -230,45 +300,45 @@ namespace Vulnerator.ViewModel
             {
                 using (DatabaseContext databaseContext = new DatabaseContext())
                 {
-                    // Hardwares = databaseContext.Hardwares
-                    //     .Include(h => h.SoftwareHardwares.Select(s => s.Software))
-                    //     .Include(h => h.IP_Addresses)
-                    //     .Include(h => h.MAC_Addresses)
-                    //     .Include(h => h.Groups)
-                    //     .Include(h => h.Contacts)
-                    //     .Include(h => h.HardwarePortsProtocols.Select(p => p.PP))
-                    //     .Include(h => h.VulnerabilitySources)
-                    //     .OrderBy(h => h.DisplayedHostName)
-                    //     .AsNoTracking().ToList();
-                    // Softwares = databaseContext.Softwares
-                    //     .Include(s => s.SoftwareHardwares.Select(h => h.Hardware))
-                    //     .OrderBy(s => s.DisplayedSoftwareName)
-                    //     .AsNoTracking().ToList();
-                    // Contacts = databaseContext.Contacts
-                    //     .Include(c => c.Groups)
-                    //     .Include(c => c.Certifications)
-                    //     .Include(c => c.Groups)
-                    //     .Include(c => c.Organization)
-                    //     .Include(c => c.Softwares)
-                    //     .AsNoTracking().ToList();
-                    // PortsProtocols = databaseContext.PortsProtocols
-                    //     .Include(p => p.HardwarePortsProtocols.Select(h => h.Hardware))
-                    //     .AsNoTracking().ToList();
+                    Hardwares = databaseContext.Hardwares
+                        .Include(h => h.SoftwareHardwares.Select(s => s.Software))
+                        .Include(h => h.IP_Addresses)
+                        .Include(h => h.MAC_Addresses)
+                        .Include(h => h.Groups)
+                        .Include(h => h.Contacts)
+                        .Include(h => h.HardwarePortsProtocolsServices.Select(p => p.PortProtocolService))
+                        .OrderBy(h => h.DisplayedHostName)
+                        .AsNoTracking().ToList();
+                    Softwares = databaseContext.Softwares
+                        .Include(s => s.SoftwareHardwares.Select(h => h.Hardware))
+                        .OrderBy(s => s.DisplayedSoftwareName)
+                        .AsNoTracking().ToList();
+                    //Contacts = databaseContext.Contacts
+                    //    .Include(c => c.Groups)
+                    //    .Include(c => c.Certifications)
+                    //    .Include(c => c.Groups)
+                    //    .Include(c => c.Organization)
+                    //    .Include(c => c.Softwares)
+                    //    .AsNoTracking().ToList();
+                    PortsProtocolsServices = databaseContext.PortsProtocolsServices
+                        .Include(p => p.HardwarePortsProtocolsServices.Select(h => h.Hardware))
+                        .AsNoTracking()
+                        .ToList();
                     Groups = databaseContext.Groups
                         .Include(g => g.Hardwares)
                         .AsNoTracking().ToList();
-                    // VulnerabilitySources = databaseContext.VulnerabilitySources
-                    //     .Where(vs => !vs.SourceName.Contains("Nessus"))
-                    //     .OrderBy(vs => vs.SourceName)
-                    //     .AsNoTracking().ToList();
-                    // IpAddresses = databaseContext.IP_Addresses
-                    //     .OrderBy(i => i.IP_Address)
-                    //     .AsNoTracking()
-                    //     .ToList();
-                    // MacAddresses = databaseContext.MAC_Addresses
-                    //     .OrderBy(m => m.MAC_Address)
-                    //     .AsNoTracking()
-                    //     .ToList();
+                    //VulnerabilitySources = databaseContext.VulnerabilitySources
+                    //    .Where(vs => !vs.SourceName.Contains("Nessus"))
+                    //    .OrderBy(vs => vs.SourceName)
+                    //    .AsNoTracking().ToList();
+                    IpAddresses = databaseContext.IP_Addresses
+                        .OrderBy(i => i.IpAddress)
+                        .AsNoTracking()
+                        .ToList();
+                    MacAddresses = databaseContext.MAC_Addresses
+                        .OrderBy(m => m.MacAddress)
+                        .AsNoTracking()
+                        .ToList();
                     NewGroup = new Group();
                 }
             }
@@ -280,7 +350,9 @@ namespace Vulnerator.ViewModel
         }
 
         public RelayCommand<object> GenerateCklCommand
-        { get { return new RelayCommand<object>(p => GenerateCkl(p)); } }
+        {
+            get { return new RelayCommand<object>(p => GenerateCkl(p)); }
+        }
 
         private void GenerateCkl(object param)
         {
@@ -365,16 +437,19 @@ namespace Vulnerator.ViewModel
                 int vulnerabilitySourceId = int.Parse(SelectedVulnerabilitySource.VulnerabilitySource_ID.ToString());
                 AssociateStig associateStig = new AssociateStig();
                 associateStig.ToHardware(vulnerabilitySourceId, hardwareId);
-                Messenger.Default.Send(new NotificationMessage<string>("ModelUpdate", "AllModels"), MessengerToken.ModelUpdated);
+                Messenger.Default.Send(new NotificationMessage<string>("ModelUpdate", "AllModels"),
+                    MessengerToken.ModelUpdated);
             }
             catch (Exception exception)
             {
-                LogWriter.LogError($"Unable to associate STIG '{SelectedVulnerabilitySource.VulnerabilitySourceFileName}' to Hardware.");
+                LogWriter.LogError(
+                    $"Unable to associate STIG '{SelectedVulnerabilitySource.VulnerabilitySourceFileName}' to Hardware.");
                 throw exception;
             }
         }
 
         public RelayCommand ModifyGroupCommand => new RelayCommand(ModifyGroup);
+
         private void ModifyGroup()
         {
             try
@@ -383,9 +458,13 @@ namespace Vulnerator.ViewModel
 
                 BackgroundWorker backgroundWorker = new BackgroundWorker();
                 if (SelectedGroup != null)
-                { backgroundWorker.DoWork += updateGroupBackgroundWorker_DoWork; }
+                {
+                    backgroundWorker.DoWork += updateGroupBackgroundWorker_DoWork;
+                }
                 else
-                { backgroundWorker.DoWork += addGroupBackgroundWorker_DoWork; }
+                {
+                    backgroundWorker.DoWork += addGroupBackgroundWorker_DoWork;
+                }
 
                 backgroundWorker.RunWorkerAsync();
                 backgroundWorker.RunWorkerCompleted += groupActionBackgroundWorker_RunWorkerCompleted;
@@ -403,7 +482,9 @@ namespace Vulnerator.ViewModel
             try
             {
                 if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
-                { DatabaseBuilder.sqliteConnection.Open(); }
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
 
                 using (SQLiteTransaction sQLiteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
                 {
@@ -431,7 +512,9 @@ namespace Vulnerator.ViewModel
             finally
             {
                 if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
-                { DatabaseBuilder.sqliteConnection.Close(); }
+                {
+                    DatabaseBuilder.sqliteConnection.Close();
+                }
             }
         }
 
@@ -440,7 +523,9 @@ namespace Vulnerator.ViewModel
             try
             {
                 if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
-                { DatabaseBuilder.sqliteConnection.Open(); }
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
 
                 using (SQLiteTransaction sQLiteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
                 {
@@ -467,7 +552,9 @@ namespace Vulnerator.ViewModel
             finally
             {
                 if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
-                { DatabaseBuilder.sqliteConnection.Close(); }
+                {
+                    DatabaseBuilder.sqliteConnection.Close();
+                }
             }
         }
 
@@ -493,7 +580,6 @@ namespace Vulnerator.ViewModel
 
         private void DeleteGroupHandler()
         {
-
             try
             {
                 if (SelectedGroup == null && Groups.Count(x => x.IsChecked) < 1) return;
@@ -512,11 +598,12 @@ namespace Vulnerator.ViewModel
 
         private void deleteGroupBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-
             try
             {
                 if (!DatabaseBuilder.sqliteConnection.State.Equals(ConnectionState.Open))
-                { DatabaseBuilder.sqliteConnection.Open(); }
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
 
                 using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
                 {
@@ -525,10 +612,14 @@ namespace Vulnerator.ViewModel
                         if (Groups.Count(x => x.IsChecked) > 0)
                         {
                             foreach (Group group in Groups.Where(x => x.IsChecked))
-                            { DeleteGroup(group, sqliteCommand); }
+                            {
+                                DeleteGroup(group, sqliteCommand);
+                            }
                         }
                         else if (SelectedGroup != null)
-                        { DeleteGroup(SelectedGroup, sqliteCommand); }
+                        {
+                            DeleteGroup(SelectedGroup, sqliteCommand);
+                        }
                     }
 
                     sqliteTransaction.Commit();
@@ -542,13 +633,14 @@ namespace Vulnerator.ViewModel
             finally
             {
                 if (!DatabaseBuilder.sqliteConnection.State.Equals(ConnectionState.Closed))
-                { DatabaseBuilder.sqliteConnection.Close(); }
+                {
+                    DatabaseBuilder.sqliteConnection.Close();
+                }
             }
         }
 
         private void DeleteGroup(Group group, SQLiteCommand sqliteCommand)
         {
-
             try
             {
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Group_ID", group.Group_ID));
@@ -563,10 +655,10 @@ namespace Vulnerator.ViewModel
 
         private void groupActionBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
             try
             {
-                Messenger.Default.Send(new NotificationMessage<string>("ModelUpdate", "AllModels"), MessengerToken.ModelUpdated);
+                Messenger.Default.Send(new NotificationMessage<string>("ModelUpdate", "AllModels"),
+                    MessengerToken.ModelUpdated);
                 NewGroup = new Group();
             }
             catch (Exception exception)

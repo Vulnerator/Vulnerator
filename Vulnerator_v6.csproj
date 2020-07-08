@@ -322,6 +322,7 @@
     <Compile Include="Model\Entity\AuthorizationToConnectOrInterim_ATC_PendingItem.cs" />
     <Compile Include="Model\Entity\AuthorizationCondition.cs" />
     <Compile Include="Model\Entity\AvailabilityLevel.cs" />
+    <Compile Include="Model\Entity\Boundary.cs" />
     <Compile Include="Model\Entity\CCI.cs" />
     <Compile Include="Model\Entity\Certification.cs" />
     <Compile Include="Model\Entity\CommonControlPackage.cs" />
@@ -347,6 +348,9 @@
     <Compile Include="Model\Entity\GroupContactTitle.cs" />
     <Compile Include="Model\Entity\GroupMitigationOrConditionVulnerability.cs" />
     <Compile Include="Model\Entity\Hardware.cs" />
+    <Compile Include="Model\Entity\HardwarePortProtocolService.cs" />
+    <Compile Include="Model\Entity\HardwareSoftwarePortProtocolServiceBoundary.cs" />
+    <Compile Include="Model\Entity\HardwareSoftwarePortProtocolService.cs" />
     <Compile Include="Model\Entity\IATA_Standard.cs" />
     <Compile Include="Model\Entity\IA_Control.cs" />
     <Compile Include="Model\Entity\ImpactAdjustment.cs" />
@@ -378,6 +382,7 @@
     <Compile Include="Model\Entity\SecurityAssessmentProcedure.cs" />
     <Compile Include="Model\Entity\SCAP_Score.cs" />
     <Compile Include="Model\Entity\Software.cs" />
+    <Compile Include="Model\Entity\SoftwareHardware.cs" />
     <Compile Include="Model\Entity\StepOneQuestionnaire.cs" />
     <Compile Include="Model\Entity\SystemCategorization.cs" />
     <Compile Include="Model\Entity\SystemCategorizationInformationTypesImpactAdjustment.cs" />
@@ -808,6 +813,8 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\Group.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\VulnerabilitySource.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\VulnerabilityVersionAndRelease.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\Boundaries.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwareSoftwarePortsProtocolsServicesBoundaries.ddl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -973,7 +980,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\RequiredReportUserSelections.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ReportFindingTypeUserSettings.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ReportSeverityUserSettings.ddl" />
-    <Content Include="Resources\DdlFiles\Tables\Create\HardwareSoftwarePortsProtocolsServices.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwareSoftwarePortsProtocolsServices.ddl" />
     <Content Include="Resources\UserGuide\Images\ThemeFlyout.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

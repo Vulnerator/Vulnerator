@@ -322,8 +322,8 @@ namespace Vulnerator.Model.DataAccess
                     "MitigationOrCondition_ID", "ImpactDescription",  "PredisposingConditions", "TechnicalMitigation", "ProposedMitigation",
                     "ThreatRelevance", "SeverityPervasiveness", "Likelihood", "Impact", "Risk", "ResidualRisk", "ResidualRiskAfterProposed",
                     "MitigatedStatus", "EstimatedCompletionDate", "ApprovalDate", "ExpirationDate", "IsApproved", "Approver", "ThreatDescription",
-                    // PortsProtocols Table
-                    "PortProtocol_ID", "Port", "Protocol",
+                    // HardwarePortsProtocolsServices Table
+                    "PortProtocolService_ID", "Port", "Protocol",
                     // PortsServices Table
                     "PortService_ID", "DiscoveredServiceName", "DisplayedServiceName", "ServiceAcronym",
                     // Software Table

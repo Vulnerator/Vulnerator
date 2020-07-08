@@ -18,6 +18,7 @@ namespace Vulnerator.Model.DataAccess
             AuthorizationToConnectOrInterim_ATC_PendingItems { get; set; }
 
         public virtual DbSet<AvailabilityLevel> AvailabilityLevels { get; set; }
+        public virtual DbSet<Boundary> Boundaries { get; set; }
         public virtual DbSet<CCI> CCIs { get; set; }
         public virtual DbSet<Certification> Certifications { get; set; }
         public virtual DbSet<CommonControlPackage> CommonControlPackages { get; set; }
@@ -46,6 +47,9 @@ namespace Vulnerator.Model.DataAccess
             set;
         }
         public virtual DbSet<Hardware> Hardwares { get; set; }
+        public virtual DbSet<HardwarePortProtocolService> HardwarePortsProtocolsServices { get; set; }
+        public virtual DbSet<HardwareSoftwarePortProtocolServiceBoundary> HardwarePortsProtocolsServicesBoundaries { get; set; }
+        public virtual DbSet<HardwareSoftwarePortProtocolService> HardwareSoftwarePortProtocolServices { get; set; }
         public virtual DbSet<IA_Control> IA_Controls { get; set; }
         public virtual DbSet<IATA_Standard> IATA_Standards { get; set; }
         public virtual DbSet<ImpactAdjustment> ImpactAdjustments { get; set; }
@@ -75,6 +79,7 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<SecurityAssessmentProcedure> SecurityAssessmentProcedures { get; set; }
         public virtual DbSet<SCAP_Score> SCAP_Scores { get; set; }
         public virtual DbSet<Software> Softwares { get; set; }
+        public virtual DbSet<SoftwareHardware> SoftwareHardwares { get; set; }
         public virtual DbSet<StepOneQuestionnaire> StepOneQuestionnaires { get; set; }
         public virtual DbSet<SystemCategorization> SystemCategorizations { get; set; }
         public virtual DbSet<TestReference> TestReferences { get; set; }
@@ -329,6 +334,16 @@ namespace Vulnerator.Model.DataAccess
                     .MapLeftKey("IP_Address_ID")
                     .MapRightKey("Hardware_ID"));
 
+            modelBuilder.Entity<Hardware>().HasMany(e => e.MAC_Addresses).WithMany(e => e.Hardwares)
+                .Map(e => e.ToTable("Hardware_MAC_Addresses")
+                    .MapLeftKey("Hardware_ID")
+                    .MapRightKey("MAC_Address_ID"));
+
+            modelBuilder.Entity<MAC_Address>().HasMany(e => e.Hardwares).WithMany(e => e.MAC_Addresses)
+                .Map(e => e.ToTable("Hardware_MAC_Addresses")
+                    .MapLeftKey("MAC_Address_ID")
+                    .MapRightKey("Hardware_ID"));
+
             modelBuilder.Entity<Hardware>().HasMany(e => e.Locations).WithMany(e => e.Hardwares)
                 .Map(e => e.ToTable("HardwareLocation")
                     .MapLeftKey("Hardware_ID")
@@ -339,15 +354,37 @@ namespace Vulnerator.Model.DataAccess
                     .MapLeftKey("Location_ID")
                     .MapRightKey("Hardware_ID"));
 
-            modelBuilder.Entity<Hardware>().HasMany(e => e.PortsProtocolsServices).WithMany(e => e.Hardwares)
-                .Map(e => e.ToTable("HardwarePortsProtocolsServices")
-                    .MapLeftKey("Hardware_ID")
-                    .MapRightKey("PortProtocolService_ID"));
+            modelBuilder.Entity<HardwarePortProtocolService>().HasRequired(e => e.Hardware).WithMany(e => e.HardwarePortsProtocolsServices);
 
-            modelBuilder.Entity<PortProtocolService>().HasMany(e => e.Hardwares).WithMany(e => e.PortsProtocolsServices)
-                .Map(e => e.ToTable("HardwarePortsProtocolsServices")
-                    .MapLeftKey("PortProtocolService_ID")
-                    .MapRightKey("Hardware_ID"));
+            modelBuilder.Entity<Hardware>().HasMany(e => e.HardwarePortsProtocolsServices).WithRequired(e => e.Hardware);
+
+            modelBuilder.Entity<HardwarePortProtocolService>().HasRequired(e => e.PortProtocolService).WithMany(e => e.HardwarePortsProtocolsServices);
+
+            modelBuilder.Entity<PortProtocolService>().HasMany(e => e.HardwarePortsProtocolsServices).WithRequired(e => e.PortProtocolService);
+
+            modelBuilder.Entity<HardwarePortProtocolService>().HasMany(e => e.HardwareSoftwarePortsProtocolsServices)
+                .WithRequired(e => e.HardwarePortProtocolService);
+
+            modelBuilder.Entity<HardwareSoftwarePortProtocolService>().HasRequired(e => e.HardwarePortProtocolService)
+                .WithMany(e => e.HardwareSoftwarePortsProtocolsServices);
+
+            modelBuilder.Entity<Software>().HasMany(e => e.HardwareSoftwarePortsProtocolsServices)
+                .WithRequired(e => e.Software);
+
+            modelBuilder.Entity<HardwareSoftwarePortProtocolService>().HasRequired(e => e.Software)
+                .WithMany(e => e.HardwareSoftwarePortsProtocolsServices);
+
+            modelBuilder.Entity<HardwareSoftwarePortProtocolServiceBoundary>().HasRequired(e => e.Boundary)
+                .WithMany(e => e.HardwareSoftwarePortsProtocolsServicesBoundaries);
+
+            modelBuilder.Entity<Boundary>().HasMany(e => e.HardwareSoftwarePortsProtocolsServicesBoundaries)
+                .WithRequired(e => e.Boundary);
+
+            modelBuilder.Entity<HardwareSoftwarePortProtocolServiceBoundary>().HasRequired(e => e.HardwareSoftwarePortProtocolService)
+                .WithMany(e => e.HardwareSoftwarePortsProtocolsServicesBoundaries);
+
+            modelBuilder.Entity<HardwareSoftwarePortProtocolService>().HasMany(e => e.HardwareSoftwarePortsProtocolsServicesBoundaries)
+                .WithRequired(e => e.HardwareSoftwarePortProtocolService);
 
             modelBuilder.Entity<InformationType>().HasMany(e => e.MissionAreas).WithMany(e => e.InformationTypes)
                 .Map(e => e.ToTable("InformationTypesMissionAreas")
@@ -595,15 +632,17 @@ namespace Vulnerator.Model.DataAccess
                     .MapLeftKey("Contact_ID")
                     .MapRightKey("Software_ID"));
 
-            modelBuilder.Entity<Software>().HasMany(e => e.Hardwares).WithMany(e => e.Softwares)
-                .Map(e => e.ToTable("SoftwareHardware")
-                    .MapLeftKey("Software_ID")
-                    .MapRightKey("Hardware_ID"));
+            modelBuilder.Entity<SoftwareHardware>().HasRequired(e => e.Hardware)
+                .WithMany(e => e.SoftwareHardwares);
 
-            modelBuilder.Entity<Hardware>().HasMany(e => e.Softwares).WithMany(e => e.Hardwares)
-                .Map(e => e.ToTable("SoftwareHardware")
-                    .MapLeftKey("Hardware_ID")
-                    .MapRightKey("Software_ID"));
+            modelBuilder.Entity<Hardware>().HasMany(e => e.SoftwareHardwares)
+                .WithRequired(e => e.Hardware);
+
+            modelBuilder.Entity<SoftwareHardware>().HasRequired(e => e.Software)
+                .WithMany(e => e.SoftwareHardwares);
+
+            modelBuilder.Entity<Software>().HasMany(e => e.SoftwareHardwares)
+                .WithRequired(e => e.Software);
 
             modelBuilder.Entity<StepOneQuestionnaire>().HasOptional(e => e.BaselineLocation);
 

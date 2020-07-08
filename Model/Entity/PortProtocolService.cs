@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
+    [Table("PortsProtocolsServices")]
     public class PortProtocolService : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -14,12 +15,12 @@ namespace Vulnerator.Model.Entity
             "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PortProtocolService()
         {
-            Hardwares = new ObservableCollection<Hardware>();
+            HardwarePortsProtocolsServices = new ObservableCollection<HardwarePortProtocolService>();
         }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long PortProtocol_ID { get; set; }
+        public long PortProtocolService_ID { get; set; }
 
         [Required]
         public long Port { get; set; }
@@ -36,6 +37,6 @@ namespace Vulnerator.Model.Entity
         public string ServiceAcronym { get; set; }
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Hardware> Hardwares { get; set; }
+        public virtual ICollection<HardwarePortProtocolService> HardwarePortsProtocolsServices { get; set; }
     }
 }

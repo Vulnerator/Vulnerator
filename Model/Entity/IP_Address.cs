@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
+    [Table("IP_Addresses")]
     public class IP_Address : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;

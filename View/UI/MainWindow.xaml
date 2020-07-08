@@ -176,13 +176,22 @@
                                                                     Kind="ChartLine" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
+                        <Controls:HamburgerMenuIconItem Label="Configuration Management"
+                                                        Tag="{StaticResource configurationManagementView}"
+                                                        ToolTip="Configuration Management">
+                            <Controls:HamburgerMenuIconItem.Icon>
+                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Kind="DesktopAlt" />
+                            </Controls:HamburgerMenuIconItem.Icon>
+                        </Controls:HamburgerMenuIconItem>
                         <Controls:HamburgerMenuIconItem Label="Reporting"
                                                         Tag="{StaticResource ReportingView}"
                                                         ToolTip="Reporting">
                             <Controls:HamburgerMenuIconItem.Icon>
                                 <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
                                                                     VerticalAlignment="Center"
-                                                                    Kind="FileExport" />
+                                                                    Kind="FileDownload" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>
                         <!--<Controls:HamburgerMenuIconItem Label="RMF"
@@ -194,15 +203,6 @@
                                                             Kind="FileCertificate" />
                             </Controls:HamburgerMenuIconItem.Icon>
                         </Controls:HamburgerMenuIconItem>-->
-                        <Controls:HamburgerMenuIconItem Label="Configuration Management"
-                                                        Tag="{StaticResource configurationManagementView}"
-                                                        ToolTip="Configuration Management">
-                            <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
-                                                                    VerticalAlignment="Center"
-                                                                    Kind="DesktopAlt" />
-                            </Controls:HamburgerMenuIconItem.Icon>
-                        </Controls:HamburgerMenuIconItem>
                         <Controls:HamburgerMenuIconItem Label="News"
                                                         Tag="{StaticResource newsView}"
                                                         ToolTip="News">

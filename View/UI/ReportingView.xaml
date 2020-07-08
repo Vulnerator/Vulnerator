@@ -134,10 +134,11 @@
                     </Grid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Configuration Management"
+            <!--  TODO: Implement CM reports  -->
+            <!--<TabItem Header="Configuration Management"
                      Style="{StaticResource CustomMetroTabItem}">
                 <Grid Margin="5,0,5,5" />
-            </TabItem>
+            </TabItem>-->
         </Controls:MetroAnimatedSingleRowTabControl>
     </Grid>
 </UserControl>
