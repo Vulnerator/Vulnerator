@@ -82,8 +82,8 @@ namespace Vulnerator.Model.BusinessLogic
                                 sqliteCommand.Parameters["RiskStatement"].Value = csvReader.GetField("Synopsis");
                                 sqliteCommand.Parameters["VulnerabilityDescription"].Value = csvReader.GetField("Description");
                                 sqliteCommand.Parameters["FixText"].Value = csvReader.GetField("Solution");
-                                sqliteCommand.Parameters["RawRisk"].Value = ConvertRiskFactorToRawRisk(csvReader.GetField("Risk Factor"));
-                                sqliteCommand.Parameters["RawRisk"].Value = csvReader.GetField("STIG Severity");
+                                sqliteCommand.Parameters["PrimaryRawRiskIndicator"].Value = ConvertRiskFactorToRawRisk(csvReader.GetField("Risk Factor"));
+                                sqliteCommand.Parameters["SecondaryRawRiskIndicator"].Value = csvReader.GetField("STIG Severity");
                                 string crossReferences = csvReader.GetField("Cross References");
                                 if (!string.IsNullOrWhiteSpace(crossReferences))
                                 {
@@ -205,7 +205,7 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["Status"].Value = "Ongoing";
                 sqliteCommand.Parameters["UniqueFinding_ID"].Value = DBNull.Value;
                 sqliteCommand.Parameters["Approval_Status"].Value = "Not Approved";
-                sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "False";
+                sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "False";
                 sqliteCommand.Parameters["FindingType"].Value = "ACAS";
                 databaseInterface.UpdateUniqueFinding(sqliteCommand);
                 databaseInterface.InsertUniqueFinding(sqliteCommand);

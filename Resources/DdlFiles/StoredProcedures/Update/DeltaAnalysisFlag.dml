@@ -1,7 +1,7 @@
 ﻿UPDATE
     UniqueFindings
 SET
-    DeltaAnalysisRequired = 'True'
+    DeltaAnalysisIsRequired = 'True'
 WHERE
     Vulnerability_ID = (
         SELECT

@@ -29,8 +29,8 @@ namespace Vulnerator.Model.BusinessLogic
     {
         DatabaseInterface databaseInterface = new DatabaseInterface();
         private string fileNameWithoutPath = string.Empty;
-        private string firstDiscovered = DateTime.Now.ToShortDateString();
-        private string lastObserved = DateTime.Now.ToShortDateString();
+        private DateTime firstDiscovered = DateTime.Now;
+        private DateTime lastObserved = DateTime.Now;
         private bool incorrectFileType = false;
         private List<string> ccis = new List<string>();
         private List<string> ips = new List<string>();
@@ -281,7 +281,7 @@ namespace Vulnerator.Model.BusinessLogic
                 }
                 sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value = rule;
                 sqliteCommand.Parameters["VulnerabilityVersion"].Value = ruleVersion;
-                sqliteCommand.Parameters["RawRisk"].Value = xmlReader.GetAttribute("severity").ToRawRisk();
+                sqliteCommand.Parameters["PrimaryRawRiskIndicator"].Value = xmlReader.GetAttribute("severity").ToRawRisk();
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -324,7 +324,7 @@ namespace Vulnerator.Model.BusinessLogic
                             {
                                 sqliteCommand.Parameters["CCI_Number"].Value = cci;
                                 databaseInterface.MapVulnerabilityToCci(sqliteCommand);
-                                sqliteCommand.Parameters["CCI_Number"].Value = string.Empty;
+                                sqliteCommand.Parameters["CCI_Number"].Value = DBNull.Value;
                             }
                             ccis.Clear();
                         }
@@ -345,6 +345,17 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 string rootNode = @"<root></root>";
                 descriptionNodeValue = rootNode.Insert(6, descriptionNodeValue);
+                if (descriptionNodeValue.Contains(@"<link>"))
+                { descriptionNodeValue = descriptionNodeValue.Replace(@"<link>", "\"link\""); }
+                if (descriptionNodeValue.Contains(@"<link"))
+                {
+                    int falseStartElementIndex = descriptionNodeValue.IndexOf("<link");
+                    int falseEndElementIndex = descriptionNodeValue.IndexOf(">", falseStartElementIndex);
+                    StringBuilder stringBuilder = new StringBuilder(descriptionNodeValue);
+                    stringBuilder[falseEndElementIndex] = '\"';
+                    descriptionNodeValue = stringBuilder.ToString();
+                    descriptionNodeValue = descriptionNodeValue.Replace(@"<link", "\"link");
+                }
                 using (XmlReader xmlReader = XmlReader.Create(GenerateStreamFromString(descriptionNodeValue)))
                 {
                     while (xmlReader.Read())
@@ -428,7 +439,7 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 DateTime scanEndTime;
                 if (DateTime.TryParse(xmlReader.GetAttribute("end-time"), out scanEndTime))
-                { firstDiscovered = lastObserved = scanEndTime.ToShortDateString(); }
+                { firstDiscovered = lastObserved = scanEndTime; }
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -580,7 +591,7 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 sqliteCommand.Parameters["LastObserved"].Value = lastObserved;
-                sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "False";
+                sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "False";
                 sqliteCommand.Parameters["FirstDiscovered"].Value = firstDiscovered;
                 sqliteCommand.Parameters["FindingType"].Value = "XCCDF";
                 databaseInterface.UpdateUniqueFinding(sqliteCommand);

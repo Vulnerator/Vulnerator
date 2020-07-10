@@ -188,7 +188,7 @@ namespace Vulnerator.Model.BusinessLogic
                             case "Existing Version Is Newer":
                                 {
                                     databaseInterface.UpdateVulnerabilityDates(sqliteCommand);
-                                    sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "True";
+                                    sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "True";
                                     break;
                                 }
                             case "Identical Versions":

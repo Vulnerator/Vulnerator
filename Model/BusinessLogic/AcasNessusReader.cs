@@ -263,8 +263,7 @@ namespace Vulnerator.Model.BusinessLogic
                             case "risk_factor":
                                 {
                                     xmlReader.Read();
-                                    if (string.IsNullOrWhiteSpace(sqliteCommand.Parameters["RawRisk"].Value.ToString()))
-                                    { sqliteCommand.Parameters["RawRisk"].Value = ConvertRiskFactorToRawRisk(xmlReader.Value); }
+                                    sqliteCommand.Parameters["PrimaryRawRiskIndicator"].Value = ConvertRiskFactorToRawRisk(xmlReader.Value);
                                     break;
                                 }
                             case "solution":
@@ -286,7 +285,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "stig_severity":
                                 {
-                                    sqliteCommand.Parameters["RawRisk"].Value = xmlReader.ObtainCurrentNodeValue(true);
+                                    sqliteCommand.Parameters["SecondaryRawRiskIndicator"].Value = xmlReader.ObtainCurrentNodeValue(true);
                                     break;
                                 }
                             case "xref":
@@ -637,7 +636,7 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["Status"].Value = "Ongoing";
                 sqliteCommand.Parameters["UniqueFinding_ID"].Value = DBNull.Value;
                 sqliteCommand.Parameters["FirstDiscovered"].Value = firstDiscovered;
-                sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "False";
+                sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "False";
                 sqliteCommand.Parameters["FindingSourceFileName"].Value = fileName;
                 databaseInterface.InsertUniqueFinding(sqliteCommand);
             }

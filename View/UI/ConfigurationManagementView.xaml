@@ -219,13 +219,15 @@
                                                             HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                                     </DataGrid.Columns>
                                 </DataGrid>
-                                <vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
-                                                           Controls:TextBoxHelper.ClearTextButton="True"
-                                                           Controls:TextBoxHelper.Watermark="Associate New Hardware"
-                                                           DisplayMemberPath="DisplayedHostName"
-                                                           ItemsSource="{Binding Hardwares}"
-                                                           Style="{StaticResource HeaderedComboBoxStyle}"
-                                                           Visibility="{Binding SelectedGroup, Converter={StaticResource IsNullToCollapsedConverter}}" />
+                                <ComboBox Controls:TextBoxHelper.ButtonCommand="{Binding AddHardwareToGroupCommand}"
+                                          Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                          Controls:TextBoxHelper.ClearTextButton="True"
+                                          Controls:TextBoxHelper.Watermark="Add Hardware"
+                                          DisplayMemberPath="DisplayedHostName"
+                                          ItemsSource="{Binding Hardwares}"
+                                          SelectedItem="{Binding SelectedHardwareForGroupMapping, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}"
+                                          Visibility="{Binding SelectedGroup, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <Controls:ToggleSwitch x:Name="groupAccreditationToggleSwitch"
                                                        Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
@@ -381,22 +383,26 @@
                                          vh:DependencyProperties.FloatingWatermark="Discovered Host Name"
                                          IsReadOnly="True"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding SelectedHardware.DiscoveredHostName, Mode=OneWay}" />
+                                         Text="{Binding SelectedHardware.DiscoveredHostName, Mode=OneWay}"
+                                         Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Preferred Host Name"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedHardware.DisplayedHostName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="FQDN (Read Only)"
                                          vh:DependencyProperties.FloatingWatermark="FQDN"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding SelectedHardware.FQDN, Mode=OneWay}" />
+                                         Text="{Binding SelectedHardware.FQDN, Mode=OneWay}"
+                                         Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="NetBIOS Name (Read Only)"
                                          vh:DependencyProperties.FloatingWatermark="NetBIOS Name"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding SelectedHardware.NetBIOS, Mode=OneWay}" />
+                                         Text="{Binding SelectedHardware.NetBIOS, Mode=OneWay}"
+                                         Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Scan IP (Read Only)"
                                          vh:DependencyProperties.FloatingWatermark="Scan IP"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding SelectedHardware.ScanIP, Mode=OneWay}" />
+                                         Text="{Binding SelectedHardware.ScanIP, Mode=OneWay}"
+                                         Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <DataGrid MinHeight="100"
                                           Margin="{StaticResource MarginTop5}"
                                           ItemsSource="{Binding SelectedHardware.IP_Addresses}"
@@ -442,12 +448,14 @@
                                                             HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                                     </DataGrid.Columns>
                                 </DataGrid>
-                                <vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
-                                                           Controls:TextBoxHelper.ClearTextButton="True"
-                                                           Controls:TextBoxHelper.Watermark="Associate New Hardware"
-                                                           DisplayMemberPath="GroupName"
-                                                           ItemsSource="{Binding Groups}"
-                                                           Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <ComboBox Controls:TextBoxHelper.ButtonCommand="{Binding AddGroupToHardwareCommand}"
+                                          Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                          Controls:TextBoxHelper.ClearTextButton="True"
+                                          Controls:TextBoxHelper.Watermark="Add Group"
+                                          DisplayMemberPath="GroupName"
+                                          ItemsSource="{Binding Groups}"
+                                          SelectedItem="{Binding SelectedGroupForHardwareMapping, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
                                 <DataGrid MinHeight="100"
                                           MaxHeight="300"
                                           Margin="{StaticResource MarginTop5}"
@@ -651,7 +659,8 @@
                                 <TextBox Controls:TextBoxHelper.Watermark="Discovered Software Name (Read Only)"
                                          IsReadOnly="True"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding SelectedSoftware.DiscoveredSoftwareName, Mode=OneWay}" />
+                                         Text="{Binding SelectedSoftware.DiscoveredSoftwareName, Mode=OneWay}"
+                                         Visibility="{Binding SelectedSoftware, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Preferred Software Name"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedSoftware.DisplayedSoftwareName, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
@@ -661,7 +670,8 @@
                                 <TextBox Controls:TextBoxHelper.Watermark="Software Version (Read Only)"
                                          IsReadOnly="True"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding SelectedSoftware.SoftwareVersion, Mode=OneWay}" />
+                                         Text="{Binding SelectedSoftware.SoftwareVersion, Mode=OneWay}"
+                                         Visibility="{Binding SelectedSoftware, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Software Function"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedSoftware.Function, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
@@ -677,11 +687,12 @@
                                                             HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                                     </DataGrid.Columns>
                                 </DataGrid>
-                                <vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                <!--  TODO: Enable Hardware-to-software mapping  -->
+                                <!--<vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
                                                            Controls:TextBoxHelper.ClearTextButton="True"
                                                            Controls:TextBoxHelper.Watermark="Associated Hardware"
                                                            IsEditable="True"
-                                                           Style="{StaticResource HeaderedComboBoxStyle}" />
+                                                           Style="{StaticResource HeaderedComboBoxStyle}" />-->
                                 <TextBox Controls:TextBoxHelper.Watermark="DADMS ID"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedSoftware.DADMS_ID, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />

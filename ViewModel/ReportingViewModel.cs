@@ -249,7 +249,7 @@ namespace Vulnerator.ViewModel
             {
                 switch (e.Argument.ToString())
                 {
-                    case "2":
+                    case "1":
                     {
                         if ((bool) GetExcelReportName())
                         {

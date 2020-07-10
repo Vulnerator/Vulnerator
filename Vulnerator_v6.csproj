@@ -428,6 +428,7 @@
     <Compile Include="Model\BusinessLogic\OpenXmlReportCreator.cs" />
     <Compile Include="Model\BusinessLogic\PdfReportCreator.cs" />
     <Compile Include="ViewModel\ConfigurationManagementViewModel.cs" />
+    <Compile Include="ViewModel\LoadingViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MessengerToken.cs" />
     <Compile Include="ViewModel\NewsViewModel.cs" />
@@ -467,6 +468,9 @@
     </Compile>
     <Compile Include="View\UI\ConfigurationManagementView.xaml.cs">
       <DependentUpon>ConfigurationManagementView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\LoadingWindow.xaml.cs">
+      <DependentUpon>LoadingWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UI\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -639,6 +643,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\UI\LoadingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\UI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -705,6 +713,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Vulnerator_Logo_Large_Color_SquareBackground_20190805.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\AdditionalTestConsiderations.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\AuthorizationConditions.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\AuthorizationToConnectOrInterim_ATC_PendingItems.ddl" />
@@ -802,6 +813,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\MitigationOrCondition.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\RequiredReportIsSelected.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\HardwareSoftwareMapping.dml" />
+    <Content Include="Resources\DdlFiles\StoredProcedures\Select\StigDiscrepancies.dml" />
     <Content Include="Resources\DdlFiles\StoredProcedures\Update\AcasUniqueFinding.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\CklUniqueFinding.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\UniqueFindingMitigationOrCondition.dml" />

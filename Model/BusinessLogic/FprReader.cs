@@ -114,8 +114,8 @@ namespace Vulnerator.Model.BusinessLogic
                             sqliteCommand.Parameters["ToolGeneratedOutput"].Value = fprVulnerability.Output;
                             
                             sqliteCommand.Parameters["Comments"].Value = fprVulnerability.Comments;
-                            sqliteCommand.Parameters["RawRisk"].Value = fprVulnerability.RawRisk;
-                            sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "False";
+                            sqliteCommand.Parameters["PrimaryRawRiskIndicator"].Value = fprVulnerability.RawRisk;
+                            sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "False";
                             foreach (FprVulnerability.AuditComment comment in fprVulnerability.AuditComments.OrderBy(x => x.EditTime))
                             {
                                 string concatenatedComment =

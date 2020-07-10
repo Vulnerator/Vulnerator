@@ -339,7 +339,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "Severity":
                                 {
-                                    sqliteCommand.Parameters["RawRisk"].Value = ObtainAttributeDataNodeValue(xmlReader).ToRawRisk();
+                                    sqliteCommand.Parameters["PrimaryRawRiskIndicator"].Value = ObtainAttributeDataNodeValue(xmlReader).ToRawRisk();
                                     break;
                                 }
                             case "Group_Title":
@@ -465,7 +465,7 @@ namespace Vulnerator.Model.BusinessLogic
                             case "Existing Version Is Newer":
                                 {
                                     databaseInterface.UpdateVulnerabilityDates(sqliteCommand);
-                                    sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "True";
+                                    sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "True";
                                     break;
                                 }
                             case "Identical Versions":
@@ -571,10 +571,10 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["TechnologyArea"].Value = techArea;
                 sqliteCommand.Parameters["WebDB_Site"].Value = webDbSite;
                 sqliteCommand.Parameters["WebDB_Instance"].Value = webDbInstance;
-                sqliteCommand.Parameters["LastObserved"].Value = DateTime.Now.ToShortDateString();
-                if (string.IsNullOrWhiteSpace(sqliteCommand.Parameters["DeltaAnalysisRequired"].Value.ToString()))
-                { sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "False"; }
-                sqliteCommand.Parameters["FirstDiscovered"].Value = DateTime.Now.ToShortDateString();
+                sqliteCommand.Parameters["LastObserved"].Value = DateTime.Now;
+                if (string.IsNullOrWhiteSpace(sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value.ToString()))
+                { sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "False"; }
+                sqliteCommand.Parameters["FirstDiscovered"].Value = DateTime.Now;
                 sqliteCommand.Parameters["Classification"].Value = classification;
                 sqliteCommand.Parameters["FindingType"].Value = "CKL";
                 databaseInterface.UpdateUniqueFinding(sqliteCommand);

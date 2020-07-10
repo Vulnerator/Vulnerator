@@ -39,6 +39,7 @@ namespace Vulnerator.ViewModel
             SimpleIoc.Default.Register<SplashViewModel>();
             SimpleIoc.Default.Register<SettingsViewModel>();
             SimpleIoc.Default.Register<ConfigurationManagementViewModel>();
+            SimpleIoc.Default.Register<LoadingViewModel>();
         }
 
         public AboutViewModel About => SimpleIoc.Default.GetInstance<AboutViewModel>();
@@ -62,6 +63,8 @@ namespace Vulnerator.ViewModel
         public VulnerabilityViewModel Vulnerability => SimpleIoc.Default.GetInstance<VulnerabilityViewModel>();
 
         public ConfigurationManagementViewModel ConfigurationManagement => SimpleIoc.Default.GetInstance<ConfigurationManagementViewModel>();
+
+        public LoadingViewModel Loading => SimpleIoc.Default.GetInstance<LoadingViewModel>();
 
         public static void Cleanup()
         { }

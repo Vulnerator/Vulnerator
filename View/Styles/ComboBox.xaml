@@ -22,7 +22,7 @@
     <converter:IsNullConverter x:Key="IsNullConverter" />
 
     <Style x:Key="EditableTextBoxStyle"
-           BasedOn="{StaticResource MetroTextBox}"
+           BasedOn="{StaticResource MetroButtonTextBox}"
            TargetType="{x:Type TextBox}">
         <Setter Property="MinHeight" Value="0" />
         <Setter Property="Template">
@@ -434,6 +434,7 @@
                                      HorizontalAlignment="Stretch"
                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                     Controls:TextBoxHelper.ButtonCommand="{TemplateBinding Controls:TextBoxHelper.ButtonCommand}"
                                      Controls:TextBoxHelper.ButtonContent="{TemplateBinding Controls:TextBoxHelper.ButtonContent}"
                                      Controls:TextBoxHelper.ButtonContentTemplate="{TemplateBinding Controls:TextBoxHelper.ButtonContentTemplate}"
                                      Controls:TextBoxHelper.ButtonFontFamily="{TemplateBinding Controls:TextBoxHelper.ButtonFontFamily}"

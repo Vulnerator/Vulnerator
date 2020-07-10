@@ -22,7 +22,6 @@ namespace Vulnerator.ViewModel
 {
     public class ConfigurationManagementViewModel : ViewModelBase
     {
-        private DatabaseContext databaseContext;
         private VulnerabilitySource vulnerabilitySource;
         private string saveDirectory = string.Empty;
         private DatabaseInterface databaseInterface = new DatabaseInterface();
@@ -493,10 +492,12 @@ namespace Vulnerator.ViewModel
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters["Group_ID"].Value = SelectedGroup.Group_ID;
                         sqliteCommand.Parameters["GroupName"].Value = SelectedGroup.GroupName;
-                        sqliteCommand.Parameters["GroupAcronym"].Value = SelectedGroup.GroupAcronym;
+                        sqliteCommand.Parameters["GroupAcronym"].Value =
+                            (object) SelectedGroup.GroupAcronym ?? DBNull.Value;
                         sqliteCommand.Parameters["GroupTier"].Value = SelectedGroup.GroupTier;
                         sqliteCommand.Parameters["IsAccreditation"].Value = SelectedGroup.IsAccreditation ?? "False";
-                        sqliteCommand.Parameters["Accreditation_eMASS_ID"].Value = SelectedGroup.Accreditation_eMASS_ID;
+                        sqliteCommand.Parameters["Accreditation_eMASS_ID"].Value =
+                            (object) SelectedGroup.Accreditation_eMASS_ID ?? DBNull.Value;
                         sqliteCommand.Parameters["IsPlatform"].Value = SelectedGroup.IsPlatform ?? "False";
                         databaseInterface.UpdateGroup(sqliteCommand);
                     }
@@ -506,7 +507,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                LogWriter.LogError($"Unable to update group '{NewGroup.GroupName}'.");
+                LogWriter.LogError($"Unable to update group '{SelectedGroup.GroupName}'.");
                 throw exception;
             }
             finally
@@ -653,6 +654,125 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        public RelayCommand AddHardwareToGroupCommand => new RelayCommand(AddHardwareToGroup);
+
+        private void AddHardwareToGroup()
+        {
+            try
+            {
+                if (SelectedGroup is null || SelectedHardwareForGroupMapping is null)
+                {
+                    return;
+                }
+                // Combobox controls clear the bound SelectedItem when the command fires;
+                // mapping those values to an arguments class prevents a race condition
+                GroupHardwareMappingDoWorkArguments doWorkArguments = new GroupHardwareMappingDoWorkArguments()
+                    {GroupName = SelectedGroup.GroupName, DiscoveredHostName = SelectedHardwareForGroupMapping.DiscoveredHostName};
+                BackgroundWorker backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += addHardwareToGroupBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerCompleted += groupActionBackgroundWorker_RunWorkerCompleted;
+                backgroundWorker.RunWorkerAsync(doWorkArguments);
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogErrorWithDebug(
+                    $"Unable to associate hardware asset '{SelectedHardwareForGroupMapping.DisplayedHostName}' to group '{SelectedGroup.GroupName}'.",
+                    exception);
+            }
+        }
+
+        private void addHardwareToGroupBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (!DatabaseBuilder.sqliteConnection.State.Equals(ConnectionState.Open))
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
+                {
+                    using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                    {
+                        GroupHardwareMappingDoWorkArguments arguments =
+                            e.Argument as GroupHardwareMappingDoWorkArguments;
+                        databaseInterface.InsertParameterPlaceholders(sqliteCommand);
+                        sqliteCommand.Parameters["GroupName"].Value = arguments.GroupName;
+                        sqliteCommand.Parameters["DiscoveredHostName"].Value = arguments.DiscoveredHostName;
+                        databaseInterface.MapHardwareToGroup(sqliteCommand);
+                    }
+
+                    sqliteTransaction.Commit();
+                }
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Hardware to Group association background worker failed.");
+                throw exception;
+            }
+        }
+
+        public RelayCommand AddGroupToHardwareCommand => new RelayCommand(AddGroupToHardware);
+
+        private void AddGroupToHardware()
+        {
+            try
+            {
+                if (SelectedHardware is null || SelectedGroupForHardwareMapping is null)
+                {
+                    return;
+                }
+                // Combobox controls clear the bound SelectedItem when the command fires;
+                // mapping those values to an arguments class prevents a race condition
+                GroupHardwareMappingDoWorkArguments doWorkArguments = new GroupHardwareMappingDoWorkArguments()
+                    {GroupName = SelectedGroupForHardwareMapping.GroupName, DiscoveredHostName = SelectedHardware.DiscoveredHostName};
+                BackgroundWorker backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += addGroupToHardwareBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerCompleted += groupActionBackgroundWorker_RunWorkerCompleted;
+                backgroundWorker.RunWorkerAsync(doWorkArguments);
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogErrorWithDebug(
+                    $"Unable to associate group '{SelectedGroupForHardwareMapping.GroupName}' to hardware asset '{SelectedHardware.DisplayedHostName}'.",
+                    exception);
+            }
+        }
+
+        private void addGroupToHardwareBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Console.WriteLine("GroupToHardware DoWork");
+            try
+            {
+                if (!DatabaseBuilder.sqliteConnection.State.Equals(ConnectionState.Open))
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
+                {
+                    using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                    {
+                        GroupHardwareMappingDoWorkArguments arguments =
+                            e.Argument as GroupHardwareMappingDoWorkArguments;
+                        databaseInterface.InsertParameterPlaceholders(sqliteCommand);
+                        sqliteCommand.Parameters["GroupName"].Value = arguments.GroupName;
+                        sqliteCommand.Parameters["DiscoveredHostName"].Value = arguments.DiscoveredHostName;
+                        databaseInterface.MapHardwareToGroup(sqliteCommand);
+                    }
+
+                    sqliteTransaction.Commit();
+                }
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Group to Hardware association background worker failed.");
+                throw exception;
+            }
+        }
+
         private void groupActionBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             try
@@ -666,6 +786,16 @@ namespace Vulnerator.ViewModel
                 LogWriter.LogError("Unable to run Group post-modification background worker RunWorkerCompleted tasks.");
                 throw exception;
             }
+        }
+
+        /// <summary>
+        /// Holds the Group ID and Hardware ID to be associated / disassociated
+        /// </summary>
+        public class GroupHardwareMappingDoWorkArguments
+        {
+            public string GroupName { get; set; }
+
+            public string DiscoveredHostName { get; set; }
         }
     }
 }

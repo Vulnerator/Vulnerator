@@ -50,35 +50,16 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                 using (SpreadsheetDocument spreadsheetDocument =
                     SpreadsheetDocument.Create(fileName, SpreadsheetDocumentType.Workbook))
                 {
-                    LogWriter.LogStatusUpdate("Creating workbook framework.");
+                    LogWriter.LogStatusUpdate("Creating POA&M workbook framework.");
                     WorkbookPart workbookPart = spreadsheetDocument.AddWorkbookPart();
                     WorkbookStylesPart workbookStylesPart = workbookPart.AddNewPart<WorkbookStylesPart>();
                     workbookStylesPart.Stylesheet = _openXmlStylesheetCreator.CreateStylesheet();
                     Workbook workbook = workbookPart.Workbook = new Workbook();
                     Sheets sheets = workbook.AppendChild(new Sheets());
-
-                    List<string> findingTypes = new List<string>();
-                    using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
-                    {
-                        sqliteCommand.CommandText = "SELECT FindingType FROM FindingTypes;";
-                        using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
-                        {
-                            while (sqliteDataReader.Read())
-                            {
-                                findingTypes.Add(sqliteDataReader["FindingType"].ToString());
-                            }
-                        }
-                    }
-
                     StartPoam(workbookPart, sheets);
-
-                    LogWriter.LogStatusUpdate("Creating POA&M and RAR tabs.");
-                    foreach (string findingType in findingTypes)
-                    {
-                        WriteFindingsToPoam(findingType);
-                    }
-
-                    LogWriter.LogStatusUpdate("Finalizing workbook.");
+                    LogWriter.LogStatusUpdate("Writing POA&M findings.");
+                    WriteFindingsToPoam();
+                    LogWriter.LogStatusUpdate("Finalizing POA&M workbook.");
                     EndPoam();
                     _openXmlCellDataHandler.CreateSharedStringPart(workbookPart, sharedStringMaxIndex,
                         sharedStringDictionary);
@@ -95,36 +76,6 @@ namespace Vulnerator.Model.BusinessLogic.Reports
             finally
             {
                 DatabaseBuilder.sqliteConnection.Close();
-            }
-        }
-
-        private void WriteFindingsToPoam(string findingType)
-        {
-            try
-            {
-                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
-                {
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", findingType));
-                    sqliteCommand.CommandText =
-                        _ddlReader.ReadDdl(_storedProcedureBase + "Select.GroupedPoamVulnerabilities.dml", assembly);
-                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
-                    {
-                        while (sqliteDataReader.Read())
-                        {
-                            if (sqliteDataReader["UniqueVulnerabilityIdentifier"].ToString().Equals("Plugin"))
-                            {
-                                continue;
-                            }
-
-                            WriteFindingToPoam(sqliteDataReader);
-                        }
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to write findings to the 'POA&M' workbook.");
-                throw exception;
             }
         }
 
@@ -522,6 +473,34 @@ namespace Vulnerator.Model.BusinessLogic.Reports
             }
         }
 
+        private void WriteFindingsToPoam()
+        {
+            try
+            {
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.CommandText =
+                        _ddlReader.ReadDdl(_storedProcedureBase + "Select.GroupedPoamVulnerabilities.dml", assembly);
+                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                    {
+                        while (sqliteDataReader.Read())
+                        {
+                            if (sqliteDataReader["UniqueVulnerabilityIdentifier"].ToString().Equals("Plugin"))
+                            {
+                                continue;
+                            }
+                            WriteFindingToPoam(sqliteDataReader);
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to write findings to the 'POA&M' workbook.");
+                throw exception;
+            }
+        }
+
         private void WriteFindingToPoam(SQLiteDataReader sqliteDataReader)
         {
             try
@@ -614,7 +593,7 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                 string comments = sqliteDataReader["Comments"] + doubleCarriageReturn + sqliteDataReader["FindingDetails"];
                 _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, comments, 20,
                     ref sharedStringMaxIndex, sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["RawRisk"].ToString(), 24,
+                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["PrimaryRawRiskIndicator"].ToString(), 24,
                     ref sharedStringMaxIndex, sharedStringDictionary);
                 if (!string.IsNullOrWhiteSpace(sqliteDataReader["DisplayedSoftwareName"].ToString()))
                 {
