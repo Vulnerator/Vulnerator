@@ -314,6 +314,7 @@
     <Compile Include="Model\BusinessLogic\Reports\OpenXmlEmassPoamReportCreator.cs" />
     <Compile Include="Model\BusinessLogic\RawStigReader.cs" />
     <Compile Include="Model\BusinessLogic\AssociateStig.cs" />
+    <Compile Include="Model\BusinessLogic\Reports\OpenXmlStigDiscrepanciesReportCreator.cs" />
     <Compile Include="Model\BusinessLogic\Reports\OpenXmlStylesheetCreator.cs" />
     <Compile Include="Model\DataAccess\DatabaseBuilder.cs" />
     <Compile Include="Model\DataAccess\DatabaseContext.cs" />
@@ -813,7 +814,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\MitigationOrCondition.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\RequiredReportIsSelected.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\HardwareSoftwareMapping.dml" />
-    <Content Include="Resources\DdlFiles\StoredProcedures\Select\StigDiscrepancies.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\StigDiscrepancies.dml" />
     <Content Include="Resources\DdlFiles\StoredProcedures\Update\AcasUniqueFinding.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\CklUniqueFinding.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\UniqueFindingMitigationOrCondition.dml" />

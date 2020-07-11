@@ -129,7 +129,7 @@ namespace Vulnerator.ViewModel
             try
             {
                 VulnerabilityReports = databaseContext.RequiredReports
-                    .Where(r => r.ReportCategory.Equals("Vulnerability Management") && !r.IsReportEnabled.Equals("False"))
+                    .Where(r => r.ReportCategory.Equals("Vulnerability Management"))
                     .OrderBy(r => r.DisplayedReportName)
                     .AsNoTracking()
                     .ToList();
@@ -258,6 +258,25 @@ namespace Vulnerator.ViewModel
                             Messenger.Default.Send(guiFeedback);
                             OpenXmlEmassPoamReportCreator openXmlEmassPoamReportCreator = new OpenXmlEmassPoamReportCreator();
                             openXmlEmassPoamReportCreator.CreateEmassPoam(saveExcelFile.FileName);
+                            e.Result = "Success";
+                            guiFeedback.SetFields("Report creation complete", "Collapsed", true);
+                            Messenger.Default.Send(guiFeedback);
+                        }
+                        else
+                        {
+                            e.Result = "Cancelled";
+                        }
+                        return;
+                    }
+                    case "3":
+                    {
+                        if ((bool) GetExcelReportName())
+                        {
+                            GuiFeedback guiFeedback = new GuiFeedback();
+                            guiFeedback.SetFields("Creating report...", "Visible", false);
+                            Messenger.Default.Send(guiFeedback);
+                            OpenXmlStigDiscrepanciesReportCreator openXmlStigDiscrepanciesReportCreator = new OpenXmlStigDiscrepanciesReportCreator();
+                            openXmlStigDiscrepanciesReportCreator.CreateDiscrepanciesReport(saveExcelFile.FileName);
                             e.Result = "Success";
                             guiFeedback.SetFields("Report creation complete", "Collapsed", true);
                             Messenger.Default.Send(guiFeedback);
