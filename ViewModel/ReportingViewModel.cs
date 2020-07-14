@@ -247,19 +247,36 @@ namespace Vulnerator.ViewModel
         {
             try
             {
+                GuiFeedback guiFeedback = new GuiFeedback();
                 switch (e.Argument.ToString())
                 {
                     case "1":
                     {
                         if ((bool) GetExcelReportName())
                         {
-                            GuiFeedback guiFeedback = new GuiFeedback();
+                            
                             guiFeedback.SetFields("Creating report...", "Visible", false);
                             Messenger.Default.Send(guiFeedback);
                             OpenXmlEmassPoamReportCreator openXmlEmassPoamReportCreator = new OpenXmlEmassPoamReportCreator();
                             openXmlEmassPoamReportCreator.CreateEmassPoam(saveExcelFile.FileName);
                             e.Result = "Success";
-                            guiFeedback.SetFields("Report creation complete", "Collapsed", true);
+                            Messenger.Default.Send(guiFeedback);
+                        }
+                        else
+                        {
+                            e.Result = "Cancelled";
+                        }
+                        return;
+                    }
+                    case "2":
+                    {
+                        if ((bool) GetExcelReportName())
+                        {
+                            guiFeedback.SetFields("Creating report...", "Visible", false);
+                            Messenger.Default.Send(guiFeedback);
+                            OpenXmlNavyRarReportCreator openXmlNavyRarReportCreator = new OpenXmlNavyRarReportCreator();
+                            openXmlNavyRarReportCreator.CreateNavyRar(saveExcelFile.FileName);
+                            e.Result = "Success";
                             Messenger.Default.Send(guiFeedback);
                         }
                         else
@@ -272,13 +289,11 @@ namespace Vulnerator.ViewModel
                     {
                         if ((bool) GetExcelReportName())
                         {
-                            GuiFeedback guiFeedback = new GuiFeedback();
                             guiFeedback.SetFields("Creating report...", "Visible", false);
                             Messenger.Default.Send(guiFeedback);
                             OpenXmlStigDiscrepanciesReportCreator openXmlStigDiscrepanciesReportCreator = new OpenXmlStigDiscrepanciesReportCreator();
                             openXmlStigDiscrepanciesReportCreator.CreateDiscrepanciesReport(saveExcelFile.FileName);
                             e.Result = "Success";
-                            guiFeedback.SetFields("Report creation complete", "Collapsed", true);
                             Messenger.Default.Send(guiFeedback);
                         }
                         else
@@ -341,7 +356,7 @@ namespace Vulnerator.ViewModel
 
                 Messenger.Default.Send(notification);
                 GuiFeedback guiFeedback = new GuiFeedback();
-                guiFeedback.SetFields("File ingestion complete", "Collapsed", true);
+                guiFeedback.SetFields("Report creation complete", "Collapsed", true);
                 Messenger.Default.Send(guiFeedback);
             }
             catch (Exception exception)

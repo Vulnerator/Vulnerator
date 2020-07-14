@@ -314,6 +314,7 @@
     <Compile Include="Model\BusinessLogic\Reports\OpenXmlEmassPoamReportCreator.cs" />
     <Compile Include="Model\BusinessLogic\RawStigReader.cs" />
     <Compile Include="Model\BusinessLogic\AssociateStig.cs" />
+    <Compile Include="Model\BusinessLogic\Reports\OpenXmlNavyRarReportCreator.cs" />
     <Compile Include="Model\BusinessLogic\Reports\OpenXmlStigDiscrepanciesReportCreator.cs" />
     <Compile Include="Model\BusinessLogic\Reports\OpenXmlStylesheetCreator.cs" />
     <Compile Include="Model\DataAccess\DatabaseBuilder.cs" />
@@ -714,6 +715,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\NavyRar.dml" />
     <Resource Include="Vulnerator_Logo_Large_Color_SquareBackground_20190805.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

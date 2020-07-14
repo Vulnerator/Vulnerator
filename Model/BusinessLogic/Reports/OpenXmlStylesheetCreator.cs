@@ -98,7 +98,7 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                         CreateCellFormat(0, 0, 1, centerHorizontal, topVertical, true),
                         /*Index 25 - Bold Black Font, No Fill, No Borders, Wrap Text*/
                         CreateCellFormat(1, 0, 0, leftHorizontal, topVertical, false),
-                        /*Index 4 - Bold Black Font, Dark Gray Fill, All Borders, Centered, Wrap Text*/
+                        /*Index 26 - Bold Black Font, Dark Gray Fill, All Borders, Centered, Wrap Text*/
                         CreateCellFormat(1, 2, 1, centerHorizontal, centerVertical, true)
                     )
                 );

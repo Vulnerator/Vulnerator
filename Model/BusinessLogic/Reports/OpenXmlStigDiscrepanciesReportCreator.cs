@@ -21,8 +21,7 @@ namespace Vulnerator.Model.BusinessLogic.Reports
     public class OpenXmlStigDiscrepanciesReportCreator
     {
         private Dictionary<string, int> sharedStringDictionary = new Dictionary<string, int>();
-        private int sharedStringMaxIndex = 0;
-        private int poamRowCounterIndex = 1;
+        private int sharedStringMaxIndex;
         private UInt32Value sheetIndex = 1;
         private DdlReader _ddlReader = new DdlReader();
         private Assembly assembly = Assembly.GetExecutingAssembly();
@@ -43,17 +42,17 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                 using (SpreadsheetDocument spreadsheetDocument =
                     SpreadsheetDocument.Create(fileName, SpreadsheetDocumentType.Workbook))
                 {
-                    LogWriter.LogStatusUpdate("Creating POA&M workbook framework.");
+                    LogWriter.LogStatusUpdate("Creating STIG Discrepancies workbook framework.");
                     WorkbookPart workbookPart = spreadsheetDocument.AddWorkbookPart();
                     WorkbookStylesPart workbookStylesPart = workbookPart.AddNewPart<WorkbookStylesPart>();
                     workbookStylesPart.Stylesheet = _openXmlStylesheetCreator.CreateStylesheet();
                     Workbook workbook = workbookPart.Workbook = new Workbook();
                     Sheets sheets = workbook.AppendChild(new Sheets());
-                    StartPoam(workbookPart, sheets);
-                    LogWriter.LogStatusUpdate("Writing POA&M findings.");
-                    WriteFindingsToPoam();
-                    LogWriter.LogStatusUpdate("Finalizing POA&M workbook.");
-                    EndPoam();
+                    StartReport(workbookPart, sheets);
+                    LogWriter.LogStatusUpdate("Writing STIG Discrepancies findings.");
+                    WriteFindingsToReport();
+                    LogWriter.LogStatusUpdate("Finalizing STIG Discrepancies workbook.");
+                    EndReport();
                     _openXmlCellDataHandler.CreateSharedStringPart(workbookPart, sharedStringMaxIndex,
                         sharedStringDictionary);
                 }
@@ -72,30 +71,30 @@ namespace Vulnerator.Model.BusinessLogic.Reports
             }
         }
 
-        private void StartPoam(WorkbookPart workbookPart, Sheets sheets)
+        private void StartReport(WorkbookPart workbookPart, Sheets sheets)
         {
             try
             {
                 WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
                 Sheet sheet = new Sheet()
-                    {Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "POA&M"};
+                    {Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "STIG Discrepancies"};
                 sheetIndex++;
                 sheets.Append(sheet);
                 _openXmlWriter = OpenXmlWriter.Create(worksheetPart);
                 _openXmlWriter.WriteStartElement(new Worksheet());
-                WritePoamColumns();
+                WriteReportColumns();
                 _openXmlWriter.WriteStartElement(new SheetData());
                 _openXmlWriter.WriteElement(new Row() {Hidden = true});
-                WritePoamHeaderRowOne();
+                WriteReportHeaderRow();
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Unable to initialize 'POA&M' tab.");
+                LogWriter.LogError("Unable to initialize 'STIG Discrepancies' tab.");
                 throw exception;
             }
         }
 
-        private void WritePoamColumns()
+        private void WriteReportColumns()
         {
             try
             {
@@ -122,12 +121,12 @@ namespace Vulnerator.Model.BusinessLogic.Reports
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Unable to generate 'POA&M' columns.");
+                LogWriter.LogError("Unable to generate 'STIG Discrepancies' columns.");
                 throw exception;
             }
         }
 
-        private void WritePoamHeaderRowOne()
+        private void WriteReportHeaderRow()
         {
             try
             {
@@ -172,12 +171,12 @@ namespace Vulnerator.Model.BusinessLogic.Reports
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Unable to generate first 'POA&M' header row.");
+                LogWriter.LogError("Unable to generate first 'STIG Discrepancies' header row.");
                 throw exception;
             }
         }
 
-        private void WriteFindingsToPoam()
+        private void WriteFindingsToReport()
         {
             try
             {
@@ -196,19 +195,19 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                                 continue;
                             }
 
-                            WriteFindingToPoam(sqliteDataReader);
+                            WriteFindingToReport(sqliteDataReader);
                         }
                     }
                 }
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Unable to write findings to the 'POA&M' workbook.");
+                LogWriter.LogError("Unable to write findings to the 'STIG Discrepancies' workbook.");
                 throw exception;
             }
         }
 
-        private void WriteFindingToPoam(SQLiteDataReader sqliteDataReader)
+        private void WriteFindingToReport(SQLiteDataReader sqliteDataReader)
         {
             try
             {
@@ -295,16 +294,15 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                     ref sharedStringMaxIndex, sharedStringDictionary);
 
                 _openXmlWriter.WriteEndElement();
-                poamRowCounterIndex++;
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Unable to write finding to 'POA&M'.");
+                LogWriter.LogError("Unable to write finding to 'STIG Discrepancies'.");
                 throw exception;
             }
         }
 
-        private void EndPoam()
+        private void EndReport()
         {
             try
             {
@@ -314,7 +312,7 @@ namespace Vulnerator.Model.BusinessLogic.Reports
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Unable to finalize 'POA&M' tab.");
+                LogWriter.LogError("Unable to finalize 'STIG Discrepancies' tab.");
                 throw exception;
             }
         }

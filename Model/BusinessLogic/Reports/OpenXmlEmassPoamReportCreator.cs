@@ -21,7 +21,7 @@ namespace Vulnerator.Model.BusinessLogic.Reports
     public class OpenXmlEmassPoamReportCreator
     {
         private Dictionary<string, int> sharedStringDictionary = new Dictionary<string, int>();
-        private int sharedStringMaxIndex = 0;
+        private int sharedStringMaxIndex;
         private string ContactOrganization = Properties.Settings.Default.Organization;
         private string ContactName = Properties.Settings.Default.Name;
         private string ContactNumber = Properties.Settings.Default.Phone;
@@ -742,7 +742,7 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                                           sqliteDataReader["UniqueProposedMitigation"];
                 _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, proposedMitigations, 20,
                     ref sharedStringMaxIndex, sharedStringDictionary);
-                if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueResidualRisk"].ToString()))
+                if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueResidualRiskAfterProposed"].ToString()))
                 {
                     _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["UniqueResidualRiskAfterProposed"].ToString(), 24, ref sharedStringMaxIndex,
                         sharedStringDictionary);
