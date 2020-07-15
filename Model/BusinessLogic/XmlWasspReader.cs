@@ -121,7 +121,7 @@ namespace Vulnerator.Model.BusinessLogic
                             case "vulnerability":
                             {
                                 sqliteCommand.Parameters["PrimaryRawRiskIndicator"].Value =
-                                    xmlReader.ObtainCurrentNodeValue(false).ToRawRisk();
+                                    xmlReader.ObtainCurrentNodeValue(false).ToString().ToRawRisk();
                                 break;
                             }
                             case "control":
@@ -136,10 +136,6 @@ namespace Vulnerator.Model.BusinessLogic
                                     {
                                         break;
                                     }
-                                    default:
-                                    {
-                                        break;
-                                    }
                                 }
 
                                 break;
@@ -147,7 +143,7 @@ namespace Vulnerator.Model.BusinessLogic
                             case "result":
                             {
                                 sqliteCommand.Parameters["Status"].Value =
-                                    xmlReader.ObtainCurrentNodeValue(false).ToVulneratorStatus();
+                                    xmlReader.ObtainCurrentNodeValue(false).ToString().ToVulneratorStatus();
                                 break;
                             }
                             case "recommendation":
@@ -169,6 +165,8 @@ namespace Vulnerator.Model.BusinessLogic
                         databaseInterface.InsertAndMapIpAddress(sqliteCommand);
                         databaseInterface.InsertAndMapMacAddress(sqliteCommand);
                         databaseInterface.InsertVulnerability(sqliteCommand);
+                        databaseInterface.MapVulnerabilityToSource(sqliteCommand);
+                        databaseInterface.UpdateUniqueFinding(sqliteCommand);
                         databaseInterface.InsertUniqueFinding(sqliteCommand);
                     }
                 }

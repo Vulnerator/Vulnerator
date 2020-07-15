@@ -351,7 +351,7 @@ namespace Vulnerator.Model.DataAccess
                     "VulnerabilitySource_ID", "SourceName", "SourceSecondaryIdentifier", "VulnerabilitySourceFileName",
                     "SourceDescription", "SourceVersion", "SourceRelease",
                     // SCAP_Scores Table
-                    "SCAP_Score_ID", "Score", "ScanDate"
+                    "SCAP_Score_ID", "Score", "ScanDate", "ScanProfile", "ScanUser", "UserIsPrivileged", "UserIsAuthenticated"
                 };
                 foreach (string parameter in parameters)
                 { sqliteCommand.Parameters.Add(new SQLiteParameter(parameter, DBNull.Value)); }
@@ -669,23 +669,31 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                switch (sqliteCommand.Parameters["FindingType"].Value.ToString())
-                {
-                    case "ACAS":
-                        {
-                            sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.UniqueFinding.dml", assembly);
-                            sqliteCommand.ExecuteNonQuery();
-                            break;
-                        }
-                    case "CKL":
-                        {
-                            sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.CklUniqueFinding.dml", assembly);
-                            sqliteCommand.ExecuteNonQuery();
-                            break;
-                        }
-                    default:
-                        { break; }
-                }
+                // switch (sqliteCommand.Parameters["FindingType"].Value.ToString())
+                // {
+                //     case "ACAS":
+                //     {
+                //         sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.AcasUniqueFinding.dml", assembly);
+                //         break;
+                //     }
+                //     case "CKL":
+                //     {
+                //         sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.CklUniqueFinding.dml", assembly);
+                //         break;
+                //     }
+                //     case "XCCDF":
+                //     {
+                //         sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.XccdfUniqueFinding.dml", assembly);
+                //         break;
+                //     }
+                //     default:
+                //     {
+                //         sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.UniqueFinding.dml", assembly);
+                //         break;
+                //     }
+                // }
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.UniqueFinding.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
             {

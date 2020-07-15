@@ -210,17 +210,17 @@ namespace Vulnerator.Model.DataAccess
                                     }
                                     case "status":
                                     {
-                                        cci.Status = xmlReader.ObtainCurrentNodeValue(false);
+                                        cci.Status = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                         break;
                                     }
                                     case "definition":
                                     {
-                                        cci.Definition = xmlReader.ObtainCurrentNodeValue(false);
+                                        cci.Definition = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                         break;
                                     }
                                     case "type":
                                     {
-                                        cci.Type = xmlReader.ObtainCurrentNodeValue(false);
+                                        cci.Type = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                         break;
                                     }
                                     case "references":
@@ -498,7 +498,7 @@ namespace Vulnerator.Model.DataAccess
                                     }
                                     case "ImplementationGuidance":
                                     {
-                                        string implementationGuidance = xmlReader.ObtainCurrentNodeValue(false);
+                                        string implementationGuidance = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                         implementationGuidance =
                                             implementationGuidance.SanitizeNewLines().InsertStartingBullet();
                                         sqliteCommand.Parameters.Add(new SQLiteParameter("ImplementationGuidance",
@@ -507,7 +507,7 @@ namespace Vulnerator.Model.DataAccess
                                     }
                                     case "AssessmentProcedures":
                                     {
-                                        string ap = xmlReader.ObtainCurrentNodeValue(false);
+                                        string ap = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                         ap = ap.SanitizeNewLines().InsertStartingBullet();
                                         sqliteCommand.Parameters.Add(new SQLiteParameter("AP_Text", ap));
                                         break;
@@ -587,13 +587,14 @@ namespace Vulnerator.Model.DataAccess
                                     default:
                                     {
                                         overlayApplicability.Add(xmlReader.Name.Replace("-", " "),
-                                            xmlReader.ObtainCurrentNodeValue(false));
+                                            xmlReader.ObtainCurrentNodeValue(false).ToString());
                                         break;
                                     }
                                 }
                             }
                             else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Control"))
                             {
+                                // TODO: Finish this
                                 if (sqliteCommand.Parameters.Contains("enhancement"))
                                 { }
                                 else

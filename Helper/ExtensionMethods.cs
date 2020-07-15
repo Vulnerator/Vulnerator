@@ -133,7 +133,7 @@ namespace Vulnerator.Helper
             }
         }
 
-        public static string ObtainCurrentNodeValue(this XmlReader xmlReader, bool sanitizeBrackets)
+        public static object ObtainCurrentNodeValue(this XmlReader xmlReader, bool sanitizeBrackets)
         {
             try
             {
@@ -150,7 +150,9 @@ namespace Vulnerator.Helper
                 { return value; }
                 value = value.Replace("&gt", ">");
                 value = value.Replace("&lt", "<");
-                return value;
+                if (!string.IsNullOrWhiteSpace(value))
+                { return value; }
+                return  DBNull.Value;
             }
             catch (Exception exception)
             {

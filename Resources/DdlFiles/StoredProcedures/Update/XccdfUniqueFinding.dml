@@ -1,8 +1,6 @@
 UPDATE
     UniqueFindings
 SET ToolGeneratedOutput           = @ToolGeneratedOutput,
-    Comments                      = @Comments,
-    FindingDetails                = @FindingDetails,
     LastObserved                  = @LastObserved,
     FindingSourceFile_ID          = (
         SELECT FindingSourceFile_ID
@@ -42,5 +40,4 @@ WHERE (
     FROM Vulnerabilities
     WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier
 )
-  AND LastObserved <= @LastObserved
-  AND InstanceIdentifier = @InstanceIdentifier;
+  AND LastObserved <= @LastObserved;

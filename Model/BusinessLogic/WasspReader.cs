@@ -15,8 +15,6 @@ namespace Vulnerator.Model.BusinessLogic
 {
     class WasspReader
     {
-        private string fileNameWithoutPath = string.Empty;
-        private bool UserPrefersHostName => Properties.Settings.Default.CklRequiresHostName;
         private DatabaseInterface databaseInterface = new DatabaseInterface();
 
         public string ReadWassp(Object.File file)
@@ -120,8 +118,6 @@ namespace Vulnerator.Model.BusinessLogic
                                                         sqliteCommand.Parameters["FixText"].Value = ObtainItemValue(xmlReader);
                                                         break;
                                                     }
-                                                default:
-                                                    { break; }
                                             }
                                         }
                                         else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("table"))
@@ -130,8 +126,9 @@ namespace Vulnerator.Model.BusinessLogic
                                             databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                                             databaseInterface.InsertHardware(sqliteCommand);
                                             databaseInterface.InsertVulnerability(sqliteCommand);
-                                            databaseInterface.InsertUniqueFinding(sqliteCommand);
+                                            databaseInterface.MapVulnerabilityToSource(sqliteCommand);
                                             databaseInterface.UpdateUniqueFinding(sqliteCommand);
+                                            databaseInterface.InsertUniqueFinding(sqliteCommand);
                                             break;
                                         }
                                     }

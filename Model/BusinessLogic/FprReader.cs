@@ -92,7 +92,6 @@ namespace Vulnerator.Model.BusinessLogic
 
                         sqliteCommand.Parameters["SourceName"].Value = "HPE Fortify SCA";
                         sqliteCommand.Parameters["SourceVersion"].Value = version;
-                        sqliteCommand.Parameters["SourceRelease"].Value = string.Empty;
                         sqliteCommand.Parameters["DiscoveredSoftwareName"].Value = softwareName;
                         sqliteCommand.Parameters["DisplayedSoftwareName"].Value = softwareName;
                         sqliteCommand.Parameters["FindingSourceFileName"].Value = file.FileName;
@@ -112,7 +111,6 @@ namespace Vulnerator.Model.BusinessLogic
                             sqliteCommand.Parameters["FixText"].Value = fprVulnerability.FixText;
                             sqliteCommand.Parameters["InstanceIdentifier"].Value = fprVulnerability.InstanceId;
                             sqliteCommand.Parameters["ToolGeneratedOutput"].Value = fprVulnerability.Output;
-                            
                             sqliteCommand.Parameters["Comments"].Value = fprVulnerability.Comments;
                             sqliteCommand.Parameters["PrimaryRawRiskIndicator"].Value = fprVulnerability.RawRisk;
                             sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "False";
@@ -140,7 +138,7 @@ namespace Vulnerator.Model.BusinessLogic
                             {
                                 if (!persistentParameters.Contains(parameter.ParameterName))
                                 {
-                                    sqliteCommand.Parameters[parameter.ParameterName].Value = string.Empty;
+                                    sqliteCommand.Parameters[parameter.ParameterName].Value = DBNull.Value;
                                 }
                             }
                         }
@@ -181,7 +179,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                                 case "BuildID":
                                 {
-                                    softwareName = xmlReader.ObtainCurrentNodeValue(false);
+                                    softwareName = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                     break;
                                 }
                                 case "Vulnerability":
@@ -206,7 +204,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                                 case "EngineVersion":
                                 {
-                                    version = xmlReader.ObtainCurrentNodeValue(false);
+                                    version = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                     break;
                                 }
                                 case "Rule":
@@ -240,27 +238,27 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "ClassID":
                             {
-                                fprVulnerability.ClassId = xmlReader.ObtainCurrentNodeValue(false);
+                                fprVulnerability.ClassId = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                 break;
                             }
                             case "Kingdom":
                             {
-                                fprVulnerability.Kingdom = xmlReader.ObtainCurrentNodeValue(false);
+                                fprVulnerability.Kingdom = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                 break;
                             }
                             case "Type":
                             {
-                                fprVulnerability.Type = xmlReader.ObtainCurrentNodeValue(false);
+                                fprVulnerability.Type = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                 break;
                             }
                             case "Subtype":
                             {
-                                fprVulnerability.SubType = xmlReader.ObtainCurrentNodeValue(false);
+                                fprVulnerability.SubType = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                 break;
                             }
                             case "InstanceID":
                             {
-                                fprVulnerability.InstanceId = xmlReader.ObtainCurrentNodeValue(false);
+                                fprVulnerability.InstanceId = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                 break;
                             }
                             case "Def":
@@ -318,19 +316,19 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "Abstract":
                             {
-                                abstractNode = xmlReader.ObtainCurrentNodeValue(false);
+                                abstractNode = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                 abstractOutput = SanitizeAndParseAbstract(abstractNode);
                                 break;
                             }
                             case "Explanation":
                             {
-                                explanationNode = xmlReader.ObtainCurrentNodeValue(false);
+                                explanationNode = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                 explanationNode = SanitizeAndParseExplanation(explanationNode);
                                 break;
                             }
                             case "Recommendations":
                             {
-                                recommendationsNode = xmlReader.ObtainCurrentNodeValue(false);
+                                recommendationsNode = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                 recommendationsNode = SanitizeAndParseRecommendations(recommendationsNode);
                                 break;
                             }
@@ -379,17 +377,17 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "altcategoryDISACCI2":
                             {
-                                ccis = ParseCciValues(xmlReader.ObtainCurrentNodeValue(false));
+                                ccis = ParseCciValues(xmlReader.ObtainCurrentNodeValue(false).ToString());
                                 break;
                             }
                             case "Impact":
                             {
-                                impact = xmlReader.ObtainCurrentNodeValue(false).ToFortifyThreshold();
+                                impact = xmlReader.ObtainCurrentNodeValue(false).ToString().ToFortifyThreshold();
                                 break;
                             }
                             case "Probability":
                             {
-                                probability = xmlReader.ObtainCurrentNodeValue(false).ToFortifyThreshold();
+                                probability = xmlReader.ObtainCurrentNodeValue(false).ToString().ToFortifyThreshold();
                                 break;
                             }
                         }
@@ -489,12 +487,12 @@ namespace Vulnerator.Model.BusinessLogic
                             {
                                 case "Paragraph":
                                 {
-                                    output = xmlReader.ObtainCurrentNodeValue(false);
+                                    output = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                     break;
                                 }
                                 case "AltParagraph":
                                 {
-                                    riskStatement = xmlReader.ObtainCurrentNodeValue(false);
+                                    riskStatement = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                     break;
                                 }
                                 default:
@@ -804,17 +802,17 @@ namespace Vulnerator.Model.BusinessLogic
                         {
                             case "ns2:Content":
                             {
-                                auditComment.Content = xmlReader.ObtainCurrentNodeValue(false);
+                                auditComment.Content = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                 break;
                             }
                             case "ns2:Username":
                             {
-                                auditComment.UserName = xmlReader.ObtainCurrentNodeValue(false);
+                                auditComment.UserName = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                 break;
                             }
                             case "ns2:Timestamp":
                             {
-                                auditComment.EditTime = DateTime.Parse(xmlReader.ObtainCurrentNodeValue(false));
+                                auditComment.EditTime = DateTime.Parse(xmlReader.ObtainCurrentNodeValue(false).ToString());
                                 break;
                             }
                         }

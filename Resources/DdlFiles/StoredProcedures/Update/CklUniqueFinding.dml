@@ -1,39 +1,44 @@
-﻿UPDATE
-  UniqueFindings
-SET
-  FindingDetails = @FindingDetails,
-  Comments = @Comments,
-  SeverityOverride = @SeverityOverride,
-  SeverityOverrideJustification = @SeverityOverrideJustification,
-  LastObserved = @LastObserved,
-  TechnologyArea = @TechnologyArea,
-  WebDB_Site = @WebDB_Site,
-  WebDB_Instance = @WebDB_Instance,
-  FindingSourceFile_ID = (
-    SELECT
-      FindingSourceFile_ID
-    FROM
-      UniqueFindingsSourceFiles
-    WHERE
-      FindingSourceFileName = @FindingSourceFileName
-  ),
-  STATUS = @Status,
-  ToolGeneratedOutput = @ToolGeneratedOutput
-WHERE
-  Hardware_ID = (
-    SELECT
-      Hardware_ID
-    FROM
-      Hardware
-    WHERE
-      DiscoveredHostName = @DiscoveredHostName
-  )
+UPDATE
+    UniqueFindings
+SET Comments                      = @Comments,
+    FindingDetails                = @FindingDetails,
+    LastObserved                  = @LastObserved,
+    FindingSourceFile_ID          = (
+        SELECT FindingSourceFile_ID
+        FROM UniqueFindingsSourceFiles
+        WHERE FindingSourceFileName = @FindingSourceFileName
+    ),
+    Status                        = @Status,
+    VulnerabilitySource_ID        = (
+        SELECT VulnerabilitySource_ID
+        FROM VulnerabilitySources
+        WHERE SourceName = @SourceName
+          AND SourceVersion = @SourceVersion
+          AND SourceRelease = @SourceRelease
+    ),
+    SeverityOverride              = @SeverityOverride,
+    SeverityOverrideJustification = @SeverityOverrideJustification,
+    TechnologyArea                = @TechnologyArea,
+    WebDB_Site                    = @WebDB_Site,
+    WebDB_Instance                = @WebDB_Instance,
+    Classification                = @Classification,
+    CVSS_EnvironmentalScore       = @CVSS_EnvironmentalScore,
+    CVSS_EnvironmentalVector      = @CVSS_EnvironmentalVector
+WHERE (
+            Hardware_ID = (
+            SELECT Hardware_ID
+            FROM Hardware
+            WHERE DiscoveredHostName = @DiscoveredHostName
+        ) OR
+            Software_ID = (
+                SELECT Software_ID
+                FROM Software
+                WHERE DiscoveredSoftwareName = @DiscoveredSoftwareName
+            )
+    )
   AND Vulnerability_ID = (
-    SELECT
-      Vulnerability_ID
-    FROM
-      Vulnerabilities
-    WHERE
-      UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier
-  )
-  AND LastObserved < @LastObserved;
+    SELECT Vulnerability_ID
+    FROM Vulnerabilities
+    WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier
+)
+  AND LastObserved <= @LastObserved;

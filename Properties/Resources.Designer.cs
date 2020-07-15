@@ -19,7 +19,7 @@ namespace Vulnerator.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -223,7 +223,7 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to \d{2}\s\D{3}\s\d{4}.
+        ///   Looks up a localized string similar to \d{2}\s\D+\s\d{4}.
         /// </summary>
         internal static string RegexStigDate {
             get {
@@ -237,6 +237,24 @@ namespace Vulnerator.Properties {
         internal static string RegexStigId {
             get {
                 return ResourceManager.GetString("RegexStigId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ((?&lt;=\.0*))[1-9]+.
+        /// </summary>
+        internal static string RegexStigRelease {
+            get {
+                return ResourceManager.GetString("RegexStigRelease", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [1-9]+(?=\.).
+        /// </summary>
+        internal static string RegexStigVersion {
+            get {
+                return ResourceManager.GetString("RegexStigVersion", resourceCulture);
             }
         }
         
@@ -255,6 +273,15 @@ namespace Vulnerator.Properties {
         internal static string RegexVulnerabilityGroupIdentifier {
             get {
                 return ResourceManager.GetString("RegexVulnerabilityGroupIdentifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (?:MAC-|CAT_)(?:[1-3]|I)_[a-zA-Z]+.
+        /// </summary>
+        internal static string RegexXccdfProfile {
+            get {
+                return ResourceManager.GetString("RegexXccdfProfile", resourceCulture);
             }
         }
         

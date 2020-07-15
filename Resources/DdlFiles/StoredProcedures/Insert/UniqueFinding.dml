@@ -24,6 +24,13 @@ VALUES (NULL,
             WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier
         ),
         (
+            SELECT VulnerabilitySource_ID
+            FROM VulnerabilitySources
+            WHERE SourceName = @SourceName
+              AND SourceVersion = @SourceVersion
+              AND SourceRelease = @SourceRelease
+        ),
+        (
             SELECT Hardware_ID
             FROM Hardware
             WHERE DiscoveredHostName = @DiscoveredHostName
@@ -41,4 +48,4 @@ VALUES (NULL,
         @Classification,
         @CVSS_EnvironmentalScore,
         @CVSS_EnvironmentalVector,
-        NULL);
+        @MitigationOrCondition_ID);

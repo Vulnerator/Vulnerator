@@ -172,16 +172,25 @@
     <value>(?&lt;=Release: )\d+(?=\s)</value>
   </data>
   <data name="RegexStigDate" xml:space="preserve">
-    <value>\d{2}\s\D{3}\s\d{4}</value>
+    <value>\d{2}\s\D+\s\d{4}</value>
   </data>
   <data name="RegexStigId" xml:space="preserve">
     <value>(?:(?:\w)+(?:-|\.|_)?)+</value>
+  </data>
+  <data name="RegexStigRelease" xml:space="preserve">
+    <value>((?&lt;=\.0*))[1-9]+</value>
+  </data>
+  <data name="RegexStigVersion" xml:space="preserve">
+    <value>[1-9]+(?=\.)</value>
   </data>
   <data name="RegexTrailingNewLine" xml:space="preserve">
     <value>(?:(?&lt;=\s)\n(?=\s|$))</value>
   </data>
   <data name="RegexVulnerabilityGroupIdentifier" xml:space="preserve">
     <value>V-\d*</value>
+  </data>
+  <data name="RegexXccdfProfile" xml:space="preserve">
+    <value>(?:MAC-|CAT_)(?:[1-3]|I)_[a-zA-Z]+</value>
   </data>
   <data name="RegexXccdfRule" xml:space="preserve">
     <value>SV-\d*r\d*</value>

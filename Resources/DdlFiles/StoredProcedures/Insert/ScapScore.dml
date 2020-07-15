@@ -16,4 +16,9 @@ VALUES (NULL,
             FROM VulnerabilitySources
             WHERE SourceName = @SourceName
         ),
-        @ScanDate);
+        @ScanDate,
+        @ScanProfile,
+        @ScanUser,
+        @UserIsPrivileged,
+        @UserIsAuthenticated
+);
