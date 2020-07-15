@@ -1,5 +1,5 @@
 ﻿<div align="center">
-    <img width="25%" src="VulneratorLogoDraft.png">
+    <img width="25%" src="Vulnerator_Logo_Large_Color_SquareBackground_20190805.png">
 	<h1>Vulnerator</h1>
 	<h2>Vulnerability Continuous Monitoring Made Easy</h2>
 		<a href="https://gitter.im/Vulnerator/Vulnerator">

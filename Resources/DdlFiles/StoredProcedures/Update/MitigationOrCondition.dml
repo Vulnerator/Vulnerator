@@ -5,6 +5,7 @@ SET
     PredisposingConditions = @PredisposingConditions,
     TechnicalMitigation = @TechnicalMitigation,
     ProposedMitigation = @ProposedMitigation,
+    ThreatDescription = @ThreatDescription,
     ThreatRelevance = @ThreatRelevance,
     SeverityPervasiveness = @SeverityPervasiveness,
     Likelihood = @Likelihood,

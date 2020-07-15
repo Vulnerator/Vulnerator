@@ -26,10 +26,7 @@ WHERE
     FROM
       Hardware
     WHERE
-      ScanIP = @ScanIP
-      AND DiscoveredHostName = @DiscoveredHostName
-      AND FQDN = @FQDN
-      AND NetBIOS = @NetBIOS
+      DiscoveredHostName = @DiscoveredHostName
   )
   AND Vulnerability_ID = (
     SELECT

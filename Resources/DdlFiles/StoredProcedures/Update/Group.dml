@@ -20,7 +20,7 @@ SET
     SystemType = @SystemType,
     RDTE_Zone = @RDTE_Zone,
     StepOneQuestionnaire_ID = @StepOneQuestionnaire_ID,
-    SAP_ID = @SAP_ID,
+    SecurityAssessmentProcedure_ID = @SecurityAssessmentProcedure_ID,
     PIT_Determination_ID = @PIT_Determination_ID
 WHERE
     Group_ID = @Group_ID;

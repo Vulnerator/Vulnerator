@@ -19,10 +19,10 @@ namespace Vulnerator.Model.Entity
             ControlSets = new ObservableCollection<ControlSet>();
             Overlays = new ObservableCollection<Overlay>();
             AvailabilityLevels = new ObservableCollection<AvailabilityLevel>();
-            CCIs = new ObservableCollection<CCI>();
             ControlApplicabilityAssessments = new ObservableCollection<ControlApplicabilityAssessment>();
             ConfidentialityLevels = new ObservableCollection<ConfidentialityLevel>();
             IntegrityLevels = new ObservableCollection<IntegrityLevel>();
+            NIST_ControlsCCIs = new ObservableCollection<NIST_ControlCCI>();
         }
 
         [Key]
@@ -66,10 +66,7 @@ namespace Vulnerator.Model.Entity
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AvailabilityLevel> AvailabilityLevels { get; set; }
-        
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CCI> CCIs { get; set; }
-        
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ControlApplicabilityAssessment> ControlApplicabilityAssessments { get; set; }
         
@@ -79,5 +76,7 @@ namespace Vulnerator.Model.Entity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<IntegrityLevel> IntegrityLevels { get; set; }
         
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<NIST_ControlCCI> NIST_ControlsCCIs { get; set; }
     }
 }

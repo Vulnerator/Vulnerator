@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
+    [Table("UniqueFindings")]
     public class UniqueFinding : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -46,6 +47,7 @@ namespace Vulnerator.Model.Entity
         public virtual UniqueFindingSourceFile UniqueFindingSourceFile { get; set; }
 
         [CanBeNull]
+        [ForeignKey("MitigationOrCondition")]
         public long? MitigationOrCondition_ID { get; set; }
         
         [CanBeNull]

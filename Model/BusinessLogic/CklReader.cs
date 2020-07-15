@@ -17,17 +17,14 @@ namespace Vulnerator.Model.BusinessLogic
     /// </summary>
     public class CklReader
     {
-        private Assembly assembly = Assembly.GetExecutingAssembly();
         DatabaseInterface databaseInterface = new DatabaseInterface();
-        private string stigInfo = string.Empty;
-        private string versionInfo = string.Empty;
-        private string releaseInfo = string.Empty;
         private string techArea = string.Empty;
         private string webDbSite = string.Empty;
         private string webDbInstance = string.Empty;
         private string classification = string.Empty;
         private List<string> ccis = new List<string>();
-        private string[] persistentParameters = new string[] {
+        private DateTime dateTimeNow = DateTime.Now;
+        private string[] persistentParameters =  {
             "GroupName", "FindingSourceFileName", "SourceName", "SourceVersion", "SourceRelease", "DiscoveredHostName", "ScanIP", "FQDN", "NetBIOS", "FindingType"
         };
 
@@ -55,6 +52,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters["GroupName"].Value = "All";
+                        sqliteCommand.Parameters["LastObserved"].Value = dateTimeNow;
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
                         using (XmlReader xmlReader = XmlReader.Create(file.FilePath, xmlReaderSettings))
@@ -341,7 +339,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "Severity":
                                 {
-                                    sqliteCommand.Parameters["RawRisk"].Value = ObtainAttributeDataNodeValue(xmlReader).ToRawRisk();
+                                    sqliteCommand.Parameters["PrimaryRawRiskIndicator"].Value = ObtainAttributeDataNodeValue(xmlReader).ToRawRisk();
                                     break;
                                 }
                             case "Group_Title":
@@ -452,7 +450,8 @@ namespace Vulnerator.Model.BusinessLogic
                         switch (databaseInterface.CompareVulnerabilityVersions(sqliteCommand))
                         {
                             case "Record Not Found":
-                                {
+                            {
+                                sqliteCommand.Parameters["FirstDiscovered"].Value = dateTimeNow;
                                     databaseInterface.InsertVulnerability(sqliteCommand);
                                     databaseInterface.MapVulnerabilityToSource(sqliteCommand);
                                     break;
@@ -466,7 +465,7 @@ namespace Vulnerator.Model.BusinessLogic
                             case "Existing Version Is Newer":
                                 {
                                     databaseInterface.UpdateVulnerabilityDates(sqliteCommand);
-                                    sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "True";
+                                    sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "True";
                                     break;
                                 }
                             case "Identical Versions":
@@ -474,14 +473,14 @@ namespace Vulnerator.Model.BusinessLogic
                                     databaseInterface.UpdateVulnerabilityDates(sqliteCommand);
                                     break;
                                 }
-                            default:
-                                { break; }
                         }
                         ParseUniqueFindingData(sqliteCommand, xmlReader);
                         if (ccis.Count > 0)
                         {
                             foreach (string cci in ccis)
                             {
+                                if (string.IsNullOrWhiteSpace(cci))
+                                { continue; }
                                 sqliteCommand.Parameters["CCI_Number"].Value = cci;
                                 databaseInterface.MapVulnerabilityToCci(sqliteCommand);
                                 sqliteCommand.Parameters["CCI_Number"].Value = string.Empty;
@@ -572,10 +571,10 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["TechnologyArea"].Value = techArea;
                 sqliteCommand.Parameters["WebDB_Site"].Value = webDbSite;
                 sqliteCommand.Parameters["WebDB_Instance"].Value = webDbInstance;
-                sqliteCommand.Parameters["LastObserved"].Value = DateTime.Now.ToShortDateString();
-                if (string.IsNullOrWhiteSpace(sqliteCommand.Parameters["DeltaAnalysisRequired"].Value.ToString()))
-                { sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "False"; }
-                sqliteCommand.Parameters["FirstDiscovered"].Value = DateTime.Now.ToShortDateString();
+                sqliteCommand.Parameters["LastObserved"].Value = DateTime.Now;
+                if (string.IsNullOrWhiteSpace(sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value.ToString()))
+                { sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "False"; }
+                sqliteCommand.Parameters["FirstDiscovered"].Value = DateTime.Now;
                 sqliteCommand.Parameters["Classification"].Value = classification;
                 sqliteCommand.Parameters["FindingType"].Value = "CKL";
                 databaseInterface.UpdateUniqueFinding(sqliteCommand);
@@ -656,9 +655,6 @@ namespace Vulnerator.Model.BusinessLogic
 
         private void ClearGlobals()
         {
-            stigInfo = string.Empty;
-            versionInfo = string.Empty;
-            releaseInfo = string.Empty;
             techArea = string.Empty;
             webDbSite = string.Empty;
             webDbInstance = string.Empty;

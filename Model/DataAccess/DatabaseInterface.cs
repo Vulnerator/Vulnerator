@@ -321,9 +321,9 @@ namespace Vulnerator.Model.DataAccess
                     // MitigationsOrConditions Table
                     "MitigationOrCondition_ID", "ImpactDescription",  "PredisposingConditions", "TechnicalMitigation", "ProposedMitigation",
                     "ThreatRelevance", "SeverityPervasiveness", "Likelihood", "Impact", "Risk", "ResidualRisk", "ResidualRiskAfterProposed",
-                    "MitigatedStatus", "EstimatedCompletionDate", "ApprovalDate", "ExpirationDate", "IsApproved", "Approver",
-                    // PortsProtocols Table
-                    "PortProtocol_ID", "Port", "Protocol",
+                    "MitigatedStatus", "EstimatedCompletionDate", "ApprovalDate", "ExpirationDate", "IsApproved", "Approver", "ThreatDescription",
+                    // HardwarePortsProtocolsServices Table
+                    "PortProtocolService_ID", "Port", "Protocol",
                     // PortsServices Table
                     "PortService_ID", "DiscoveredServiceName", "DisplayedServiceName", "ServiceAcronym",
                     // Software Table
@@ -333,7 +333,7 @@ namespace Vulnerator.Model.DataAccess
                     "ApprovedForBaselineGlobal", "BaselineApproverGlobal", "Instance", "InstallDate",
                     // UniqueFindings Table
                     "UniqueFinding_ID", "InstanceIdentifier", "ToolGeneratedOutput", "Comments", "FindingDetails",  "FirstDiscovered",  "LastObserved",
-                    "DeltaAnalysisRequired", "FindingType_ID", "FindingSourceFile_ID", "Status", "Vulnerability_ID", "Hardware_ID",  "Software_ID",
+                    "DeltaAnalysisIsRequired", "FindingType_ID", "FindingSourceFile_ID", "Status", "Vulnerability_ID", "Hardware_ID",  "Software_ID",
                     "SeverityOverride", "SeverityOverrideJustification", "TechnologyArea", "WebDB_Site", "WebDB_Instance",
                     "Classification", "CVSS_EnvironmentalScore", "CVSS_EnvironmentalVector",
                     // UniqueFindingSourceFiles Table
@@ -342,7 +342,7 @@ namespace Vulnerator.Model.DataAccess
                     "Vulnerability_ID", "UniqueVulnerabilityIdentifier", "VulnerabilityGroupIdentifier", "VulnerabilityGroupTitle",
                     "SecondaryVulnerabilityIdentifier", "VulnerabilityFamilyOrClass", "VulnerabilityVersion", "VulnerabilityRelease",
                     "VulnerabilityTitle", "VulnerabilityDescription", "RiskStatement", "FixText", "PublishedDate", "ModifiedDate",
-                    "FixPublishedDate", "RawRisk", "CVSS_BaseScore", "CVSS_BaseVector", "CVSS_TemporalScore", "CVSS_TemporalVector",
+                    "FixPublishedDate", "PrimaryRawRiskIndicator", "SecondaryRawRiskIndicator", "CVSS_BaseScore", "CVSS_BaseVector", "CVSS_TemporalScore", "CVSS_TemporalVector",
                     "CheckContent", "FalsePositives", "FalseNegatives", "IsDocumentable", "Mitigations", "MitigationControl", "IsActive",
                     "PotentialImpacts", "ThirdPartyTools", "SecurityOverrideGuidance", "SeverityOverrideGuidance", "Overflow",
                     // VulnerabilityReferences Table
@@ -534,7 +534,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                LogWriter.LogError($"Unable to map CCI '{sqliteCommand.Parameters["CCI"].Value}' to vulnerability '{sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value}'.");
+                LogWriter.LogError($"Unable to map CCI '{sqliteCommand.Parameters["CCI_Number"].Value}' to vulnerability '{sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value}'.");
                 throw exception;
             }
         }
@@ -937,7 +937,7 @@ namespace Vulnerator.Model.DataAccess
             }
             catch (Exception exception)
             {
-                LogWriter.LogError($"Unable to update Group '{sqliteCommand.Parameters["Name"].Value}'.");
+                LogWriter.LogError($"Unable to update Group '{sqliteCommand.Parameters["GroupName"].Value}'.");
                 throw exception;
             }
         }

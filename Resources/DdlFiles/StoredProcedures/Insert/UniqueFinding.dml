@@ -6,7 +6,7 @@ VALUES (NULL,
         @FindingDetails,
         @FirstDiscovered,
         @LastObserved,
-        @DeltaAnalysisRequired,
+        @DeltaAnalysisIsRequired,
         (
             SELECT FindingType_ID
             FROM FindingTypes
@@ -26,8 +26,7 @@ VALUES (NULL,
         (
             SELECT Hardware_ID
             FROM Hardware
-            WHERE ScanIP = @ScanIP
-              AND DiscoveredHostName = @DiscoveredHostName
+            WHERE DiscoveredHostName = @DiscoveredHostName
         ),
         (
             SELECT Software_ID

@@ -112,7 +112,7 @@ namespace Vulnerator.Model.BusinessLogic
                                                     }
                                                 case "VulnInfo":
                                                     {
-                                                        sqliteCommand.Parameters["RawRisk"].Value = ObtainItemValue(xmlReader).ToRawRisk();
+                                                        sqliteCommand.Parameters["PrimaryRawRiskIndicator"].Value = ObtainItemValue(xmlReader).ToRawRisk();
                                                         break;
                                                     }
                                                 case "RecInfo":
@@ -126,7 +126,7 @@ namespace Vulnerator.Model.BusinessLogic
                                         }
                                         else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("table"))
                                         {
-                                            sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "False";
+                                            sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "False";
                                             databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                                             databaseInterface.InsertHardware(sqliteCommand);
                                             databaseInterface.InsertVulnerability(sqliteCommand);

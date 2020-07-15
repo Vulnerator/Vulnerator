@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
+    [Table("Hardware")]
     public class Hardware : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -20,10 +21,9 @@ namespace Vulnerator.Model.Entity
             Groups = new ObservableCollection<Group>();
             IP_Addresses = new ObservableCollection<IP_Address>();
             MAC_Addresses = new ObservableCollection<MAC_Address>();
-            VulnerabilitySources = new ObservableCollection<VulnerabilitySource>();
             Locations = new ObservableCollection<Location>();
-            PortsProtocols = new ObservableCollection<PortProtocol>();
-            Softwares = new ObservableCollection<Software>();
+            HardwarePortsProtocolsServices = new ObservableCollection<HardwarePortProtocolService>();
+            SoftwareHardwares = new ObservableCollection<SoftwareHardware>();
         }
 
         [Key]
@@ -101,15 +101,12 @@ namespace Vulnerator.Model.Entity
         public virtual ICollection<MAC_Address> MAC_Addresses { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<VulnerabilitySource> VulnerabilitySources { get; set; }
-        
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Location> Locations { get; set; }
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PortProtocol> PortsProtocols { get; set; }
-        
+        public virtual ICollection<HardwarePortProtocolService> HardwarePortsProtocolsServices { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Software> Softwares { get; set; }
+        public virtual ICollection<SoftwareHardware> SoftwareHardwares { get; set; }
     }
 }

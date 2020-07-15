@@ -310,8 +310,13 @@
     <Compile Include="Model\BusinessLogic\AcasNessusReader.cs" />
     <Compile Include="Model\BusinessLogic\AcasCsvReader.cs" />
     <Compile Include="Model\BusinessLogic\CklCreator.cs" />
+    <Compile Include="Model\BusinessLogic\Reports\OpenXmlCellDataHandler.cs" />
+    <Compile Include="Model\BusinessLogic\Reports\OpenXmlEmassPoamReportCreator.cs" />
     <Compile Include="Model\BusinessLogic\RawStigReader.cs" />
     <Compile Include="Model\BusinessLogic\AssociateStig.cs" />
+    <Compile Include="Model\BusinessLogic\Reports\OpenXmlNavyRarReportCreator.cs" />
+    <Compile Include="Model\BusinessLogic\Reports\OpenXmlStigDiscrepanciesReportCreator.cs" />
+    <Compile Include="Model\BusinessLogic\Reports\OpenXmlStylesheetCreator.cs" />
     <Compile Include="Model\DataAccess\DatabaseBuilder.cs" />
     <Compile Include="Model\DataAccess\DatabaseContext.cs" />
     <Compile Include="Model\DataAccess\DatabaseInterface.cs" />
@@ -319,6 +324,7 @@
     <Compile Include="Model\Entity\AuthorizationToConnectOrInterim_ATC_PendingItem.cs" />
     <Compile Include="Model\Entity\AuthorizationCondition.cs" />
     <Compile Include="Model\Entity\AvailabilityLevel.cs" />
+    <Compile Include="Model\Entity\Boundary.cs" />
     <Compile Include="Model\Entity\CCI.cs" />
     <Compile Include="Model\Entity\Certification.cs" />
     <Compile Include="Model\Entity\CommonControlPackage.cs" />
@@ -344,6 +350,9 @@
     <Compile Include="Model\Entity\GroupContactTitle.cs" />
     <Compile Include="Model\Entity\GroupMitigationOrConditionVulnerability.cs" />
     <Compile Include="Model\Entity\Hardware.cs" />
+    <Compile Include="Model\Entity\HardwarePortProtocolService.cs" />
+    <Compile Include="Model\Entity\HardwareSoftwarePortProtocolServiceBoundary.cs" />
+    <Compile Include="Model\Entity\HardwareSoftwarePortProtocolService.cs" />
     <Compile Include="Model\Entity\IATA_Standard.cs" />
     <Compile Include="Model\Entity\IA_Control.cs" />
     <Compile Include="Model\Entity\ImpactAdjustment.cs" />
@@ -360,11 +369,11 @@
     <Compile Include="Model\Entity\MitigationOrCondition.cs" />
     <Compile Include="Model\Entity\NetworkConnectionRule.cs" />
     <Compile Include="Model\Entity\NIST_Control.cs" />
+    <Compile Include="Model\Entity\NIST_ControlCCI.cs" />
     <Compile Include="Model\Entity\Organization.cs" />
     <Compile Include="Model\Entity\Overlay.cs" />
     <Compile Include="Model\Entity\PIT_Determination.cs" />
-    <Compile Include="Model\Entity\PortService.cs" />
-    <Compile Include="Model\Entity\PortProtocol.cs" />
+    <Compile Include="Model\Entity\PortProtocolService.cs" />
     <Compile Include="Model\Entity\RelatedDocument.cs" />
     <Compile Include="Model\Entity\RelatedTesting.cs" />
     <Compile Include="Model\Entity\ReportFindingTypeUserSettings.cs" />
@@ -375,6 +384,7 @@
     <Compile Include="Model\Entity\SecurityAssessmentProcedure.cs" />
     <Compile Include="Model\Entity\SCAP_Score.cs" />
     <Compile Include="Model\Entity\Software.cs" />
+    <Compile Include="Model\Entity\SoftwareHardware.cs" />
     <Compile Include="Model\Entity\StepOneQuestionnaire.cs" />
     <Compile Include="Model\Entity\SystemCategorization.cs" />
     <Compile Include="Model\Entity\SystemCategorizationInformationTypesImpactAdjustment.cs" />
@@ -420,6 +430,7 @@
     <Compile Include="Model\BusinessLogic\OpenXmlReportCreator.cs" />
     <Compile Include="Model\BusinessLogic\PdfReportCreator.cs" />
     <Compile Include="ViewModel\ConfigurationManagementViewModel.cs" />
+    <Compile Include="ViewModel\LoadingViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MessengerToken.cs" />
     <Compile Include="ViewModel\NewsViewModel.cs" />
@@ -459,6 +470,9 @@
     </Compile>
     <Compile Include="View\UI\ConfigurationManagementView.xaml.cs">
       <DependentUpon>ConfigurationManagementView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\LoadingWindow.xaml.cs">
+      <DependentUpon>LoadingWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UI\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -631,6 +645,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\UI\LoadingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\UI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -697,6 +715,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\NavyRar.dml" />
+    <Resource Include="Vulnerator_Logo_Large_Color_SquareBackground_20190805.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\AdditionalTestConsiderations.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\AuthorizationConditions.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\AuthorizationToConnectOrInterim_ATC_PendingItems.ddl" />
@@ -794,6 +816,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\MitigationOrCondition.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\RequiredReportIsSelected.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\HardwareSoftwareMapping.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\StigDiscrepancies.dml" />
     <Content Include="Resources\DdlFiles\StoredProcedures\Update\AcasUniqueFinding.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\CklUniqueFinding.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\UniqueFindingMitigationOrCondition.dml" />
@@ -805,6 +828,8 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\Group.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\VulnerabilitySource.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\VulnerabilityVersionAndRelease.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\Boundaries.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwareSoftwarePortsProtocolsServicesBoundaries.ddl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -970,6 +995,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\RequiredReportUserSelections.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ReportFindingTypeUserSettings.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ReportSeverityUserSettings.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwareSoftwarePortsProtocolsServices.ddl" />
     <Content Include="Resources\UserGuide\Images\ThemeFlyout.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

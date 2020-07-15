@@ -40,9 +40,6 @@ namespace Vulnerator.Model.Entity
 
         [StringLength(20)]
         public string ContactPhone { get; set; }
-        
-        [StringLength(50)]
-        public string ContactTitle { get; set; }
 
         public long? Organization_ID { get; set; }
 

@@ -39,13 +39,11 @@
                               Margin="0,5,5,0"
                               HorizontalAlignment="Stretch"
                               VerticalAlignment="Stretch"
-                              CanUserAddRows="False"
                               CanUserReorderColumns="True"
                               CanUserResizeColumns="True"
                               ItemsSource="{Binding VulnerabilityReports}"
                               SelectedItem="{Binding SelectedReport}"
                               Style="{StaticResource GreyBorderedDataGridStyle}"
-                              HorizontalScrollBarVisibility="Disabled"
                               VerticalScrollBarVisibility="Auto">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Width="Auto">
@@ -58,47 +56,24 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Width="Auto"
-                                                    SortMemberPath="DisplayedReportName">
-                                <DataGridTemplateColumn.HeaderStyle>
-                                    <Style BasedOn="{StaticResource MetroDataGridColumnHeader}"
-                                           TargetType="{x:Type DataGridColumnHeader}">
-                                        <Setter Property="HorizontalContentAlignment" Value="Center" />
-                                    </Style>
-                                </DataGridTemplateColumn.HeaderStyle>
-                                <DataGridTemplateColumn.Header>
-                                    <TextBlock HorizontalAlignment="Center"
-                                               Text="Report Name"
-                                               TextTrimming="CharacterEllipsis" />
-                                </DataGridTemplateColumn.Header>
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding DisplayedReportName}"
-                                                   TextTrimming="CharacterEllipsis"
-                                                   TextWrapping="NoWrap"
-                                                   ToolTip="{Binding DisplayedReportName}" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Width="Auto"
+                                                Binding="{Binding DisplayedReportName}"
+                                                Header="Report Name"
+                                                HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
+                            <DataGridTextColumn Width="Auto"
+                                                Binding="{Binding ReportType}"
+                                                Header="Report Name"
+                                                HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
                             <DataGridTemplateColumn Width="Auto"
                                                     SortMemberPath="Report_Type">
-                                <DataGridTemplateColumn.HeaderStyle>
-                                    <Style BasedOn="{StaticResource MetroDataGridColumnHeader}"
-                                           TargetType="{x:Type DataGridColumnHeader}">
-                                        <Setter Property="HorizontalContentAlignment" Value="Center" />
-                                    </Style>
-                                </DataGridTemplateColumn.HeaderStyle>
-                                <DataGridTemplateColumn.Header>
-                                    <TextBlock HorizontalAlignment="Center"
-                                               Text="Report Type"
-                                               TextTrimming="CharacterEllipsis" />
-                                </DataGridTemplateColumn.Header>
+
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Report_Type}"
-                                                   TextTrimming="CharacterEllipsis"
-                                                   TextWrapping="NoWrap"
-                                                   ToolTip="{Binding Report_Type}" />
+                                        <Button Margin="{StaticResource MarginAll5}"
+                                                Command="{Binding Path=DataContext.GenerateSingleReportCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
+                                                CommandParameter="{Binding RequiredReport_ID}">
+                                            <IconPacks:FontAwesomeLight Kind="FileDownload" />
+                                        </Button>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -159,10 +134,11 @@
                     </Grid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Configuration Management"
+            <!--  TODO: Implement CM reports  -->
+            <!--<TabItem Header="Configuration Management"
                      Style="{StaticResource CustomMetroTabItem}">
                 <Grid Margin="5,0,5,5" />
-            </TabItem>
+            </TabItem>-->
         </Controls:MetroAnimatedSingleRowTabControl>
     </Grid>
 </UserControl>

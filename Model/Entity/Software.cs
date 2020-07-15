@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
+    [Table("Software")]
     public class Software : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -16,8 +17,8 @@ namespace Vulnerator.Model.Entity
         {
             DADMS_Networks = new ObservableCollection<DADMS_Network>();
             Contacts = new ObservableCollection<Contact>();
-            PortServices = new ObservableCollection<PortService>();
-            Hardwares = new ObservableCollection<Hardware>();
+            HardwareSoftwarePortsProtocolsServices = new ObservableCollection<HardwareSoftwarePortProtocolService>();
+            SoftwareHardwares = new ObservableCollection<SoftwareHardware>();
             UniqueFindings = new ObservableCollection<UniqueFinding>();
         }
 
@@ -54,7 +55,7 @@ namespace Vulnerator.Model.Entity
         public string HasCustomCode { get; set; }
 
         [StringLength(5)]
-        public string IaOrIa_Enabled { get; set; }
+        public string IA_OrIA_Enabled { get; set; }
 
         [StringLength(5)]
         public string IsOS_OrFirmware { get; set; }
@@ -82,14 +83,14 @@ namespace Vulnerator.Model.Entity
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Contact> Contacts { get; set; }
-        
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PortService> PortServices { get; set; }
-        
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Hardware> Hardwares { get; set; }
+        public virtual ICollection<SoftwareHardware> SoftwareHardwares { get; set; }
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UniqueFinding> UniqueFindings { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<HardwareSoftwarePortProtocolService> HardwareSoftwarePortsProtocolsServices { get; set; }
     }
 }

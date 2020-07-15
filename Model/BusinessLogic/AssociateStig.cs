@@ -63,7 +63,7 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 sqliteCommand.Parameters["Status"].Value = "Not Reviewed";
                 sqliteCommand.Parameters["LastObserved"].Value = DateTime.Now.ToShortDateString();
-                sqliteCommand.Parameters["DeltaAnalysisRequired"].Value = "False";
+                sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "False";
                 sqliteCommand.Parameters["Approval_Status"].Value = "Not Approved";
                 sqliteCommand.Parameters["FirstDiscovered"].Value = DateTime.Now.ToShortDateString();
                 sqliteCommand.Parameters["Classification"].Value = "Unclassified";
