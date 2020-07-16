@@ -277,6 +277,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (?:[Hh]igh|[Mm]edium|[Ll]ow|[Ii]nformational).
+        /// </summary>
+        internal static string RegexWasspRawRisk {
+            get {
+                return ResourceManager.GetString("RegexWasspRawRisk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to (?:MAC-|CAT_)(?:[1-3]|I)_[a-zA-Z]+.
         /// </summary>
         internal static string RegexXccdfProfile {

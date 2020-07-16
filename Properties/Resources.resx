@@ -189,6 +189,9 @@
   <data name="RegexVulnerabilityGroupIdentifier" xml:space="preserve">
     <value>V-\d*</value>
   </data>
+  <data name="RegexWasspRawRisk" xml:space="preserve">
+    <value>(?:[Hh]igh|[Mm]edium|[Ll]ow|[Ii]nformational)</value>
+  </data>
   <data name="RegexXccdfProfile" xml:space="preserve">
     <value>(?:MAC-|CAT_)(?:[1-3]|I)_[a-zA-Z]+</value>
   </data>

@@ -91,6 +91,7 @@ namespace Vulnerator.Model.BusinessLogic
                         }
 
                         sqliteCommand.Parameters["SourceName"].Value = "HPE Fortify SCA";
+                        sqliteCommand.Parameters["SourceRelease"].Value = "HPE Fortify SCA";
                         sqliteCommand.Parameters["SourceVersion"].Value = version;
                         sqliteCommand.Parameters["DiscoveredSoftwareName"].Value = softwareName;
                         sqliteCommand.Parameters["DisplayedSoftwareName"].Value = softwareName;
@@ -103,6 +104,10 @@ namespace Vulnerator.Model.BusinessLogic
                         foreach (FprVulnerability fprVulnerability in fprVulnerabilityList)
                         {
                             sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value = fprVulnerability.ClassId;
+                            if (sqliteCommand.Parameters["VulnerabilityVersion"].Value == DBNull.Value)
+                            { sqliteCommand.Parameters["VulnerabilityVersion"].Value = string.Empty; }
+                            if (sqliteCommand.Parameters["VulnerabilityRelease"].Value == DBNull.Value)
+                            { sqliteCommand.Parameters["VulnerabilityRelease"].Value = string.Empty; }
                             sqliteCommand.Parameters["VulnerabilityGroupTitle"].Value = fprVulnerability.Kingdom;
                             sqliteCommand.Parameters["VulnerabilityFamilyOrClass"].Value = fprVulnerability.Type;
                             sqliteCommand.Parameters["VulnerabilityTitle"].Value = fprVulnerability.SubType;
