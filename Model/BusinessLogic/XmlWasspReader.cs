@@ -3,6 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Xml;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Helper;
@@ -55,6 +56,8 @@ namespace Vulnerator.Model.BusinessLogic
                         sqliteCommand.Parameters["GroupName"].Value = "All";
                         sqliteCommand.Parameters["SourceName"].Value =
                             "Windows Automated Security Scanning Program (WASSP)";
+                        sqliteCommand.Parameters["SourceVersion"].Value = string.Empty;
+                        sqliteCommand.Parameters["SourceRelease"].Value = string.Empty;
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         using (XmlReader xmlReader = XmlReader.Create(file.FilePath, xmlReaderSettings))
                         {
@@ -86,6 +89,11 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         switch (xmlReader.Name)
                         {
+                            case "scanner":
+                            {
+                                ObtainWasspVersion(xmlReader, sqliteCommand);
+                                break;
+                            }
                             case "date":
                             {
                                 sqliteCommand.Parameters["FirstDiscovered"].Value =
@@ -120,8 +128,10 @@ namespace Vulnerator.Model.BusinessLogic
                             }
                             case "vulnerability":
                             {
+                                string parsed = xmlReader.ObtainCurrentNodeValue(false).ToString();
+                                Regex regex = new Regex(Properties.Resources.RegexWasspRawRisk);
                                 sqliteCommand.Parameters["PrimaryRawRiskIndicator"].Value =
-                                    xmlReader.ObtainCurrentNodeValue(false).ToRawRisk();
+                                    regex.Match(parsed).Value.ToRawRisk();
                                 break;
                             }
                             case "control":
@@ -136,10 +146,6 @@ namespace Vulnerator.Model.BusinessLogic
                                     {
                                         break;
                                     }
-                                    default:
-                                    {
-                                        break;
-                                    }
                                 }
 
                                 break;
@@ -147,7 +153,7 @@ namespace Vulnerator.Model.BusinessLogic
                             case "result":
                             {
                                 sqliteCommand.Parameters["Status"].Value =
-                                    xmlReader.ObtainCurrentNodeValue(false).ToVulneratorStatus();
+                                    xmlReader.ObtainCurrentNodeValue(false).ToString().ToVulneratorStatus();
                                 break;
                             }
                             case "recommendation":
@@ -155,20 +161,22 @@ namespace Vulnerator.Model.BusinessLogic
                                 sqliteCommand.Parameters["FixText"].Value = xmlReader.ObtainCurrentNodeValue(false);
                                 break;
                             }
-                            default:
-                            {
-                                break;
-                            }
                         }
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("test"))
                     {
                         sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "False";
+                        if (sqliteCommand.Parameters["VulnerabilityVersion"].Value == DBNull.Value)
+                        { sqliteCommand.Parameters["VulnerabilityVersion"].Value = string.Empty; }
+                        if (sqliteCommand.Parameters["VulnerabilityRelease"].Value == DBNull.Value)
+                        { sqliteCommand.Parameters["VulnerabilityRelease"].Value = string.Empty; }
                         databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                         databaseInterface.InsertHardware(sqliteCommand);
                         databaseInterface.InsertAndMapIpAddress(sqliteCommand);
                         databaseInterface.InsertAndMapMacAddress(sqliteCommand);
                         databaseInterface.InsertVulnerability(sqliteCommand);
+                        databaseInterface.MapVulnerabilityToSource(sqliteCommand);
+                        databaseInterface.UpdateUniqueFinding(sqliteCommand);
                         databaseInterface.InsertUniqueFinding(sqliteCommand);
                     }
                 }
@@ -176,6 +184,31 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 LogWriter.LogError("Unable to parse vulnerability information.");
+                throw exception;
+            }
+        }
+
+        private void ObtainWasspVersion(XmlReader xmlReader, SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                while (xmlReader.Read())
+                {
+                    if (xmlReader.IsStartElement() && xmlReader.Name.Equals("version"))
+                    {
+                        sqliteCommand.Parameters["SourceVersion"].Value =
+                            xmlReader.ObtainCurrentNodeValue(false);
+                        return;
+                    }
+                    if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("scanner"))
+                    { return; }
+                }
+
+                
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to obtain WASSP version information.");
                 throw exception;
             }
         }

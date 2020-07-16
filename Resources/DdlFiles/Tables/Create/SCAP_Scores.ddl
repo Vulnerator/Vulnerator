@@ -5,6 +5,10 @@ CREATE TABLE IF NOT EXISTS SCAP_Scores (
     FindingSourceFile_ID INTEGER NOT NULL,
     VulnerabilitySource_ID INTEGER NOT NULL,
     ScanDate DATETIME NOT NULL,
+    ScanProfile NVARCHAR (25) NOT NULL,
+    ScanUser NAVARCHAR (200) NOT NULL,
+    UserIsPrivileged NVARCHAR (5) NOT NULL,
+    UserIsAuthenticated NVARCHAR (5) NOT NULL,
     UNIQUE (
            Hardware_ID,
            FindingSourceFile_ID,

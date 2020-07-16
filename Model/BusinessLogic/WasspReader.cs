@@ -15,9 +15,8 @@ namespace Vulnerator.Model.BusinessLogic
 {
     class WasspReader
     {
-        private string fileNameWithoutPath = string.Empty;
-        private bool UserPrefersHostName => Properties.Settings.Default.CklRequiresHostName;
         private DatabaseInterface databaseInterface = new DatabaseInterface();
+        private string wasspFile;
 
         public string ReadWassp(Object.File file)
         {
@@ -30,22 +29,23 @@ namespace Vulnerator.Model.BusinessLogic
                 }
 
                 HTMLtoXML htmlReader = new HTMLtoXML();
-                string wasspFile = htmlReader.Convert(file.FilePath);
+                wasspFile = htmlReader.Convert(file.FilePath);
 
                 if (wasspFile.Equals("Failed; See Log"))
                 { return wasspFile; }
-                else
-                {
-                    ParseWasspWithXmlReader(wasspFile, file);
-                    System.IO.File.Delete(wasspFile);
-                    return "Processed";
-                }
+                ParseWasspWithXmlReader(wasspFile, file);
+                return "Processed";
             }
             catch (Exception exception)
             {
                 string error = $"Unable to process WASSP file '{file.FileName}'.";
                 LogWriter.LogErrorWithDebug(error, exception);
                 return "Failed; See Log";
+            }
+            finally
+            {
+                if (File.Exists(wasspFile))
+                { File.Delete(wasspFile); }
             }
         }
 
@@ -64,6 +64,8 @@ namespace Vulnerator.Model.BusinessLogic
                         sqliteCommand.Parameters["FindingType"].Value = "WASSP";
                         sqliteCommand.Parameters["GroupName"].Value = "All";
                         sqliteCommand.Parameters["SourceName"].Value = "Windows Automated Security Scanning Program (WASSP)";
+                        sqliteCommand.Parameters["SourceVersion"].Value = string.Empty;
+                        sqliteCommand.Parameters["SourceRelease"].Value = string.Empty;
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         using (XmlReader xmlReader = XmlReader.Create(wasspFile, xmlReaderSettings))
                         {
@@ -120,18 +122,21 @@ namespace Vulnerator.Model.BusinessLogic
                                                         sqliteCommand.Parameters["FixText"].Value = ObtainItemValue(xmlReader);
                                                         break;
                                                     }
-                                                default:
-                                                    { break; }
                                             }
                                         }
                                         else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("table"))
                                         {
                                             sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "False";
+                                            if (sqliteCommand.Parameters["VulnerabilityVersion"].Value == DBNull.Value)
+                                            { sqliteCommand.Parameters["VulnerabilityVersion"].Value = string.Empty; }
+                                            if (sqliteCommand.Parameters["VulnerabilityRelease"].Value == DBNull.Value)
+                                            { sqliteCommand.Parameters["VulnerabilityRelease"].Value = string.Empty; }
                                             databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                                             databaseInterface.InsertHardware(sqliteCommand);
                                             databaseInterface.InsertVulnerability(sqliteCommand);
-                                            databaseInterface.InsertUniqueFinding(sqliteCommand);
+                                            databaseInterface.MapVulnerabilityToSource(sqliteCommand);
                                             databaseInterface.UpdateUniqueFinding(sqliteCommand);
+                                            databaseInterface.InsertUniqueFinding(sqliteCommand);
                                             break;
                                         }
                                     }

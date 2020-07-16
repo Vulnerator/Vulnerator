@@ -719,6 +719,9 @@
     <Resource Include="Vulnerator_Logo_Large_Color_SquareBackground_20190805.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\AcasUniqueFinding.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\CklUniqueFinding.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\XccdfUniqueFinding.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\AdditionalTestConsiderations.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\AuthorizationConditions.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\AuthorizationToConnectOrInterim_ATC_PendingItems.ddl" />
@@ -817,8 +820,6 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\RequiredReportIsSelected.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\HardwareSoftwareMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\StigDiscrepancies.dml" />
-    <Content Include="Resources\DdlFiles\StoredProcedures\Update\AcasUniqueFinding.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\CklUniqueFinding.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\UniqueFindingMitigationOrCondition.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\Vulnerability.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\VulnerabilityDates.dml" />
@@ -891,6 +892,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\GroupsConnectedSystems.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\GroupsConnections.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\GroupsContactsTitles.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\UniqueFinding.dml" />
     <Content Include="Resources\DdlFiles\Tables\Create\GroupsIATA_Standards.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\GroupsMitigationsOrConditionsVulnerabilities.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\GroupsOverlays.ddl" />

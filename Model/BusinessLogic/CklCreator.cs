@@ -148,7 +148,7 @@ namespace Vulnerator.Model.BusinessLogic
                 WriteStigDataNode(xmlWriter, "Severity", sqliteDataReader["PrimaryRawRiskIndicator"].ToString().ToSeverity());
                 WriteStigDataNode(xmlWriter, "Group_Title", sqliteDataReader["VulnerabilityGroup_Title"].ToString());
                 string ruleId =
-                    $"{sqliteDataReader["UniqueVulnerabilityIdentifier"]}r{sqliteDataReader["VulnerabilityVersion"].ToString()}_rule";
+                    $"{sqliteDataReader["UniqueVulnerabilityIdentifier"]}r{sqliteDataReader["VulnerabilityVersion"]}_rule";
                 WriteStigDataNode(xmlWriter, "Rule_ID", ruleId);
                 WriteStigDataNode(xmlWriter, "Rule_Ver", sqliteDataReader["SecondaryVulnerabilityIdentifier"].ToString());
                 WriteStigDataNode(xmlWriter, "Rule_Title", sqliteDataReader["VulnerabilityTitle"].ToString());

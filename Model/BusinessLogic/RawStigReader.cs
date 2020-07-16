@@ -97,7 +97,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         case "title":
                             {
-                                string sourceName = xmlReader.ObtainCurrentNodeValue(false).Replace('_', ' ');
+                                string sourceName = xmlReader.ObtainCurrentNodeValue(false).ToString().Replace('_', ' ');
                                 sourceName = sourceName.ToSanitizedSource();
                                 sqliteCommand.Parameters.Add(new SQLiteParameter("SourceName", sourceName));
                                 break;
@@ -109,7 +109,7 @@ namespace Vulnerator.Model.BusinessLogic
                             }
                         case "plain-text":
                             {
-                                string release = xmlReader.ObtainCurrentNodeValue(false);
+                                string release = xmlReader.ObtainCurrentNodeValue(false).ToString();
                                 if (release.Contains(" "))
                                 {
                                     Regex regex = new Regex(Properties.Resources.RegexRawStigRelease);
@@ -271,7 +271,7 @@ namespace Vulnerator.Model.BusinessLogic
                             case "ident":
                                 {
                                     if (xmlReader.GetAttribute("system").Equals("http://iase.disa.mil/cci"))
-                                    { ccis.Add(xmlReader.ObtainCurrentNodeValue(false).Replace("CCI-", string.Empty)); }
+                                    { ccis.Add(xmlReader.ObtainCurrentNodeValue(false).ToString().Replace("CCI-", string.Empty)); }
                                     break;
                                 }
                             case "fixtext":
@@ -360,16 +360,14 @@ namespace Vulnerator.Model.BusinessLogic
                                     }
                                 case "Responsibility":
                                     {
-                                        responsibilities.Add(xmlReader.ObtainCurrentNodeValue(false));
+                                        responsibilities.Add(xmlReader.ObtainCurrentNodeValue(false).ToString());
                                         break;
                                     }
                                 case "IAControls":
                                     {
-                                        iaControls.Add(xmlReader.ObtainCurrentNodeValue(false));
+                                        iaControls.Add(xmlReader.ObtainCurrentNodeValue(false).ToString());
                                         break;
                                     }
-                                default:
-                                    { break; }
                             }
                         }
                     }

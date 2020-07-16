@@ -27,7 +27,7 @@ namespace Vulnerator.Helper
             { "notapplicable", "Not Applicable" },
             { "notchecked", "Not Reviewed" },
             { "notselected", "Not Reviewed" },
-            { "informational", "Informational" },
+            { "informational", "Completed" },
             { "fixed", "Completed" },
             { "\nfail\n", "Ongoing" },
             { "\npass\n", "Completed" },
@@ -133,7 +133,7 @@ namespace Vulnerator.Helper
             }
         }
 
-        public static string ObtainCurrentNodeValue(this XmlReader xmlReader, bool sanitizeBrackets)
+        public static object ObtainCurrentNodeValue(this XmlReader xmlReader, bool sanitizeBrackets)
         {
             try
             {
@@ -150,7 +150,9 @@ namespace Vulnerator.Helper
                 { return value; }
                 value = value.Replace("&gt", ">");
                 value = value.Replace("&lt", "<");
-                return value;
+                if (!string.IsNullOrWhiteSpace(value))
+                { return value; }
+                return  DBNull.Value;
             }
             catch (Exception exception)
             {
@@ -197,7 +199,7 @@ namespace Vulnerator.Helper
         public static string ToRawRisk(this string _string)
         {
             try
-            { return severityDictionary.TryGetValue(_string, out string rawRisk) ? rawRisk : "?"; }
+            { return severityDictionary.TryGetValue(_string.ToLower(), out string rawRisk) ? rawRisk : "?"; }
             catch (Exception exception)
             {
                 LogWriter.LogError($"Unable to convert severity '{_string}' to a raw risk value.");
@@ -208,7 +210,7 @@ namespace Vulnerator.Helper
         public static string ToSeverity(this string _string)
         {
             try
-            { return rawRiskDictionary.TryGetValue(_string, out string severity) ? severity : "unknown"; }
+            { return rawRiskDictionary.TryGetValue(_string.ToLower(), out string severity) ? severity : "unknown"; }
             catch (Exception exception)
             {
                 LogWriter.LogError($"Unable to convert raw risk '{_string}' to a severity value.");
@@ -219,7 +221,7 @@ namespace Vulnerator.Helper
         public static string ToImpact(this string _string)
         {
             try
-            { return rawRiskDictionary.TryGetValue(_string, out string impact) ? impact : "unknown"; }
+            { return rawRiskDictionary.TryGetValue(_string.ToLower(), out string impact) ? impact : "unknown"; }
             catch (Exception exception)
             {
                 LogWriter.LogError($"Unable to convert raw risk '{_string}' to an impact value.");
