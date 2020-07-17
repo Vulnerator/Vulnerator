@@ -950,6 +950,48 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public void UpdateReportIsSelected(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.RequiredReportIsSelected.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to update 'IsReportSelected' value for RequiredReport with ID '{sqliteCommand.Parameters["RequiredReportUserSelection_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void UpdateReportFindingTypeIsSelected(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.ReportFindingTypeIsSelected.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to update 'IsSelected' value for ReportFindingTypeUserSetting with ID '{sqliteCommand.Parameters["ReportFindingTypeUserSettings_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void UpdateReportSeverityIsSelected(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.ReportSeverityIsSelected.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to update 'IsSelected' value for ReportSeverityUserSetting with ID '{sqliteCommand.Parameters["ReportSeverityUserSettings_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
         public void DeleteGroupsCCIsMappingByGroup(SQLiteCommand sqliteCommand)
         {
             try

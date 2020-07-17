@@ -461,6 +461,7 @@
     <Compile Include="View\Converter\ImportButtonTextAppendingConverter.cs" />
     <Compile Include="View\Converter\InverseBooleanConverter.cs" />
     <Compile Include="View\Converter\MaxLengthToRemainingCharactersConverter.cs" />
+    <Compile Include="View\Converter\MultiValueConverter.cs" />
     <Compile Include="View\Converter\NullToBooleanConverter.cs" />
     <Compile Include="View\Converter\RemainingCharactersConverter.cs" />
     <Compile Include="View\Converter\ResizeModeMinMaxButtonVisibilityConverter.cs" />
@@ -719,6 +720,8 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserFindingTypes.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserSeverities.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserSelections.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportFindingTypeIsSelected.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportSeverityIsSelected.dml" />
     <Resource Include="Vulnerator_Logo_Large_Color_SquareBackground_20190805.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
