@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
@@ -48,8 +49,8 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private List<RequiredReport> _vulnerabilityReports;
-        public List<RequiredReport> VulnerabilityReports
+        private List<RequiredReportUserSelection> _vulnerabilityReports;
+        public List<RequiredReportUserSelection> VulnerabilityReports
         {
             get => _vulnerabilityReports;
             set
@@ -62,9 +63,9 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private RequiredReport _selectedReport;
+        private RequiredReportUserSelection _selectedReport;
 
-        public RequiredReport SelectedReport
+        public RequiredReportUserSelection SelectedReport
         {
             get => _selectedReport;
             set
@@ -73,6 +74,36 @@ namespace Vulnerator.ViewModel
                 {
                     _selectedReport = value;
                     RaisePropertyChanged("SelectedReport");
+                }
+            }
+        }
+
+        private List<ReportFindingTypeUserSettings> _selectedReportFindingTypeSettings;
+
+        public List<ReportFindingTypeUserSettings> SelectedReportFindingTypeSettings
+        {
+            get => _selectedReportFindingTypeSettings;
+            set
+            {
+                if (_selectedReportFindingTypeSettings != value)
+                {
+                    _selectedReportFindingTypeSettings = value;
+                    RaisePropertyChanged("SelectedReportFindingTypeSettings");
+                }
+            }
+        }
+
+        private List<ReportSeverityUserSettings> _selectedReportSeveritySettings;
+
+        public List<ReportSeverityUserSettings> SelectedReportSeveritySettings
+        {
+            get => _selectedReportSeveritySettings;
+            set
+            {
+                if (_selectedReportSeveritySettings != value)
+                {
+                    _selectedReportSeveritySettings = value;
+                    RaisePropertyChanged("SelectedReportSeveritySettings");
                 }
             }
         }
@@ -128,9 +159,10 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                VulnerabilityReports = databaseContext.RequiredReports
-                    .Where(r => r.ReportCategory.Equals("Vulnerability Management"))
-                    .OrderBy(r => r.DisplayedReportName)
+                VulnerabilityReports = databaseContext.RequiredReportUserSelections
+                    .Include(r => r.RequiredReport)
+                    .Where(r => r.RequiredReport.ReportCategory.Equals("Vulnerability Management") && r.UserName.Equals(Properties.Settings.Default.ActiveUser))
+                    .OrderBy(r => r.RequiredReport.DisplayedReportName)
                     .AsNoTracking()
                     .ToList();
             }
@@ -139,6 +171,70 @@ namespace Vulnerator.ViewModel
                 LogWriter.LogError("Unable to populate ReportingViewModel required reports list.");
                 throw exception;
             }
+        }
+
+        public RelayCommand<object> ReportSelectionChangedCommand => new RelayCommand<object>(ReportSelectionChanged);
+
+        private void ReportSelectionChanged(object parameter)
+        {
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += ReportSelectionChangedBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerAsync(parameter);
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to handle report SelectionChanged event.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        private void ReportSelectionChangedBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                RequiredReportUserSelection selection = e.Argument as RequiredReportUserSelection;
+                DatabaseContext dbContext = new DatabaseContext();
+                SelectedReportFindingTypeSettings = dbContext.ReportFindingTypeUserSettings
+                    .Include(r => r.FindingType)
+                    .Where(r => r.RequiredReport_ID.Equals(selection.RequiredReport_ID) &&
+                                         r.UserName.Equals(Properties.Settings.Default.ActiveUser))
+                    .AsNoTracking()
+                    .ToList();
+                SelectedReportSeveritySettings = dbContext.ReportSeverityUserSettings
+                    .Where(r => r.RequiredReport_ID.Equals(selection.RequiredReport_ID) &&
+                                r.UserName.Equals(Properties.Settings.Default.ActiveUser))
+                    .AsNoTracking()
+                    .ToList();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to update the view with the selected report information.");
+                throw exception;
+            }
+        }
+
+        public RelayCommand<object> SetReportIsSelectedCommand => new RelayCommand<object>(SetReportIsSelected);
+
+        private void SetReportIsSelected(object parameter)
+        {
+            Console.WriteLine(parameter);
+        }
+
+        public RelayCommand<object> SetReportFindingTypeIsSelectedCommand => new RelayCommand<object>(SetReportFindingTypeIsSelected);
+
+        private void SetReportFindingTypeIsSelected(object parameter)
+        {
+            Console.WriteLine(parameter);
+        }
+
+        public RelayCommand<object> SetReportSeverityIsSelectedCommand => new RelayCommand<object>(SetReportSeverityIsSelected);
+
+        private void SetReportSeverityIsSelected(object parameter)
+        {
+            Console.WriteLine(parameter);
         }
 
         public RelayCommand ExecuteExportCommand => new RelayCommand(ExecuteExport);
@@ -218,7 +314,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                LogWriter.LogError($"Unable to update report selection criteria for {SelectedReport.DisplayedReportName}");
+                LogWriter.LogError($"Unable to update report selection criteria for {SelectedReport.RequiredReport.DisplayedReportName}");
                 throw exception;
             }
         }

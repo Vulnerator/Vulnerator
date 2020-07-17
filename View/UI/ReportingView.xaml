@@ -51,21 +51,22 @@
                                     <DataTemplate>
                                         <CheckBox Margin="5,0,0,0"
                                                   HorizontalAlignment="Center"
-                                                  Command="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
+                                                  Command="{Binding DataContext.SetReportIsSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
+                                                  CommandParameter="{Binding RequiredReport_ID}"
+                                                  IsChecked="{Binding IsReportSelected}"
                                                   Style="{StaticResource CustomCheckBox}" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <DataGridTextColumn Width="Auto"
-                                                Binding="{Binding DisplayedReportName}"
+                                                Binding="{Binding RequiredReport.DisplayedReportName}"
                                                 Header="Report Name"
                                                 HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
                             <DataGridTextColumn Width="Auto"
-                                                Binding="{Binding ReportType}"
-                                                Header="Report Name"
+                                                Binding="{Binding RequiredReport.ReportType}"
+                                                Header="Report Type"
                                                 HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
-                            <DataGridTemplateColumn Width="Auto"
-                                                    SortMemberPath="Report_Type">
+                            <DataGridTemplateColumn Width="Auto">
 
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -78,31 +79,97 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding ReportSelectionChangedCommand}"
+                                                       CommandParameter="{Binding Path=SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                     </DataGrid>
                     <ScrollViewer Grid.Row="0"
                                   Grid.Column="1"
                                   Margin="0,5,0,0"
                                   VerticalScrollBarVisibility="Auto">
                         <Grid>
-                            <GridExtra:ResponsiveGrid>
-                                <TextBox Margin="5,0"
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <GridExtra:ResponsiveGrid Grid.Row="0"
+                                                      Margin="{StaticResource MarginBottom5}">
+                                <TextBox Margin="{StaticResource MarginLeftRightBottom5}"
                                          Controls:TextBoxHelper.Watermark="Selected Report Name"
                                          vh:DependencyProperties.FloatingWatermark="Report Name (Read Only)"
                                          IsReadOnly="True"
                                          Style="{StaticResource ResponsiveGridReportingTextBoxStyle}"
-                                         Text="{Binding SelectedReport.DisplayedReportName}" />
-                                <TextBox Margin="5,0"
+                                         Text="{Binding SelectedReport.RequiredReport.DisplayedReportName}" />
+                                <TextBox Margin="{StaticResource MarginLeftRightBottom5}"
                                          Controls:TextBoxHelper.Watermark="Selected Report Type"
                                          vh:DependencyProperties.FloatingWatermark="Report Type (Read Only)"
                                          IsReadOnly="True"
                                          Style="{StaticResource ResponsiveGridReportingTextBoxStyle}"
-                                         Text="{Binding SelectedReport.ReportType}" />
-                                <TextBox Margin="5,0"
+                                         Text="{Binding SelectedReport.RequiredReport.ReportType}" />
+                                <TextBox Margin="{StaticResource MarginLeftRightBottom5}"
                                          Controls:TextBoxHelper.Watermark="Selected Report Category"
                                          vh:DependencyProperties.FloatingWatermark="Report Category (Read Only)"
                                          IsReadOnly="True"
                                          Style="{StaticResource ResponsiveGridReportingTextBoxStyle}"
-                                         Text="{Binding SelectedReport.ReportCategory}" />
+                                         Text="{Binding SelectedReport.RequiredReport.ReportCategory}" />
+                            </GridExtra:ResponsiveGrid>
+                            <GridExtra:ResponsiveGrid Grid.Row="1">
+                                <DataGrid Height="275"
+                                          Margin="{StaticResource MarginAll5}"
+                                          GridExtra:ResponsiveGrid.MD="6"
+                                          GridExtra:ResponsiveGrid.XS="12"
+                                          ItemsSource="{Binding SelectedReportFindingTypeSettings}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridTemplateColumn Width="Auto"
+                                                                HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <CheckBox Width="Auto"
+                                                              Margin="5,0,0,0"
+                                                              HorizontalAlignment="Center"
+                                                              Command="{Binding DataContext.SetReportFindingTypeIsSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
+                                                              CommandParameter="{Binding ReportFindingTypeUserSettings_ID}"
+                                                              IsChecked="{Binding IsSelected}"
+                                                              Style="{StaticResource CustomCheckBox}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTextColumn Width="Auto"
+                                                            Binding="{Binding FindingType.Finding_Type}"
+                                                            Header="Finding Type"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <DataGrid Height="275"
+                                          Margin="{StaticResource MarginAll5}"
+                                          GridExtra:ResponsiveGrid.MD="6"
+                                          GridExtra:ResponsiveGrid.XS="12"
+                                          ItemsSource="{Binding SelectedReportSeveritySettings}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridTemplateColumn Width="Auto"
+                                                                HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <CheckBox Margin="5,0,0,0"
+                                                              HorizontalAlignment="Center"
+                                                              Command="{Binding DataContext.SetReportSeverityIsSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
+                                                              CommandParameter="{Binding ReportSeverityUserSettings_ID}"
+                                                              IsChecked="{Binding IsSelected}"
+                                                              Style="{StaticResource CustomCheckBox}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTextColumn Width="Auto"
+                                                            Binding="{Binding Severity}"
+                                                            Header="Severity"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
                             </GridExtra:ResponsiveGrid>
                         </Grid>
                     </ScrollViewer>

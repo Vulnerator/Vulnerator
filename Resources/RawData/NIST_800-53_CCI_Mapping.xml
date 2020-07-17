@@ -84,11 +84,11 @@
 		<ImplementationGuidance>The organization being inspected/assessed documents personnel responsible for the management of system accounts.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented appointment of management personnel to ensure that the organization being inspected/assessed has documented personnel responsible for the management of system accounts.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="2" enhancement="0" dod-ap="AC-2.4" indicator="AC-2 (c )" cci="000008">
+	<Pair family="AC" number="2" enhancement="0" dod-ap="AC-2.4" indicator="AC-2 (c)" cci="000008">
 		<ImplementationGuidance>The organization being inspected/assessed documents conditions for adding accounts as members of groups.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented conditions for adding accounts as members of groups to ensure that the conditions are established.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="2" enhancement="0" dod-ap="AC-2.5" indicator="AC-2 (c )" cci="002113">
+	<Pair family="AC" number="2" enhancement="0" dod-ap="AC-2.5" indicator="AC-2 (c)" cci="002113">
 		<ImplementationGuidance>The organization being inspected/assessed documents conditions for adding accounts as members of roles.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented conditions for adding accounts as members of roles to ensure that the conditions are established.</AssessmentProcedures>
 	</Pair>
@@ -112,13 +112,13 @@
 		<ImplementationGuidance>The organization being inspected/assessed documents other attributes for each account on the information system.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented list of other attributes for a sampling of information system accounts to ensure that other attributes are specified.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="2" enhancement="0" dod-ap="AC-2.12" indicator="AC-2 (e )" cci="002120">
+	<Pair family="AC" number="2" enhancement="0" dod-ap="AC-2.12" indicator="AC-2 (e)" cci="002120">
 		<ImplementationGuidance>DoD has defined the personnel or roles as the ISSM or ISSO.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
 			DoD has defined the personnel or roles as the ISSM or ISSO.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="2" enhancement="0" dod-ap="AC-2.11" indicator="AC-2 (e )" cci="000010">
+	<Pair family="AC" number="2" enhancement="0" dod-ap="AC-2.11" indicator="AC-2 (e)" cci="000010">
 		<ImplementationGuidance>The organization being inspected/assessed implements a process for the ISSM or ISSO to approve information system account requests.
 
 			The organization being inspected/assessed maintains an audit trail of approvals.
@@ -431,13 +431,13 @@
 			The organization must maintain an audit trail of monitoring.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the audit trail of monitoring to ensure the organization being inspected/assessed  monitors privileged role assignments.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="2" enhancement="7" dod-ap="AC-2(7).4" indicator="AC-2 (7) (c )" cci="002136">
+	<Pair family="AC" number="2" enhancement="7" dod-ap="AC-2(7).4" indicator="AC-2 (7) (c)" cci="002136">
 		<ImplementationGuidance>DoD has defined the actions as disables (or revokes) privileged user account.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
 			DoD has defined the actions as disables (or revokes) privileged user account.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="2" enhancement="7" dod-ap="AC-2(7).5" indicator="AC-2 (7) (c )" cci="002137">
+	<Pair family="AC" number="2" enhancement="7" dod-ap="AC-2(7).5" indicator="AC-2 (7) (c)" cci="002137">
 		<ImplementationGuidance>The organization being inspected/assessed documents and implements a process to disable (or revoke) the privileged user account when privileged role assignments are no longer appropriate.
 
 			The organization must maintain an audit trail of the actions taken.
@@ -657,7 +657,7 @@
 
 			For information system components that have applicable STIGs or SRGs, the organization conducting the inspection/assessment evaluates the components to ensure that the organization being inspected/assessed has configured the information system in compliance with the applicable STIGs and SRGs pertaining to CCI 2160.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="3" enhancement="3" dod-ap="AC-3(3).9" indicator="AC-3 (3) (c )" cci="002161">
+	<Pair family="AC" number="3" enhancement="3" dod-ap="AC-3(3).9" indicator="AC-3 (3) (c)" cci="002161">
 		<ImplementationGuidance>The organization being inspected/assessed defines and documents subjects which may explicitly be granted organization-defined privileges such that they are not limited by some or all of the mandatory access control constraints.
 
 			DoD has determined that the subjects are not appropriate to define at the Enterprise level.</ImplementationGuidance>
@@ -665,7 +665,7 @@
 
 			DoD has determined that the subjects are not appropriate to define at the Enterprise level.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="3" enhancement="3" dod-ap="AC-3(3).10" indicator="AC-3 (3) (c )" cci="002162">
+	<Pair family="AC" number="3" enhancement="3" dod-ap="AC-3(3).10" indicator="AC-3 (3) (c)" cci="002162">
 		<ImplementationGuidance>The organization being inspected/assessed defines and documents the  privileges that may explicitly be granted to organization-defined subjects such that they are not limited by some or all of the mandatory access control constraints.
 
 			DoD has determined the privileges are not appropriate to define at the Enterprise level.</ImplementationGuidance>
@@ -673,7 +673,7 @@
 
 			DoD has determined the privileges are not appropriate to define at the Enterprise level.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="3" enhancement="3" dod-ap="AC-3(3).11" indicator="AC-3 (3) (c )" cci="003014">
+	<Pair family="AC" number="3" enhancement="3" dod-ap="AC-3(3).11" indicator="AC-3 (3) (c)" cci="003014">
 		<ImplementationGuidance>The organization being inspected/assessed configures the information system to enforce  mandatory access control policies defined in AC-3 (3), CCI 2153 over all subjects and objects.
 
 			For information system components that have applicable STIGs or SRGs, the organization being inspected/assessed must comply with the STIG/SRG guidance that pertains to CCI 3014.</ImplementationGuidance>
@@ -681,7 +681,7 @@
 
 			For information system components that have applicable STIGs or SRGs, the organization conducting the inspection/assessment evaluates the components to ensure that the organization being inspected/assessed has configured the information system in compliance with the applicable STIGs and SRGs pertaining to CCI 3014.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="3" enhancement="3" dod-ap="AC-3(3).12" indicator="AC-3 (3) (c )" cci="003015">
+	<Pair family="AC" number="3" enhancement="3" dod-ap="AC-3(3).12" indicator="AC-3 (3) (c)" cci="003015">
 		<ImplementationGuidance>The organization being inspected/assessed configures the information system to explicitly grant privileges defined in AC-3 (3), CCI 2162 such that they are not limited by some or all of the mandatory access control constraints.
 
 			For information system components that have applicable STIGs or SRGs, the organization being inspected/assessed must comply with the STIG/SRG guidance that pertains to CCI 3015.</ImplementationGuidance>
@@ -1300,7 +1300,7 @@
 		<ImplementationGuidance>The organization being inspected/assessed documents separation of duties of individuals.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented separation of duties to ensure the organization being inspected/assessed documents separation of duties of individuals.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="5" enhancement="0" dod-ap="AC-5.4" indicator="AC-5 (c )" cci="002220">
+	<Pair family="AC" number="5" enhancement="0" dod-ap="AC-5.4" indicator="AC-5 (c)" cci="002220">
 		<ImplementationGuidance>The organization being inspected/assessed defines and documents the information system access authorizations to support separation of duties.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented  information system access authorizations to ensure the organization being inspected/assessed defines information system access authorizations to support separation of duties.</AssessmentProcedures>
 	</Pair>
@@ -1620,7 +1620,7 @@
 
 			For information system components that have applicable STIGs or SRGs, the organization conducting the inspection/assessment evaluates the components to ensure that the organization being inspected/assessed has configured the information system in compliance with the applicable STIGs and SRGs pertaining to CCI 50.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="8" enhancement="0" dod-ap="AC-8.8" indicator="AC-8 (c ) (1)" cci="001384">
+	<Pair family="AC" number="8" enhancement="0" dod-ap="AC-8.8" indicator="AC-8 (c) (1)" cci="001384">
 		<ImplementationGuidance>The organization being inspected/assessed configures the information system to display the content of DTM 08-060, "Policy on Use of Department of Defense (DoD) Information Systems - Standard Consent Banner and User Agreement," March 2013  before granting further access for publicly accessible systems
 
 			For information system components that have applicable STIGs or SRGs, the organization being inspected/assessed must comply with the STIG/SRG guidance that pertains to CCI 1384.
@@ -1632,7 +1632,7 @@
 
 			DoD has defined the conditions as the content of DTM 08-060, "Policy on Use of Department of Defense (DoD) Information Systems - Standard Consent Banner and User Agreement," March 2013.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="8" enhancement="0" dod-ap="AC-8.10" indicator="AC-8 (c ) (2)" cci="001385">
+	<Pair family="AC" number="8" enhancement="0" dod-ap="AC-8.10" indicator="AC-8 (c) (2)" cci="001385">
 		<ImplementationGuidance>The organization being inspected/assessed configures the information system to display references, if any, to monitoring that are consistent with privacy accommodations for such systems that generally prohibit those activities for publicly accessible systems.
 
 			For information system components that have applicable STIGs or SRGs, the organization being inspected/assessed must comply with the STIG/SRG guidance that pertains to CCI 1385.</ImplementationGuidance>
@@ -1640,7 +1640,7 @@
 
 			For information system components that have applicable STIGs or SRGs, the organization conducting the inspection/assessment evaluates the components to ensure that the organization being inspected/assessed has configured the information system in compliance with the applicable STIGs and SRGs pertaining to CCI 1385.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="8" enhancement="0" dod-ap="AC-8.11" indicator="AC-8 (c ) (2)" cci="001386">
+	<Pair family="AC" number="8" enhancement="0" dod-ap="AC-8.11" indicator="AC-8 (c) (2)" cci="001386">
 		<ImplementationGuidance>The organization being inspected/assessed configures the information system to display references, if any, to recording that are consistent with privacy accommodations for such systems that generally prohibit those activities  for publicly accessible systems.
 
 			For information system components that have applicable STIGs or SRGs, the organization being inspected/assessed must comply with the STIG/SRG guidance that pertains to CCI 1386.</ImplementationGuidance>
@@ -1648,7 +1648,7 @@
 
 			For information system components that have applicable STIGs or SRGs, the organization conducting the inspection/assessment evaluates the components to ensure that the organization being inspected/assessed has configured the information system in compliance with the applicable STIGs and SRGs pertaining to CCI 1386.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="8" enhancement="0" dod-ap="AC-8.12" indicator="AC-8 (c ) (2)" cci="001387">
+	<Pair family="AC" number="8" enhancement="0" dod-ap="AC-8.12" indicator="AC-8 (c) (2)" cci="001387">
 		<ImplementationGuidance>The organization being inspected/assessed configures the information system to display references, if any, to auditing that are consistent with privacy accommodations for such systems that generally prohibit those activities for publicly accessible systems.
 
 			For information system components that have applicable STIGs or SRGs, the organization being inspected/assessed must comply with the STIG/SRG guidance that pertains to CCI 1387.</ImplementationGuidance>
@@ -1656,7 +1656,7 @@
 
 			For information system components that have applicable STIGs or SRGs, the organization conducting the inspection/assessment evaluates the components to ensure that the organization being inspected/assessed has configured the information system in compliance with the applicable STIGs and SRGs pertaining to CCI 1387.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="8" enhancement="0" dod-ap="AC-8.13" indicator="AC-8 (c ) (3)" cci="001388">
+	<Pair family="AC" number="8" enhancement="0" dod-ap="AC-8.13" indicator="AC-8 (c) (3)" cci="001388">
 		<ImplementationGuidance>The organization being inspected/assessed configures the information system to include a description of the authorized uses of the system for publicly accessible systems.
 
 			For information system components that have applicable STIGs or SRGs, the organization being inspected/assessed must comply with the STIG/SRG guidance that pertains to CCI 1388.</ImplementationGuidance>
@@ -1664,7 +1664,7 @@
 
 			For information system components that have applicable STIGs or SRGs, the organization conducting the inspection/assessment evaluates the components to ensure that the organization being inspected/assessed has configured the information system in compliance with the applicable STIGs and SRGs pertaining to CCI 1388.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="8" enhancement="0" dod-ap="AC-8.9" indicator="AC-8 (c ) (1)" cci="002248">
+	<Pair family="AC" number="8" enhancement="0" dod-ap="AC-8.9" indicator="AC-8 (c) (1)" cci="002248">
 		<ImplementationGuidance>DoD has defined the conditions as the content of DTM 08-060, "Policy on Use of Department of Defense (DoD) Information Systems – Standard Consent Banner and User Agreement," March 2013.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
@@ -1945,19 +1945,19 @@
 		<ImplementationGuidance>The organization being inspected/assessed documents and implements a process to ensure that the security attribute associations are retained with the information.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented process to ensure the organization being inspected/assessed ensures that the security attribute associations are retained with the information.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="16" enhancement="0" dod-ap="AC-16.12" indicator="AC-16 (c )" cci="002267">
+	<Pair family="AC" number="16" enhancement="0" dod-ap="AC-16.12" indicator="AC-16 (c)" cci="002267">
 		<ImplementationGuidance>DoD has defined the security attributes as the security attributes defined in AC-16, CCIs 2256-2258.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
 			DoD has defined the security attributes as the security attributes defined in AC-16, CCIs 2256-2258.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="16" enhancement="0" dod-ap="AC-16.13" indicator="AC-16 (c )" cci="002268">
+	<Pair family="AC" number="16" enhancement="0" dod-ap="AC-16.13" indicator="AC-16 (c)" cci="002268">
 		<ImplementationGuidance>DoD has defined the information systems as all information systems.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
 			DoD has defined the information systems as all information systems.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="16" enhancement="0" dod-ap="AC-16.14" indicator="AC-16 (c )" cci="002269">
+	<Pair family="AC" number="16" enhancement="0" dod-ap="AC-16.14" indicator="AC-16 (c)" cci="002269">
 		<ImplementationGuidance>The organization being inspected/assessed establishes and documents the permitted security attributes for all information systems as a subset of the security attributes defined in AC-16, CCI 2267.
 
 			DoD has defined the information systems as all information systems.</ImplementationGuidance>
@@ -2542,7 +2542,7 @@
 		<ImplementationGuidance>The organization being inspected/assessed documents and implements a process to  require that if classified information is found on mobile devices, the incident handling policy is followed.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented process to ensure the organization being inspected/assessed requires that if classified information is found on mobile devices, the incident handling policy is followed.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="19" enhancement="4" dod-ap="AC-19(4).8" indicator="AC-19 (4) (c )" cci="002327">
+	<Pair family="AC" number="19" enhancement="4" dod-ap="AC-19(4).8" indicator="AC-19 (4) (c)" cci="002327">
 		<ImplementationGuidance>The organization being inspected/assessed defines and documents the security policies which restrict the connection of classified mobile devices to classified information systems. 
 
 			DoD has determined the security policies are not appropriate to define at the Enterprise level.</ImplementationGuidance>
@@ -2550,7 +2550,7 @@
 
 			DoD has determined the security policies are not appropriate to define at the Enterprise level.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AC" number="19" enhancement="4" dod-ap="AC-19(4).9" indicator="AC-19 (4) (c )" cci="002328">
+	<Pair family="AC" number="19" enhancement="4" dod-ap="AC-19(4).9" indicator="AC-19 (4) (c)" cci="002328">
 		<ImplementationGuidance>The organization being inspected/assessed documents and implements a process to restrict the connection of classified mobile devices to classified information systems in accordance with the security policies defined in AC-19 (4), CCI 2327.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented process to ensure the organization being inspected/assessed restricts the connection of classified mobile devices to classified information systems in accordance with the security policies defined in AC-19 (4), CCI 2327.</AssessmentProcedures>
 	</Pair>
@@ -2936,7 +2936,7 @@
 
 			DoD Components are automatically compliant with this CCI because they are covered by the DoD level policy, DoDD 8570.01.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AT" number="2" enhancement="0" dod-ap="AT-2.4" indicator="AT-2 (c )" cci="001479">
+	<Pair family="AT" number="2" enhancement="0" dod-ap="AT-2.4" indicator="AT-2 (c)" cci="001479">
 		<ImplementationGuidance>DoDD 8570.01 meets the DoD requirement for IA awareness training policy and procedures.  DISA's DoD IA awareness CBT is the DoD baseline standard. 
 
 			DoD Components are automatically compliant with this CCI because they are covered by the DoD level policy, DoDD 8570.01.</ImplementationGuidance>
@@ -2973,7 +2973,7 @@
 			The organization being inspected/assessed may define specific requirements within the above listed sources for their personnel.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines documented records (IAW AT-4) of their privileged users training.</AssessmentProcedures>
 	</Pair>
-	<Pair family="AT" number="3" enhancement="0" dod-ap="AT-3.3" indicator="AT-3 (c )" cci="000110">
+	<Pair family="AT" number="3" enhancement="0" dod-ap="AT-3.3" indicator="AT-3 (c)" cci="000110">
 		<ImplementationGuidance>Privileged user type Security-related education/training available through DISA IASE (e.g. VTE, Skill Soft, other professional sources)  meets the provision of this control.
 			The organization being inspected/assessed may define specific requirements within the above listed sources for their personnel.
 
@@ -2981,7 +2981,7 @@
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines documented records (IAW AT-4) of their privileged users training.
 		</AssessmentProcedures>
 	</Pair>
-	<Pair family="AT" number="3" enhancement="0" dod-ap="AT-3.4" indicator="AT-3 (c )" cci="000111">
+	<Pair family="AT" number="3" enhancement="0" dod-ap="AT-3.4" indicator="AT-3 (c)" cci="000111">
 		<ImplementationGuidance>DoD has defined the frequency as annually.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level. 
 
@@ -4693,7 +4693,7 @@
 			Policy Note:
 			Interconnection security agreements are required for systems connecting between enclaves that require the hosting enclave to enable PPS outside of their already established and approved business practices.  Connections can include both DoD enclaves or non DoD enclaves.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CA" number="3" enhancement="0" dod-ap="CA-3.5" indicator="CA-3 (c )" cci="002083">
+	<Pair family="CA" number="3" enhancement="0" dod-ap="CA-3.5" indicator="CA-3 (c)" cci="002083">
 		<ImplementationGuidance>The organization being inspected/assessed reviews and updates Interconnection Security Agreements at least annually.
 
 			The organization must maintain an audit trail of reviews and updates.
@@ -4703,7 +4703,7 @@
 
 			DoD has defined the frequency as at least annually.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CA" number="3" enhancement="0" dod-ap="CA-3.6" indicator="CA-3 (c )" cci="002084">
+	<Pair family="CA" number="3" enhancement="0" dod-ap="CA-3.6" indicator="CA-3 (c)" cci="002084">
 		<ImplementationGuidance>DoD has defined the frequency as at least annually.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
@@ -4889,7 +4889,7 @@
 		<ImplementationGuidance>Future DoD-wide CM guidance to be published</ImplementationGuidance>
 		<AssessmentProcedures>Future DoD-wide CM guidance to be published</AssessmentProcedures>
 	</Pair>
-	<Pair family="CA" number="7" enhancement="0" dod-ap="CA-7.7" indicator="CA-7 (e )" cci="002091">
+	<Pair family="CA" number="7" enhancement="0" dod-ap="CA-7.7" indicator="CA-7 (e)" cci="002091">
 		<ImplementationGuidance>Future DoD-wide CM guidance to be published</ImplementationGuidance>
 		<AssessmentProcedures>Future DoD-wide CM guidance to be published</AssessmentProcedures>
 	</Pair>
@@ -5239,7 +5239,7 @@
 			The organization must maintain an audit trail of the implementation of approved configuration-controlled changes.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the audit trail documenting the implementation of approved configuration-controlled changes to the information system to ensure the organization being inspected/assessed has implemented the approved changes.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CM" number="3" enhancement="0" dod-ap="CM-3.6" indicator="CM-3 (e )" cci="000316">
+	<Pair family="CM" number="3" enhancement="0" dod-ap="CM-3.6" indicator="CM-3 (e)" cci="000316">
 		<ImplementationGuidance>The organization being inspected/assessed retains records of all configuration-controlled changes to the information system, as a result of CM-3, CCI 1819, for a time period defined by the organization's CCB.
 
 			DoD has defined the time period as a time period defined by the organization's CCB.</ImplementationGuidance>
@@ -5247,7 +5247,7 @@
 
 			DoD has defined the time period as a time period defined by the organization's CCB.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CM" number="3" enhancement="0" dod-ap="CM-3.7" indicator="CM-3 (e )" cci="002056">
+	<Pair family="CM" number="3" enhancement="0" dod-ap="CM-3.7" indicator="CM-3 (e)" cci="002056">
 		<ImplementationGuidance>DoD has defined the time period as a time period defined by the organization's CCB.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
@@ -5697,13 +5697,13 @@
 			The organization must maintain an audit trail of approved changes to the security plan.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the security plan and the audit trail of approved changes to ensure the deviations are approved IAW CM-3, CCI 314.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CM" number="6" enhancement="0" dod-ap="CM-6.9" indicator="CM-6 (c )" cci="001755">
+	<Pair family="CM" number="6" enhancement="0" dod-ap="CM-6.9" indicator="CM-6 (c)" cci="001755">
 		<ImplementationGuidance>DoD has defined the information system components as all configurable information system components.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
 			DoD has defined the information system components as all configurable information system components.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CM" number="6" enhancement="0" dod-ap="CM-6.10" indicator="CM-6 (c )" cci="001756">
+	<Pair family="CM" number="6" enhancement="0" dod-ap="CM-6.10" indicator="CM-6 (c)" cci="001756">
 		<ImplementationGuidance>The organization being inspected/assessed must define and document in the system security plan, the requirements which may deviate from the approved configuration settings on the information system components defined in CM-6, CCI 1755.  
 
 			DoD has determined that it is not appropriate to define at the Enterprise level.</ImplementationGuidance>
@@ -6091,11 +6091,11 @@
 		<ImplementationGuidance>The organization being inspected/assessed will  implement a configuration management plan for the information system that addresses roles, responsibilities, and configuration management processes and procedures.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the configuration management plan as well as evidence of implementation (e.g., completed change requests, meeting minutes, and other relevant documents) to ensure the organization being inspected/assessed implements a configuration management plan for the information system that addresses roles, responsibilities, and configuration management processes and procedures.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CM" number="9" enhancement="0" dod-ap="CM-9.7" indicator="CM-9(c )" cci="000424">
+	<Pair family="CM" number="9" enhancement="0" dod-ap="CM-9.7" indicator="CM-9(c)" cci="000424">
 		<ImplementationGuidance>The organization being inspected/assessed will develop and document a configuration management plan for the information system that defines the configuration items.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines  the configuration management plan to ensure it defines and documents the configuration items for the information system.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CM" number="9" enhancement="0" dod-ap="CM-9.8" indicator="CM-9 (c )" cci="000426">
+	<Pair family="CM" number="9" enhancement="0" dod-ap="CM-9.8" indicator="CM-9 (c)" cci="000426">
 		<ImplementationGuidance>The organization being inspected/assessed will implement a configuration management plan for the information system that defines the configuration items.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the configuration management plan to ensure the organization being inspected/assessed implements a configuration management plan for the information system that defines the configuration items.</AssessmentProcedures>
 	</Pair>
@@ -6117,11 +6117,11 @@
 		<ImplementationGuidance>The organization being inspected/assessed will implement a configuration management plan that has a process for controlling changes to configuration items.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the configuration management plan as well as evidence of implementation (e.g., completed change requests, meeting minutes, and other relevant documents) to ensure the organization being inspected/assessed implements a configuration management plan for the information system that establishes a process for managing the configuration of the configuration items.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CM" number="9" enhancement="0" dod-ap="CM-9.9" indicator="CM-9 (c )" cci="001796">
+	<Pair family="CM" number="9" enhancement="0" dod-ap="CM-9.9" indicator="CM-9 (c)" cci="001796">
 		<ImplementationGuidance>The organization being inspected/assessed will develop and document a configuration management plan for the information system that places the configuration items under configuration management.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the configuration management plan to ensure the organization being inspected/assessed documents that configuration items are placed under configuration management.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CM" number="9" enhancement="0" dod-ap="CM-9.10" indicator="CM-9 (c )" cci="001798">
+	<Pair family="CM" number="9" enhancement="0" dod-ap="CM-9.10" indicator="CM-9 (c)" cci="001798">
 		<ImplementationGuidance>The organization being inspected/assessed will implement a configuration management plan for the information system that places the configuration items under configuration management.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the configuration management plan as well as evidence of implementation (e.g., completed change requests, meeting minutes, and other relevant documents) to ensure the organization being inspected/assessed implements a configuration management plan  for the information system and that configuration items identified are under configuration management.</AssessmentProcedures>
 	</Pair>
@@ -6181,13 +6181,13 @@
 			Software license tracking can be accomplished by manual methods (e.g., simple spreadsheets) or automated methods (e.g., specialized tracking applications) depending on organizational needs.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the tracking records to ensure the organization being inspected/assessed tracks the use of software documentation protected by quantity licenses to control distribution of the software documentation.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CM" number="10" enhancement="0" dod-ap="CM-10.9" indicator="CM-10 (c )" cci="001732">
+	<Pair family="CM" number="10" enhancement="0" dod-ap="CM-10.9" indicator="CM-10 (c)" cci="001732">
 		<ImplementationGuidance>The organization being inspected/assessed reviews and authorizes in order to control the use of peer-to-peer file sharing technology to ensure that this capability is not used for the unauthorized distribution, display, performance, or reproduction of copyrighted work.
 
 			The organization must maintain an audit trail of peer-to-peer file sharing technology reviews and authorizations.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the audit trail of peer-to-peer file sharing technology reviews and authorizations to ensure the organization being inspected/assessed controls the use of peer-to-peer file sharing technology to ensure that this capability is not used for the unauthorized distribution, display, performance, or reproduction of copyrighted work.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CM" number="10" enhancement="0" dod-ap="CM-10.10" indicator="CM-10 (c )" cci="001733">
+	<Pair family="CM" number="10" enhancement="0" dod-ap="CM-10.10" indicator="CM-10 (c)" cci="001733">
 		<ImplementationGuidance>The organization being inspected/assessed  documents the use of peer-to-peer file sharing technology to ensure that this capability is not used for the unauthorized distribution, display, performance, or reproduction of copyrighted work.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documentation for the use of peer-to-peer file sharing technology to ensure that this capability is not used for the unauthorized distribution, display, performance, or reproduction of copyrighted work.</AssessmentProcedures>
 	</Pair>
@@ -6229,13 +6229,13 @@
 		<ImplementationGuidance>The organization being inspected/assessed must enforce software installation policies as defined in CM-11, CCI 1804 through methods defined in CM-11, CCI 1806.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines software installation policies defined in CM-11, CCI 1804 and inspects the methods defined in CM-11, CCI 1806 to verify they are properly implemented.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CM" number="11" enhancement="0" dod-ap="CM-11.5" indicator="CM-11 (c )" cci="001808">
+	<Pair family="CM" number="11" enhancement="0" dod-ap="CM-11.5" indicator="CM-11 (c)" cci="001808">
 		<ImplementationGuidance>DoD has defined the frequency as at least monthly.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
 			DoD has defined the frequency as at least monthly.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CM" number="11" enhancement="0" dod-ap="CM-11.6" indicator="CM-11 (c )" cci="001809">
+	<Pair family="CM" number="11" enhancement="0" dod-ap="CM-11.6" indicator="CM-11 (c)" cci="001809">
 		<ImplementationGuidance>The organization being inspected/assessed must monitor software installation policy compliance at least monthly.
 
 			The organization must maintain audit trails of monitoring activity.
@@ -6515,7 +6515,7 @@
 		<ImplementationGuidance>DoD has defined the time period as 1 hour (Availability High) 12 hours (Availability Moderate)  as defined in the contingency plan.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
-			DoD has defined the time period as 1 hour (Availability High )  12 hours (Availability Moderate)  as defined in the contingency plan.</AssessmentProcedures>
+			DoD has defined the time period as 1 hour (Availability High)  12 hours (Availability Moderate)  as defined in the contingency plan.</AssessmentProcedures>
 	</Pair>
 	<Pair family="CP" number="2" enhancement="3" dod-ap="CP-2(3).2" indicator="CP-2 (3)" cci="000474">
 		<ImplementationGuidance>DoD has defined the time period as 1 hour (Availability High) 12 hours (Availability Moderate) as defined in the contingency plan.</ImplementationGuidance>
@@ -6538,27 +6538,27 @@
 			as defined in the contingency plan.</AssessmentProcedures>
 	</Pair>
 	<Pair family="CP" number="2" enhancement="4" dod-ap="CP-2(4).1" indicator="CP-2 (4)" cci="000477">
-		<ImplementationGuidance>DoD has defined the time period as 1 hour (Availability High ) 1-5 days (Availability Moderate)  5-30 days (Availability Low) 
+		<ImplementationGuidance>DoD has defined the time period as 1 hour (Availability High) 1-5 days (Availability Moderate)  5-30 days (Availability Low) 
 			as defined in the contingency plan.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
-			DoD has defined the time period as 1 hour (Availability High ) 1-5 days (Availability Moderate) 5-30 days (Availability Low) 
+			DoD has defined the time period as 1 hour (Availability High) 1-5 days (Availability Moderate) 5-30 days (Availability Low) 
 			as defined in the contingency plan.</AssessmentProcedures>
 	</Pair>
 	<Pair family="CP" number="2" enhancement="4" dod-ap="CP-2(4).2" indicator="CP-2 (4)" cci="000478">
-		<ImplementationGuidance>DoD has defined the time period as 1 hour (Availability High ) 1-5 days (Availability Moderate) 5-30 days (Availability Low) 
+		<ImplementationGuidance>DoD has defined the time period as 1 hour (Availability High) 1-5 days (Availability Moderate) 5-30 days (Availability Low) 
 			as defined in the contingency plan.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
-			DoD has defined the time period as 1 hour (Availability High ) 1-5 days (Availability Moderate) 5-30 days (Availability Low) 
+			DoD has defined the time period as 1 hour (Availability High) 1-5 days (Availability Moderate) 5-30 days (Availability Low) 
 			as defined in the contingency plan.</AssessmentProcedures>
 	</Pair>
 	<Pair family="CP" number="2" enhancement="4" dod-ap="CP-2(4).3" indicator="CP-2 (4)" cci="000479">
-		<ImplementationGuidance>The organization being inspected/assessed shall document within their contingency plan, procedures for full resumption of affected missions within 1 hour (Availability High ) 
+		<ImplementationGuidance>The organization being inspected/assessed shall document within their contingency plan, procedures for full resumption of affected missions within 1 hour (Availability High) 
 			1-5 days (Availability Moderate) 
 			5-30 days (Availability Low) 
 			as defined in the contingency plan.</ImplementationGuidance>
-		<AssessmentProcedures>The organization conducting the inspection/assessment obtains the contingency plan to ensure it contains procedures for full resumption of affected missions within 1 hour (Availability High ) 
+		<AssessmentProcedures>The organization conducting the inspection/assessment obtains the contingency plan to ensure it contains procedures for full resumption of affected missions within 1 hour (Availability High) 
 			1-5 days (Availability Moderate) 
 			5-30 days (Availability Low) 
 			as defined in the contingency plan.</AssessmentProcedures>
@@ -6637,13 +6637,13 @@
 			The organization will maintain documentation of the training activity dates, location, and personnel for audit trail purposes and future reference (e.g., scheduling refresher training, etc.).</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines training materials and documentation of training activities to determine whether the materials are accurate in consideration of the state of the information system and content of the contingency plan.  The organization ensures that training is provided to users consistent with assigned roles and responsibilities.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CP" number="3" enhancement="0" dod-ap="CP-3.4" indicator="CP-3 (c )" cci="000485">
+	<Pair family="CP" number="3" enhancement="0" dod-ap="CP-3.4" indicator="CP-3 (c)" cci="000485">
 		<ImplementationGuidance>DoD has defined the frequency as at least annually.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
 			DoD has defined the frequency as at least annually</AssessmentProcedures>
 	</Pair>
-	<Pair family="CP" number="3" enhancement="0" dod-ap="CP-3.5" indicator="CP-3 (c )" cci="000487">
+	<Pair family="CP" number="3" enhancement="0" dod-ap="CP-3.5" indicator="CP-3 (c)" cci="000487">
 		<ImplementationGuidance>The organization being inspected/assessed provides refresher contingency training to personnel with contingency roles and responsibilities IAW CP-2, CCI 449 at least annually.
 
 			The organization will maintain documentation of the training activity dates, location, and personnel for audit trail purposes and future reference (e.g., scheduling refresher training, etc.).
@@ -6691,7 +6691,7 @@
 			The organization must maintain an audit trail of issues identified during the reviews of the contingency plan test results.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the audit trail of issues identified during the reviews of the contingency plan test results to ensure the organization being inspected/assessed reviews the contingency plan test results.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CP" number="4" enhancement="0" dod-ap="CP-4.5" indicator="CP-4 (c )" cci="000497">
+	<Pair family="CP" number="4" enhancement="0" dod-ap="CP-4.5" indicator="CP-4 (c)" cci="000497">
 		<ImplementationGuidance>The organization being inspected/assessed identifies and documents any corrective actions required after reviewing the contingency plan test results.  The organization initiates corrective actions and tracks those actions within the POA&amp;M.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contingency plan test results as well as any documented corrective actions required and ensures the corrective actions are being implemented and tracked within the POA&amp;M.</AssessmentProcedures>
 	</Pair>
@@ -6751,27 +6751,27 @@
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contingency plan to ensure the organization has documented explicit mitigation actions for  accessibility problems identified in CP-6 (3), CCI 509 to the alternate storage site in the event of an area-wide disruption or disaster.</AssessmentProcedures>
 	</Pair>
 	<Pair family="CP" number="7" enhancement="0" dod-ap="CP-7.1" indicator="CP-7 (a)" cci="000510">
-		<ImplementationGuidance>DoD has defined the time period as 1 hour (Availability High ) 12 hours (Availability Moderate) as defined in the contingency plan.</ImplementationGuidance>
+		<ImplementationGuidance>DoD has defined the time period as 1 hour (Availability High) 12 hours (Availability Moderate) as defined in the contingency plan.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
-			DoD has defined the time period as 1 hour (Availability High ) 12 hours (Availability Moderate) as defined in the contingency plan</AssessmentProcedures>
+			DoD has defined the time period as 1 hour (Availability High) 12 hours (Availability Moderate) as defined in the contingency plan</AssessmentProcedures>
 	</Pair>
 	<Pair family="CP" number="7" enhancement="0" dod-ap="CP-7.2" indicator="CP-7 (a)" cci="000513">
-		<ImplementationGuidance>The organization being inspected/assessed  documents and gains approval for alternate processing site agreements that permit the transfer and resumption of information system operations for essential missions within 1 hour (Availability High ) 12 hours (Availability Moderate) as defined in the contingency plan.</ImplementationGuidance>
-		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the approved alternate processing site agreements to ensure the organization has alternate processing site support that will permit the transfer and resumption of information system operations for essential missions within 1 hour (Availability High ) 12 hours (Availability Moderate) as defined in the contingency plan.</AssessmentProcedures>
+		<ImplementationGuidance>The organization being inspected/assessed  documents and gains approval for alternate processing site agreements that permit the transfer and resumption of information system operations for essential missions within 1 hour (Availability High) 12 hours (Availability Moderate) as defined in the contingency plan.</ImplementationGuidance>
+		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the approved alternate processing site agreements to ensure the organization has alternate processing site support that will permit the transfer and resumption of information system operations for essential missions within 1 hour (Availability High) 12 hours (Availability Moderate) as defined in the contingency plan.</AssessmentProcedures>
 	</Pair>
 	<Pair family="CP" number="7" enhancement="0" dod-ap="CP-7.3" indicator="CP-7 (a)" cci="000514">
-		<ImplementationGuidance>The organization being inspected/assessed  documents and gains approval for alternate processing site agreements that permit the transfer and resumption of information system operations for business functions within 1 hour (Availability High ) 12 hours (Availability Moderate) as defined in the contingency plan.</ImplementationGuidance>
-		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the approved alternate processing site agreements to ensure the organization has alternate processing site support that will permit the transfer and resumption of information system operations for business functions within 1 hour (Availability High ) 12 hours (Availability Moderate) as defined in the contingency plan.</AssessmentProcedures>
+		<ImplementationGuidance>The organization being inspected/assessed  documents and gains approval for alternate processing site agreements that permit the transfer and resumption of information system operations for business functions within 1 hour (Availability High) 12 hours (Availability Moderate) as defined in the contingency plan.</ImplementationGuidance>
+		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the approved alternate processing site agreements to ensure the organization has alternate processing site support that will permit the transfer and resumption of information system operations for business functions within 1 hour (Availability High) 12 hours (Availability Moderate) as defined in the contingency plan.</AssessmentProcedures>
 	</Pair>
 	<Pair family="CP" number="7" enhancement="0" dod-ap="CP-7.5" indicator="CP-7 (b)" cci="000515">
 		<ImplementationGuidance>The organization being inspected/assessed maintains an inventory of equipment and supplies required to transfer and resume operations, or engages contract support that meets required timelines to  support 1 hour (Availability High) 12 hours (Availability Moderate) as defined in the contingency plan.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines:
 			1. Inventory of equipment and supplies or,
 			2. Contract documentation
-			to ensure the organization has the equipment and supply resources necessary, or provisions to obtain the resources to transfer and resume operations at the alternate processing site within 1 hour (Availability High ) 12 hours (Availability Moderate) as defined in the contingency plan.</AssessmentProcedures>
+			to ensure the organization has the equipment and supply resources necessary, or provisions to obtain the resources to transfer and resume operations at the alternate processing site within 1 hour (Availability High) 12 hours (Availability Moderate) as defined in the contingency plan.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CP" number="7" enhancement="0" dod-ap="CP-7.6" indicator="CP-7 (c )" cci="000521">
+	<Pair family="CP" number="7" enhancement="0" dod-ap="CP-7.6" indicator="CP-7 (c)" cci="000521">
 		<ImplementationGuidance>The organization being inspected/assessed documents the information security safeguards that are in place at both the primary and alternate sites and evidence that the alternate site was approved based on an assessment that security is equivalent at the alternate site.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documentation of the primary/alternate site information security safeguards that are in place as well as evidence that the alternate site was approved based on an assessment that security is equivalent at the alternate site.</AssessmentProcedures>
 	</Pair>
@@ -6818,24 +6818,24 @@
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines system resource lists or agreements with external support providers to ensure the organization being inspected/assessed prepares for circumstances that preclude returning to the primary processing site.</AssessmentProcedures>
 	</Pair>
 	<Pair family="CP" number="8" enhancement="0" dod-ap="CP-8.1" indicator="CP-8" cci="000522">
-		<ImplementationGuidance>DoD has defined the time period as 1 hour (Availability High ) 12 hours (Availability Moderate) as defined in the contingency plan.</ImplementationGuidance>
+		<ImplementationGuidance>DoD has defined the time period as 1 hour (Availability High) 12 hours (Availability Moderate) as defined in the contingency plan.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
-			DoD has defined the time period as 1 hour (Availability High ) 12 hours (Availability Moderate) as defined in the contingency plan.</AssessmentProcedures>
+			DoD has defined the time period as 1 hour (Availability High) 12 hours (Availability Moderate) as defined in the contingency plan.</AssessmentProcedures>
 	</Pair>
 	<Pair family="CP" number="8" enhancement="0" dod-ap="CP-8.2" indicator="CP-8" cci="000523">
-		<ImplementationGuidance>DoD has defined the time period as 1 hour (Availability High ) 12 hours (Availability Moderate) as defined in the contingency plan.</ImplementationGuidance>
+		<ImplementationGuidance>DoD has defined the time period as 1 hour (Availability High) 12 hours (Availability Moderate) as defined in the contingency plan.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
-			DoD has defined the time period as 1 hour (Availability High ) 12 hours (Availability Moderate) as defined in the contingency plan.</AssessmentProcedures>
+			DoD has defined the time period as 1 hour (Availability High) 12 hours (Availability Moderate) as defined in the contingency plan.</AssessmentProcedures>
 	</Pair>
 	<Pair family="CP" number="8" enhancement="0" dod-ap="CP-8.3" indicator="CP-8" cci="000524">
-		<ImplementationGuidance>The organization being inspected/assessed  documents and gains approval for alternate telecommunications service agreements that permit the resumption of telecommunications services for essential missions IAW DoDI 8100.04.  DoD has defined the time period as  1 hour (Availability High ) 12 hours (Availability Moderate) as defined in the contingency plan.</ImplementationGuidance>
-		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the approved alternate telecommunications service agreements to ensure they permit the resumption of telecommunications services for essential mission IAW DoDI 8100.04.  DoD has defined the time period as  1 hour (Availability High ) 12 hours (Availability Moderate) as defined in the contingency plan.</AssessmentProcedures>
+		<ImplementationGuidance>The organization being inspected/assessed  documents and gains approval for alternate telecommunications service agreements that permit the resumption of telecommunications services for essential missions IAW DoDI 8100.04.  DoD has defined the time period as  1 hour (Availability High) 12 hours (Availability Moderate) as defined in the contingency plan.</ImplementationGuidance>
+		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the approved alternate telecommunications service agreements to ensure they permit the resumption of telecommunications services for essential mission IAW DoDI 8100.04.  DoD has defined the time period as  1 hour (Availability High) 12 hours (Availability Moderate) as defined in the contingency plan.</AssessmentProcedures>
 	</Pair>
 	<Pair family="CP" number="8" enhancement="0" dod-ap="CP-8.4" indicator="CP-8" cci="000525">
-		<ImplementationGuidance>The organization being inspected/assessed documents and gains approval for alternate telecommunications service agreements that permit the resumption of telecommunications services for business functions IAW DoDI 8100.04.  DoD has defined the time period as  1 hour (Availability High ) 12 hours (Availability Moderate) as defined in the contingency plan.</ImplementationGuidance>
-		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the approved alternate telecommunications service agreements to ensure they permit the resumption of telecommunications services for business functions IAW DoDI 8100.04.  DoD has defined the time period as 1 hour (Availability High ) 12 hours (Availability Moderate) as defined in the contingency plan.</AssessmentProcedures>
+		<ImplementationGuidance>The organization being inspected/assessed documents and gains approval for alternate telecommunications service agreements that permit the resumption of telecommunications services for business functions IAW DoDI 8100.04.  DoD has defined the time period as  1 hour (Availability High) 12 hours (Availability Moderate) as defined in the contingency plan.</ImplementationGuidance>
+		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the approved alternate telecommunications service agreements to ensure they permit the resumption of telecommunications services for business functions IAW DoDI 8100.04.  DoD has defined the time period as 1 hour (Availability High) 12 hours (Availability Moderate) as defined in the contingency plan.</AssessmentProcedures>
 	</Pair>
 	<Pair family="CP" number="8" enhancement="0" dod-ap="CP-8.5" indicator="CP-8" cci="002840">
 		<ImplementationGuidance>The organization being inspected/assessed defines and documents the information system operations to be resumed for essential missions within the organization-defined time period when the primary telecommunications capabilities are unavailable at either the primary or alternate processing or storage sites.  
@@ -6898,19 +6898,19 @@
 			The organization must maintain an audit trail of reviews.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the audit trail of reviews to ensure the organization being inspected/assessed reviews provider contingency plans to ensure that the plans meet organizational contingency requirements.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CP" number="8" enhancement="4" dod-ap="CP-8(4).4" indicator="CP-8 (4) (c )" cci="002843">
+	<Pair family="CP" number="8" enhancement="4" dod-ap="CP-8(4).4" indicator="CP-8 (4) (c)" cci="002843">
 		<ImplementationGuidance>DoD has defined the frequency as at least annually.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
 			DoD has defined the frequency as at least annually.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CP" number="8" enhancement="4" dod-ap="CP-8(4).5" indicator="CP-8 (4) (c )" cci="002844">
+	<Pair family="CP" number="8" enhancement="4" dod-ap="CP-8(4).5" indicator="CP-8 (4) (c)" cci="002844">
 		<ImplementationGuidance>DoD has defined the frequency as at least annually.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
 			DoD has defined the frequency as at least annually.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CP" number="8" enhancement="4" dod-ap="CP-8(4).6" indicator="CP-8 (4) (c )" cci="002845">
+	<Pair family="CP" number="8" enhancement="4" dod-ap="CP-8(4).6" indicator="CP-8 (4) (c)" cci="002845">
 		<ImplementationGuidance>The organization being inspected/assessed obtains and maintains evidence of contingency testing by providers to ensure that the training is tested at least annually. 
 
 			DoD has defined the frequency as at least annually.</ImplementationGuidance>
@@ -6918,7 +6918,7 @@
 
 			DoD has defined the frequency as at least annually.</AssessmentProcedures>
 	</Pair>
-	<Pair family="CP" number="8" enhancement="4" dod-ap="CP-8(4).7" indicator="CP-8 (4) (c )" cci="002846">
+	<Pair family="CP" number="8" enhancement="4" dod-ap="CP-8(4).7" indicator="CP-8 (4) (c)" cci="002846">
 		<ImplementationGuidance>The organization being inspected/assessed obtains and maintains evidence of contingency training by providers to ensure that the training is provided at least annually. 
 
 			DoD has defined the frequency as at least annually.</ImplementationGuidance>
@@ -7007,13 +7007,13 @@
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the record of where software is stored to ensure the organization being inspected/assessed stores backup copies of critical information system software and other security-related information defined in CP-9 (3), CCI 2849 in a separate facility or in a fire-rated container that is not collocated with the operational system.</AssessmentProcedures>
 	</Pair>
 	<Pair family="CP" number="9" enhancement="5" dod-ap="CP-9(5).1" indicator="CP-9 (5)" cci="000547">
-		<ImplementationGuidance>DoD has defined the time period as Continuously (Availability High ) 
+		<ImplementationGuidance>DoD has defined the time period as Continuously (Availability High) 
 			24 hours (Availability Moderate) 
 			7 days (Availability Low) 
 			as defined in the contingency plan.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
-			DoD has defined the time period as Continuously (Availability High ) 
+			DoD has defined the time period as Continuously (Availability High) 
 			24 hours (Availability Moderate) 
 			7 days (Availability Low) 
 			as defined in the contingency plan.</AssessmentProcedures>
@@ -7072,26 +7072,26 @@
 	</Pair>
 	<Pair family="CP" number="10" enhancement="4" dod-ap="CP-10(4).1" indicator="CP-10 (4)" cci="000556">
 		<ImplementationGuidance>DoD has defined the time period as 
-			1 hour (Availability High ) 
+			1 hour (Availability High) 
 			24 hours (Availability Moderate) 
 			1 - 5 days (Availability Low) 
 			as defined in the contingency plan.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
 			DoD has defined the time period as 
-			1 hour (Availability High ) 
+			1 hour (Availability High) 
 			24 hours (Availability Moderate) 
 			1 - 5 days (Availability Low) 
 			as defined in the contingency plan.</AssessmentProcedures>
 	</Pair>
 	<Pair family="CP" number="10" enhancement="4" dod-ap="CP-10(4).2" indicator="CP-10 (4)" cci="000557">
 		<ImplementationGuidance>The organization being inspected/assessed exercises the capability to restore information system components from configuration-controlled and integrity-protected information representing a secure, operational state for the components within the defined time period during contingency plan testing:
-			1 hour (Availability High )
+			1 hour (Availability High)
 			24 hours (Availability Moderate)
 			1 - 5 days (Availability Low) 
 			as defined in the contingency plan.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines contingency plan test results to verify the organization exercises the capability to restore information system components from configuration-controlled and integrity-protected information representing a secure, operational state for the components, and that restoration occurred within the defined time period:
-			1 hour (Availability High )
+			1 hour (Availability High)
 			24 hours (Availability Moderate)
 			1 - 5 days (Availability Low) 
 			as defined in the contingency plan.</AssessmentProcedures>
@@ -7597,7 +7597,7 @@
 		<ImplementationGuidance>The organization being inspected/assessed implements a process to manage information system identifiers by selecting an identifier that identifies an individual, group, role, or device.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines documentation or system configuration information to ensure the organization being inspected/assessed manages information system identifiers by selecting an identifier that identifies an individual, group, role, or device.</AssessmentProcedures>
 	</Pair>
-	<Pair family="IA" number="4" enhancement="0" dod-ap="IA-4.4" indicator="IA-4 (c )" cci="001973">
+	<Pair family="IA" number="4" enhancement="0" dod-ap="IA-4.4" indicator="IA-4 (c)" cci="001973">
 		<ImplementationGuidance>The organization being inspected/assessed implements a process to manage information system identifiers by assigning the identifier to the intended individual, group, role, or device.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines documentation or system configuration information to ensure the organization being inspected/assessed manages information system identifiers by assigning the identifier to the intended individual, group, role, or device.</AssessmentProcedures>
 	</Pair>
@@ -7751,7 +7751,7 @@
 		<ImplementationGuidance>The organization being inspected/assessed defines and documents procedures for lost/compromised authenticators.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented procedures for lost/compromised authenticators to ensure they have been defined.</AssessmentProcedures>
 	</Pair>
-	<Pair family="IA" number="5" enhancement="0" dod-ap="IA-5.12" indicator="IA-5 (e )" cci="001989">
+	<Pair family="IA" number="5" enhancement="0" dod-ap="IA-5.12" indicator="IA-5 (e)" cci="001989">
 		<ImplementationGuidance>The organization being inspected/assessed documents and implements a procedures to change default authenticators prior to information system installation.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented procedures to change default authenticators to ensure the procedures are defined.
 
@@ -7968,7 +7968,7 @@
 
 			DoD has defined the number of generations as a minimum of 5.</AssessmentProcedures>
 	</Pair>
-	<Pair family="IA" number="5" enhancement="1" dod-ap="IA-5(1).19" indicator="IA-5 (1) (e )" cci="001618">
+	<Pair family="IA" number="5" enhancement="1" dod-ap="IA-5(1).19" indicator="IA-5 (1) (e)" cci="001618">
 		<ImplementationGuidance>DoD has defined the number of generations as a minimum of 5.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
@@ -8002,7 +8002,7 @@
 
 			The organization conducting the inspection/assessment examines the information system to ensure the organization being inspected/assessed has configured the information system to store its own private key in a FIPS 140-2 validated cryptographic module.</AssessmentProcedures>
 	</Pair>
-	<Pair family="IA" number="5" enhancement="2" dod-ap="IA-5(2).3" indicator="IA-5 (2) (c )" cci="000187">
+	<Pair family="IA" number="5" enhancement="2" dod-ap="IA-5(2).3" indicator="IA-5 (2) (c)" cci="000187">
 		<ImplementationGuidance>The information system performing PKI-based authentication must be configured to map the authenticated PKI credential to a corresponding network or information system account or role in accordance with DoDI 8520.03.
 
 			For information system components that have applicable STIGs or SRGs, the organization being inspected/assessed must comply with the STIG/SRG guidance that pertains to CCI 187.</ImplementationGuidance>
@@ -8533,7 +8533,7 @@
 
 			For general users, DoD components are automatically compliant with the requirement based on DoDD 8570.01 requirements for IA awareness training. </AssessmentProcedures>
 	</Pair>
-	<Pair family="IR" number="2" enhancement="0" dod-ap="IR-2.3" indicator="IR-2 (c )" cci="000814">
+	<Pair family="IR" number="2" enhancement="0" dod-ap="IR-2.3" indicator="IR-2 (c)" cci="000814">
 		<ImplementationGuidance>The organization being inspected/assessed documents and implements a process to provide incident response training to information system users, other than general users, consistent with assigned roles and responsibilities annually.
 
 			For general users, DoD components are automatically compliant with the requirement based on DoDD 8570.01 requirements for IA awareness training.
@@ -8548,7 +8548,7 @@
 
 			DoD has defined the frequency as annually.</AssessmentProcedures>
 	</Pair>
-	<Pair family="IR" number="2" enhancement="0" dod-ap="IR-2.4" indicator="IR-2 (c )" cci="000815">
+	<Pair family="IR" number="2" enhancement="0" dod-ap="IR-2.4" indicator="IR-2 (c)" cci="000815">
 		<ImplementationGuidance>DoD has defined the frequency as annually.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
@@ -8944,7 +8944,7 @@
 			The organization must document the update actions as an audit trail.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines documentation of the update actions for the incident response plan to ensure the organization is updating the incident response plan to address system/organizational changes or problems encountered during plan implementation, execution, or testing and incorporating lessons learned from past incidents (IR-4a).</AssessmentProcedures>
 	</Pair>
-	<Pair family="IR" number="8" enhancement="0" dod-ap="IR-8.17" indicator="IR-8 (e )" cci="002803">
+	<Pair family="IR" number="8" enhancement="0" dod-ap="IR-8.17" indicator="IR-8 (e)" cci="002803">
 		<ImplementationGuidance>DoD has defined the incident response personnel as all stakeholders identified in the incident response plan, not later than 30 days after the change is made.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
@@ -8990,7 +8990,7 @@
 			manager, and the responsible computer incident response center.
 		</AssessmentProcedures>
 	</Pair>
-	<Pair family="IR" number="9" enhancement="0" dod-ap="IR-9.4" indicator="IR-9 (c )" cci="002808">
+	<Pair family="IR" number="9" enhancement="0" dod-ap="IR-9.4" indicator="IR-9 (c)" cci="002808">
 		<ImplementationGuidance>The organization being inspected/assessed documents within their incident response plan, a process to  isolate the contaminated information system or system component.
 
 		</ImplementationGuidance>
@@ -9004,7 +9004,7 @@
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the incident response plan as well as after action reports of incidents to ensure that the organization being inspected/assessed  eradicates the information from the contaminated information system or component.
 		</AssessmentProcedures>
 	</Pair>
-	<Pair family="IR" number="9" enhancement="0" dod-ap="IR-9.6" indicator="IR-9 (e )" cci="002810">
+	<Pair family="IR" number="9" enhancement="0" dod-ap="IR-9.6" indicator="IR-9 (e)" cci="002810">
 		<ImplementationGuidance>The organization being inspected/assessed documents within their incident response plan, a process to identify other information systems or system components that may have been subsequently contaminated.
 
 		</ImplementationGuidance>
@@ -9211,7 +9211,7 @@
 			The organization must maintain records of all approvals and monitoring activities.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines records of all approvals and monitoring activities to ensure the organization being inspected/assessed approves and monitors all maintenance activities whether performed on site or remotely and whether the equipment is serviced on site or removed to another location.</AssessmentProcedures>
 	</Pair>
-	<Pair family="MA" number="2" enhancement="0" dod-ap="MA-2.11" indicator="MA-2 (c )" cci="002874">
+	<Pair family="MA" number="2" enhancement="0" dod-ap="MA-2.11" indicator="MA-2 (c)" cci="002874">
 		<ImplementationGuidance>The organization being inspected/assessed defines and documents the personnel or roles who can explicitly approve the removal of the information system or system components from organizational facilities for off-site maintenance or repairs.
 
 			DoD has determined the personnel or roles are not appropriate to define at the Enterprise level.</ImplementationGuidance>
@@ -9510,7 +9510,7 @@
 			The organization must maintain a record of personnel performing maintenance on the information system.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented process as well as the record of personnel performing maintenance on the information system to ensure the organization being inspected/assessed ensures that non-escorted personnel performing maintenance on the information system have required access authorizations.</AssessmentProcedures>
 	</Pair>
-	<Pair family="MA" number="5" enhancement="0" dod-ap="MA-5.4" indicator="MA-5 (c )" cci="002895">
+	<Pair family="MA" number="5" enhancement="0" dod-ap="MA-5.4" indicator="MA-5 (c)" cci="002895">
 		<ImplementationGuidance>The organization being inspected/assessed defines and documents organizational personnel with required access authorizations and technical competence to supervise the maintenance activities of personnel who do not possess the required access authorizations.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines documented organizational personnel to ensure the organization being inspected/assessed designates organizational personnel with required access authorizations and technical competence to supervise the maintenance activities of personnel who do not possess the required access authorizations.</AssessmentProcedures>
 	</Pair>
@@ -9805,7 +9805,7 @@
 
 			Organizational personnel with information system media transport responsibilities and security management personnel are to be interviewed. The purpose of the reviews and reviews is to determine if the organization has established restrictions associated with the transport of information system media to authorized personnel only.</AssessmentProcedures>
 	</Pair>
-	<Pair family="MP" number="5" enhancement="0" dod-ap="MP-5.5" indicator="MP-5 (c )" cci="001025">
+	<Pair family="MP" number="5" enhancement="0" dod-ap="MP-5.5" indicator="MP-5 (c)" cci="001025">
 		<ImplementationGuidance>The organization being inspected/assessed documents activities associated with the transport of information system media.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented activities to ensure the organization being inspected/assessed documents activities associated with the transport of information system media.</AssessmentProcedures>
 	</Pair>
@@ -10012,7 +10012,7 @@
 		<ImplementationGuidance>The organization being inspected/assessed includes within the process defined in MP-8, CCI 2596, processes which are commensurate with the security category and/or classification level of the information to be removed and the access authorizations of the potential recipients of the downgraded information.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented process defined in MP-8, CCI 2596 to ensure it is commensurate with the security category and/or classification level of the information to be removed and the access authorizations of the potential recipients of the downgraded information.</AssessmentProcedures>
 	</Pair>
-	<Pair family="MP" number="8" enhancement="0" dod-ap="MP-8.4" indicator="MP-8 (c )" cci="002599">
+	<Pair family="MP" number="8" enhancement="0" dod-ap="MP-8.4" indicator="MP-8 (c)" cci="002599">
 		<ImplementationGuidance>The organization being inspected/assessed defines, identifies, and documents the information system media requiring downgrading.
 
 			DoD has determined the information system media is not appropriate to define at the Enterprise level.</ImplementationGuidance>
@@ -10295,7 +10295,7 @@
 			entry/exit events required elsewhere in system documentation that would have occurred before the inspection/assessment such as daily checks and scheduled
 			maintenance are strongly encouraged and help to establish a history of compliance/non-compliance.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PE" number="3" enhancement="0" dod-ap="PE-3.9" indicator="PE-3 (c )" cci="002920">
+	<Pair family="PE" number="3" enhancement="0" dod-ap="PE-3.9" indicator="PE-3 (c)" cci="002920">
 		<ImplementationGuidance>The organization being inspected/assessed defines and documents security safeguards to control access to areas within the facility officially designated as publicly accessible.
 
 			DoD has determined the security safeguards are not appropriate to define at the Enterprise level.</ImplementationGuidance>
@@ -10303,7 +10303,7 @@
 
 			DoD has determined the security safeguards are not appropriate to define at the Enterprise level.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PE" number="3" enhancement="0" dod-ap="PE-3.8" indicator="PE-3 (c )" cci="002919">
+	<Pair family="PE" number="3" enhancement="0" dod-ap="PE-3.8" indicator="PE-3 (c)" cci="002919">
 		<ImplementationGuidance>The organization being inspected/assessed provides security safeguards defined in PE-3, CCI 2920 to control access to areas within the facility officially designated as publicly accessible. 
 
 			The organization must document which areas are officially designated as publicly accessible.</ImplementationGuidance>
@@ -10759,7 +10759,7 @@
 		<ImplementationGuidance>The organization being inspected/assessed implements a long-term alternate power supply for the information system that is not reliant on external power generation.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines documentation identifying the implemented alternate power supply to ensure the organization being inspected/assessed implements a  long-term alternate power supply for the information system that is not reliant on external power generation.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PE" number="11" enhancement="2" dod-ap="PE-11(2).3" indicator="PE-11 (2) (c )" cci="002958">
+	<Pair family="PE" number="11" enhancement="2" dod-ap="PE-11(2).3" indicator="PE-11 (2) (c)" cci="002958">
 		<ImplementationGuidance>The organization being inspected/assessed implements a long-term alternate power supply for the information system that is capable of maintaining minimally required operational capability or full operational capability in the event of an extended loss of the primary power source.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines documentation identifying the implemented alternate power supply to ensure the organization being inspected/assessed implements a long-term alternate power supply for the information system that is capable of maintaining minimally required operational capability or full operational capability in the event of an extended loss of the primary power source.</AssessmentProcedures>
 	</Pair>
@@ -11223,13 +11223,13 @@
 
 			DoD has defined the personnel or roles as at a minimum, the ISSO, ISSM and SCA.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PL" number="2" enhancement="0" dod-ap="PL-2.15" indicator="PL-2 (c )" cci="000572">
+	<Pair family="PL" number="2" enhancement="0" dod-ap="PL-2.15" indicator="PL-2 (c)" cci="000572">
 		<ImplementationGuidance>DoD has defined the frequency as annually.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
 			DoD has defined the frequency as annually.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PL" number="2" enhancement="0" dod-ap="PL-2.16" indicator="PL-2 (c )" cci="000573">
+	<Pair family="PL" number="2" enhancement="0" dod-ap="PL-2.16" indicator="PL-2 (c)" cci="000573">
 		<ImplementationGuidance>The information system owner as part of the annual security control review will also review the security plan annually.
 
 			Documentation of security plan reviews is required as an audit trail.
@@ -11247,11 +11247,11 @@
 
 			The purpose of the reviews is to validate the organization is updating the Information System (IS) security plan to address changes to the IS, its environment of operation, or problems identified during plan implementation or security control assessments.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PL" number="2" enhancement="0" dod-ap="PL-2.18" indicator="PL-2 (e )" cci="003063">
+	<Pair family="PL" number="2" enhancement="0" dod-ap="PL-2.18" indicator="PL-2 (e)" cci="003063">
 		<ImplementationGuidance>The organization being inspected/assessed documents and implements a process to protect the security plan from unauthorized disclosure.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented process to ensure the organization being inspected/assessed  protects the security plan from unauthorized disclosure.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PL" number="2" enhancement="0" dod-ap="PL-2.19" indicator="PL-2 (e )" cci="003064">
+	<Pair family="PL" number="2" enhancement="0" dod-ap="PL-2.19" indicator="PL-2 (e)" cci="003064">
 		<ImplementationGuidance>The organization being inspected/assessed documents and implements a process to protect the security plan from unauthorized modification.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented process to ensure the organization being inspected/assessed  protects the security plan from unauthorized modification.</AssessmentProcedures>
 	</Pair>
@@ -11283,13 +11283,13 @@
 		<ImplementationGuidance>The organization being inspected/assessed will  obtain  signed acknowledgment (paper or electronic signature) from individuals indicating that they have read, understand, and agree to abide by the rules of behavior, before authorizing access to information and the information system.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains a list of individuals with active accounts and validates the existence of signed acknowledgements (paper or electronic signature) of the organizational AUP associated with a sampling of individuals selected from the list.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PL" number="4" enhancement="0" dod-ap="PL-4.5" indicator="PL-4 (c )" cci="003069">
+	<Pair family="PL" number="4" enhancement="0" dod-ap="PL-4.5" indicator="PL-4 (c)" cci="003069">
 		<ImplementationGuidance>DoD has defined the frequency as annually.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
 			DoD has defined the frequency as annually.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PL" number="4" enhancement="0" dod-ap="PL-4.4" indicator="PL-4 (c )" cci="003068">
+	<Pair family="PL" number="4" enhancement="0" dod-ap="PL-4.4" indicator="PL-4 (c)" cci="003068">
 		<ImplementationGuidance>The organization being inspected/assessed reviews and updates the rules of behavior annually.
 
 			The organization must maintain an audit trail of reviews and updates.
@@ -11365,15 +11365,15 @@
 
 			DoD has defined the frequency as annually.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PL" number="8" enhancement="0" dod-ap="PL-8.7" indicator="PL-8 (c )" cci="003078">
+	<Pair family="PL" number="8" enhancement="0" dod-ap="PL-8.7" indicator="PL-8 (c)" cci="003078">
 		<ImplementationGuidance>The organization being inspected/assessed includes planned information security architecture changes in the security plan.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the security plan to ensure the organization being inspected/assessed includes planned information security architecture changes in the security plan.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PL" number="8" enhancement="0" dod-ap="PL-8.8" indicator="PL-8 (c )" cci="003079">
+	<Pair family="PL" number="8" enhancement="0" dod-ap="PL-8.8" indicator="PL-8 (c)" cci="003079">
 		<ImplementationGuidance>The organization being inspected/assessed includes planned information security architecture changes in the security Concept of Operations (CONOPS).</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines security CONOPS to ensure the organization being inspected/assessed includes planned information security architecture changes in the security CONOPS.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PL" number="8" enhancement="0" dod-ap="PL-8.9" indicator="PL-8 (c )" cci="003080">
+	<Pair family="PL" number="8" enhancement="0" dod-ap="PL-8.9" indicator="PL-8 (c)" cci="003080">
 		<ImplementationGuidance>The organization being inspected/assessed includes planned information security architecture changes in organizational procurements/acquisitions.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines a sampling of procurement materials to ensure the organization being inspected/assessed includes planned information security architecture changes in organizational procurements/acquisitions.</AssessmentProcedures>
 	</Pair>
@@ -11621,7 +11621,7 @@
 
 			DoD components are automatically compliant with this CCI because they are covered by DoD Risk Management Framework (DoDI 8510.01).</AssessmentProcedures>
 	</Pair>
-	<Pair family="PM" number="9" enhancement="0" dod-ap="PM-9.3" indicator="PM-9 (c )" cci="002994">
+	<Pair family="PM" number="9" enhancement="0" dod-ap="PM-9.3" indicator="PM-9 (c)" cci="002994">
 		<ImplementationGuidance>DoD Risk Management Framework meets the requirement for a comprehensive organizational risk strategy.
 
 			DoD components are automatically compliant with this CCI because they are covered by the DoD Risk Management Framework (DoDI 8510.01).</ImplementationGuidance>
@@ -11767,7 +11767,7 @@
 		<ImplementationGuidance>The organization being inspected/assessed establishes and institutionalizes contact with selected groups and associations within the security community to maintain currency with recommended security practices, techniques, and technologies.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines artifacts showing contact to ensure the organization being inspected/assessed establishes and institutionalizes contact with selected groups and associations within the security community to maintain currency with recommended security practices, techniques, and technologies.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PM" number="15" enhancement="0" dod-ap="PM-15.3" indicator="PM-15 (c )" cci="003012">
+	<Pair family="PM" number="15" enhancement="0" dod-ap="PM-15.3" indicator="PM-15 (c)" cci="003012">
 		<ImplementationGuidance>The organization being inspected/assessed establishes and institutionalizes contact with selected groups and associations within the security community to share current security-related information including threats, vulnerabilities, and incidents.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines artifacts showing contact to ensure the organization being inspected/assessed establishes and institutionalizes contact with selected groups and associations within the security community to share current security-related information including threats, vulnerabilities, and incidents.</AssessmentProcedures>
 	</Pair>
@@ -11945,7 +11945,7 @@
 			The organization must maintain records of termination/revocation of any authenticators/credentials.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented process as well as a sampling of records of termination/revocation of any authenticators/credentials to ensure the organization being inspected/assessed terminates/revokes any authenticators/credentials associated with the individual upon termination of individual employment.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PS" number="4" enhancement="0" dod-ap="PS-4.5" indicator="PS-4 (c )" cci="003024">
+	<Pair family="PS" number="4" enhancement="0" dod-ap="PS-4.5" indicator="PS-4 (c)" cci="003024">
 		<ImplementationGuidance>The organization being inspected/assessed defines and documents information security topics to be discussed while conducting exit interviews.
 
 			DoD has determined the information security topics are not appropriate to define at the Enterprise level.</ImplementationGuidance>
@@ -11953,7 +11953,7 @@
 
 			DoD has determined the information security topics are not appropriate to define at the Enterprise level.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PS" number="4" enhancement="0" dod-ap="PS-4.4" indicator="PS-4 (c )" cci="001523">
+	<Pair family="PS" number="4" enhancement="0" dod-ap="PS-4.4" indicator="PS-4 (c)" cci="001523">
 		<ImplementationGuidance>The organization being inspected/assessed, conducts exit interviews that include a discussion of information security topics defined in PS-4, CCI 3024 upon termination of individual employment IAW organization security policy and procedures.  The organization must retain an audit trail of conducted exit interviews (AU-2)</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines documentation of departed personnel and the audit trail of conducted exit interviews to ensure all departed personnel had exit interviews conducted that include a discussion of information security topics defined in PS-4, CCI 3024.</AssessmentProcedures>
 	</Pair>
@@ -11961,13 +11961,13 @@
 		<ImplementationGuidance>The organization being inspected/assessed  upon termination of individual employment retrieves all security-related organizational information systems-related property IAW organization security policy and procedures.  The organization must retain an audit trail of all retrieved security-related organizational information systems-related property (AU-2).</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines appropriate organization security-related organizational information systems-related property documentation/logs and compares to audit trail of all retrieved security-related organizational information systems-related property (AU-2) to ensure all property has been retrieved.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PS" number="4" enhancement="0" dod-ap="PS-4.7" indicator="PS-4 (e )" cci="001525">
+	<Pair family="PS" number="4" enhancement="0" dod-ap="PS-4.7" indicator="PS-4 (e)" cci="001525">
 		<ImplementationGuidance>The organization being inspected/assessed  upon termination of individual employment retains access to organizational information formerly controlled by terminated individual IAW organization security policy and procedures. 
 
 			Organizational information formerly controlled by terminated individuals generally refers to online work-product including email files.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment interviews appropriate IT and security personnel to validate the organization has procedures in place which, upon termination of individual's employment, will ensure it retains access to organizational information formerly controlled by the terminated individual.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PS" number="4" enhancement="0" dod-ap="PS-4.8" indicator="PS-4 (e )" cci="001526">
+	<Pair family="PS" number="4" enhancement="0" dod-ap="PS-4.8" indicator="PS-4 (e)" cci="001526">
 		<ImplementationGuidance>The organization being inspected/assessed  upon termination of individual employment retains access to organizational information systems formerly controlled by terminated individual IAW organization security policy and procedures. 
 
 			Organizational information systems formerly controlled by terminated individuals generally refers to issued hardware (e.g. laptops, BlackBerrys, PEDs, removable media, etc.)</ImplementationGuidance>
@@ -12051,7 +12051,7 @@
 
 			DoD defines the time period as immediately.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PS" number="5" enhancement="0" dod-ap="PS-5.5" indicator="PS-5 (c )" cci="003031">
+	<Pair family="PS" number="5" enhancement="0" dod-ap="PS-5.5" indicator="PS-5 (c)" cci="003031">
 		<ImplementationGuidance>The organization being inspected/assessed documents and implements a process to modify access authorization as needed to correspond with any changes in operational need due to reassignment or transfer.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented process and a sampling of accounts of users recently transferred or reassigned to ensure the organization being inspected/assessed modifies access authorization as needed to correspond with any changes in operational need due to reassignment or transfer.</AssessmentProcedures>
 	</Pair>
@@ -12099,19 +12099,19 @@
 			DoD has defined the frequency as annually.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the audit trail to ensure review/update occurred annually and departed employees no longer have valid access agreements.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PS" number="6" enhancement="0" dod-ap="PS-6.4" indicator="PS-6 (c ) (1)" cci="001531">
+	<Pair family="PS" number="6" enhancement="0" dod-ap="PS-6.4" indicator="PS-6 (c) (1)" cci="001531">
 		<ImplementationGuidance>The organization being inspected/assessed will ensure all individuals have appropriate access agreements in place prior to being granted access to information and information systems.
 
 			DD Form 2875 is the accepted DoD methodology of requesting and granting of access to information and information systems.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains a list of organizational individuals with active accounts and validates the existence of signed DD Form 2875 (paper or electronic) associated with a sampling of individuals selected from the list.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PS" number="6" enhancement="0" dod-ap="PS-6.6" indicator="PS-6 (c ) (2)" cci="003037">
+	<Pair family="PS" number="6" enhancement="0" dod-ap="PS-6.6" indicator="PS-6 (c) (2)" cci="003037">
 		<ImplementationGuidance>DoD has defined the frequency as when there is a change to the user's level of access.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
 			DoD has defined the frequency as when there is a change to the user's level of access.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PS" number="6" enhancement="0" dod-ap="PS-6.5" indicator="PS-6 (c ) (2)" cci="003036">
+	<Pair family="PS" number="6" enhancement="0" dod-ap="PS-6.5" indicator="PS-6 (c) (2)" cci="003036">
 		<ImplementationGuidance>The organization being inspected/assessed requires that individuals re-sign access agreements to maintain access to organizational information systems when access agreements have been updated or when there is a change to the user's level of access.
 
 			DoD has defined the frequency as when there is a change to the user's level of access.</ImplementationGuidance>
@@ -12157,7 +12157,7 @@
 		<ImplementationGuidance>The organization being inspected/assessed documents and implements a process to require third-party providers to comply with personnel security policies and procedures established by the organization.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented process to ensure the organization being inspected/assessed requires third-party providers to comply with personnel security policies and procedures established by the organization.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PS" number="7" enhancement="0" dod-ap="PS-7.3" indicator="PS-7 (c )" cci="001540">
+	<Pair family="PS" number="7" enhancement="0" dod-ap="PS-7.3" indicator="PS-7 (c)" cci="001540">
 		<ImplementationGuidance>The organization being inspected/assessed documents personnel security requirements for third-party providers.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the personnel security requirements to ensure the organization being inspected/assessed documents personnel security requirements for third-party providers.</AssessmentProcedures>
 	</Pair>
@@ -12185,7 +12185,7 @@
 
 			DoD has defined the time period as immediately.</AssessmentProcedures>
 	</Pair>
-	<Pair family="PS" number="7" enhancement="0" dod-ap="PS-7.7" indicator="PS-7 (e )" cci="001541">
+	<Pair family="PS" number="7" enhancement="0" dod-ap="PS-7.7" indicator="PS-7 (e)" cci="001541">
 		<ImplementationGuidance>The organization being inspected/assessed monitors third-party provider compliance with personnel security requirements.
 
 			The organization must maintain an audit trail of monitoring activity.</ImplementationGuidance>
@@ -12361,7 +12361,7 @@
 
 			DoD has defined the personnel or roles as the ISSM, ISSO, AO, and PM.</AssessmentProcedures>
 	</Pair>
-	<Pair family="RA" number="3" enhancement="0" dod-ap="RA-3.8" indicator="RA-3 (e )" cci="001052">
+	<Pair family="RA" number="3" enhancement="0" dod-ap="RA-3.8" indicator="RA-3 (e)" cci="001052">
 		<ImplementationGuidance>The organization being inspected/asssessed updates the risk assessment upon re-accreditation or whenever there are significant changes to the information system or environment of operation (including the identification of new threats and vulnerabilities), or other conditions that may impact the security state of the system.
 
 			DoD has defined the frequency as upon re-accreditation. </ImplementationGuidance>
@@ -12369,7 +12369,7 @@
 
 			DoD has defined the frequency as upon re-accreditation. </AssessmentProcedures>
 	</Pair>
-	<Pair family="RA" number="3" enhancement="0" dod-ap="RA-3.9" indicator="RA-3 (e )" cci="001053">
+	<Pair family="RA" number="3" enhancement="0" dod-ap="RA-3.9" indicator="RA-3 (e)" cci="001053">
 		<ImplementationGuidance>DoD has defined the frequency as upon re-accreditation. </ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
@@ -12443,7 +12443,7 @@
 
 			DoD has defined the response times as IAW an authoritative source (e.g. IAVM, CTOs, DTMs).</AssessmentProcedures>
 	</Pair>
-	<Pair family="RA" number="5" enhancement="0" dod-ap="RA-5.11" indicator="RA-5 (e )" cci="002376">
+	<Pair family="RA" number="5" enhancement="0" dod-ap="RA-5.11" indicator="RA-5 (e)" cci="002376">
 		<ImplementationGuidance>DoD has defined the personnel or roles as at a minimum, the ISSO and ISSM.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
@@ -12700,7 +12700,7 @@
 		<ImplementationGuidance>The organization being inspected/assessed documents within contracts/agreements for the information system, system component, or information system service,  the security strength requirements, explicitly or by reference, IAW DoDI 8580.1.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed includes the security strength requirements, explicitly or by reference, in the acquisition contract for the information system, system component, or information system service in accordance with applicable federal laws, Executive Orders, directives, policies, regulations, standards, guidelines, and organizational mission/business needs  including DoDI 8580.1.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="4" enhancement="0" dod-ap="SA-4.3" indicator="SA-4 (c )" cci="003096">
+	<Pair family="SA" number="4" enhancement="0" dod-ap="SA-4.3" indicator="SA-4 (c)" cci="003096">
 		<ImplementationGuidance>The organization being inspected/assessed documents within contracts/agreements for the information system, system component, or information system service,  the security assurance requirements, explicitly or by reference, IAW DoDI 8580.1.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed  includes the security assurance requirements, explicitly or by reference, in the acquisition contract for the information system, system component, or information system service in accordance with applicable federal laws, Executive Orders, directives, policies, regulations, standards, guidelines, and organizational mission/business needs  including DoDI 8580.1.</AssessmentProcedures>
 	</Pair>
@@ -12708,7 +12708,7 @@
 		<ImplementationGuidance>The organization being inspected/assessed documents within contracts/agreements for the information system, system component, or information system service,  the security-related documentation requirements, explicitly or by reference.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed includes the security-related documentation requirements, explicitly or by reference, in the acquisition contract for the information system, system component, or information system service in accordance with applicable federal laws, Executive Orders, directives, policies, regulations, standards, guidelines, and organizational mission/business needs.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="4" enhancement="0" dod-ap="SA-4.5" indicator="SA-4 (e )" cci="003098">
+	<Pair family="SA" number="4" enhancement="0" dod-ap="SA-4.5" indicator="SA-4 (e)" cci="003098">
 		<ImplementationGuidance>The organization being inspected/assessed documents within contracts/agreements for the information system, system component, or information system service,  requirements for protecting security-related documentation, explicitly or by reference.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed includes requirements for protecting security-related documentation, explicitly or by reference, in the acquisition contract for the information system, system component, or information system service in accordance with applicable federal laws, Executive Orders, directives, policies, regulations, standards, guidelines, and organizational mission/business needs.</AssessmentProcedures>
 	</Pair>
@@ -12868,13 +12868,13 @@
 		<ImplementationGuidance>The organization being inspected/assessed documents within contracts/agreements, requirements that the developer provide user documentation for the information system, system component or information system service that describes user responsibilities in maintaining the security of the system, component, or service.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer provide user documentation for the information system, system component or information system service that describes user responsibilities in maintaining the security of the system, component, or service.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="5" enhancement="0" dod-ap="SA-5.11" indicator="SA-5 (c )" cci="000642">
+	<Pair family="SA" number="5" enhancement="0" dod-ap="SA-5.11" indicator="SA-5 (c)" cci="000642">
 		<ImplementationGuidance>
 			The organization being inspected/assessed documents attempts to obtain information system, system component, or information system service documentation when such documentation is either unavailable or nonexistent.
 		</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented attempts to ensure the organization being inspected/assessed documents attempts to obtain information system, system component, or information system service documentation when such documentation is either unavailable or nonexistent.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="5" enhancement="0" dod-ap="SA-5.9" indicator="SA-5 (c )" cci="003132">
+	<Pair family="SA" number="5" enhancement="0" dod-ap="SA-5.9" indicator="SA-5 (c)" cci="003132">
 		<ImplementationGuidance>The organization being inspected/assessed takes actions defined in SA-5, CCI 3133 in response to attempts to obtain either unavailable or  nonexistent documentation for information system, system component, or information system service.
 
 			The organization must maintain a record of actions taken.
@@ -12884,7 +12884,7 @@
 
 			DoD has determined the actions are not appropriate to define at the Enterprise level.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="5" enhancement="0" dod-ap="SA-5.10" indicator="SA-5 (c )" cci="003133">
+	<Pair family="SA" number="5" enhancement="0" dod-ap="SA-5.10" indicator="SA-5 (c)" cci="003133">
 		<ImplementationGuidance>The organization being inspected/assessed defines and documents actions to be taken in response to attempts to obtain either unavailable or  nonexistent documentation for information system, system component, or information system service.
 
 			DoD has determined the actions are not appropriate to define at the Enterprise level.
@@ -12898,7 +12898,7 @@
 		<ImplementationGuidance>The organization being inspected/assessed documents and implements processes to store and handle information system, system component, or information system service documentation  as required, in accordance with the risk management strategy.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented processes to ensure the organization being inspected/assessed stores and handles information system, system component, or information system service documentation  as required, in accordance with the risk management strategy.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="5" enhancement="0" dod-ap="SA-5.13" indicator="SA-5 (e )" cci="003135">
+	<Pair family="SA" number="5" enhancement="0" dod-ap="SA-5.13" indicator="SA-5 (e)" cci="003135">
 		<ImplementationGuidance>The organization being inspected/assessed distributes information system, system component, or information system service documentation to at a minimum, the ISSO, ISSM, and SCA, via an information sharing capability.
 
 			DoD has defined the personnel or roles as at a minimum, the ISSO, ISSM, and SCA.</ImplementationGuidance>
@@ -12906,7 +12906,7 @@
 
 			DoD has defined the personnel or roles as at a minimum, the ISSO, ISSM, and SCA.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="5" enhancement="0" dod-ap="SA-5.14" indicator="SA-5 (e )" cci="003136">
+	<Pair family="SA" number="5" enhancement="0" dod-ap="SA-5.14" indicator="SA-5 (e)" cci="003136">
 		<ImplementationGuidance>DoD has defined the personnel or roles as at a minimum, the ISSO, ISSM, and SCA.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
@@ -13018,13 +13018,13 @@
 		<ImplementationGuidance>The organization being inspected/assessed must establish in the official documentation governing the provision of the external IT services (e.g. contract, MOU, MOA, SLA, etc.) the roles and responsibilities of all types of users of the external information system services.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the official documentation governing the provision of the external IT services (e.g. contract, MOU, MOA, SLA, etc.) to confirm the organization has clearly established the roles and responsibilities of all types of users of the external information system services.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="9" enhancement="0" dod-ap="SA-9.8" indicator="SA-9 (c )" cci="003138">
+	<Pair family="SA" number="9" enhancement="0" dod-ap="SA-9.8" indicator="SA-9 (c)" cci="003138">
 		<ImplementationGuidance>The organization being inspected/assessed  implements the processes, methods, and techniques defined in SA-9, CCI 3139  to monitor security control compliance by external service providers on an ongoing basis.
 
 			The organization must maintain records of monitoring.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the records of monitoring to ensure the organization being inspected/assessed implements the processes, methods, and techniques defined in SA-9, CCI 3139  to monitor security control compliance by external service providers on an ongoing basis.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="9" enhancement="0" dod-ap="SA-9.9" indicator="SA-9 (c )" cci="003139">
+	<Pair family="SA" number="9" enhancement="0" dod-ap="SA-9.9" indicator="SA-9 (c)" cci="003139">
 		<ImplementationGuidance>The organization being inspected/assessed defines and documents processes, methods, and techniques to employ to monitor security control compliance by external service providers on an ongoing basis.
 
 			DoD has determined the processes, methods, and techniques are not appropriate to define at the Enterprise level.</ImplementationGuidance>
@@ -13176,15 +13176,15 @@
 		<ImplementationGuidance>The organization being inspected/assessed requires within contracts/agreements that the developer of the information system, system component, or information system service document the potential security impacts of approved changes to the system, component, or service.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service document the potential security impacts of approved changes to the system, component, or service.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="10" enhancement="0" dod-ap="SA-10.9" indicator="SA-10 (e )" cci="003161">
+	<Pair family="SA" number="10" enhancement="0" dod-ap="SA-10.9" indicator="SA-10 (e)" cci="003161">
 		<ImplementationGuidance>The organization being inspected/assessed requires within contracts/agreements that the developer of the information system, system component, or information system service track security flaws within the system, component, or service.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service track security flaws within the system, component, or service.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="10" enhancement="0" dod-ap="SA-10.10" indicator="SA-10 (e )" cci="003162">
+	<Pair family="SA" number="10" enhancement="0" dod-ap="SA-10.10" indicator="SA-10 (e)" cci="003162">
 		<ImplementationGuidance>The organization being inspected/assessed requires within contracts/agreements that the developer of the information system, system component, or information system service track flaw resolution within the system, component, or service.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service track flaw resolution within the system, component, or service.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="10" enhancement="0" dod-ap="SA-10.11" indicator="SA-10 (e )" cci="003163">
+	<Pair family="SA" number="10" enhancement="0" dod-ap="SA-10.11" indicator="SA-10 (e)" cci="003163">
 		<ImplementationGuidance>The organization being inspected/assessed requires within contracts/agreements that the developer of the information system, system component, or information system service report security flaws and flaw resolution within the system, component, or service findings to at a minimum, the ISSO and ISSM.
 
 			DoD has defined the personnel as at a minimum, the ISSO and ISSM.</ImplementationGuidance>
@@ -13192,7 +13192,7 @@
 
 			DoD has defined the personnel as at a minimum, the ISSO and ISSM.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="10" enhancement="0" dod-ap="SA-10.12" indicator="SA-10 (e )" cci="003164">
+	<Pair family="SA" number="10" enhancement="0" dod-ap="SA-10.12" indicator="SA-10 (e)" cci="003164">
 		<ImplementationGuidance>DoD has defined the personnel as at a minimum, the ISSO and ISSM.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
@@ -13266,11 +13266,11 @@
 
 			DoD has determined the depth and coverage are not appropriate to define at the Enterprise level.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="11" enhancement="0" dod-ap="SA-11.5" indicator="SA-11 (c )" cci="003175">
+	<Pair family="SA" number="11" enhancement="0" dod-ap="SA-11.5" indicator="SA-11 (c)" cci="003175">
 		<ImplementationGuidance>The organization being inspected/assessed requires the developer to produce and provide evidence of the execution of the security assessment plan.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service produce evidence of the execution of the security assessment plan.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="11" enhancement="0" dod-ap="SA-11.6" indicator="SA-11 (c )" cci="003176">
+	<Pair family="SA" number="11" enhancement="0" dod-ap="SA-11.6" indicator="SA-11 (c)" cci="003176">
 		<ImplementationGuidance>The organization being inspected/assessed requires the developer to produce and provide results of the security testing/evaluation.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service produce the results of the security testing/evaluation.</AssessmentProcedures>
 	</Pair>
@@ -13279,7 +13279,7 @@
 		</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service implement a verifiable flaw remediation process.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="11" enhancement="0" dod-ap="SA-11.8" indicator="SA-11 (e )" cci="003178">
+	<Pair family="SA" number="11" enhancement="0" dod-ap="SA-11.8" indicator="SA-11 (e)" cci="003178">
 		<ImplementationGuidance>The organization being inspected/assessed requires the developer to correct flaws identified during security testing/evaluation and to document and provide evidence that the flaws were corrected.
 		</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service correct flaws identified during security testing/evaluation and provide evidence.</AssessmentProcedures>
@@ -13982,15 +13982,15 @@
 
 			DoD has determined the tools and methods are not appropriate to define at the Enterprise level.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="15" enhancement="4" dod-ap="SA-15(4).13" indicator="SA-15 (4) (c )" cci="003268">
+	<Pair family="SA" number="15" enhancement="4" dod-ap="SA-15(4).13" indicator="SA-15 (4) (c)" cci="003268">
 		<ImplementationGuidance>The organization being inspected/assessed requires within contracts/agreements that the developers performing threat modeling for the information system produces evidence that meet the acceptance criteria defined in SA-15 (4), CCI 3270.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developers performing threat modeling for the information system produces evidence that meet the acceptance criteria defined in SA-15 (4), CCI 3270.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="15" enhancement="4" dod-ap="SA-15(4).14" indicator="SA-15 (4) (c )" cci="003269">
+	<Pair family="SA" number="15" enhancement="4" dod-ap="SA-15(4).14" indicator="SA-15 (4) (c)" cci="003269">
 		<ImplementationGuidance>The organization being inspected/assessed requires within contracts/agreements that the developers performing vulnerability analysis for the information system produces evidence that meet the acceptance criteria defined in SA-15 (4), CCI 3271.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the vulnerability analysis performed by the developers performing vulnerability analysis for the information system produces evidence that meet the acceptance criteria defined in SA-15 (4), CCI 3271.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="15" enhancement="4" dod-ap="SA-15(4).15" indicator="SA-15 (4) (c )" cci="003270">
+	<Pair family="SA" number="15" enhancement="4" dod-ap="SA-15(4).15" indicator="SA-15 (4) (c)" cci="003270">
 		<ImplementationGuidance>The organization being inspected/assessed defines and documents the acceptance criteria that must be met when threat modeling of the information system is performed by the developer.
 
 			DoD has determined the acceptance criteria is not appropriate to define at the Enterprise level.</ImplementationGuidance>
@@ -13998,7 +13998,7 @@
 
 			DoD has determined the acceptance criteria is not appropriate to define at the Enterprise level.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="15" enhancement="4" dod-ap="SA-15(4).16" indicator="SA-15 (4) (c )" cci="003271">
+	<Pair family="SA" number="15" enhancement="4" dod-ap="SA-15(4).16" indicator="SA-15 (4) (c)" cci="003271">
 		<ImplementationGuidance>The organization being inspected/assessed defines and documents the acceptance criteria that must be met when vulnerability analysis of the information system is performed by the developer.
 
 			DoD has determined the acceptance criteria is not appropriate to define at the Enterprise level.</ImplementationGuidance>
@@ -14056,7 +14056,7 @@
 		<ImplementationGuidance>The organization being inspected/assessed requires within contracts/agreements that the  developer of the information system, system component, or information system service determine the exploitation potential for discovered vulnerabilities.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service  determine the exploitation potential for discovered vulnerabilities.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="15" enhancement="7" dod-ap="SA-15(7).4" indicator="SA-15 (7) (c )" cci="003278">
+	<Pair family="SA" number="15" enhancement="7" dod-ap="SA-15(7).4" indicator="SA-15 (7) (c)" cci="003278">
 		<ImplementationGuidance>The organization being inspected/assessed requires within contracts/agreements that the  developer of the information system, system component, or information system service determine potential risk mitigations for delivered vulnerabilities.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service  determine potential risk mitigations for delivered vulnerabilities.</AssessmentProcedures>
 	</Pair>
@@ -14150,7 +14150,7 @@
 		<ImplementationGuidance>The organization being inspected/assessed documents within contracts/agreements, the requirement that the developer produce a design specification and security architecture  that accurately and completely describes the allocation of security controls among physical and logical components.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer produce a design specification and security architecture that accurately and completely describes the allocation of security controls among physical and logical components.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="17" enhancement="0" dod-ap="SA-17.5" indicator="SA-17 (c )" cci="003297">
+	<Pair family="SA" number="17" enhancement="0" dod-ap="SA-17.5" indicator="SA-17 (c)" cci="003297">
 		<ImplementationGuidance>The organization being inspected/assessed documents within contracts/agreements, the requirement that the developer produce a design specification and security architecture  that expresses how individual security functions, mechanisms, and services work together to provide required security capabilities and a unified approach to protection.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer produce a design specification and security architecture that expresses how individual security functions, mechanisms, and services work together to provide required security capabilities and a unified approach to protection.</AssessmentProcedures>
 	</Pair>
@@ -14210,15 +14210,15 @@
 		<ImplementationGuidance>The organization being inspected/assessed documents within the contracts/agreements, the requirement that the  developer of the information system, system component, or information system service show via proof to the extent feasible with additional informal demonstration as necessary, that the formal top-level specification is consistent with the formal policy model.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service show via proof to the extent feasible with additional informal demonstration as necessary, that the formal top-level specification is consistent with the formal policy model.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="17" enhancement="3" dod-ap="SA-17(3).5" indicator="SA-17 (3) (c )" cci="003312">
+	<Pair family="SA" number="17" enhancement="3" dod-ap="SA-17(3).5" indicator="SA-17 (3) (c)" cci="003312">
 		<ImplementationGuidance>The organization being inspected/assessed documents within the contracts/agreements, the requirement that the  developer of the information system, system component, or information system service show via informal demonstration, that the formal top-level specification completely covers the interfaces to security-relevant hardware.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service show via informal demonstration, that the formal top-level specification completely covers the interfaces to security-relevant hardware.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="17" enhancement="3" dod-ap="SA-17(3).6" indicator="SA-17 (3) (c )" cci="003313">
+	<Pair family="SA" number="17" enhancement="3" dod-ap="SA-17(3).6" indicator="SA-17 (3) (c)" cci="003313">
 		<ImplementationGuidance>The organization being inspected/assessed documents within the contracts/agreements, the requirement that the  developer of the information system, system component, or information system service show via informal demonstration, that the formal top-level specification completely covers the interfaces to security-relevant software.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service show via informal demonstration, that the formal top-level specification completely covers the interfaces to security-relevant software.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="17" enhancement="3" dod-ap="SA-17(3).7" indicator="SA-17 (3) (c )" cci="003314">
+	<Pair family="SA" number="17" enhancement="3" dod-ap="SA-17(3).7" indicator="SA-17 (3) (c)" cci="003314">
 		<ImplementationGuidance>The organization being inspected/assessed documents within the contracts/agreements, the requirement that the  developer of the information system, system component, or information system service  show via informal demonstration, that the formal top-level specification completely covers the interfaces to security-relevant firmware.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service  show via informal demonstration, that the formal top-level specification completely covers the interfaces to security-relevant firmware.</AssessmentProcedures>
 	</Pair>
@@ -14234,15 +14234,15 @@
 		<ImplementationGuidance>The organization being inspected/assessed documents within the contracts/agreements, the requirement that the  developer of the information system, system component, or information system service show that the formal top-level specification is an accurate description of the implemented security-relevant firmware.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service show that the formal top-level specification is an accurate description of the implemented security-relevant firmware.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="17" enhancement="3" dod-ap="SA-17(3).11" indicator="SA-17 (3) (e )" cci="003318">
+	<Pair family="SA" number="17" enhancement="3" dod-ap="SA-17(3).11" indicator="SA-17 (3) (e)" cci="003318">
 		<ImplementationGuidance>The organization being inspected/assessed documents within the contracts/agreements, the requirement that the  developer of the information system, system component, or information system service describe the security-relevant firmware mechanisms not addressed in the formal top-level specification but strictly internal to the security-relevant hardware.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service  describe the security-relevant firmware mechanisms not addressed in the formal top-level specification but strictly internal to the security-relevant hardware.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="17" enhancement="3" dod-ap="SA-17(3).12" indicator="SA-17 (3) (e )" cci="003319">
+	<Pair family="SA" number="17" enhancement="3" dod-ap="SA-17(3).12" indicator="SA-17 (3) (e)" cci="003319">
 		<ImplementationGuidance>The organization being inspected/assessed documents within the contracts/agreements, the requirement that the  developer of the information system, system component, or information system service describe the security-relevant software mechanisms not addressed in the formal top-level specification but strictly internal to the security-relevant software.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service  describe the security-relevant software mechanisms not addressed in the formal top-level specification but strictly internal to the security-relevant software.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="17" enhancement="3" dod-ap="SA-17(3).13" indicator="SA-17 (3) (e )" cci="003320">
+	<Pair family="SA" number="17" enhancement="3" dod-ap="SA-17(3).13" indicator="SA-17 (3) (e)" cci="003320">
 		<ImplementationGuidance>The organization being inspected/assessed documents within the contracts/agreements, the requirement that the  developer of the information system, system component, or information system service describe the security-relevant firmware mechanisms not addressed in the formal top-level specification but strictly internal to the security-relevant firmware.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service  describe the security-relevant firmware mechanisms not addressed in the formal top-level specification but strictly internal to the security-relevant firmware.</AssessmentProcedures>
 	</Pair>
@@ -14262,15 +14262,15 @@
 		<ImplementationGuidance>The organization being inspected/assessed documents within the contracts/agreements, the requirement that the  developer of the information system, system component, or information system service  show via informal demonstration or convincing argument with formal methods as feasible that the descriptive top-level specification is consistent with the formal policy model.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service  show via informal demonstration or convincing argument with formal methods as feasible that the descriptive top-level specification is consistent with the formal policy model.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="17" enhancement="4" dod-ap="SA-17(4).5" indicator="SA-17 (4) (c )" cci="003325">
+	<Pair family="SA" number="17" enhancement="4" dod-ap="SA-17(4).5" indicator="SA-17 (4) (c)" cci="003325">
 		<ImplementationGuidance>The organization being inspected/assessed documents within the contracts/agreements, the requirement that the  developer of the information system, system component, or information system service show via informal demonstration, that the descriptive top-level specification completely covers the interfaces to security-relevant hardware.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service show via informal demonstration, that the descriptive top-level specification completely covers the interfaces to security-relevant hardware.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="17" enhancement="4" dod-ap="SA-17(4).6" indicator="SA-17 (4) (c )" cci="003326">
+	<Pair family="SA" number="17" enhancement="4" dod-ap="SA-17(4).6" indicator="SA-17 (4) (c)" cci="003326">
 		<ImplementationGuidance>The organization being inspected/assessed documents within the contracts/agreements, the requirement that the  developer of the information system, system component, or information system service show via informal demonstration, that the descriptive top-level specification completely covers the interfaces to security-relevant software.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service show via informal demonstration, that the descriptive top-level specification completely covers the interfaces to security-relevant software.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="17" enhancement="4" dod-ap="SA-17(4).7" indicator="SA-17 (4) (c )" cci="003327">
+	<Pair family="SA" number="17" enhancement="4" dod-ap="SA-17(4).7" indicator="SA-17 (4) (c)" cci="003327">
 		<ImplementationGuidance>The organization being inspected/assessed documents within the contracts/agreements, the requirement that the  developer of the information system, system component, or information system service show via informal demonstration, that the descriptive top-level specification completely covers the interfaces to security-relevant firmware.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service show via informal demonstration, that the descriptive top-level specification completely covers the interfaces to security-relevant firmware.</AssessmentProcedures>
 	</Pair>
@@ -14286,15 +14286,15 @@
 		<ImplementationGuidance>The organization being inspected/assessed documents within the contracts/agreements, the requirement that the  developer of the information system, system component, or information system service show that the descriptive top-level specification is an accurate description of the interfaces to security-relevant firmware.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service show that the descriptive top-level specification is an accurate description of the interfaces to security-relevant firmware.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="17" enhancement="4" dod-ap="SA-17(4).11" indicator="SA-17 (4) (e )" cci="003331">
+	<Pair family="SA" number="17" enhancement="4" dod-ap="SA-17(4).11" indicator="SA-17 (4) (e)" cci="003331">
 		<ImplementationGuidance>The organization being inspected/assessed documents within the contracts/agreements, the requirement that the  developer of the information system, system component, or information system service describe the security-relevant hardware mechanisms not addressed in the descriptive top-level specification but strictly internal to the security-relevant hardware.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service describe the security-relevant hardware mechanisms not addressed in the descriptive top-level specification but strictly internal to the security-relevant hardware.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="17" enhancement="4" dod-ap="SA-17(4).12" indicator="SA-17 (4) (e )" cci="003332">
+	<Pair family="SA" number="17" enhancement="4" dod-ap="SA-17(4).12" indicator="SA-17 (4) (e)" cci="003332">
 		<ImplementationGuidance>The organization being inspected/assessed documents within the contracts/agreements, the requirement that the  developer of the information system, system component, or information system service  describe the security-relevant software mechanisms not addressed in the descriptive top-level specification but strictly internal to the security-relevant software.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service  describe the security-relevant software mechanisms not addressed in the descriptive top-level specification but strictly internal to the security-relevant software.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SA" number="17" enhancement="4" dod-ap="SA-17(4).13" indicator="SA-17 (4) (e )" cci="003333">
+	<Pair family="SA" number="17" enhancement="4" dod-ap="SA-17(4).13" indicator="SA-17 (4) (e)" cci="003333">
 		<ImplementationGuidance>The organization being inspected/assessed documents within the contracts/agreements, the requirement that the  developer of the information system, system component, or information system service describe the security-relevant firmware mechanisms not addressed in the descriptive top-level specification but strictly internal to the security-relevant firmware.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the contracts/agreements to ensure the organization being inspected/assessed requires that the developer of the information system, system component, or information system service describe the security-relevant firmware mechanisms not addressed in the descriptive top-level specification but strictly internal to the security-relevant firmware.</AssessmentProcedures>
 	</Pair>
@@ -14892,7 +14892,7 @@
 		<ImplementationGuidance>The organization being inspected/assessed designs the information system to leverage subnetworks so that publicly accessible system components are physically and/or logically separated from internal organizational networks.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines network topology diagrams, architecture documentation, or any other documentation identifying component partitioning to ensure the organization being inspected/assessed implements subnetworks for publicly accessible system components that are physically and/or logically separated from internal organizational networks.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SC" number="7" enhancement="0" dod-ap="SC-7.3" indicator="SC-7 (c )" cci="001098">
+	<Pair family="SC" number="7" enhancement="0" dod-ap="SC-7.3" indicator="SC-7 (c)" cci="001098">
 		<ImplementationGuidance>The organization being inspected/assessed designs the information system to enforce requirements that components connect to external networks or information systems only through managed interfaces consisting of boundary protection devices arranged in accordance with an organizational security architecture.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines network topology diagrams, architecture documentation, or any other documentation identifying component connectivity to ensure the organization being inspected/assessed   connects to external networks or information systems only through managed interfaces consisting of boundary protection devices arranged in accordance with an organizational security architecture.</AssessmentProcedures>
 	</Pair>
@@ -14908,7 +14908,7 @@
 		<ImplementationGuidance>The organization being inspected/assessed defines and documents a traffic flow policy for each managed interface for each external telecommunication service.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented traffic flow policy to ensure the organization being inspected/assessed establishes a traffic flow policy for each managed interface for each external telecommunication service.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SC" number="7" enhancement="4" dod-ap="SC-7(4).3" indicator="SC-7 (4) (c )" cci="002396">
+	<Pair family="SC" number="7" enhancement="4" dod-ap="SC-7(4).3" indicator="SC-7 (4) (c)" cci="002396">
 		<ImplementationGuidance>The organization being inspected/assessed documents and implements mechanisms to protect the confidentiality and integrity of the information being transmitted across each interface for each external telecommunication service.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented mechanisms to ensure the organization being inspected/assessed protects the confidentiality and integrity of the information being transmitted across each interface for each external telecommunication service.</AssessmentProcedures>
 	</Pair>
@@ -14932,7 +14932,7 @@
 
 			DoD has defined the frequency as every 180 days.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SC" number="7" enhancement="4" dod-ap="SC-7(4).7" indicator="SC-7 (4) (e )" cci="001108">
+	<Pair family="SC" number="7" enhancement="4" dod-ap="SC-7(4).7" indicator="SC-7 (4) (e)" cci="001108">
 		<ImplementationGuidance>The organization being inspected/assessed documents and implements a process to remove traffic flow policy exceptions that are no longer supported by an explicit mission/business need for each external telecommunication service.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented process as well as a sampling of existing exceptions to ensure the organization being inspected/assessed removes traffic flow policy exceptions that are no longer supported by an explicit mission/business need for each external telecommunication service.</AssessmentProcedures>
 	</Pair>
@@ -16928,13 +16928,13 @@
 		<ImplementationGuidance>The organization being inspected/assessed documents and implements a process for regression testing IAW CM-4 to identify any potential side effects before installation of software updates.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented process and test results to ensure the organization being inspected/assessed tests firmware updates related to flaw remediation for potential side effects before installation.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SI" number="2" enhancement="0" dod-ap="SI-2.8" indicator="SI-2 (c )" cci="002604">
+	<Pair family="SI" number="2" enhancement="0" dod-ap="SI-2.8" indicator="SI-2 (c)" cci="002604">
 		<ImplementationGuidance>DoD has defined the time period as 30 days.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
 			DoD has defined the time period as 30 days</AssessmentProcedures>
 	</Pair>
-	<Pair family="SI" number="2" enhancement="0" dod-ap="SI-2.9" indicator="SI-2 (c )" cci="002605">
+	<Pair family="SI" number="2" enhancement="0" dod-ap="SI-2.9" indicator="SI-2 (c)" cci="002605">
 		<ImplementationGuidance>The organization being inspected/assessed configures the information system to install security-relevant software updates within 30 days of the release of the updates
 
 			For information system components that have applicable STIGs or SRGs, the organization being inspected/assessed must comply with the STIG/SRG guidance that pertains to CCI 2605.
@@ -16946,13 +16946,13 @@
 
 			DoD has defined the time period as 30 days.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SI" number="2" enhancement="0" dod-ap="SI-2.10" indicator="SI-2 (c )" cci="002606">
+	<Pair family="SI" number="2" enhancement="0" dod-ap="SI-2.10" indicator="SI-2 (c)" cci="002606">
 		<ImplementationGuidance>DoD has defined the time period as 30 days.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
 			DoD has defined the time period as 30 days</AssessmentProcedures>
 	</Pair>
-	<Pair family="SI" number="2" enhancement="0" dod-ap="SI-2.11" indicator="SI-2 (c )" cci="002607">
+	<Pair family="SI" number="2" enhancement="0" dod-ap="SI-2.11" indicator="SI-2 (c)" cci="002607">
 		<ImplementationGuidance>The organization being inspected/assessed configures the information system to install security-relevant firmware updates within 30 days of the release of the updates.
 
 			For information system components that have applicable STIGs or SRGs, the organization being inspected/assessed must comply with the STIG/SRG guidance that pertains to CCI 2607.
@@ -17118,13 +17118,13 @@
 
 			For information system components that have applicable STIGs or SRGs, the organization conducting the inspection/assessment evaluates the components to ensure that the organization being inspected/assessed has configured the information system in compliance with the applicable STIGs and SRGs pertaining to CCI 1240.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SI" number="3" enhancement="0" dod-ap="SI-3.6" indicator="SI-3 (c ) (1)" cci="002623">
+	<Pair family="SI" number="3" enhancement="0" dod-ap="SI-3.6" indicator="SI-3 (c) (1)" cci="002623">
 		<ImplementationGuidance>DoD has defined the frequency as every 7 days.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
 			DoD has defined the frequency as every 7 days.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SI" number="3" enhancement="0" dod-ap="SI-3.7" indicator="SI-3 (c ) (1)" cci="002624">
+	<Pair family="SI" number="3" enhancement="0" dod-ap="SI-3.7" indicator="SI-3 (c) (1)" cci="002624">
 		<ImplementationGuidance>The organization being inspected/assessed configures the malicious code protection mechanisms to perform real-time scans of files from external sources at network entry/exit points as the files are downloaded, opened, or executed in accordance with organizational security policy.
 
 			For information system components that have applicable STIGs or SRGs, the organization being inspected/assessed must comply with the STIG/SRG guidance that pertains to CCI 2624.</ImplementationGuidance>
@@ -17132,7 +17132,7 @@
 
 			For information system components that have applicable STIGs or SRGs, the organization conducting the inspection/assessment evaluates the components to ensure that the organization being inspected/assessed has configured the information system in compliance with the applicable STIGs and SRGs pertaining to CCI 2624.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SI" number="3" enhancement="0" dod-ap="SI-3.9" indicator="SI-3 (c ) (1)" cci="001242">
+	<Pair family="SI" number="3" enhancement="0" dod-ap="SI-3.9" indicator="SI-3 (c) (1)" cci="001242">
 		<ImplementationGuidance>The organization being inspected/assessed configures malicious code protection mechanisms to perform real-time scans of files from external sources at endpoints as the files are downloaded, opened, or executed in accordance with organizational security policy.
 
 			For information system components that have applicable STIGs or SRGs, the organization being inspected/assessed must comply with the STIG/SRG guidance that pertains to CCI 1242.</ImplementationGuidance>
@@ -17140,7 +17140,7 @@
 
 			For information system components that have applicable STIGs or SRGs, the organization conducting the inspection/assessment evaluates the components to ensure that the organization being inspected/assessed has configured the information system in compliance with the applicable STIGs and SRGs pertaining to CCI 1242.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SI" number="3" enhancement="0" dod-ap="SI-3.8" indicator="SI-3 (c ) (1)" cci="001241">
+	<Pair family="SI" number="3" enhancement="0" dod-ap="SI-3.8" indicator="SI-3 (c) (1)" cci="001241">
 		<ImplementationGuidance>The organization being inspected/assessed configures malicious code protection mechanisms to perform periodic scans of the information system on every 7 days.
 
 			For information system components that have applicable STIGs or SRGs, the organization being inspected/assessed must comply with the STIG/SRG guidance that pertains to CCI 1241.
@@ -17152,13 +17152,13 @@
 
 			DoD has defined the frequency as every 7 days.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SI" number="3" enhancement="0" dod-ap="SI-3.11" indicator="SI-3 (c ) (2)" cci="001244">
+	<Pair family="SI" number="3" enhancement="0" dod-ap="SI-3.11" indicator="SI-3 (c) (2)" cci="001244">
 		<ImplementationGuidance>DoD has defined the actions as block and quarantine malicious code and then send an alert to the administrator immediately in near real-time.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
 			DoD has defined the actions as block and quarantine malicious code and then send an alert to the administrator immediately in near real-time.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SI" number="3" enhancement="0" dod-ap="SI-3.10" indicator="SI-3 (c ) (2)" cci="001243">
+	<Pair family="SI" number="3" enhancement="0" dod-ap="SI-3.10" indicator="SI-3 (c) (2)" cci="001243">
 		<ImplementationGuidance>The organization being inspected/assessed configures malicious code protection mechanisms to perform block and quarantine malicious code and then send an alert to the administrator immediately in near real-time in response to malicious code detection.
 
 			For information system components that have applicable STIGs or SRGs, the organization being inspected/assessed must comply with the STIG/SRG guidance that pertains to CCI 1243.
@@ -17392,7 +17392,7 @@
 		<ImplementationGuidance>The organization being inspected/assessed  documents and implements a process to protect information obtained from intrusion-monitoring tools from unauthorized deletion.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented process to ensure the organization being inspected/assessed  protects information obtained from intrusion-monitoring tools from unauthorized deletion.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SI" number="4" enhancement="0" dod-ap="SI-4.13" indicator="SI-4 (e )" cci="001257">
+	<Pair family="SI" number="4" enhancement="0" dod-ap="SI-4.13" indicator="SI-4 (e)" cci="001257">
 		<ImplementationGuidance>The organization being inspected/assessed documents and implements a process to  heighten the level of information system monitoring activity whenever there is an indication of increased risk to organizational operations and assets, individuals, other organizations, or the Nation based on law enforcement information, intelligence information, or other credible sources of information.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented process to ensure the organization being inspected/assessed heightens the level of information system monitoring activity whenever there is an indication of increased risk to organizational operations and assets, individuals, other organizations, or the Nation based on law enforcement information, intelligence information, or other credible sources of information.</AssessmentProcedures>
 	</Pair>
@@ -17638,7 +17638,7 @@
 		<ImplementationGuidance>The organization being inspected/assessed develops and documents profiles representing common traffic patterns and/or events.</ImplementationGuidance>
 		<AssessmentProcedures>The organization conducting the inspection/assessment obtains and examines the documented profiles to ensure the organization being inspected/assessed develops profiles representing common traffic patterns and/or events.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SI" number="4" enhancement="13" dod-ap="SI-4(13).3" indicator="SI-4 (13) (c )" cci="002669">
+	<Pair family="SI" number="4" enhancement="13" dod-ap="SI-4(13).3" indicator="SI-4 (13) (c)" cci="002669">
 		<ImplementationGuidance>The organization being inspected/assessed documents and implements a process to use the traffic/event profiles in tuning system-monitoring devices to reduce the number of false positives and false negatives.
 
 			The organization must maintain an audit log of tuning events.</ImplementationGuidance>
@@ -17860,11 +17860,11 @@
 
 			DoD has defined the personnel or roles as the ISSO and ISSM.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SI" number="5" enhancement="0" dod-ap="SI-5.6" indicator="SI-5 (c )" cci="002693">
+	<Pair family="SI" number="5" enhancement="0" dod-ap="SI-5.6" indicator="SI-5 (c)" cci="002693">
 		<ImplementationGuidance>DoD has determined the elements are not applicable as elements are not selected as recipients of security alerts, advisories and directives.</ImplementationGuidance>
 		<AssessmentProcedures>DoD has determined the elements are not applicable as elements are not selected as recipients of security alerts, advisories and directives.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SI" number="5" enhancement="0" dod-ap="SI-5.7" indicator="SI-5 (c )" cci="002694">
+	<Pair family="SI" number="5" enhancement="0" dod-ap="SI-5.7" indicator="SI-5 (c)" cci="002694">
 		<ImplementationGuidance>DoD has defined the external organizations as CNDSP Tier 1 for vetting. The CNDSP Tier 1 will pass the information to the accredited Tier 2 CNDSPs.  Tier 2 CNDSPs are responsible for ensuring all Tier 3 entities receive the information.  Tier 3 organizations will ensure all local Op Centers/LAN shops receive information (i.e. Component IT System and Security Personnel) (e.g. ISSM, ISSOs, and system administrators).</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
@@ -17928,7 +17928,7 @@
 
 			DoD has defined the frequency as 30 days.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SI" number="6" enhancement="0" dod-ap="SI-6.7" indicator="SI-6 (c )" cci="002700">
+	<Pair family="SI" number="6" enhancement="0" dod-ap="SI-6.7" indicator="SI-6 (c)" cci="002700">
 		<ImplementationGuidance>DoD has defined the personnel or roles as the ISSO and ISSM.</ImplementationGuidance>
 		<AssessmentProcedures>The organization being inspected/assessed is automatically compliant with this CCI because they are covered at the DoD level.
 
@@ -17940,7 +17940,7 @@
 
 			DoD has defined the alternative action(s) as notifies system administrator.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SI" number="6" enhancement="0" dod-ap="SI-6.6" indicator="SI-6 (c )" cci="001294">
+	<Pair family="SI" number="6" enhancement="0" dod-ap="SI-6.6" indicator="SI-6 (c)" cci="001294">
 		<ImplementationGuidance>The organization being inspected/assessed configures the information system to notify the ISSO and ISSM of failed security verification tests.
 
 			For information system components that have applicable STIGs or SRGs, the organization being inspected/assessed must comply with the STIG/SRG guidance that pertains to CCI 1294.
@@ -18392,7 +18392,7 @@
 
 			For information system components that have applicable STIGs or SRGs, the organization conducting the inspection/assessment evaluates the components to ensure that the organization being inspected/assessed has configured the information system in compliance with the applicable STIGs and SRGs pertaining to CCI 2748.</AssessmentProcedures>
 	</Pair>
-	<Pair family="SI" number="10" enhancement="1" dod-ap="SI-10(1).5" indicator="SI-10 (1) (c )" cci="002749">
+	<Pair family="SI" number="10" enhancement="1" dod-ap="SI-10(1).5" indicator="SI-10 (1) (c)" cci="002749">
 		<ImplementationGuidance>The organization being inspected/assessed configures the information system to audit the use of the manual override capability.
 
 			For information system components that have applicable STIGs or SRGs, the organization being inspected/assessed must comply with the STIG/SRG guidance that pertains to CCI 2749.</ImplementationGuidance>

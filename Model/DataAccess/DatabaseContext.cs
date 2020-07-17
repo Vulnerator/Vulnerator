@@ -73,7 +73,10 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<PortProtocolService> PortsProtocolsServices { get; set; }
         public virtual DbSet<RelatedDocument> RelatedDocuments { get; set; }
         public virtual DbSet<RelatedTesting> RelatedTestings { get; set; }
-        public virtual DbSet<ReportSeverityUserSettings> ReportSeverities { get; set; }
+
+        public virtual DbSet<ReportFindingTypeUserSettings> ReportFindingTypeUserSettings { get; set; }
+        public virtual DbSet<ReportSeverityUserSettings> ReportSeverityUserSettings { get; set; }
+        public virtual DbSet<RequiredReportUserSelection> RequiredReportUserSelections { get; set; }
         public virtual DbSet<RequiredReport> RequiredReports { get; set; }
         public virtual DbSet<ResponsibilityRole> ResponsibilityRoles { get; set; }
         public virtual DbSet<SecurityAssessmentProcedure> SecurityAssessmentProcedures { get; set; }
@@ -808,14 +811,26 @@ namespace Vulnerator.Model.DataAccess
             modelBuilder.Entity<RequiredReportUserSelection>().HasRequired(e => e.RequiredReport)
                 .WithMany(e => e.RequiredReportUserSelections);
 
+            modelBuilder.Entity<RequiredReport>().HasMany(e => e.RequiredReportUserSelections)
+                .WithRequired(e => e.RequiredReport);
+
             modelBuilder.Entity<ReportFindingTypeUserSettings>().HasRequired(e => e.RequiredReport)
                 .WithMany(e => e.ReportFindingTypeUserSettings);
+
+            modelBuilder.Entity<RequiredReport>().HasMany(e => e.ReportFindingTypeUserSettings)
+                .WithRequired(e => e.RequiredReport);
 
             modelBuilder.Entity<ReportFindingTypeUserSettings>().HasRequired(e => e.FindingType)
                 .WithMany(e => e.ReportFindingTypeUserSettings);
 
+            modelBuilder.Entity<FindingType>().HasMany(e => e.ReportFindingTypeUserSettings)
+                .WithRequired(e => e.FindingType);
+
             modelBuilder.Entity<ReportSeverityUserSettings>().HasRequired(e => e.RequiredReport)
                 .WithMany(e => e.ReportSeverityUserSettings);
+
+            modelBuilder.Entity<RequiredReport>().HasMany(e => e.ReportSeverityUserSettings)
+                .WithRequired(e => e.RequiredReport);
         }
     }
 }

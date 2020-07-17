@@ -27,19 +27,11 @@ namespace Vulnerator.Model.Entity
         public string UserName { get; set; }
         
         [Required]
-        [StringLength(50)]
-        public string ReportCatI { get; set; }
+        [StringLength(25)]
+        public string Severity { get; set; }
         
         [Required]
-        [StringLength(50)]
-        public string ReportCatII { get; set; }
-        
-        [Required]
-        [StringLength(50)]
-        public string ReportCatIII { get; set; }
-        
-        [Required]
-        [StringLength(50)]
-        public string ReportCatIV { get; set; }
+        [StringLength(5)]
+        public string IsSelected { get; set; }
     }
 }

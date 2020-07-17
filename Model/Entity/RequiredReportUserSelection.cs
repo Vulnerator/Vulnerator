@@ -28,6 +28,6 @@ namespace Vulnerator.Model.Entity
         
         [Required]
         [StringLength(5)]
-        public string IsSelected { get; set; }
+        public string IsReportSelected { get; set; }
     }
 }
