@@ -76,6 +76,7 @@ namespace Vulnerator.Model.DataAccess
 
         public virtual DbSet<ReportFindingTypeUserSettings> ReportFindingTypeUserSettings { get; set; }
         public virtual DbSet<ReportSeverityUserSettings> ReportSeverityUserSettings { get; set; }
+        public virtual DbSet<ReportStatusUserSettings> ReportStatusUserSettings { get; set; }
         public virtual DbSet<RequiredReportUserSelection> RequiredReportUserSelections { get; set; }
         public virtual DbSet<RequiredReport> RequiredReports { get; set; }
         public virtual DbSet<ResponsibilityRole> ResponsibilityRoles { get; set; }
@@ -830,6 +831,12 @@ namespace Vulnerator.Model.DataAccess
                 .WithMany(e => e.ReportSeverityUserSettings);
 
             modelBuilder.Entity<RequiredReport>().HasMany(e => e.ReportSeverityUserSettings)
+                .WithRequired(e => e.RequiredReport);
+
+            modelBuilder.Entity<ReportStatusUserSettings>().HasRequired(e => e.RequiredReport)
+                .WithMany(e => e.ReportStatusUserSettings);
+
+            modelBuilder.Entity<RequiredReport>().HasMany(e => e.ReportStatusUserSettings)
                 .WithRequired(e => e.RequiredReport);
         }
     }

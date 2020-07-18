@@ -992,6 +992,20 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public void UpdateReportStatusIsSelected(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.ReportStatusIsSelected.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to update 'IsSelected' value for ReportStatusUserSetting with ID '{sqliteCommand.Parameters["ReportStatusUserSettings_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
         public void DeleteGroupsCCIsMappingByGroup(SQLiteCommand sqliteCommand)
         {
             try

@@ -109,6 +109,21 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private ObservableCollection<ReportStatusUserSettings> _selectedReportStatusSettings;
+
+        public ObservableCollection<ReportStatusUserSettings> SelectedReportStatusSettings
+        {
+            get => _selectedReportStatusSettings;
+            set
+            {
+                if (_selectedReportStatusSettings != value)
+                {
+                    _selectedReportStatusSettings = value;
+                    RaisePropertyChanged("SelectedReportStatusSettings");
+                }
+            }
+        }
+
         public ReportingViewModel()
         {
             try
@@ -207,6 +222,11 @@ namespace Vulnerator.ViewModel
                         .AsNoTracking()
                         .ToObservableCollection();
                     SelectedReportSeveritySettings = databaseContext.ReportSeverityUserSettings
+                        .Where(r => r.RequiredReport_ID.Equals(selection.RequiredReport_ID) &&
+                                    r.UserName.Equals(Properties.Settings.Default.ActiveUser))
+                        .AsNoTracking()
+                        .ToObservableCollection();
+                    SelectedReportStatusSettings = databaseContext.ReportStatusUserSettings
                         .Where(r => r.RequiredReport_ID.Equals(selection.RequiredReport_ID) &&
                                     r.UserName.Equals(Properties.Settings.Default.ActiveUser))
                         .AsNoTracking()
@@ -371,6 +391,58 @@ namespace Vulnerator.ViewModel
             catch (Exception exception)
             {
                 LogWriter.LogError("The 'SetReportSeverityIsSelected' background worker has failed.");
+                e.Result = exception;
+                throw exception;
+            }
+        }
+
+        public RelayCommand<object> SetReportStatusIsSelectedCommand => new RelayCommand<object>(SetReportStatusIsSelected);
+
+        private void SetReportStatusIsSelected(object parameter)
+        {
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += SetReportStatusIsSelectedBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerCompleted += ReportUpdateBackgroundWorker_RunWorkerCompleted;
+                backgroundWorker.RunWorkerAsync(parameter);
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                string error = $"Unable to set `IsSelected` value for the report severity with ID '{parameter}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        private void SetReportStatusIsSelectedBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (e.Argument is null)
+                {
+                    e.Result = "No parameter";
+                    return;
+                }
+                
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                object[] args = e.Argument as object[];
+
+                using (SQLiteCommand sqLiteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqLiteCommand.Parameters.Add(new SQLiteParameter("ReportStatusUserSettings_ID", args[0]));
+                    sqLiteCommand.Parameters.Add(new SQLiteParameter("IsSelected", args[1].ToString()));
+                    databaseInterface.UpdateReportStatusIsSelected(sqLiteCommand);
+                }
+                e.Result = "Success";
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("The 'SetReportStatusIsSelected' background worker has failed.");
                 e.Result = exception;
                 throw exception;
             }

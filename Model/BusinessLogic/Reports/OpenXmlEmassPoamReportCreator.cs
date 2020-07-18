@@ -479,8 +479,61 @@ namespace Vulnerator.Model.BusinessLogic.Reports
             {
                 using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
+                    string findingTypeFilter = string.Empty;
+                    string severityFilter = string.Empty;
+                    string statusFilter = string.Empty;
+                    List<string> statusFilterList = new List<string>();
+                    sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.EmassPoamRequiredFindingTypes.dml", assembly);
+                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                    {
+                        if (!sqliteDataReader.HasRows)
+                        { return; }
+
+                        findingTypeFilter = "UF.FindingType_ID IN (";
+                        while (sqliteDataReader.Read())
+                        {
+                            findingTypeFilter += $"{sqliteDataReader["FindingType_ID"]}, ";
+                        }
+
+                        findingTypeFilter = findingTypeFilter.Remove(findingTypeFilter.Length - 2);
+                        findingTypeFilter += ")";
+                    }
+
+                    sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.EmassPoamRequiredSeverities.dml", assembly);
+                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                    {
+                        if (!sqliteDataReader.HasRows)
+                        { return; }
+
+                        severityFilter = "IN (";
+                        while (sqliteDataReader.Read())
+                        {
+                            severityFilter += $"{sqliteDataReader["Severity"]}, ";
+                        }
+
+                        severityFilter = severityFilter.Remove(severityFilter.Length - 2);
+                        severityFilter += ")";
+                    }
+
+                    sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.EmassPoamRequiredStatuses.dml", assembly);
+                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                    {
+                        if (!sqliteDataReader.HasRows)
+                        { return; }
+
+                        statusFilter = "IN (";
+                        while (sqliteDataReader.Read())
+                        {
+                            statusFilter += $"{sqliteDataReader["Status"]}, ";
+                            statusFilterList.Add($"%{sqliteDataReader["Status"]}%");
+                        }
+
+                        statusFilter = statusFilter.Remove(statusFilter.Length - 2);
+                        statusFilter += ")";
+                    }
+
                     sqliteCommand.CommandText =
-                        _ddlReader.ReadDdl(_storedProcedureBase + "Select.GroupedPoamVulnerabilities.dml", assembly);
+                        _ddlReader.ReadDdl(_storedProcedureBase + "Select.EmassPoamVulnerabilities.dml", assembly);
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
                         while (sqliteDataReader.Read())

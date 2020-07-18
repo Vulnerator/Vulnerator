@@ -898,8 +898,7 @@
     <Style x:Key="ResponsiveGridReportingTextBoxStyle"
            BasedOn="{StaticResource HeaderedTextBoxStyle}"
            TargetType="{x:Type TextBox}">
-        <Setter Property="GridExtra:ResponsiveGrid.LG" Value="4" />
-        <Setter Property="GridExtra:ResponsiveGrid.MD" Value="6" />
+        <Setter Property="GridExtra:ResponsiveGrid.MD" Value="4" />
         <Setter Property="GridExtra:ResponsiveGrid.XS" Value="12" />
     </Style>
 

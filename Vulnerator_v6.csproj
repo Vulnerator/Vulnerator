@@ -377,6 +377,7 @@
     <Compile Include="Model\Entity\RelatedDocument.cs" />
     <Compile Include="Model\Entity\RelatedTesting.cs" />
     <Compile Include="Model\Entity\ReportFindingTypeUserSettings.cs" />
+    <Compile Include="Model\Entity\ReportStatusUserSettings.cs" />
     <Compile Include="Model\Entity\ReportSeverityUserSettings.cs" />
     <Compile Include="Model\Entity\RequiredReport.cs" />
     <Compile Include="Model\Entity\RequiredReportUserSelection.cs" />
@@ -722,6 +723,12 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserSelections.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportFindingTypeIsSelected.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportSeverityIsSelected.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\EmassPoamRequiredFindingTypes.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\EmassPoamRequiredSeverities.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ReportStatusUserSettings.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserStatuses.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\EmassPoamRequiredStatuses.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportStatusIsSelected.dml" />
     <Resource Include="Vulnerator_Logo_Large_Color_SquareBackground_20190805.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
@@ -809,7 +816,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\VulnerabilityIA_ControlMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\VulnerabilitySourceVulnerabilityMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\Hardware.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\GroupedPoamVulnerabilities.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\EmassPoamVulnerabilities.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\HardwareCklCreationData.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\Indexes.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\UngroupedVulnerabilities.dml" />

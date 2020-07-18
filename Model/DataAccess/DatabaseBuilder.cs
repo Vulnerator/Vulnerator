@@ -696,7 +696,8 @@ namespace Vulnerator.Model.DataAccess
             try
             {
                 LogWriter.LogStatusUpdate("Inserting user-specific report requirements.");
-                string[] severities = {"CAT I", "CAT II", "CAT III", "CAT IV", "Critical", "High", "Medium", "Low", "Informational"};
+                string[] severities = {"CAT I", "CAT II", "CAT III", "CAT IV"};
+                string[] statuses = {"Ongoing", "Not Reviewed", "Not Applicable", "Completed", "Error"};
                 List<string> reportIds = new List<string>();
                 List<string> findingTypeIds = new List<string>();
 
@@ -743,6 +744,14 @@ namespace Vulnerator.Model.DataAccess
                     foreach (string severity in severities)
                     {
                         sqliteCommand.Parameters.Add(new SQLiteParameter("Severity", severity));
+                        sqliteCommand.ExecuteNonQuery();
+                    }
+                    sqliteCommand.CommandText =
+                        _ddlReader.ReadDdl(storedProcedureBase + "RequiredReportUserStatuses.dml",
+                            assembly);
+                    foreach (string status in statuses)
+                    {
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("Status", status));
                         sqliteCommand.ExecuteNonQuery();
                     }
                     sqliteCommand.CommandText =
