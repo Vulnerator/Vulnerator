@@ -171,6 +171,9 @@
   <data name="RegexRawStigRelease" xml:space="preserve">
     <value>(?&lt;=Release: )\d+(?=\s)</value>
   </data>
+  <data name="RegexSqlGroupBy" xml:space="preserve">
+    <value>(?:GROUP\sBY)|(?:group\sby)</value>
+  </data>
   <data name="RegexStigDate" xml:space="preserve">
     <value>\d{2}\s\D+\s\d{4}</value>
   </data>
