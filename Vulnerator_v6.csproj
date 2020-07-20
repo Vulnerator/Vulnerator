@@ -719,7 +719,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\NavyRar.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\NavyRarVulnerabilities.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserFindingTypes.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserSeverities.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserSelections.dml" />
