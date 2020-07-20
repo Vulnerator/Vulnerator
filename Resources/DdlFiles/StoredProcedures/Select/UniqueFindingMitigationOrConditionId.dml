@@ -1,0 +1,6 @@
+﻿SELECT
+     MitigationOrCondition_ID
+FROM
+     UniqueFindings
+WHERE
+     InstanceIdentifier = @InstanceIdentifier;

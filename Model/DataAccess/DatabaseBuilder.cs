@@ -698,10 +698,13 @@ namespace Vulnerator.Model.DataAccess
                 LogWriter.LogStatusUpdate("Inserting user-specific report requirements.");
                 string[] severities = {"CAT I", "CAT II", "CAT III", "CAT IV"};
                 string[] statuses = {"Ongoing", "Not Reviewed", "Not Applicable", "Completed", "Error"};
+                string storedProcedureBase = "Vulnerator.Resources.DdlFiles.StoredProcedures.Select.";
                 List<string> reportIds = new List<string>();
                 List<string> findingTypeIds = new List<string>();
+                List<string> groupIds = new List<string>();
 
-                sqliteCommand.CommandText = "SELECT RequiredReport_ID FROM RequiredReports;";
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(storedProcedureBase + "RequiredReportIds.dml",
+                    assembly);;
                 using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
                     if (sqliteDataReader.HasRows)
@@ -712,9 +715,9 @@ namespace Vulnerator.Model.DataAccess
                         }
                     }
                 }
-            
 
-                sqliteCommand.CommandText = "SELECT FindingType_ID FROM FindingTypes;";
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(storedProcedureBase + "FindingTypeIds.dml",
+                    assembly);
                 using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
                     if (sqliteDataReader.HasRows)
@@ -725,8 +728,22 @@ namespace Vulnerator.Model.DataAccess
                         }
                     }
                 }
+
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(storedProcedureBase + "GroupIds.dml",
+                    assembly);
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                {
+                    if (sqliteDataReader.HasRows)
+                    {
+                        while (sqliteDataReader.Read())
+                        {
+                            groupIds.Add(sqliteDataReader[0].ToString());
+                        }
+                    }
+                }
+
                 sqliteCommand.Parameters.Add(new SQLiteParameter("UserName", Properties.Settings.Default.ActiveUser));
-                string storedProcedureBase = "Vulnerator.Resources.DdlFiles.StoredProcedures.Insert.";
+                storedProcedureBase = "Vulnerator.Resources.DdlFiles.StoredProcedures.Insert.";
                 foreach (string report in reportIds)
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("RequiredReport_ID", report));
@@ -752,6 +769,14 @@ namespace Vulnerator.Model.DataAccess
                     foreach (string status in statuses)
                     {
                         sqliteCommand.Parameters.Add(new SQLiteParameter("Status", status));
+                        sqliteCommand.ExecuteNonQuery();
+                    }
+                    sqliteCommand.CommandText =
+                        _ddlReader.ReadDdl(storedProcedureBase + "RequiredReportUserGroups.dml",
+                            assembly);
+                    foreach (string group in groupIds)
+                    {
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("Group_ID", group));
                         sqliteCommand.ExecuteNonQuery();
                     }
                     sqliteCommand.CommandText =

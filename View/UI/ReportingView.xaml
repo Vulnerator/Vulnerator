@@ -130,7 +130,7 @@
                                 <DataGrid MaxHeight="275"
                                           Margin="{StaticResource MarginLeftTopRight5}"
                                           VerticalAlignment="Stretch"
-                                          GridExtra:ResponsiveGrid.MD="4"
+                                          GridExtra:ResponsiveGrid.MD="3"
                                           GridExtra:ResponsiveGrid.XS="12"
                                           ItemsSource="{Binding SelectedReportFindingTypeSettings, Mode=TwoWay}"
                                           Style="{StaticResource GreyBorderedDataGridStyle}">
@@ -165,7 +165,7 @@
                                 <DataGrid MaxHeight="275"
                                           Margin="{StaticResource MarginLeftTopRight5}"
                                           VerticalAlignment="Stretch"
-                                          GridExtra:ResponsiveGrid.MD="4"
+                                          GridExtra:ResponsiveGrid.MD="3"
                                           GridExtra:ResponsiveGrid.XS="12"
                                           ItemsSource="{Binding SelectedReportSeveritySettings, Mode=TwoWay}"
                                           Style="{StaticResource GreyBorderedDataGridStyle}">
@@ -199,7 +199,7 @@
                                 <DataGrid MaxHeight="275"
                                           Margin="{StaticResource MarginLeftTopRight5}"
                                           VerticalAlignment="Stretch"
-                                          GridExtra:ResponsiveGrid.MD="4"
+                                          GridExtra:ResponsiveGrid.MD="3"
                                           GridExtra:ResponsiveGrid.XS="12"
                                           ItemsSource="{Binding SelectedReportStatusSettings, Mode=TwoWay}"
                                           Style="{StaticResource GreyBorderedDataGridStyle}">
@@ -227,6 +227,40 @@
                                         <DataGridTextColumn Width="Auto"
                                                             Binding="{Binding Status}"
                                                             Header="Status"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <DataGrid MaxHeight="275"
+                                          Margin="{StaticResource MarginLeftTopRight5}"
+                                          VerticalAlignment="Stretch"
+                                          GridExtra:ResponsiveGrid.MD="3"
+                                          GridExtra:ResponsiveGrid.XS="12"
+                                          ItemsSource="{Binding SelectedReportGroupSettings, Mode=TwoWay}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridTemplateColumn Width="Auto"
+                                                                HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <CheckBox Margin="{StaticResource MarginLeft5}"
+                                                              HorizontalAlignment="Center"
+                                                              Command="{Binding DataContext.SetReportGroupIsSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
+                                                              IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                                              Style="{StaticResource CustomCheckBox}">
+                                                        <CheckBox.CommandParameter>
+                                                            <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                                                                <Binding Path="ReportGroupUserSettings_ID" />
+                                                                <Binding Path="IsChecked"
+                                                                         RelativeSource="{RelativeSource Mode=Self}" />
+                                                            </MultiBinding>
+                                                        </CheckBox.CommandParameter>
+                                                    </CheckBox>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTextColumn Width="Auto"
+                                                            Binding="{Binding Group.GroupName}"
+                                                            Header="Group"
                                                             HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                                     </DataGrid.Columns>
                                 </DataGrid>

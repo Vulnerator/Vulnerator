@@ -593,7 +593,7 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 LogWriter.LogError(
-                    $"Unable to parse the version information for plugin '{sqliteCommand.Parameters["VulnerabilityVersion"].Value.ToString()}'.");
+                    $"Unable to parse the version information for plugin '{sqliteCommand.Parameters["VulnerabilityVersion"].Value}'.");
                 throw exception;
             }
         }
@@ -611,7 +611,7 @@ namespace Vulnerator.Model.BusinessLogic
             catch (Exception exception)
             {
                 LogWriter.LogError(
-                    $"Unable to insert source '{sqliteCommand.Parameters["SourceName"].Value.ToString()} {sqliteCommand.Parameters["SourceVersion"].Value.ToString()} {sqliteCommand.Parameters["SourceRelease"].Value.ToString()}'.");
+                    $"Unable to insert source '{sqliteCommand.Parameters["SourceName"].Value} {sqliteCommand.Parameters["SourceVersion"].Value} {sqliteCommand.Parameters["SourceRelease"].Value}'.");
                 throw exception;
             }
         }
@@ -621,6 +621,7 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 sqliteCommand.Parameters["Status"].Value = "Ongoing";
+                sqliteCommand.Parameters["MitigatedStatus"].Value = "Ongoing";
                 sqliteCommand.Parameters["UniqueFinding_ID"].Value = DBNull.Value;
                 sqliteCommand.Parameters["FirstDiscovered"].Value = firstDiscovered;
                 sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "False";
@@ -633,11 +634,41 @@ namespace Vulnerator.Model.BusinessLogic
                     $"{sqliteCommand.Parameters["DiscoveredServiceName"].Value}";
                 databaseInterface.UpdateUniqueFinding(sqliteCommand);
                 databaseInterface.InsertUniqueFinding(sqliteCommand);
+                PrepareMitigationOrCondition(sqliteCommand);
             }
             catch (Exception exception)
             {
                 LogWriter.LogError(
-                    $"Unable to create a UniqueFinding record for plugin '{sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value}'.");
+                    $"Unable to create or update a UniqueFinding record for plugin '{sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value}'.");
+                throw exception;
+            }
+        }
+
+        private void PrepareMitigationOrCondition(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                int? mitigationOrCondition_ID =
+                    databaseInterface.SelectUniqueFindingMitigationOrConditionId(sqliteCommand);
+                if (mitigationOrCondition_ID is null)
+                {
+                    databaseInterface.InsertMitigationOrConditionMitigatedStatus(sqliteCommand);
+                    sqliteCommand.Parameters["MitigationOrCondition_ID"].Value =
+                        databaseInterface.SelectLastInsertRowId(sqliteCommand);
+                    databaseInterface.UpdateUniqueFindingMitigationOrCondition(sqliteCommand);
+                    return;
+                }
+
+                if (sqliteCommand.Parameters["MitigatedStatus"].Value.Equals("Completed"))
+                {
+                    sqliteCommand.Parameters["MitigationOrCondition_ID"].Value = mitigationOrCondition_ID;
+                    databaseInterface.UpdateMitigationOrConditionMitigatedStatus(sqliteCommand);
+                }
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError(
+                    $"Unable to create or update a MitigationOrCondition record for plugin '{sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value}'.");
                 throw exception;
             }
         }

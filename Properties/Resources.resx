@@ -153,6 +153,9 @@
   <data name="RegexExcessiveNewLineAndTab" xml:space="preserve">
     <value>(?:(\r?)\n){2,}(?:\t){2,}</value>
   </data>
+  <data name="RegexGroupsMitigationsOrConditionsVulnerabilities" xml:space="preserve">
+    <value>\) GroupsMitigationsOrConditionsVulnerabilities</value>
+  </data>
   <data name="RegexIndentedMidlineNewLine" xml:space="preserve">
     <value>(?:\r)*\n\s{4,}</value>
   </data>

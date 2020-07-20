@@ -377,6 +377,7 @@
     <Compile Include="Model\Entity\PortProtocolService.cs" />
     <Compile Include="Model\Entity\RelatedDocument.cs" />
     <Compile Include="Model\Entity\RelatedTesting.cs" />
+    <Compile Include="Model\Entity\ReportGroupUserSettings.cs" />
     <Compile Include="Model\Entity\ReportFindingTypeUserSettings.cs" />
     <Compile Include="Model\Entity\ReportStatusUserSettings.cs" />
     <Compile Include="Model\Entity\ReportSeverityUserSettings.cs" />
@@ -724,12 +725,22 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserSelections.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportFindingTypeIsSelected.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportSeverityIsSelected.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\EmassPoamRequiredFindingTypes.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\EmassPoamRequiredSeverities.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\RequiredFindingTypes.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\RequiredSeverities.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ReportStatusUserSettings.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserStatuses.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\EmassPoamRequiredStatuses.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\RequiredStatuses.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportStatusIsSelected.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\MitigationOrConditionMitigatedStatus.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\UniqueFindingMitigationOrConditionId.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\MitigationOrConditionMitigatedStatus.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\GroupIds.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\FindingTypeIds.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\RequiredReportIds.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ReportGroupUserSettings.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserGroups.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportGroupIsSelected.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\RequiredGroups.dml" />
     <Resource Include="Vulnerator_Logo_Large_Color_SquareBackground_20190805.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

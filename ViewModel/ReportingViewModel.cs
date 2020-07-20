@@ -94,6 +94,21 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private ObservableCollection<ReportGroupUserSettings> _selectedReportGroupSettings;
+
+        public ObservableCollection<ReportGroupUserSettings> SelectedReportGroupSettings
+        {
+            get => _selectedReportGroupSettings;
+            set
+            {
+                if (_selectedReportGroupSettings != value)
+                {
+                    _selectedReportGroupSettings = value;
+                    RaisePropertyChanged("SelectedReportGroupSettings");
+                }
+            }
+        }
+
         private ObservableCollection<ReportSeverityUserSettings> _selectedReportSeveritySettings;
 
         public ObservableCollection<ReportSeverityUserSettings> SelectedReportSeveritySettings
@@ -221,6 +236,12 @@ namespace Vulnerator.ViewModel
                                     r.UserName.Equals(Properties.Settings.Default.ActiveUser))
                         .AsNoTracking()
                         .ToObservableCollection();
+                    SelectedReportGroupSettings = databaseContext.ReportGroupUserSettings
+                        .Include(r => r.Group)
+                        .Where(r => r.RequiredReport_ID.Equals(selection.RequiredReport_ID) &&
+                                    r.UserName.Equals(Properties.Settings.Default.ActiveUser))
+                        .AsNoTracking()
+                        .ToObservableCollection();
                     SelectedReportSeveritySettings = databaseContext.ReportSeverityUserSettings
                         .Where(r => r.RequiredReport_ID.Equals(selection.RequiredReport_ID) &&
                                     r.UserName.Equals(Properties.Settings.Default.ActiveUser))
@@ -344,6 +365,58 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        public RelayCommand<object> SetReportGroupIsSelectedCommand => new RelayCommand<object>(SetReportGroupIsSelected);
+
+        private void SetReportGroupIsSelected(object parameter)
+        {
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += SetReportGroupIsSelectedBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerCompleted += ReportUpdateBackgroundWorker_RunWorkerCompleted;
+                backgroundWorker.RunWorkerAsync(parameter);
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                string error = $"Unable to set `IsSelected` value for the report finding type with ID '{parameter}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        private void SetReportGroupIsSelectedBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (e.Argument is null)
+                {
+                    e.Result = "No parameter";
+                    return;
+                }
+                
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                object[] args = e.Argument as object[];
+
+                using (SQLiteCommand sqLiteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqLiteCommand.Parameters.Add(new SQLiteParameter("ReportGroupUserSettings_ID", args[0]));
+                    sqLiteCommand.Parameters.Add(new SQLiteParameter("IsSelected", args[1].ToString()));
+                    databaseInterface.UpdateReportGroupIsSelected(sqLiteCommand);
+                }
+                e.Result = "Success";
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("The 'SetReportGroupIsSelected' background worker has failed.");
+                e.Result = exception;
+                throw exception;
+            }
+        }
+
         public RelayCommand<object> SetReportSeverityIsSelectedCommand => new RelayCommand<object>(SetReportSeverityIsSelected);
 
         private void SetReportSeverityIsSelected(object parameter)
@@ -453,6 +526,10 @@ namespace Vulnerator.ViewModel
         {
             try
             {
+                if (e.Result.ToString().Equals("Success"))
+                {
+                    return;
+                }
                 Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
                 Notification notification = new Notification();
                 notification.Background = appStyle.Item1.Resources["GrayBrush10"].ToString();
@@ -474,14 +551,6 @@ namespace Vulnerator.ViewModel
                     {
                         switch (e.Result.ToString())
                         {
-                            case "Success":
-                            {
-                                notification.Accent = "Green";
-                                notification.Badge = "Success";
-                                notification.Header = "Report Update";
-                                notification.Message = "Requested report updates performed successfully.";
-                                break;
-                            }
                             case "No parameter":
                             {
                                 notification.Accent = "Orange";

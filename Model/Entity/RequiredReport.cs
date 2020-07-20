@@ -13,6 +13,7 @@ namespace Vulnerator.Model.Entity
         public RequiredReport()
         {
             ReportFindingTypeUserSettings = new ObservableCollection<ReportFindingTypeUserSettings>();
+            ReportGroupUserSettings = new ObservableCollection<ReportGroupUserSettings>();
             ReportSeverityUserSettings = new ObservableCollection<ReportSeverityUserSettings>();
             ReportStatusUserSettings = new ObservableCollection<ReportStatusUserSettings>();
             RequiredReportUserSelections = new ObservableCollection<RequiredReportUserSelection>();
@@ -39,6 +40,9 @@ namespace Vulnerator.Model.Entity
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ReportFindingTypeUserSettings> ReportFindingTypeUserSettings { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ReportGroupUserSettings> ReportGroupUserSettings { get; set; }
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ReportSeverityUserSettings> ReportSeverityUserSettings { get; set; }

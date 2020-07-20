@@ -1,0 +1,7 @@
+SELECT G.Group_ID
+FROM ReportGroupUserSettings
+         LEFT JOIN Groups G on ReportGroupUserSettings.Group_ID = G.Group_ID
+         LEFT JOIN RequiredReports RR on ReportGroupUserSettings.RequiredReport_ID = RR.RequiredReport_ID
+WHERE IsSelected = 'True'
+  AND DisplayedReportName = @DisplayedReportName
+  AND UserName = @UserName

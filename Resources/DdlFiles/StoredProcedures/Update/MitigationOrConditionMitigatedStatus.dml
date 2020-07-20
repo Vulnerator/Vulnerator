@@ -1,0 +1,6 @@
+﻿UPDATE
+    MitigationsOrConditions
+SET
+    MitigatedStatus = @MitigatedStatus
+WHERE
+    MitigationOrCondition_ID = @MitigationOrCondition_ID;

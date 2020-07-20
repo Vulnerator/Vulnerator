@@ -73,8 +73,8 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<PortProtocolService> PortsProtocolsServices { get; set; }
         public virtual DbSet<RelatedDocument> RelatedDocuments { get; set; }
         public virtual DbSet<RelatedTesting> RelatedTestings { get; set; }
-
         public virtual DbSet<ReportFindingTypeUserSettings> ReportFindingTypeUserSettings { get; set; }
+        public virtual DbSet<ReportGroupUserSettings> ReportGroupUserSettings { get; set; }
         public virtual DbSet<ReportSeverityUserSettings> ReportSeverityUserSettings { get; set; }
         public virtual DbSet<ReportStatusUserSettings> ReportStatusUserSettings { get; set; }
         public virtual DbSet<RequiredReportUserSelection> RequiredReportUserSelections { get; set; }
@@ -821,8 +821,14 @@ namespace Vulnerator.Model.DataAccess
             modelBuilder.Entity<RequiredReport>().HasMany(e => e.ReportFindingTypeUserSettings)
                 .WithRequired(e => e.RequiredReport);
 
-            modelBuilder.Entity<ReportFindingTypeUserSettings>().HasRequired(e => e.FindingType)
+            modelBuilder.Entity<ReportFindingTypeUserSettings>().HasRequired(e => e.RequiredReport)
                 .WithMany(e => e.ReportFindingTypeUserSettings);
+
+            modelBuilder.Entity<RequiredReport>().HasMany(e => e.ReportGroupUserSettings)
+                .WithRequired(e => e.RequiredReport);
+
+            modelBuilder.Entity<ReportGroupUserSettings>().HasRequired(e => e.RequiredReport)
+                .WithMany(e => e.ReportGroupUserSettings);
 
             modelBuilder.Entity<FindingType>().HasMany(e => e.ReportFindingTypeUserSettings)
                 .WithRequired(e => e.FindingType);

@@ -15,94 +15,118 @@ namespace Vulnerator.Model.BusinessLogic.Reports
         private Assembly assembly = Assembly.GetExecutingAssembly();
         private string _storedProcedureBase = "Vulnerator.Resources.DdlFiles.StoredProcedures.";
 
-        public string FindingType(string reportName, SQLiteCommand sqliteCommand)
+        public string FindingType(SQLiteCommand sqliteCommand)
         {
             try
             {
-                string findingTypeFilter = string.Empty;
-                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + $"Select.{reportName}RequiredFindingTypes.dml", assembly);
+                string filter = string.Empty;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.RequiredFindingTypes.dml", assembly);
                 using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
                     if (!sqliteDataReader.HasRows)
-                    { return findingTypeFilter; }
+                    { return filter; }
 
-                    findingTypeFilter = "(UF.FindingType_ID IN (";
+                    filter = "(UF.FindingType_ID IN (";
                     while (sqliteDataReader.Read())
                     {
-                        findingTypeFilter += $"'{sqliteDataReader["FindingType_ID"]}', ";
+                        filter += $"'{sqliteDataReader["FindingType_ID"]}', ";
                     }
 
-                    findingTypeFilter = findingTypeFilter.Remove(findingTypeFilter.Length - 2);
-                    findingTypeFilter += ")) ";
-                    return findingTypeFilter;
+                    filter = filter.Remove(filter.Length - 2);
+                    filter += ")) ";
+                    return filter;
                 }
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Unable to write findings to the 'POA&M' workbook.");
+                LogWriter.LogError("Unable to obtain 'FindingType' filter requirements.");
                 throw exception;
             }
         }
 
-        public string Severity(string reportName, SQLiteCommand sqliteCommand)
+        public string Group(SQLiteCommand sqliteCommand)
         {
             try
             {
-                string severityFilter = string.Empty;
-                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + $"Select.{reportName}RequiredSeverities.dml", assembly);
+                string filter = string.Empty;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.RequiredGroups.dml", assembly);
                 using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
                     if (!sqliteDataReader.HasRows)
-                    { return severityFilter; }
+                    { return filter; }
 
-                    severityFilter = "IN (";
+                    filter = "(HG.Group_ID IN (";
                     while (sqliteDataReader.Read())
                     {
-                        severityFilter += $"'{sqliteDataReader["Severity"]}', ";
+                        filter += $"'{sqliteDataReader["Group_ID"]}', ";
                     }
 
-                    severityFilter = severityFilter.Remove(severityFilter.Length - 2);
-                    severityFilter += ")";
-                    return severityFilter;
+                    filter = filter.Remove(filter.Length - 2);
+                    filter += ")) ";
+                    return filter;
                 }
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Unable to write findings to the 'POA&M' workbook.");
+                LogWriter.LogError("Unable to obtain 'Group' filter requirements.");
                 throw exception;
             }
         }
 
-        public Tuple<string, List<string>> Status(string reportName, SQLiteCommand sqliteCommand)
+        public string Severity(SQLiteCommand sqliteCommand)
         {
             try
             {
-                string statusFilter = string.Empty;
-                List<string> statusFilterList = new List<string>();
-                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + $"Select.{reportName}RequiredStatuses.dml", assembly);
+                string filter = string.Empty;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.RequiredSeverities.dml", assembly);
                 using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
                     if (!sqliteDataReader.HasRows)
-                    {
-                        return Tuple.Create(statusFilter, statusFilterList);
+                    { return filter; }
 
-                    }
-
-                    statusFilter = "IN (";
+                    filter = "IN (";
                     while (sqliteDataReader.Read())
                     {
-                        statusFilter += $"{sqliteDataReader["Status"]}, ";
-                        statusFilterList.Add($"%{sqliteDataReader["Status"]}%");
+                        filter += $"'{sqliteDataReader["Severity"].ToString().Remove(0, 4)}', ";
                     }
 
-                    statusFilter = statusFilter.Remove(statusFilter.Length - 2);
-                    statusFilter += ")";
-                    return Tuple.Create(statusFilter, statusFilterList);
+                    filter = filter.Remove(filter.Length - 2);
+                    filter += ")";
+                    return filter;
                 }
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Unable to write findings to the 'POA&M' workbook.");
+                LogWriter.LogError("Unable to obtain 'Severity' filter requirements.");
+                throw exception;
+            }
+        }
+
+        public string Status(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                string filter = string.Empty;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.RequiredStatuses.dml", assembly);
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                {
+                    if (!sqliteDataReader.HasRows)
+                    { return filter; }
+
+                    filter = "IN (";
+                    while (sqliteDataReader.Read())
+                    {
+                        filter += $"'{sqliteDataReader["Status"]}', ";
+                    }
+
+                    filter = filter.Remove(filter.Length - 2);
+                    filter += ")";
+                    return filter;
+                }
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to obtain 'Status' filter requirements.");
                 throw exception;
             }
         }

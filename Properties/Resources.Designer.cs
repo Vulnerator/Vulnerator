@@ -169,6 +169,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to \) GroupsMitigationsOrConditionsVulnerabilities.
+        /// </summary>
+        internal static string RegexGroupsMitigationsOrConditionsVulnerabilities {
+            get {
+                return ResourceManager.GetString("RegexGroupsMitigationsOrConditionsVulnerabilities", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to (?:\r)*\n\s{4,}.
         /// </summary>
         internal static string RegexIndentedMidlineNewLine {

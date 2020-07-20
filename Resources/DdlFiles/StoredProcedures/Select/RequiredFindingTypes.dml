@@ -4,3 +4,4 @@ FROM ReportFindingTypeUserSettings
          LEFT JOIN RequiredReports RR on ReportFindingTypeUserSettings.RequiredReport_ID = RR.RequiredReport_ID
 WHERE IsSelected = 'True'
   AND DisplayedReportName = 'eMASS-Importable POA&M'
+  AND UserName = @UserName
