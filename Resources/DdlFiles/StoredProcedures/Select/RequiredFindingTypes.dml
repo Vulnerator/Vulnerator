@@ -1,0 +1,7 @@
+SELECT FT.FindingType_ID
+FROM ReportFindingTypeUserSettings
+         LEFT JOIN FindingTypes FT on ReportFindingTypeUserSettings.FindingType_ID = FT.FindingType_ID
+         LEFT JOIN RequiredReports RR on ReportFindingTypeUserSettings.RequiredReport_ID = RR.RequiredReport_ID
+WHERE IsSelected = 'True'
+  AND DisplayedReportName = 'eMASS-Importable POA&M'
+  AND UserName = @UserName

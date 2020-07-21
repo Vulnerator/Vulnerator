@@ -153,6 +153,9 @@
   <data name="RegexExcessiveNewLineAndTab" xml:space="preserve">
     <value>(?:(\r?)\n){2,}(?:\t){2,}</value>
   </data>
+  <data name="RegexGroupsMitigationsOrConditionsVulnerabilities" xml:space="preserve">
+    <value>\) GroupsMitigationsOrConditionsVulnerabilities</value>
+  </data>
   <data name="RegexIndentedMidlineNewLine" xml:space="preserve">
     <value>(?:\r)*\n\s{4,}</value>
   </data>
@@ -171,8 +174,14 @@
   <data name="RegexRawStigRelease" xml:space="preserve">
     <value>(?&lt;=Release: )\d+(?=\s)</value>
   </data>
+  <data name="RegexSqlGroupBy" xml:space="preserve">
+    <value>(?:GROUP\sBY)|(?:group\sby)</value>
+  </data>
   <data name="RegexStigDate" xml:space="preserve">
     <value>\d{2}\s\D+\s\d{4}</value>
+  </data>
+  <data name="RegexStigDiscrepanciesStatus" xml:space="preserve">
+    <value>FindingType\s+=\s+(?:(?:'CKL')|(?:'XCCDF'))\)\)\s+as\s+(?:Mitigated)*(?:(?:Ckl)|(?:Xccdf))Status</value>
   </data>
   <data name="RegexStigId" xml:space="preserve">
     <value>(?:(?:\w)+(?:-|\.|_)?)+</value>

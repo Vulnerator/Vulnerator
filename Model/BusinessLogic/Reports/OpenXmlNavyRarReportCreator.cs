@@ -4,6 +4,7 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
@@ -207,8 +208,64 @@ namespace Vulnerator.Model.BusinessLogic.Reports
             {
                 using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("UserName",
+                        Properties.Settings.Default.ActiveUser));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("DisplayedReportName", "Navy RAR"));
+                    FilterTextCreator filterTextCreator = new FilterTextCreator();
+                    string findingTypeFilter = filterTextCreator.FindingType(sqliteCommand);
+                    string groupFilter = filterTextCreator.Group(sqliteCommand);
+                    string severityFilter = filterTextCreator.Severity(sqliteCommand);
+                    string statusFilter = filterTextCreator.Status(sqliteCommand);
                     sqliteCommand.CommandText =
-                        _ddlReader.ReadDdl(_storedProcedureBase + "Select.NavyRar.dml", assembly);
+                        _ddlReader.ReadDdl(_storedProcedureBase + "Select.NavyRarVulnerabilities.dml", assembly);
+
+                    if (!string.IsNullOrWhiteSpace(findingTypeFilter) ||
+                        !string.IsNullOrWhiteSpace(groupFilter) ||
+                        !string.IsNullOrWhiteSpace(severityFilter) ||
+                        !string.IsNullOrWhiteSpace(statusFilter))
+                    {
+                        
+                        Regex regex = new Regex(Properties.Resources.RegexSqlGroupBy);
+                        sqliteCommand.CommandText =
+                            sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, "WHERE ");
+                        if (!string.IsNullOrWhiteSpace(findingTypeFilter))
+                        {
+                            sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, findingTypeFilter);
+                        }
+                        if (!string.IsNullOrWhiteSpace(groupFilter))
+                        {
+                            if (!string.IsNullOrWhiteSpace(findingTypeFilter))
+                            {
+                                sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"AND {Environment.NewLine}");
+                            }
+                            sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, groupFilter);
+                        }
+                        if (!string.IsNullOrWhiteSpace(severityFilter))
+                        {
+                            if (!string.IsNullOrWhiteSpace(findingTypeFilter) || !string.IsNullOrWhiteSpace(groupFilter))
+                            {
+                                sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"AND {Environment.NewLine}");
+                            }
+                            sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"(PrimaryRawRiskIndicator {severityFilter}) ");
+                        }
+                        if (!string.IsNullOrWhiteSpace(statusFilter))
+                        {
+                            if (!string.IsNullOrWhiteSpace(findingTypeFilter) || !string.IsNullOrWhiteSpace(groupFilter) || !string.IsNullOrWhiteSpace(severityFilter))
+                            {
+                                sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"AND {Environment.NewLine}");
+                            }
+                            sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"(UniqueMitigatedStatus {statusFilter}) ");
+                            sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, Environment.NewLine);
+                            regex = new Regex(Properties.Resources.RegexGroupsMitigationsOrConditionsVulnerabilities);
+                            sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"{Environment.NewLine}WHERE (MitigatedStatus {statusFilter}) ");
+                        }
+                        else
+                        {
+                            sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, Environment.NewLine);
+                        }
+                        
+                    }
+
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
                         while (sqliteDataReader.Read())

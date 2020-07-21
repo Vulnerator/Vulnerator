@@ -1,0 +1,6 @@
+﻿UPDATE
+    ReportGroupUserSettings
+SET
+    IsSelected = @IsSelected
+WHERE
+    ReportGroupUserSettings_ID = @ReportGroupUserSettings_ID

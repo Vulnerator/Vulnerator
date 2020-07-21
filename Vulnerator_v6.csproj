@@ -264,6 +264,7 @@
       <HintPath>packages\WPFToolkit.3.5.50211.1\lib\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Ribbon" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\MvvmLightLibs.5.4.1.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -310,6 +311,7 @@
     <Compile Include="Model\BusinessLogic\AcasNessusReader.cs" />
     <Compile Include="Model\BusinessLogic\AcasCsvReader.cs" />
     <Compile Include="Model\BusinessLogic\CklCreator.cs" />
+    <Compile Include="Model\BusinessLogic\Reports\FilterTextCreator.cs" />
     <Compile Include="Model\BusinessLogic\Reports\OpenXmlCellDataHandler.cs" />
     <Compile Include="Model\BusinessLogic\Reports\OpenXmlEmassPoamReportCreator.cs" />
     <Compile Include="Model\BusinessLogic\RawStigReader.cs" />
@@ -376,7 +378,9 @@
     <Compile Include="Model\Entity\PortProtocolService.cs" />
     <Compile Include="Model\Entity\RelatedDocument.cs" />
     <Compile Include="Model\Entity\RelatedTesting.cs" />
+    <Compile Include="Model\Entity\ReportGroupUserSettings.cs" />
     <Compile Include="Model\Entity\ReportFindingTypeUserSettings.cs" />
+    <Compile Include="Model\Entity\ReportStatusUserSettings.cs" />
     <Compile Include="Model\Entity\ReportSeverityUserSettings.cs" />
     <Compile Include="Model\Entity\RequiredReport.cs" />
     <Compile Include="Model\Entity\RequiredReportUserSelection.cs" />
@@ -461,6 +465,7 @@
     <Compile Include="View\Converter\ImportButtonTextAppendingConverter.cs" />
     <Compile Include="View\Converter\InverseBooleanConverter.cs" />
     <Compile Include="View\Converter\MaxLengthToRemainingCharactersConverter.cs" />
+    <Compile Include="View\Converter\MultiValueConverter.cs" />
     <Compile Include="View\Converter\NullToBooleanConverter.cs" />
     <Compile Include="View\Converter\RemainingCharactersConverter.cs" />
     <Compile Include="View\Converter\ResizeModeMinMaxButtonVisibilityConverter.cs" />
@@ -715,7 +720,28 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\NavyRar.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\NavyRarVulnerabilities.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserFindingTypes.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserSeverities.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserSelections.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportFindingTypeIsSelected.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportSeverityIsSelected.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\RequiredFindingTypes.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\RequiredSeverities.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ReportStatusUserSettings.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserStatuses.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\RequiredStatuses.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportStatusIsSelected.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\MitigationOrConditionMitigatedStatus.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\UniqueFindingMitigationOrConditionId.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\MitigationOrConditionMitigatedStatus.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\GroupIds.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\FindingTypeIds.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\RequiredReportIds.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ReportGroupUserSettings.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserGroups.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportGroupIsSelected.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\RequiredGroups.dml" />
     <Resource Include="Vulnerator_Logo_Large_Color_SquareBackground_20190805.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
@@ -803,7 +829,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\VulnerabilityIA_ControlMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\VulnerabilitySourceVulnerabilityMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\Hardware.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\GroupedPoamVulnerabilities.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\EmassPoamVulnerabilities.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\HardwareCklCreationData.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\Indexes.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\UngroupedVulnerabilities.dml" />
@@ -819,7 +845,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\MitigationOrCondition.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\RequiredReportIsSelected.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\HardwareSoftwareMapping.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\StigDiscrepancies.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\StigDiscrepanciesVulnerabilities.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\UniqueFindingMitigationOrCondition.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\Vulnerability.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\VulnerabilityDates.dml" />

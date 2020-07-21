@@ -4,17 +4,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
-    public class ReportSeverityUserSettings : INotifyPropertyChanged
+    public class ReportStatusUserSettings : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public ReportSeverityUserSettings()
+        public ReportStatusUserSettings()
         { }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long ReportSeverityUserSettings_ID { get; set; }
+        public long ReportStatusUserSettings_ID { get; set; }
         
         [Required]
         public long RequiredReport_ID { get; set; }
@@ -28,7 +28,7 @@ namespace Vulnerator.Model.Entity
         
         [Required]
         [StringLength(25)]
-        public string Severity { get; set; }
+        public string Status { get; set; }
         
         [Required]
         [StringLength(5)]

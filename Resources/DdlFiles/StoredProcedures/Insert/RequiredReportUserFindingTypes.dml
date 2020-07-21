@@ -1,0 +1,2 @@
+﻿INSERT INTO ReportFindingTypeUserSettings
+VALUES (NULL, @RequiredReport_ID, @FindingType_ID, @UserName, 'True');

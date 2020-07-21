@@ -11,6 +11,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Data.SQLite;
 using System.Linq;
+using System.Reflection;
 using Vulnerator.Helper;
 using Vulnerator.Model.BusinessLogic;
 using Vulnerator.Model.DataAccess;
@@ -25,6 +26,8 @@ namespace Vulnerator.ViewModel
         private VulnerabilitySource vulnerabilitySource;
         private string saveDirectory = string.Empty;
         private DatabaseInterface databaseInterface = new DatabaseInterface();
+        private DdlReader _ddlReader = new DdlReader();
+        private Assembly assembly = Assembly.GetExecutingAssembly();
 
         private List<Hardware> _hardwares;
 
@@ -528,7 +531,7 @@ namespace Vulnerator.ViewModel
                     DatabaseBuilder.sqliteConnection.Open();
                 }
 
-                using (SQLiteTransaction sQLiteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
+                using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
                 {
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
@@ -540,9 +543,38 @@ namespace Vulnerator.ViewModel
                         sqliteCommand.Parameters["Accreditation_eMASS_ID"].Value = NewGroup.Accreditation_eMASS_ID;
                         sqliteCommand.Parameters["IsPlatform"].Value = NewGroup.IsPlatform ?? "False";
                         databaseInterface.InsertGroup(sqliteCommand);
-                    }
 
-                    sQLiteTransaction.Commit();
+                        string storedProcedureBase = "Vulnerator.Resources.DdlFiles.StoredProcedures.";
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("UserName",
+                            Properties.Settings.Default.ActiveUser));
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("Group_ID",
+                            databaseInterface.SelectLastInsertRowId(sqliteCommand)));
+                        List<string> reportIds = new List<string>();
+                        sqliteCommand.CommandText = _ddlReader.ReadDdl(
+                            storedProcedureBase + "Select.RequiredReportIds.dml",
+                            assembly);
+                        ;
+                        using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                        {
+                            if (sqliteDataReader.HasRows)
+                            {
+                                while (sqliteDataReader.Read())
+                                {
+                                    reportIds.Add(sqliteDataReader[0].ToString());
+                                }
+                            }
+                        }
+
+                        sqliteCommand.CommandText =
+                            _ddlReader.ReadDdl(storedProcedureBase + "Insert.RequiredReportUserGroups.dml",
+                                assembly);
+                        foreach (string report in reportIds)
+                        {
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("RequiredReport_ID", report));
+                            sqliteCommand.ExecuteNonQuery();
+                        }
+                    }
+                    sqliteTransaction.Commit();
                 }
             }
             catch (Exception exception)

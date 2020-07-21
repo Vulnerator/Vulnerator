@@ -1,11 +1,17 @@
 SELECT UniqueVulnerabilityIdentifier,
-       GROUP_CONCAT(DISTINCT VulnerabilityVersion)                                       as VulnVersion,
-       GROUP_CONCAT(DISTINCT VulnerabilityRelease)                                       as VulnRelease,
+       GROUP_CONCAT(DISTINCT (SELECT VulnerabilityVersion WHERE FindingType = 'XCCDF'))  as XccdfVulnVersion,
+       GROUP_CONCAT(DISTINCT (SELECT VulnerabilityRelease WHERE FindingType = 'XCCDF'))  as XccdfVulnRelease,
+       GROUP_CONCAT(DISTINCT (SELECT VulnerabilityVersion WHERE FindingType = 'CKL'))    as CklVulnVersion,
+       GROUP_CONCAT(DISTINCT (SELECT VulnerabilityRelease WHERE FindingType = 'CKL'))    as CklVulnRelease,
        SecondaryVulnerabilityIdentifier,
        VulnerabilityGroupIdentifier,
        VulnerabilityGroupTitle,
        VulnerabilityTitle,
        SourceName,
+       GROUP_CONCAT(DISTINCT (SELECT SourceVersion WHERE FindingType = 'XCCDF'))         as XccdfSourceVersion,
+       GROUP_CONCAT(DISTINCT (SELECT SourceRelease WHERE FindingType = 'XCCDF'))         as XccdfSourceRelease,
+       GROUP_CONCAT(DISTINCT (SELECT SourceVersion WHERE FindingType = 'CKL'))           as CklSourceVersion,
+       GROUP_CONCAT(DISTINCT (SELECT SourceRelease WHERE FindingType = 'CKL'))           as CklSourceRelease,
        GROUP_CONCAT(DISTINCT (SELECT DiscoveredHostName WHERE FindingType = 'XCCDF'))    as XccdfHost,
        GROUP_CONCAT(DISTINCT (SELECT DiscoveredHostName WHERE FindingType = 'CKL'))      as CklHost,
        GROUP_CONCAT(DISTINCT (SELECT Status WHERE FindingType = 'XCCDF'))                as XccdfStatus,
@@ -14,19 +20,19 @@ SELECT UniqueVulnerabilityIdentifier,
                     (SELECT MitigatedStatus WHERE FindingType = 'XCCDF'))                as MitigatedXccdfStatus,
        GROUP_CONCAT(DISTINCT (SELECT MitigatedStatus WHERE FindingType = 'CKL'))         as MitigatedCklStatus,
        GROUP_CONCAT(DISTINCT (SELECT Comments WHERE FindingType = 'CKL'))                as CklComments,
-       GROUP_CONCAT(DISTINCT (SELECT FindingDetails WHERE FindingType = 'CKL'))          as cklFindingDetails,
+       GROUP_CONCAT(DISTINCT (SELECT FindingDetails WHERE FindingType = 'CKL'))          as CklFindingDetails,
        GROUP_CONCAT(DISTINCT (SELECT ToolGeneratedOutput WHERE FindingType = 'XCCDF'))   as XccdfOutput,
        GROUP_CONCAT(DISTINCT (SELECT FindingSourceFileName WHERE FindingType = 'XCCDF')) as XccdfFileName,
        GROUP_CONCAT(DISTINCT (SELECT FindingSourceFileName WHERE FindingType = 'CKL'))   as CklFileName
-FROM Vulnerabilities V
-         LEFT JOIN UniqueFindings UF on V.Vulnerability_ID = UF.Vulnerability_ID
+FROM UniqueFindings UF
+         LEFT JOIN Vulnerabilities V on V.Vulnerability_ID = UF.Vulnerability_ID
          LEFT JOIN UniqueFindingsSourceFiles UFSF on UF.FindingSourceFile_ID = UFSF.FindingSourceFile_ID
          LEFT JOIN FindingTypes FT on UF.FindingType_ID = FT.FindingType_ID
          LEFT JOIN Hardware H on UF.Hardware_ID = H.Hardware_ID
+         LEFT JOIN HardwareGroups HG on H.Hardware_ID = HG.Hardware_ID
          LEFT JOIN MitigationsOrConditions MOC on UF.MitigationOrCondition_ID = MOC.MitigationOrCondition_ID
-         LEFT JOIN VulnerabilitiesVulnerabilitySources VVS on V.Vulnerability_ID = VVS.Vulnerability_ID
-         LEFT JOIN VulnerabilitySources VS on VVS.VulnerabilitySource_ID = VS.VulnerabilitySource_ID
-WHERE FindingType = 'XCCDF'
-   OR FindingType = 'CKL'
-GROUP BY UniqueVulnerabilityIdentifier, H.Hardware_ID
-ORDER BY UniqueVulnerabilityIdentifier
+         LEFT JOIN VulnerabilitySources VS on UF.VulnerabilitySource_ID = VS.VulnerabilitySource_ID
+WHERE (FindingType = 'XCCDF'
+    OR FindingType = 'CKL')
+GROUP BY SourceName, UniqueVulnerabilityIdentifier, H.Hardware_ID
+ORDER BY SourceName, UniqueVulnerabilityIdentifier, H.Hardware_ID;

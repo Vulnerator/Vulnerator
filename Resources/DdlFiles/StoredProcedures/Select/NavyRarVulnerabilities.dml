@@ -1,10 +1,14 @@
-﻿SELECT UF.Vulnerability_ID                                                                  as Vulnerability_ID,
+SELECT UF.Vulnerability_ID                                                                  as Vulnerability_ID,
        V.VulnerabilityGroupTitle,
        V.VulnerabilityTitle,
        V.VulnerabilityDescription,
+       GROUP_CONCAT(DISTINCT CCI_Number)                                                    as CCI,
        GROUP_CONCAT(DISTINCT
                     NC.ControlFamily || '-' || NC.ControlNumber || '.' ||
                     NC.ControlEnhancement)                                                  as NIST_Controls,
+       GROUP_CONCAT(DISTINCT ConfidentialityLevel)                                          as ConfidentialityLevel,
+       GROUP_CONCAT(DISTINCT IntegrityLevel)                                                as IntegrityLevel,
+       GROUP_CONCAT(DISTINCT AvailabilityLevel)                                             as AvailabilityLevel,
        GROUP_CONCAT(DISTINCT CI.CCI_Number)                                                 as CCIs,
        GROUP_CONCAT(DISTINCT UF.InstanceIdentifier)                                         as InstanceIdentifier,
        V.UniqueVulnerabilityIdentifier,
@@ -87,13 +91,18 @@ FROM UniqueFindings UF
                        HG.Group_ID = GroupsMitigationsOrConditionsVulnerabilities.Group_ID)
          LEFT JOIN FindingTypes FT on UF.FindingType_ID = FT.FindingType_ID
          LEFT JOIN Vulnerabilities V on UF.Vulnerability_ID = V.Vulnerability_ID
-         LEFT JOIN VulnerabilitiesVulnerabilitySources VVS on V.Vulnerability_ID = VVS.Vulnerability_ID
-         LEFT JOIN VulnerabilitySources VS on VVS.VulnerabilitySource_ID = VS.VulnerabilitySource_ID
+         LEFT JOIN VulnerabilitySources VS on UF.VulnerabilitySource_ID = VS.VulnerabilitySource_ID
          LEFT JOIN VulnerabilitiesCCIs VCI on V.Vulnerability_ID = VCI.Vulnerability_ID
          LEFT JOIN CCIs CI on VCI.CCI_ID = CI.CCI_ID
          LEFT JOIN NIST_ControlsCCIs NCCI on CI.CCI_ID = NCCI.CCI_ID
          LEFT JOIN NIST_Controls NC on NCCI.NIST_Control_ID = NC.NIST_Control_ID
          LEFT JOIN MitigationsOrConditions UFMOC
                    on UF.MitigationOrCondition_ID = UFMOC.MitigationOrCondition_ID
+         LEFT JOIN NIST_ControlsConfidentialityLevels NCCL on NC.NIST_Control_ID = NCCL.NIST_Control_ID
+         LEFT JOIN ConfidentialityLevels CL on NCCL.ConfidentialityLevel_ID = CL.ConfidentialityLevel_ID
+         LEFT JOIN NIST_ControlsIntegrityLevels NCIL on NC.NIST_Control_ID = NCIL.NIST_Control_ID
+         LEFT JOIN IntegrityLevels IL on NCIL.IntegrityLevel_ID = IL.IntegrityLevel_ID
+         LEFT JOIN NIST_ControlsAvailabilityLevels NCAL on NC.NIST_Control_ID = NCAL.NIST_Control_ID
+         LEFT JOIN AvailabilityLevels AL on NCAL.AvailabilityLevel_ID = AL.AvailabilityLevel_ID
 GROUP BY VS.SourceName, V.UniqueVulnerabilityIdentifier, Status, UFMOC.MitigatedStatus, UF.Hardware_ID
 ORDER BY VS.SourceName, V.UniqueVulnerabilityIdentifier, Status, UFMOC.MitigatedStatus, UF.Hardware_ID

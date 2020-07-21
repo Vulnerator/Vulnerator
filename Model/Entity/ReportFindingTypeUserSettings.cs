@@ -31,5 +31,9 @@ namespace Vulnerator.Model.Entity
         [Required]
         [StringLength(50)]
         public string UserName { get; set; }
+
+        [Required]
+        [StringLength(5)]
+        public string IsSelected { get; set; }
     }
 }

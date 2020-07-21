@@ -33,6 +33,7 @@ namespace Vulnerator.Model.BusinessLogic
         private DateTime firstDiscovered = DateTime.Now;
         private DateTime lastObserved = DateTime.Now;
         private bool incorrectFileType = false;
+        private string tool = string.Empty;
         private List<string> ccis = new List<string>();
         private List<string> ips = new List<string>();
         private List<string> macs = new List<string>();
@@ -442,6 +443,8 @@ namespace Vulnerator.Model.BusinessLogic
                 DateTime scanEndTime;
                 if (DateTime.TryParse(xmlReader.GetAttribute("end-time"), out scanEndTime))
                 { firstDiscovered = lastObserved = scanEndTime; }
+
+                tool = xmlReader.GetAttribute("test-system");
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -567,6 +570,7 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 string rule = xmlReader.GetAttribute("idref");
+                string time = xmlReader.GetAttribute("time");
                 string ruleVersion = string.Empty;
                 Regex xccdfRuleRegex = new Regex(Properties.Resources.RegexXccdfRule);
                 rule = xccdfRuleRegex.Match(rule).Value;
@@ -580,7 +584,15 @@ namespace Vulnerator.Model.BusinessLogic
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement() && xmlReader.Name.Equals("cdf:result"))
-                    { sqliteCommand.Parameters["Status"].Value = xmlReader.ObtainCurrentNodeValue(true).ToString().ToVulneratorStatus(); }
+                    {
+                        string rawStatus = xmlReader.ObtainCurrentNodeValue(true).ToString();
+                        sqliteCommand.Parameters["Status"].Value = rawStatus.ToVulneratorStatus();
+                        sqliteCommand.Parameters["MitigatedStatus"].Value = sqliteCommand.Parameters["Status"].Value;
+                        sqliteCommand.Parameters["ToolGeneratedOutput"].Value =
+                            $"Tool: {tool}{Environment.NewLine}" +
+                            $"Time: {time}{Environment.NewLine}" +
+                            $"Result: {rawStatus}";
+                    }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("cdf:rule-result"))
                     {
                         PrepareUniqueFinding(sqliteCommand);

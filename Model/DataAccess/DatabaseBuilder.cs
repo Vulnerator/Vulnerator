@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
@@ -91,6 +92,7 @@ namespace Vulnerator.Model.DataAccess
                         MapControlsToCci(sqliteCommand);
                         MapControlsToCnssOverlays(sqliteCommand);
                         MapControlsToMonitoringFrequency(sqliteCommand);
+                        InsertUserReportSettings(sqliteCommand);
                     }
 
                     sqliteTransaction.Commit();
@@ -191,6 +193,7 @@ namespace Vulnerator.Model.DataAccess
             {
                 LogWriter.LogStatusUpdate("Verifying CCIs are populated.");
                 Cci cci = new Cci();
+                string version = string.Empty;
                 using (Stream stream =
                     assembly.GetManifestResourceStream("Vulnerator.Resources.RawData.U_CCI_List.xml"))
                 {
@@ -202,6 +205,11 @@ namespace Vulnerator.Model.DataAccess
                             {
                                 switch (xmlReader.Name)
                                 {
+                                    case "version":
+                                    {
+                                        version = xmlReader.ObtainCurrentNodeValue(false).ToString();
+                                        break;
+                                    }
                                     case "cci_item":
                                     {
                                         cci = new Cci();
@@ -228,15 +236,11 @@ namespace Vulnerator.Model.DataAccess
                                         cci.CciReferences = ObtainCciReferences(xmlReader);
                                         break;
                                     }
-                                    default:
-                                    {
-                                        break;
-                                    }
                                 }
                             }
                             else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("cci_item"))
                             {
-                                InsertCciValues(cci, sqliteCommand);
+                                InsertCciValues(cci, sqliteCommand, version);
                             }
                         }
                     }
@@ -249,15 +253,19 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        private void InsertCciValues(Cci cci, SQLiteCommand sqliteCommand)
+        private void InsertCciValues(Cci cci, SQLiteCommand sqliteCommand, string version)
         {
             try
             {
+                DateTime versionDateTime = DateTime.ParseExact(version, "yyyy-MM-dd",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None);
                 sqliteCommand.Parameters.Add(new SQLiteParameter("CCI", cci.CciItem));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Definition", cci.Definition));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Type", cci.Type));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("Status", cci.Status));
-                sqliteCommand.CommandText = "INSERT INTO Ccis VALUES (NULL, @CCI, @Definition, @Type, @Status);";
+                sqliteCommand.Parameters.Add(new SQLiteParameter("Version", versionDateTime));
+                sqliteCommand.CommandText = "INSERT INTO Ccis VALUES (NULL, @CCI, @Definition, @Type, @Status, @Version);";
                 sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.Parameters.Clear();
             }
@@ -679,6 +687,107 @@ namespace Vulnerator.Model.DataAccess
             catch (Exception exception)
             {
                 LogWriter.LogError("Unable to map NIST controls to monitoring frequencies.");
+                throw exception;
+            }
+        }
+
+        private void InsertUserReportSettings(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                LogWriter.LogStatusUpdate("Inserting user-specific report requirements.");
+                string[] severities = {"CAT I", "CAT II", "CAT III", "CAT IV"};
+                string[] statuses = {"Ongoing", "Not Reviewed", "Not Applicable", "Completed", "Error"};
+                string storedProcedureBase = "Vulnerator.Resources.DdlFiles.StoredProcedures.Select.";
+                List<string> reportIds = new List<string>();
+                List<string> findingTypeIds = new List<string>();
+                List<string> groupIds = new List<string>();
+
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(storedProcedureBase + "RequiredReportIds.dml",
+                    assembly);;
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                {
+                    if (sqliteDataReader.HasRows)
+                    {
+                        while (sqliteDataReader.Read())
+                        {
+                            reportIds.Add(sqliteDataReader[0].ToString());
+                        }
+                    }
+                }
+
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(storedProcedureBase + "FindingTypeIds.dml",
+                    assembly);
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                {
+                    if (sqliteDataReader.HasRows)
+                    {
+                        while (sqliteDataReader.Read())
+                        {
+                            findingTypeIds.Add(sqliteDataReader[0].ToString());
+                        }
+                    }
+                }
+
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(storedProcedureBase + "GroupIds.dml",
+                    assembly);
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                {
+                    if (sqliteDataReader.HasRows)
+                    {
+                        while (sqliteDataReader.Read())
+                        {
+                            groupIds.Add(sqliteDataReader[0].ToString());
+                        }
+                    }
+                }
+
+                sqliteCommand.Parameters.Add(new SQLiteParameter("UserName", Properties.Settings.Default.ActiveUser));
+                storedProcedureBase = "Vulnerator.Resources.DdlFiles.StoredProcedures.Insert.";
+                foreach (string report in reportIds)
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("RequiredReport_ID", report));
+                    sqliteCommand.CommandText =
+                        _ddlReader.ReadDdl(storedProcedureBase + "RequiredReportUserFindingTypes.dml",
+                            assembly);
+                    foreach (string findingType in findingTypeIds)
+                    {
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType_ID", findingType));
+                        sqliteCommand.ExecuteNonQuery();
+                    }
+                    sqliteCommand.CommandText =
+                        _ddlReader.ReadDdl(storedProcedureBase + "RequiredReportUserSeverities.dml",
+                            assembly);
+                    foreach (string severity in severities)
+                    {
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("Severity", severity));
+                        sqliteCommand.ExecuteNonQuery();
+                    }
+                    sqliteCommand.CommandText =
+                        _ddlReader.ReadDdl(storedProcedureBase + "RequiredReportUserStatuses.dml",
+                            assembly);
+                    foreach (string status in statuses)
+                    {
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("Status", status));
+                        sqliteCommand.ExecuteNonQuery();
+                    }
+                    sqliteCommand.CommandText =
+                        _ddlReader.ReadDdl(storedProcedureBase + "RequiredReportUserGroups.dml",
+                            assembly);
+                    foreach (string group in groupIds)
+                    {
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("Group_ID", group));
+                        sqliteCommand.ExecuteNonQuery();
+                    }
+                    sqliteCommand.CommandText =
+                        _ddlReader.ReadDdl(storedProcedureBase + "RequiredReportUserSelections.dml",
+                            assembly);
+                    sqliteCommand.ExecuteNonQuery();
+                }
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to insert user-specific report requirements.");
                 throw exception;
             }
         }

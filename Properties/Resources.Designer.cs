@@ -169,6 +169,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to \) GroupsMitigationsOrConditionsVulnerabilities.
+        /// </summary>
+        internal static string RegexGroupsMitigationsOrConditionsVulnerabilities {
+            get {
+                return ResourceManager.GetString("RegexGroupsMitigationsOrConditionsVulnerabilities", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to (?:\r)*\n\s{4,}.
         /// </summary>
         internal static string RegexIndentedMidlineNewLine {
@@ -223,11 +232,29 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (?:GROUP\sBY)|(?:group\sby).
+        /// </summary>
+        internal static string RegexSqlGroupBy {
+            get {
+                return ResourceManager.GetString("RegexSqlGroupBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to \d{2}\s\D+\s\d{4}.
         /// </summary>
         internal static string RegexStigDate {
             get {
                 return ResourceManager.GetString("RegexStigDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FindingType\s+=\s+(?:(?:&apos;CKL&apos;)|(?:&apos;XCCDF&apos;))\)\)\s+as\s+(?:Mitigated)*(?:(?:Ckl)|(?:Xccdf))Status.
+        /// </summary>
+        internal static string RegexStigDiscrepanciesStatus {
+            get {
+                return ResourceManager.GetString("RegexStigDiscrepanciesStatus", resourceCulture);
             }
         }
         

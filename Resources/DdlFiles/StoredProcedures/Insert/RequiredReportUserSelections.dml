@@ -1,0 +1,2 @@
+﻿INSERT INTO RequiredReportUserSelections
+VALUES (NULL, @RequiredReport_ID, @UserName, 'True' );

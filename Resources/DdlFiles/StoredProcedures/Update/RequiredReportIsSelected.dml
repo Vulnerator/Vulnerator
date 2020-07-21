@@ -3,5 +3,4 @@
 SET
     IsReportSelected = @IsReportSelected
 WHERE
-    RequiredReport_ID = @RequiredReport_ID
-    AND UserName = @UserName;
+    RequiredReportUserSelection_ID = @RequiredReportUserSelection_ID;

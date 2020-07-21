@@ -249,6 +249,7 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 sqliteCommand.Parameters["Status"].Value = "Ongoing";
+                sqliteCommand.Parameters["MitigatedStatus"].Value = "Ongoing";
                 sqliteCommand.Parameters["UniqueFinding_ID"].Value = DBNull.Value;
                 sqliteCommand.Parameters["Approval_Status"].Value = "Not Approved";
                 sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "False";

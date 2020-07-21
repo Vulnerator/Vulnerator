@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.SQLite;
@@ -9,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Vulnerator.Model.Entity;
@@ -28,8 +31,9 @@ namespace Vulnerator.ViewModel
     public class ReportingViewModel : ViewModelBase
     {
         private BackgroundWorker backgroundWorker;
-        private SaveFileDialog saveExcelFile;
-        private SaveFileDialog savePdfFile;
+        private FolderBrowserDialog folderBrowserDialog;
+        private Microsoft.Win32.SaveFileDialog saveExcelFile;
+        private Microsoft.Win32.SaveFileDialog savePdfFile;
         private DatabaseInterface databaseInterface = new DatabaseInterface();
         public static Stopwatch stopWatch = new Stopwatch();
         public static Stopwatch fileStopWatch = new Stopwatch();
@@ -48,8 +52,8 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private List<RequiredReport> _vulnerabilityReports;
-        public List<RequiredReport> VulnerabilityReports
+        private ObservableCollection<RequiredReportUserSelection> _vulnerabilityReports;
+        public ObservableCollection<RequiredReportUserSelection> VulnerabilityReports
         {
             get => _vulnerabilityReports;
             set
@@ -62,9 +66,9 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private RequiredReport _selectedReport;
+        private RequiredReportUserSelection _selectedReport;
 
-        public RequiredReport SelectedReport
+        public RequiredReportUserSelection SelectedReport
         {
             get => _selectedReport;
             set
@@ -73,6 +77,66 @@ namespace Vulnerator.ViewModel
                 {
                     _selectedReport = value;
                     RaisePropertyChanged("SelectedReport");
+                }
+            }
+        }
+
+        private ObservableCollection<ReportFindingTypeUserSettings> _selectedReportFindingTypeSettings;
+
+        public ObservableCollection<ReportFindingTypeUserSettings> SelectedReportFindingTypeSettings
+        {
+            get => _selectedReportFindingTypeSettings;
+            set
+            {
+                if (_selectedReportFindingTypeSettings != value)
+                {
+                    _selectedReportFindingTypeSettings = value;
+                    RaisePropertyChanged("SelectedReportFindingTypeSettings");
+                }
+            }
+        }
+
+        private ObservableCollection<ReportGroupUserSettings> _selectedReportGroupSettings;
+
+        public ObservableCollection<ReportGroupUserSettings> SelectedReportGroupSettings
+        {
+            get => _selectedReportGroupSettings;
+            set
+            {
+                if (_selectedReportGroupSettings != value)
+                {
+                    _selectedReportGroupSettings = value;
+                    RaisePropertyChanged("SelectedReportGroupSettings");
+                }
+            }
+        }
+
+        private ObservableCollection<ReportSeverityUserSettings> _selectedReportSeveritySettings;
+
+        public ObservableCollection<ReportSeverityUserSettings> SelectedReportSeveritySettings
+        {
+            get => _selectedReportSeveritySettings;
+            set
+            {
+                if (_selectedReportSeveritySettings != value)
+                {
+                    _selectedReportSeveritySettings = value;
+                    RaisePropertyChanged("SelectedReportSeveritySettings");
+                }
+            }
+        }
+
+        private ObservableCollection<ReportStatusUserSettings> _selectedReportStatusSettings;
+
+        public ObservableCollection<ReportStatusUserSettings> SelectedReportStatusSettings
+        {
+            get => _selectedReportStatusSettings;
+            set
+            {
+                if (_selectedReportStatusSettings != value)
+                {
+                    _selectedReportStatusSettings = value;
+                    RaisePropertyChanged("SelectedReportStatusSettings");
                 }
             }
         }
@@ -128,16 +192,384 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                VulnerabilityReports = databaseContext.RequiredReports
-                    .Where(r => r.ReportCategory.Equals("Vulnerability Management"))
-                    .OrderBy(r => r.DisplayedReportName)
+                VulnerabilityReports = databaseContext.RequiredReportUserSelections
+                    .Include(r => r.RequiredReport)
+                    .Where(r => r.RequiredReport.ReportCategory.Equals("Vulnerability Management") && r.UserName.Equals(Properties.Settings.Default.ActiveUser))
+                    .OrderBy(r => r.RequiredReport.DisplayedReportName)
                     .AsNoTracking()
-                    .ToList();
+                    .ToObservableCollection();
             }
             catch (Exception exception)
             {
                 LogWriter.LogError("Unable to populate ReportingViewModel required reports list.");
                 throw exception;
+            }
+        }
+
+        public RelayCommand<object> ReportSelectionChangedCommand => new RelayCommand<object>(ReportSelectionChanged);
+
+        private void ReportSelectionChanged(object parameter)
+        {
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += ReportSelectionChangedBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerAsync(parameter);
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to handle report SelectionChanged event.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        private void ReportSelectionChangedBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                RequiredReportUserSelection selection = e.Argument as RequiredReportUserSelection;
+                
+                using (DatabaseContext databaseContext = new DatabaseContext())
+                {
+                    SelectedReportFindingTypeSettings = databaseContext.ReportFindingTypeUserSettings
+                        .Include(r => r.FindingType)
+                        .Where(r => r.RequiredReport_ID.Equals(selection.RequiredReport_ID) &&
+                                    r.UserName.Equals(Properties.Settings.Default.ActiveUser))
+                        .AsNoTracking()
+                        .ToObservableCollection();
+                    SelectedReportGroupSettings = databaseContext.ReportGroupUserSettings
+                        .Include(r => r.Group)
+                        .Where(r => r.RequiredReport_ID.Equals(selection.RequiredReport_ID) &&
+                                    r.UserName.Equals(Properties.Settings.Default.ActiveUser))
+                        .AsNoTracking()
+                        .ToObservableCollection();
+                    SelectedReportSeveritySettings = databaseContext.ReportSeverityUserSettings
+                        .Where(r => r.RequiredReport_ID.Equals(selection.RequiredReport_ID) &&
+                                    r.UserName.Equals(Properties.Settings.Default.ActiveUser))
+                        .AsNoTracking()
+                        .ToObservableCollection();
+                    SelectedReportStatusSettings = databaseContext.ReportStatusUserSettings
+                        .Where(r => r.RequiredReport_ID.Equals(selection.RequiredReport_ID) &&
+                                    r.UserName.Equals(Properties.Settings.Default.ActiveUser))
+                        .AsNoTracking()
+                        .ToObservableCollection();
+                }
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to update the view with the selected report information.");
+                throw exception;
+            }
+        }
+
+        public RelayCommand<object> SetReportIsSelectedCommand => new RelayCommand<object>(SetReportIsSelected);
+
+        private void SetReportIsSelected(object parameter)
+        {
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += SetReportIsSelectedBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerCompleted += ReportUpdateBackgroundWorker_RunWorkerCompleted;
+                backgroundWorker.RunWorkerAsync(parameter);
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                string error = $"Unable to set `IsReportSelected` value for the report with ID '{parameter}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        private void SetReportIsSelectedBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (e.Argument is null)
+                {
+                    e.Result = "No parameter";
+                    return;
+                }
+
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                object[] args = e.Argument as object[];
+
+                using (SQLiteCommand sqLiteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqLiteCommand.Parameters.Add(new SQLiteParameter("RequiredReportUserSelection_ID", args[0]));
+                    sqLiteCommand.Parameters.Add(new SQLiteParameter("IsReportSelected", args[1].ToString()));
+                    databaseInterface.UpdateReportIsSelected(sqLiteCommand);
+                }
+
+                e.Result = "Success";
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("The 'SetReportIsSelected' background worker has failed.");
+                e.Result = exception;
+            }
+        }
+
+        public RelayCommand<object> SetReportFindingTypeIsSelectedCommand => new RelayCommand<object>(SetReportFindingTypeIsSelected);
+
+        private void SetReportFindingTypeIsSelected(object parameter)
+        {
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += SetReportFindingTypeIsSelectedBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerCompleted += ReportUpdateBackgroundWorker_RunWorkerCompleted;
+                backgroundWorker.RunWorkerAsync(parameter);
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                string error = $"Unable to set `IsSelected` value for the report finding type with ID '{parameter}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        private void SetReportFindingTypeIsSelectedBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (e.Argument is null)
+                {
+                    e.Result = "No parameter";
+                    return;
+                }
+                
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                object[] args = e.Argument as object[];
+
+                using (SQLiteCommand sqLiteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqLiteCommand.Parameters.Add(new SQLiteParameter("ReportFindingTypeUserSettings_ID", args[0]));
+                    sqLiteCommand.Parameters.Add(new SQLiteParameter("IsSelected", args[1].ToString()));
+                    databaseInterface.UpdateReportFindingTypeIsSelected(sqLiteCommand);
+                }
+                e.Result = "Success";
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("The 'SetReportFindingTypeIsSelected' background worker has failed.");
+                e.Result = exception;
+                throw exception;
+            }
+        }
+
+        public RelayCommand<object> SetReportGroupIsSelectedCommand => new RelayCommand<object>(SetReportGroupIsSelected);
+
+        private void SetReportGroupIsSelected(object parameter)
+        {
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += SetReportGroupIsSelectedBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerCompleted += ReportUpdateBackgroundWorker_RunWorkerCompleted;
+                backgroundWorker.RunWorkerAsync(parameter);
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                string error = $"Unable to set `IsSelected` value for the report finding type with ID '{parameter}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        private void SetReportGroupIsSelectedBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (e.Argument is null)
+                {
+                    e.Result = "No parameter";
+                    return;
+                }
+                
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                object[] args = e.Argument as object[];
+
+                using (SQLiteCommand sqLiteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqLiteCommand.Parameters.Add(new SQLiteParameter("ReportGroupUserSettings_ID", args[0]));
+                    sqLiteCommand.Parameters.Add(new SQLiteParameter("IsSelected", args[1].ToString()));
+                    databaseInterface.UpdateReportGroupIsSelected(sqLiteCommand);
+                }
+                e.Result = "Success";
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("The 'SetReportGroupIsSelected' background worker has failed.");
+                e.Result = exception;
+                throw exception;
+            }
+        }
+
+        public RelayCommand<object> SetReportSeverityIsSelectedCommand => new RelayCommand<object>(SetReportSeverityIsSelected);
+
+        private void SetReportSeverityIsSelected(object parameter)
+        {
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += SetReportSeverityIsSelectedBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerCompleted += ReportUpdateBackgroundWorker_RunWorkerCompleted;
+                backgroundWorker.RunWorkerAsync(parameter);
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                string error = $"Unable to set `IsSelected` value for the report severity with ID '{parameter}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        private void SetReportSeverityIsSelectedBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (e.Argument is null)
+                {
+                    e.Result = "No parameter";
+                    return;
+                }
+                
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                object[] args = e.Argument as object[];
+
+                using (SQLiteCommand sqLiteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqLiteCommand.Parameters.Add(new SQLiteParameter("ReportSeverityUserSettings_ID", args[0]));
+                    sqLiteCommand.Parameters.Add(new SQLiteParameter("IsSelected", args[1].ToString()));
+                    databaseInterface.UpdateReportSeverityIsSelected(sqLiteCommand);
+                }
+                e.Result = "Success";
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("The 'SetReportSeverityIsSelected' background worker has failed.");
+                e.Result = exception;
+                throw exception;
+            }
+        }
+
+        public RelayCommand<object> SetReportStatusIsSelectedCommand => new RelayCommand<object>(SetReportStatusIsSelected);
+
+        private void SetReportStatusIsSelected(object parameter)
+        {
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += SetReportStatusIsSelectedBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerCompleted += ReportUpdateBackgroundWorker_RunWorkerCompleted;
+                backgroundWorker.RunWorkerAsync(parameter);
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                string error = $"Unable to set `IsSelected` value for the report severity with ID '{parameter}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        private void SetReportStatusIsSelectedBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (e.Argument is null)
+                {
+                    e.Result = "No parameter";
+                    return;
+                }
+                
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                object[] args = e.Argument as object[];
+
+                using (SQLiteCommand sqLiteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqLiteCommand.Parameters.Add(new SQLiteParameter("ReportStatusUserSettings_ID", args[0]));
+                    sqLiteCommand.Parameters.Add(new SQLiteParameter("IsSelected", args[1].ToString()));
+                    databaseInterface.UpdateReportStatusIsSelected(sqLiteCommand);
+                }
+                e.Result = "Success";
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("The 'SetReportStatusIsSelected' background worker has failed.");
+                e.Result = exception;
+                throw exception;
+            }
+        }
+        
+        private void ReportUpdateBackgroundWorker_RunWorkerCompleted(object sender,
+            RunWorkerCompletedEventArgs e)
+        {
+            try
+            {
+                if (e.Result.ToString().Equals("Success"))
+                {
+                    return;
+                }
+                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(System.Windows.Application.Current);
+                Notification notification = new Notification();
+                notification.Background = appStyle.Item1.Resources["GrayBrush10"].ToString();
+                notification.Foreground = appStyle.Item1.Resources["TextBrush"].ToString();
+                if (e.Result != null)
+                {
+                    if (e.Result is Exception)
+                    {
+                        notification.Accent = "Red";
+                        notification.Badge = "Failure";
+                        notification.Header = "Report Update";
+                        notification.Message = "Unable to update the report as requested; see log for details.";
+                        Exception exception = e.Result as Exception;
+                        string error = "Unable to update the report as requested.";
+                        LogWriter.LogErrorWithDebug(error, exception);
+                        PopulateGui();
+                    }
+                    else
+                    {
+                        switch (e.Result.ToString())
+                        {
+                            case "No parameter":
+                            {
+                                notification.Accent = "Orange";
+                                notification.Badge = "Warning";
+                                notification.Header = "Report Update";
+                                notification.Message = "No report selected to update.";
+                                break;
+                            }
+                        }
+                    }
+                }
+                Messenger.Default.Send(notification);
+            }
+            catch (Exception exception)
+            {
+                string error = "The 'ReportUpdated' background worker completion tasks have failed.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
@@ -218,7 +650,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                LogWriter.LogError($"Unable to update report selection criteria for {SelectedReport.DisplayedReportName}");
+                LogWriter.LogError($"Unable to update report selection criteria for {SelectedReport.RequiredReport.DisplayedReportName}");
                 throw exception;
             }
         }
@@ -314,7 +746,7 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
+                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(System.Windows.Application.Current);
                 Notification notification = new Notification();
                 notification.Background = appStyle.Item1.Resources["GrayBrush10"].ToString();
                 notification.Foreground = appStyle.Item1.Resources["TextBrush"].ToString();
@@ -361,7 +793,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("Unable to handle file ingestion background worker completion events.");
+                LogWriter.LogError("Unable to handle the single report creation background worker completion events.");
                 throw exception;
             }
         }
@@ -384,7 +816,7 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                saveExcelFile = new SaveFileDialog();
+                saveExcelFile = new Microsoft.Win32.SaveFileDialog();
                 saveExcelFile.AddExtension = true;
                 saveExcelFile.Filter = "Excel Files (*.xlsx)|*.xlsx";
                 saveExcelFile.DefaultExt = "xlsx";
@@ -435,7 +867,7 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                savePdfFile = new SaveFileDialog();
+                savePdfFile = new Microsoft.Win32.SaveFileDialog();
                 savePdfFile.AddExtension = true;
                 savePdfFile.Filter = "PDF Files (*.pdf)|*.pdf";
                 savePdfFile.DefaultExt = "xls";

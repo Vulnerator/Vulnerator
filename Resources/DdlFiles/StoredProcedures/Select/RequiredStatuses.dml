@@ -1,0 +1,6 @@
+SELECT Status
+FROM ReportStatusUserSettings
+         LEFT JOIN RequiredReports RR on ReportStatusUserSettings.RequiredReport_ID = RR.RequiredReport_ID
+WHERE IsSelected = 'True'
+  AND DisplayedReportName = 'eMASS-Importable POA&M'
+  AND UserName = @UserName

@@ -297,6 +297,20 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public void InsertMitigationOrConditionMitigatedStatus(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.MitigationOrConditionMitigatedStatus.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to insert the new mitigation mitigated status.");
+                throw exception;
+            }
+        }
+
         public void InsertParameterPlaceholders(SQLiteCommand sqliteCommand)
         {
             try
@@ -351,7 +365,9 @@ namespace Vulnerator.Model.DataAccess
                     "VulnerabilitySource_ID", "SourceName", "SourceSecondaryIdentifier", "VulnerabilitySourceFileName",
                     "SourceDescription", "SourceVersion", "SourceRelease",
                     // SCAP_Scores Table
-                    "SCAP_Score_ID", "Score", "ScanDate", "ScanProfile", "ScanUser", "UserIsPrivileged", "UserIsAuthenticated"
+                    "SCAP_Score_ID", "Score", "ScanDate", "ScanProfile", "ScanUser", "UserIsPrivileged", "UserIsAuthenticated",
+                    // Report Filtering
+                    "UserName"
                 };
                 foreach (string parameter in parameters)
                 { sqliteCommand.Parameters.Add(new SQLiteParameter(parameter, DBNull.Value)); }
@@ -567,6 +583,26 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public int? SelectUniqueFindingMitigationOrConditionId(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.UniqueFindingMitigationOrConditionId.dml", assembly);
+                object scalarResult = sqliteCommand.ExecuteScalar();
+                if (string.IsNullOrWhiteSpace(scalarResult.ToString()))
+                {
+                    return null;
+
+                }
+                return int.Parse(scalarResult.ToString());
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to select the last inserted row ID.");
+                throw exception;
+            }
+        }
+
         public List<string> SelectUniqueVulnerabilityIdentifiersBySource(SQLiteCommand sqliteCommand)
         {
             try
@@ -656,6 +692,20 @@ namespace Vulnerator.Model.DataAccess
             try
             {
                 sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.MitigationOrCondition.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to update MitigationOrCondition associated with ID '{sqliteCommand.Parameters["MitigationOrCondition_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void UpdateMitigationOrConditionMitigatedStatus(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.MitigationOrConditionMitigatedStatus.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
@@ -946,6 +996,76 @@ namespace Vulnerator.Model.DataAccess
             catch (Exception exception)
             {
                 LogWriter.LogError($"Unable to update Group '{sqliteCommand.Parameters["GroupName"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void UpdateReportIsSelected(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.RequiredReportIsSelected.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to update 'IsReportSelected' value for RequiredReport with ID '{sqliteCommand.Parameters["RequiredReportUserSelection_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void UpdateReportFindingTypeIsSelected(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.ReportFindingTypeIsSelected.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to update 'IsSelected' value for ReportFindingTypeUserSetting with ID '{sqliteCommand.Parameters["ReportFindingTypeUserSettings_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void UpdateReportGroupIsSelected(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.ReportGroupIsSelected.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to update 'IsSelected' value for ReportGroupUserSetting with ID '{sqliteCommand.Parameters["ReportGroupUserSettings_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void UpdateReportSeverityIsSelected(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.ReportSeverityIsSelected.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to update 'IsSelected' value for ReportSeverityUserSetting with ID '{sqliteCommand.Parameters["ReportSeverityUserSettings_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void UpdateReportStatusIsSelected(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.ReportStatusIsSelected.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to update 'IsSelected' value for ReportStatusUserSetting with ID '{sqliteCommand.Parameters["ReportStatusUserSettings_ID"].Value}'.");
                 throw exception;
             }
         }

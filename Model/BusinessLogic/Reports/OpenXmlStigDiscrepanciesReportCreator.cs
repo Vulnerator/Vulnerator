@@ -99,24 +99,29 @@ namespace Vulnerator.Model.BusinessLogic.Reports
             try
             {
                 _openXmlWriter.WriteStartElement(new Columns());
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 1, Min = 1});
+                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 1, Min = 1});
                 _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 2, Min = 2});
                 _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 3, Min = 3});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 4, Min = 4});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 5, Min = 5});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 6, Min = 6});
+                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 4, Min = 4});
+                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 5, Min = 5});
+                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 6, Min = 6});
                 _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 7, Min = 7});
                 _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 8, Min = 8});
                 _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 9, Min = 9});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 10, Min = 10});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 11, Min = 11});
+                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 10, Min = 10});
+                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 11, Min = 11});
                 _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 12, Min = 12});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 13, Min = 13});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 14, Min = 14});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 15, Min = 15});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 16, Min = 16});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 17, Min = 17});
+                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 13, Min = 13});
+                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 14, Min = 14});
+                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 15, Min = 15});
+                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 16, Min = 16});
+                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 17, Min = 17});
                 _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 18, Min = 18});
+                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 19, Min = 19});
+                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 20, Min = 20});
+                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 21, Min = 21});
+                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 22, Min = 22});
+                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 23, Min = 23});
                 _openXmlWriter.WriteEndElement();
             }
             catch (Exception exception)
@@ -131,7 +136,19 @@ namespace Vulnerator.Model.BusinessLogic.Reports
             try
             {
                 _openXmlWriter.WriteStartElement(new Row());
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Rule ID", 4, ref sharedStringMaxIndex,
+                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "STIG Name", 4, ref sharedStringMaxIndex,
+                    sharedStringDictionary);
+                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "XCCDF STIG Version", 4, ref sharedStringMaxIndex,
+                    sharedStringDictionary);
+                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "XCCDF STIG Release", 4, ref sharedStringMaxIndex,
+                    sharedStringDictionary);
+                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "CKL STIG Version", 4, ref sharedStringMaxIndex,
+                    sharedStringDictionary);
+                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "CKL STIG Release", 4, ref sharedStringMaxIndex,
+                    sharedStringDictionary);
+                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "XCCDF Rule ID", 4, ref sharedStringMaxIndex,
+                    sharedStringDictionary);
+                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "CKL Rule ID", 4, ref sharedStringMaxIndex,
                     sharedStringDictionary);
                 _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "STIG ID", 4, ref sharedStringMaxIndex,
                     sharedStringDictionary);
@@ -140,8 +157,6 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                 _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Group Title", 4, ref sharedStringMaxIndex,
                     sharedStringDictionary);
                 _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Vulnerability Title", 4, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "STIG Name", 4, ref sharedStringMaxIndex,
                     sharedStringDictionary);
                 _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "XCCDF Host", 4, ref sharedStringMaxIndex,
                     sharedStringDictionary);
@@ -182,8 +197,51 @@ namespace Vulnerator.Model.BusinessLogic.Reports
             {
                 using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("UserName",
+                        Properties.Settings.Default.ActiveUser));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("DisplayedReportName", "Navy RAR"));
+                    FilterTextCreator filterTextCreator = new FilterTextCreator();
+                    string groupFilter = filterTextCreator.Group(sqliteCommand);
+                    string severityFilter = filterTextCreator.Severity(sqliteCommand);
+                    string statusFilter = filterTextCreator.Status(sqliteCommand);
                     sqliteCommand.CommandText =
-                        _ddlReader.ReadDdl(_storedProcedureBase + "Select.StigDiscrepancies.dml", assembly);
+                        _ddlReader.ReadDdl(_storedProcedureBase + "Select.StigDiscrepanciesVulnerabilities.dml", assembly);
+
+                    if (!string.IsNullOrWhiteSpace(groupFilter) ||
+                        !string.IsNullOrWhiteSpace(severityFilter) ||
+                        !string.IsNullOrWhiteSpace(statusFilter))
+                    {
+                        
+                        Regex regex = new Regex(Properties.Resources.RegexSqlGroupBy);
+                        sqliteCommand.CommandText =
+                            sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"{Environment.NewLine}");
+
+                        if (!string.IsNullOrWhiteSpace(groupFilter))
+                        {
+                            sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"AND {Environment.NewLine}");
+                            sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, groupFilter);
+                        }
+                        if (!string.IsNullOrWhiteSpace(severityFilter))
+                        {
+                            sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"AND {Environment.NewLine}");
+                            sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"(PrimaryRawRiskIndicator {severityFilter}) ");
+                        }
+                        sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, Environment.NewLine);
+                        if (!string.IsNullOrWhiteSpace(statusFilter))
+                        {
+                            regex = new Regex(Properties.Resources.RegexStigDiscrepanciesStatus);
+                            MatchCollection matches = regex.Matches(sqliteCommand.CommandText);
+                            for (int i = matches.Count - 1; i >= 0; i--)
+                            {
+                                sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(matches[i].Index, "AND ");
+                                sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(matches[i].Index, matches[i].ToString().Contains("Mitigated") ? 
+                                    $"MitigatedStatus {statusFilter}" :
+                                    $"Status {statusFilter} ");
+                            }
+                            
+                        }
+                    }
+
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
                         while (sqliteDataReader.Read())
@@ -212,17 +270,50 @@ namespace Vulnerator.Model.BusinessLogic.Reports
             try
             {
                 _openXmlWriter.WriteStartElement(new Row());
-                string ruleId =
-                    $"{sqliteDataReader["UniqueVulnerabilityIdentifier"]}r{sqliteDataReader["VulnVersion"]}";
+                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter,
+                    sqliteDataReader["SourceName"].ToString(), 20,
+                    ref sharedStringMaxIndex, sharedStringDictionary);
 
-                if (!string.IsNullOrWhiteSpace(sqliteDataReader["VulnRelease"].ToString()))
+                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter,
+                    sqliteDataReader["XccdfSourceVersion"].ToString(), 20,
+                    ref sharedStringMaxIndex, sharedStringDictionary);
+
+                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter,
+                    sqliteDataReader["XccdfSourceRelease"].ToString(), 20,
+                    ref sharedStringMaxIndex, sharedStringDictionary);
+
+                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter,
+                    sqliteDataReader["CklSourceVersion"].ToString(), 20,
+                    ref sharedStringMaxIndex, sharedStringDictionary);
+
+                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter,
+                    sqliteDataReader["CklSourceRelease"].ToString(), 20,
+                    ref sharedStringMaxIndex, sharedStringDictionary);
+
+                string xccdfRuleId =
+                    $"{sqliteDataReader["UniqueVulnerabilityIdentifier"]}r{sqliteDataReader["XccdfVulnVersion"]}";
+
+                if (!string.IsNullOrWhiteSpace(sqliteDataReader["XccdfVulnRelease"].ToString()))
                 {
-                    ruleId += $".{sqliteDataReader["VulnRelease"]}";
+                    xccdfRuleId += $".{sqliteDataReader["XccdfVulnRelease"]}";
                 }
 
                 _openXmlCellDataHandler.WriteCellValue(
                     _openXmlWriter,
-                    ruleId,
+                    xccdfRuleId,
+                    24, ref sharedStringMaxIndex, sharedStringDictionary);
+
+                string cklRuleId =
+                    $"{sqliteDataReader["UniqueVulnerabilityIdentifier"]}r{sqliteDataReader["CklVulnVersion"]}";
+
+                if (!string.IsNullOrWhiteSpace(sqliteDataReader["CklVulnRelease"].ToString()))
+                {
+                    cklRuleId += $".{sqliteDataReader["CklVulnRelease"]}";
+                }
+
+                _openXmlCellDataHandler.WriteCellValue(
+                    _openXmlWriter,
+                    cklRuleId,
                     24, ref sharedStringMaxIndex, sharedStringDictionary);
 
                 _openXmlCellDataHandler.WriteCellValue(_openXmlWriter,
@@ -240,11 +331,7 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                 _openXmlCellDataHandler.WriteCellValue(_openXmlWriter,
                     sqliteDataReader["VulnerabilityTitle"].ToString(), 20,
                     ref sharedStringMaxIndex, sharedStringDictionary);
-                
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter,
-                    sqliteDataReader["SourceName"].ToString(), 20,
-                    ref sharedStringMaxIndex, sharedStringDictionary);
-                
+
                 _openXmlCellDataHandler.WriteCellValue(_openXmlWriter,
                     sqliteDataReader["XccdfHost"].ToString(), 24,
                     ref sharedStringMaxIndex, sharedStringDictionary);
@@ -274,7 +361,7 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                     ref sharedStringMaxIndex, sharedStringDictionary);
                 
                 _openXmlCellDataHandler.WriteCellValue(_openXmlWriter,
-                    sqliteDataReader["cklFindingDetails"].ToString(), 20,
+                    sqliteDataReader["CklFindingDetails"].ToString(), 20,
                     ref sharedStringMaxIndex, sharedStringDictionary);
                 
                 _openXmlCellDataHandler.WriteCellValue(_openXmlWriter,
