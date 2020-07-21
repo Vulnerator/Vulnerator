@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Vulnerator.Model.Entity;
@@ -30,8 +31,9 @@ namespace Vulnerator.ViewModel
     public class ReportingViewModel : ViewModelBase
     {
         private BackgroundWorker backgroundWorker;
-        private SaveFileDialog saveExcelFile;
-        private SaveFileDialog savePdfFile;
+        private FolderBrowserDialog folderBrowserDialog;
+        private Microsoft.Win32.SaveFileDialog saveExcelFile;
+        private Microsoft.Win32.SaveFileDialog savePdfFile;
         private DatabaseInterface databaseInterface = new DatabaseInterface();
         public static Stopwatch stopWatch = new Stopwatch();
         public static Stopwatch fileStopWatch = new Stopwatch();
@@ -530,7 +532,7 @@ namespace Vulnerator.ViewModel
                 {
                     return;
                 }
-                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
+                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(System.Windows.Application.Current);
                 Notification notification = new Notification();
                 notification.Background = appStyle.Item1.Resources["GrayBrush10"].ToString();
                 notification.Foreground = appStyle.Item1.Resources["TextBrush"].ToString();
@@ -744,7 +746,7 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
+                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(System.Windows.Application.Current);
                 Notification notification = new Notification();
                 notification.Background = appStyle.Item1.Resources["GrayBrush10"].ToString();
                 notification.Foreground = appStyle.Item1.Resources["TextBrush"].ToString();
@@ -814,7 +816,7 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                saveExcelFile = new SaveFileDialog();
+                saveExcelFile = new Microsoft.Win32.SaveFileDialog();
                 saveExcelFile.AddExtension = true;
                 saveExcelFile.Filter = "Excel Files (*.xlsx)|*.xlsx";
                 saveExcelFile.DefaultExt = "xlsx";
@@ -865,7 +867,7 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                savePdfFile = new SaveFileDialog();
+                savePdfFile = new Microsoft.Win32.SaveFileDialog();
                 savePdfFile.AddExtension = true;
                 savePdfFile.Filter = "PDF Files (*.pdf)|*.pdf";
                 savePdfFile.DefaultExt = "xls";
