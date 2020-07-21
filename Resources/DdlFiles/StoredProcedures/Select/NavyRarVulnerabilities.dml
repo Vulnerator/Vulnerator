@@ -91,8 +91,7 @@ FROM UniqueFindings UF
                        HG.Group_ID = GroupsMitigationsOrConditionsVulnerabilities.Group_ID)
          LEFT JOIN FindingTypes FT on UF.FindingType_ID = FT.FindingType_ID
          LEFT JOIN Vulnerabilities V on UF.Vulnerability_ID = V.Vulnerability_ID
-         LEFT JOIN VulnerabilitiesVulnerabilitySources VVS on V.Vulnerability_ID = VVS.Vulnerability_ID
-         LEFT JOIN VulnerabilitySources VS on VVS.VulnerabilitySource_ID = VS.VulnerabilitySource_ID
+         LEFT JOIN VulnerabilitySources VS on UF.VulnerabilitySource_ID = VS.VulnerabilitySource_ID
          LEFT JOIN VulnerabilitiesCCIs VCI on V.Vulnerability_ID = VCI.Vulnerability_ID
          LEFT JOIN CCIs CI on VCI.CCI_ID = CI.CCI_ID
          LEFT JOIN NIST_ControlsCCIs NCCI on CI.CCI_ID = NCCI.CCI_ID

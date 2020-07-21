@@ -844,7 +844,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\MitigationOrCondition.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\RequiredReportIsSelected.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\HardwareSoftwareMapping.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\StigDiscrepancies.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\StigDiscrepanciesVulnerabilities.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\UniqueFindingMitigationOrCondition.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\Vulnerability.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\VulnerabilityDates.dml" />

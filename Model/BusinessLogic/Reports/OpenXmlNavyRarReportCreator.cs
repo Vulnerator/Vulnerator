@@ -255,10 +255,15 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                                 sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"AND {Environment.NewLine}");
                             }
                             sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"(UniqueMitigatedStatus {statusFilter}) ");
+                            sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, Environment.NewLine);
                             regex = new Regex(Properties.Resources.RegexGroupsMitigationsOrConditionsVulnerabilities);
                             sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"{Environment.NewLine}WHERE (MitigatedStatus {statusFilter}) ");
                         }
-                        sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, Environment.NewLine);
+                        else
+                        {
+                            sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, Environment.NewLine);
+                        }
+                        
                     }
 
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())

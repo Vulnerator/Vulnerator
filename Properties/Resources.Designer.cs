@@ -250,6 +250,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FindingType\s+=\s+(?:(?:&apos;CKL&apos;)|(?:&apos;XCCDF&apos;))\)\)\s+as\s+(?:Mitigated)*(?:(?:Ckl)|(?:Xccdf))Status.
+        /// </summary>
+        internal static string RegexStigDiscrepanciesStatus {
+            get {
+                return ResourceManager.GetString("RegexStigDiscrepanciesStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to (?:(?:\w)+(?:-|\.|_)?)+.
         /// </summary>
         internal static string RegexStigId {

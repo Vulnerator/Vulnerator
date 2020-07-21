@@ -180,6 +180,9 @@
   <data name="RegexStigDate" xml:space="preserve">
     <value>\d{2}\s\D+\s\d{4}</value>
   </data>
+  <data name="RegexStigDiscrepanciesStatus" xml:space="preserve">
+    <value>FindingType\s+=\s+(?:(?:'CKL')|(?:'XCCDF'))\)\)\s+as\s+(?:Mitigated)*(?:(?:Ckl)|(?:Xccdf))Status</value>
+  </data>
   <data name="RegexStigId" xml:space="preserve">
     <value>(?:(?:\w)+(?:-|\.|_)?)+</value>
   </data>
