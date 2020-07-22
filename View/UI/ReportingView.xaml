@@ -81,7 +81,7 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Margin="{StaticResource MarginAll5}"
-                                                Command="{Binding Path=DataContext.GenerateSingleReportCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
+                                                Command="{Binding Path=DataContext.GenerateSingleVulnerabilityReportCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
                                                 CommandParameter="{Binding RequiredReport_ID}">
                                             <IconPacks:FontAwesomeLight Kind="FileDownload" />
                                         </Button>
@@ -269,10 +269,10 @@
                     </ScrollViewer>
                     <Button Grid.Row="1"
                             Grid.Column="0"
-                            MinWidth="{Binding ElementName=DiscardReportChangesButton, Path=ActualWidth}"
                             Margin="0,5,5,0"
                             HorizontalAlignment="Left"
-                            Content="Launch Reports" />
+                            Command="{Binding GenerateAllVulnerabilityReportsCommand}"
+                            Content="Launch All Reports" />
                     <!--<Grid Grid.Row="1"
                           Grid.Column="1">
                         <Grid.ColumnDefinitions>

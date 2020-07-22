@@ -7,6 +7,7 @@ using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.SQLite;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +33,7 @@ namespace Vulnerator.ViewModel
     {
         private BackgroundWorker backgroundWorker;
         private FolderBrowserDialog folderBrowserDialog;
+        private DialogResult? dialogResult;
         private Microsoft.Win32.SaveFileDialog saveExcelFile;
         private Microsoft.Win32.SaveFileDialog savePdfFile;
         private DatabaseInterface databaseInterface = new DatabaseInterface();
@@ -655,15 +657,15 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        public RelayCommand<object> GenerateSingleReportCommand => new RelayCommand<object>(GenerateSingleReport);
+        public RelayCommand<object> GenerateSingleVulnerabilityReportCommand => new RelayCommand<object>(GenerateSingleVulnerabilityReport);
 
-        private void GenerateSingleReport(object parameter)
+        private void GenerateSingleVulnerabilityReport(object parameter)
         {
             try
             {
                 backgroundWorker = new BackgroundWorker();
-                backgroundWorker.DoWork += GenerateSingleReportBackgroundWorker_DoWork;
-                backgroundWorker.RunWorkerCompleted += GenerateSingleReportBackgroundWorker_RunWorkerCompleted;
+                backgroundWorker.DoWork += GenerateSingleVulnerabilityReportBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerCompleted += GenerateReportBackgroundWorker_RunWorkerCompleted;
                 backgroundWorker.RunWorkerAsync(parameter);
                 backgroundWorker.Dispose();
             }
@@ -675,7 +677,7 @@ namespace Vulnerator.ViewModel
             
         }
 
-        private void GenerateSingleReportBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private void GenerateSingleVulnerabilityReportBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             try
             {
@@ -687,11 +689,12 @@ namespace Vulnerator.ViewModel
                         if ((bool) GetExcelReportName())
                         {
                             
-                            guiFeedback.SetFields("Creating report...", "Visible", false);
+                            guiFeedback.SetFields("Creating eMASS POA&M...", "Visible", false);
                             Messenger.Default.Send(guiFeedback);
                             OpenXmlEmassPoamReportCreator openXmlEmassPoamReportCreator = new OpenXmlEmassPoamReportCreator();
                             openXmlEmassPoamReportCreator.CreateEmassPoam(saveExcelFile.FileName);
                             e.Result = "Success";
+                            guiFeedback.SetFields("eMASS POA&M creation completed...", "Collapsed", false);
                             Messenger.Default.Send(guiFeedback);
                         }
                         else
@@ -704,11 +707,12 @@ namespace Vulnerator.ViewModel
                     {
                         if ((bool) GetExcelReportName())
                         {
-                            guiFeedback.SetFields("Creating report...", "Visible", false);
+                            guiFeedback.SetFields("Creating Navy RAR...", "Visible", false);
                             Messenger.Default.Send(guiFeedback);
                             OpenXmlNavyRarReportCreator openXmlNavyRarReportCreator = new OpenXmlNavyRarReportCreator();
                             openXmlNavyRarReportCreator.CreateNavyRar(saveExcelFile.FileName);
                             e.Result = "Success";
+                            guiFeedback.SetFields("Navy RAR creation completed...", "Collapsed", false);
                             Messenger.Default.Send(guiFeedback);
                         }
                         else
@@ -721,11 +725,12 @@ namespace Vulnerator.ViewModel
                     {
                         if ((bool) GetExcelReportName())
                         {
-                            guiFeedback.SetFields("Creating report...", "Visible", false);
+                            guiFeedback.SetFields("Creating STIG Discrepancies Report...", "Visible", false);
                             Messenger.Default.Send(guiFeedback);
                             OpenXmlStigDiscrepanciesReportCreator openXmlStigDiscrepanciesReportCreator = new OpenXmlStigDiscrepanciesReportCreator();
                             openXmlStigDiscrepanciesReportCreator.CreateDiscrepanciesReport(saveExcelFile.FileName);
                             e.Result = "Success";
+                            guiFeedback.SetFields("STIG Discrepancies report creation completed...", "Collapsed", false);
                             Messenger.Default.Send(guiFeedback);
                         }
                         else
@@ -742,7 +747,84 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private void GenerateSingleReportBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        
+
+        public RelayCommand GenerateAllVulnerabilityReportsCommand => new RelayCommand(GenerateAllVulnerabilityReports);
+
+        private void GenerateAllVulnerabilityReports()
+        {
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += GenerateAllVulnerabilityReportsBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerCompleted += GenerateReportBackgroundWorker_RunWorkerCompleted;
+                backgroundWorker.RunWorkerAsync();
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to generate all reports.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        private void GenerateAllVulnerabilityReportsBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                GuiFeedback guiFeedback = new GuiFeedback();
+                guiFeedback.SetFields("Creating vulnerability reports...", "Visible", false);
+                Messenger.Default.Send(guiFeedback);
+
+                string location = GetAllReportsSaveLocation();
+                if (string.IsNullOrWhiteSpace(location))
+                {
+                    e.Result = "Cancelled";
+                    return;
+                }
+
+                foreach (RequiredReportUserSelection report in VulnerabilityReports)
+                {
+                    if (report.IsReportSelected.Equals("False"))
+                    {
+                        continue;
+                    }
+
+                    switch (report.RequiredReportUserSelection_ID)
+                    {
+                        case 1:
+                        {
+                            OpenXmlNavyRarReportCreator openXmlNavyRarReportCreator = new OpenXmlNavyRarReportCreator();
+                            openXmlNavyRarReportCreator.CreateNavyRar($"{location}\\eMASS-POA&M_{DateTime.Now.ToString("yyyyMMdd-HHmmss", new CultureInfo("en-US"))}.xlsx");
+                            break;
+                        }
+                        case 2:
+                        {
+                            OpenXmlNavyRarReportCreator openXmlNavyRarReportCreator = new OpenXmlNavyRarReportCreator();
+                            openXmlNavyRarReportCreator.CreateNavyRar($"{location}\\Navy-RAR_{DateTime.Now.ToString("yyyyMMdd-HHmmss", new CultureInfo("en-US"))}.xlsx");
+                            break;
+                        }
+                        case 3:
+                        {
+                            OpenXmlStigDiscrepanciesReportCreator openXmlStigDiscrepanciesReportCreator = new OpenXmlStigDiscrepanciesReportCreator();
+                            openXmlStigDiscrepanciesReportCreator.CreateDiscrepanciesReport($"{location}\\STIG-Discrepancies_{DateTime.Now.ToString("yyyyMMdd-HHmmss", new CultureInfo("en-US"))}.xlsx");
+                            break;
+                        }
+                    }
+                }
+
+                dialogResult = null;
+                e.Result = "Success";
+                guiFeedback.SetFields("Reports created.", "Collapsed", false);
+                Messenger.Default.Send(guiFeedback);
+            }
+            catch (Exception exception)
+            {
+                e.Result = exception;
+            }
+        }
+
+        private void GenerateReportBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             try
             {
@@ -798,20 +880,6 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        // TODO: Rework this for the actual reports
-        // private bool ExcelReportsAreRequired()
-        // {
-        //     bool PoamAndRarAreNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbPoamRar"));
-        //     bool SummaryTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbAssetOverview"));
-        //     bool DiscrepanciesTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbDiscrepancies"));
-        //     bool AcasOutputTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbAcasOutput"));
-        //     bool StigDetailsTabIsNeeded = bool.Parse(ConfigAlter.ReadSettingsFromDictionary("cbStigDetails"));
-        //     if (PoamAndRarAreNeeded || SummaryTabIsNeeded || DiscrepanciesTabIsNeeded || AcasOutputTabIsNeeded || StigDetailsTabIsNeeded)
-        //     { return true; }
-        //     else
-        //     { return false; }
-        // }
-
         private bool? GetExcelReportName()
         {
             try
@@ -830,6 +898,33 @@ namespace Vulnerator.ViewModel
                 string error = "Unable to get the Excel report name.";
                 LogWriter.LogErrorWithDebug(error, exception);
                 return null;
+            }
+        }
+
+        private string GetAllReportsSaveLocation()
+        {
+            try
+            {
+                var invoking = System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    folderBrowserDialog = new FolderBrowserDialog();
+                    dialogResult = folderBrowserDialog.ShowDialog();
+                    
+                }));
+                invoking.Wait();
+                
+                if (dialogResult == DialogResult.OK)
+                {
+                    return folderBrowserDialog.SelectedPath;
+                }
+
+                return string.Empty;
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to get the Excel report name.";
+                LogWriter.LogErrorWithDebug(error, exception);
+                return string.Empty;
             }
         }
 
