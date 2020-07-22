@@ -120,7 +120,7 @@
                                     Content="{IconPacks:FontAwesomeLight Kind=FilePlus}"
                                     ToolTip="Create" />
                         </Grid>
-                        <Grid Grid.Column="0">
+                        <Grid Grid.Column="0" Visibility="Collapsed">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
@@ -143,7 +143,7 @@
                                            TextTrimming="CharacterEllipsis" />
                             </Label>
                         </Grid>
-                        <Grid>
+                        <Grid Visibility="Collapsed">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="Auto" />
@@ -230,7 +230,8 @@
                                   Background="Red"
                                   BorderBrush="Red"
                                   ExpandDirection="Down"
-                                  Style="{StaticResource CustomExpander}">
+                                  Style="{StaticResource CustomExpander}"
+                                  Visibility="Collapsed">
                             <Expander.Header>
                                 <Label Foreground="White">
                                     <Grid>
@@ -367,7 +368,7 @@
                     </StackPanel>
                     <StackPanel Grid.Column="1"
                                 HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch">
+                                VerticalAlignment="Stretch" Visibility="Collapsed">
                         <Grid HorizontalAlignment="Stretch">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />

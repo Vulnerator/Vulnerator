@@ -444,7 +444,7 @@
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Width="Auto"
                                                             Binding="{Binding GroupName}"
-                                                            Header="Associated Hardware"
+                                                            Header="Associated Groups"
                                                             HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                                     </DataGrid.Columns>
                                 </DataGrid>

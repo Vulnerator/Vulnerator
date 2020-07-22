@@ -69,13 +69,6 @@
                             <Label Content="{Binding ApplicationVersion}"
                                    Style="{StaticResource SecondLevelHeaderStyle}" />
                         </StackPanel>
-                        <Label Grid.Row="2"
-                               Grid.Column="1">
-                            <TextBlock x:Name="kcsUrlTextBox"
-                                       Text="Maintained by Kuchta Creative Services, LLC"
-                                       TextTrimming="CharacterEllipsis"
-                                       TextWrapping="NoWrap" />
-                        </Label>
                     </Grid>
                     <Label Style="{StaticResource TopLevelHeaderStyle}">
                         <TextBlock Text="Mission"
