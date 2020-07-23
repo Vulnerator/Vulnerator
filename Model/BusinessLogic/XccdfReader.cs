@@ -32,6 +32,7 @@ namespace Vulnerator.Model.BusinessLogic
         private string fileNameWithoutPath = string.Empty;
         private DateTime firstDiscovered = DateTime.Now;
         private DateTime lastObserved = DateTime.Now;
+        string _groupName = null;
         private bool incorrectFileType = false;
         private string tool = string.Empty;
         private List<string> ccis = new List<string>();
@@ -39,9 +40,9 @@ namespace Vulnerator.Model.BusinessLogic
         private List<string> macs = new List<string>();
         private List<string> responsibilities = new List<string>();
         private List<string> iaControls = new List<string>();
-        private string[] persistentParameters = { "Name", "FindingSourceFileName", "SourceName", "SourceVersion", "SourceRelease", "VulnerabilityRelease", "PublishedDate" };
+        private string[] persistentParameters = { "GroupName", "FindingSourceFileName", "SourceName", "SourceVersion", "SourceRelease", "VulnerabilityRelease", "PublishedDate" };
 
-        public string ReadXccdfFile(Object.File file)
+        public string ReadXccdfFile(Object.File file, string groupName)
         {
             try
             {
@@ -79,7 +80,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters.Add(new SQLiteParameter("FindingType", "XCCDF"));
-                        sqliteCommand.Parameters["GroupName"].Value = "All";
+                        sqliteCommand.Parameters["GroupName"].Value = string.IsNullOrWhiteSpace(_groupName) ? "All" : _groupName;
                         sqliteCommand.Parameters["FindingSourceFileName"].Value = fileNameWithoutPath;
                         sqliteCommand.Parameters["VulnerabilityRelease"].Value = string.Empty;
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);

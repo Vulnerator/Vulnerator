@@ -25,6 +25,7 @@ namespace Vulnerator.Model.BusinessLogic
         private object classification = string.Empty;
         private List<string> ccis = new List<string>();
         private DateTime dateTimeNow = DateTime.Now;
+        string _groupName = null;
         private string[] persistentParameters =  {
             "GroupName", "FindingSourceFileName", "SourceName", "SourceVersion", "SourceRelease", "DiscoveredHostName", "ScanIP", "FQDN", "NetBIOS", "FindingType", "VulnerabilityRelease", "PublishedDate"
         };
@@ -36,7 +37,7 @@ namespace Vulnerator.Model.BusinessLogic
         /// <param name="mitigationsList">List of mitigation items for vulnerabilities to be read against.</param>
         /// <param name="systemName">Name of the system that the mitigations check will be run against.</param>
         /// <returns>string Value</returns>
-        public string ReadCklFile(File file)
+        public string ReadCklFile(File file, string groupName)
         {
             try
             {
@@ -52,7 +53,7 @@ namespace Vulnerator.Model.BusinessLogic
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
-                        sqliteCommand.Parameters["GroupName"].Value = "All";
+                        sqliteCommand.Parameters["GroupName"].Value = string.IsNullOrWhiteSpace(_groupName) ? "All" : _groupName;
                         sqliteCommand.Parameters["LastObserved"].Value = dateTimeNow;
                         sqliteCommand.Parameters["VulnerabilityRelease"].Value = string.Empty;
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);

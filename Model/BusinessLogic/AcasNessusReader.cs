@@ -29,6 +29,7 @@ namespace Vulnerator.Model.BusinessLogic
         private string dateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
         private bool found21745;
         private bool found26917;
+        string _groupName = null;
         List<VulnerabilityReference> references = new List<VulnerabilityReference>();
         private string[] persistentParameters =
         {
@@ -40,7 +41,7 @@ namespace Vulnerator.Model.BusinessLogic
         /// </summary>
         /// <param name="file">File Object to be parsed</param>
         /// <returns>string Value</returns>
-        public string ReadAcasNessusFile(Object.File file)
+        public string ReadAcasNessusFile(Object.File file, string groupName)
         {
             try
             {
@@ -49,7 +50,7 @@ namespace Vulnerator.Model.BusinessLogic
                     LogWriter.LogError($"'{file.FileName}' is in use; please close any open instances and try again.");
                     return "Failed; File In Use";
                 }
-
+                _groupName = groupName;
                 fileName = file.FileName;
                 ParseNessusWithXmlReader(file);
 
@@ -75,7 +76,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters["FindingType"].Value = "ACAS";
-                        sqliteCommand.Parameters["GroupName"].Value = "All";
+                        sqliteCommand.Parameters["GroupName"].Value = string.IsNullOrWhiteSpace(_groupName) ? "All" : _groupName;
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         XmlReaderSettings xmlReaderSettings = GenerateXmlReaderSettings();
                         using (XmlReader xmlReader = XmlReader.Create(file.FilePath, xmlReaderSettings))
