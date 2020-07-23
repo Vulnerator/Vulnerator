@@ -19,6 +19,7 @@ namespace Vulnerator.Model.BusinessLogic
         private DateTime firstDiscovered = DateTime.Now;
         private DateTime lastObserved = DateTime.Now;
         private string version = string.Empty;
+        string _groupName = null;
         private DatabaseInterface databaseInterface = new DatabaseInterface();
         private List<FprVulnerability> fprVulnerabilityList = new List<FprVulnerability>();
 
@@ -37,7 +38,7 @@ namespace Vulnerator.Model.BusinessLogic
             new FortifySeverity() {Impact = "High", Probability = "High", Severity = "I"},
         };
 
-        public string ReadFpr(Object.File file)
+        public string ReadFpr(Object.File file, string groupName)
         {
             try
             {
@@ -72,7 +73,7 @@ namespace Vulnerator.Model.BusinessLogic
                     using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
-                        sqliteCommand.Parameters["GroupName"].Value = "All";
+                        sqliteCommand.Parameters["GroupName"].Value = string.IsNullOrWhiteSpace(_groupName) ? "All" : _groupName;
                         databaseInterface.InsertParsedFileSource(sqliteCommand, file);
                         using (Stream stream = System.IO.File.OpenRead(file.FilePath))
                         {

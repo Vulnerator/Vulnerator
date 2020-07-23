@@ -15,8 +15,9 @@ namespace Vulnerator.Model.BusinessLogic
     {
         private string fileNameWithoutPath = string.Empty;
         private DatabaseInterface databaseInterface = new DatabaseInterface();
+        string _groupName = null;
 
-        public string ReadXmlWassp(Object.File file)
+        public string ReadXmlWassp(Object.File file, string groupName)
         {
             try
             {
@@ -53,7 +54,7 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters["FindingType"].Value = "WASSP";
-                        sqliteCommand.Parameters["GroupName"].Value = "All";
+                        sqliteCommand.Parameters["GroupName"].Value = string.IsNullOrWhiteSpace(_groupName) ? "All" : _groupName;
                         sqliteCommand.Parameters["SourceName"].Value =
                             "Windows Automated Security Scanning Program (WASSP)";
                         sqliteCommand.Parameters["SourceVersion"].Value = string.Empty;
@@ -104,7 +105,8 @@ namespace Vulnerator.Model.BusinessLogic
                             case "host":
                             {
                                 sqliteCommand.Parameters["IP_Address"].Value = xmlReader.GetAttribute("ip");
-                                sqliteCommand.Parameters["DiscoveredHostName"].Value = xmlReader.GetAttribute("name");
+                                sqliteCommand.Parameters["DiscoveredHostName"].Value = xmlReader.GetAttribute("name").Trim();
+                                sqliteCommand.Parameters["DisplayedHostName"].Value = sqliteCommand.Parameters["DiscoveredHostName"].Value;
                                 sqliteCommand.Parameters["MAC_Address"].Value = xmlReader.GetAttribute("mac");
                                 break;
                             }
