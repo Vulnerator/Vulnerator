@@ -1,0 +1,2 @@
+﻿INSERT INTO ReportRmfOverrideUserSettings
+VALUES (NULL, @RequiredReport_ID, NULL, @UserName, 'False');

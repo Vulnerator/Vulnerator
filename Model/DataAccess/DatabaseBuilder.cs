@@ -783,6 +783,16 @@ namespace Vulnerator.Model.DataAccess
                         _ddlReader.ReadDdl(storedProcedureBase + "RequiredReportUserSelections.dml",
                             assembly);
                     sqliteCommand.ExecuteNonQuery();
+
+                    sqliteCommand.CommandText =
+                        _ddlReader.ReadDdl(storedProcedureBase + "RequiredReportUserGlobalSelections.dml",
+                            assembly);
+                    sqliteCommand.ExecuteNonQuery();
+
+                    sqliteCommand.CommandText =
+                        _ddlReader.ReadDdl(storedProcedureBase + "RequiredReportUserRmfOverride.dml",
+                            assembly);
+                    sqliteCommand.ExecuteNonQuery();
                 }
             }
             catch (Exception exception)

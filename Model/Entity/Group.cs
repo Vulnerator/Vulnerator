@@ -19,6 +19,7 @@ namespace Vulnerator.Model.Entity
             Contacts = new ObservableCollection<Contact>();
             Hardwares = new ObservableCollection<Hardware>();
             Waivers = new ObservableCollection<Waiver>();
+            ReportRmfOverrideUserSettings = new ObservableCollection<ReportRmfOverrideUserSettings>();
         }
 
         [Key]
@@ -135,6 +136,9 @@ namespace Vulnerator.Model.Entity
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Waiver> Waivers { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ReportRmfOverrideUserSettings> ReportRmfOverrideUserSettings { get; set; }
 
     }
 }
