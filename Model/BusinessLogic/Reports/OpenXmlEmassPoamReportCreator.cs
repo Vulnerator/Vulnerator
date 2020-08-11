@@ -481,12 +481,12 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("UserName",
                         Properties.Settings.Default.ActiveUser));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("DisplayedReportName", "eMASS-Importable POA&M"));
                     FilterTextCreator filterTextCreator = new FilterTextCreator();
-                    string findingTypeFilter = filterTextCreator.FindingType(sqliteCommand);
-                    string groupFilter = filterTextCreator.Group(sqliteCommand);
-                    string severityFilter = filterTextCreator.Severity(sqliteCommand);
-                    string statusFilter = filterTextCreator.Status(sqliteCommand);
+                    string findingTypeFilter = filterTextCreator.FindingType(sqliteCommand, "eMASS-Importable POA&M");
+                    string groupFilter = filterTextCreator.Group(sqliteCommand, "eMASS-Importable POA&M");
+                    string severityFilter = filterTextCreator.Severity(sqliteCommand, "eMASS-Importable POA&M");
+                    string statusFilter = filterTextCreator.Status(sqliteCommand, "eMASS-Importable POA&M");
+                    string rmfOverrideFilter = filterTextCreator.RmfOverride(sqliteCommand, "eMASS-Importable POA&M");
                     sqliteCommand.CommandText =
                         _ddlReader.ReadDdl(_storedProcedureBase + "Select.EmassPoamVulnerabilities.dml", assembly);
 
@@ -531,6 +531,18 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                             sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"{Environment.NewLine}WHERE (MitigatedStatus {statusFilter}) ");
                         }
                         sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, Environment.NewLine);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(rmfOverrideFilter))
+                    {
+                        Regex regex = new Regex(Properties.Resources.RegexSqlSoftwareId);
+                        sqliteCommand.CommandText =
+                            sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index,
+                                rmfOverrideFilter);
+                        regex = new Regex(Properties.Resources.RegexGroupProposedMitigation);
+                        sqliteCommand.CommandText =
+                            sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index,
+                                Properties.Resources.StringGroupRmfFields);
                     }
 
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())

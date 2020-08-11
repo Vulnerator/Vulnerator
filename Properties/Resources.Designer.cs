@@ -169,6 +169,15 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (?:GroupProposedMitigation).
+        /// </summary>
+        internal static string RegexGroupProposedMitigation {
+            get {
+                return ResourceManager.GetString("RegexGroupProposedMitigation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to \) GroupsMitigationsOrConditionsVulnerabilities.
         /// </summary>
         internal static string RegexGroupsMitigationsOrConditionsVulnerabilities {
@@ -237,6 +246,15 @@ namespace Vulnerator.Properties {
         internal static string RegexSqlGroupBy {
             get {
                 return ResourceManager.GetString("RegexSqlGroupBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (?:UF\.Software_ID = S\.Software_ID).
+        /// </summary>
+        internal static string RegexSqlSoftwareId {
+            get {
+                return ResourceManager.GetString("RegexSqlSoftwareId", resourceCulture);
             }
         }
         
@@ -327,6 +345,20 @@ namespace Vulnerator.Properties {
         internal static string RegexXccdfRule {
             get {
                 return ResourceManager.GetString("RegexXccdfRule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ,
+        ///GroupsMitigationsOrConditionsVulnerabilities2.EstimatedCompletionDate   as GroupEstimatedCompletionDate,
+        ///       GroupsMitigationsOrConditionsVulnerabilities2.SeverityPervasiveness     as GroupSeverityPervasiveness,
+        ///       GroupsMitigationsOrConditionsVulnerabilities2.ThreatRelevance           as GroupThreatRelevance,
+        ///       GroupsMitigationsOrConditionsVulnerabilities2.ThreatDescription         as GroupThreatDescription,
+        ///       GroupsMitigationsOrConditionsVulnerabilities2.Likelihood                a [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string StringGroupRmfFields {
+            get {
+                return ResourceManager.GetString("StringGroupRmfFields", resourceCulture);
             }
         }
     }

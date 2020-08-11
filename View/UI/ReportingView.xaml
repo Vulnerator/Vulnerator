@@ -121,6 +121,9 @@
                                                                Margin="{StaticResource MarginLeftTopRight5}"
                                                                VerticalAlignment="Bottom"
                                                                Controls:TextBoxHelper.Watermark="Override Group (Optional)"
+                                                               Controls:TextBoxHelper.ClearTextButton="True"
+                                                               Controls:TextBoxHelper.ButtonCommand="{Binding ClearRmfOverrideGroupCommand}"
+                                                               Controls:TextBoxHelper.ButtonCommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Mode=Self}}"
                                                                GridExtra:ResponsiveGrid.MD="6"
                                                                Command="{Binding SetRmfOverrideGroupCommand}"
                                                                CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Mode=Self}}"
@@ -305,11 +308,12 @@
                                     </Label>
                                     <GridExtra:ResponsiveGrid>
                                         <CheckBox x:Name="UseGlobalRmfOverrideValue"
-                                                  Margin="{StaticResource MarginLeft5}"
+                                                  Margin="{StaticResource MarginLeftBottom5}"
                                                   GridExtra:ResponsiveGrid.MD="3"
                                                   GridExtra:ResponsiveGrid.XS="12"
                                                   Command="{Binding SetUseGlobalValueCommand}"
                                                   Content="Use Global Value"
+                                                  VerticalAlignment="Bottom"
                                                   IsChecked="{Binding ReportUseGlobalValueUserSettings.UseGlobalRmfOverrideValue, Mode=OneWay}">
                                             <CheckBox.CommandParameter>
                                                 <MultiBinding Converter="{StaticResource MultiValueConverter}">
@@ -324,6 +328,9 @@
                                                                    Margin="{StaticResource MarginLeft5}"
                                                                    VerticalAlignment="Top"
                                                                    Controls:TextBoxHelper.Watermark="Override Group (Optional)"
+                                                                   Controls:TextBoxHelper.ClearTextButton="True"
+                                                                   Controls:TextBoxHelper.ButtonCommand="{Binding ClearRmfOverrideGroupCommand}"
+                                                                   Controls:TextBoxHelper.ButtonCommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Mode=Self}}"
                                                                    GridExtra:ResponsiveGrid.MD="9"
                                                                    GridExtra:ResponsiveGrid.XS="12"
                                                                    Command="{Binding SetRmfOverrideGroupCommand}"
@@ -340,6 +347,10 @@
                                     <StackPanel VerticalAlignment="Stretch"
                                                 GridExtra:ResponsiveGrid.MD="3"
                                                 GridExtra:ResponsiveGrid.XS="12">
+                                        <Label GridExtra:ResponsiveGrid.XS="12"
+                                               Style="{StaticResource ThirdLevelHeaderStyle}">
+                                            Selected Report Finding Type
+                                        </Label>
                                         <CheckBox x:Name="UseGlobalFindingTypeValue"
                                                   Margin="{StaticResource MarginLeftTop5}"
                                                   Command="{Binding SetUseGlobalValueCommand}"
@@ -392,6 +403,10 @@
                                     <StackPanel VerticalAlignment="Stretch"
                                                 GridExtra:ResponsiveGrid.MD="3"
                                                 GridExtra:ResponsiveGrid.XS="12">
+                                        <Label GridExtra:ResponsiveGrid.XS="12"
+                                               Style="{StaticResource ThirdLevelHeaderStyle}">
+                                            Selected Report Severity
+                                        </Label>
                                         <CheckBox x:Name="UseGlobalSeverityValue"
                                                   Margin="{StaticResource MarginLeftTop5}"
                                                   Command="{Binding SetUseGlobalValueCommand}"
@@ -443,6 +458,10 @@
                                     <StackPanel VerticalAlignment="Stretch"
                                                 GridExtra:ResponsiveGrid.MD="3"
                                                 GridExtra:ResponsiveGrid.XS="12">
+                                        <Label GridExtra:ResponsiveGrid.XS="12"
+                                               Style="{StaticResource ThirdLevelHeaderStyle}">
+                                            Selected Report Status
+                                        </Label>
                                         <CheckBox x:Name="UseGlobalStatusValue"
                                                   Margin="{StaticResource MarginLeftTop5}"
                                                   Command="{Binding SetUseGlobalValueCommand}"
@@ -494,6 +513,10 @@
                                     <StackPanel VerticalAlignment="Stretch"
                                                 GridExtra:ResponsiveGrid.MD="3"
                                                 GridExtra:ResponsiveGrid.XS="12">
+                                        <Label GridExtra:ResponsiveGrid.XS="12"
+                                               Style="{StaticResource ThirdLevelHeaderStyle}">
+                                            Selected Report Group
+                                        </Label>
                                         <CheckBox x:Name="UseGlobalGroupsValue"
                                                   Margin="{StaticResource MarginLeftTop5}"
                                                   Command="{Binding SetUseGlobalValueCommand}"

@@ -943,6 +943,72 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        public RelayCommand<object> ClearRmfOverrideGroupCommand => new RelayCommand<object>(ClearRmfOverrideGroup);
+
+        private void ClearRmfOverrideGroup(object parameter)
+        {
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += ClearRmfOverrideGroupBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerAsync(parameter);
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to clear RMF override group.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        private void ClearRmfOverrideGroupBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (e.Argument is null)
+                {
+                    e.Result = "No parameter";
+                    return;
+                }
+                
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                { DatabaseBuilder.sqliteConnection.Open(); }
+
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("UserName", Properties.Settings.Default.ActiveUser));
+                    switch (e.Argument)
+                    {
+                        case "GlobalRmfOverride":
+                        {
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("Group_ID", DBNull.Value));
+                            databaseInterface.ClearReportRmfOverrideGlobal(sqliteCommand);
+                            GlobalReportRmfOverrideUserSettingsGroup = null;
+                            break;
+                        }
+                        case "SelectedReportRmfOverride":
+                        {
+                            if (SelectedReportRmfOverrideUserSettingsGroup is null)
+                            {
+                                e.Result = "No selected group";
+                                return;
+                            }
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("Group_ID", DBNull.Value));
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("RequiredReport_ID", SelectedReport.RequiredReport_ID));
+                            databaseInterface.ClearReportRmfOverrideSelectedReport(sqliteCommand);
+                            SelectedReportRmfOverrideUserSettingsGroup = null;
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                string error = "The 'ClearRmfOverrideGroup' background worker has failed.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
         public RelayCommand<object> SetUseGlobalValueCommand => new RelayCommand<object>(SetUseGlobalValue);
 
         private void SetUseGlobalValue(object parameter)

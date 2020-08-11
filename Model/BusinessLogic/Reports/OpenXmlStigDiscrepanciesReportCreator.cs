@@ -199,11 +199,10 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("UserName",
                         Properties.Settings.Default.ActiveUser));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("DisplayedReportName", "Navy RAR"));
                     FilterTextCreator filterTextCreator = new FilterTextCreator();
-                    string groupFilter = filterTextCreator.Group(sqliteCommand);
-                    string severityFilter = filterTextCreator.Severity(sqliteCommand);
-                    string statusFilter = filterTextCreator.Status(sqliteCommand);
+                    string groupFilter = filterTextCreator.Group(sqliteCommand, "SCAP & STIG Discrepancies");
+                    string severityFilter = filterTextCreator.Severity(sqliteCommand, "SCAP & STIG Discrepancies");
+                    string statusFilter = filterTextCreator.Status(sqliteCommand, "SCAP & STIG Discrepancies");
                     sqliteCommand.CommandText =
                         _ddlReader.ReadDdl(_storedProcedureBase + "Select.StigDiscrepanciesVulnerabilities.dml", assembly);
 

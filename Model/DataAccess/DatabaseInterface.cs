@@ -1113,6 +1113,34 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public void ClearReportRmfOverrideGlobal(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.ClearReportRmfOverrideGlobal.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to clear 'Group_ID' value for the 'Global' ReportRmfOverrideUserSettings.");
+                throw exception;
+            }
+        }
+
+        public void ClearReportRmfOverrideSelectedReport(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.ClearReportRmfOverrideSelectedReport.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to clear 'Group_ID' value for ReportRmfOverrideUserSettings with RequiredReport_ID '{sqliteCommand.Parameters["RequiredReport_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
         public void DeleteGroupsCCIsMappingByGroup(SQLiteCommand sqliteCommand)
         {
             try

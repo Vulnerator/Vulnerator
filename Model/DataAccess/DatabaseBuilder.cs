@@ -771,14 +771,19 @@ namespace Vulnerator.Model.DataAccess
                         sqliteCommand.Parameters.Add(new SQLiteParameter("Status", status));
                         sqliteCommand.ExecuteNonQuery();
                     }
-                    sqliteCommand.CommandText =
-                        _ddlReader.ReadDdl(storedProcedureBase + "RequiredReportUserGroups.dml",
-                            assembly);
                     foreach (string group in groupIds)
                     {
                         sqliteCommand.Parameters.Add(new SQLiteParameter("Group_ID", group));
+                        sqliteCommand.CommandText =
+                            _ddlReader.ReadDdl(storedProcedureBase + "RequiredReportUserGroups.dml",
+                                assembly);
                         sqliteCommand.ExecuteNonQuery();
                     }
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Group_ID", DBNull.Value));
+                    sqliteCommand.CommandText =
+                        _ddlReader.ReadDdl(storedProcedureBase + "RequiredReportUserRmfOverride.dml",
+                            assembly);
+                    sqliteCommand.ExecuteNonQuery();
                     sqliteCommand.CommandText =
                         _ddlReader.ReadDdl(storedProcedureBase + "RequiredReportUserSelections.dml",
                             assembly);
@@ -786,11 +791,6 @@ namespace Vulnerator.Model.DataAccess
 
                     sqliteCommand.CommandText =
                         _ddlReader.ReadDdl(storedProcedureBase + "RequiredReportUserGlobalSelections.dml",
-                            assembly);
-                    sqliteCommand.ExecuteNonQuery();
-
-                    sqliteCommand.CommandText =
-                        _ddlReader.ReadDdl(storedProcedureBase + "RequiredReportUserRmfOverride.dml",
                             assembly);
                     sqliteCommand.ExecuteNonQuery();
                 }

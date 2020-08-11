@@ -1,0 +1,4 @@
+SELECT [COLUMN_NAME] FROM ReportUseGlobalValueUserSettings
+LEFT JOIN RequiredReports RR ON ReportUseGlobalValueUserSettings.RequiredReport_ID = RR.RequiredReport_ID
+WHERE UserName = @UserName
+AND DisplayedReportName = @DisplayedReportName;

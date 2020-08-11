@@ -751,6 +751,10 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportRmfOverrideGlobal.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportRmfOverrideSelectedReport.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportUseGlobalValueUserSettings.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\ReportUseGlobalValueUserSettings.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\ReportRmfOverrideUserSettings.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ClearReportRmfOverrideGlobal.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ClearReportRmfOverrideSelectedReport.dml" />
     <Resource Include="Vulnerator_Logo_Large_Color_SquareBackground_20190805.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
