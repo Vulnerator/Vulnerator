@@ -153,9 +153,6 @@
   <data name="RegexExcessiveNewLineAndTab" xml:space="preserve">
     <value>(?:(\r?)\n){2,}(?:\t){2,}</value>
   </data>
-  <data name="RegexGroupProposedMitigation" xml:space="preserve">
-    <value>(?:GroupProposedMitigation)</value>
-  </data>
   <data name="RegexGroupsMitigationsOrConditionsVulnerabilities" xml:space="preserve">
     <value>\) GroupsMitigationsOrConditionsVulnerabilities</value>
   </data>
@@ -177,11 +174,14 @@
   <data name="RegexRawStigRelease" xml:space="preserve">
     <value>(?&lt;=Release: )\d+(?=\s)</value>
   </data>
+  <data name="RegexSqlFindingTypes" xml:space="preserve">
+    <value>(?:LEFT JOIN FindingTypes FT)</value>
+  </data>
+  <data name="RegexSqlFromUniqueFindings" xml:space="preserve">
+    <value>(?:FROM UniqueFindings UF)</value>
+  </data>
   <data name="RegexSqlGroupBy" xml:space="preserve">
     <value>(?:GROUP\sBY)|(?:group\sby)</value>
-  </data>
-  <data name="RegexSqlSoftwareId" xml:space="preserve">
-    <value>(?:UF\.Software_ID = S\.Software_ID)</value>
   </data>
   <data name="RegexStigDate" xml:space="preserve">
     <value>\d{2}\s\D+\s\d{4}</value>
@@ -214,16 +214,13 @@
     <value>SV-\d*r\d*</value>
   </data>
   <data name="StringGroupRmfFields" xml:space="preserve">
-    <value>,
-GroupsMitigationsOrConditionsVulnerabilities2.EstimatedCompletionDate   as GroupEstimatedCompletionDate,
+    <value>, GroupsMitigationsOrConditionsVulnerabilities2.EstimatedCompletionDate   as GroupEstimatedCompletionDate,
        GroupsMitigationsOrConditionsVulnerabilities2.SeverityPervasiveness     as GroupSeverityPervasiveness,
        GroupsMitigationsOrConditionsVulnerabilities2.ThreatRelevance           as GroupThreatRelevance,
-       GroupsMitigationsOrConditionsVulnerabilities2.ThreatDescription         as GroupThreatDescription,
        GroupsMitigationsOrConditionsVulnerabilities2.Likelihood                as GroupLikelihood,
        GroupsMitigationsOrConditionsVulnerabilities2.Impact                    as GroupImpact,
-       GroupsMitigationsOrConditionsVulnerabilities2.ImpactDescription         as GroupImpactDescription,
        GroupsMitigationsOrConditionsVulnerabilities2.ResidualRisk              as GroupResidualRisk,
        GroupsMitigationsOrConditionsVulnerabilities2.MitigatedStatus           as GroupMitigatedStatus,
-       GroupsMitigationsOrConditionsVulnerabilities2.ResidualRiskAfterProposed as GroupResidualRiskAfterProposed</value>
+       GroupsMitigationsOrConditionsVulnerabilities2.ResidualRiskAfterProposed as GroupResidualRiskAfterProposed </value>
   </data>
 </root>

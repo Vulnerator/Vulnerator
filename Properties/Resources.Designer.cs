@@ -169,15 +169,6 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to (?:GroupProposedMitigation).
-        /// </summary>
-        internal static string RegexGroupProposedMitigation {
-            get {
-                return ResourceManager.GetString("RegexGroupProposedMitigation", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to \) GroupsMitigationsOrConditionsVulnerabilities.
         /// </summary>
         internal static string RegexGroupsMitigationsOrConditionsVulnerabilities {
@@ -241,20 +232,29 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (?:LEFT JOIN FindingTypes FT).
+        /// </summary>
+        internal static string RegexSqlFindingTypes {
+            get {
+                return ResourceManager.GetString("RegexSqlFindingTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (?:FROM UniqueFindings UF).
+        /// </summary>
+        internal static string RegexSqlFromUniqueFindings {
+            get {
+                return ResourceManager.GetString("RegexSqlFromUniqueFindings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to (?:GROUP\sBY)|(?:group\sby).
         /// </summary>
         internal static string RegexSqlGroupBy {
             get {
                 return ResourceManager.GetString("RegexSqlGroupBy", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to (?:UF\.Software_ID = S\.Software_ID).
-        /// </summary>
-        internal static string RegexSqlSoftwareId {
-            get {
-                return ResourceManager.GetString("RegexSqlSoftwareId", resourceCulture);
             }
         }
         
@@ -349,12 +349,11 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ,
-        ///GroupsMitigationsOrConditionsVulnerabilities2.EstimatedCompletionDate   as GroupEstimatedCompletionDate,
+        ///   Looks up a localized string similar to , GroupsMitigationsOrConditionsVulnerabilities2.EstimatedCompletionDate   as GroupEstimatedCompletionDate,
         ///       GroupsMitigationsOrConditionsVulnerabilities2.SeverityPervasiveness     as GroupSeverityPervasiveness,
         ///       GroupsMitigationsOrConditionsVulnerabilities2.ThreatRelevance           as GroupThreatRelevance,
-        ///       GroupsMitigationsOrConditionsVulnerabilities2.ThreatDescription         as GroupThreatDescription,
-        ///       GroupsMitigationsOrConditionsVulnerabilities2.Likelihood                a [rest of string was truncated]&quot;;.
+        ///       GroupsMitigationsOrConditionsVulnerabilities2.Likelihood                as GroupLikelihood,
+        ///       GroupsMitigationsOrConditionsVulnerabilities2.Impact                    as GroupI [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string StringGroupRmfFields {
             get {

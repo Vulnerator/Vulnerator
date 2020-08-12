@@ -19,7 +19,7 @@ namespace Vulnerator.Model.BusinessLogic.Reports
         {
             try
             {
-                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.ReportUseGlobalValueUserSettings", assembly);
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.ReportUseGlobalValueUserSettings.dml", assembly);
                 sqliteCommand.CommandText =
                     sqliteCommand.CommandText.Replace("[COLUMN_NAME]", "UseGlobalFindingTypeValue");
                 
@@ -192,10 +192,13 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                     if (!sqliteDataReader.HasRows)
                     { return string.Empty; }
 
-
+                    sqliteDataReader.Read();
+                    if (string.IsNullOrWhiteSpace(sqliteDataReader["Group_ID"].ToString()))
+                    {
+                        return string.Empty;
+                    }
                     return "LEFT JOIN (SELECT GMOCV.Group_ID, GMOCV.Vulnerability_ID, GMOCV.MitigationOrCondition_ID, MitigatedStatus, " +
-                           "SeverityPervasiveness, ThreatRelevance, ThreatDescription, " +
-                           "Likelihood, Impact, ImpactDescription, ResidualRisk, ResidualRiskAfterProposed, " +
+                           "SeverityPervasiveness, ThreatRelevance, Likelihood, Impact, ResidualRisk, ResidualRiskAfterProposed, " +
                            "EstimatedCompletionDate FROM GroupsMitigationsOrConditionsVulnerabilities GMOCV LEFT JOIN MitigationsOrConditions MOC " +
                            "on GMOCV.MitigationOrCondition_ID = MOC.MitigationOrCondition_ID LEFT JOIN Groups G2 on GMOCV.Group_ID = G2.Group_ID " + 
                            $"WHERE GMOCV.Group_ID = {sqliteDataReader["Group_ID"]}) " +

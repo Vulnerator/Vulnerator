@@ -120,7 +120,8 @@
                                     Content="{IconPacks:FontAwesomeLight Kind=FilePlus}"
                                     ToolTip="Create" />
                         </Grid>
-                        <Grid Grid.Column="0" Visibility="Collapsed">
+                        <Grid Grid.Column="0"
+                              Visibility="Collapsed">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
@@ -368,7 +369,8 @@
                     </StackPanel>
                     <StackPanel Grid.Column="1"
                                 HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch" Visibility="Collapsed">
+                                VerticalAlignment="Stretch"
+                                Visibility="Collapsed">
                         <Grid HorizontalAlignment="Stretch">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />

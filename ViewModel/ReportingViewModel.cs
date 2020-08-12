@@ -917,6 +917,11 @@ namespace Vulnerator.ViewModel
                     {
                         case "GlobalRmfOverride":
                         {
+                            if (GlobalReportRmfOverrideUserSettingsGroup is null)
+                            {
+                                e.Result = "No global group";
+                                return;
+                            }
                             sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", GlobalReportRmfOverrideUserSettingsGroup.GroupName));
                             databaseInterface.UpdateReportRmfOverrideGlobal(sqliteCommand);
                             break;

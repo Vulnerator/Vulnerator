@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -319,6 +320,16 @@ namespace Vulnerator.Helper
                 LogWriter.LogError($"Unable to insert starting bullet on '{_string}'.");
                 throw exception;
             }
+        }
+
+        public static bool HasColumn(this SQLiteDataReader sqliteDataReader, string columnName)
+        {
+            for (int i=0; i < sqliteDataReader.FieldCount; i++)
+            {
+                if (sqliteDataReader.GetName(i).Equals(columnName, StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+            }
+            return false;
         }
     }
 }
