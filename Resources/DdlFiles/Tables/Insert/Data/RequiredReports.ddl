@@ -19,6 +19,13 @@ VALUES (NULL,
         'True',
         'Vulnerability Management');
 
+INSERT INTO RequiredReports
+VALUES (NULL,
+        'Global',
+        'N/A',
+        'True',
+        'N/A');
+
 -- INSERT INTO RequiredReports
 -- VALUES (NULL,
 --         'Excel Summary',

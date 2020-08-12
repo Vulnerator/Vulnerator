@@ -1,64 +1,46 @@
-﻿SELECT UF.Vulnerability_ID                                                                  as Vulnerability_ID,
+﻿SELECT UF.Vulnerability_ID                                                    as Vulnerability_ID,
        V.VulnerabilityGroupTitle,
        V.VulnerabilityTitle,
        V.VulnerabilityDescription,
        GROUP_CONCAT(DISTINCT
                     NC.ControlFamily || '-' || NC.ControlNumber || '.' ||
-                    NC.ControlEnhancement)                                                  as NIST_Controls,
-       GROUP_CONCAT(DISTINCT CI.CCI_Number)                                                 as CCIs,
-       GROUP_CONCAT(DISTINCT UF.InstanceIdentifier)                                         as InstanceIdentifier,
+                    NC.ControlEnhancement)                                    as NIST_Controls,
+       GROUP_CONCAT(DISTINCT CI.CCI_Number)                                   as CCIs,
+       GROUP_CONCAT(DISTINCT UF.InstanceIdentifier)                           as InstanceIdentifier,
        V.UniqueVulnerabilityIdentifier,
        V.SecondaryVulnerabilityIdentifier,
        V.VulnerabilityGroupIdentifier,
-       V.VulnerabilityVersion                                                               as VulnVerison,
-       V.VulnerabilityRelease                                                               as VulnRelease,
-       UFMOC.EstimatedCompletionDate                                                        as UniqueEstimatedCompletionDate,
-       GROUP_CONCAT(DISTINCT
-                    GroupsMitigationsOrConditionsVulnerabilities.EstimatedCompletionDate)   as GroupEstimatedCompletionDate,
-       VS.SourceName                                                                        as VulnSourceName,
-       VS.SourceVersion                                                                     as VulnSourceVersion,
-       VS.SourceRelease                                                                     as VulnSourceRelease,
-       Status                                                                               as RawStatus,
-       GROUP_CONCAT(DISTINCT
-                    GroupsMitigationsOrConditionsVulnerabilities.MitigatedStatus)           as GroupMitigatedStatus,
-       UFMOC.MitigatedStatus                                                                as UniqueMitigatedStatus,
-       GROUP_CONCAT(DISTINCT Comments)                                                      as Comments,
-       GROUP_CONCAT(DISTINCT FindingDetails)                                                as FindingDetails,
-       GROUP_CONCAT(DISTINCT ToolGeneratedOutput)                                           as ToolGeneratedOutput,
+       V.VulnerabilityVersion                                                 as VulnVerison,
+       V.VulnerabilityRelease                                                 as VulnRelease,
+       UFMOC.EstimatedCompletionDate                                          as UniqueEstimatedCompletionDate,
+       VS.SourceName                                                          as VulnSourceName,
+       VS.SourceVersion                                                       as VulnSourceVersion,
+       VS.SourceRelease                                                       as VulnSourceRelease,
+       Status                                                                 as RawStatus,
+       UFMOC.MitigatedStatus                                                  as UniqueMitigatedStatus,
+       GROUP_CONCAT(DISTINCT Comments)                                        as Comments,
+       GROUP_CONCAT(DISTINCT FindingDetails)                                  as FindingDetails,
+       GROUP_CONCAT(DISTINCT ToolGeneratedOutput)                             as ToolGeneratedOutput,
        V.PrimaryRawRiskIndicator,
        V.SecondaryRawRiskIndicator,
-       GROUP_CONCAT(DISTINCT H.DisplayedHostName)                                           as HostName,
-       GROUP_CONCAT(DISTINCT S.DisplayedSoftwareName)                                       as DisplayedSoftwareName,
-       UFMOC.TechnicalMitigation                                                            as UniqueTechnicalMitigation,
-       GROUP_CONCAT(DISTINCT
-                    GroupsMitigationsOrConditionsVulnerabilities.TechnicalMitigation)       as GroupTechnicalMitigation,
-       UFMOC.PredisposingConditions                                                         as UniquePredisposingConditions,
-       GROUP_CONCAT(DISTINCT
-                    GroupsMitigationsOrConditionsVulnerabilities.PredisposingConditions)    as GroupPredisposingConditions,
-       UFMOC.SeverityPervasiveness                                                          as UniqueSeverityPervasiveness,
-       GROUP_CONCAT(DISTINCT
-                    GroupsMitigationsOrConditionsVulnerabilities.SeverityPervasiveness)     as GroupSeverityPervasiveness,
-       UFMOC.ThreatRelevance                                                                as UniqueThreatRelevance,
-       GROUP_CONCAT(DISTINCT
-                    GroupsMitigationsOrConditionsVulnerabilities.ThreatRelevance)           as GroupThreatRelevance,
-       UFMOC.ThreatDescription                                                              as UniqueThreatDescription,
-       GROUP_CONCAT(DISTINCT
-                    GroupsMitigationsOrConditionsVulnerabilities.ThreatDescription)         as GroupThreatDescription,
-       UFMOC.Likelihood                                                                     as UniqueLikelihood,
-       GROUP_CONCAT(DISTINCT GroupsMitigationsOrConditionsVulnerabilities.Likelihood)       as GroupLikelihood,
-       UFMOC.Impact                                                                         as UniqueImpact,
-       (GroupsMitigationsOrConditionsVulnerabilities.Impact)                                as GroupImpact,
-       UFMOC.ImpactDescription                                                              as UniqueImpactDescription,
-       GROUP_CONCAT(DISTINCT
-                    GroupsMitigationsOrConditionsVulnerabilities.ImpactDescription)         as GroupImpactDescription,
-       UFMOC.ResidualRisk                                                                   as UniqueResidualRisk,
-       GROUP_CONCAT(DISTINCT GroupsMitigationsOrConditionsVulnerabilities.ResidualRisk)     as GroupResidualRisk,
-       UFMOC.ProposedMitigation                                                             as UniqueProposedMitigation,
-       GROUP_CONCAT(DISTINCT
-                    GroupsMitigationsOrConditionsVulnerabilities.ProposedMitigation)        as GroupProposedMitigation,
-       UFMOC.ResidualRiskAfterProposed                                                      as UniqueResidualRiskAfterProposed,
-       GROUP_CONCAT(DISTINCT
-                    GroupsMitigationsOrConditionsVulnerabilities.ResidualRiskAfterProposed) as GroupResidualRiskAfterProposed
+       GROUP_CONCAT(DISTINCT H.DisplayedHostName)                             as HostName,
+       GROUP_CONCAT(DISTINCT S.DisplayedSoftwareName)                         as DisplayedSoftwareName,
+       UFMOC.TechnicalMitigation                                              as UniqueTechnicalMitigation,
+       UFMOC.PredisposingConditions                                           as UniquePredisposingConditions,
+       UFMOC.SeverityPervasiveness                                            as UniqueSeverityPervasiveness,
+       UFMOC.ThreatRelevance                                                  as UniqueThreatRelevance,
+       UFMOC.ThreatDescription                                                as UniqueThreatDescription,
+       UFMOC.Likelihood                                                       as UniqueLikelihood,
+       UFMOC.Impact                                                           as UniqueImpact,
+       UFMOC.ImpactDescription                                                as UniqueImpactDescription,
+       UFMOC.ResidualRisk                                                     as UniqueResidualRisk,
+       UFMOC.ProposedMitigation                                               as UniqueProposedMitigation,
+       UFMOC.ResidualRiskAfterProposed                                        as UniqueResidualRiskAfterProposed,
+       GROUP_CONCAT(DISTINCT GroupsMitigationsOrConditionsVulnerabilities.PredisposingConditions) as GroupPredisposingConditions,
+       GROUP_CONCAT(DISTINCT GroupsMitigationsOrConditionsVulnerabilities.ProposedMitigation) as GroupProposedMitigations,
+       GROUP_CONCAT(DISTINCT GroupsMitigationsOrConditionsVulnerabilities.TechnicalMitigation) as GroupTechnicalMitigations,
+       GROUP_CONCAT(DISTINCT GroupsMitigationsOrConditionsVulnerabilities.ThreatDescription) as GroupThreatDescription,
+       GROUP_CONCAT(DISTINCT GroupsMitigationsOrConditionsVulnerabilities.ImpactDescription) as GroupImpactDescription
 FROM UniqueFindings UF
          LEFT JOIN Hardware H on UF.Hardware_ID = H.Hardware_ID
          LEFT JOIN HardwareGroups HG on H.Hardware_ID = HG.Hardware_ID
@@ -66,19 +48,11 @@ FROM UniqueFindings UF
          LEFT JOIN (SELECT GMOCV.Group_ID,
                            GMOCV.Vulnerability_ID,
                            GMOCV.MitigationOrCondition_ID,
-                           MitigatedStatus,
+                           ProposedMitigation,
                            TechnicalMitigation,
                            PredisposingConditions,
-                           SeverityPervasiveness,
-                           ThreatRelevance,
                            ThreatDescription,
-                           Likelihood,
-                           Impact,
-                           ImpactDescription,
-                           ResidualRisk,
-                           ProposedMitigation,
-                           ResidualRiskAfterProposed,
-                           EstimatedCompletionDate
+                           ImpactDescription
                     FROM GroupsMitigationsOrConditionsVulnerabilities GMOCV
                              LEFT JOIN MitigationsOrConditions MOC
                                        on GMOCV.MitigationOrCondition_ID = MOC.MitigationOrCondition_ID
@@ -95,4 +69,4 @@ FROM UniqueFindings UF
          LEFT JOIN MitigationsOrConditions UFMOC
                    on UF.MitigationOrCondition_ID = UFMOC.MitigationOrCondition_ID
 GROUP BY VS.SourceName, V.UniqueVulnerabilityIdentifier, Status, UFMOC.MitigatedStatus, UF.Hardware_ID
-ORDER BY VS.SourceName, V.UniqueVulnerabilityIdentifier, Status, UFMOC.MitigatedStatus, UF.Hardware_ID
+ORDER BY VS.SourceName, V.UniqueVulnerabilityIdentifier, Status, UFMOC.MitigatedStatus, UF.Hardware_ID;

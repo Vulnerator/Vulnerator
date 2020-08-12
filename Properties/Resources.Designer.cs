@@ -232,6 +232,24 @@ namespace Vulnerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (?:LEFT JOIN FindingTypes FT).
+        /// </summary>
+        internal static string RegexSqlFindingTypes {
+            get {
+                return ResourceManager.GetString("RegexSqlFindingTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (?:FROM UniqueFindings UF).
+        /// </summary>
+        internal static string RegexSqlFromUniqueFindings {
+            get {
+                return ResourceManager.GetString("RegexSqlFromUniqueFindings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to (?:GROUP\sBY)|(?:group\sby).
         /// </summary>
         internal static string RegexSqlGroupBy {
@@ -327,6 +345,19 @@ namespace Vulnerator.Properties {
         internal static string RegexXccdfRule {
             get {
                 return ResourceManager.GetString("RegexXccdfRule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to , GroupsMitigationsOrConditionsVulnerabilities2.EstimatedCompletionDate   as GroupEstimatedCompletionDate,
+        ///       GroupsMitigationsOrConditionsVulnerabilities2.SeverityPervasiveness     as GroupSeverityPervasiveness,
+        ///       GroupsMitigationsOrConditionsVulnerabilities2.ThreatRelevance           as GroupThreatRelevance,
+        ///       GroupsMitigationsOrConditionsVulnerabilities2.Likelihood                as GroupLikelihood,
+        ///       GroupsMitigationsOrConditionsVulnerabilities2.Impact                    as GroupI [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string StringGroupRmfFields {
+            get {
+                return ResourceManager.GetString("StringGroupRmfFields", resourceCulture);
             }
         }
     }

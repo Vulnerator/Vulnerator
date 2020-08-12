@@ -21,7 +21,6 @@ using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Object;
 using GalaSoft.MvvmLight.Messaging;
 using MahApps.Metro;
-using Microsoft.Win32;
 using Vulnerator.Helper;
 using Vulnerator.Model.BusinessLogic;
 using Vulnerator.Model.BusinessLogic.Reports;
@@ -39,6 +38,21 @@ namespace Vulnerator.ViewModel
         private DatabaseInterface databaseInterface = new DatabaseInterface();
         public static Stopwatch stopWatch = new Stopwatch();
         public static Stopwatch fileStopWatch = new Stopwatch();
+
+        private string _overrideLabel;
+
+        public string OverrideLabel
+        {
+            get => _overrideLabel;
+            set
+            {
+                if (_overrideLabel != value)
+                {
+                    _overrideLabel = value;
+                    RaisePropertyChanged("OverrideLabel");
+                }
+            }
+        }
 
         private List<Group> _groups { get; set; }
         public List<Group> Groups
@@ -143,11 +157,164 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private ReportRmfOverrideUserSettings _selectedReportRmfOverrideUserSettings;
+
+        public ReportRmfOverrideUserSettings SelectedReportRmfOverrideUserSettings
+        {
+            get => _selectedReportRmfOverrideUserSettings;
+            set
+            {
+                if (_selectedReportRmfOverrideUserSettings != value)
+                {
+                    _selectedReportRmfOverrideUserSettings = value;
+                    RaisePropertyChanged("SelectedReportRmfOverrideUserSettings");
+                }
+            }
+        }
+
+        private Group _selectedReportRmfOverrideUserSettingsGroup;
+
+        public Group SelectedReportRmfOverrideUserSettingsGroup
+        {
+            get => _selectedReportRmfOverrideUserSettingsGroup;
+            set
+            {
+                if (_selectedReportRmfOverrideUserSettingsGroup != value)
+                {
+                    _selectedReportRmfOverrideUserSettingsGroup = value;
+                    RaisePropertyChanged("SelectedReportRmfOverrideUserSettingsGroup");
+                }
+            }
+        }
+
+        private ObservableCollection<ReportUseGlobalValueUserSettings> _selectedReportUseGlobalValueUserSettings;
+
+        public ObservableCollection<ReportUseGlobalValueUserSettings> SelectedReportUseGlobalValueUserSettings
+        {
+            get => _selectedReportUseGlobalValueUserSettings;
+            set
+            {
+                if (_selectedReportUseGlobalValueUserSettings != value)
+                {
+                    _selectedReportUseGlobalValueUserSettings = value;
+                    RaisePropertyChanged("SelectedReportUseGlobalValueUserSettings");
+                }
+            }
+        }
+
+        private ObservableCollection<ReportFindingTypeUserSettings> _globalReportFindingTypeSettings;
+
+        public ObservableCollection<ReportFindingTypeUserSettings> GlobalReportFindingTypeSettings
+        {
+            get => _globalReportFindingTypeSettings;
+            set
+            {
+                if (_globalReportFindingTypeSettings != value)
+                {
+                    _globalReportFindingTypeSettings = value;
+                    RaisePropertyChanged("GlobalReportFindingTypeSettings");
+                }
+            }
+        }
+
+        private ObservableCollection<ReportGroupUserSettings> _globalReportGroupSettings;
+
+        public ObservableCollection<ReportGroupUserSettings> GlobalReportGroupSettings
+        {
+            get => _globalReportGroupSettings;
+            set
+            {
+                if (_globalReportGroupSettings != value)
+                {
+                    _globalReportGroupSettings = value;
+                    RaisePropertyChanged("GlobalReportGroupSettings");
+                }
+            }
+        }
+
+        private ObservableCollection<ReportSeverityUserSettings> _globalReportSeveritySettings;
+
+        public ObservableCollection<ReportSeverityUserSettings> GlobalReportSeveritySettings
+        {
+            get => _globalReportSeveritySettings;
+            set
+            {
+                if (_globalReportSeveritySettings != value)
+                {
+                    _globalReportSeveritySettings = value;
+                    RaisePropertyChanged("GlobalReportSeveritySettings");
+                }
+            }
+        }
+
+        private ObservableCollection<ReportStatusUserSettings> _globalReportStatusSettings;
+
+        public ObservableCollection<ReportStatusUserSettings> GlobalReportStatusSettings
+        {
+            get => _globalReportStatusSettings;
+            set
+            {
+                if (_globalReportStatusSettings != value)
+                {
+                    _globalReportStatusSettings = value;
+                    RaisePropertyChanged("GlobalReportStatusSettings");
+                }
+            }
+        }
+
+        private ReportRmfOverrideUserSettings _globalReportRmfOverrideUserSettings;
+
+        public ReportRmfOverrideUserSettings GlobalReportRmfOverrideUserSettings
+        {
+            get => _globalReportRmfOverrideUserSettings;
+            set
+            {
+                if (_globalReportRmfOverrideUserSettings != value)
+                {
+                    _globalReportRmfOverrideUserSettings = value;
+                    RaisePropertyChanged("GlobalReportRmfOverrideUserSettings");
+                }
+            }
+        }
+
+        private Group _globalReportRmfOverrideUserSettingsGroup;
+
+        public Group GlobalReportRmfOverrideUserSettingsGroup
+        {
+            get => _globalReportRmfOverrideUserSettingsGroup;
+            set
+            {
+                if (_globalReportRmfOverrideUserSettingsGroup != value)
+                {
+                    _globalReportRmfOverrideUserSettingsGroup = value;
+                    RaisePropertyChanged("GlobalReportRmfOverrideUserSettingsGroup");
+                }
+            }
+        }
+
+        private ReportUseGlobalValueUserSettings _reportUseGlobalValueUserSettings;
+
+        public ReportUseGlobalValueUserSettings ReportUseGlobalValueUserSettings
+        {
+            get => _reportUseGlobalValueUserSettings;
+            set
+            {
+                if (_reportUseGlobalValueUserSettings != value)
+                {
+                    _reportUseGlobalValueUserSettings = value;
+                    RaisePropertyChanged("ReportUseGlobalValueUserSettings");
+                }
+            }
+        }
+
         public ReportingViewModel()
         {
             try
             {
                 LogWriter.LogStatusUpdate("Begin instantiation of ReportingViewModel.");
+                OverrideLabel = 
+                    "An optional selection that overrides the individually set status, impact, risk, etc. for each asset " +
+                    "using the values provided for the selected group.";
                 PopulateGui();
                 Messenger.Default.Register<NotificationMessage<string>>(this, MessengerToken.ModelUpdated, (msg) => HandleModelUpdate(msg.Notification));
                 LogWriter.LogStatusUpdate("ReportingViewModel instantiated successfully.");
@@ -179,8 +346,9 @@ namespace Vulnerator.ViewModel
             {
                 using (DatabaseContext databaseContext = new DatabaseContext())
                 {
-                    PopulateReports(databaseContext);
                     Groups = databaseContext.Groups.AsNoTracking().ToList();
+                    PopulateReports(databaseContext);
+                    PopulateGlobalLists(databaseContext);
                 }
             }
             catch (Exception exception)
@@ -204,6 +372,48 @@ namespace Vulnerator.ViewModel
             catch (Exception exception)
             {
                 LogWriter.LogError("Unable to populate ReportingViewModel required reports list.");
+                throw exception;
+            }
+        }
+
+        private void PopulateGlobalLists(DatabaseContext databaseContext)
+        {
+            try
+            {
+                GlobalReportFindingTypeSettings = databaseContext.ReportFindingTypeUserSettings
+                    .Include(r => r.FindingType)
+                    .Where(r => r.RequiredReport.DisplayedReportName.Equals("Global") &&
+                                r.UserName.Equals(Properties.Settings.Default.ActiveUser))
+                    .AsNoTracking()
+                    .ToObservableCollection();
+                GlobalReportGroupSettings = databaseContext.ReportGroupUserSettings
+                    .Include(r => r.Group)
+                    .Where(r => r.RequiredReport.DisplayedReportName.Equals("Global") &&
+                                r.UserName.Equals(Properties.Settings.Default.ActiveUser))
+                    .AsNoTracking()
+                    .ToObservableCollection();
+                GlobalReportSeveritySettings = databaseContext.ReportSeverityUserSettings
+                    .Where(r => r.RequiredReport.DisplayedReportName.Equals("Global") &&
+                                r.UserName.Equals(Properties.Settings.Default.ActiveUser))
+                    .AsNoTracking()
+                    .ToObservableCollection();
+                GlobalReportStatusSettings = databaseContext.ReportStatusUserSettings
+                    .Where(r => r.RequiredReport.DisplayedReportName.Equals("Global") &&
+                                r.UserName.Equals(Properties.Settings.Default.ActiveUser))
+                    .AsNoTracking()
+                    .ToObservableCollection();
+                GlobalReportRmfOverrideUserSettings = databaseContext.ReportRmfOverrideUserSettings
+                    .Include(r => r.Group)
+                    .FirstOrDefault(r => r.RequiredReport.DisplayedReportName.Equals("Global") &&
+                                         r.UserName.Equals(Properties.Settings.Default.ActiveUser));
+                if (GlobalReportRmfOverrideUserSettings.Group != null)
+                { GlobalReportRmfOverrideUserSettingsGroup = Groups.FirstOrDefault(x => x.Group_ID.Equals(GlobalReportRmfOverrideUserSettings.Group_ID)); }
+                else
+                { GlobalReportRmfOverrideUserSettingsGroup = null; }
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to populate ReportingViewModel global user setting lists.");
                 throw exception;
             }
         }
@@ -256,6 +466,18 @@ namespace Vulnerator.ViewModel
                                     r.UserName.Equals(Properties.Settings.Default.ActiveUser))
                         .AsNoTracking()
                         .ToObservableCollection();
+                    SelectedReportRmfOverrideUserSettings = databaseContext.ReportRmfOverrideUserSettings
+                        .Include(r => r.Group)
+                        .FirstOrDefault(r => r.RequiredReport_ID.Equals(selection.RequiredReport_ID) &&
+                                             r.UserName.Equals(Properties.Settings.Default.ActiveUser));
+                    if (SelectedReportRmfOverrideUserSettings.Group != null)
+                    { SelectedReportRmfOverrideUserSettingsGroup = Groups.FirstOrDefault(x => x.Group_ID.Equals(SelectedReportRmfOverrideUserSettings.Group_ID)); }
+                    else
+                    { SelectedReportRmfOverrideUserSettingsGroup = null; }
+
+                    ReportUseGlobalValueUserSettings = databaseContext.ReportUseGlobalValueUserSettings
+                        .FirstOrDefault(r => r.RequiredReport_ID.Equals(selection.RequiredReport_ID) && 
+                                             r.UserName.Equals(Properties.Settings.Default.ActiveUser));
                 }
             }
             catch (Exception exception)
@@ -509,11 +731,11 @@ namespace Vulnerator.ViewModel
 
                 object[] args = e.Argument as object[];
 
-                using (SQLiteCommand sqLiteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
-                    sqLiteCommand.Parameters.Add(new SQLiteParameter("ReportStatusUserSettings_ID", args[0]));
-                    sqLiteCommand.Parameters.Add(new SQLiteParameter("IsSelected", args[1].ToString()));
-                    databaseInterface.UpdateReportStatusIsSelected(sqLiteCommand);
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("ReportStatusUserSettings_ID", args[0]));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("IsSelected", args[1].ToString()));
+                    databaseInterface.UpdateReportStatusIsSelected(sqliteCommand);
                 }
                 e.Result = "Success";
             }
@@ -657,6 +879,198 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        public RelayCommand<object> SetRmfOverrideGroupCommand => new RelayCommand<object>(SetRmfOverrideGroup);
+
+        private void SetRmfOverrideGroup(object parameter)
+        {
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += SetRmfOverrideGroupBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerAsync(parameter);
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to set RMF override group.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        private void SetRmfOverrideGroupBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (e.Argument is null)
+                {
+                    e.Result = "No parameter";
+                    return;
+                }
+                
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                { DatabaseBuilder.sqliteConnection.Open(); }
+
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("UserName", Properties.Settings.Default.ActiveUser));
+                    switch (e.Argument)
+                    {
+                        case "GlobalRmfOverride":
+                        {
+                            if (GlobalReportRmfOverrideUserSettingsGroup is null)
+                            {
+                                e.Result = "No global group";
+                                return;
+                            }
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", GlobalReportRmfOverrideUserSettingsGroup.GroupName));
+                            databaseInterface.UpdateReportRmfOverrideGlobal(sqliteCommand);
+                            break;
+                        }
+                        case "SelectedReportRmfOverride":
+                        {
+                            if (SelectedReportRmfOverrideUserSettingsGroup is null)
+                            {
+                                e.Result = "No selected group";
+                                return;
+                            }
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("GroupName", SelectedReportRmfOverrideUserSettingsGroup.GroupName));
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("RequiredReport_ID", SelectedReport.RequiredReport_ID));
+                            databaseInterface.UpdateReportRmfOverrideSelectedReport(sqliteCommand);
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                string error = "The 'SetRmfOverrideGroup' background worker has failed.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        public RelayCommand<object> ClearRmfOverrideGroupCommand => new RelayCommand<object>(ClearRmfOverrideGroup);
+
+        private void ClearRmfOverrideGroup(object parameter)
+        {
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += ClearRmfOverrideGroupBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerAsync(parameter);
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to clear RMF override group.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        private void ClearRmfOverrideGroupBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (e.Argument is null)
+                {
+                    e.Result = "No parameter";
+                    return;
+                }
+                
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                { DatabaseBuilder.sqliteConnection.Open(); }
+
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("UserName", Properties.Settings.Default.ActiveUser));
+                    switch (e.Argument)
+                    {
+                        case "GlobalRmfOverride":
+                        {
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("Group_ID", DBNull.Value));
+                            databaseInterface.ClearReportRmfOverrideGlobal(sqliteCommand);
+                            GlobalReportRmfOverrideUserSettingsGroup = null;
+                            break;
+                        }
+                        case "SelectedReportRmfOverride":
+                        {
+                            if (SelectedReportRmfOverrideUserSettingsGroup is null)
+                            {
+                                e.Result = "No selected group";
+                                return;
+                            }
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("Group_ID", DBNull.Value));
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("RequiredReport_ID", SelectedReport.RequiredReport_ID));
+                            databaseInterface.ClearReportRmfOverrideSelectedReport(sqliteCommand);
+                            SelectedReportRmfOverrideUserSettingsGroup = null;
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                string error = "The 'ClearRmfOverrideGroup' background worker has failed.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        public RelayCommand<object> SetUseGlobalValueCommand => new RelayCommand<object>(SetUseGlobalValue);
+
+        private void SetUseGlobalValue(object parameter)
+        {
+            try
+            {
+                backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += SetUseGlobalValueBackgroundWorker_DoWork;
+                backgroundWorker.RunWorkerAsync(parameter);
+                backgroundWorker.Dispose();
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to set use global value.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        private void SetUseGlobalValueBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (e.Argument is null)
+                {
+                    e.Result = "No parameter";
+                    return;
+                }
+
+                if (SelectedReport is null)
+                {
+                    e.Result = "No report selected";
+                    return;
+                }
+                
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                object[] args = e.Argument as object[];
+
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("ColumnValue", args[1].ToString()));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("RequiredReport_ID", SelectedReport.RequiredReport_ID));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("UserName", Properties.Settings.Default.ActiveUser));
+                    databaseInterface.UpdateReportUseGlobalValueUserSettings(sqliteCommand, args[0].ToString());
+                }
+            }
+            catch (Exception exception)
+            {
+                string error = "The 'SetUseGlobalValue' background worker has failed.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
         public RelayCommand<object> GenerateSingleVulnerabilityReportCommand => new RelayCommand<object>(GenerateSingleVulnerabilityReport);
 
         private void GenerateSingleVulnerabilityReport(object parameter)
@@ -746,8 +1160,6 @@ namespace Vulnerator.ViewModel
                 e.Result = exception;
             }
         }
-
-        
 
         public RelayCommand GenerateAllVulnerabilityReportsCommand => new RelayCommand(GenerateAllVulnerabilityReports);
 

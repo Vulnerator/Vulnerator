@@ -74,6 +74,8 @@ namespace Vulnerator.Model.DataAccess
         public virtual DbSet<RelatedDocument> RelatedDocuments { get; set; }
         public virtual DbSet<RelatedTesting> RelatedTestings { get; set; }
         public virtual DbSet<ReportFindingTypeUserSettings> ReportFindingTypeUserSettings { get; set; }
+        public virtual DbSet<ReportRmfOverrideUserSettings> ReportRmfOverrideUserSettings { get; set; }
+        public virtual DbSet<ReportUseGlobalValueUserSettings> ReportUseGlobalValueUserSettings { get; set; }
         public virtual DbSet<ReportGroupUserSettings> ReportGroupUserSettings { get; set; }
         public virtual DbSet<ReportSeverityUserSettings> ReportSeverityUserSettings { get; set; }
         public virtual DbSet<ReportStatusUserSettings> ReportStatusUserSettings { get; set; }
@@ -843,6 +845,24 @@ namespace Vulnerator.Model.DataAccess
                 .WithMany(e => e.ReportStatusUserSettings);
 
             modelBuilder.Entity<RequiredReport>().HasMany(e => e.ReportStatusUserSettings)
+                .WithRequired(e => e.RequiredReport);
+
+            modelBuilder.Entity<ReportRmfOverrideUserSettings>().HasRequired(e => e.RequiredReport)
+                .WithMany(e => e.ReportRmfOverrideUserSettings);
+
+            modelBuilder.Entity<RequiredReport>().HasMany(e => e.ReportRmfOverrideUserSettings)
+                .WithRequired(e => e.RequiredReport);
+
+            modelBuilder.Entity<ReportRmfOverrideUserSettings>().HasOptional(e => e.Group)
+                .WithMany(e => e.ReportRmfOverrideUserSettings);
+
+            modelBuilder.Entity<Group>().HasMany(e => e.ReportRmfOverrideUserSettings)
+                .WithOptional(e => e.Group);
+
+            modelBuilder.Entity<ReportUseGlobalValueUserSettings>().HasRequired(e => e.RequiredReport)
+                .WithMany(e => e.ReportUseGlobalValueUserSettings);
+
+            modelBuilder.Entity<RequiredReport>().HasMany(e => e.ReportUseGlobalValueUserSettings)
                 .WithRequired(e => e.RequiredReport);
         }
     }

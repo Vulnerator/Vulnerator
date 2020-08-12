@@ -1,18 +1,18 @@
 ﻿<Controls:MetroWindow x:Class="Vulnerator.View.UI.CloseReportWorkbook"
                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                      xmlns:vm="clr-namespace:Vulnerator.ViewModel"
-                      xmlns:v="clr-namespace:Vulnerator.View"
                       xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-                      DataContext="{DynamicResource MainWindowViewModel}"
-                      Height="209"
+                      xmlns:v="clr-namespace:Vulnerator.View"
+                      xmlns:vm="clr-namespace:Vulnerator.ViewModel"
                       Width="385"
-                      ShowInTaskbar="False"
-                      Topmost="True"
-                      WindowStartupLocation="CenterOwner"
-                      ShowTitleBar="False"
+                      Height="209"
+                      DataContext="{DynamicResource MainWindowViewModel}"
+                      GlowBrush="{DynamicResource AccentColorBrush}"
                       ResizeMode="NoResize"
-                      GlowBrush="{DynamicResource AccentColorBrush}">
+                      ShowInTaskbar="False"
+                      ShowTitleBar="False"
+                      Topmost="True"
+                      WindowStartupLocation="CenterOwner">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -20,29 +20,29 @@
             <RowDefinition Height="48*" />
             <RowDefinition Height="17*" />
         </Grid.RowDefinitions>
-        <Label Content="Unable to save to supplied file location" 
-               HorizontalContentAlignment="Center"
-               HorizontalAlignment="Stretch" 
-               VerticalAlignment="Top"
-               Style="{StaticResource SecondLevelHeaderStyle}" 
-               Height="31" 
+        <Label Height="31"
                Margin="21,1,5,0"
-               RenderOptions.ClearTypeHint="Enabled"/>
-        <TextBlock Grid.Row="1" 
-                   TextWrapping="Wrap" 
-                   Text="Excel is unable to access the file name provided; please ensure that the file is not open and try again.&#xA;&#xA;If this error persists, please contact the Vulnerator Project Leads or post the issue on the Software Forge site, both found in the &quot;About&quot; menu."
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Top"
+               HorizontalContentAlignment="Center"
+               Content="Unable to save to supplied file location"
+               RenderOptions.ClearTypeHint="Enabled"
+               Style="{StaticResource SecondLevelHeaderStyle}" />
+        <TextBlock Grid.Row="1"
+                   Height="96"
+                   Margin="10,0"
+                   VerticalAlignment="Top"
                    RenderOptions.ClearTypeHint="Enabled"
-                   VerticalAlignment="Top" 
-                   Height="96" 
-                   Margin="10,0"/>
-        <Button Content="Close"
-                HorizontalAlignment="Left"
-                Margin="128,1,0,0"
-                Grid.Row="2"
-                VerticalAlignment="Top"
+                   Text="Excel is unable to access the file name provided; please ensure that the file is not open and try again.&#xA;&#xA;If this error persists, please contact the Vulnerator Project Leads or post the issue on the Software Forge site, both found in the &quot;About&quot; menu."
+                   TextWrapping="Wrap" />
+        <Button Grid.Row="2"
                 Width="116"
                 Height="26"
-                Style="{StaticResource MetroFlatButton}"
-                Click="CloseClick" />
+                Margin="128,1,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Click="CloseClick"
+                Content="Close"
+                Style="{StaticResource MetroFlatButton}" />
     </Grid>
 </Controls:MetroWindow>

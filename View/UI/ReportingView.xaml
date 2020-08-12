@@ -23,6 +23,8 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <Converters:MultiValueConverter x:Key="MultiValueConverter" />
+        <Converters:IsNullToCollapsedConverter x:Key="IsNullToCollapsedConverter" />
+        <Converters:BooleanToCollapsedConverter x:Key="BooleanToCollapsedConverter" />
     </UserControl.Resources>
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
         <Controls:MetroAnimatedSingleRowTabControl Controls:TabControlHelper.Underlined="SelectedTabItem">
@@ -100,172 +102,499 @@
                                   Grid.Column="1"
                                   Margin="{StaticResource MarginLeft5}"
                                   VerticalScrollBarVisibility="Auto">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <GridExtra:ResponsiveGrid Grid.Row="0"
-                                                      Margin="{StaticResource MarginBottom5}">
-                                <TextBox Margin="{StaticResource MarginLeftRightBottom5}"
-                                         Controls:TextBoxHelper.Watermark="Selected Report Name"
-                                         vh:DependencyProperties.FloatingWatermark="Report Name (Read Only)"
-                                         IsReadOnly="True"
-                                         Style="{StaticResource ResponsiveGridReportingTextBoxStyle}"
-                                         Text="{Binding SelectedReport.RequiredReport.DisplayedReportName}" />
-                                <TextBox Margin="{StaticResource MarginLeftRightBottom5}"
-                                         Controls:TextBoxHelper.Watermark="Selected Report Type"
-                                         vh:DependencyProperties.FloatingWatermark="Report Type (Read Only)"
-                                         IsReadOnly="True"
-                                         Style="{StaticResource ResponsiveGridReportingTextBoxStyle}"
-                                         Text="{Binding SelectedReport.RequiredReport.ReportType}" />
-                                <TextBox Margin="{StaticResource MarginLeftRightBottom5}"
-                                         Controls:TextBoxHelper.Watermark="Selected Report Category"
-                                         vh:DependencyProperties.FloatingWatermark="Report Category (Read Only)"
-                                         IsReadOnly="True"
-                                         Style="{StaticResource ResponsiveGridReportingTextBoxStyle}"
-                                         Text="{Binding SelectedReport.RequiredReport.ReportCategory}" />
-                            </GridExtra:ResponsiveGrid>
-                            <GridExtra:ResponsiveGrid Grid.Row="1">
-                                <DataGrid MaxHeight="275"
-                                          Margin="{StaticResource MarginLeftTopRight5}"
-                                          VerticalAlignment="Stretch"
-                                          GridExtra:ResponsiveGrid.MD="3"
-                                          GridExtra:ResponsiveGrid.XS="12"
-                                          ItemsSource="{Binding SelectedReportFindingTypeSettings, Mode=TwoWay}"
-                                          Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridTemplateColumn Width="Auto"
-                                                                HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <CheckBox Width="Auto"
-                                                              Margin="{StaticResource MarginLeft5}"
-                                                              HorizontalAlignment="Center"
-                                                              Command="{Binding DataContext.SetReportFindingTypeIsSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
-                                                              IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                                                              Style="{StaticResource CustomCheckBox}">
-                                                        <CheckBox.CommandParameter>
-                                                            <MultiBinding Converter="{StaticResource MultiValueConverter}">
-                                                                <Binding Path="ReportFindingTypeUserSettings_ID" />
-                                                                <Binding Path="IsChecked"
-                                                                         RelativeSource="{RelativeSource Mode=Self}" />
-                                                            </MultiBinding>
-                                                        </CheckBox.CommandParameter>
-                                                    </CheckBox>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                        <DataGridTextColumn Width="Auto"
-                                                            Binding="{Binding FindingType.Finding_Type}"
-                                                            Header="Finding Type"
-                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <DataGrid MaxHeight="275"
-                                          Margin="{StaticResource MarginLeftTopRight5}"
-                                          VerticalAlignment="Stretch"
-                                          GridExtra:ResponsiveGrid.MD="3"
-                                          GridExtra:ResponsiveGrid.XS="12"
-                                          ItemsSource="{Binding SelectedReportSeveritySettings, Mode=TwoWay}"
-                                          Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridTemplateColumn Width="Auto"
-                                                                HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <CheckBox Margin="{StaticResource MarginLeft5}"
-                                                              HorizontalAlignment="Center"
-                                                              Command="{Binding DataContext.SetReportSeverityIsSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
-                                                              IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                                                              Style="{StaticResource CustomCheckBox}">
-                                                        <CheckBox.CommandParameter>
-                                                            <MultiBinding Converter="{StaticResource MultiValueConverter}">
-                                                                <Binding Path="ReportSeverityUserSettings_ID" />
-                                                                <Binding Path="IsChecked"
-                                                                         RelativeSource="{RelativeSource Mode=Self}" />
-                                                            </MultiBinding>
-                                                        </CheckBox.CommandParameter>
-                                                    </CheckBox>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                        <DataGridTextColumn Width="Auto"
-                                                            Binding="{Binding Severity}"
-                                                            Header="Severity"
-                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <DataGrid MaxHeight="275"
-                                          Margin="{StaticResource MarginLeftTopRight5}"
-                                          VerticalAlignment="Stretch"
-                                          GridExtra:ResponsiveGrid.MD="3"
-                                          GridExtra:ResponsiveGrid.XS="12"
-                                          ItemsSource="{Binding SelectedReportStatusSettings, Mode=TwoWay}"
-                                          Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridTemplateColumn Width="Auto"
-                                                                HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <CheckBox Margin="{StaticResource MarginLeft5}"
-                                                              HorizontalAlignment="Center"
-                                                              Command="{Binding DataContext.SetReportStatusIsSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
-                                                              IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                                                              Style="{StaticResource CustomCheckBox}">
-                                                        <CheckBox.CommandParameter>
-                                                            <MultiBinding Converter="{StaticResource MultiValueConverter}">
-                                                                <Binding Path="ReportStatusUserSettings_ID" />
-                                                                <Binding Path="IsChecked"
-                                                                         RelativeSource="{RelativeSource Mode=Self}" />
-                                                            </MultiBinding>
-                                                        </CheckBox.CommandParameter>
-                                                    </CheckBox>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                        <DataGridTextColumn Width="Auto"
-                                                            Binding="{Binding Status}"
-                                                            Header="Status"
-                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <DataGrid MaxHeight="275"
-                                          Margin="{StaticResource MarginLeftTopRight5}"
-                                          VerticalAlignment="Stretch"
-                                          GridExtra:ResponsiveGrid.MD="3"
-                                          GridExtra:ResponsiveGrid.XS="12"
-                                          ItemsSource="{Binding SelectedReportGroupSettings, Mode=TwoWay}"
-                                          Style="{StaticResource GreyBorderedDataGridStyle}">
-                                    <DataGrid.Columns>
-                                        <DataGridTemplateColumn Width="Auto"
-                                                                HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <CheckBox Margin="{StaticResource MarginLeft5}"
-                                                              HorizontalAlignment="Center"
-                                                              Command="{Binding DataContext.SetReportGroupIsSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
-                                                              IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                                                              Style="{StaticResource CustomCheckBox}">
-                                                        <CheckBox.CommandParameter>
-                                                            <MultiBinding Converter="{StaticResource MultiValueConverter}">
-                                                                <Binding Path="ReportGroupUserSettings_ID" />
-                                                                <Binding Path="IsChecked"
-                                                                         RelativeSource="{RelativeSource Mode=Self}" />
-                                                            </MultiBinding>
-                                                        </CheckBox.CommandParameter>
-                                                    </CheckBox>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                        <DataGridTextColumn Width="Auto"
-                                                            Binding="{Binding Group.GroupName}"
-                                                            Header="Group"
-                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </GridExtra:ResponsiveGrid>
-                        </Grid>
+                        <StackPanel>
+                            <Label Style="{StaticResource SecondLevelHeaderStyle}">Global Settings</Label>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <StackPanel>
+                                    <Label VerticalAlignment="Bottom"
+                                           Style="{StaticResource ThirdLevelHeaderStyle}">
+                                        Global RMF Value Group Override
+                                    </Label>
+                                    <GridExtra:ResponsiveGrid>
+                                        <TextBlock Margin="{StaticResource MarginLeftTop5}"
+                                                   Text="{Binding OverrideLabel}"
+                                                   TextWrapping="Wrap"
+                                                   GridExtra:ResponsiveGrid.MD="6"/>
+                                    </GridExtra:ResponsiveGrid>
+                                    <GridExtra:ResponsiveGrid>
+                                        <vh:CommandEnabledComboBox x:Name="GlobalRmfOverride"
+                                                                   Margin="{StaticResource MarginLeftRight5}"
+                                                                   Controls:TextBoxHelper.ButtonCommand="{Binding ClearRmfOverrideGroupCommand}"
+                                                                   Controls:TextBoxHelper.ButtonCommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Mode=Self}}"
+                                                                   Controls:TextBoxHelper.ClearTextButton="True"
+                                                                   Controls:TextBoxHelper.Watermark="Override Group (Optional)"
+                                                                   GridExtra:ResponsiveGrid.MD="6"
+                                                                   Command="{Binding SetRmfOverrideGroupCommand}"
+                                                                   CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Mode=Self}}"
+                                                                   DisplayMemberPath="GroupName"
+                                                                   ItemsSource="{Binding Groups}"
+                                                                   SelectedItem="{Binding GlobalReportRmfOverrideUserSettingsGroup}"
+                                                                   Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    </GridExtra:ResponsiveGrid>
+                                </StackPanel>
+                                <GridExtra:ResponsiveGrid Grid.Row="1">
+                                    <StackPanel GridExtra:ResponsiveGrid.MD="3"
+                                                GridExtra:ResponsiveGrid.XS="12"
+                                                VerticalAlignment="Stretch">
+                                        <Label GridExtra:ResponsiveGrid.XS="12"
+                                               Style="{StaticResource ThirdLevelHeaderStyle}">
+                                            Global Finding Type
+                                        </Label>
+                                        <DataGrid MaxHeight="275"
+                                                  ItemsSource="{Binding GlobalReportFindingTypeSettings, Mode=TwoWay}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}"
+                                                  Margin="{StaticResource MarginLeftTopRight5}">
+                                            <DataGrid.Columns>
+                                                <DataGridTemplateColumn Width="Auto"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <CheckBox Width="Auto"
+                                                                  Margin="{StaticResource MarginLeft5}"
+                                                                  HorizontalAlignment="Center"
+                                                                  Command="{Binding DataContext.SetReportFindingTypeIsSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
+                                                                  IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                                                  Style="{StaticResource CustomCheckBox}">
+                                                                <CheckBox.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                                                                        <Binding Path="ReportFindingTypeUserSettings_ID" />
+                                                                        <Binding Path="IsChecked"
+                                                                             RelativeSource="{RelativeSource Mode=Self}" />
+                                                                    </MultiBinding>
+                                                                </CheckBox.CommandParameter>
+                                                            </CheckBox>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTextColumn Width="Auto"
+                                                                Binding="{Binding FindingType.Finding_Type}"
+                                                                Header="Finding Type"
+                                                                HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </StackPanel>
+                                    <StackPanel GridExtra:ResponsiveGrid.MD="3"
+                                                GridExtra:ResponsiveGrid.XS="12"
+                                                VerticalAlignment="Stretch">
+                                        <Label GridExtra:ResponsiveGrid.XS="12"
+                                               Style="{StaticResource ThirdLevelHeaderStyle}">
+                                            Global Severity
+                                        </Label>
+                                        <DataGrid MaxHeight="275"
+                                                  ItemsSource="{Binding GlobalReportSeveritySettings, Mode=TwoWay}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}"
+                                                  Margin="{StaticResource MarginLeftTopRight5}">
+                                            <DataGrid.Columns>
+                                                <DataGridTemplateColumn Width="Auto"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <CheckBox Margin="{StaticResource MarginLeft5}"
+                                                                  HorizontalAlignment="Center"
+                                                                  Command="{Binding DataContext.SetReportSeverityIsSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
+                                                                  IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                                                  Style="{StaticResource CustomCheckBox}">
+                                                                <CheckBox.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                                                                        <Binding Path="ReportSeverityUserSettings_ID" />
+                                                                        <Binding Path="IsChecked"
+                                                                             RelativeSource="{RelativeSource Mode=Self}" />
+                                                                    </MultiBinding>
+                                                                </CheckBox.CommandParameter>
+                                                            </CheckBox>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTextColumn Width="Auto"
+                                                                Binding="{Binding Severity}"
+                                                                Header="Severity"
+                                                                HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </StackPanel>
+                                    <StackPanel GridExtra:ResponsiveGrid.MD="3"
+                                                GridExtra:ResponsiveGrid.XS="12"
+                                                VerticalAlignment="Stretch">
+                                        <Label GridExtra:ResponsiveGrid.XS="12"
+                                               Style="{StaticResource ThirdLevelHeaderStyle}">
+                                            Global Status
+                                        </Label>
+                                        <DataGrid MaxHeight="275"
+                                                  ItemsSource="{Binding GlobalReportStatusSettings, Mode=TwoWay}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}"
+                                                  Margin="{StaticResource MarginLeftTopRight5}">
+                                            <DataGrid.Columns>
+                                                <DataGridTemplateColumn Width="Auto"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <CheckBox Margin="{StaticResource MarginLeft5}"
+                                                                  HorizontalAlignment="Center"
+                                                                  Command="{Binding DataContext.SetReportStatusIsSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
+                                                                  IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                                                  Style="{StaticResource CustomCheckBox}">
+                                                                <CheckBox.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                                                                        <Binding Path="ReportStatusUserSettings_ID" />
+                                                                        <Binding Path="IsChecked"
+                                                                             RelativeSource="{RelativeSource Mode=Self}" />
+                                                                    </MultiBinding>
+                                                                </CheckBox.CommandParameter>
+                                                            </CheckBox>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTextColumn Width="Auto"
+                                                                Binding="{Binding Status}"
+                                                                Header="Status"
+                                                                HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </StackPanel>
+                                    <StackPanel GridExtra:ResponsiveGrid.MD="3"
+                                                GridExtra:ResponsiveGrid.XS="12"
+                                                VerticalAlignment="Stretch">
+                                        <Label GridExtra:ResponsiveGrid.XS="12"
+                                               Style="{StaticResource ThirdLevelHeaderStyle}">
+                                            Global Group
+                                        </Label>
+                                        <DataGrid MaxHeight="275"
+                                                  ItemsSource="{Binding GlobalReportGroupSettings, Mode=TwoWay}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}"
+                                                  Margin="{StaticResource MarginLeftTopRight5}">
+                                            <DataGrid.Columns>
+                                                <DataGridTemplateColumn Width="Auto"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <CheckBox Margin="{StaticResource MarginLeft5}"
+                                                                  HorizontalAlignment="Center"
+                                                                  Command="{Binding DataContext.SetReportGroupIsSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
+                                                                  IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                                                  Style="{StaticResource CustomCheckBox}">
+                                                                <CheckBox.CommandParameter>
+                                                                    <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                                                                        <Binding Path="ReportGroupUserSettings_ID" />
+                                                                        <Binding Path="IsChecked"
+                                                                             RelativeSource="{RelativeSource Mode=Self}" />
+                                                                    </MultiBinding>
+                                                                </CheckBox.CommandParameter>
+                                                            </CheckBox>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTextColumn Width="Auto"
+                                                                Binding="{Binding Group.GroupName}"
+                                                                Header="Group"
+                                                                HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </StackPanel>
+                                </GridExtra:ResponsiveGrid>
+                            </Grid>
+                            <StackPanel Margin="{StaticResource MarginTop10}" Visibility="{Binding SelectedReport, Converter={StaticResource IsNullToCollapsedConverter}, FallbackValue=Collapsed}">
+                                <Label Style="{StaticResource SecondLevelHeaderStyle}">Per Report Settings</Label>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <GridExtra:ResponsiveGrid Grid.Row="0"
+                                                          Margin="{StaticResource MarginBottom5}">
+                                        <TextBox Margin="{StaticResource MarginLeftRightBottom5}"
+                                             Controls:TextBoxHelper.Watermark="Selected Report Name"
+                                             vh:DependencyProperties.FloatingWatermark="Report Name (Read Only)"
+                                             IsReadOnly="True"
+                                             Style="{StaticResource ResponsiveGridReportingTextBoxStyle}"
+                                             Text="{Binding SelectedReport.RequiredReport.DisplayedReportName}" />
+                                        <TextBox Margin="{StaticResource MarginLeftRightBottom5}"
+                                             Controls:TextBoxHelper.Watermark="Selected Report Type"
+                                             vh:DependencyProperties.FloatingWatermark="Report Type (Read Only)"
+                                             IsReadOnly="True"
+                                             Style="{StaticResource ResponsiveGridReportingTextBoxStyle}"
+                                             Text="{Binding SelectedReport.RequiredReport.ReportType}" />
+                                        <TextBox Margin="{StaticResource MarginLeftRightBottom5}"
+                                             Controls:TextBoxHelper.Watermark="Selected Report Category"
+                                             vh:DependencyProperties.FloatingWatermark="Report Category (Read Only)"
+                                             IsReadOnly="True"
+                                             Style="{StaticResource ResponsiveGridReportingTextBoxStyle}"
+                                             Text="{Binding SelectedReport.RequiredReport.ReportCategory}" />
+                                    </GridExtra:ResponsiveGrid>
+                                    <StackPanel Grid.Row="1"
+                                            Margin="{StaticResource MarginBottom5}">
+                                        <Label GridExtra:ResponsiveGrid.XS="12"
+                                           Style="{StaticResource ThirdLevelHeaderStyle}">
+                                            Selected Report RMF Value Group Override
+                                        </Label>
+                                        <GridExtra:ResponsiveGrid>
+                                            <CheckBox x:Name="UseGlobalRmfOverrideValue"
+                                                  Margin="{StaticResource MarginLeftBottom5}"
+                                                  VerticalAlignment="Bottom"
+                                                  GridExtra:ResponsiveGrid.MD="3"
+                                                  Command="{Binding SetUseGlobalValueCommand}"
+                                                  Content="Use Global Value"
+                                                  IsChecked="{Binding ReportUseGlobalValueUserSettings.UseGlobalRmfOverrideValue, Mode=OneWay, FallbackValue=True}">
+                                                <CheckBox.CommandParameter>
+                                                    <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                                                        <Binding Path="Name"
+                                                             RelativeSource="{RelativeSource Mode=Self}" />
+                                                        <Binding Path="IsChecked"
+                                                             RelativeSource="{RelativeSource Mode=Self}" />
+                                                    </MultiBinding>
+                                                </CheckBox.CommandParameter>
+                                            </CheckBox>
+                                        </GridExtra:ResponsiveGrid>
+                                        <GridExtra:ResponsiveGrid>
+                                            <vh:CommandEnabledComboBox x:Name="SelectedReportRmfOverride"
+                                                                   Margin="{StaticResource MarginLeftRight5}"
+                                                                   VerticalAlignment="Top"
+                                                                   Controls:TextBoxHelper.ButtonCommand="{Binding ClearRmfOverrideGroupCommand}"
+                                                                   Controls:TextBoxHelper.ButtonCommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Mode=Self}}"
+                                                                   Controls:TextBoxHelper.ClearTextButton="True"
+                                                                   Controls:TextBoxHelper.Watermark="Override Group (Optional)"
+                                                                   GridExtra:ResponsiveGrid.MD="6"
+                                                                   Command="{Binding SetRmfOverrideGroupCommand}"
+                                                                   CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Mode=Self}}"
+                                                                   DisplayMemberPath="GroupName"
+                                                                   ItemsSource="{Binding Groups}"
+                                                                   SelectedItem="{Binding SelectedReportRmfOverrideUserSettingsGroup}"
+                                                                   Style="{StaticResource HeaderedComboBoxStyle}"
+                                                                   Visibility="{Binding ElementName=UseGlobalRmfOverrideValue, Path=IsChecked, Converter={StaticResource BooleanToCollapsedConverter}}" />
+                                        </GridExtra:ResponsiveGrid>
+                                    </StackPanel>
+                                    <GridExtra:ResponsiveGrid Grid.Row="2"
+                                                          VerticalAlignment="Stretch">
+                                        <StackPanel VerticalAlignment="Stretch"
+                                                GridExtra:ResponsiveGrid.MD="3"
+                                                GridExtra:ResponsiveGrid.XS="12">
+                                            <Label GridExtra:ResponsiveGrid.XS="12"
+                                               Style="{StaticResource ThirdLevelHeaderStyle}">
+                                                Selected Report Finding Type
+                                            </Label>
+                                            <CheckBox x:Name="UseGlobalFindingTypeValue"
+                                                  Margin="{StaticResource MarginLeftTop5}"
+                                                  Command="{Binding SetUseGlobalValueCommand}"
+                                                  Content="Use Global Value"
+                                                  IsChecked="{Binding ReportUseGlobalValueUserSettings.UseGlobalFindingTypeValue, Mode=OneWay, FallbackValue=True}">
+                                                <CheckBox.CommandParameter>
+                                                    <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                                                        <Binding Path="Name"
+                                                             RelativeSource="{RelativeSource Mode=Self}" />
+                                                        <Binding Path="IsChecked"
+                                                             RelativeSource="{RelativeSource Mode=Self}" />
+                                                    </MultiBinding>
+                                                </CheckBox.CommandParameter>
+                                            </CheckBox>
+                                            <DataGrid MaxHeight="275"
+                                                  Margin="{StaticResource MarginLeftTopRight5}"
+                                                  VerticalAlignment="Stretch"
+                                                  ItemsSource="{Binding SelectedReportFindingTypeSettings, Mode=TwoWay}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}"
+                                                  Visibility="{Binding ElementName=UseGlobalFindingTypeValue, Path=IsChecked, Converter={StaticResource BooleanToCollapsedConverter}, FallbackValue=Collapsed}">
+                                                <DataGrid.Columns>
+                                                    <DataGridTemplateColumn Width="Auto"
+                                                                        HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <CheckBox Width="Auto"
+                                                                      Margin="{StaticResource MarginLeft5}"
+                                                                      HorizontalAlignment="Center"
+                                                                      Command="{Binding DataContext.SetReportFindingTypeIsSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
+                                                                      IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                                                      Style="{StaticResource CustomCheckBox}">
+                                                                    <CheckBox.CommandParameter>
+                                                                        <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                                                                            <Binding Path="ReportFindingTypeUserSettings_ID" />
+                                                                            <Binding Path="IsChecked"
+                                                                                 RelativeSource="{RelativeSource Mode=Self}" />
+                                                                        </MultiBinding>
+                                                                    </CheckBox.CommandParameter>
+                                                                </CheckBox>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                    <DataGridTextColumn Width="Auto"
+                                                                    Binding="{Binding FindingType.Finding_Type}"
+                                                                    Header="Finding Type"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </StackPanel>
+                                        <StackPanel VerticalAlignment="Stretch"
+                                                GridExtra:ResponsiveGrid.MD="3"
+                                                GridExtra:ResponsiveGrid.XS="12">
+                                            <Label GridExtra:ResponsiveGrid.XS="12"
+                                               Style="{StaticResource ThirdLevelHeaderStyle}">
+                                                Selected Report Severity
+                                            </Label>
+                                            <CheckBox x:Name="UseGlobalSeverityValue"
+                                                  Margin="{StaticResource MarginLeftTop5}"
+                                                  Command="{Binding SetUseGlobalValueCommand}"
+                                                  Content="Use Global Value"
+                                                  IsChecked="{Binding ReportUseGlobalValueUserSettings.UseGlobalSeverityValue, Mode=OneWay, FallbackValue=True}">
+                                                <CheckBox.CommandParameter>
+                                                    <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                                                        <Binding Path="Name"
+                                                             RelativeSource="{RelativeSource Mode=Self}" />
+                                                        <Binding Path="IsChecked"
+                                                             RelativeSource="{RelativeSource Mode=Self}" />
+                                                    </MultiBinding>
+                                                </CheckBox.CommandParameter>
+                                            </CheckBox>
+                                            <DataGrid MaxHeight="275"
+                                                  Margin="{StaticResource MarginLeftTopRight5}"
+                                                  VerticalAlignment="Stretch"
+                                                  ItemsSource="{Binding SelectedReportSeveritySettings, Mode=TwoWay}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}"
+                                                  Visibility="{Binding ElementName=UseGlobalSeverityValue, Path=IsChecked, Converter={StaticResource BooleanToCollapsedConverter}, FallbackValue=Collapsed}">
+                                                <DataGrid.Columns>
+                                                    <DataGridTemplateColumn Width="Auto"
+                                                                        HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <CheckBox Margin="{StaticResource MarginLeft5}"
+                                                                      HorizontalAlignment="Center"
+                                                                      Command="{Binding DataContext.SetReportSeverityIsSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
+                                                                      IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                                                      Style="{StaticResource CustomCheckBox}">
+                                                                    <CheckBox.CommandParameter>
+                                                                        <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                                                                            <Binding Path="ReportSeverityUserSettings_ID" />
+                                                                            <Binding Path="IsChecked"
+                                                                                 RelativeSource="{RelativeSource Mode=Self}" />
+                                                                        </MultiBinding>
+                                                                    </CheckBox.CommandParameter>
+                                                                </CheckBox>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                    <DataGridTextColumn Width="Auto"
+                                                                    Binding="{Binding Severity}"
+                                                                    Header="Severity"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </StackPanel>
+                                        <StackPanel VerticalAlignment="Stretch"
+                                                GridExtra:ResponsiveGrid.MD="3"
+                                                GridExtra:ResponsiveGrid.XS="12">
+                                            <Label GridExtra:ResponsiveGrid.XS="12"
+                                               Style="{StaticResource ThirdLevelHeaderStyle}">
+                                                Selected Report Status
+                                            </Label>
+                                            <CheckBox x:Name="UseGlobalStatusValue"
+                                                  Margin="{StaticResource MarginLeftTop5}"
+                                                  Command="{Binding SetUseGlobalValueCommand}"
+                                                  Content="Use Global Value"
+                                                  IsChecked="{Binding ReportUseGlobalValueUserSettings.UseGlobalStatusValue, Mode=OneWay, FallbackValue=True}">
+                                                <CheckBox.CommandParameter>
+                                                    <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                                                        <Binding Path="Name"
+                                                             RelativeSource="{RelativeSource Mode=Self}" />
+                                                        <Binding Path="IsChecked"
+                                                             RelativeSource="{RelativeSource Mode=Self}" />
+                                                    </MultiBinding>
+                                                </CheckBox.CommandParameter>
+                                            </CheckBox>
+                                            <DataGrid MaxHeight="275"
+                                                  Margin="{StaticResource MarginLeftTopRight5}"
+                                                  VerticalAlignment="Stretch"
+                                                  ItemsSource="{Binding SelectedReportStatusSettings, Mode=TwoWay}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}"
+                                                  Visibility="{Binding ElementName=UseGlobalStatusValue, Path=IsChecked, Converter={StaticResource BooleanToCollapsedConverter}, FallbackValue=Collapsed}">
+                                                <DataGrid.Columns>
+                                                    <DataGridTemplateColumn Width="Auto"
+                                                                        HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <CheckBox Margin="{StaticResource MarginLeft5}"
+                                                                      HorizontalAlignment="Center"
+                                                                      Command="{Binding DataContext.SetReportStatusIsSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
+                                                                      IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                                                      Style="{StaticResource CustomCheckBox}">
+                                                                    <CheckBox.CommandParameter>
+                                                                        <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                                                                            <Binding Path="ReportStatusUserSettings_ID" />
+                                                                            <Binding Path="IsChecked"
+                                                                                 RelativeSource="{RelativeSource Mode=Self}" />
+                                                                        </MultiBinding>
+                                                                    </CheckBox.CommandParameter>
+                                                                </CheckBox>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                    <DataGridTextColumn Width="Auto"
+                                                                    Binding="{Binding Status}"
+                                                                    Header="Status"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </StackPanel>
+                                        <StackPanel VerticalAlignment="Stretch"
+                                                GridExtra:ResponsiveGrid.MD="3"
+                                                GridExtra:ResponsiveGrid.XS="12">
+                                            <Label GridExtra:ResponsiveGrid.XS="12"
+                                               Style="{StaticResource ThirdLevelHeaderStyle}">
+                                                Selected Report Group
+                                            </Label>
+                                            <CheckBox x:Name="UseGlobalGroupsValue"
+                                                  Margin="{StaticResource MarginLeftTop5}"
+                                                  Command="{Binding SetUseGlobalValueCommand}"
+                                                  Content="Use Global Value"
+                                                  IsChecked="{Binding ReportUseGlobalValueUserSettings.UseGlobalGroupValue, Mode=OneWay, FallbackValue=True}">
+                                                <CheckBox.CommandParameter>
+                                                    <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                                                        <Binding Path="Name"
+                                                             RelativeSource="{RelativeSource Mode=Self}" />
+                                                        <Binding Path="IsChecked"
+                                                             RelativeSource="{RelativeSource Mode=Self}" />
+                                                    </MultiBinding>
+                                                </CheckBox.CommandParameter>
+                                            </CheckBox>
+                                            <DataGrid MaxHeight="275"
+                                                  Margin="{StaticResource MarginLeftTopRight5}"
+                                                  VerticalAlignment="Stretch"
+                                                  ItemsSource="{Binding SelectedReportGroupSettings, Mode=TwoWay}"
+                                                  Style="{StaticResource GreyBorderedDataGridStyle}"
+                                                  Visibility="{Binding ElementName=UseGlobalGroupsValue, Path=IsChecked, Converter={StaticResource BooleanToCollapsedConverter}, FallbackValue=Collapsed}">
+                                                <DataGrid.Columns>
+                                                    <DataGridTemplateColumn Width="Auto"
+                                                                        HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <CheckBox Margin="{StaticResource MarginLeft5}"
+                                                                      HorizontalAlignment="Center"
+                                                                      Command="{Binding DataContext.SetReportGroupIsSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
+                                                                      IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                                                      Style="{StaticResource CustomCheckBox}">
+                                                                    <CheckBox.CommandParameter>
+                                                                        <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                                                                            <Binding Path="ReportGroupUserSettings_ID" />
+                                                                            <Binding Path="IsChecked"
+                                                                                 RelativeSource="{RelativeSource Mode=Self}" />
+                                                                        </MultiBinding>
+                                                                    </CheckBox.CommandParameter>
+                                                                </CheckBox>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                    <DataGridTextColumn Width="Auto"
+                                                                    Binding="{Binding Group.GroupName}"
+                                                                    Header="Group"
+                                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </StackPanel>
+                                    </GridExtra:ResponsiveGrid>
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+
                     </ScrollViewer>
                     <Button Grid.Row="1"
                             Grid.Column="0"

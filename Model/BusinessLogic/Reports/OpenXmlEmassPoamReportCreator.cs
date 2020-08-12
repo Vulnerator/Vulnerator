@@ -481,12 +481,12 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("UserName",
                         Properties.Settings.Default.ActiveUser));
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("DisplayedReportName", "eMASS-Importable POA&M"));
                     FilterTextCreator filterTextCreator = new FilterTextCreator();
-                    string findingTypeFilter = filterTextCreator.FindingType(sqliteCommand);
-                    string groupFilter = filterTextCreator.Group(sqliteCommand);
-                    string severityFilter = filterTextCreator.Severity(sqliteCommand);
-                    string statusFilter = filterTextCreator.Status(sqliteCommand);
+                    string findingTypeFilter = filterTextCreator.FindingType(sqliteCommand, "eMASS-Importable POA&M");
+                    string groupFilter = filterTextCreator.Group(sqliteCommand, "eMASS-Importable POA&M");
+                    string severityFilter = filterTextCreator.Severity(sqliteCommand, "eMASS-Importable POA&M");
+                    string statusFilter = filterTextCreator.Status(sqliteCommand, "eMASS-Importable POA&M");
+                    string rmfOverrideFilter = filterTextCreator.RmfOverride(sqliteCommand, "eMASS-Importable POA&M");
                     sqliteCommand.CommandText =
                         _ddlReader.ReadDdl(_storedProcedureBase + "Select.EmassPoamVulnerabilities.dml", assembly);
 
@@ -531,6 +531,18 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                             sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"{Environment.NewLine}WHERE (MitigatedStatus {statusFilter}) ");
                         }
                         sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, Environment.NewLine);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(rmfOverrideFilter))
+                    {
+                        Regex regex = new Regex(Properties.Resources.RegexSqlFindingTypes);
+                        sqliteCommand.CommandText =
+                            sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index,
+                                rmfOverrideFilter);
+                        regex = new Regex(Properties.Resources.RegexSqlFromUniqueFindings);
+                        sqliteCommand.CommandText =
+                            sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index,
+                                Properties.Resources.StringGroupRmfFields);
                     }
 
                     using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
@@ -588,20 +600,14 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                     sharedStringDictionary);
                 _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
                     sharedStringDictionary);
-                if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueEstimatedCompletionDate"].ToString()))
+                if (sqliteDataReader.HasColumn("GroupEstimatedCompletionDate") && !string.IsNullOrWhiteSpace(sqliteDataReader["GroupEstimatedCompletionDate"].ToString()))
                 {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["UniqueEstimatedCompletionDate"].ToString(), 20, ref sharedStringMaxIndex,
+                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, DateTime.Parse(sqliteDataReader["GroupEstimatedCompletionDate"].ToString()).ToShortDateString(), 20, ref sharedStringMaxIndex,
                         sharedStringDictionary);
                 }
-                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["GroupEstimatedCompletionDate"].ToString()))
+                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueEstimatedCompletionDate"].ToString()))
                 {
-                    List<string> stringDates = sqliteDataReader["GroupEstimatedCompletionDate"].ToString().Split(',')
-                        .ToList();
-                    List<DateTime> dates = new List<DateTime>();
-                    foreach (string date in stringDates)
-                    { dates.Add(DateTime.Parse(date)); }
-                    DateTime selectedDate =  dates.OrderBy(x => x.Date).FirstOrDefault();
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, selectedDate.ToShortDateString(), 20, ref sharedStringMaxIndex,
+                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["UniqueEstimatedCompletionDate"].ToString(), 20, ref sharedStringMaxIndex,
                         sharedStringDictionary);
                 }
                 else
@@ -617,22 +623,15 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                                                                        sqliteDataReader["VulnSourceVersion"] + "." +
                                                                        sqliteDataReader["VulnSourceRelease"], 24,
                     ref sharedStringMaxIndex, sharedStringDictionary);
-                if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueMitigatedStatus"].ToString()))
+                if (sqliteDataReader.HasColumn("GroupMitigatedStatus") && !string.IsNullOrWhiteSpace(sqliteDataReader["GroupMitigatedStatus"].ToString()))
+                {
+                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["GroupMitigatedStatus"].ToString(), 24,
+                        ref sharedStringMaxIndex, sharedStringDictionary);
+                }
+                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueMitigatedStatus"].ToString()))
                 {
                     _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["UniqueMitigatedStatus"].ToString(), 24,
                         ref sharedStringMaxIndex, sharedStringDictionary);
-                }
-                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["GroupMitigatedStatus"].ToString()))
-                {
-                    foreach (string status in mitigatedStatuses)
-                    {
-                        if (sqliteDataReader["GroupMitigatedStatus"].ToString().Contains(status))
-                        {
-                            _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, status, 24,
-                                ref sharedStringMaxIndex, sharedStringDictionary);
-                            break;
-                        }
-                    }
                 }
                 else
                 {
@@ -659,158 +658,132 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                         sqliteDataReader["HostName"].ToString().Replace(",", Environment.NewLine), 20, ref sharedStringMaxIndex,
                         sharedStringDictionary);
                 }
-                string technicalMitigation = sqliteDataReader["GroupTechnicalMitigation"].ToString().Replace(",", doubleCarriageReturn) + doubleCarriageReturn +
-                                             sqliteDataReader["UniqueTechnicalMitigation"];
+                string technicalMitigation = sqliteDataReader["UniqueTechnicalMitigation"].ToString();
+                if (!string.IsNullOrWhiteSpace(sqliteDataReader["GroupTechnicalMitigations"].ToString()))
+                {
+                    technicalMitigation = technicalMitigation.Insert(0, sqliteDataReader["GroupTechnicalMitigations"].ToString().Replace(",", doubleCarriageReturn) + doubleCarriageReturn);
+                }
                 _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, technicalMitigation, 20,
                     ref sharedStringMaxIndex, sharedStringDictionary);
-                string predisposingConditions = sqliteDataReader["GroupPredisposingConditions"].ToString().Replace(",", doubleCarriageReturn) + doubleCarriageReturn +
-                                             sqliteDataReader["UniquePredisposingConditions"];
+                string predisposingConditions = sqliteDataReader["UniquePredisposingConditions"].ToString();
+                if (!string.IsNullOrWhiteSpace(sqliteDataReader["GroupPredisposingConditions"].ToString()))
+                {
+                    predisposingConditions = predisposingConditions.Insert(0, sqliteDataReader["GroupPredisposingConditions"].ToString().Replace(",", doubleCarriageReturn) + doubleCarriageReturn);
+                }
                 _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, predisposingConditions, 20,
                     ref sharedStringMaxIndex, sharedStringDictionary);
-                if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueSeverityPervasiveness"].ToString()))
+                if (sqliteDataReader.HasColumn("GroupSeverityPervasiveness") && !string.IsNullOrWhiteSpace(sqliteDataReader["GroupSeverityPervasiveness"].ToString()))
+                {
+                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["GroupSeverityPervasiveness"].ToString(), 24, ref sharedStringMaxIndex,
+                        sharedStringDictionary);
+                }
+                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueSeverityPervasiveness"].ToString()))
                 {
                     _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["UniqueSeverityPervasiveness"].ToString(), 24, ref sharedStringMaxIndex,
                         sharedStringDictionary);
                 }
-                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["GroupSeverityPervasiveness"].ToString()))
-                {
-                    foreach (string level in levels)
-                    {
-                        if (sqliteDataReader["GroupSeverityPervasiveness"].ToString().Contains(level))
-                        {
-                            _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, level, 24, ref sharedStringMaxIndex,
-                                sharedStringDictionary);
-                            break;
-                        }
-                    }
-                    
-                }
                 else
                 {
                     _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 24, ref sharedStringMaxIndex,
                         sharedStringDictionary);
                 }
-                if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueThreatRelevance"].ToString()))
+                if (sqliteDataReader.HasColumn("GroupThreatRelevance") && !string.IsNullOrWhiteSpace(sqliteDataReader["GroupThreatRelevance"].ToString()))
+                {
+                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["GroupThreatRelevance"].ToString(), 24, ref sharedStringMaxIndex,
+                        sharedStringDictionary);
+                    
+                }
+                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueThreatRelevance"].ToString()))
                 {
                     _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["UniqueThreatRelevance"].ToString(), 24, ref sharedStringMaxIndex,
                         sharedStringDictionary);
                 }
-                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["GroupThreatRelevance"].ToString()))
-                {
-                    foreach (string level in levels)
-                    {
-                        if (sqliteDataReader["GroupThreatRelevance"].ToString().Contains(level))
-                        {
-                            _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, level, 24, ref sharedStringMaxIndex,
-                                sharedStringDictionary);
-                            break;
-                        }
-                    }
-                    
-                }
                 else
                 {
                     _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 24, ref sharedStringMaxIndex,
                         sharedStringDictionary);
                 }
-                string threatDescription = sqliteDataReader["GroupThreatDescription"].ToString().Replace(",", doubleCarriageReturn) + doubleCarriageReturn +
-                                  sqliteDataReader["UniqueThreatDescription"];
+                string threatDescription = sqliteDataReader["UniqueThreatDescription"].ToString();
+                if (!string.IsNullOrWhiteSpace(sqliteDataReader["GroupThreatDescription"].ToString()))
+                {
+                    threatDescription = threatDescription.Insert(0,
+                        sqliteDataReader["GroupThreatDescription"].ToString().Replace(",", doubleCarriageReturn) +
+                        doubleCarriageReturn);
+                }
                 _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, threatDescription, 20,
                     ref sharedStringMaxIndex, sharedStringDictionary);
-                if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueLikelihood"].ToString()))
+                if (sqliteDataReader.HasColumn("GroupLikelihood") && !string.IsNullOrWhiteSpace(sqliteDataReader["GroupLikelihood"].ToString()))
+                {
+                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["GroupLikelihood"].ToString(), 24, ref sharedStringMaxIndex,
+                        sharedStringDictionary);
+                }
+                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueLikelihood"].ToString()))
                 {
                     _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["UniqueLikelihood"].ToString(), 24, ref sharedStringMaxIndex,
                         sharedStringDictionary);
                 }
-                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["GroupLikelihood"].ToString()))
-                {
-                    foreach (string level in levels)
-                    {
-                        if (sqliteDataReader["GroupLikelihood"].ToString().Contains(level))
-                        {
-                            _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, level, 24, ref sharedStringMaxIndex,
-                                sharedStringDictionary);
-                            break;
-                        }
-                    }
-                    
-                }
                 else
                 {
                     _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 24, ref sharedStringMaxIndex,
                         sharedStringDictionary);
                 }
-                if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueImpact"].ToString()))
+                if (sqliteDataReader.HasColumn("GroupImpact") && !string.IsNullOrWhiteSpace(sqliteDataReader["GroupImpact"].ToString()))
+                {
+                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["GroupImpact"].ToString(), 24, ref sharedStringMaxIndex,
+                        sharedStringDictionary);
+                }
+                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueImpact"].ToString()))
                 {
                     _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["UniqueImpact"].ToString(), 24, ref sharedStringMaxIndex,
                         sharedStringDictionary);
                 }
-                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["GroupImpact"].ToString()))
-                {
-                    foreach (string level in levels)
-                    {
-                        if (sqliteDataReader["GroupImpact"].ToString().Contains(level))
-                        {
-                            _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, level, 24, ref sharedStringMaxIndex,
-                                sharedStringDictionary);
-                            break;
-                        }
-                    }
-                    
-                }
                 else
                 {
                     _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 24, ref sharedStringMaxIndex,
                         sharedStringDictionary);
                 }
-                string impactDescription = sqliteDataReader["GroupImpactDescription"].ToString().Replace(",", doubleCarriageReturn) + doubleCarriageReturn +
-                                          sqliteDataReader["UniqueImpactDescription"];
+                string impactDescription = sqliteDataReader["UniqueImpactDescription"].ToString();
+                if (!string.IsNullOrWhiteSpace(sqliteDataReader["GroupImpactDescription"].ToString()))
+                {
+                    impactDescription = impactDescription.Insert(0,
+                        sqliteDataReader["GroupImpactDescription"].ToString().Replace(",", doubleCarriageReturn) +
+                        doubleCarriageReturn);
+                }
                 _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, impactDescription, 20,
                     ref sharedStringMaxIndex, sharedStringDictionary);
-                if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueResidualRisk"].ToString()))
+                if (sqliteDataReader.HasColumn("GroupResidualRisk") && !string.IsNullOrWhiteSpace(sqliteDataReader["GroupResidualRisk"].ToString()))
+                {
+                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["GroupResidualRisk"].ToString(), 24, ref sharedStringMaxIndex,
+                        sharedStringDictionary);
+                }
+                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueResidualRisk"].ToString()))
                 {
                     _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["UniqueResidualRisk"].ToString(), 24, ref sharedStringMaxIndex,
                         sharedStringDictionary);
                 }
-                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["GroupResidualRisk"].ToString()))
-                {
-                    foreach (string level in levels)
-                    {
-                        if (sqliteDataReader["GroupResidualRisk"].ToString().Contains(level))
-                        {
-                            _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, level, 24, ref sharedStringMaxIndex,
-                                sharedStringDictionary);
-                            break;
-                        }
-                    }
-                    
-                }
                 else
                 {
                     _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 24, ref sharedStringMaxIndex,
                         sharedStringDictionary);
                 }
-                string proposedMitigations = sqliteDataReader["GroupProposedMitigation"].ToString().Replace(",", doubleCarriageReturn) + doubleCarriageReturn +
-                                          sqliteDataReader["UniqueProposedMitigation"];
+                string proposedMitigations = sqliteDataReader["UniqueProposedMitigation"].ToString();
+                if (!string.IsNullOrWhiteSpace(sqliteDataReader["GroupProposedMitigations"].ToString()))
+                {
+                    proposedMitigations = proposedMitigations.Insert(0,
+                        sqliteDataReader["GroupProposedMitigations"].ToString().Replace(",", doubleCarriageReturn) +
+                        doubleCarriageReturn);
+                }
                 _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, proposedMitigations, 20,
                     ref sharedStringMaxIndex, sharedStringDictionary);
-                if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueResidualRiskAfterProposed"].ToString()))
+                if (sqliteDataReader.HasColumn("GroupResidualRiskAfterProposed") && !string.IsNullOrWhiteSpace(sqliteDataReader["GroupResidualRiskAfterProposed"].ToString()))
+                {
+                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["GroupResidualRiskAfterProposed"].ToString(), 24, ref sharedStringMaxIndex,
+                        sharedStringDictionary);
+                }
+                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueResidualRiskAfterProposed"].ToString()))
                 {
                     _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["UniqueResidualRiskAfterProposed"].ToString(), 24, ref sharedStringMaxIndex,
                         sharedStringDictionary);
-                }
-                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["GroupResidualRiskAfterProposed"].ToString()))
-                {
-                    foreach (string level in levels)
-                    {
-                        if (sqliteDataReader["GroupResidualRiskAfterProposed"].ToString().Contains(level))
-                        {
-                            _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, level, 24, ref sharedStringMaxIndex,
-                                sharedStringDictionary);
-                            break;
-                        }
-                    }
-                    
                 }
                 else
                 {

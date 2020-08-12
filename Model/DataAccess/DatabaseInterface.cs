@@ -1070,6 +1070,77 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public void UpdateReportUseGlobalValueUserSettings(SQLiteCommand sqliteCommand, string columnName)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.ReportUseGlobalValueUserSettings.dml", assembly);
+                sqliteCommand.CommandText = sqliteCommand.CommandText.Replace("[COLUMN_NAME]", columnName);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to update '{columnName}' value for ReportUseGlobalValueUserSetting with RequiredReport_ID '{sqliteCommand.Parameters["RequiredReport_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void UpdateReportRmfOverrideGlobal(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.ReportRmfOverrideGlobal.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to update 'Group_ID' value for the 'Global' ReportRmfOverrideUserSettings.");
+                throw exception;
+            }
+        }
+
+        public void UpdateReportRmfOverrideSelectedReport(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.ReportRmfOverrideSelectedReport.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to update 'Group_ID' value for ReportRmfOverrideUserSettings with RequiredReport_ID '{sqliteCommand.Parameters["RequiredReport_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void ClearReportRmfOverrideGlobal(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.ClearReportRmfOverrideGlobal.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to clear 'Group_ID' value for the 'Global' ReportRmfOverrideUserSettings.");
+                throw exception;
+            }
+        }
+
+        public void ClearReportRmfOverrideSelectedReport(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.ClearReportRmfOverrideSelectedReport.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to clear 'Group_ID' value for ReportRmfOverrideUserSettings with RequiredReport_ID '{sqliteCommand.Parameters["RequiredReport_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
         public void DeleteGroupsCCIsMappingByGroup(SQLiteCommand sqliteCommand)
         {
             try

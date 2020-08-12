@@ -380,8 +380,10 @@
     <Compile Include="Model\Entity\RelatedTesting.cs" />
     <Compile Include="Model\Entity\ReportGroupUserSettings.cs" />
     <Compile Include="Model\Entity\ReportFindingTypeUserSettings.cs" />
+    <Compile Include="Model\Entity\ReportRmfOverrideUserSettings.cs" />
     <Compile Include="Model\Entity\ReportStatusUserSettings.cs" />
     <Compile Include="Model\Entity\ReportSeverityUserSettings.cs" />
+    <Compile Include="Model\Entity\ReportUseGlobalValueUserSettings.cs" />
     <Compile Include="Model\Entity\RequiredReport.cs" />
     <Compile Include="Model\Entity\RequiredReportUserSelection.cs" />
     <Compile Include="Model\Entity\ResponsibilityRole.cs" />
@@ -742,6 +744,17 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserGroups.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportGroupIsSelected.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\RequiredGroups.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ReportRmfOverrideUserSettings.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ReportUseGlobalValueUserSettings.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserGlobalSelections.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserRmfOverride.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportRmfOverrideGlobal.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportRmfOverrideSelectedReport.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ReportUseGlobalValueUserSettings.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\ReportUseGlobalValueUserSettings.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\ReportRmfOverrideUserSettings.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ClearReportRmfOverrideGlobal.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ClearReportRmfOverrideSelectedReport.dml" />
     <Resource Include="Vulnerator_Logo_Large_Color_SquareBackground_20190805.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

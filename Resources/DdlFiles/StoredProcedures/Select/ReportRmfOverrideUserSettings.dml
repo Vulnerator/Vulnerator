@@ -1,0 +1,4 @@
+SELECT Group_ID FROM ReportRmfOverrideUserSettings
+LEFT JOIN RequiredReports RR ON ReportRmfOverrideUserSettings.RequiredReport_ID = RR.RequiredReport_ID
+WHERE UserName = @UserName
+AND DisplayedReportName = @DisplayedReportName;

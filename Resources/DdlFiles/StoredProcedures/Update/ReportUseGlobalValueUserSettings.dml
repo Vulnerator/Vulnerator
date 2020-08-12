@@ -1,0 +1,4 @@
+﻿UPDATE ReportUseGlobalValueUserSettings
+SET [COLUMN_NAME] = @ColumnValue
+WHERE RequiredReport_ID = @RequiredReport_ID
+AND UserName = @UserName;

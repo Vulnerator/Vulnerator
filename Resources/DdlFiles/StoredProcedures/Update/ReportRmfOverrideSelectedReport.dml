@@ -1,0 +1,4 @@
+﻿UPDATE ReportRmfOverrideUserSettings
+SET Group_ID = (SELECT Group_ID FROM Groups WHERE GroupName = @GroupName)
+WHERE RequiredReport_ID = @RequiredReport_ID
+AND UserName = @UserName;
