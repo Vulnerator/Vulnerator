@@ -509,14 +509,24 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "Ingested Version Is Newer":
                                 {
-                                    databaseInterface.UpdateVulnerability(sqliteCommand);
-                                    databaseInterface.UpdateDeltaAnalysisFlags(sqliteCommand);
+                                    databaseInterface.InsertVulnerability(sqliteCommand);
+                                    databaseInterface.MapVulnerabilityToSource(sqliteCommand);
+                                    List<string> ids = databaseInterface.SelectOutdatedVulnerabilities(sqliteCommand);
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("UpdatedStatus", "Completed"));
+                                    foreach (string id in ids)
+                                    {
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("UniqueFinding_ID", id));
+                                        databaseInterface.UpdateUniqueFindingStatusById(sqliteCommand);
+                                    }
+                                    sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UpdatedStatus"]);
+                                    sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UniqueFinding_ID"]);
                                     break;
                                 }
                             case "Existing Version Is Newer":
                                 {
                                     databaseInterface.UpdateVulnerabilityDates(sqliteCommand);
                                     sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "True";
+                                    databaseInterface.UpdateDeltaAnalysisFlags(sqliteCommand);
                                     break;
                                 }
                             case "Identical Versions":

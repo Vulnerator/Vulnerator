@@ -41,7 +41,10 @@ namespace Vulnerator.Model.Entity
         public string SoftwareVersion { get; set; }
 
         [StringLength(500)]
-        public string Function { get; set; }
+        public string SoftwareFunction { get; set; }
+
+        [StringLength(1000)]
+        public string SoftwareDescription { get; set; }
 
         [StringLength(25)]
         public string DADMS_ID { get; set; }

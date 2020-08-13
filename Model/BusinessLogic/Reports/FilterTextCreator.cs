@@ -21,7 +21,7 @@ namespace Vulnerator.Model.BusinessLogic.Reports
             {
                 sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.ReportUseGlobalValueUserSettings.dml", assembly);
                 sqliteCommand.CommandText =
-                    sqliteCommand.CommandText.Replace("[COLUMN_NAME]", "UseGlobalFindingTypeValue");
+                    sqliteCommand.CommandText.Replace("[COLUMN_NAME]", columnName);
                 
                 using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
@@ -29,7 +29,7 @@ namespace Vulnerator.Model.BusinessLogic.Reports
                     {
                         while (sqliteDataReader.Read())
                         {
-                            if (sqliteDataReader["UseGlobalFindingTypeValue"] != null)
+                            if (bool.Parse(sqliteDataReader[columnName].ToString()))
                             { return true; }
 
                             return false;
@@ -84,7 +84,7 @@ namespace Vulnerator.Model.BusinessLogic.Reports
             try
             {
                 sqliteCommand.Parameters.Add(new SQLiteParameter("DisplayedReportName", displayedReportName));
-                if (GetUseGlobalValue(sqliteCommand, "UseGlobalGroupsValue"))
+                if (GetUseGlobalValue(sqliteCommand, "UseGlobalGroupValue"))
                 { sqliteCommand.Parameters["DisplayedReportName"].Value = "Global"; }
 
                 string filter = string.Empty;

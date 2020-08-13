@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Windows.Media.Animation;
 using log4net;
 using System.Xml;
 using Vulnerator.Helper;
@@ -29,7 +30,7 @@ namespace Vulnerator.Model.BusinessLogic
         private string dateTimeFormat = "ddd MMM d HH:mm:ss yyyy";
         private bool found21745;
         private bool found26917;
-        string _groupName = null;
+        string _groupName;
         List<VulnerabilityReference> references = new List<VulnerabilityReference>();
         private string[] persistentParameters =
         {
@@ -104,6 +105,19 @@ namespace Vulnerator.Model.BusinessLogic
                                     sqliteCommand.Parameters["Found21745"].Value = found21745;
                                     sqliteCommand.Parameters["Found26917"].Value = found26917;
                                     databaseInterface.SetCredentialedScanStatus(sqliteCommand);
+                                    if (!found21745 && !found26917)
+                                    {
+                                        sqliteCommand.Parameters.Add(new SQLiteParameter("UpdatedStatus", "Completed"));
+                                        List<string> ids =
+                                            databaseInterface.SelectOutdatedUniqueFindings(sqliteCommand, lastObserved);
+                                        foreach (string id in ids)
+                                        {
+                                            sqliteCommand.Parameters.Add(new SQLiteParameter("UniqueFinding_ID", id));
+                                            databaseInterface.UpdateUniqueFindingStatusById(sqliteCommand);
+                                        }
+                                        sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UpdatedStatus"]);
+                                        sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UniqueFinding_ID"]);
+                                    }
                                     found21745 = found26917 = false;
                                 }
                             }
@@ -344,6 +358,15 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         sqliteCommand.Parameters["ScanIP"].Value = ipAddress;
                         PrepareVulnerabilitySource(sqliteCommand);
+                        List<string> ids = databaseInterface.SelectOutdatedVulnerabilities(sqliteCommand);
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("UpdatedStatus", "Completed"));
+                        foreach (string id in ids)
+                        {
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("UniqueFinding_ID", id));
+                            databaseInterface.UpdateUniqueFindingStatusById(sqliteCommand);
+                        }
+                        sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UpdatedStatus"]);
+                        sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UniqueFinding_ID"]);
                         databaseInterface.InsertVulnerability(sqliteCommand);
                         databaseInterface.MapVulnerabilityToSource(sqliteCommand);
                         if (Properties.Settings.Default.CaptureAcasPortInformation)
@@ -622,7 +645,6 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 sqliteCommand.Parameters["Status"].Value = "Ongoing";
-                sqliteCommand.Parameters["MitigatedStatus"].Value = "Ongoing";
                 sqliteCommand.Parameters["UniqueFinding_ID"].Value = DBNull.Value;
                 sqliteCommand.Parameters["FirstDiscovered"].Value = firstDiscovered;
                 sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "False";
@@ -635,41 +657,11 @@ namespace Vulnerator.Model.BusinessLogic
                     $"{sqliteCommand.Parameters["DiscoveredServiceName"].Value}";
                 databaseInterface.UpdateUniqueFinding(sqliteCommand);
                 databaseInterface.InsertUniqueFinding(sqliteCommand);
-                PrepareMitigationOrCondition(sqliteCommand);
             }
             catch (Exception exception)
             {
                 LogWriter.LogError(
                     $"Unable to create or update a UniqueFinding record for plugin '{sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value}'.");
-                throw exception;
-            }
-        }
-
-        private void PrepareMitigationOrCondition(SQLiteCommand sqliteCommand)
-        {
-            try
-            {
-                int? mitigationOrCondition_ID =
-                    databaseInterface.SelectUniqueFindingMitigationOrConditionId(sqliteCommand);
-                if (mitigationOrCondition_ID is null)
-                {
-                    databaseInterface.InsertMitigationOrConditionMitigatedStatus(sqliteCommand);
-                    sqliteCommand.Parameters["MitigationOrCondition_ID"].Value =
-                        databaseInterface.SelectLastInsertRowId(sqliteCommand);
-                    databaseInterface.UpdateUniqueFindingMitigationOrCondition(sqliteCommand);
-                    return;
-                }
-
-                if (sqliteCommand.Parameters["MitigatedStatus"].Value.Equals("Completed"))
-                {
-                    sqliteCommand.Parameters["MitigationOrCondition_ID"].Value = mitigationOrCondition_ID;
-                    databaseInterface.UpdateMitigationOrConditionMitigatedStatus(sqliteCommand);
-                }
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError(
-                    $"Unable to create or update a MitigationOrCondition record for plugin '{sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value}'.");
                 throw exception;
             }
         }

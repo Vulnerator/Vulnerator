@@ -601,7 +601,7 @@
                             Margin="0,5,5,0"
                             HorizontalAlignment="Left"
                             Command="{Binding GenerateAllVulnerabilityReportsCommand}"
-                            Content="Launch All Reports" />
+                            Content="Launch Selected Reports" />
                     <!--<Grid Grid.Row="1"
                           Grid.Column="1">
                         <Grid.ColumnDefinitions>

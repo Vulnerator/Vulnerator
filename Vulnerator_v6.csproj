@@ -755,6 +755,9 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\ReportRmfOverrideUserSettings.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ClearReportRmfOverrideGlobal.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\ClearReportRmfOverrideSelectedReport.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\UniqueFindingLastObservedDateAndId.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\VulnerabilityVersionAndReleaseAndUniqueFindingId.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\UniqueFindingStatusById.dml" />
     <Resource Include="Vulnerator_Logo_Large_Color_SquareBackground_20190805.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
@@ -844,7 +847,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\Hardware.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\EmassPoamVulnerabilities.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\HardwareCklCreationData.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\Indexes.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\Indices.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\UngroupedVulnerabilities.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\UniqueVulnerabilityIdentifiersBySource.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\VulnerabilitiesForDeletion.dml" />
