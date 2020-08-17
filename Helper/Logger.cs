@@ -77,6 +77,8 @@ namespace Vulnerator.Helper
             {
                 #if DEBUG
                 throw exception;
+                #else
+                throw;
                 #endif
             }
         }
