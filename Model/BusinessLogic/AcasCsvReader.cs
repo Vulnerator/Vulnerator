@@ -157,6 +157,21 @@ namespace Vulnerator.Model.BusinessLogic
                                 sqliteCommand.Parameters["MAC_Address"].Value = csvReader.GetField("MAC Address");
                                 PrepareVulnerabilitySource(sqliteCommand);
                                 databaseInterface.InsertHardware(sqliteCommand);
+                                sqliteCommand.Parameters["InstanceIdentifier"].Value = 
+                                    $"{sqliteCommand.Parameters["DiscoveredHostName"].Value}_" +
+                                    $"{sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value}_" + 
+                                    $"{sqliteCommand.Parameters["Port"].Value}_" + 
+                                    $"{sqliteCommand.Parameters["Protocol"].Value}_" + 
+                                    $"{sqliteCommand.Parameters["DiscoveredServiceName"].Value}";
+                                List<string> ids = databaseInterface.SelectOutdatedVulnerabilities(sqliteCommand, true);
+                                sqliteCommand.Parameters.Add(new SQLiteParameter("UpdatedStatus", "Completed"));
+                                foreach (string id in ids)
+                                {
+                                    sqliteCommand.Parameters.Add(new SQLiteParameter("UniqueFinding_ID", id));
+                                    databaseInterface.UpdateUniqueFindingStatusById(sqliteCommand);
+                                }
+                                sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UpdatedStatus"]);
+                                sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UniqueFinding_ID"]);
                                 databaseInterface.InsertVulnerability(sqliteCommand);
                                 databaseInterface.MapVulnerabilityToSource(sqliteCommand);
                                 if (Properties.Settings.Default.CaptureAcasPortInformation)
@@ -249,13 +264,22 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 sqliteCommand.Parameters["Status"].Value = "Ongoing";
-                sqliteCommand.Parameters["MitigatedStatus"].Value = "Ongoing";
                 sqliteCommand.Parameters["UniqueFinding_ID"].Value = DBNull.Value;
                 sqliteCommand.Parameters["Approval_Status"].Value = "Not Approved";
                 sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "False";
                 sqliteCommand.Parameters["FindingType"].Value = "ACAS";
                 databaseInterface.UpdateUniqueFinding(sqliteCommand);
                 databaseInterface.InsertUniqueFinding(sqliteCommand);
+                sqliteCommand.Parameters.Add(new SQLiteParameter("UpdatedStatus", "Completed"));
+                List<string> ids =
+                    databaseInterface.SelectOutdatedUniqueFindings(sqliteCommand, DateTime.Parse(sqliteCommand.Parameters["LastObserved"].Value.ToString()));
+                foreach (string id in ids)
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("UniqueFinding_ID", id));
+                    databaseInterface.UpdateUniqueFindingStatusById(sqliteCommand);
+                }
+                sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UpdatedStatus"]);
+                sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UniqueFinding_ID"]);
             }
             catch (Exception exception)
             {

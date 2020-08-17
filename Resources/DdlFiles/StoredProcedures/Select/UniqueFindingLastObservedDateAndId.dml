@@ -1,0 +1,6 @@
+﻿SELECT LastObserved, UniqueFinding_ID
+FROM UniqueFindings
+         LEFT JOIN Hardware H on UniqueFindings.Hardware_ID = H.Hardware_ID
+         LEFT JOIN FindingTypes FT on UniqueFindings.FindingType_ID = FT.FindingType_ID
+WHERE DiscoveredHostName = @DiscoveredHostName
+  AND FindingType = @FindingType;

@@ -100,6 +100,17 @@ namespace Vulnerator.Model.BusinessLogic
                         sqliteCommand.Parameters["FindingType"].Value = "Fortify";
                         sqliteCommand.Parameters["FirstDiscovered"].Value = firstDiscovered;
                         sqliteCommand.Parameters["LastObserved"].Value = lastObserved;
+                        List<string> ids = databaseInterface.SelectOutdatedVulnerabilities(sqliteCommand, true);
+                        sqliteCommand.Parameters.Add(new SQLiteParameter("UpdatedStatus", "Completed"));
+                        foreach (string id in ids)
+                        {
+                            sqliteCommand.Parameters.Add(new SQLiteParameter("UniqueFinding_ID", id));
+                            databaseInterface.UpdateUniqueFindingStatusById(sqliteCommand);
+                        }
+                        if (sqliteCommand.Parameters.Contains("UpdatedStatus"))
+                        { sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UpdatedStatus"]); }
+                        if (sqliteCommand.Parameters.Contains("UniqueFinding_ID"))
+                        { sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UniqueFinding_ID"]); }
                         databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                         databaseInterface.InsertSoftware(sqliteCommand);
                         foreach (FprVulnerability fprVulnerability in fprVulnerabilityList)

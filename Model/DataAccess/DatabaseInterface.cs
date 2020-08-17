@@ -136,7 +136,47 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public void DropVulnerabilityRelatedIndices()
+        public void DropIndices()
+        {
+            try
+            {
+                List<string> indices = new List<string>();
+                if (!DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
+                { DatabaseBuilder.sqliteConnection.Open(); }
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.CommandText = _ddlReader.ReadDdl("Vulnerator.Resources.DdlFiles.StoredProcedures.Select.Indices.dml", assembly);
+                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                    {
+                        if (sqliteDataReader.HasRows)
+                        {
+                            return;
+                        }
+                        while (sqliteDataReader.Read())
+                        {
+                            if (sqliteDataReader["name"].ToString().Contains("autoindex"))
+                            { continue; }
+                            indices.Add(sqliteDataReader["name"].ToString());
+                        }
+                    }
+
+                    foreach (string index in indices)
+                    {
+                        sqliteCommand.CommandText = $"DROP INDEX IF EXISTS {index};";
+                        sqliteCommand.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("$Unable to drop database indices.");
+                throw exception;
+            }
+            finally
+            { DatabaseBuilder.sqliteConnection.Close(); }
+        }
+
+        public void Reindex()
         {
             try
             {
@@ -144,31 +184,13 @@ namespace Vulnerator.Model.DataAccess
                 { DatabaseBuilder.sqliteConnection.Open(); }
                 using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
-                    sqliteCommand.CommandText = "PRAGMA user_version";
-                    int latestVersion = int.Parse(sqliteCommand.ExecuteScalar().ToString());
-                    for (int i = 0; i <= latestVersion; i++)
-                    {
-                        switch (i)
-                        {
-                            case 0:
-                                {
-                                    sqliteCommand.CommandText = _ddlReader.ReadDdl("Vulnerator.Resources.DdlFiles.v6-2-0_DropVulnerabilityRelatedIndices.ddl", assembly);
-                                    break;
-
-                                }
-                            default:
-                                { break; }
-                        }
-                        if (sqliteCommand.CommandText.Equals(string.Empty))
-                        { return; }
-                        sqliteCommand.ExecuteNonQuery();
-                        sqliteCommand.CommandText = string.Empty;
-                    }
+                    sqliteCommand.CommandText = "REINDEX sqlite_master;";
+                    sqliteCommand.ExecuteNonQuery();
                 }
             }
             catch (Exception exception)
             {
-                LogWriter.LogError("$Unable to drop vulnerability related indices.");
+                LogWriter.LogError("$Unable to reindex the database.");
                 throw exception;
             }
             finally
@@ -342,7 +364,7 @@ namespace Vulnerator.Model.DataAccess
                     "PortService_ID", "DiscoveredServiceName", "DisplayedServiceName", "ServiceAcronym",
                     // Software Table
                     "Software_ID", "DiscoveredSoftwareName", "DisplayedSoftwareName", "SoftwareAcronym", "SoftwareVersion",
-                    "Function", "DADMS_ID", "DADMS_Disposition", "DADMS_LastDateAuthorized", "HasCustomCode", "IA_OrIA_Enabled",
+                    "SoftwareFunction", "SoftwareDescription", "DADMS_ID", "DADMS_Disposition", "DADMS_LastDateAuthorized", "HasCustomCode", "IA_OrIA_Enabled",
                     "IsOS_OrFirmware", "FAM_Accepted", "ExternallyAuthorized", "ReportInAccreditationGlobal",
                     "ApprovedForBaselineGlobal", "BaselineApproverGlobal", "Instance", "InstallDate",
                     // UniqueFindings Table
@@ -603,6 +625,79 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public List<string> SelectOutdatedUniqueFindings(SQLiteCommand sqliteCommand, DateTime lastObserved)
+        {
+            try
+            {
+                List<string> ids = new List<string>();
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.UniqueFindingLastObservedDateAndId.dml", assembly);
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                {
+                    if (!sqliteDataReader.HasRows)
+                    { return ids; }
+                    while (sqliteDataReader.Read())
+                    {
+                        if (DateTime.Parse(sqliteDataReader["LastObserved"].ToString()) < lastObserved)
+                        { ids.Add(sqliteDataReader["UniqueFinding_ID"].ToString()); }
+                    }
+                }
+                return ids;
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to generate a list of outdated unique findings for hardware '{sqliteCommand.Parameters["DiscoveredHostName"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public List<string> SelectOutdatedVulnerabilities(SQLiteCommand sqliteCommand, bool filterOnInstanceIdentifier)
+        {
+            try
+            {
+                List<string> ids = new List<string>();
+                if (filterOnInstanceIdentifier)
+                {
+                    sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.VulnerabilityVersionAndReleaseAndUniqueFindingIdByInstanceIdentifier.dml", assembly);
+
+                }
+                else
+                { sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.VulnerabilityVersionAndReleaseAndUniqueFindingId.dml", assembly); }
+                using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                {
+                    if (!sqliteDataReader.HasRows)
+                    { return ids; }
+                    while (sqliteDataReader.Read())
+                    {
+                        bool versionOutdated = false;
+                        bool releaseOutdated = false;
+                        if ((int.TryParse(sqliteDataReader["VulnerabilityVersion"].ToString(), out int i) &&
+                             int.TryParse(sqliteCommand.Parameters["VulnerabilityVersion"].Value.ToString(), out i)) &&
+                            (int.Parse(sqliteDataReader["VulnerabilityVersion"].ToString()) <
+                             int.Parse(sqliteCommand.Parameters["VulnerabilityVersion"].Value.ToString())))
+                        { versionOutdated = true; }
+
+                        if ((int.TryParse(sqliteDataReader["VulnerabilityVersion"].ToString(), out i) && 
+                             int.TryParse(sqliteCommand.Parameters["VulnerabilityVersion"].Value.ToString(), out i)) &&
+                            (int.TryParse(sqliteDataReader["VulnerabilityRelease"].ToString(), out i) && 
+                             int.TryParse(sqliteCommand.Parameters["VulnerabilityRelease"].Value.ToString(), out i)) &&
+                            (int.Parse(sqliteDataReader["VulnerabilityVersion"].ToString()) ==
+                             int.Parse(sqliteCommand.Parameters["VulnerabilityVersion"].Value.ToString())) && 
+                            (int.Parse(sqliteDataReader["VulnerabilityRelease"].ToString()) <
+                             int.Parse(sqliteCommand.Parameters["VulnerabilityRelease"].Value.ToString())))
+                        { releaseOutdated = true; }
+                        if (versionOutdated || releaseOutdated)
+                        { ids.Add(sqliteDataReader["UniqueFinding_ID"].ToString()); }
+                    }
+                }
+                return ids;
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to generate a list of outdated unique findings for vulnerability '{sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value}'.");
+                throw exception;
+            }
+        }
+
         public List<string> SelectUniqueVulnerabilityIdentifiersBySource(SQLiteCommand sqliteCommand)
         {
             try
@@ -719,29 +814,6 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                // switch (sqliteCommand.Parameters["FindingType"].Value.ToString())
-                // {
-                //     case "ACAS":
-                //     {
-                //         sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.AcasUniqueFinding.dml", assembly);
-                //         break;
-                //     }
-                //     case "CKL":
-                //     {
-                //         sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.CklUniqueFinding.dml", assembly);
-                //         break;
-                //     }
-                //     case "XCCDF":
-                //     {
-                //         sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.XccdfUniqueFinding.dml", assembly);
-                //         break;
-                //     }
-                //     default:
-                //     {
-                //         sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.UniqueFinding.dml", assembly);
-                //         break;
-                //     }
-                // }
                 sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.UniqueFinding.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
@@ -1109,6 +1181,20 @@ namespace Vulnerator.Model.DataAccess
             catch (Exception exception)
             {
                 LogWriter.LogError($"Unable to update 'Group_ID' value for ReportRmfOverrideUserSettings with RequiredReport_ID '{sqliteCommand.Parameters["RequiredReport_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void UpdateUniqueFindingStatusById(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.UniqueFindingStatusById.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to update 'Status' value for UniqueFinding with UniqueFinding_ID '{sqliteCommand.Parameters["UniqueFinding_ID"].Value}'.");
                 throw exception;
             }
         }

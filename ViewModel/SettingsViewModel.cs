@@ -236,12 +236,13 @@ namespace Vulnerator.ViewModel
                 {
                     ProgressBarValue = 0;
                     ProgressVisibility = "Visible";
-                    databaseInterface.DropVulnerabilityRelatedIndices();
+                    databaseInterface.DropIndices();
                     ParseZip(StigLibraryLocation);
                     databaseInterface.CreateVulnerabilityRelatedIndices();
                     Properties.Settings.Default.StigLibraryIngestDate = DateTime.Now.ToLongDateString();
                     Messenger.Default.Send(new NotificationMessage<string>("ModelUpdate", "AllModels"), MessengerToken.ModelUpdated);
                     StigLibraryLocation = string.Empty;
+                    databaseInterface.Reindex();
                     if (stigFilesParsed == 0)
                     { e.Result = "None"; }
                     else if (stigFilesParsed < stigFilesAttempted)

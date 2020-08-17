@@ -41,6 +41,8 @@ WHERE (
     SELECT Vulnerability_ID
     FROM Vulnerabilities
     WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier
+      AND VulnerabilityVersion = @VulnerabilityVersion
+      AND VulnerabilityRelease = @VulnerabilityRelease
 )
   AND LastObserved <= @LastObserved
   AND InstanceIdentifier = @InstanceIdentifier;

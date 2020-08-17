@@ -320,7 +320,33 @@ namespace Vulnerator.Model.BusinessLogic
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("cdf:Group"))
                     {
-                        databaseInterface.InsertVulnerability(sqliteCommand);
+                        switch (databaseInterface.CompareVulnerabilityVersions(sqliteCommand))
+                        {
+                            case "Record Not Found":
+                                {
+                                    databaseInterface.InsertVulnerability(sqliteCommand);
+                                    databaseInterface.MapVulnerabilityToSource(sqliteCommand);
+                                    break;
+                                }
+                            case "Ingested Version Is Newer":
+                                {
+                                    databaseInterface.InsertVulnerability(sqliteCommand);
+                                    databaseInterface.MapVulnerabilityToSource(sqliteCommand);
+                                    break;
+                                }
+                            case "Existing Version Is Newer":
+                                {
+                                    databaseInterface.UpdateVulnerabilityDates(sqliteCommand);
+                                    sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "True";
+                                    databaseInterface.UpdateDeltaAnalysisFlags(sqliteCommand);
+                                    break;
+                                }
+                            case "Identical Versions":
+                                {
+                                    databaseInterface.UpdateVulnerabilityDates(sqliteCommand);
+                                    break;
+                                }
+                        }
                         databaseInterface.MapVulnerabilityToSource(sqliteCommand);
                         if (ccis.Count > 0)
                         {
@@ -588,7 +614,6 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         string rawStatus = xmlReader.ObtainCurrentNodeValue(true).ToString();
                         sqliteCommand.Parameters["Status"].Value = rawStatus.ToVulneratorStatus();
-                        sqliteCommand.Parameters["MitigatedStatus"].Value = sqliteCommand.Parameters["Status"].Value;
                         sqliteCommand.Parameters["ToolGeneratedOutput"].Value =
                             $"Tool: {tool}{Environment.NewLine}" +
                             $"Time: {time}{Environment.NewLine}" +
@@ -625,6 +650,17 @@ namespace Vulnerator.Model.BusinessLogic
                     $"{sqliteCommand.Parameters["DiscoveredHostName"].Value}_" +
                     $"{sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value}r{sqliteCommand.Parameters["VulnerabilityVersion"].Value}_" +
                     "XCCDF";
+                List<string> ids = databaseInterface.SelectOutdatedVulnerabilities(sqliteCommand, false);
+                sqliteCommand.Parameters.Add(new SQLiteParameter("UpdatedStatus", "Completed"));
+                foreach (string id in ids)
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("UniqueFinding_ID", id));
+                    databaseInterface.UpdateUniqueFindingStatusById(sqliteCommand);
+                }
+                if (sqliteCommand.Parameters.Contains("UpdatedStatus"))
+                { sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UpdatedStatus"]); }
+                if (sqliteCommand.Parameters.Contains("UniqueFinding_ID"))
+                { sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UniqueFinding_ID"]); }
                 databaseInterface.UpdateUniqueFinding(sqliteCommand);
                 databaseInterface.InsertUniqueFinding(sqliteCommand);
             }

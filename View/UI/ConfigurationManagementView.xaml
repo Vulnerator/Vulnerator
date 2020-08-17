@@ -341,11 +341,12 @@
                                         HorizontalAlignment="Right"
                                         Command="{Binding}"
                                         Content="Clear Selected Hardware" />
-                                <Button Grid.Column="4"
+                                <!-- TODO: Incorporate ability to delete HW -->
+                                <!--<Button Grid.Column="4"
                                         Margin="{StaticResource MarginLeft5}"
                                         HorizontalAlignment="Right"
                                         Command="{Binding}"
-                                        Content="Delete Selected Hardware" />
+                                        Content="Delete Selected Hardware" />-->
                             </Grid>
                         </ScrollViewer>
                     </Grid>
@@ -538,10 +539,11 @@
                                 <TextBox Controls:TextBoxHelper.Watermark="Role"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedHardware.Role, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
-                                <Button Margin="{StaticResource MarginTop5}"
+                                <!-- TODO: Incorporate ability to modify HW -->
+                                <!--<Button Margin="{StaticResource MarginTop5}"
                                         HorizontalAlignment="Center"
-                                        Command="{Binding ModifyGroupCommand}"
-                                        Content="Update Hardware" />
+                                        Command="{Binding}"
+                                        Content="Update Hardware" />-->
                             </StackPanel>
                         </ScrollViewer>
                     </Expander>
@@ -618,11 +620,12 @@
                                         HorizontalAlignment="Right"
                                         Command="{Binding}"
                                         Content="Clear Selected Software" />
-                                <Button Grid.Column="4"
+                                <!-- TODO: Incorporate ability to delete SW -->
+                                <!--<Button Grid.Column="4"
                                         Margin="{StaticResource MarginLeft5}"
                                         HorizontalAlignment="Right"
                                         Command="{Binding}"
-                                        Content="Delete Selected Software" />
+                                        Content="Delete Selected Software" />-->
                             </Grid>
                         </ScrollViewer>
                     </Grid>
@@ -674,7 +677,14 @@
                                          Visibility="{Binding SelectedSoftware, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Software Function"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding SelectedSoftware.Function, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
+                                         Text="{Binding SelectedSoftware.SoftwareFunction, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                         MaxLength="500"
+                                         vh:DependencyProperties.ShowCharacterCount="True"/>
+                                <TextBox Controls:TextBoxHelper.Watermark="Software Description"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedSoftware.SoftwareDescription, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                         MaxLength="1000"
+                                         vh:DependencyProperties.ShowCharacterCount="True"/>
                                 <DataGrid MinHeight="100"
                                           MaxHeight="300"
                                           Margin="{StaticResource MarginTop5}"
@@ -754,10 +764,11 @@
                                 <TextBox Controls:TextBoxHelper.Watermark="Baseline Approver"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedSoftware.BaselineApproverGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
-                                <Button Margin="{StaticResource MarginTop5}"
+                                <!-- TODO: Incorporate ability to modify SW -->
+                                <!--<Button Margin="{StaticResource MarginTop5}"
                                         HorizontalAlignment="Center"
-                                        Command="{Binding ModifyGroupCommand}"
-                                        Content="Update Software" />
+                                        Command="{Binding}"
+                                        Content="Update Software" />-->
                             </StackPanel>
                         </ScrollViewer>
                     </Expander>
@@ -838,11 +849,12 @@
                                         HorizontalAlignment="Right"
                                         Command="{Binding}"
                                         Content="Clear Selected PPS" />
-                                <Button Grid.Column="4"
+                                <!-- TODO: Incorporate ability to delete PPS -->
+                                <!--<Button Grid.Column="4"
                                         Margin="{StaticResource MarginLeft5}"
                                         HorizontalAlignment="Right"
                                         Command="{Binding}"
-                                        Content="Delete PPS" />
+                                        Content="Delete PPS" />-->
                             </Grid>
                         </ScrollViewer>
                     </Grid>
@@ -908,7 +920,7 @@
                                                             HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                                     </DataGrid.Columns>
                                 </DataGrid>
-                                <!--  TODO: Add ability to associate Hardware to Software  -->
+                                <!--  TODO: Add ability to associate HW to PPS  -->
                                 <!--<vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
                                                            Controls:TextBoxHelper.ClearTextButton="True"
                                                            Controls:TextBoxHelper.Watermark="Add Hardware"

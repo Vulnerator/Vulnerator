@@ -1,0 +1,6 @@
+﻿UPDATE
+    UniqueFindings
+SET
+    Status = @UpdatedStatus
+WHERE
+    UniqueFinding_ID = @UniqueFinding_ID;
