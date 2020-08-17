@@ -1,0 +1,22 @@
+﻿INSERT INTO Hardware
+VALUES (NULL,
+        @DisplayedHostName,
+        @DiscoveredHostName,
+        @FQDN,
+        @NetBIOS,
+        @ScanIP,
+        @Found21745,
+        @Found26917,
+        @IsVirtualServer,
+        @NIAP_Level,
+        @Manufacturer,
+        @ModelNumber,
+        @IsIA_Enabled,
+        @SerialNumber,
+        @Role,
+        (
+            SELECT LifecycleStatus_ID
+            FROM LifecycleStatuses
+            WHERE LifecycleStatus = 'Uncategorized'
+        ),
+        @OperatingSystem);

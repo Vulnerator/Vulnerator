@@ -1,0 +1,47 @@
+﻿<Controls:MetroWindow x:Class="Vulnerator.View.UI.NoInternetApplication"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      xmlns:v="clr-namespace:Vulnerator.View"
+                      xmlns:vm="clr-namespace:Vulnerator.ViewModel"
+                      Width="385"
+                      Height="209"
+                      GlowBrush="{DynamicResource AccentColorBrush}"
+                      ResizeMode="NoResize"
+                      ShowInTaskbar="False"
+                      ShowTitleBar="False"
+                      Topmost="True"
+                      WindowStartupLocation="CenterOwner">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="17*" />
+            <RowDefinition Height="48*" />
+            <RowDefinition Height="17*" />
+        </Grid.RowDefinitions>
+        <Label Height="31"
+               Margin="21,1,5,0"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Top"
+               HorizontalContentAlignment="Center"
+               Content="Unable to locate an internet browser"
+               RenderOptions.ClearTypeHint="Enabled"
+               Style="{StaticResource styleSecondLevelHeader}" />
+        <TextBlock Grid.Row="1"
+                   Height="96"
+                   Margin="10,0"
+                   VerticalAlignment="Top"
+                   RenderOptions.ClearTypeHint="Enabled"
+                   Text="Vulnerator was unable to locate and launch an internet browsing application.&#xA;&#xA;Please ensure that an internet browsing program (i.e. Internet Explorer) is present on the system."
+                   TextWrapping="Wrap" />
+        <Button Grid.Row="2"
+                Width="116"
+                Height="26"
+                Margin="128,1,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Click="CloseClick"
+                Content="Close"
+                Style="{StaticResource MetroFlatButton}" />
+    </Grid>
+</Controls:MetroWindow>

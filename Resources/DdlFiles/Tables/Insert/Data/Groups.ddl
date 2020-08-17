@@ -1,0 +1,27 @@
+INSERT INTO
+    Groups
+VALUES
+    (
+        NULL,
+        'All',
+        NULL,
+        1,
+        'False',
+        NULL,
+        'False',
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        'False',
+        NULL,
+        'False',
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL
+    );

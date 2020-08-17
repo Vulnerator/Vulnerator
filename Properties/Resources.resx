@@ -46,7 +46,7 @@
     
     mimetype: application/x-microsoft.net.object.binary.base64
     value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
     
     mimetype: application/x-microsoft.net.object.soap.base64
@@ -60,6 +60,7 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
@@ -68,9 +69,10 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="name" use="required" type="xsd:string" />
               <xsd:attribute name="type" type="xsd:string" />
               <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
@@ -85,9 +87,10 @@
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -109,9 +112,115 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="RegexAcasDebianSoftwareName" xml:space="preserve">
+    <value>(?&lt;=(?:\w{2})\s{2})(?:\w+(?:-?\.?\+*)*)+</value>
+  </data>
+  <data name="RegexAcasDebianSoftwareVersion" xml:space="preserve">
+    <value>(?:\s{10,})(?:\d+(?:\w*(?:-?\.?\+*\:?\~?)*)*)+</value>
+  </data>
+  <data name="RegexAcasLinuxSoftwareName" xml:space="preserve">
+    <value>^(\w)+(-?\.?[A-Za-z]+)*</value>
+  </data>
+  <data name="RegexAcasLinuxSoftwareVersion" xml:space="preserve">
+    <value>(?:(?:\d+\.?-?)+(?:(?:\w+)?\.?-?)+)+(?=\|)</value>
+  </data>
+  <data name="RegexAcasSoftwareInstallDate" xml:space="preserve">
+    <value>(?&lt;=\[installed on\s)(?:\d{2,4}\/\d{1,2}\/\d{1,2})(?=\])</value>
+  </data>
+  <data name="RegexAcasSolarisSoftwareName" xml:space="preserve">
+    <value>^(?:\w)+(?:-?(?:\w?)+)+</value>
+  </data>
+  <data name="RegexAcasSolarisSoftwareVersion" xml:space="preserve">
+    <value>(?:\d+\.?)+,?(?:REV=(?:\d+\.?)+)?</value>
+  </data>
+  <data name="RegexAcasWindowsSoftwareName" xml:space="preserve">
+    <value>^.+?((?=\[)|(?=\r?\n))</value>
+  </data>
+  <data name="RegexAcasWindowsSoftwareVersion" xml:space="preserve">
+    <value>(?&lt;=\[version\s)(?:\d+(?:(?:(?:\.|-?)\d*)*)|(?:\w+))(?=\])</value>
+  </data>
+  <data name="RegexCatText" xml:space="preserve">
+    <value>CAT\s(?:I{1,3}(?:V)?)(?:,\s)*</value>
+  </data>
+  <data name="RegexCciSelector" xml:space="preserve">
+    <value>(?:CCI-\d*)</value>
+  </data>
+  <data name="RegexExcessiveNewLineAndTab" xml:space="preserve">
+    <value>(?:(\r?)\n){2,}(?:\t){2,}</value>
+  </data>
+  <data name="RegexGroupsMitigationsOrConditionsVulnerabilities" xml:space="preserve">
+    <value>\) GroupsMitigationsOrConditionsVulnerabilities</value>
+  </data>
+  <data name="RegexIndentedMidlineNewLine" xml:space="preserve">
+    <value>(?:\r)*\n\s{4,}</value>
+  </data>
+  <data name="RegexIPv4" xml:space="preserve">
+    <value>(?:(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]){1,3}</value>
+  </data>
+  <data name="RegexIPv6" xml:space="preserve">
+    <value>(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))</value>
+  </data>
+  <data name="RegexMAC" xml:space="preserve">
+    <value>(?:[0-9A-Fa-f]{1,2}[:-]){5}(?:[0-9A-Fa-f]{2})</value>
+  </data>
+  <data name="RegexMidlineNewLine" xml:space="preserve">
+    <value>(?:(?&lt;!\r\n)(?&lt;=[^(\r)])(?:\r\n)(?=[a-z0-9])|(?:(?&lt;!\r)\n)(?=[a-z0-9]))</value>
+  </data>
+  <data name="RegexRawStigRelease" xml:space="preserve">
+    <value>(?&lt;=Release: )\d+(?=\s)</value>
+  </data>
+  <data name="RegexSqlFindingTypes" xml:space="preserve">
+    <value>(?:LEFT JOIN FindingTypes FT)</value>
+  </data>
+  <data name="RegexSqlFromUniqueFindings" xml:space="preserve">
+    <value>(?:FROM UniqueFindings UF)</value>
+  </data>
+  <data name="RegexSqlGroupBy" xml:space="preserve">
+    <value>(?:GROUP\sBY)|(?:group\sby)</value>
+  </data>
+  <data name="RegexStigDate" xml:space="preserve">
+    <value>\d{2}\s\D+\s\d{4}</value>
+  </data>
+  <data name="RegexStigDiscrepanciesStatus" xml:space="preserve">
+    <value>FindingType\s+=\s+(?:(?:'CKL')|(?:'XCCDF'))\)\)\s+as\s+(?:Mitigated)*(?:(?:Ckl)|(?:Xccdf))Status</value>
+  </data>
+  <data name="RegexStigId" xml:space="preserve">
+    <value>(?:(?:\w)+(?:-|\.|_)?)+</value>
+  </data>
+  <data name="RegexStigRelease" xml:space="preserve">
+    <value>((?&lt;=\.0*))[1-9]+</value>
+  </data>
+  <data name="RegexStigVersion" xml:space="preserve">
+    <value>[1-9]+(?=\.)</value>
+  </data>
+  <data name="RegexTrailingNewLine" xml:space="preserve">
+    <value>(?:(?&lt;=\s)\n(?=\s|$))</value>
+  </data>
+  <data name="RegexVulnerabilityGroupIdentifier" xml:space="preserve">
+    <value>V-\d*</value>
+  </data>
+  <data name="RegexWasspRawRisk" xml:space="preserve">
+    <value>(?:[Hh]igh|[Mm]edium|[Ll]ow|[Ii]nformational)</value>
+  </data>
+  <data name="RegexXccdfProfile" xml:space="preserve">
+    <value>(?:MAC-|CAT_)(?:[1-3]|I)_[a-zA-Z]+</value>
+  </data>
+  <data name="RegexXccdfRule" xml:space="preserve">
+    <value>SV-\d*r\d*</value>
+  </data>
+  <data name="StringGroupRmfFields" xml:space="preserve">
+    <value>, GroupsMitigationsOrConditionsVulnerabilities2.EstimatedCompletionDate   as GroupEstimatedCompletionDate,
+       GroupsMitigationsOrConditionsVulnerabilities2.SeverityPervasiveness     as GroupSeverityPervasiveness,
+       GroupsMitigationsOrConditionsVulnerabilities2.ThreatRelevance           as GroupThreatRelevance,
+       GroupsMitigationsOrConditionsVulnerabilities2.Likelihood                as GroupLikelihood,
+       GroupsMitigationsOrConditionsVulnerabilities2.Impact                    as GroupImpact,
+       GroupsMitigationsOrConditionsVulnerabilities2.ResidualRisk              as GroupResidualRisk,
+       GroupsMitigationsOrConditionsVulnerabilities2.MitigatedStatus           as GroupMitigatedStatus,
+       GroupsMitigationsOrConditionsVulnerabilities2.ResidualRiskAfterProposed as GroupResidualRiskAfterProposed </value>
+  </data>
 </root>

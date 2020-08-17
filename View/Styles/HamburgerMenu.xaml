@@ -1,0 +1,60 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                    xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
+                    xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                    xmlns:local="clr-namespace:Vulnerator.View.Styles"
+                    xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+                    xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
+                    xmlns:vm="clr-namespace:Vulnerator.ViewModel">
+
+    <DataTemplate x:Key="HamburgerMenuItem"
+                  DataType="{x:Type Controls:HamburgerMenuIconItem}">
+        <Grid Height="48">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="48" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <ContentControl Grid.Column="0"
+                            Content="{Binding Icon}"
+                            Focusable="False" />
+            <TextBlock Grid.Column="1"
+                       VerticalAlignment="Center"
+                       Text="{Binding Label}" />
+        </Grid>
+    </DataTemplate>
+
+    <Style x:Key="HamburgerMenuCreatorsItemStyle"
+           BasedOn="{StaticResource HamburgerMenuItemStyle}"
+           TargetType="{x:Type ListBoxItem}">
+        <Setter Property="Controls:ItemHelper.ActiveSelectionBackgroundBrush" Value="Transparent" />
+        <Setter Property="Controls:ItemHelper.ActiveSelectionForegroundBrush" Value="{DynamicResource AccentBaseColorBrush}" />
+        <Setter Property="Controls:ItemHelper.DisabledForegroundBrush" Value="{DynamicResource GrayNormalBrush}" />
+        <Setter Property="Controls:ItemHelper.DisabledSelectedBackgroundBrush" Value="Transparent" />
+        <Setter Property="Controls:ItemHelper.DisabledSelectedForegroundBrush" Value="{DynamicResource GrayNormalBrush}" />
+        <Setter Property="Controls:ItemHelper.HoverBackgroundBrush" Value="{DynamicResource GrayBrush9}" />
+        <Setter Property="Controls:ItemHelper.HoverSelectedBackgroundBrush" Value="{DynamicResource GrayBrush9}" />
+        <Setter Property="Controls:ItemHelper.SelectedBackgroundBrush" Value="Transparent" />
+        <Setter Property="Controls:ItemHelper.SelectedForegroundBrush" Value="{DynamicResource AccentBaseColorBrush}" />
+    </Style>
+
+    <Style x:Key="HamburgerMenuCreatorsStyle"
+           BasedOn="{StaticResource {x:Type Controls:HamburgerMenu}}"
+           TargetType="{x:Type Controls:HamburgerMenu}">
+        <Setter Property="HamburgerMenuTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <ContentControl Width="22"
+                                    Height="22"
+                                    Content="{IconPacks:FontAwesomeLight Kind=Bars}" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource HamburgerMenuCreatorsItemStyle}" />
+        <Setter Property="OptionsItemContainerStyle" Value="{StaticResource HamburgerMenuCreatorsItemStyle}" />
+        <Setter Property="PaneBackground" Value="{DynamicResource GrayBrush10}" />
+        <Setter Property="PaneForeground" Value="{DynamicResource TextBrush}" />
+        <Setter Property="ShowSelectionIndicator" Value="True" />
+    </Style>
+
+</ResourceDictionary>

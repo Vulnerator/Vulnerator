@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Vulnerator.View.UI;
 
 namespace Vulnerator
 {
@@ -22,7 +24,39 @@ namespace Vulnerator
         {
             // hook on error before app really starts
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+            Vulnerator.Properties.Settings.Default.Upgrade();
+            Vulnerator.Properties.Settings.Default.Save();
+            //AddListeners();
             base.OnStartup(e);
+        }
+
+        void Application_Startup(object sender, StartupEventArgs e)
+        {
+            if (Vulnerator.Properties.Settings.Default["Environment"].ToString().Equals("Undefined"))
+            {
+                SplashWindow splashWindow = new SplashWindow();
+                splashWindow.Show();
+            }
+            else
+            {
+                MainWindow mainWindow = new MainWindow();
+                mainWindow.Show();
+            }
+        }
+
+        [Conditional("DEBUG")]
+        private void AddListeners()
+        {
+            PresentationTraceSources.Refresh();
+            PresentationTraceSources.DataBindingSource.Listeners.Add(new ConsoleTraceListener());
+            PresentationTraceSources.DataBindingSource.Listeners.Add(new DebugTraceListener());
+            PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Warning | SourceLevels.Error | SourceLevels.Critical;
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            Vulnerator.Properties.Settings.Default.Save();
+            base.OnExit(e);
         }
 
         void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -62,7 +96,6 @@ namespace Vulnerator
 
             string logPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             string logFile = logPath + @"\Vulnerator_v6_StartupErrorLog.txt";
-            string _exception = exception.ToString();
 
             if (!Directory.Exists(logPath))
             { Directory.CreateDirectory(logPath); }
@@ -73,7 +106,7 @@ namespace Vulnerator
                 using (StreamWriter sw = new StreamWriter(fs))
                 {
                     sw.WriteLine(DateTime.Now);
-                    sw.WriteLine(exception);
+                    sw.WriteLine(error);
                     sw.WriteLine(Environment.NewLine);
                     sw.Close();
                 }
@@ -89,6 +122,18 @@ namespace Vulnerator
         {
             MessageBox.Show(@"The application has encountered an error; please notify the developer via the GitHub site at https://github.com/Vulnerator/Vulnerator", 
                 "Application Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    public class DebugTraceListener : TraceListener
+    {
+        public override void Write(string message)
+        {
+        }
+
+        public override void WriteLine(string message)
+        {
+            Debugger.Break();
         }
     }
 }

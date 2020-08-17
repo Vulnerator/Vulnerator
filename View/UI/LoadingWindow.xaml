@@ -1,0 +1,89 @@
+﻿<Controls:MetroWindow x:Class="Vulnerator.View.UI.LoadingWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      Title="Vulnerator"
+                      Width="250"
+                      Height="250"
+                      BorderBrush="{DynamicResource AccentColorBrush}"
+                      DataContext="{Binding Loading, Source={StaticResource Locator}}"
+                      GlowBrush="{DynamicResource AccentColorBrush}"
+                      Icon="/Vulnerator;component/Resources/vulnerator.ico"
+                      ResizeMode="NoResize"
+                      ShowCloseButton="False"
+                      ShowMaxRestoreButton="False"
+                      ShowMinButton="False"
+                      ShowTitleBar="False"
+                      Style="{DynamicResource CustomCleanWindowStyleKey}"
+                      WindowStartupLocation="CenterScreen"
+                      mc:Ignorable="d">
+
+    <!--  Window Icon Template  -->
+    <Controls:MetroWindow.IconTemplate>
+        <DataTemplate>
+            <Border Width="48">
+                <IconPacks:PackIconFontAwesomeBrands Width="{TemplateBinding Width}"
+                                                     Height="{TemplateBinding Height}"
+                                                     Margin="4"
+                                                     HorizontalAlignment="Center"
+                                                     Flip="Horizontal"
+                                                     Foreground="{DynamicResource BlackBrush}"
+                                                     Kind="Vulnerator" />
+            </Border>
+        </DataTemplate>
+    </Controls:MetroWindow.IconTemplate>
+
+    <!--  Window Titlebar Controls  -->
+    <Controls:MetroWindow.TitleTemplate>
+        <DataTemplate>
+            <StackPanel HorizontalAlignment="Left"
+                        Orientation="Horizontal">
+                <TextBlock Margin="5,0"
+                           VerticalAlignment="Center"
+                           FontFamily="{DynamicResource HeaderFontFamily}"
+                           FontSize="{DynamicResource WindowTitleFontSize}"
+                           Text="{TemplateBinding Content}"
+                           TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+        </DataTemplate>
+    </Controls:MetroWindow.TitleTemplate>
+
+    <!--  Window Command Button Styling  -->
+    <Controls:MetroWindow.WindowButtonCommands>
+        <Controls:WindowButtonCommands Template="{DynamicResource MahApps.Metro.Templates.WindowButtonCommands.Win10}" />
+    </Controls:MetroWindow.WindowButtonCommands>
+
+    <Controls:MetroWindow.Resources>
+        <BitmapImage x:Key="VulneratorLogo"
+                     UriSource="/Vulnerator_Logo_Large_Color_SquareBackground_20190805.png" />
+    </Controls:MetroWindow.Resources>
+
+    <StackPanel Margin="5,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+        <Image Width="100"
+               Margin="0,-15"
+               Source="{StaticResource VulneratorLogo}" />
+        <Label HorizontalAlignment="Center"
+               Style="{StaticResource TopLevelHeaderStyle}">
+            <TextBlock Text="Loading..."
+                       TextTrimming="CharacterEllipsis" />
+        </Label>
+        <Label Margin="{StaticResource MarginBottom10}"
+               HorizontalAlignment="Center">
+            <TextBlock Text="Please wait while Vulnerator initializes"
+                       TextTrimming="CharacterEllipsis" />
+        </Label>
+        <ProgressBar Margin="{StaticResource MarginAll5}"
+                     Foreground="{DynamicResource AccentColorBrush}"
+                     IsIndeterminate="True" />
+        <Label Margin="{StaticResource MarginBottom10}"
+               HorizontalAlignment="Center">
+            <TextBlock Text="{Binding LoadingActionText}"
+                       TextTrimming="CharacterEllipsis" />
+        </Label>
+    </StackPanel>
+</Controls:MetroWindow>

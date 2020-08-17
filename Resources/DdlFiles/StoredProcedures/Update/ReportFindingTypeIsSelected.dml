@@ -1,0 +1,6 @@
+﻿UPDATE
+    ReportFindingTypeUserSettings
+SET
+    IsSelected = @IsSelected
+WHERE
+    ReportFindingTypeUserSettings_ID = @ReportFindingTypeUserSettings_ID

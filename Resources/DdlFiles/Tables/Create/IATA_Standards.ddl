@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS IATA_Standards (
+    IATA_Standard_ID INTEGER PRIMARY KEY,
+    IATA_StandardTitle NVARCHAR (50) NOT NULL,
+    IATA_StandardDescription NVARCHAR (1000) NOT NULL
+);

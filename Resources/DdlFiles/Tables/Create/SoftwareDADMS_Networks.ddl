@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS SoftwareDADMS_Networks (
+    Software_DADMS_Network_ID INTEGER PRIMARY KEY,
+    Software_ID INTEGER NOT NULL,
+    DADMS_Network_ID INTEGER NOT NULL,
+    UNIQUE (Software_ID, DADMS_Network_ID) ON CONFLICT IGNORE,
+    FOREIGN KEY (Software_ID) REFERENCES Software(Software_ID),
+    FOREIGN KEY (DADMS_Network_ID) REFERENCES DADMS_Networks(DADMS_Network_ID)
+);

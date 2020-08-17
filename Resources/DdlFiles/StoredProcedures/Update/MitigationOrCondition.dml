@@ -1,0 +1,23 @@
+﻿UPDATE
+    MitigationsOrConditions
+SET
+    ImpactDescription = @ImpactDescription,
+    PredisposingConditions = @PredisposingConditions,
+    TechnicalMitigation = @TechnicalMitigation,
+    ProposedMitigation = @ProposedMitigation,
+    ThreatDescription = @ThreatDescription,
+    ThreatRelevance = @ThreatRelevance,
+    SeverityPervasiveness = @SeverityPervasiveness,
+    Likelihood = @Likelihood,
+    Impact = @Impact,
+    Risk = @Risk,
+    ResidualRisk = @ResidualRisk,
+    ResidualRiskAfterProposed = @ResidualRiskAfterProposed,
+    MitigatedStatus = @MitigatedStatus,
+    ExpirationDate = @ExpirationDate,
+    EstimatedCompletionDate = @EstimatedCompletionDate,
+    ApprovalDate = @ApprovalDate,
+    IsApproved = @IsApproved,
+    Approver = @Approver
+WHERE
+    MitigationOrCondition_ID = @MitigationOrCondition_ID;

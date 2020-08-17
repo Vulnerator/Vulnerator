@@ -1,0 +1,6 @@
+﻿UPDATE
+    ReportSeverityUserSettings
+SET
+    IsSelected = @IsSelected
+WHERE
+    ReportSeverityUserSettings_ID = @ReportSeverityUserSettings_ID

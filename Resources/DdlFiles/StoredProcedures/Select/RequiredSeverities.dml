@@ -1,0 +1,6 @@
+SELECT Severity
+FROM ReportSeverityUserSettings
+         LEFT JOIN RequiredReports RR on ReportSeverityUserSettings.RequiredReport_ID = RR.RequiredReport_ID
+WHERE IsSelected = 'True'
+  AND DisplayedReportName = @DisplayedReportName
+  AND UserName = @UserName

@@ -1,0 +1,12 @@
+﻿INSERT INTO HardwareGroups
+VALUES (NULL,
+        (
+            SELECT Hardware_ID
+            FROM Hardware
+            WHERE DiscoveredHostName = @DiscoveredHostName
+        ),
+        (
+            SELECT Group_ID
+            FROM Groups
+            WHERE GroupName = @GroupName
+        ));

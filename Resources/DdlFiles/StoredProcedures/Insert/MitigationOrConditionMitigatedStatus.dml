@@ -1,0 +1,4 @@
+﻿INSERT INTO
+    MitigationsOrConditions (MitigatedStatus)
+VALUES
+    (@MitigatedStatus);

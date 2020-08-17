@@ -1,0 +1,13 @@
+﻿UPDATE
+    UniqueFindings
+SET
+    DeltaAnalysisIsRequired = 'True'
+WHERE
+    Vulnerability_ID = (
+        SELECT
+            Vulnerability_ID
+        FROM
+            Vulnerabilities
+        WHERE
+            UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier
+    );

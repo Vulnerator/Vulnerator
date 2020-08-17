@@ -22,6 +22,9 @@ bld/
 # Visual Studio 2015 cache/options directory
 .vs/
 
+# Jetbrains idea directory
+.idea
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*

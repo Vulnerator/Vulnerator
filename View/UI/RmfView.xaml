@@ -1,0 +1,1561 @@
+﻿<UserControl x:Class="Vulnerator.View.UI.RmfView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
+             xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:LiveCharts="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dat="clr-namespace:System.Windows.Data;assembly=PresentationFramework"
+             xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:local="clr-namespace:Vulnerator.View.UI"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:v="clr-namespace:Vulnerator.View"
+             xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
+             xmlns:vm="clr-namespace:Vulnerator.ViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             d:DesignWidth="800"
+             DataContext="{Binding Rmf, Source={StaticResource Locator}}"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+
+    <Grid Background="{DynamicResource WindowBackgroundBrush}">
+        <Controls:MetroAnimatedSingleRowTabControl Margin="5,0,5,5"
+                                                   Controls:TabControlHelper.Underlined="SelectedTabItem"
+                                                   TabStripPlacement="Left">
+            <TabItem Style="{StaticResource CustomVerticalMetroTabItem}">
+                <TabItem.Header>
+                    <ComboBox Controls:TextBoxHelper.Watermark="Select an Accreditation"
+                              IsEnabled="True" />
+                </TabItem.Header>
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <Expander Margin="5,0,5,5"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  BorderThickness="0"
+                                  IsExpanded="True">
+                            <Expander.Header>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="System Overview"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                            </Expander.Header>
+                            <StackPanel>
+                                <TextBox Grid.Column="0"
+                                         Grid.ColumnSpan="2"
+                                         Margin="0,0,0,5"
+                                         Controls:TextBoxHelper.Watermark="System Name"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0"
+                                             Margin="0,0,5,5"
+                                             Controls:TextBoxHelper.Watermark="System Acronym"
+                                             Style="{StaticResource HeaderedTextBoxStyle}" />
+                                    <TextBox Grid.Column="1"
+                                             Margin="0,0,5,5"
+                                             Controls:TextBoxHelper.Watermark="System Version/Release"
+                                             Style="{StaticResource HeaderedTextBoxStyle}" />
+                                    <TextBox Grid.Column="2"
+                                             Margin="0,0,0,5"
+                                             Controls:TextBoxHelper.Watermark="System eMASS ID"
+                                             Style="{StaticResource HeaderedTextBoxStyle}" />
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox Margin="0,0,5,5"
+                                              Controls:TextBoxHelper.Watermark="System Registration Type"
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <ComboBox Grid.Column="1"
+                                              Margin="0,0,0,5"
+                                              Controls:TextBoxHelper.Watermark="System Type"
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox Grid.Column="0"
+                                              Margin="0,0,5,5"
+                                              Controls:TextBoxHelper.Watermark="DITPR ID"
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <ComboBox Grid.Column="1"
+                                              Margin="0,0,0,5"
+                                              Controls:TextBoxHelper.Watermark="DoD IT Registration Number"
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                </Grid>
+                                <TextBox Margin="0,0,0,5"
+                                         Controls:TextBoxHelper.Watermark="DVS Site"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                            </StackPanel>
+                        </Expander>
+                        <Expander Margin="5,0,5,5"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  BorderThickness="0"
+                                  IsExpanded="True">
+                            <Expander.Header>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="Accessibility"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                            </Expander.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <ComboBox Margin="0,0,5,5"
+                                          Controls:TextBoxHelper.Watermark="Logical Access Control"
+                                          IsEditable="True"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <ComboBox Grid.Column="1"
+                                          Margin="0,0,0,5"
+                                          Controls:TextBoxHelper.Watermark="Physical Access Control"
+                                          IsEditable="True"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <ComboBox Grid.Row="1"
+                                          Grid.Column="0"
+                                          Margin="0,0,5,5"
+                                          Controls:TextBoxHelper.Watermark="Network Connection Antivirus Scan Periodicity"
+                                          IsEditable="True"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <ComboBox Grid.Row="1"
+                                          Grid.Column="1"
+                                          Margin="0,0,0,5"
+                                          Controls:TextBoxHelper.Watermark="DoDIN Connection Periodicity"
+                                          IsEditable="True"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
+                            </Grid>
+                        </Expander>
+                        <Expander Margin="5,0,5,5"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  BorderThickness="0"
+                                  IsExpanded="True">
+                            <Expander.Header>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="Ports / Architecture Information"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                            </Expander.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Margin="0,0,5,5"
+                                         Controls:TextBoxHelper.Watermark="PPSM Registration Number"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <DatePicker Grid.Column="1"
+                                            Margin="0,0,0,5"
+                                            Controls:TextBoxHelper.Watermark="PPSM Registration Date"
+                                            Style="{StaticResource HeaderedDatePickerStyle}" />
+                            </Grid>
+                        </Expander>
+                        <Expander Margin="5,0,5,5"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  BorderThickness="0"
+                                  IsExpanded="True">
+                            <Expander.Header>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="Encryption"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                            </Expander.Header>
+                            <DataGrid MinHeight="100"
+                                      Margin="0,0,0,5"
+                                      Style="{StaticResource GreyBorderedDataGridStyle}">
+                                <DataGrid.Columns>
+                                    <DataGridCheckBoxColumn />
+                                    <DataGridTextColumn Width="*">
+                                        <DataGridTextColumn.Header>
+                                            <TextBlock Text="Encryption Technique"
+                                                       TextTrimming="CharacterEllipsis" />
+                                        </DataGridTextColumn.Header>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Width="*">
+                                        <DataGridTextColumn.Header>
+                                            <TextBlock Text="Cryptographic Key Management"
+                                                       TextTrimming="CharacterEllipsis" />
+                                        </DataGridTextColumn.Header>
+                                    </DataGridTextColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Expander>
+                        <Expander Margin="5,0,5,5"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  BorderThickness="0"
+                                  IsExpanded="True">
+                            <Expander.Header>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="Location Information"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                            </Expander.Header>
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <CheckBox x:Name="typeAccreditationCheckBox"
+                                              Margin="0,5,5,6"
+                                              VerticalAlignment="Bottom"
+                                              Style="{StaticResource CustomCheckBox}">
+                                        <TextBlock Text="Type Authorization"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </CheckBox>
+                                    <TextBox Grid.Column="1"
+                                             Grid.ColumnSpan="2"
+                                             Margin="0,0,0,5"
+                                             Controls:TextBoxHelper.Watermark="Type Authorization Installation Name / Owning Organization"
+                                             IsEnabled="{Binding ElementName=typeAccreditationCheckBox, Path=IsChecked}"
+                                             Style="{StaticResource HeaderedTextBoxStyle}" />
+                                </Grid>
+                                <DataGrid MinHeight="100"
+                                          Margin="0,0,0,5"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Width="*">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="Associated Locations"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                    <DataGrid.RowDetailsTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <TextBlock HorizontalAlignment="Stretch"
+                                                           FontWeight="DemiBold"
+                                                           Text="Street Address One:"
+                                                           TextAlignment="Right"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Grid.Row="1"
+                                                           HorizontalAlignment="Stretch"
+                                                           FontWeight="DemiBold"
+                                                           Text="Street Address One:"
+                                                           TextAlignment="Right"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Grid.Row="2"
+                                                           HorizontalAlignment="Stretch"
+                                                           FontWeight="DemiBold"
+                                                           Text="Building:"
+                                                           TextAlignment="Right"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Grid.Row="2"
+                                                           Grid.Column="2"
+                                                           HorizontalAlignment="Stretch"
+                                                           FontWeight="DemiBold"
+                                                           Text="Floor:"
+                                                           TextAlignment="Right"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Grid.Row="2"
+                                                           Grid.Column="4"
+                                                           HorizontalAlignment="Stretch"
+                                                           FontWeight="DemiBold"
+                                                           Text="Room:"
+                                                           TextAlignment="Right"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Grid.Row="3"
+                                                           HorizontalAlignment="Stretch"
+                                                           FontWeight="DemiBold"
+                                                           Text="City:"
+                                                           TextAlignment="Right"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Grid.Row="3"
+                                                           Grid.Column="2"
+                                                           HorizontalAlignment="Stretch"
+                                                           FontWeight="DemiBold"
+                                                           Text="State:"
+                                                           TextAlignment="Right"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Grid.Row="3"
+                                                           Grid.Column="4"
+                                                           HorizontalAlignment="Stretch"
+                                                           FontWeight="DemiBold"
+                                                           Text="Zip Code:"
+                                                           TextAlignment="Right"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Grid.Row="4"
+                                                           HorizontalAlignment="Stretch"
+                                                           FontWeight="DemiBold"
+                                                           Text="APO / FPO:"
+                                                           TextAlignment="Right"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Grid.Row="5"
+                                                           HorizontalAlignment="Stretch"
+                                                           FontWeight="DemiBold"
+                                                           Text="OSS Accreditation Date:"
+                                                           TextAlignment="Right"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <CheckBox Grid.Row="6"
+                                                          Grid.ColumnSpan="2"
+                                                          Style="{StaticResource CustomCheckBox}">
+                                                    <TextBlock Text="Is Baseline Location"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                </CheckBox>
+                                                <CheckBox Grid.Row="6"
+                                                          Grid.Column="2"
+                                                          Grid.ColumnSpan="2"
+                                                          Style="{StaticResource CustomCheckBox}">
+                                                    <TextBlock Text="Is Deployment Location"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                </CheckBox>
+                                                <CheckBox Grid.Row="6"
+                                                          Grid.Column="4"
+                                                          Grid.ColumnSpan="2"
+                                                          Style="{StaticResource CustomCheckBox}">
+                                                    <TextBlock Text="Is Test Location"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                </CheckBox>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </DataGrid.RowDetailsTemplate>
+                                </DataGrid>
+                            </StackPanel>
+                        </Expander>
+                        <Expander Margin="5,0,5,5"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  BorderThickness="0"
+                                  IsExpanded="True">
+                            <Expander.Header>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="Authorization Information"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                            </Expander.Header>
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <ComboBox Margin="0,0,5,5"
+                                              Controls:TextBoxHelper.Watermark="Security Plan Approval Status"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <DatePicker Grid.Column="1"
+                                                Margin="0,0,0,5"
+                                                Controls:TextBoxHelper.Watermark="Security Plan Approval Date"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
+                                    <ComboBox Grid.Row="1"
+                                              Margin="0,0,5,5"
+                                              Controls:TextBoxHelper.Watermark="Authorization Status"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <DatePicker Grid.Row="1"
+                                                Grid.Column="1"
+                                                Margin="0,0,0,5"
+                                                Controls:TextBoxHelper.Watermark="Authorization Date"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
+                                    <CheckBox Grid.Row="2"
+                                              Margin="0,5,5,6"
+                                              VerticalAlignment="Bottom"
+                                              Style="{StaticResource CustomCheckBox}">
+                                        <TextBlock Text="Has Authorization Documentation"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </CheckBox>
+                                    <DatePicker Grid.Row="2"
+                                                Grid.Column="1"
+                                                Margin="0,0,0,5"
+                                                Controls:TextBoxHelper.Watermark="Authorization Termination Date"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
+                                    <ComboBox Grid.Row="3"
+                                              Margin="0,0,5,5"
+                                              Controls:TextBoxHelper.Watermark="RMF Activity"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <DatePicker Grid.Row="3"
+                                                Grid.Column="1"
+                                                Margin="0,0,0,5"
+                                                Controls:TextBoxHelper.Watermark="Assessment Completion Date"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
+                                </Grid>
+                                <DataGrid MinHeight="100"
+                                          Margin="0,0,0,5"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Width="*">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="Authorization Condition"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Width="*">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="Required Completion Date"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                        <DataGridCheckBoxColumn Width="Auto">
+                                            <DataGridCheckBoxColumn.Header>
+                                                <TextBlock Text="Completed"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </DataGridCheckBoxColumn.Header>
+                                        </DataGridCheckBoxColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </Expander>
+                        <Expander Margin="5,0,5,5"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  BorderThickness="0"
+                                  IsExpanded="True">
+                            <Expander.Header>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="FISMA"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                            </Expander.Header>
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <CheckBox Grid.Row="0"
+                                              Margin="0,5,5,6"
+                                              Style="{StaticResource CustomCheckBox}">
+                                        <TextBlock Text="FISMA Reportable"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </CheckBox>
+                                    <CheckBox Grid.Row="0"
+                                              Grid.Column="1"
+                                              Margin="0,5,0,6"
+                                              Style="{StaticResource CustomCheckBox}">
+                                        <TextBlock Text="ERS Reportable"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </CheckBox>
+                                    <CheckBox Grid.Row="1"
+                                              Margin="0,5,5,6"
+                                              VerticalAlignment="Bottom"
+                                              Style="{StaticResource CustomCheckBox}">
+                                        <TextBlock Text="Security Review Completed"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </CheckBox>
+                                    <DatePicker Grid.Row="1"
+                                                Grid.Column="1"
+                                                Margin="0,0,0,5"
+                                                Controls:TextBoxHelper.Watermark="Security Review Date"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
+                                    <CheckBox Grid.Row="2"
+                                              Margin="0,5,5,6"
+                                              VerticalAlignment="Bottom"
+                                              Style="{StaticResource CustomCheckBox}">
+                                        <TextBlock Text="Privacy Impact Assessment (PIA) Required"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </CheckBox>
+                                    <DatePicker Grid.Row="2"
+                                                Grid.Column="1"
+                                                Margin="0,0,0,5"
+                                                Controls:TextBoxHelper.Watermark="PIA Completion Date"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
+                                    <CheckBox Grid.Row="3"
+                                              Margin="0,5,5,6"
+                                              VerticalAlignment="Bottom"
+                                              Style="{StaticResource CustomCheckBox}">
+                                        <TextBlock Text="eAuthentication Risk Assessent (ERA) Required"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </CheckBox>
+                                    <DatePicker Grid.Row="3"
+                                                Grid.Column="1"
+                                                Margin="0,0,0,5"
+                                                Controls:TextBoxHelper.Watermark="ERA Completion Date"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <CheckBox Grid.ColumnSpan="2"
+                                              Margin="0,15,5,6"
+                                              Style="{StaticResource CustomCheckBox}">
+                                        <TextBlock Text="Contingency Plan Required"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </CheckBox>
+                                    <CheckBox x:Name="contingencyPlanTestedCheckBox"
+                                              Grid.Column="2"
+                                              Margin="0,15,5,6"
+                                              Style="{StaticResource CustomCheckBox}">
+                                        <TextBlock Text="Contingency Plan Tested"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </CheckBox>
+                                    <DatePicker Grid.Column="3"
+                                                Margin="0,0,0,5"
+                                                Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                Controls:TextBoxHelper.Watermark="Contingency Plan Test Date"
+                                                Visibility="{Binding ElementName=contingencyPlanTestedCheckBox, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                </Grid>
+                            </StackPanel>
+                        </Expander>
+                        <Expander Margin="5,0,5,5"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  BorderThickness="0"
+                                  IsExpanded="True">
+                            <Expander.Header>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="Business Information"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                            </Expander.Header>
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <ComboBox Margin="0,0,5,5"
+                                              Controls:TextBoxHelper.Watermark="Mission Criticality"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <ComboBox Grid.Column="1"
+                                              Margin="0,0,0,5"
+                                              Controls:TextBoxHelper.Watermark="Governing Mission Area"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <TextBox Grid.Row="1"
+                                             Grid.ColumnSpan="2"
+                                             Margin="0,0,0,5"
+                                             Controls:TextBoxHelper.Watermark="Owning DoD Component"
+                                             Style="{StaticResource HeaderedTextBoxStyle}" />
+                                    <ComboBox Grid.Row="2"
+                                              Margin="0,0,5,5"
+                                              Controls:TextBoxHelper.Watermark="Acquisition Category"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <ComboBox Grid.Row="2"
+                                              Grid.Column="1"
+                                              Margin="0,0,0,5"
+                                              Controls:TextBoxHelper.Watermark="Software Category"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                </Grid>
+                                <ComboBox Margin="0,0,0,5"
+                                          Controls:TextBoxHelper.Watermark="System Lifecycle / Acquisition Phase"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <ComboBox Margin="0,0,0,5"
+                                          Controls:TextBoxHelper.Watermark="System Ownership &amp; Control"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <TextBox Height="100"
+                                         Margin="0,0,0,5"
+                                         Controls:TextBoxHelper.Watermark="Additional Information"
+                                         AcceptsReturn="True"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                            </StackPanel>
+                        </Expander>
+                        <Expander Margin="5,0,5,5"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  BorderThickness="0"
+                                  IsExpanded="True">
+                            <Expander.Header>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="External Security Services"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                            </Expander.Header>
+                            <DataGrid MinHeight="100"
+                                      Margin="0,0,0,5"
+                                      Style="{StaticResource GreyBorderedDataGridStyle}">
+                                <DataGrid.Columns>
+                                    <DataGridCheckBoxColumn />
+                                    <DataGridTextColumn Width="*">
+                                        <DataGridTextColumn.Header>
+                                            <TextBlock Text="External Security Service"
+                                                       TextTrimming="CharacterEllipsis" />
+                                        </DataGridTextColumn.Header>
+                                    </DataGridTextColumn>
+                                </DataGrid.Columns>
+                                <DataGrid.RowDetailsTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <TextBox Margin="0,0,0,5"
+                                                     AcceptsReturn="True"
+                                                     Text="Service Description"
+                                                     TextWrapping="Wrap" />
+                                            <TextBox Grid.Row="1"
+                                                     Margin="0,0,0,5"
+                                                     AcceptsReturn="True"
+                                                     Text="Security Requirements Description"
+                                                     TextWrapping="Wrap" />
+                                            <TextBox Grid.Row="2"
+                                                     Margin="0,0,0,5"
+                                                     AcceptsReturn="True"
+                                                     Text="Risk Determination"
+                                                     TextWrapping="Wrap" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </DataGrid.RowDetailsTemplate>
+                            </DataGrid>
+                        </Expander>
+                        <Expander Margin="5,0,5,5"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  BorderThickness="0"
+                                  IsExpanded="True">
+                            <Expander.Header>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="Connectivity"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                            </Expander.Header>
+                            <DataGrid MinHeight="100"
+                                      Margin="0,0,0,5"
+                                      Style="{StaticResource GreyBorderedDataGridStyle}">
+                                <DataGrid.Columns>
+                                    <DataGridCheckBoxColumn />
+                                    <DataGridComboBoxColumn Width="*">
+                                        <DataGridComboBoxColumn.Header>
+                                            <TextBlock Text="Connectivity Type"
+                                                       TextTrimming="CharacterEllipsis" />
+                                        </DataGridComboBoxColumn.Header>
+                                    </DataGridComboBoxColumn>
+                                    <DataGridComboBoxColumn Width="Auto">
+                                        <DataGridComboBoxColumn.Header>
+                                            <TextBlock Text="Own Circuit"
+                                                       TextTrimming="CharacterEllipsis" />
+                                        </DataGridComboBoxColumn.Header>
+                                    </DataGridComboBoxColumn>
+                                    <DataGridComboBoxColumn Width="*">
+                                        <DataGridComboBoxColumn.Header>
+                                            <TextBlock Text="CCSD Location"
+                                                       TextTrimming="CharacterEllipsis" />
+                                        </DataGridComboBoxColumn.Header>
+                                    </DataGridComboBoxColumn>
+                                    <DataGridTextColumn>
+                                        <DataGridTextColumn.Header>
+                                            <TextBlock Text="CCSD Number"
+                                                       TextTrimming="CharacterEllipsis" />
+                                        </DataGridTextColumn.Header>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn>
+                                        <DataGridTextColumn.Header>
+                                            <TextBlock Text="CCSD Support"
+                                                       TextTrimming="CharacterEllipsis" />
+                                        </DataGridTextColumn.Header>
+                                    </DataGridTextColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Expander>
+                        <Expander Margin="5,0"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  BorderThickness="0"
+                                  IsExpanded="True">
+                            <Expander.Header>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="ATC / IATC"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                            </Expander.Header>
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <DatePicker Margin="0,0,5,5"
+                                                Controls:TextBoxHelper.Watermark="ATC / IATC Granted Date"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
+                                    <DatePicker Grid.Column="1"
+                                                Margin="0,0,5,5"
+                                                Controls:TextBoxHelper.Watermark="ATC / IATC Expiration Date"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
+                                    <DatePicker Grid.Column="2"
+                                                Margin="0,0,0,5"
+                                                Controls:TextBoxHelper.Watermark="CND Service Provider"
+                                                Style="{StaticResource HeaderedDatePickerStyle}" />
+                                </Grid>
+                                <DataGrid MinHeight="100"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridCheckBoxColumn />
+                                        <DataGridTextColumn Width="*">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="Pending Item"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Width="*">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="Pending Due Date Item"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </Expander>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Categorize"
+                     Style="{StaticResource CustomVerticalMetroTabItem}">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <Expander Margin="5,0,5,5"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  BorderThickness="0"
+                                  IsExpanded="True">
+                            <Expander.Header>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="RMF Team Members"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                            </Expander.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <ComboBox Margin="0,0,5,5"
+                                              Controls:TextBoxHelper.Watermark="Program Manager (PM)"
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <ComboBox Margin="0,0,5,5"
+                                              Controls:TextBoxHelper.Watermark="Information System Security Manager (ISSM)"
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <ComboBox Margin="0,0,5,5"
+                                              Controls:TextBoxHelper.Watermark="Information System Security Engineer (ISSE)"
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <ComboBox Margin="0,0,5,5"
+                                              Controls:TextBoxHelper.Watermark="(Functional/Navy) Authorizing Official ([F/N]AO)"
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <ComboBox Margin="0,0,5,5"
+                                              Controls:TextBoxHelper.Watermark="(Functional) Security Control Assessor ([F]SCA)"
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <ComboBox Margin="0,0,5,5"
+                                              Controls:TextBoxHelper.Watermark="Validator"
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <ComboBox Margin="0,0,0,5"
+                                              Controls:TextBoxHelper.Watermark="Information System Owner (ISO)"
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <ComboBox Margin="0,0,0,5"
+                                              Controls:TextBoxHelper.Watermark="User Representative"
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <ComboBox Margin="0,0,0,5"
+                                              Controls:TextBoxHelper.Watermark="Package Submitting Office (PSO) Representative"
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <ComboBox Margin="0,0,0,5"
+                                              Controls:TextBoxHelper.Watermark="(F/N)AO CSA"
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <ComboBox Margin="0,0,0,5"
+                                              Controls:TextBoxHelper.Watermark="(F)SCA Liaison"
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                </StackPanel>
+                            </Grid>
+                        </Expander>
+                        <Expander Margin="5,0,5,5"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  BorderThickness="0"
+                                  IsExpanded="True">
+                            <Expander.Header>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="Additional Considerations"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                            </Expander.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <ComboBox Margin="0,0,5,5"
+                                              Controls:TextBoxHelper.Watermark="System Classification"
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <ComboBox x:Name="releasabilityComboBox"
+                                              Margin="0,0,5,5"
+                                              Controls:TextBoxHelper.Watermark="Information Releasability"
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <DataGrid Grid.Row="0"
+                                              Grid.Column="1"
+                                              MinHeight="100"
+                                              Margin="0,0,5,5"
+                                              Style="{StaticResource GreyBorderedDataGridStyle}">
+                                        <DataGrid.Columns>
+                                            <DataGridCheckBoxColumn />
+                                            <DataGridTextColumn Width="*">
+                                                <DataGridTextColumn.Header>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0"
+                                                                   Text="Required Overlay(s)"
+                                                                   TextTrimming="CharacterEllipsis" />
+                                                        <Canvas Grid.Column="1"
+                                                                VerticalAlignment="Stretch">
+                                                            <Canvas.ToolTip>
+                                                                <TextBlock Text="Select all overlays required for the system (if applicable)"
+                                                                           TextWrapping="Wrap" />
+                                                            </Canvas.ToolTip>
+                                                            <IconPacks:PackIconFontAwesomeLight Grid.Column="1"
+                                                                                                Height="14"
+                                                                                                Margin="5,0"
+                                                                                                VerticalAlignment="Center"
+                                                                                                Kind="QuestionCircle" />
+                                                        </Canvas>
+                                                    </Grid>
+                                                </DataGridTextColumn.Header>
+                                            </DataGridTextColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                    <DataGrid Grid.Row="0"
+                                              Grid.Column="1"
+                                              MinHeight="100"
+                                              Margin="0,0,5,5"
+                                              Style="{StaticResource GreyBorderedDataGridStyle}">
+                                        <DataGrid.Columns>
+                                            <DataGridCheckBoxColumn />
+                                            <DataGridTextColumn Width="*">
+                                                <DataGridTextColumn.Header>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0"
+                                                                   Text="Applicable Executive Order(s)"
+                                                                   TextTrimming="CharacterEllipsis" />
+                                                        <Canvas Grid.Column="1"
+                                                                VerticalAlignment="Stretch">
+                                                            <Canvas.ToolTip>
+                                                                <TextBlock Text="Select all executive orders or overarching policies that define the impact of data loss / breach (if applicable)"
+                                                                           TextWrapping="Wrap" />
+                                                            </Canvas.ToolTip>
+                                                            <IconPacks:PackIconFontAwesomeLight Grid.Column="1"
+                                                                                                Height="14"
+                                                                                                Margin="5,0"
+                                                                                                VerticalAlignment="Center"
+                                                                                                Kind="QuestionCircle" />
+                                                        </Canvas>
+                                                    </Grid>
+                                                </DataGridTextColumn.Header>
+                                            </DataGridTextColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <ComboBox Margin="0,0,0,5"
+                                              Controls:TextBoxHelper.Watermark="Information Classification"
+                                              IsEditable="True"
+                                              Style="{StaticResource HeaderedComboBoxStyle}" />
+                                    <CheckBox x:Name="clearanceRequirementCheckBox"
+                                              Margin="0,16,0,10"
+                                              Style="{StaticResource CustomCheckBox}">
+                                        <TextBlock Text="Clearance requirements vary by role"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </CheckBox>
+                                    <TextBox Height="100"
+                                             Margin="0,0,0,5"
+                                             Controls:TextBoxHelper.Watermark="Please describe any and all special clearance requirements"
+                                             TextWrapping="Wrap"
+                                             Visibility="{Binding ElementName=clearanceRequirementCheckBox, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    <DataGrid Grid.Row="0"
+                                              Grid.Column="1"
+                                              MinHeight="100"
+                                              Margin="0,0,0,5"
+                                              Style="{StaticResource GreyBorderedDataGridStyle}">
+                                        <DataGrid.Columns>
+                                            <DataGridCheckBoxColumn />
+                                            <DataGridTextColumn Width="*">
+                                                <DataGridTextColumn.Header>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0"
+                                                                   Text="Interconnected System(s)"
+                                                                   TextTrimming="CharacterEllipsis" />
+                                                        <Canvas Grid.Column="1"
+                                                                VerticalAlignment="Stretch">
+                                                            <Canvas.ToolTip>
+                                                                <TextBlock Text="Select all interconnected systems which could elevate the impact level (if applicable)"
+                                                                           TextWrapping="Wrap" />
+                                                            </Canvas.ToolTip>
+                                                            <IconPacks:PackIconFontAwesomeLight Grid.Column="1"
+                                                                                                Height="14"
+                                                                                                Margin="5,0"
+                                                                                                VerticalAlignment="Center"
+                                                                                                Kind="QuestionCircle" />
+                                                        </Canvas>
+                                                    </Grid>
+                                                </DataGridTextColumn.Header>
+                                            </DataGridTextColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                    <DataGrid Grid.Row="0"
+                                              Grid.Column="1"
+                                              MinHeight="100"
+                                              Margin="0,0,0,5"
+                                              Style="{StaticResource GreyBorderedDataGridStyle}">
+                                        <DataGrid.Columns>
+                                            <DataGridCheckBoxColumn />
+                                            <DataGridTextColumn Width="*">
+                                                <DataGridTextColumn.Header>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0"
+                                                                   Text="Joint Authorization Organization(s)"
+                                                                   TextTrimming="CharacterEllipsis" />
+                                                        <Canvas Grid.Column="1"
+                                                                VerticalAlignment="Stretch">
+                                                            <Canvas.ToolTip>
+                                                                <TextBlock Text="Select all organizations involved in the Joint Authorization (if applicable)"
+                                                                           TextWrapping="Wrap" />
+                                                            </Canvas.ToolTip>
+                                                            <IconPacks:PackIconFontAwesomeLight Grid.Column="1"
+                                                                                                Height="14"
+                                                                                                Margin="5,0"
+                                                                                                VerticalAlignment="Center"
+                                                                                                Kind="QuestionCircle" />
+                                                        </Canvas>
+                                                    </Grid>
+                                                </DataGridTextColumn.Header>
+                                            </DataGridTextColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </StackPanel>
+                                <CheckBox Grid.Row="1"
+                                          Grid.ColumnSpan="2"
+                                          Margin="0,0,5,5"
+                                          Style="{StaticResource CustomCheckBox}">
+                                    <TextBlock Text="Data loss / breach from multiple sources creates an aggregation condition that heightens risk"
+                                               TextWrapping="Wrap" />
+                                </CheckBox>
+                            </Grid>
+                        </Expander>
+                        <Expander Margin="5,0,5,5"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  BorderThickness="0"
+                                  IsExpanded="True">
+                            <Expander.Header>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="National Security System (NSS) Determination"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                            </Expander.Header>
+                            <StackPanel>
+                                <CheckBox Margin="0,0,0,5"
+                                          Style="{StaticResource CustomCheckBox}">
+                                    <TextBlock Text="Involves intelligence activities"
+                                               TextWrapping="Wrap" />
+
+                                </CheckBox>
+                                <CheckBox Margin="0,0,0,5"
+                                          Style="{StaticResource CustomCheckBox}">
+                                    <TextBlock Text="Involves cryptologic activities relating to national security"
+                                               TextWrapping="Wrap" />
+                                </CheckBox>
+                                <CheckBox Margin="0,0,0,5"
+                                          Style="{StaticResource CustomCheckBox}">
+                                    <TextBlock Text="Involves command and control of military forces"
+                                               TextWrapping="Wrap" />
+                                </CheckBox>
+                                <CheckBox Margin="0,0,0,5"
+                                          Style="{StaticResource CustomCheckBox}">
+                                    <TextBlock Text="Involves equipment that is an integral part of a weapon or weapons system"
+                                               TextWrapping="Wrap" />
+                                </CheckBox>
+                                <CheckBox Margin="0,0,0,5"
+                                          Style="{StaticResource CustomCheckBox}">
+                                    <TextBlock Text="Is critical to the direct fulfillment of military or intelligence missions"
+                                               TextWrapping="Wrap" />
+                                </CheckBox>
+                                <CheckBox Margin="0,0,0,5"
+                                          Style="{StaticResource CustomCheckBox}">
+                                    <TextBlock Text="Information system is used for routine administrative and business applications (e.g. payroll, finance, logistics, and personnel management applications)"
+                                               TextWrapping="Wrap" />
+                                </CheckBox>
+                                <CheckBox Margin="0,0,0,5"
+                                          Style="{StaticResource CustomCheckBox}">
+                                    <TextBlock Text="Information System is protected at all times by procedures established for information that has been specifically authorized under criteria established by an Executive Order or an Act of Congress to be kept classified in the interest of national defense or foreign policy"
+                                               TextWrapping="Wrap" />
+                                </CheckBox>
+                                <Label Style="{StaticResource SecondLevelHeaderStyle}">
+                                    <TextBlock Text="NSS Determination: "
+                                               TextWrapping="Wrap" />
+                                </Label>
+                            </StackPanel>
+                        </Expander>
+                        <Expander Margin="5,0,5,5"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  BorderThickness="0"
+                                  IsExpanded="True">
+                            <Expander.Header>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="Information Types Identification"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                            </Expander.Header>
+                            <DataGrid Grid.Row="0"
+                                      Grid.Column="1"
+                                      MinHeight="100"
+                                      Margin="0,0,0,5"
+                                      Style="{StaticResource GreyBorderedDataGridStyle}">
+                                <DataGrid.Columns>
+                                    <DataGridCheckBoxColumn />
+                                    <DataGridTextColumn Width=".25*">
+                                        <DataGridTextColumn.Header>
+                                            <TextBlock Grid.Column="0"
+                                                       Text="Information Type Identifier"
+                                                       TextTrimming="CharacterEllipsis" />
+                                        </DataGridTextColumn.Header>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Width=".25*">
+                                        <DataGridTextColumn.Header>
+                                            <TextBlock Grid.Column="0"
+                                                       Text="Information Type Name"
+                                                       TextTrimming="CharacterEllipsis" />
+                                        </DataGridTextColumn.Header>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Width=".5*">
+                                        <DataGridTextColumn.Header>
+                                            <TextBlock Grid.Column="0"
+                                                       Text="Applicability Description"
+                                                       TextTrimming="CharacterEllipsis" />
+                                        </DataGridTextColumn.Header>
+                                    </DataGridTextColumn>
+                                </DataGrid.Columns>
+                                <DataGrid.RowDetailsTemplate>
+                                    <DataTemplate>
+                                        <DataGrid>
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn>
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock Grid.Column="0"
+                                                                   Text="Key"
+                                                                   TextTrimming="CharacterEllipsis" />
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn>
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock Grid.Column="0"
+                                                                   Text="Confidentiality Breach Impact"
+                                                                   TextTrimming="CharacterEllipsis" />
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn>
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock Grid.Column="0"
+                                                                   Text="Integrity Breach Impact"
+                                                                   TextTrimming="CharacterEllipsis" />
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn>
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock Grid.Column="0"
+                                                                   Text="Availability Breach Impact"
+                                                                   TextTrimming="CharacterEllipsis" />
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </DataTemplate>
+                                </DataGrid.RowDetailsTemplate>
+                            </DataGrid>
+                        </Expander>
+                        <Expander Margin="5,0"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  BorderThickness="0"
+                                  IsExpanded="True">
+                            <Expander.Header>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="Overall System Security Category"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                            </Expander.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <Label HorizontalAlignment="Stretch"
+                                           Style="{StaticResource SecondLevelHeaderStyle}">
+                                        <TextBlock HorizontalAlignment="Center"
+                                                   Text="Confidentiality"
+                                                   TextAlignment="Center"
+                                                   TextWrapping="Wrap" />
+                                    </Label>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <Label HorizontalAlignment="Stretch"
+                                           Style="{StaticResource SecondLevelHeaderStyle}">
+                                        <TextBlock HorizontalAlignment="Center"
+                                                   Text="Integrity"
+                                                   TextAlignment="Center"
+                                                   TextWrapping="Wrap" />
+                                    </Label>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <Label HorizontalAlignment="Stretch"
+                                           Style="{StaticResource SecondLevelHeaderStyle}">
+                                        <TextBlock HorizontalAlignment="Center"
+                                                   Text="Availability"
+                                                   TextAlignment="Center"
+                                                   TextWrapping="Wrap" />
+                                    </Label>
+                                </StackPanel>
+                            </Grid>
+                        </Expander>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Select"
+                     Style="{StaticResource CustomVerticalMetroTabItem}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+
+                        <DataGrid MinHeight="500"
+                                  Margin="5,0"
+                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                            <DataGrid.Columns>
+                                <DataGridCheckBoxColumn />
+                                <DataGridTextColumn Width="*">
+                                    <DataGridTextColumn.Header>
+                                        <TextBlock Text="Control Family"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*">
+                                    <DataGridTextColumn.Header>
+                                        <TextBlock Text="Control Number"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*">
+                                    <DataGridTextColumn.Header>
+                                        <TextBlock Text="Enhancement"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="*">
+                                    <DataGridTextColumn.Header>
+                                        <TextBlock Text="Title"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <Label HorizontalAlignment="Stretch"
+                                                   HorizontalContentAlignment="Right">
+                                                <TextBlock HorizontalAlignment="Stretch"
+                                                           FontWeight="DemiBold"
+                                                           Text="Control Text:"
+                                                           TextAlignment="Right"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </Label>
+                                            <Label Grid.Row="1"
+                                                   HorizontalAlignment="Stretch"
+                                                   HorizontalContentAlignment="Right">
+                                                <TextBlock HorizontalAlignment="Stretch"
+                                                           FontWeight="DemiBold"
+                                                           Text="Supplemental Guidance:"
+                                                           TextAlignment="Right"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </Label>
+                                        </Grid>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <CheckBox Margin="5,5,5,10"
+                                                      Style="{StaticResource CustomCheckBox}">
+                                                <TextBlock Text="Inheritable"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </CheckBox>
+                                            <CheckBox x:Name="inheritedCheckBox"
+                                                      Grid.Column="1"
+                                                      Margin="0,5,5,10"
+                                                      Style="{StaticResource CustomCheckBox}">
+                                                <TextBlock Text="Inherited"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </CheckBox>
+                                            <ComboBox Grid.Column="2"
+                                                      Margin="0,0,0,5"
+                                                      Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                      Controls:TextBoxHelper.Watermark="Inherited From" />
+                                        </Grid>
+                                        <TextBox Grid.Row="2"
+                                                 Grid.ColumnSpan="2"
+                                                 Margin="5,0,0,5"
+                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                                 Controls:TextBoxHelper.Watermark="Implementation Notes"
+                                                 AcceptsReturn="True" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
+                        </DataGrid>
+                    </StackPanel>
+                    <Expander Grid.Column="1"
+                              Background="{DynamicResource WindowBackgroundBrush}"
+                              BorderThickness="0"
+                              ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                                                Margin="5"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                Kind="CheckAll">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock Grid.Column="1"
+                                               Margin="5,0"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource LabelTextBrush}"
+                                               Text="Bulk Process"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                        <StackPanel>
+                            <CheckBox Margin="0,0,5,5"
+                                      Style="{StaticResource CustomCheckBox}">
+                                <TextBlock Text="Inheritable"
+                                           TextTrimming="CharacterEllipsis" />
+                            </CheckBox>
+                            <CheckBox x:Name="bulkInheritedCheckBox"
+                                      Margin="0,0,5,5"
+                                      Style="{StaticResource CustomCheckBox}">
+                                <TextBlock Text="Inherited"
+                                           TextTrimming="CharacterEllipsis" />
+                            </CheckBox>
+                            <ComboBox Margin="0,0,5,5"
+                                      Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                      Controls:TextBoxHelper.Watermark="Inherited From"
+                                      Visibility="{Binding ElementName=bulkInheritedCheckBox, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            <ComboBox Margin="0,0,5,5"
+                                      Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                      Controls:TextBoxHelper.Watermark="Implementation Status" />
+                            <DatePicker Margin="0,0,5,5"
+                                        Controls:TextBoxHelper.Watermark="Implementation Date" />
+                            <TextBox Width="200"
+                                     Margin="0,0,5,5"
+                                     Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                     Controls:TextBoxHelper.Watermark="Implementation Notes"
+                                     AcceptsReturn="True" />
+                        </StackPanel>
+                    </Expander>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Implement"
+                     Style="{StaticResource CustomVerticalMetroTabItem}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <DataGrid Margin="5,0"
+                              Style="{StaticResource GreyBorderedDataGridStyle}">
+                        <DataGrid.Columns>
+                            <DataGridCheckBoxColumn />
+                            <DataGridTextColumn Width="*">
+                                <DataGridTextColumn.Header>
+                                    <Label>
+                                        <TextBlock Text="Asset Name"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </Label>
+                                </DataGridTextColumn.Header>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="*">
+                                <DataGridTextColumn.Header>
+                                    <Label>
+                                        <TextBlock Text="Applicable Testing"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </Label>
+                                </DataGridTextColumn.Header>
+                            </DataGridTextColumn>
+                            <DataGridCheckBoxColumn Width="Auto">
+                                <DataGridCheckBoxColumn.Header>
+                                    <Label>
+                                        <TextBlock Text="Completed"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </Label>
+                                </DataGridCheckBoxColumn.Header>
+                            </DataGridCheckBoxColumn>
+                            <DataGridTextColumn Width="*">
+                                <DataGridTextColumn.Header>
+                                    <Label>
+                                        <TextBlock Text="Completion Date"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </Label>
+                                </DataGridTextColumn.Header>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Expander Grid.Column="1"
+                              Background="{DynamicResource WindowBackgroundBrush}"
+                              BorderThickness="0"
+                              ExpandDirection="Right">
+                        <Expander.Header>
+                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                                <Label.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Label.LayoutTransform>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <IconPacks:PackIconMaterial Grid.Column="0"
+                                                                Margin="5"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                Kind="CheckAll">
+                                        <IconPacks:PackIconMaterial.LayoutTransform>
+                                            <RotateTransform Angle="-90" />
+                                        </IconPacks:PackIconMaterial.LayoutTransform>
+                                    </IconPacks:PackIconMaterial>
+                                    <TextBlock Grid.Column="1"
+                                               Margin="5,0"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource LabelTextBrush}"
+                                               Text="Bulk Process"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Label>
+                        </Expander.Header>
+                        <StackPanel>
+                            <CheckBox Margin="0,0,5,5"
+                                      Style="{StaticResource CustomCheckBox}">
+                                <TextBlock Text="Completed" />
+                            </CheckBox>
+                            <DatePicker Margin="0,0,5,5"
+                                        Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                        Controls:TextBoxHelper.Watermark="Completion Date" />
+                        </StackPanel>
+                    </Expander>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Assess"
+                     Style="{StaticResource CustomVerticalMetroTabItem}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <Expander Margin="5,0,5,5"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  BorderThickness="0"
+                                  IsExpanded="True">
+                            <Expander.Header>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="Background"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                            </Expander.Header>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           Margin="0,0,0,5"
+                                           TextWrapping="Wrap">
+                                    Discuss the background of the system and its purpose.
+                                    Describe the need that the system is intended to meet and idntify any expected interfaces with other systems.
+                                    Enter a high-level summary paragraph describing the design and how it integrates with any existing systems,
+                                    addressing inheritance and specific defense-in-depth controls.
+                                </TextBlock>
+                                <TextBox Grid.Row="1"
+                                         Height="100"
+                                         Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                         Controls:TextBoxHelper.Watermark="Background"
+                                         AcceptsReturn="True"
+                                         TextWrapping="Wrap" />
+                            </Grid>
+                        </Expander>
+                        <Expander Margin="5,0,5,5"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  BorderThickness="0"
+                                  IsExpanded="True">
+                            <Expander.Header>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="Scope"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                            </Expander.Header>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           Margin="0,0,0,5"
+                                           TextWrapping="Wrap">
+                                    Describe which system components (in broad terms) will be tested and
+                                    certified during execution of the security test plan; a full list of
+                                    components will appear later in the &quot;Testing Architecture&quot; section.
+                                    Include deviations or exceptions related to representative sampling,
+                                    technical problems with automated testing of devices, etc. (details
+                                    will be discussed below).  Reference any external testing completed
+                                    or required, such as Cyber Security Inspection (CSI) or Web Risk
+                                    Assessment (WRA) results, if applicable.
+                                </TextBlock>
+                                <TextBox Grid.Row="1"
+                                         Height="100"
+                                         Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                         Controls:TextBoxHelper.Watermark="Background"
+                                         AcceptsReturn="True"
+                                         TextWrapping="Wrap" />
+                            </Grid>
+                        </Expander>
+                        <Expander Margin="5,0,5,5"
+                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  BorderThickness="0"
+                                  IsExpanded="True">
+                            <Expander.Header>
+                                <Label Style="{StaticResource TopLevelHeaderStyle}">
+                                    <TextBlock Text="References"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Label>
+                            </Expander.Header>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           Margin="0,0,0,5"
+                                           TextWrapping="Wrap">
+                                    List any reference documents that were used to support testing and prepare
+                                    this plan.
+                                </TextBlock>
+                                <DataGrid Grid.Row="1"
+                                          Height="100"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridCheckBoxColumn />
+                                        <DataGridTextColumn Width="*">
+                                            <DataGridTextColumn.Header>
+                                                <TextBlock Text="Reference"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </DataGridTextColumn.Header>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </Expander>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Authorize"
+                     Style="{StaticResource CustomVerticalMetroTabItem}" />
+            <TabItem Header="Monitor"
+                     Style="{StaticResource CustomVerticalMetroTabItem}" />
+        </Controls:MetroAnimatedSingleRowTabControl>
+    </Grid>
+</UserControl>

@@ -1,0 +1,2 @@
+﻿INSERT INTO ReportGroupUserSettings
+VALUES (NULL, @RequiredReport_ID, @Group_ID, @UserName, 'True');

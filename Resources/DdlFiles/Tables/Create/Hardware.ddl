@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS Hardware (
+    Hardware_ID INTEGER PRIMARY KEY,
+    DisplayedHostName NVARCHAR (50),
+    DiscoveredHostName NVARCHAR (50),
+    FQDN NVARCHAR (500),
+    NetBIOS NVARCHAR (300),
+    ScanIP NVARCHAR (50),
+    Found21745 NVARCHAR (5),
+    Found26917 NVARCHAR (5),
+    IsVirtualServer NVARCHAR (5),
+    NIAP_Level NVARCHAR (25),
+    Manufacturer NVARCHAR (25),
+    ModelNumber NVARCHAR (50),
+    IsIA_Enabled NVARCHAR (5),
+    SerialNumber NVARCHAR (50),
+    Role NVARCHAR (25),
+    LifecycleStatus_ID INTEGER,
+    OperatingSystem NVARCHAR (100),
+    FOREIGN KEY (LifecycleStatus_ID) REFERENCES LifecycleStatuses(LifecycleStatus_ID),
+    UNIQUE (DiscoveredHostName) ON CONFLICT IGNORE
+);

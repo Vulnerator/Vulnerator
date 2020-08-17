@@ -1,0 +1,2 @@
+﻿INSERT INTO ReportSeverityUserSettings
+VALUES (NULL, @RequiredReport_ID, @UserName, @Severity, 'True' );

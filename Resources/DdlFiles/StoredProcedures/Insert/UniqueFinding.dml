@@ -1,0 +1,53 @@
+﻿INSERT INTO UniqueFindings
+VALUES (NULL,
+        @InstanceIdentifier,
+        @ToolGeneratedOutput,
+        @Comments,
+        @FindingDetails,
+        @FirstDiscovered,
+        @LastObserved,
+        @DeltaAnalysisIsRequired,
+        (
+            SELECT FindingType_ID
+            FROM FindingTypes
+            WHERE FindingType = @FindingType
+        ),
+        (
+            SELECT FindingSourceFile_ID
+            FROM UniqueFindingsSourceFiles
+            WHERE FindingSourceFileName = @FindingSourceFileName
+        ),
+        @Status,
+        (
+            SELECT Vulnerability_ID
+            FROM Vulnerabilities
+            WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier
+              AND VulnerabilityVersion = @VulnerabilityVersion
+              AND VulnerabilityRelease = @VulnerabilityRelease
+        ),
+        (
+            SELECT VulnerabilitySource_ID
+            FROM VulnerabilitySources
+            WHERE SourceName = @SourceName
+              AND SourceVersion = @SourceVersion
+              AND SourceRelease = @SourceRelease
+        ),
+        (
+            SELECT Hardware_ID
+            FROM Hardware
+            WHERE DiscoveredHostName = @DiscoveredHostName
+        ),
+        (
+            SELECT Software_ID
+            FROM Software
+            WHERE DiscoveredSoftwareName = @DiscoveredSoftwareName
+        ),
+        @SeverityOverride,
+        @SeverityOverrideJustification,
+        @TechnologyArea,
+        @WebDB_Site,
+        @WebDB_Instance,
+        @Classification,
+        @CVSS_EnvironmentalScore,
+        @CVSS_EnvironmentalVector,
+        @MitigationOrCondition_ID);

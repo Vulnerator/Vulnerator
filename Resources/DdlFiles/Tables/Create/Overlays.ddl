@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS Overlays (
+    Overlay_ID INTEGER PRIMARY KEY,
+    OverlayName NVARCHAR (100) NOT NULL
+);
