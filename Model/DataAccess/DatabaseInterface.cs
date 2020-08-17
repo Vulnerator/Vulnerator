@@ -670,10 +670,17 @@ namespace Vulnerator.Model.DataAccess
                     {
                         bool versionOutdated = false;
                         bool releaseOutdated = false;
-                        if (int.Parse(sqliteDataReader["VulnerabilityVersion"].ToString()) <
-                            int.Parse(sqliteCommand.Parameters["VulnerabilityVersion"].Value.ToString()))
+                        if ((int.TryParse(sqliteDataReader["VulnerabilityVersion"].ToString(), out int i) &&
+                             int.TryParse(sqliteCommand.Parameters["VulnerabilityVersion"].Value.ToString(), out i)) &&
+                            (int.Parse(sqliteDataReader["VulnerabilityVersion"].ToString()) <
+                             int.Parse(sqliteCommand.Parameters["VulnerabilityVersion"].Value.ToString())))
                         { versionOutdated = true; }
-                        if ((int.Parse(sqliteDataReader["VulnerabilityVersion"].ToString()) ==
+
+                        if ((int.TryParse(sqliteDataReader["VulnerabilityVersion"].ToString(), out i) && 
+                             int.TryParse(sqliteCommand.Parameters["VulnerabilityVersion"].Value.ToString(), out i)) &&
+                            (int.TryParse(sqliteDataReader["VulnerabilityRelease"].ToString(), out i) && 
+                             int.TryParse(sqliteCommand.Parameters["VulnerabilityRelease"].Value.ToString(), out i)) &&
+                            (int.Parse(sqliteDataReader["VulnerabilityVersion"].ToString()) ==
                              int.Parse(sqliteCommand.Parameters["VulnerabilityVersion"].Value.ToString())) && 
                             (int.Parse(sqliteDataReader["VulnerabilityRelease"].ToString()) <
                              int.Parse(sqliteCommand.Parameters["VulnerabilityRelease"].Value.ToString())))
@@ -807,29 +814,6 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                // switch (sqliteCommand.Parameters["FindingType"].Value.ToString())
-                // {
-                //     case "ACAS":
-                //     {
-                //         sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.AcasUniqueFinding.dml", assembly);
-                //         break;
-                //     }
-                //     case "CKL":
-                //     {
-                //         sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.CklUniqueFinding.dml", assembly);
-                //         break;
-                //     }
-                //     case "XCCDF":
-                //     {
-                //         sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.XccdfUniqueFinding.dml", assembly);
-                //         break;
-                //     }
-                //     default:
-                //     {
-                //         sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.UniqueFinding.dml", assembly);
-                //         break;
-                //     }
-                // }
                 sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.UniqueFinding.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }

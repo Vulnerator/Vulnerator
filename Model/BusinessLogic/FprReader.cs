@@ -107,8 +107,10 @@ namespace Vulnerator.Model.BusinessLogic
                             sqliteCommand.Parameters.Add(new SQLiteParameter("UniqueFinding_ID", id));
                             databaseInterface.UpdateUniqueFindingStatusById(sqliteCommand);
                         }
-                        sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UpdatedStatus"]);
-                        sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UniqueFinding_ID"]);
+                        if (sqliteCommand.Parameters.Contains("UpdatedStatus"))
+                        { sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UpdatedStatus"]); }
+                        if (sqliteCommand.Parameters.Contains("UniqueFinding_ID"))
+                        { sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UniqueFinding_ID"]); }
                         databaseInterface.InsertVulnerabilitySource(sqliteCommand);
                         databaseInterface.InsertSoftware(sqliteCommand);
                         foreach (FprVulnerability fprVulnerability in fprVulnerabilityList)

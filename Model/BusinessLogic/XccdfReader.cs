@@ -332,15 +332,6 @@ namespace Vulnerator.Model.BusinessLogic
                                 {
                                     databaseInterface.InsertVulnerability(sqliteCommand);
                                     databaseInterface.MapVulnerabilityToSource(sqliteCommand);
-                                    List<string> ids = databaseInterface.SelectOutdatedVulnerabilities(sqliteCommand, true);
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("UpdatedStatus", "Completed"));
-                                    foreach (string id in ids)
-                                    {
-                                        sqliteCommand.Parameters.Add(new SQLiteParameter("UniqueFinding_ID", id));
-                                        databaseInterface.UpdateUniqueFindingStatusById(sqliteCommand);
-                                    }
-                                    sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UpdatedStatus"]);
-                                    sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UniqueFinding_ID"]);
                                     break;
                                 }
                             case "Existing Version Is Newer":
@@ -659,6 +650,17 @@ namespace Vulnerator.Model.BusinessLogic
                     $"{sqliteCommand.Parameters["DiscoveredHostName"].Value}_" +
                     $"{sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value}r{sqliteCommand.Parameters["VulnerabilityVersion"].Value}_" +
                     "XCCDF";
+                List<string> ids = databaseInterface.SelectOutdatedVulnerabilities(sqliteCommand, false);
+                sqliteCommand.Parameters.Add(new SQLiteParameter("UpdatedStatus", "Completed"));
+                foreach (string id in ids)
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("UniqueFinding_ID", id));
+                    databaseInterface.UpdateUniqueFindingStatusById(sqliteCommand);
+                }
+                if (sqliteCommand.Parameters.Contains("UpdatedStatus"))
+                { sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UpdatedStatus"]); }
+                if (sqliteCommand.Parameters.Contains("UniqueFinding_ID"))
+                { sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UniqueFinding_ID"]); }
                 databaseInterface.UpdateUniqueFinding(sqliteCommand);
                 databaseInterface.InsertUniqueFinding(sqliteCommand);
             }
