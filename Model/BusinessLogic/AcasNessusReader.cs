@@ -115,8 +115,14 @@ namespace Vulnerator.Model.BusinessLogic
                                             sqliteCommand.Parameters.Add(new SQLiteParameter("UniqueFinding_ID", id));
                                             databaseInterface.UpdateUniqueFindingStatusById(sqliteCommand);
                                         }
-                                        sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UpdatedStatus"]);
-                                        sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UniqueFinding_ID"]);
+                                        if (sqliteCommand.Parameters.Contains("UpdatedStatus"))
+                                        {
+                                            sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UpdatedStatus"]);
+                                        }
+                                        if (sqliteCommand.Parameters.Contains("UniqueFinding_ID"))
+                                        {
+                                            sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UniqueFinding_ID"]);
+                                        }
                                     }
                                     found21745 = found26917 = false;
                                 }
@@ -347,6 +353,10 @@ namespace Vulnerator.Model.BusinessLogic
                                     string version = xmlReader.ObtainCurrentNodeValue(true).ToString();
                                     sqliteCommand.Parameters["VulnerabilityVersion"].Value = version.Split('.')[0];
                                     sqliteCommand.Parameters["VulnerabilityRelease"].Value = version.Split('.')[1];
+                                    Regex regex = new Regex(@"\D");
+                                    sqliteCommand.Parameters["VulnerabilityRelease"].Value =
+                                        regex.Replace(sqliteCommand.Parameters["VulnerabilityRelease"].Value.ToString(),
+                                            string.Empty);
                                     ParsePluginRevision(sqliteCommand);
                                     break;
                                 }
@@ -358,15 +368,28 @@ namespace Vulnerator.Model.BusinessLogic
                     {
                         sqliteCommand.Parameters["ScanIP"].Value = ipAddress;
                         PrepareVulnerabilitySource(sqliteCommand);
-                        List<string> ids = databaseInterface.SelectOutdatedVulnerabilities(sqliteCommand);
+                        sqliteCommand.Parameters["InstanceIdentifier"].Value = 
+                            $"{sqliteCommand.Parameters["DiscoveredHostName"].Value}_" +
+                            $"{sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value}_" + 
+                            $"{sqliteCommand.Parameters["Port"].Value}_" + 
+                            $"{sqliteCommand.Parameters["Protocol"].Value}_" + 
+                            $"{sqliteCommand.Parameters["DiscoveredServiceName"].Value}";
+                        List<string> ids = databaseInterface.SelectOutdatedVulnerabilities(sqliteCommand, true);
                         sqliteCommand.Parameters.Add(new SQLiteParameter("UpdatedStatus", "Completed"));
                         foreach (string id in ids)
                         {
                             sqliteCommand.Parameters.Add(new SQLiteParameter("UniqueFinding_ID", id));
                             databaseInterface.UpdateUniqueFindingStatusById(sqliteCommand);
                         }
-                        sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UpdatedStatus"]);
-                        sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UniqueFinding_ID"]);
+
+                        if (sqliteCommand.Parameters.Contains("UpdatedStatus"))
+                        {
+                            sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UpdatedStatus"]);
+                        }
+                        if (sqliteCommand.Parameters.Contains("UniqueFinding_ID"))
+                        {
+                            sqliteCommand.Parameters.Remove(sqliteCommand.Parameters["UniqueFinding_ID"]);
+                        }
                         databaseInterface.InsertVulnerability(sqliteCommand);
                         databaseInterface.MapVulnerabilityToSource(sqliteCommand);
                         if (Properties.Settings.Default.CaptureAcasPortInformation)
@@ -645,16 +668,10 @@ namespace Vulnerator.Model.BusinessLogic
             try
             {
                 sqliteCommand.Parameters["Status"].Value = "Ongoing";
-                sqliteCommand.Parameters["UniqueFinding_ID"].Value = DBNull.Value;
+                sqliteCommand.Parameters.Add(new SQLiteParameter("UniqueFinding_ID", DBNull.Value));
                 sqliteCommand.Parameters["FirstDiscovered"].Value = firstDiscovered;
                 sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "False";
                 sqliteCommand.Parameters["FindingSourceFileName"].Value = fileName;
-                sqliteCommand.Parameters["InstanceIdentifier"].Value = 
-                    $"{sqliteCommand.Parameters["DiscoveredHostName"].Value}_" +
-                    $"{sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value}_" + 
-                    $"{sqliteCommand.Parameters["Port"].Value}_" + 
-                    $"{sqliteCommand.Parameters["Protocol"].Value}_" + 
-                    $"{sqliteCommand.Parameters["DiscoveredServiceName"].Value}";
                 databaseInterface.UpdateUniqueFinding(sqliteCommand);
                 databaseInterface.InsertUniqueFinding(sqliteCommand);
             }

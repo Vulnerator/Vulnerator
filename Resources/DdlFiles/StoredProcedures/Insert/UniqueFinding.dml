@@ -22,6 +22,8 @@ VALUES (NULL,
             SELECT Vulnerability_ID
             FROM Vulnerabilities
             WHERE UniqueVulnerabilityIdentifier = @UniqueVulnerabilityIdentifier
+              AND VulnerabilityVersion = @VulnerabilityVersion
+              AND VulnerabilityRelease = @VulnerabilityRelease
         ),
         (
             SELECT VulnerabilitySource_ID

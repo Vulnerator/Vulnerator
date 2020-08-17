@@ -100,7 +100,7 @@ namespace Vulnerator.Model.BusinessLogic
                         sqliteCommand.Parameters["FindingType"].Value = "Fortify";
                         sqliteCommand.Parameters["FirstDiscovered"].Value = firstDiscovered;
                         sqliteCommand.Parameters["LastObserved"].Value = lastObserved;
-                        List<string> ids = databaseInterface.SelectOutdatedVulnerabilities(sqliteCommand);
+                        List<string> ids = databaseInterface.SelectOutdatedVulnerabilities(sqliteCommand, true);
                         sqliteCommand.Parameters.Add(new SQLiteParameter("UpdatedStatus", "Completed"));
                         foreach (string id in ids)
                         {

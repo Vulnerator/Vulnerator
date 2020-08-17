@@ -157,7 +157,13 @@ namespace Vulnerator.Model.BusinessLogic
                                 sqliteCommand.Parameters["MAC_Address"].Value = csvReader.GetField("MAC Address");
                                 PrepareVulnerabilitySource(sqliteCommand);
                                 databaseInterface.InsertHardware(sqliteCommand);
-                                List<string> ids = databaseInterface.SelectOutdatedVulnerabilities(sqliteCommand);
+                                sqliteCommand.Parameters["InstanceIdentifier"].Value = 
+                                    $"{sqliteCommand.Parameters["DiscoveredHostName"].Value}_" +
+                                    $"{sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value}_" + 
+                                    $"{sqliteCommand.Parameters["Port"].Value}_" + 
+                                    $"{sqliteCommand.Parameters["Protocol"].Value}_" + 
+                                    $"{sqliteCommand.Parameters["DiscoveredServiceName"].Value}";
+                                List<string> ids = databaseInterface.SelectOutdatedVulnerabilities(sqliteCommand, true);
                                 sqliteCommand.Parameters.Add(new SQLiteParameter("UpdatedStatus", "Completed"));
                                 foreach (string id in ids)
                                 {

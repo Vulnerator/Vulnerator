@@ -332,7 +332,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 {
                                     databaseInterface.InsertVulnerability(sqliteCommand);
                                     databaseInterface.MapVulnerabilityToSource(sqliteCommand);
-                                    List<string> ids = databaseInterface.SelectOutdatedVulnerabilities(sqliteCommand);
+                                    List<string> ids = databaseInterface.SelectOutdatedVulnerabilities(sqliteCommand, true);
                                     sqliteCommand.Parameters.Add(new SQLiteParameter("UpdatedStatus", "Completed"));
                                     foreach (string id in ids)
                                     {

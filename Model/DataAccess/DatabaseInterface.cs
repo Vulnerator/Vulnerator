@@ -650,12 +650,18 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
-        public List<string> SelectOutdatedVulnerabilities(SQLiteCommand sqliteCommand)
+        public List<string> SelectOutdatedVulnerabilities(SQLiteCommand sqliteCommand, bool filterOnInstanceIdentifier)
         {
             try
             {
                 List<string> ids = new List<string>();
-                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.VulnerabilityVersionAndReleaseAndUniqueFindingId.dml", assembly);
+                if (filterOnInstanceIdentifier)
+                {
+                    sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.VulnerabilityVersionAndReleaseAndUniqueFindingIdByInstanceIdentifier.dml", assembly);
+
+                }
+                else
+                { sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.VulnerabilityVersionAndReleaseAndUniqueFindingId.dml", assembly); }
                 using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
                     if (!sqliteDataReader.HasRows)

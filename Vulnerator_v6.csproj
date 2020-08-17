@@ -758,6 +758,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\UniqueFindingLastObservedDateAndId.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\VulnerabilityVersionAndReleaseAndUniqueFindingId.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\UniqueFindingStatusById.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\VulnerabilityVersionAndReleaseAndUniqueFindingIdByInstanceIdentifier.dml" />
     <Resource Include="Vulnerator_Logo_Large_Color_SquareBackground_20190805.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
