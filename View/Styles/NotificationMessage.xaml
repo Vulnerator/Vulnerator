@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                     xmlns:Notifications="clr-namespace:Enterwell.Clients.Wpf.Notifications.Controls;assembly=Enterwell.Clients.Wpf.Notifications"
-                    xmlns:local="clr-namespace:Vulnerator.View.Styles">
+                    xmlns:notifications="clr-namespace:Enterwell.Clients.Wpf.Notifications;assembly=Enterwell.Clients.Wpf.Notifications">
 
     <Style x:Key="NotificationBadgeBaseStyle"
            TargetType="{x:Type TextBlock}">
@@ -66,7 +66,7 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="Button.IsDefaulted" Value="True">
-                            <Setter TargetName="backgroundBorder" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.MahApps.Brushes.Highlight}}" />
+                            <Setter TargetName="backgroundBorder" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrush}}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="backgroundOverlay" Property="Background" Value="{StaticResource NotificationButtonDarkBackgroundOverlayBrush}" />
@@ -230,7 +230,7 @@
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
-                                    <DataTemplate DataType="local:INotificationMessageButton">
+                                    <DataTemplate DataType="notifications:INotificationMessageButton">
                                         <Button Content="{Binding Content}"
                                                 IsEnabled="{Binding IsEnabled}" />
                                     </DataTemplate>

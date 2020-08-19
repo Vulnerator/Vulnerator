@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using ControlzEx.Theming;
 using Vulnerator.Helper;
 using Vulnerator.Model.Object;
 using Vulnerator.Properties;
@@ -63,8 +64,6 @@ namespace Vulnerator.ViewModel
             try
             {
                 LogWriter.LogStatusUpdate("Begin instantiation of ThemeViewModel.");
-                ThemeManager.AddAppTheme("PowerShellDark", new Uri("pack://application:,,,/Vulnerator;component/View/Theme/PowerShellDark.xaml"));
-                ThemeManager.AddAppTheme("BlackAndWhite", new Uri("pack://application:,,,/Vulnerator;component/View/Theme/BlackAndWhite.xaml"));
                 Themes = PopulateAvailableThemes();
                 SetTheme(Properties.Settings.Default["Theme"].ToString());
                 SetAccent(Properties.Settings.Default["Accent"].ToString());
@@ -82,7 +81,7 @@ namespace Vulnerator.ViewModel
             try
             {
                 List<ThemeDefinition> themes = new List<ThemeDefinition>();
-                foreach (AppTheme theme in ThemeManager.AppThemes)
+                foreach (Theme theme in ThemeManager.Current.Themes)
                 {
                     string displayName = string.Empty;
                     switch (theme.Name)
@@ -95,16 +94,6 @@ namespace Vulnerator.ViewModel
                         case "BaseLight":
                             {
                                 displayName = "Light";
-                                break;
-                            }
-                        case "PowerShellDark":
-                            {
-                                displayName = "PowerShell Dark";
-                                break;
-                            }
-                        case "BlackAndWhite":
-                            {
-                                displayName = "Black & White";
                                 break;
                             }
                         default:
@@ -125,8 +114,7 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
-                ThemeManager.ChangeAppStyle(Application.Current, appStyle.Item2, ThemeManager.GetAppTheme(theme));
+                ThemeManager.Current.ChangeTheme(Application.Current, theme);
                 SelectedTheme = Themes.FirstOrDefault(t => t.ActualName == theme);
             }
             catch (Exception exception)
@@ -140,8 +128,7 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
-                ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent(accent), appStyle.Item1);
+                // TODO: Figure this out
             }
             catch (Exception exception)
             {
@@ -155,8 +142,8 @@ namespace Vulnerator.ViewModel
             try
             {
                 string theme = SelectedTheme.ActualName;
-                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
-                ThemeManager.ChangeAppStyle(Application.Current, appStyle.Item2, ThemeManager.GetAppTheme(theme));
+                // Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
+                // ThemeManager.ChangeAppStyle(Application.Current, appStyle.Item2, ThemeManager.GetAppTheme(theme));
                 Settings.Default["Theme"] = theme;
             }
             catch (Exception exception)
@@ -172,8 +159,8 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
-                ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent(parameter.ToString()), appStyle.Item1);
+                // Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
+                // ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent(parameter.ToString()), appStyle.Item1);
                 Settings.Default["Accent"] = parameter.ToString();
             }
             catch (Exception exception)

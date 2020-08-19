@@ -17,6 +17,7 @@
                       xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
                       xmlns:v="clr-namespace:Vulnerator.View"
                       xmlns:vm="clr-namespace:Vulnerator.ViewModel"
+                      xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
                       Title="Vulnerator"
                       MinWidth="750"
                       MinHeight="300"
@@ -31,7 +32,7 @@
                       KeyboardNavigation.TabNavigation="Continue"
                       ResizeMode="CanResize"
                       Style="{DynamicResource CustomCleanWindowStyleKey}"
-                      TitlebarHeight="48"
+                      TitleBarHeight="48"
                       mc:Ignorable="d">
 
     <!--  Window Icon Template  -->
@@ -128,11 +129,11 @@
         <local:UserGuideView x:Key="userGuideView" />
     </Controls:MetroWindow.Resources>
 
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
             <!-- <i:InvokeCommandAction Command="{Binding LaunchStigNotificationCommand}" /> -->
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
 
     <!--  Begin Main Window Layout  -->
     <Controls:MetroContentControl Grid.Row="0"

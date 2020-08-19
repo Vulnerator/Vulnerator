@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using ControlzEx.Theming;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Vulnerator.Model.Entity;
@@ -756,10 +757,10 @@ namespace Vulnerator.ViewModel
                 {
                     return;
                 }
-                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(System.Windows.Application.Current);
+                Theme appStyle = ThemeManager.Current.DetectTheme(System.Windows.Application.Current);
                 Notification notification = new Notification();
-                notification.Background = appStyle.Item1.Resources["MahApps.Brushes.Gray10"].ToString();
-                notification.Foreground = appStyle.Item1.Resources["MahApps.Brushes.Text"].ToString();
+                notification.Background = appStyle.Resources["MahApps.Brushes.Gray10"].ToString();
+                notification.Foreground = appStyle.Resources["MahApps.Brushes.Text"].ToString();
                 if (e.Result != null)
                 {
                     if (e.Result is Exception)
@@ -1240,10 +1241,10 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(System.Windows.Application.Current);
+                Theme appStyle = ThemeManager.Current.DetectTheme(System.Windows.Application.Current);
                 Notification notification = new Notification();
-                notification.Background = appStyle.Item1.Resources["MahApps.Brushes.Gray10"].ToString();
-                notification.Foreground = appStyle.Item1.Resources["MahApps.Brushes.Text"].ToString();
+                notification.Background = appStyle.Resources["MahApps.Brushes.Gray10"].ToString();
+                notification.Foreground = appStyle.Resources["MahApps.Brushes.Text"].ToString();
                 if (e.Result != null)
                 {
                     if (e.Result is Exception)

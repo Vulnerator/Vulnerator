@@ -14,6 +14,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Windows;
+using ControlzEx.Theming;
 using Vulnerator.Helper;
 using Vulnerator.Model.BusinessLogic;
 using Vulnerator.Model.DataAccess;
@@ -259,7 +260,7 @@ namespace Vulnerator.ViewModel
         { 
             try
             {
-                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
+                Theme appStyle = ThemeManager.Current.DetectTheme(Application.Current);
                 Notification notification = new Notification();
                 if (e.Result != null)
                 {
@@ -268,9 +269,9 @@ namespace Vulnerator.ViewModel
                         notification = new Notification
                         { 
                             Accent = "Red",
-                            Background = appStyle.Item1.Resources["MahApps.Brushes.Window.Background"].ToString(),
+                            Background = appStyle.Resources["MahApps.Brushes.Window.Background"].ToString(),
                             Badge = "Failure",
-                            Foreground = appStyle.Item1.Resources["MahApps.Brushes.Text"].ToString(),
+                            Foreground = appStyle.Resources["MahApps.Brushes.Text"].ToString(),
                             Header = "STIG Library",
                             Message = "STIG Library failed to ingest."
                         };
@@ -287,9 +288,9 @@ namespace Vulnerator.ViewModel
                                     notification = new Notification
                                     {
                                         Accent = "Green",
-                                        Background = appStyle.Item1.Resources["MahApps.Brushes.Window.Background"].ToString(),
+                                        Background = appStyle.Resources["MahApps.Brushes.Window.Background"].ToString(),
                                         Badge = "Success",
-                                        Foreground = appStyle.Item1.Resources["MahApps.Brushes.Text"].ToString(),
+                                        Foreground = appStyle.Resources["MahApps.Brushes.Text"].ToString(),
                                         Header = "STIG Library",
                                         Message = "STIG Library successfully ingested."
                                     };
@@ -300,9 +301,9 @@ namespace Vulnerator.ViewModel
                                     notification = new Notification
                                     {
                                         Accent = "Orange",
-                                        Background = appStyle.Item1.Resources["MahApps.Brushes.Window.Background"].ToString(),
+                                        Background = appStyle.Resources["MahApps.Brushes.Window.Background"].ToString(),
                                         Badge = "Warning",
-                                        Foreground = appStyle.Item1.Resources["MahApps.Brushes.Text"].ToString(),
+                                        Foreground = appStyle.Resources["MahApps.Brushes.Text"].ToString(),
                                         Header = "STIG Library",
                                         Message = "STIG Library partially ingested; see log for errors."
                                     };
@@ -313,9 +314,9 @@ namespace Vulnerator.ViewModel
                                 notification = new Notification
                                 {
                                     Accent = "Red",
-                                    Background = appStyle.Item1.Resources["MahApps.Brushes.Window.Background"].ToString(),
+                                    Background = appStyle.Resources["MahApps.Brushes.Window.Background"].ToString(),
                                     Badge = "Error",
-                                    Foreground = appStyle.Item1.Resources["MahApps.Brushes.Text"].ToString(),
+                                    Foreground = appStyle.Resources["MahApps.Brushes.Text"].ToString(),
                                     Header = "STIG Library",
                                     Message = "No STIGs ingested; see log for errors."
                                 };
@@ -326,9 +327,9 @@ namespace Vulnerator.ViewModel
                                     notification = new Notification
                                     {
                                         Accent = "Orange",
-                                        Background = appStyle.Item1.Resources["MahApps.Brushes.Window.Background"].ToString(),
+                                        Background = appStyle.Resources["MahApps.Brushes.Window.Background"].ToString(),
                                         Badge = "Warning",
-                                        Foreground = appStyle.Item1.Resources["MahApps.Brushes.Text"].ToString(),
+                                        Foreground = appStyle.Resources["MahApps.Brushes.Text"].ToString(),
                                         Header = "STIG Library",
                                         Message = "No STIG library file selected."
                                     };

@@ -3,8 +3,8 @@
                     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                     xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
                     xmlns:converters="clr-namespace:MahApps.Metro.Converters;assembly=MahApps.Metro"
-                    xmlns:local="clr-namespace:Vulnerator.View.Styles"
-                    xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper">
+                    xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
+                    xmlns:vsm ="clr-namespace:System.Windows;assembly=PresentationFramework">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Themes/ToggleSwitch.xaml" />
@@ -39,12 +39,12 @@
                                            TakeThicknessSide="Left" />
 
     <Style x:Key="MahApps.Metro.Styles.ToggleSwitchButton.Win10"
-           BasedOn="{StaticResource MahApps.Metro.Styles.ToggleSwitchButton}"
+           BasedOn="{StaticResource MahApps.Styles.ToggleSwitch}"
            TargetType="{x:Type Controls:ToggleSwitch}">
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Control.Border}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Height" Value="18" />
-        <Setter Property="IsChecked" Value="{Binding Path=(vh:DependencyProperties.PrimaryValue), RelativeSource={RelativeSource Self}, Mode=TwoWay, FallbackValue=False}" />
+        <Setter Property="IsOn" Value="{Binding Path=(vh:DependencyProperties.PrimaryValue), RelativeSource={RelativeSource Self}, Mode=TwoWay, FallbackValue=False}" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="OffSwitchBrush" Value="{DynamicResource MahApps.Brushes.Control.Border}" />
         <Setter Property="OnSwitchBrush" Value="{DynamicResource MahApps.Colors.AccentBrush}" />
@@ -95,14 +95,14 @@
                                 </ControlTemplate>
                             </Thumb.Template>
                         </Thumb>
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal" />
-                                <VisualState x:Name="Disabled" />
-                                <VisualState x:Name="MouseOver" />
-                                <VisualState x:Name="Pressed" />
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
+                        <vsm:VisualStateManager.VisualStateGroups>
+                            <vsm:VisualStateGroup x:Name="CommonStates">
+                                <vsm:VisualState x:Name="Normal" />
+                                <vsm:VisualState x:Name="Disabled" />
+                                <vsm:VisualState x:Name="MouseOver" />
+                                <vsm:VisualState x:Name="Pressed" />
+                            </vsm:VisualStateGroup>
+                        </vsm:VisualStateManager.VisualStateGroups>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <!--  Checked  -->
@@ -181,10 +181,10 @@
            BasedOn="{StaticResource MahApps.Metro.Styles.ToggleSwitch}"
            TargetType="{x:Type Controls:ToggleSwitch}">
         <Setter Property="ContentDirection" Value="RightToLeft" />
-        <Setter Property="Controls:ControlsHelper.MahApps.Font.Size.Header" Value="{DynamicResource ToggleSwitchMahApps.Font.Size.Header.Win10}" />
+        <Setter Property="Controls:HeaderedControlHelper.HeaderFontSize" Value="{DynamicResource ToggleSwitchMahApps.Font.Size.Header.Win10}" />
         <Setter Property="FontFamily" Value="{DynamicResource MahApps.Fonts.Family.ToggleSwitch.Win10}" />
         <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.ToggleSwitch.Win10}" />
-        <Setter Property="MahApps.Fonts.Family.Header" Value="{DynamicResource ToggleSwitchMahApps.Fonts.Family.Header.Win10}" />
+        <Setter Property="Controls:HeaderedControlHelper.HeaderFontFamily" Value="{DynamicResource ToggleSwitchMahApps.Fonts.Family.Header.Win10}" />
         <Setter Property="OffSwitchBrush" Value="{DynamicResource MahApps.Metro.Brushes.ToggleSwitchButton.OffSwitchBrush.Win10}" />
         <Setter Property="OnSwitchBrush" Value="{DynamicResource MahApps.Metro.Brushes.ToggleSwitchButton.OffSwitchBrush.Win10}" />
         <Setter Property="ThumbIndicatorBrush" Value="{DynamicResource MahApps.Brushes.Control.Border}" />

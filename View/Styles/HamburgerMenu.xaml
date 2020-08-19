@@ -3,7 +3,6 @@
                     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                     xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
                     xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-                    xmlns:local="clr-namespace:Vulnerator.View.Styles"
                     xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
                     xmlns:vm="clr-namespace:Vulnerator.ViewModel">
@@ -25,7 +24,7 @@
     </DataTemplate>
 
     <Style x:Key="HamburgerMenuCreatorsItemStyle"
-           BasedOn="{StaticResource HamburgerMenuItemStyle}"
+           BasedOn="{StaticResource MahApps.Styles.ListBoxItem.HamburgerMenuItem	}"
            TargetType="{x:Type ListBoxItem}">
         <Setter Property="Controls:ItemHelper.ActiveSelectionBackgroundBrush" Value="Transparent" />
         <Setter Property="Controls:ItemHelper.ActiveSelectionForegroundBrush" Value="{DynamicResource MahApps.Brushes.AccentBase}" />
@@ -39,9 +38,9 @@
     </Style>
 
     <Style x:Key="HamburgerMenuCreatorsStyle"
-           BasedOn="{StaticResource {x:Type Controls:HamburgerMenu}}"
+           BasedOn="{StaticResource MahApps.Styles.HamburgerMenu.CreatorsUpdate}"
            TargetType="{x:Type Controls:HamburgerMenu}">
-        <Setter Property="HamburgerMenuTemplate">
+        <Setter Property="HamburgerButtonTemplate">
             <Setter.Value>
                 <DataTemplate>
                     <ContentControl Width="22"

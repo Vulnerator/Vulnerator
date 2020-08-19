@@ -85,7 +85,7 @@
     <SolidColorBrush x:Key="MahApps.Brushes.MenuItem.Foreground.Disabled" options:Freeze="True" Color="{StaticResource MahApps.Colors.Gray7}" />
     <SolidColorBrush x:Key="MahApps.Brushes.MenuItem.GlyphPanel.Disabled" options:Freeze="True" Color="#848589" />
 
-    <SolidColorBrush x:Key="{x:Static SystemColors.MenuMahApps.Brushes.TextKey}" options:Freeze="True" Color="{StaticResource MahApps.Colors.ThemeForeground}" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.GrayTextBrushKey}" options:Freeze="True" Color="{StaticResource MahApps.Colors.ThemeForeground}" />
 
     <Color x:Key="MahApps.Colors.MenuShadow">#FFFFFFFF</Color>
 

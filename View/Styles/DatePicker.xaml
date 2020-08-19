@@ -3,13 +3,12 @@
                     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                     xmlns:Converters="clr-namespace:MahApps.Metro.Converters;assembly=MahApps.Metro"
                     xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-                    xmlns:behaviours="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
+                    xmlns:behaviours="clr-namespace:MahApps.Metro.Behaviors;assembly=MahApps.Metro"
                     xmlns:converter="clr-namespace:Vulnerator.View.Converter"
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-                    xmlns:local="clr-namespace:Vulnerator.View.Styles"
                     xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
-                    xmlns:vm="clr-namespace:Vulnerator.ViewModel">
+                    xmlns:vm="clr-namespace:Vulnerator.ViewModel" xmlns:i1="http://schemas.microsoft.com/xaml/behaviors">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Shared.xaml" />
@@ -59,7 +58,7 @@
                                         Margin="0"
                                         HorizontalAlignment="Left"
                                         vh:DependencyProperties.FloatingWatermarkForeground="{TemplateBinding vh:DependencyProperties.FloatingWatermarkForeground}"
-                                        Style="{DynamicResource FloatingMessageContainerStyle}"
+                                        Style="{DynamicResource MahApps.Styles.ContentControl.FloatingMessageContainer }"
                                         Visibility="Hidden">
                             <ContentControl.Width>
                                 <MultiBinding Converter="{Converters:MathMultiplyConverter}">
@@ -124,7 +123,7 @@
                                     VerticalAlignment="Stretch"
                                     Foreground="{TemplateBinding Foreground}"
                                     IsTabStop="False"
-                                    Style="{DynamicResource ChromelessButtonStyle}">
+                                    Style="{DynamicResource MahApps.Styles.Button.Chromeless}">
                                 <ContentControl Width="{TemplateBinding Controls:TextBoxHelper.ButtonWidth}"
                                                 Height="{TemplateBinding Controls:TextBoxHelper.ButtonWidth}"
                                                 Padding="2"
@@ -149,9 +148,9 @@
                                                FontSize="{TemplateBinding FontSize}"
                                                Foreground="{TemplateBinding Foreground}"
                                                SelectionBrush="{DynamicResource MahApps.Brushes.Highlight}">
-                                <i:Interaction.Behaviors>
+                                <i1:Interaction.Behaviors>
                                     <behaviours:DatePickerTextBoxBehavior />
-                                </i:Interaction.Behaviors>
+                                </i1:Interaction.Behaviors>
                             </DatePickerTextBox>
 
                             <Popup x:Name="PART_Popup"
@@ -236,7 +235,7 @@
     <Style x:Key="MetroDatePickerTextBox"
            TargetType="{x:Type DatePickerTextBox}">
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Control.Background}" />
-        <Setter Property="ContextMenu" Value="{DynamicResource TextBoxMetroContextMenu}" />
+        <Setter Property="ContextMenu" Value="{DynamicResource TextBoxMahApps.Styles.ContextMenu}" />
         <Setter Property="Controls:TextBoxHelper.IsMonitoring" Value="True" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="FontFamily" Value="{DynamicResource MahApps.Fonts.Family.Control}" />

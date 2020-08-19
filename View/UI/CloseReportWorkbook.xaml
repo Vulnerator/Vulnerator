@@ -43,6 +43,6 @@
                 VerticalAlignment="Top"
                 Click="CloseClick"
                 Content="Close"
-                Style="{StaticResource MetroFlatButton}" />
+                Style="{StaticResource MahApps.Styles.Button.Flat}" />
     </Grid>
 </Controls:MetroWindow>

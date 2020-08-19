@@ -3,18 +3,17 @@
                     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                     xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
                     xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-                    xmlns:local="clr-namespace:Vulnerator.View.Styles"
                     xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
                     xmlns:vm="clr-namespace:Vulnerator.ViewModel">
 
     <Style x:Key="CustomCleanWindowStyleKey"
            TargetType="{x:Type Controls:MetroWindow}">
-        <Setter Property="NonActiveWindowTitleBrush" Value="{DynamicResource TransparentMahApps.Brushes.ThemeBackground}" />
+        <Setter Property="NonActiveWindowTitleBrush" Value="{DynamicResource MahApps.Brushes.WindowTitle.NonActive}" />
         <Setter Property="OverrideDefaultWindowCommandsBrush" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
         <Setter Property="TitleAlignment" Value="Left" />
         <Setter Property="TitleForeground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
-        <Setter Property="WindowTitleBrush" Value="{DynamicResource TransparentMahApps.Brushes.ThemeBackground}" />
+        <Setter Property="WindowTitleBrush" Value="{DynamicResource MahApps.Brushes.WindowTitle}" />
     </Style>
 
 </ResourceDictionary>

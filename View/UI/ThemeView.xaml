@@ -38,7 +38,7 @@
                                                    DisplayMemberPath="DisplayName"
                                                    ItemsSource="{Binding Themes}"
                                                    SelectedItem="{Binding SelectedTheme}"
-                                                   Style="{DynamicResource MetroComboBox}" />
+                                                   Style="{DynamicResource MahApps.Styles.ComboBox}" />
                 <Label Content="Accent Color"
                        Style="{StaticResource TopLevelHeaderStyle}" />
                 <Grid>

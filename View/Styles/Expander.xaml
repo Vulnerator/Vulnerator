@@ -3,7 +3,6 @@
                     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                     xmlns:Converters="clr-namespace:MahApps.Metro.Converters;assembly=MahApps.Metro"
                     xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-                    xmlns:local="clr-namespace:Vulnerator.View.Styles"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib"
                     xmlns:vsm="clr-namespace:System.Windows;assembly=PresentationFramework">
 
@@ -13,7 +12,7 @@
     <sys:Double x:Key="ExpanderToggleButtonEllipseThemeSize">18</sys:Double>
 
     <Style x:Key="CustomExpanderHeaderRight"
-           BasedOn="{StaticResource ExpanderBaseHeaderStyle}"
+           BasedOn="{StaticResource MahApps.Styles.ToggleButton.ExpanderHeader.Base }"
            TargetType="{x:Type ToggleButton}">
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="Template">
@@ -68,7 +67,7 @@
     </Style>
 
     <Style x:Key="CustomExpanderHeaderUp"
-           BasedOn="{StaticResource ExpanderBaseHeaderStyle}"
+           BasedOn="{StaticResource MahApps.Styles.ToggleButton.ExpanderHeader.Base }"
            TargetType="{x:Type ToggleButton}">
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="Template">
@@ -235,12 +234,12 @@
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Colors.AccentBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Controls:ControlsHelper.ContentCharacterCasing" Value="Upper" />
-        <Setter Property="Controls:ControlsHelper.MahApps.Font.Size.Header" Value="{DynamicResource MahApps.Font.Size.Content}" />
+        <Setter Property="Controls:HeaderedControlHelper.HeaderFontSize" Value="{DynamicResource MahApps.Font.Size.Content}" />
         <Setter Property="Controls:ExpanderHelper.HeaderDownStyle" Value="{StaticResource CustomExpanderHeaderDown}" />
         <Setter Property="Controls:ExpanderHelper.HeaderLeftStyle" Value="{StaticResource CustomExpanderHeaderLeft}" />
         <Setter Property="Controls:ExpanderHelper.HeaderRightStyle" Value="{StaticResource CustomExpanderHeaderRight}" />
         <Setter Property="Controls:ExpanderHelper.HeaderUpStyle" Value="{StaticResource CustomExpanderHeaderUp}" />
-        <Setter Property="Controls:GroupBoxHelper.HeaderForeground" Value="{x:Null}" />
+        <Setter Property="Controls:HeaderedControlHelper.HeaderForeground" Value="{x:Null}" />
         <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
         <Setter Property="Padding" Value="4" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -269,9 +268,9 @@
                                               ContentStringFormat="{TemplateBinding HeaderStringFormat}"
                                               ContentTemplate="{TemplateBinding HeaderTemplate}"
                                               ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
-                                              FontSize="{TemplateBinding Controls:ControlsHelper.MahApps.Font.Size.Header}"
-                                              FontStretch="{TemplateBinding Controls:ControlsHelper.HeaderFontStretch}"
-                                              FontWeight="{TemplateBinding Controls:ControlsHelper.HeaderFontWeight}"
+                                              FontSize="{TemplateBinding Controls:HeaderedControlHelper.HeaderFontSize}"
+                                              FontStretch="{TemplateBinding Controls:HeaderedControlHelper.HeaderFontStretch}"
+                                              FontWeight="{TemplateBinding Controls:HeaderedControlHelper.HeaderFontWeight}"
                                               IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                               Style="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ExpanderHelper.HeaderDownStyle)}"
                                               UseLayoutRounding="False">
@@ -281,7 +280,7 @@
                                                      Path="Background"
                                                      RelativeSource="{RelativeSource TemplatedParent}" />
                                             <Binding Mode="OneWay"
-                                                     Path="(Controls:GroupBoxHelper.HeaderForeground)"
+                                                     Path="(Controls:HeaderedControlHelper.HeaderForeground)"
                                                      RelativeSource="{RelativeSource TemplatedParent}" />
                                         </MultiBinding>
                                     </ToggleButton.Foreground>
@@ -365,7 +364,7 @@
                             <Setter TargetName="ToggleSite" Property="Style" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ExpanderHelper.HeaderLeftStyle)}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayMahApps.Brushes.TextKey}}" />
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
