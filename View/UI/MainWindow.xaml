@@ -58,8 +58,8 @@
                         Orientation="Horizontal">
                 <TextBlock Margin="6,0,5,0"
                            VerticalAlignment="Center"
-                           FontFamily="{DynamicResource HeaderFontFamily}"
-                           FontSize="{DynamicResource WindowTitleFontSize}"
+                           FontFamily="{DynamicResource MahApps.Fonts.Family.Header}"
+                           FontSize="{DynamicResource MahApps.Font.Size.Window.Title}"
                            Text="{TemplateBinding Content}"
                            TextTrimming="CharacterEllipsis" />
                 <Controls:WindowCommands DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=Controls:MetroWindow}}"

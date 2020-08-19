@@ -43,8 +43,8 @@
                         Orientation="Horizontal">
                 <TextBlock Margin="5,0"
                            VerticalAlignment="Center"
-                           FontFamily="{DynamicResource HeaderFontFamily}"
-                           FontSize="{DynamicResource WindowTitleFontSize}"
+                           FontFamily="{DynamicResource MahApps.Fonts.Family.Header}"
+                           FontSize="{DynamicResource MahApps.Font.Size.Window.Title}"
                            Text="{TemplateBinding Content}"
                            TextTrimming="CharacterEllipsis" />
             </StackPanel>

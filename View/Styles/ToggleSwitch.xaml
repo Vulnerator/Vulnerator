@@ -181,10 +181,10 @@
            BasedOn="{StaticResource MahApps.Metro.Styles.ToggleSwitch}"
            TargetType="{x:Type Controls:ToggleSwitch}">
         <Setter Property="ContentDirection" Value="RightToLeft" />
-        <Setter Property="Controls:ControlsHelper.HeaderFontSize" Value="{DynamicResource ToggleSwitchHeaderFontSize.Win10}" />
-        <Setter Property="FontFamily" Value="{DynamicResource ToggleSwitchFontFamily.Win10}" />
-        <Setter Property="FontSize" Value="{DynamicResource ToggleSwitchFontSize.Win10}" />
-        <Setter Property="HeaderFontFamily" Value="{DynamicResource ToggleSwitchHeaderFontFamily.Win10}" />
+        <Setter Property="Controls:ControlsHelper.MahApps.Font.Size.Header" Value="{DynamicResource ToggleSwitchMahApps.Font.Size.Header.Win10}" />
+        <Setter Property="FontFamily" Value="{DynamicResource MahApps.Fonts.Family.ToggleSwitch.Win10}" />
+        <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.ToggleSwitch.Win10}" />
+        <Setter Property="MahApps.Fonts.Family.Header" Value="{DynamicResource ToggleSwitchMahApps.Fonts.Family.Header.Win10}" />
         <Setter Property="OffSwitchBrush" Value="{DynamicResource MahApps.Metro.Brushes.ToggleSwitchButton.OffSwitchBrush.Win10}" />
         <Setter Property="OnSwitchBrush" Value="{DynamicResource MahApps.Metro.Brushes.ToggleSwitchButton.OffSwitchBrush.Win10}" />
         <Setter Property="ThumbIndicatorBrush" Value="{DynamicResource MahApps.Brushes.Control.Border}" />
