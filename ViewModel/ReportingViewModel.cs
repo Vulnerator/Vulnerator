@@ -406,7 +406,7 @@ namespace Vulnerator.ViewModel
                     .Include(r => r.Group)
                     .FirstOrDefault(r => r.RequiredReport.DisplayedReportName.Equals("Global") &&
                                          r.UserName.Equals(Properties.Settings.Default.ActiveUser));
-                if (GlobalReportRmfOverrideUserSettings.Group != null)
+                if (GlobalReportRmfOverrideUserSettings != null && GlobalReportRmfOverrideUserSettings.Group != null)
                 { GlobalReportRmfOverrideUserSettingsGroup = Groups.FirstOrDefault(x => x.Group_ID.Equals(GlobalReportRmfOverrideUserSettings.Group_ID)); }
                 else
                 { GlobalReportRmfOverrideUserSettingsGroup = null; }
@@ -470,7 +470,7 @@ namespace Vulnerator.ViewModel
                         .Include(r => r.Group)
                         .FirstOrDefault(r => r.RequiredReport_ID.Equals(selection.RequiredReport_ID) &&
                                              r.UserName.Equals(Properties.Settings.Default.ActiveUser));
-                    if (SelectedReportRmfOverrideUserSettings.Group != null)
+                    if (SelectedReportRmfOverrideUserSettings != null && SelectedReportRmfOverrideUserSettings.Group != null)
                     { SelectedReportRmfOverrideUserSettingsGroup = Groups.FirstOrDefault(x => x.Group_ID.Equals(SelectedReportRmfOverrideUserSettings.Group_ID)); }
                     else
                     { SelectedReportRmfOverrideUserSettingsGroup = null; }
