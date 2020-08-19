@@ -149,7 +149,7 @@
 
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="#EB2F2F" />
-                <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
                 <Setter Property="Background" Value="#7C0000" />

@@ -2386,7 +2386,7 @@ namespace Vulnerator.Model.BusinessLogic
                         ),
                     new Fills(
                     /*Index 0 - Default Fill (None)*/ CreateFill(string.Empty, PatternValues.None),
-                    /*Index 1 - Default Fill (Gray125)*/ CreateFill(string.Empty, PatternValues.Gray125),
+                    /*Index 1 - Default Fill (PatternValues.Gray125)*/ CreateFill(string.Empty, PatternValues.Gray125),
                     /*Index 2 - Dark Gray Fill*/ CreateFill("BBBBBB", PatternValues.Solid),
                     /*Index 3 - Light Gray Fill*/ CreateFill("EEEEEE", PatternValues.Solid),
                     /*Index 4 - Yellow Gray Fill*/ CreateFill("FFCC00", PatternValues.Solid)

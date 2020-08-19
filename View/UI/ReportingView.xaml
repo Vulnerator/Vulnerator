@@ -26,7 +26,7 @@
         <Converters:IsNullToCollapsedConverter x:Key="IsNullToCollapsedConverter" />
         <Converters:BooleanToCollapsedConverter x:Key="BooleanToCollapsedConverter" />
     </UserControl.Resources>
-    <Grid Background="{DynamicResource WindowBackgroundBrush}">
+    <Grid Background="{DynamicResource MahApps.Brushes.Window.Background}">
         <Controls:MetroAnimatedSingleRowTabControl Controls:TabControlHelper.Underlined="SelectedTabItem">
             <TabItem Header="Vulnerabilities"
                      Style="{StaticResource CustomMetroTabItem}">

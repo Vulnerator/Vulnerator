@@ -6,11 +6,11 @@
                     xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
 
     <Style x:Key="BlankButtonStyle"
-           BasedOn="{StaticResource MetroButton}"
+           BasedOn="{StaticResource MahApps.Styles.Button}"
            TargetType="{x:Type Button}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="FontFamily" Value="{StaticResource DefaultFont}" />
+        <Setter Property="FontFamily" Value="{StaticResource MahApps.Fonts.Family.Button}" />
         <Setter Property="FontSize" Value="12" />
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="Margin" Value="5" />
@@ -26,15 +26,15 @@
 
     <Style x:Key="SplitButtonStyle"
            TargetType="{x:Type Controls:SplitButton}">
-        <Setter Property="Background" Value="{DynamicResource GrayBrush10}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Controls:ControlsHelper.ContentCharacterCasing" Value="Upper" />
         <Setter Property="Controls:ControlsHelper.CornerRadius" Value="3" />
         <Setter Property="FontFamily" Value="{DynamicResource DefaultFont}" />
         <Setter Property="FontSize" Value="{DynamicResource UpperCaseContentFontSize}" />
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}" />
         <Setter Property="MinHeight" Value="25" />
         <Setter Property="Padding" Value="2,3" />
         <Setter Property="Template" Value="{DynamicResource SplitButtonHorizontalTemplate}" />

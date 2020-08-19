@@ -10,9 +10,9 @@
                       xmlns:local="clr-namespace:Vulnerator.View.UI"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       Title="Vulnerator"
-                      BorderBrush="{DynamicResource AccentColorBrush}"
+                      BorderBrush="{DynamicResource MahApps.Colors.AccentBrush}"
                       DataContext="{Binding Splash, Source={StaticResource Locator}}"
-                      GlowBrush="{DynamicResource AccentColorBrush}"
+                      GlowBrush="{DynamicResource MahApps.Colors.AccentBrush}"
                       Icon="/Vulnerator;component/Resources/vulnerator.ico"
                       ResizeMode="NoResize"
                       ShowCloseButton="False"
@@ -32,7 +32,7 @@
                                                      Margin="4"
                                                      HorizontalAlignment="Center"
                                                      Flip="Horizontal"
-                                                     Foreground="{DynamicResource BlackBrush}"
+                                                     Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                      Kind="Vulnerator" />
             </Border>
         </DataTemplate>
@@ -89,7 +89,7 @@
                            Height="10"
                            Margin="5,0"
                            VerticalAlignment="Center"
-                           Fill="{DynamicResource AccentColorBrush}"
+                           Fill="{DynamicResource MahApps.Colors.AccentBrush}"
                            ToolTip="All support files will be installed into the Vulnerator folder (minimal footprint)">
                     <Rectangle.OpacityMask>
                         <VisualBrush Visual="{IconPacks:FontAwesomeLight Kind=InfoCircle}" />
@@ -108,7 +108,7 @@
                            Height="10"
                            Margin="5,0"
                            VerticalAlignment="Center"
-                           Fill="{DynamicResource AccentColorBrush}"
+                           Fill="{DynamicResource MahApps.Colors.AccentBrush}"
                            ToolTip="Log files will be generated in the LocalData folder, and the user (you) gets to decide where the application database goes (perfect for sharing)">
                     <Rectangle.OpacityMask>
                         <VisualBrush Visual="{IconPacks:FontAwesomeLight Kind=InfoCircle}" />
@@ -130,7 +130,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Border Margin="5,0,0,5"
-                    BorderBrush="{DynamicResource TextBoxBorderBrush}"
+                    BorderBrush="{DynamicResource MahApps.Brushes.TextBox.Border}"
                     BorderThickness="1">
                 <TextBlock Padding="3"
                            VerticalAlignment="Center"

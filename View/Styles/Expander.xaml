@@ -55,10 +55,10 @@
                             <Setter TargetName="Arrow" Property="Flip" Value="Horizontal" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource GrayBrush2}" />
+                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource LabelTextBrush}" />
+                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource LabelMahApps.Brushes.Text}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -110,10 +110,10 @@
                             <Setter TargetName="Arrow" Property="Flip" Value="Horizontal" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource GrayBrush2}" />
+                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource LabelTextBrush}" />
+                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource LabelMahApps.Brushes.Text}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -164,10 +164,10 @@
                             <Setter TargetName="Arrow" Property="Flip" Value="Horizontal" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource GrayBrush2}" />
+                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource LabelTextBrush}" />
+                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource LabelMahApps.Brushes.Text}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -218,10 +218,10 @@
                             <Setter TargetName="Arrow" Property="Flip" Value="Vertical" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource GrayBrush2}" />
+                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource LabelTextBrush}" />
+                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource LabelMahApps.Brushes.Text}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -231,8 +231,8 @@
 
     <Style x:Key="CustomExpander"
            TargetType="{x:Type Expander}">
-        <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
+        <Setter Property="Background" Value="{DynamicResource MahApps.Colors.AccentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Colors.AccentBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Controls:ControlsHelper.ContentCharacterCasing" Value="Upper" />
         <Setter Property="Controls:ControlsHelper.HeaderFontSize" Value="{DynamicResource ContentFontSize}" />
@@ -241,7 +241,7 @@
         <Setter Property="Controls:ExpanderHelper.HeaderRightStyle" Value="{StaticResource CustomExpanderHeaderRight}" />
         <Setter Property="Controls:ExpanderHelper.HeaderUpStyle" Value="{StaticResource CustomExpanderHeaderUp}" />
         <Setter Property="Controls:GroupBoxHelper.HeaderForeground" Value="{x:Null}" />
-        <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
         <Setter Property="Padding" Value="4" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
@@ -249,7 +249,7 @@
                 <ControlTemplate TargetType="{x:Type Expander}">
                     <Grid>
                         <Rectangle x:Name="DisabledVisualElement"
-                                   Fill="{DynamicResource ControlsDisabledBrush}"
+                                   Fill="{DynamicResource MahApps.Brushes.Control.Disabled}"
                                    IsHitTestVisible="false"
                                    Opacity="0"
                                    RadiusX="3"
@@ -365,7 +365,7 @@
                             <Setter TargetName="ToggleSite" Property="Style" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ExpanderHelper.HeaderLeftStyle)}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayMahApps.Brushes.TextKey}}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

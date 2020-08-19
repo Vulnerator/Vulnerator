@@ -28,7 +28,7 @@
                                     <DropShadowEffect BlurRadius="10"
                                                       Direction="270"
                                                       Opacity="0.3"
-                                                      Color="{DynamicResource BlackColor}" />
+                                                      Color="{DynamicResource MahApps.Colors.ThemeForeground}" />
                                 </ItemsPresenter.Effect>
                             </ItemsPresenter>
                         </Border>

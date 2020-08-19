@@ -25,7 +25,7 @@
         <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
 
-    <Grid Background="{DynamicResource WindowBackgroundBrush}">
+    <Grid Background="{DynamicResource MahApps.Brushes.Window.Background}">
         <Controls:MetroAnimatedSingleRowTabControl Margin="5,0,5,5"
                                                    Controls:TabControlHelper.Underlined="SelectedTabItem"
                                                    TabStripPlacement="Left">
@@ -38,7 +38,7 @@
                               VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <Expander Margin="5,0,5,5"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
                             <Expander.Header>
@@ -109,7 +109,7 @@
                             </StackPanel>
                         </Expander>
                         <Expander Margin="5,0,5,5"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
                             <Expander.Header>
@@ -151,7 +151,7 @@
                             </Grid>
                         </Expander>
                         <Expander Margin="5,0,5,5"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
                             <Expander.Header>
@@ -175,7 +175,7 @@
                             </Grid>
                         </Expander>
                         <Expander Margin="5,0,5,5"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
                             <Expander.Header>
@@ -205,7 +205,7 @@
                             </DataGrid>
                         </Expander>
                         <Expander Margin="5,0,5,5"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
                             <Expander.Header>
@@ -356,7 +356,7 @@
                             </StackPanel>
                         </Expander>
                         <Expander Margin="5,0,5,5"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
                             <Expander.Header>
@@ -442,7 +442,7 @@
                             </StackPanel>
                         </Expander>
                         <Expander Margin="5,0,5,5"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
                             <Expander.Header>
@@ -542,7 +542,7 @@
                             </StackPanel>
                         </Expander>
                         <Expander Margin="5,0,5,5"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
                             <Expander.Header>
@@ -598,7 +598,7 @@
                             </StackPanel>
                         </Expander>
                         <Expander Margin="5,0,5,5"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
                             <Expander.Header>
@@ -647,7 +647,7 @@
                             </DataGrid>
                         </Expander>
                         <Expander Margin="5,0,5,5"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
                             <Expander.Header>
@@ -695,7 +695,7 @@
                             </DataGrid>
                         </Expander>
                         <Expander Margin="5,0"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
                             <Expander.Header>
@@ -753,7 +753,7 @@
                               VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <Expander Margin="5,0,5,5"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
                             <Expander.Header>
@@ -818,7 +818,7 @@
                             </Grid>
                         </Expander>
                         <Expander Margin="5,0,5,5"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
                             <Expander.Header>
@@ -1010,7 +1010,7 @@
                             </Grid>
                         </Expander>
                         <Expander Margin="5,0,5,5"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
                             <Expander.Header>
@@ -1063,7 +1063,7 @@
                             </StackPanel>
                         </Expander>
                         <Expander Margin="5,0,5,5"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
                             <Expander.Header>
@@ -1140,7 +1140,7 @@
                             </DataGrid>
                         </Expander>
                         <Expander Margin="5,0"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
                             <Expander.Header>
@@ -1291,11 +1291,11 @@
                         </DataGrid>
                     </StackPanel>
                     <Expander Grid.Column="1"
-                              Background="{DynamicResource WindowBackgroundBrush}"
+                              Background="{DynamicResource MahApps.Brushes.Window.Background}"
                               BorderThickness="0"
                               ExpandDirection="Right">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                            <Label Foreground="{DynamicResource LabelMahApps.Brushes.Text}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -1317,7 +1317,7 @@
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center"
-                                               Foreground="{DynamicResource LabelTextBrush}"
+                                               Foreground="{DynamicResource LabelMahApps.Brushes.Text}"
                                                Text="Bulk Process"
                                                TextTrimming="CharacterEllipsis" />
                                 </Grid>
@@ -1399,11 +1399,11 @@
                         </DataGrid.Columns>
                     </DataGrid>
                     <Expander Grid.Column="1"
-                              Background="{DynamicResource WindowBackgroundBrush}"
+                              Background="{DynamicResource MahApps.Brushes.Window.Background}"
                               BorderThickness="0"
                               ExpandDirection="Right">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                            <Label Foreground="{DynamicResource LabelMahApps.Brushes.Text}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -1425,7 +1425,7 @@
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center"
-                                               Foreground="{DynamicResource LabelTextBrush}"
+                                               Foreground="{DynamicResource LabelMahApps.Brushes.Text}"
                                                Text="Bulk Process"
                                                TextTrimming="CharacterEllipsis" />
                                 </Grid>
@@ -1448,7 +1448,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <Expander Margin="5,0,5,5"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
                             <Expander.Header>
@@ -1479,7 +1479,7 @@
                             </Grid>
                         </Expander>
                         <Expander Margin="5,0,5,5"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
                             <Expander.Header>
@@ -1514,7 +1514,7 @@
                             </Grid>
                         </Expander>
                         <Expander Margin="5,0,5,5"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
                             <Expander.Header>

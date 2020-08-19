@@ -20,18 +20,18 @@
 
     <Style x:Key="HeaderedDatePickerStyle"
            TargetType="{x:Type DatePicker}">
-        <Setter Property="Background" Value="{DynamicResource ControlBackgroundBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Control.Background}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CalendarStyle" Value="{DynamicResource MahApps.Metro.Styles.BaseMetroCalendar}" />
-        <Setter Property="Controls:ControlsHelper.FocusBorderBrush" Value="{DynamicResource TextBoxFocusBorderBrush}" />
-        <Setter Property="Controls:ControlsHelper.MouseOverBorderBrush" Value="{DynamicResource TextBoxMouseOverBorderBrush}" />
+        <Setter Property="Controls:ControlsHelper.FocusBorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border.Focus}" />
+        <Setter Property="Controls:ControlsHelper.MouseOverBorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border.MouseOver}" />
         <Setter Property="Controls:TextBoxHelper.ButtonWidth" Value="22" />
         <Setter Property="Controls:TextBoxHelper.IsMonitoring" Value="True" />
         <Setter Property="Controls:TextBoxHelper.UseFloatingWatermark" Value="True" />
         <Setter Property="FontFamily" Value="{DynamicResource ContentFontFamily}" />
         <Setter Property="FontSize" Value="{DynamicResource ContentFontSize}" />
-        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}" />
         <Setter Property="IsTodayHighlighted" Value="True" />
         <Setter Property="MinHeight" Value="26" />
         <Setter Property="Padding" Value="0" />
@@ -48,8 +48,8 @@
                         </Grid.RowDefinitions>
                         <Border x:Name="DisabledVisualElement"
                                 Grid.RowSpan="2"
-                                Background="{DynamicResource ControlsDisabledBrush}"
-                                BorderBrush="{DynamicResource ControlsDisabledBrush}"
+                                Background="{DynamicResource MahApps.Brushes.Control.Disabled}"
+                                BorderBrush="{DynamicResource MahApps.Brushes.Control.Disabled}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 IsHitTestVisible="False"
                                 Opacity="0"
@@ -144,11 +144,11 @@
                                                Controls:TextBoxHelper.Watermark="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:TextBoxHelper.Watermark), Mode=OneWay}"
                                                Controls:TextBoxHelper.WatermarkAlignment="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:TextBoxHelper.WatermarkAlignment), Mode=OneWay}"
                                                Controls:TextBoxHelper.WatermarkTrimming="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:TextBoxHelper.WatermarkTrimming), Mode=OneWay}"
-                                               CaretBrush="{DynamicResource BlackBrush}"
+                                               CaretBrush="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                Focusable="{TemplateBinding Focusable}"
                                                FontSize="{TemplateBinding FontSize}"
                                                Foreground="{TemplateBinding Foreground}"
-                                               SelectionBrush="{DynamicResource HighlightBrush}">
+                                               SelectionBrush="{DynamicResource MahApps.Brushes.Highlight}">
                                 <i:Interaction.Behaviors>
                                     <behaviours:DatePickerTextBoxBehavior />
                                 </i:Interaction.Behaviors>
@@ -182,12 +182,12 @@
                             <Setter TargetName="DisabledVisualElement" Property="Opacity" Value="0.6" />
                         </Trigger>
                         <Trigger SourceName="PART_Button" Property="IsMouseOver" Value="True">
-                            <Setter TargetName="PART_Button" Property="Background" Value="{DynamicResource GrayBrush8}" />
-                            <Setter TargetName="PART_Button" Property="Foreground" Value="{DynamicResource AccentColorBrush}" />
+                            <Setter TargetName="PART_Button" Property="Background" Value="{DynamicResource MahApps.Brushes.Gray8}" />
+                            <Setter TargetName="PART_Button" Property="Foreground" Value="{DynamicResource MahApps.Colors.AccentBrush}" />
                         </Trigger>
                         <Trigger SourceName="PART_Button" Property="IsPressed" Value="True">
-                            <Setter TargetName="PART_Button" Property="Background" Value="{DynamicResource BlackBrush}" />
-                            <Setter TargetName="PART_Button" Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+                            <Setter TargetName="PART_Button" Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                            <Setter TargetName="PART_Button" Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
                         </Trigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
@@ -235,13 +235,13 @@
 
     <Style x:Key="MetroDatePickerTextBox"
            TargetType="{x:Type DatePickerTextBox}">
-        <Setter Property="Background" Value="{DynamicResource ControlBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Control.Background}" />
         <Setter Property="ContextMenu" Value="{DynamicResource TextBoxMetroContextMenu}" />
         <Setter Property="Controls:TextBoxHelper.IsMonitoring" Value="True" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="FontFamily" Value="{DynamicResource ContentFontFamily}" />
         <Setter Property="FontSize" Value="{DynamicResource ContentFontSize}" />
-        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}" />
         <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst" />
         <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
         <Setter Property="Template">

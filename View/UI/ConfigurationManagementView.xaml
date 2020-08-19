@@ -27,7 +27,7 @@
         <Converters:IsNullToCollapsedConverter x:Key="IsNullToCollapsedConverter" />
     </UserControl.Resources>
 
-    <Grid Background="{DynamicResource WindowBackgroundBrush}">
+    <Grid Background="{DynamicResource MahApps.Brushes.Window.Background}">
         <Controls:MetroAnimatedSingleRowTabControl Controls:TabControlHelper.Underlined="SelectedTabItem">
             <TabItem Header="Groups"
                      Style="{StaticResource CustomMetroTabItem}">
@@ -159,12 +159,12 @@
                         </ScrollViewer>
                     </Grid>
                     <Expander Grid.Column="1"
-                              Background="{DynamicResource WindowBackgroundBrush}"
+                              Background="{DynamicResource MahApps.Brushes.Window.Background}"
                               BorderThickness="0"
                               ExpandDirection="Right"
                               Style="{StaticResource CustomExpander}">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                            <Label Foreground="{DynamicResource LabelMahApps.Brushes.Text}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -351,12 +351,12 @@
                         </ScrollViewer>
                     </Grid>
                     <Expander Grid.Column="1"
-                              Background="{DynamicResource WindowBackgroundBrush}"
+                              Background="{DynamicResource MahApps.Brushes.Window.Background}"
                               BorderThickness="0"
                               ExpandDirection="Right"
                               Style="{StaticResource CustomExpander}">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                            <Label Foreground="{DynamicResource LabelMahApps.Brushes.Text}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -502,7 +502,7 @@
                                                        Content="Found 21745"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedHardware.Found21745}"
+                                                       Toggled="{Binding SelectedHardware.Found21745}"
                                                        IsEnabled="False"
                                                        Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
@@ -510,7 +510,7 @@
                                                        Content="Found 26917"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedHardware.Found26917}"
+                                                       Toggled="{Binding SelectedHardware.Found26917}"
                                                        IsEnabled="False"
                                                        Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
@@ -518,14 +518,14 @@
                                                        Content="Is Virtual Server"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedHardware.IsVirtualServer}"
+                                                       Toggled="{Binding SelectedHardware.IsVirtualServer}"
                                                        Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is IA Enabled"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedHardware.IsIA_Enabled}"
+                                                       Toggled="{Binding SelectedHardware.IsIA_Enabled}"
                                                        Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="NIAP Level"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
@@ -630,12 +630,12 @@
                         </ScrollViewer>
                     </Grid>
                     <Expander Grid.Column="1"
-                              Background="{DynamicResource WindowBackgroundBrush}"
+                              Background="{DynamicResource MahApps.Brushes.Window.Background}"
                               BorderThickness="0"
                               ExpandDirection="Right"
                               Style="{StaticResource CustomExpander}">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                            <Label Foreground="{DynamicResource LabelMahApps.Brushes.Text}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -717,49 +717,49 @@
                                                        Content="Is OS / Firmware"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedSoftware.IsOS_OrFirmware, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                       Toggled="{Binding SelectedSoftware.IsOS_OrFirmware, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
                                                        Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Has Custom Code"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedSoftware.HasCustomCode, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                       Toggled="{Binding SelectedSoftware.HasCustomCode, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
                                                        Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is IA / IA Enabled"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedSoftware.IA_OrIA_Enabled, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                       Toggled="{Binding SelectedSoftware.IA_OrIA_Enabled, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
                                                        Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is FAM Accepted"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedSoftware.FAM_Accepted, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                       Toggled="{Binding SelectedSoftware.FAM_Accepted, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
                                                        Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is Externally Authorized"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedSoftware.ExternallyAuthorized, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                       Toggled="{Binding SelectedSoftware.ExternallyAuthorized, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
                                                        Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Report in Accreditation"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedSoftware.ReportInAccreditationGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                       Toggled="{Binding SelectedSoftware.ReportInAccreditationGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
                                                        Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Approved for Baseline"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedSoftware.ApprovedForBaselineGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                       Toggled="{Binding SelectedSoftware.ApprovedForBaselineGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
                                                        Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Baseline Approver"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
@@ -859,12 +859,12 @@
                         </ScrollViewer>
                     </Grid>
                     <Expander Grid.Column="1"
-                              Background="{DynamicResource WindowBackgroundBrush}"
+                              Background="{DynamicResource MahApps.Brushes.Window.Background}"
                               BorderThickness="0"
                               ExpandDirection="Right"
                               Style="{StaticResource CustomExpander}">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                            <Label Foreground="{DynamicResource LabelMahApps.Brushes.Text}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -1278,11 +1278,11 @@
                         </ScrollViewer>
                     </Grid>
                     <Expander Grid.Column="1"
-                              Background="{DynamicResource WindowBackgroundBrush}"
+                              Background="{DynamicResource MahApps.Brushes.Window.Background}"
                               BorderThickness="0"
                               ExpandDirection="Right">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                            <Label Foreground="{DynamicResource LabelMahApps.Brushes.Text}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>

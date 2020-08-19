@@ -11,13 +11,13 @@
     <Style x:Key="GreyBorderedDataGridStyle"
            BasedOn="{StaticResource MetroDataGrid}"
            TargetType="{x:Type DataGrid}">
-        <Setter Property="AlternatingRowBackground" Value="{DynamicResource GrayBrush10}" />
+        <Setter Property="AlternatingRowBackground" Value="{DynamicResource MahApps.Brushes.Gray10}" />
         <Setter Property="AutoGenerateColumns" Value="False" />
-        <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CanUserAddRows" Value="False" />
         <Setter Property="Controls:ControlsHelper.CornerRadius" Value="3" />
-        <Setter Property="Controls:ControlsHelper.FocusBorderBrush" Value="{DynamicResource TextBoxFocusBorderBrush}" />
+        <Setter Property="Controls:ControlsHelper.FocusBorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border.Focus}" />
         <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
         <Setter Property="Template">
             <Setter.Value>
@@ -94,7 +94,7 @@
 
     <Style x:Key="CustomColumnHeaderGripper"
            TargetType="{x:Type Thumb}">
-        <Setter Property="Background" Value="{DynamicResource GrayBrush5}" />
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray5}" />
         <Setter Property="Cursor" Value="SizeWE" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">

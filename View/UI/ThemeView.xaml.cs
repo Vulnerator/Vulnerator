@@ -12,8 +12,5 @@ namespace Vulnerator.View.UI
         {
             InitializeComponent();
         }
-
-        public void SetAccentColor(object sender, MouseButtonEventArgs e)
-        { }
     }
 }

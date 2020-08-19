@@ -22,7 +22,7 @@
              DataContext="{Binding Settings, Source={StaticResource Locator}}"
              mc:Ignorable="d">
     <UserControl.Resources />
-    <Grid Background="{DynamicResource WindowBackgroundBrush}">
+    <Grid Background="{DynamicResource MahApps.Brushes.Window.Background}">
         <ScrollViewer Margin="5,0,5,5"
                       HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollBarVisibility="Auto">

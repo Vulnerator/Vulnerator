@@ -59,21 +59,21 @@
 
     <Style x:Key="{x:Static wpf:Styles.QuoteBlockStyleKey}"
            TargetType="{x:Type Section}">
-        <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border}" />
         <Setter Property="BorderThickness" Value="4,0,0,0" />
         <Setter Property="Padding" Value="16,0,0,0" />
     </Style>
 
     <Style x:Key="{x:Static wpf:Styles.TableStyleKey}"
            TargetType="{x:Type Table}">
-        <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border}" />
         <Setter Property="BorderThickness" Value="0,0,1,1" />
         <Setter Property="CellSpacing" Value="0" />
     </Style>
 
     <Style x:Key="{x:Static wpf:Styles.TableCellStyleKey}"
            TargetType="{x:Type TableCell}">
-        <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border}" />
         <Setter Property="BorderThickness" Value="1,1,0,0" />
     </Style>
 
@@ -84,7 +84,7 @@
     <Style x:Key="{x:Static wpf:Styles.ThematicBreakStyleKey}"
            TargetType="{x:Type Line}">
         <Setter Property="Stretch" Value="Fill" />
-        <Setter Property="Stroke" Value="{DynamicResource TextBoxBorderBrush}" />
+        <Setter Property="Stroke" Value="{DynamicResource MahApps.Brushes.TextBox.Border}" />
     </Style>
 
 </ResourceDictionary>

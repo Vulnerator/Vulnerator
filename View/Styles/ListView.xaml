@@ -32,7 +32,7 @@
                             <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource GrayBrush9}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray9}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

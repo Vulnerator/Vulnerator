@@ -21,7 +21,7 @@
              d:DesignWidth="800"
              DataContext="{Binding Theme, Source={StaticResource Locator}}"
              mc:Ignorable="d">
-    <Grid Background="{DynamicResource WindowBackgroundBrush}">
+    <Grid Background="{DynamicResource MahApps.Brushes.Window.Background}">
         <ScrollViewer Margin="5,0,5,5"
                       CanContentScroll="True"
                       HorizontalScrollBarVisibility="Disabled"
@@ -428,42 +428,42 @@
                 <Grid>
                     <GridExtra:ResponsiveGrid>
                         <StackPanel Style="{StaticResource ResponsiveGridThemeStackPanelStyle}">
-                            <Rectangle Fill="{DynamicResource HighlightBrush}"
+                            <Rectangle Fill="{DynamicResource MahApps.Brushes.Highlight}"
                                        Style="{StaticResource ThemeSwatchStyle}"
                                        ToolTip="Highlight Color" />
                             <Label HorizontalAlignment="Center"
                                    Content="Highlight Color" />
                         </StackPanel>
                         <StackPanel Style="{StaticResource ResponsiveGridThemeStackPanelStyle}">
-                            <Rectangle Fill="{DynamicResource AccentBaseColorBrush}"
+                            <Rectangle Fill="{DynamicResource MahApps.Brushes.AccentBase}"
                                        Style="{StaticResource ThemeSwatchStyle}"
                                        ToolTip="Accent Base Color" />
                             <Label HorizontalAlignment="Center"
                                    Content="Accent Base Color" />
                         </StackPanel>
                         <StackPanel Style="{StaticResource ResponsiveGridThemeStackPanelStyle}">
-                            <Rectangle Fill="{DynamicResource AccentColorBrush}"
+                            <Rectangle Fill="{DynamicResource MahApps.Colors.AccentBrush}"
                                        Style="{StaticResource ThemeSwatchStyle}"
                                        ToolTip="Accent Color 1" />
                             <Label HorizontalAlignment="Center"
                                    Content="Accent Color 1" />
                         </StackPanel>
                         <StackPanel Style="{StaticResource ResponsiveGridThemeStackPanelStyle}">
-                            <Rectangle Fill="{DynamicResource AccentColorBrush2}"
+                            <Rectangle Fill="{DynamicResource MahApps.Colors.AccentBrush2}"
                                        Style="{StaticResource ThemeSwatchStyle}"
                                        ToolTip="Accent Color 2" />
                             <Label HorizontalAlignment="Center"
                                    Content="Accent Color 2" />
                         </StackPanel>
                         <StackPanel Style="{StaticResource ResponsiveGridThemeStackPanelStyle}">
-                            <Rectangle Fill="{DynamicResource AccentColorBrush3}"
+                            <Rectangle Fill="{DynamicResource MahApps.Colors.AccentBrush3}"
                                        Style="{StaticResource ThemeSwatchStyle}"
                                        ToolTip="Accent Color 3" />
                             <Label HorizontalAlignment="Center"
                                    Content="Accent Color 3" />
                         </StackPanel>
                         <StackPanel Style="{StaticResource ResponsiveGridThemeStackPanelStyle}">
-                            <Rectangle Fill="{DynamicResource AccentColorBrush4}"
+                            <Rectangle Fill="{DynamicResource MahApps.Colors.AccentBrush4}"
                                        Style="{StaticResource ThemeSwatchStyle}"
                                        ToolTip="Accent Color 4" />
                             <Label HorizontalAlignment="Center"

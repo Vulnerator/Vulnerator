@@ -10,11 +10,11 @@
 
     <Style x:Key="CustomCleanWindowStyleKey"
            TargetType="{x:Type Controls:MetroWindow}">
-        <Setter Property="NonActiveWindowTitleBrush" Value="{DynamicResource TransparentWhiteBrush}" />
-        <Setter Property="OverrideDefaultWindowCommandsBrush" Value="{DynamicResource BlackBrush}" />
+        <Setter Property="NonActiveWindowTitleBrush" Value="{DynamicResource TransparentMahApps.Brushes.ThemeBackground}" />
+        <Setter Property="OverrideDefaultWindowCommandsBrush" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
         <Setter Property="TitleAlignment" Value="Left" />
-        <Setter Property="TitleForeground" Value="{DynamicResource BlackBrush}" />
-        <Setter Property="WindowTitleBrush" Value="{DynamicResource TransparentWhiteBrush}" />
+        <Setter Property="TitleForeground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+        <Setter Property="WindowTitleBrush" Value="{DynamicResource TransparentMahApps.Brushes.ThemeBackground}" />
     </Style>
 
 </ResourceDictionary>

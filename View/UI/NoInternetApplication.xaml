@@ -6,7 +6,7 @@
                       xmlns:vm="clr-namespace:Vulnerator.ViewModel"
                       Width="385"
                       Height="209"
-                      GlowBrush="{DynamicResource AccentColorBrush}"
+                      GlowBrush="{DynamicResource MahApps.Colors.AccentBrush}"
                       ResizeMode="NoResize"
                       ShowInTaskbar="False"
                       ShowTitleBar="False"

@@ -9,7 +9,7 @@
         <Setter Property="Controls:ControlsHelper.CornerRadius" Value="5" />
         <Setter Property="FontSize" Value="11" />
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="Foreground" Value="{DynamicResource IdealForegroundColorBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Colors.IdealForegroundBrush}" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="Margin" Value="10,2,0,2" />
         <Setter Property="Padding" Value="4,2" />
@@ -36,7 +36,7 @@
     <Style x:Key="NotificationMessageButtonStyle"
            TargetType="{x:Type Button}">
         <Setter Property="Controls:ControlsHelper.CornerRadius" Value="5" />
-        <Setter Property="Foreground" Value="{DynamicResource IdealForegroundColorBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Colors.IdealForegroundBrush}" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="Padding" Value="12,2" />
         <Setter Property="Template">
@@ -66,7 +66,7 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="Button.IsDefaulted" Value="True">
-                            <Setter TargetName="backgroundBorder" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrush}}" />
+                            <Setter TargetName="backgroundBorder" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.MahApps.Brushes.Highlight}}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="backgroundOverlay" Property="Background" Value="{StaticResource NotificationButtonDarkBackgroundOverlayBrush}" />
@@ -93,7 +93,7 @@
                             Margin="0,0,0,5"
                             VerticalAlignment="Top"
                             Background="{TemplateBinding Background}"
-                            BorderBrush="{DynamicResource TextBoxBorderBrush}"
+                            BorderBrush="{DynamicResource MahApps.Brushes.TextBox.Border}"
                             BorderThickness="1"
                             CornerRadius="5"
                             SnapsToDevicePixels="True"

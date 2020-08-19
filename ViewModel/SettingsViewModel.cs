@@ -268,9 +268,9 @@ namespace Vulnerator.ViewModel
                         notification = new Notification
                         { 
                             Accent = "Red",
-                            Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString(),
+                            Background = appStyle.Item1.Resources["MahApps.Brushes.Window.Background"].ToString(),
                             Badge = "Failure",
-                            Foreground = appStyle.Item1.Resources["TextBrush"].ToString(),
+                            Foreground = appStyle.Item1.Resources["MahApps.Brushes.Text"].ToString(),
                             Header = "STIG Library",
                             Message = "STIG Library failed to ingest."
                         };
@@ -287,9 +287,9 @@ namespace Vulnerator.ViewModel
                                     notification = new Notification
                                     {
                                         Accent = "Green",
-                                        Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString(),
+                                        Background = appStyle.Item1.Resources["MahApps.Brushes.Window.Background"].ToString(),
                                         Badge = "Success",
-                                        Foreground = appStyle.Item1.Resources["TextBrush"].ToString(),
+                                        Foreground = appStyle.Item1.Resources["MahApps.Brushes.Text"].ToString(),
                                         Header = "STIG Library",
                                         Message = "STIG Library successfully ingested."
                                     };
@@ -300,9 +300,9 @@ namespace Vulnerator.ViewModel
                                     notification = new Notification
                                     {
                                         Accent = "Orange",
-                                        Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString(),
+                                        Background = appStyle.Item1.Resources["MahApps.Brushes.Window.Background"].ToString(),
                                         Badge = "Warning",
-                                        Foreground = appStyle.Item1.Resources["TextBrush"].ToString(),
+                                        Foreground = appStyle.Item1.Resources["MahApps.Brushes.Text"].ToString(),
                                         Header = "STIG Library",
                                         Message = "STIG Library partially ingested; see log for errors."
                                     };
@@ -313,9 +313,9 @@ namespace Vulnerator.ViewModel
                                 notification = new Notification
                                 {
                                     Accent = "Red",
-                                    Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString(),
+                                    Background = appStyle.Item1.Resources["MahApps.Brushes.Window.Background"].ToString(),
                                     Badge = "Error",
-                                    Foreground = appStyle.Item1.Resources["TextBrush"].ToString(),
+                                    Foreground = appStyle.Item1.Resources["MahApps.Brushes.Text"].ToString(),
                                     Header = "STIG Library",
                                     Message = "No STIGs ingested; see log for errors."
                                 };
@@ -326,9 +326,9 @@ namespace Vulnerator.ViewModel
                                     notification = new Notification
                                     {
                                         Accent = "Orange",
-                                        Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString(),
+                                        Background = appStyle.Item1.Resources["MahApps.Brushes.Window.Background"].ToString(),
                                         Badge = "Warning",
-                                        Foreground = appStyle.Item1.Resources["TextBrush"].ToString(),
+                                        Foreground = appStyle.Item1.Resources["MahApps.Brushes.Text"].ToString(),
                                         Header = "STIG Library",
                                         Message = "No STIG library file selected."
                                     };

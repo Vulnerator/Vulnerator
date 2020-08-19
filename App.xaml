@@ -19,12 +19,10 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Enterwell.Clients.Wpf.Notifications;component/Themes/Generic.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Clean/CleanWindow.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/themes/Light.Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Clean/MetroWindow.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatSlider.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.FlatSlider.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Themes/HamburgerMenuTemplate.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/base.xaml" />
@@ -42,7 +40,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/Label.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/ListBox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/ListView.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/MArgins.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/Margins.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/MarkdownViewer.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/MetroWindow.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/NotificationMessage.xaml" />

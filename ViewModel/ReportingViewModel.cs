@@ -758,8 +758,8 @@ namespace Vulnerator.ViewModel
                 }
                 Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(System.Windows.Application.Current);
                 Notification notification = new Notification();
-                notification.Background = appStyle.Item1.Resources["GrayBrush10"].ToString();
-                notification.Foreground = appStyle.Item1.Resources["TextBrush"].ToString();
+                notification.Background = appStyle.Item1.Resources["MahApps.Brushes.Gray10"].ToString();
+                notification.Foreground = appStyle.Item1.Resources["MahApps.Brushes.Text"].ToString();
                 if (e.Result != null)
                 {
                     if (e.Result is Exception)
@@ -1242,8 +1242,8 @@ namespace Vulnerator.ViewModel
             {
                 Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(System.Windows.Application.Current);
                 Notification notification = new Notification();
-                notification.Background = appStyle.Item1.Resources["GrayBrush10"].ToString();
-                notification.Foreground = appStyle.Item1.Resources["TextBrush"].ToString();
+                notification.Background = appStyle.Item1.Resources["MahApps.Brushes.Gray10"].ToString();
+                notification.Foreground = appStyle.Item1.Resources["MahApps.Brushes.Text"].ToString();
                 if (e.Result != null)
                 {
                     if (e.Result is Exception)
