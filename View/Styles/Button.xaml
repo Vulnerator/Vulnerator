@@ -32,7 +32,7 @@
         <Setter Property="Controls:ControlsHelper.ContentCharacterCasing" Value="Upper" />
         <Setter Property="Controls:ControlsHelper.CornerRadius" Value="3" />
         <Setter Property="FontFamily" Value="{DynamicResource MahApps.Fonts.Family.Button}" />
-        <Setter Property="FontSize" Value="{DynamicResource UpperCaseMahApps.Font.Size.Content}" />
+        <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.Button}" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}" />
         <Setter Property="MinHeight" Value="25" />
@@ -43,10 +43,11 @@
                 <Setter Property="Template" Value="{DynamicResource MahApps.Templates.SplitButton.Vertical}" />
             </Trigger>
             <Trigger Property="IsFocused" Value="True">
-                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Button.Border.Focus}" />
+                <Setter Property="BorderThickness" Value="2" />
             </Trigger>
             <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray7}" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Opacity" Value=".55" />
@@ -105,6 +106,8 @@
                                                            VerticalAlignment="Center"
                                                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                           FontFamily="{TemplateBinding FontFamily}"
+                                                           FontSize="{TemplateBinding FontSize}"
                                                            Content="{Binding SelectedItem, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                                            ContentCharacterCasing="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.ContentCharacterCasing)}"
                                                            ContentStringFormat="{TemplateBinding ItemStringFormat}"
@@ -128,10 +131,6 @@
                             <IconPacks:PackIconFontAwesomeLight Width="8"
                                                                 Height="8"
                                                                 Kind="CaretDown" />
-                            <!--<ContentControl Width="9"
-                                            Height="9"
-                                            Content="{IconPacks:FontAwesomeLight Kind=CaretCircleDown}"
-                                            Style="{DynamicResource MahApps.Styles.ContentControl.PathIcon}" />-->
                         </Button>
                     </Grid>
                 </Controls:ClipBorder>
@@ -253,10 +252,6 @@
                             <IconPacks:PackIconFontAwesomeLight Width="8"
                                                                 Height="8"
                                                                 Kind="CaretDown" />
-                            <!--<ContentControl Width="9"
-                                            Height="9"
-                                            Content="{IconPacks:FontAwesomeLight Kind=CaretCircleDown}"
-                                            Style="{DynamicResource MahApps.Styles.ContentControl.PathIcon}" />-->
                         </Button>
                     </Grid>
                 </Controls:ClipBorder>

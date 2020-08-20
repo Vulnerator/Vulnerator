@@ -40,8 +40,9 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Expander Margin="0,5"
+                    <Expander Margin="{StaticResource MarginTop5}"
                               Background="{DynamicResource MahApps.Brushes.Window.Background}"
+                              Style="{StaticResource CustomExpander}"
                               BorderThickness="0"
                               ExpandDirection="Right"
                               IsExpanded="False">
@@ -279,8 +280,9 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Expander Margin="0,5"
+                    <Expander Margin="{StaticResource MarginTop5}"
                               Background="{DynamicResource MahApps.Brushes.Window.Background}"
+                              Style="{StaticResource CustomExpander}"
                               BorderThickness="0"
                               ExpandDirection="Right"
                               IsExpanded="False">
