@@ -22,7 +22,7 @@
     <converter:IsNullConverter x:Key="IsNullConverter" />
 
     <Style x:Key="MahApps.Styles.TextBox.ComboBox.Editable"
-           BasedOn="{StaticResource MetroButtonTextBox}"
+           BasedOn="{StaticResource MahApps.Styles.TextBox.Button}"
            TargetType="{x:Type TextBox}">
         <Setter Property="MinHeight" Value="0" />
         <Setter Property="Template">
@@ -312,7 +312,7 @@
                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                        Foreground="{TemplateBinding vh:DependencyProperties.FloatingWatermarkForeground}"
                                        Opacity="1"
-                                       Style="{DynamicResource MetroAutoCollapsingTextBlock}"
+                                       Style="{DynamicResource MahApps.Styles.TextBlock.AutoCollapsing}"
                                        Text="{TemplateBinding vh:DependencyProperties.FloatingWatermark}"
                                        TextAlignment="{TemplateBinding Controls:TextBoxHelper.WatermarkAlignment}"
                                        TextTrimming="{TemplateBinding Controls:TextBoxHelper.WatermarkTrimming}">
@@ -466,7 +466,7 @@
                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                        Foreground="{TemplateBinding Foreground}"
-                                       Style="{DynamicResource MahApps.Metro.Styles.MetroWatermarkTextBlock}"
+                                       Style="{DynamicResource MahApps.Styles.TextBlock.Watermark}"
                                        Text="{TemplateBinding Controls:TextBoxHelper.Watermark}"
                                        TextAlignment="{TemplateBinding Controls:TextBoxHelper.WatermarkAlignment}"
                                        TextTrimming="{TemplateBinding Controls:TextBoxHelper.WatermarkTrimming}"

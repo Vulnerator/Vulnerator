@@ -8,7 +8,7 @@
                     xmlns:vm="clr-namespace:Vulnerator.ViewModel">
 
     <Style x:Key="HyperlinkTextBlockStyle"
-           BasedOn="{StaticResource MetroTextBlock}"
+           BasedOn="{StaticResource MahApps.Styles.TextBlock}"
            TargetType="TextBlock">
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">

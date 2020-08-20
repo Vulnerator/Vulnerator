@@ -8,7 +8,7 @@
                     xmlns:vm="clr-namespace:Vulnerator.ViewModel">
 
     <Style x:Key="greyListBoxStyle"
-           BasedOn="{StaticResource MetroListBox}"
+           BasedOn="{StaticResource MahApps.Styles.ListBox}"
            TargetType="{x:Type ListBox}">
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border}" />
         <Setter Property="BorderThickness" Value="1" />

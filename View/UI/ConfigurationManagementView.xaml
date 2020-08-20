@@ -64,7 +64,7 @@
                                                     Header="Name"
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                        <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
                                                TargetType="TextBlock">
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
@@ -76,7 +76,7 @@
                                                     Header="Acronym"
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                        <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
                                                TargetType="TextBlock">
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
@@ -88,7 +88,7 @@
                                                     Header="Tier"
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                        <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
                                                TargetType="TextBlock">
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
@@ -100,7 +100,7 @@
                                                     Header="Asset Count"
                                                     HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                        <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
                                                TargetType="TextBlock">
                                             <Setter Property="HorizontalAlignment" Value="Center" />
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
@@ -236,8 +236,7 @@
                                                        vh:DependencyProperties.SecondaryValue="{Binding SelectedGroup.IsAccreditation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        Content="Is Accreditation"
                                                        FontFamily="Segoe UI"
-                                                       FontSize="12"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       FontSize="12" />
                                 <TextBox Controls:TextBoxHelper.Watermark="eMASS ID (Digits Only)"
                                          vh:DependencyProperties.FloatingWatermark="eMASS ID"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
@@ -251,8 +250,7 @@
                                                        vh:DependencyProperties.SecondaryValue="{Binding SelectedGroup.IsPlatform, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        Content="Is Platform"
                                                        FontFamily="Segoe UI"
-                                                       FontSize="12"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       FontSize="12" />
                                 <Button Margin="{StaticResource MarginTop5}"
                                         HorizontalAlignment="Center"
                                         Command="{Binding ModifyGroupCommand}"
@@ -502,31 +500,30 @@
                                                        Content="Found 21745"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       Toggled="{Binding SelectedHardware.Found21745}"
-                                                       IsEnabled="False"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedHardware.Found21745}"
+                                                       IsEnabled="False" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Found 26917"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       Toggled="{Binding SelectedHardware.Found26917}"
+                                                       IsOn="{Binding SelectedHardware.Found26917}"
                                                        IsEnabled="False"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                        />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is Virtual Server"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       Toggled="{Binding SelectedHardware.IsVirtualServer}"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedHardware.IsVirtualServer}"
+                                                        />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is IA Enabled"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       Toggled="{Binding SelectedHardware.IsIA_Enabled}"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedHardware.IsIA_Enabled}"
+                                                        />
                                 <TextBox Controls:TextBoxHelper.Watermark="NIAP Level"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedHardware.NIAP_Level, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
@@ -717,50 +714,50 @@
                                                        Content="Is OS / Firmware"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       Toggled="{Binding SelectedSoftware.IsOS_OrFirmware, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedSoftware.IsOS_OrFirmware, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                        />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Has Custom Code"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       Toggled="{Binding SelectedSoftware.HasCustomCode, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedSoftware.HasCustomCode, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                        />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is IA / IA Enabled"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       Toggled="{Binding SelectedSoftware.IA_OrIA_Enabled, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedSoftware.IA_OrIA_Enabled, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                        />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is FAM Accepted"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       Toggled="{Binding SelectedSoftware.FAM_Accepted, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedSoftware.FAM_Accepted, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                        />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is Externally Authorized"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       Toggled="{Binding SelectedSoftware.ExternallyAuthorized, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedSoftware.ExternallyAuthorized, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                        />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Report in Accreditation"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       Toggled="{Binding SelectedSoftware.ReportInAccreditationGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedSoftware.ReportInAccreditationGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                        />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Approved for Baseline"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       Toggled="{Binding SelectedSoftware.ApprovedForBaselineGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedSoftware.ApprovedForBaselineGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                        />
                                 <TextBox Controls:TextBoxHelper.Watermark="Baseline Approver"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedSoftware.BaselineApproverGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
@@ -968,7 +965,7 @@
                                                     Header="First Name"
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                        <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
                                                TargetType="TextBlock">
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
@@ -988,7 +985,7 @@
                                                     Header="Last Name"
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                        <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
                                                TargetType="TextBlock">
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
@@ -1008,7 +1005,7 @@
                                                     Header="Email"
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                        <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
                                                TargetType="TextBlock">
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
@@ -1028,7 +1025,7 @@
                                                     Header="Title"
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                        <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
                                                TargetType="TextBlock">
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
@@ -1048,7 +1045,7 @@
                                                     Header="Organization"
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                        <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
                                                TargetType="TextBlock">
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />

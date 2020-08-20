@@ -61,10 +61,10 @@
                                                            ContentTemplate="{TemplateBinding HeaderTemplate}"
                                                            ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
                                                            FontFamily="Segoe UI Light"
-                                                           FontSize="{TemplateBinding Controls:ControlsHelper.MahApps.Font.Size.Header}"
-                                                           FontStretch="{TemplateBinding Controls:ControlsHelper.HeaderFontStretch}"
+                                                           FontSize="{TemplateBinding Controls:HeaderedControlHelper.HeaderFontSize}"
+                                                           FontStretch="{TemplateBinding Controls:HeaderedControlHelper.HeaderFontStretch}"
                                                            FontStyle="{TemplateBinding FontStyle}"
-                                                           FontWeight="{TemplateBinding Controls:ControlsHelper.HeaderFontWeight}"
+                                                           FontWeight="{TemplateBinding Controls:HeaderedControlHelper.HeaderFontWeight}"
                                                            Foreground="{TemplateBinding Foreground}"
                                                            RecognizesAccessKey="True"
                                                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
@@ -213,7 +213,7 @@
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Colors.AccentBrush}" />
         <Setter Property="BorderThickness" Value="0" />
         <!--  special property for header font size  -->
-        <Setter Property="Controls:ControlsHelper.MahApps.Font.Size.Header" Value="{DynamicResource MahApps.Font.Size.TabItem}" />
+        <Setter Property="Controls:HeaderedControlHelper.HeaderFontSize" Value="{DynamicResource MahApps.Font.Size.TabItem}" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -259,10 +259,10 @@
                                                            ContentTemplate="{TemplateBinding HeaderTemplate}"
                                                            ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
                                                            FontFamily="Segoe UI Light"
-                                                           FontSize="{TemplateBinding Controls:ControlsHelper.MahApps.Font.Size.Header}"
-                                                           FontStretch="{TemplateBinding Controls:ControlsHelper.HeaderFontStretch}"
+                                                           FontSize="{TemplateBinding Controls:HeaderedControlHelper.HeaderFontSize}"
+                                                           FontStretch="{TemplateBinding Controls:HeaderedControlHelper.HeaderFontStretch}"
                                                            FontStyle="{TemplateBinding FontStyle}"
-                                                           FontWeight="{TemplateBinding Controls:ControlsHelper.HeaderFontWeight}"
+                                                           FontWeight="{TemplateBinding Controls:HeaderedControlHelper.HeaderFontWeight}"
                                                            Foreground="{TemplateBinding Foreground}"
                                                            RecognizesAccessKey="True"
                                                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"

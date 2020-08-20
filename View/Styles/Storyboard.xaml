@@ -4,7 +4,7 @@
 
     <Storyboard x:Key="CustomHideFloatingMessageStoryboard"
                 po:Freeze="True">
-        <DoubleAnimation EasingFunction="{StaticResource ExpoEaseInOut}"
+        <DoubleAnimation EasingFunction="{StaticResource MahApps.ExponentialEase.EaseInOut}"
                          Storyboard.TargetName="PART_FloatingMessageContainer"
                          Storyboard.TargetProperty="Opacity"
                          From="1"
@@ -24,7 +24,7 @@
             <DiscreteObjectKeyFrame KeyTime="0"
                                     Value="{x:Static Visibility.Visible}" />
         </ObjectAnimationUsingKeyFrames>
-        <DoubleAnimation EasingFunction="{StaticResource ExpoEaseInOut}"
+        <DoubleAnimation EasingFunction="{StaticResource MahApps.ExponentialEase.EaseInOut}"
                          Storyboard.TargetName="PART_FloatingMessageContainer"
                          Storyboard.TargetProperty="Opacity"
                          From="0"
@@ -34,7 +34,7 @@
 
     <Storyboard x:Key="HideCharcterCountStoryboard"
                 po:Freeze="True">
-        <DoubleAnimation EasingFunction="{StaticResource ExpoEaseInOut}"
+        <DoubleAnimation EasingFunction="{StaticResource MahApps.ExponentialEase.EaseInOut}"
                          Storyboard.TargetName="PART_CharacterCounter"
                          Storyboard.TargetProperty="Opacity"
                          From="1"
@@ -54,7 +54,7 @@
             <DiscreteObjectKeyFrame KeyTime="0"
                                     Value="{x:Static Visibility.Visible}" />
         </ObjectAnimationUsingKeyFrames>
-        <DoubleAnimation EasingFunction="{StaticResource ExpoEaseInOut}"
+        <DoubleAnimation EasingFunction="{StaticResource MahApps.ExponentialEase.EaseInOut}"
                          Storyboard.TargetName="PART_CharacterCounter"
                          Storyboard.TargetProperty="Opacity"
                          From="0"

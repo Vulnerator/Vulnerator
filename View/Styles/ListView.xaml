@@ -5,7 +5,7 @@
                     xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
 
     <Style x:Key="CustomListView"
-           BasedOn="{StaticResource MetroListView}"
+           BasedOn="{StaticResource MahApps.Styles.ListView}"
            TargetType="{x:Type ListView}">
         <Setter Property="Template">
             <Setter.Value>
@@ -20,7 +20,7 @@
                                       CanContentScroll="{TemplateBinding ScrollViewer.CanContentScroll}"
                                       Focusable="False"
                                       SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                      Style="{DynamicResource MetroGridViewScrollViewerStyle}"
+                                      Style="{DynamicResource MahApps.Styles.ScrollViewer.GridView}"
                                       HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                                       VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
                             <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />

@@ -8,7 +8,7 @@
                     xmlns:vm="clr-namespace:Vulnerator.ViewModel">
 
     <Style x:Key="GreyBorderedDataGridStyle"
-           BasedOn="{StaticResource MetroDataGrid}"
+           BasedOn="{StaticResource MahApps.Styles.DataGrid}"
            TargetType="{x:Type DataGrid}">
         <Setter Property="AlternatingRowBackground" Value="{DynamicResource MahApps.Brushes.Gray10}" />
         <Setter Property="AutoGenerateColumns" Value="False" />
@@ -111,7 +111,7 @@
     </Style>
 
     <Style x:Key="CustomHeaderBaseStyle"
-           BasedOn="{StaticResource MetroDataGridColumnHeader}"
+           BasedOn="{StaticResource MahApps.Styles.DataGridColumnHeader}"
            TargetType="{x:Type DataGridColumnHeader}">
         <Setter Property="Template">
             <Setter.Value>

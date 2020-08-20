@@ -333,10 +333,10 @@
                             <Setter TargetName="ExpandSite" Property="Visibility" Value="Visible" />
                             <Setter TargetName="HeaderSite" Property="CornerRadius" Value="3,3,0,0" />
                             <Trigger.EnterActions>
-                                <BeginStoryboard Storyboard="{StaticResource MetroExpanderExpandStoryboard}" />
+                                <BeginStoryboard Storyboard="{StaticResource MahApps.Storyboard.Expander.Expand}" />
                             </Trigger.EnterActions>
                             <Trigger.ExitActions>
-                                <BeginStoryboard Storyboard="{StaticResource MetroExpanderCollapseStoryboard}" />
+                                <BeginStoryboard Storyboard="{StaticResource MahApps.Storyboard.Expander.Collapse}" />
                             </Trigger.ExitActions>
                         </Trigger>
                         <Trigger Property="ExpandDirection" Value="Right">

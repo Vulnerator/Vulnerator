@@ -10,7 +10,7 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Vulnerator;component/View/Styles/Storyboard.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Shared.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.Shared.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
@@ -18,7 +18,7 @@
     <Converters:IsNullConverter x:Key="IsNullConverter" />
 
     <Style x:Key="TrimmingTextboxStyle"
-           BasedOn="{StaticResource MetroTextBox}"
+           BasedOn="{StaticResource MahApps.Styles.TextBox}"
            TargetType="TextBox">
         <Style.Triggers>
             <DataTrigger Binding="{Binding IsKeyboardFocused, RelativeSource={RelativeSource Self}}"
@@ -39,7 +39,7 @@
     </Style>
 
     <Style x:Key="ErrorTextBox"
-           BasedOn="{StaticResource MetroTextBox}"
+           BasedOn="{StaticResource MahApps.Styles.TextBox}"
            TargetType="{x:Type TextBox}">
         <Setter Property="Background" Value="LightPink" />
         <Setter Property="BorderThickness" Value="0" />
@@ -115,7 +115,7 @@
                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                            Foreground="{TemplateBinding Foreground}"
-                                           Style="{DynamicResource MetroAutoCollapsingTextBlock}"
+                                           Style="{DynamicResource MahApps.Styles.TextBlock.AutoCollapsing}"
                                            Text="{TemplateBinding Controls:TextBoxHelper.Watermark}" />
                             </ContentControl>
                             <Button x:Name="PART_ClearText"
@@ -185,10 +185,10 @@
                                 <Condition Binding="{Binding Path=(Controls:TextBoxHelper.HasText), RelativeSource={RelativeSource Self}}" Value="True" />
                             </MultiDataTrigger.Conditions>
                             <MultiDataTrigger.EnterActions>
-                                <BeginStoryboard Storyboard="{StaticResource ShowFloatingMessageStoryboard}" />
+                                <BeginStoryboard Storyboard="{StaticResource CustomShowFloatingMessageStoryboard}" />
                             </MultiDataTrigger.EnterActions>
                             <MultiDataTrigger.ExitActions>
-                                <BeginStoryboard Storyboard="{StaticResource HideFloatingMessageStoryboard}" />
+                                <BeginStoryboard Storyboard="{StaticResource CustomHideFloatingMessageStoryboard}" />
                             </MultiDataTrigger.ExitActions>
                         </MultiDataTrigger>
 
@@ -254,7 +254,7 @@
                             <Setter TargetName="PART_WaitingForDataEffectAdornerDecorator" Property="Visibility" Value="Visible" />
                             <Setter TargetName="PART_WaitingForDataEffectGrid" Property="Effect" Value="{DynamicResource WaitingForDataEffect}" />
                             <MultiTrigger.EnterActions>
-                                <BeginStoryboard Storyboard="{StaticResource WaitingForDataStoryboard}" />
+                                <BeginStoryboard Storyboard="{StaticResource MahApps.Storyboard.WaitingForData}" />
                             </MultiTrigger.EnterActions>
                         </MultiTrigger>
                         <Trigger Property="Controls:TextBoxHelper.IsWaitingForData" Value="False">
@@ -359,7 +359,7 @@
                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                            Foreground="{TemplateBinding vh:DependencyProperties.FloatingWatermarkForeground}"
                                            Opacity="1"
-                                           Style="{DynamicResource MetroAutoCollapsingTextBlock}"
+                                           Style="{DynamicResource MahApps.Styles.TextBlock.AutoCollapsing}"
                                            Text="{TemplateBinding vh:DependencyProperties.FloatingWatermark}"
                                            TextAlignment="{TemplateBinding Controls:TextBoxHelper.WatermarkAlignment}"
                                            TextTrimming="{TemplateBinding Controls:TextBoxHelper.WatermarkTrimming}">
@@ -384,7 +384,7 @@
                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                            Foreground="{TemplateBinding vh:DependencyProperties.FloatingWatermarkForeground}"
                                            Opacity="1"
-                                           Style="{DynamicResource MetroAutoCollapsingTextBlock}"
+                                           Style="{DynamicResource MahApps.Styles.TextBlock.AutoCollapsing}"
                                            TextAlignment="Right"
                                            Visibility="Hidden">
                                     <TextBlock.Text>
@@ -459,7 +459,7 @@
                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                        Foreground="{TemplateBinding Foreground}"
-                                       Style="{DynamicResource MahApps.Metro.Styles.MetroWatermarkTextBlock}"
+                                       Style="{DynamicResource MahApps.Styles.TextBlock.Watermark}"
                                        Text="{TemplateBinding Controls:TextBoxHelper.Watermark}"
                                        TextAlignment="{TemplateBinding Controls:TextBoxHelper.WatermarkAlignment}"
                                        TextTrimming="{TemplateBinding Controls:TextBoxHelper.WatermarkTrimming}"
@@ -587,7 +587,7 @@
                             </MultiTrigger.Conditions>
                             <Setter TargetName="PART_WaitingForDataEffectAdornerDecorator" Property="Visibility" Value="Visible" />
                             <MultiTrigger.EnterActions>
-                                <BeginStoryboard Storyboard="{StaticResource WaitingForDataStoryboard}" />
+                                <BeginStoryboard Storyboard="{StaticResource MahApps.Storyboard.WaitingForData}" />
                             </MultiTrigger.EnterActions>
                         </MultiTrigger>
                         <Trigger Property="Controls:TextBoxHelper.IsWaitingForData" Value="False">
@@ -775,7 +775,7 @@
                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                        Foreground="{TemplateBinding Foreground}"
-                                       Style="{DynamicResource MahApps.Metro.Styles.MetroWatermarkTextBlock}"
+                                       Style="{DynamicResource MahApps.Styles.TextBlock.Watermark}"
                                        Text="{TemplateBinding Controls:TextBoxHelper.Watermark}"
                                        TextAlignment="{TemplateBinding Controls:TextBoxHelper.WatermarkAlignment}"
                                        TextTrimming="{TemplateBinding Controls:TextBoxHelper.WatermarkTrimming}"
@@ -881,7 +881,7 @@
                             </MultiTrigger.Conditions>
                             <Setter TargetName="PART_WaitingForDataEffectAdornerDecorator" Property="Visibility" Value="Visible" />
                             <MultiTrigger.EnterActions>
-                                <BeginStoryboard Storyboard="{StaticResource WaitingForDataStoryboard}" />
+                                <BeginStoryboard Storyboard="{StaticResource MahApps.Storyboard.WaitingForData}" />
                             </MultiTrigger.EnterActions>
                         </MultiTrigger>
                         <Trigger Property="Controls:TextBoxHelper.IsWaitingForData" Value="False">
