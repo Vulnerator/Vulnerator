@@ -418,10 +418,10 @@
                     Value="False">
                 <Setter Property="IsOn" Value="{Binding Path=(vh:DependencyProperties.SecondaryValue), RelativeSource={RelativeSource Self}, Mode=TwoWay, Converter={StaticResource NullToBooleanConverter}}" />
             </DataTrigger>
-            <DataTrigger Binding="{Binding Path=(vh:DependencyProperties.AlternateValueTrigger), RelativeSource={RelativeSource Self}, Converter={StaticResource IsNullConverter}}"
+            <!--<DataTrigger Binding="{Binding Path=(vh:DependencyProperties.AlternateValueTrigger), RelativeSource={RelativeSource Self}, Converter={StaticResource IsNullConverter}}"
                     Value="True">
                 <Setter Property="IsOn" Value="{Binding Path=(vh:DependencyProperties.PrimaryValue), RelativeSource={RelativeSource Self}, Mode=TwoWay, Converter={StaticResource NullToBooleanConverter}}" />
-            </DataTrigger>
+            </DataTrigger>-->
         </Style.Triggers>
     </Style>
 

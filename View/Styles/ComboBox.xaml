@@ -629,7 +629,7 @@
         <Setter Property="vh:DependencyProperties.FloatingWatermark" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:TextBoxHelper.Watermark)}" />
         <Setter Property="vh:DependencyProperties.FloatingWatermarkForeground" Value="{Binding RelativeSource={RelativeSource Self}, Path=Foreground}" />
         <Setter Property="vh:DependencyProperties.PrimaryValue" Value="{Binding Path=(vh:DependencyProperties.PrimaryValue), RelativeSource={RelativeSource Self}}" />
-        <Setter Property="vh:DependencyProperties.SecondaryValue" Value="{Binding Path=(vh:DependencyProperties.PrimaryValue), RelativeSource={RelativeSource Self}}" />
+        <Setter Property="vh:DependencyProperties.SecondaryValue" Value="{Binding Path=(vh:DependencyProperties.SecondaryValue), RelativeSource={RelativeSource Self}}" />
         <Style.Triggers>
             <DataTrigger Binding="{Binding Path=(vh:DependencyProperties.AlternateValueTrigger), RelativeSource={RelativeSource Self}, Converter={StaticResource IsNullConverter}}"
                          Value="False">
