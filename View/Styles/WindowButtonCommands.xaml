@@ -17,6 +17,9 @@
                                                          Height=16,
                                                          Width=16}"
                     Focusable="False"
+                    Command="{x:Static SystemCommands.MinimizeWindowCommand}"
+                    AutomationProperties.AutomationId="Minimize"
+                    AutomationProperties.Name="Minimize"
                     IsEnabled="{Binding IsMinButtonEnabled, RelativeSource={RelativeSource AncestorType={x:Type Controls:MetroWindow}}}"
                     ToolTip="{Binding Minimize, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                     UseLayoutRounding="True">
@@ -43,6 +46,9 @@
                                                          Height=16,
                                                          Width=16}"
                     Focusable="False"
+                    Command="{x:Static SystemCommands.MaximizeWindowCommand}"
+                    AutomationProperties.AutomationId="MaximizeRestore"
+                    AutomationProperties.Name="Maximize"
                     IsEnabled="{Binding IsMaxRestoreButtonEnabled, RelativeSource={RelativeSource AncestorType={x:Type Controls:MetroWindow}}}"
                     ToolTip="{Binding Maximize, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                     UseLayoutRounding="True">
@@ -69,6 +75,9 @@
                                                          Height=16,
                                                          Width=16}"
                     Focusable="False"
+                    Command="{x:Static SystemCommands.CloseWindowCommand}"
+                    AutomationProperties.AutomationId="Close"
+                    AutomationProperties.Name="Close"
                     IsEnabled="{Binding RelativeSource={RelativeSource AncestorType={x:Type Controls:MetroWindow}}, Path=IsCloseButtonEnabled, Mode=OneWay}"
                     ToolTip="{Binding Close, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                     UseLayoutRounding="True">
@@ -115,6 +124,7 @@
     </ControlTemplate>
 
     <Style x:Key="MahApps.Styles.WindowButtonCommands"
+           BasedOn="{StaticResource MahApps.Styles.WindowButtonCommands.Base}"
            TargetType="{x:Type Controls:WindowButtonCommands}">
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.TransparentWhite}" />
         <Setter Property="DarkCloseButtonStyle" Value="{DynamicResource MahApps.Styles.Button.MetroWindow.Dark}" />
@@ -137,7 +147,7 @@
     </Style>
 
     <Style x:Key="MahApps.Styles.WindowButtonCommands.Win10"
-           BasedOn="{StaticResource MahApps.Styles.WindowButtonCommands}"
+           BasedOn="{StaticResource MahApps.Styles.WindowButtonCommands.Base}"
            TargetType="{x:Type Controls:WindowButtonCommands}">
         <Setter Property="DarkCloseButtonStyle" Value="{DynamicResource MahApps.Styles.Button.MetroWindow.Close.Dark.Win10}" />
         <Setter Property="LightCloseButtonStyle" Value="{DynamicResource MahApps.Styles.Button.MetroWindow.Close.Light.Win10}" />
