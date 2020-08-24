@@ -23,20 +23,21 @@
     <Thickness x:Key="ToggleSwitchTopHeaderMargin">0 0 0 4</Thickness>
 
     <system:Double x:Key="ToggleSwitchOnStrokeThickness">0</system:Double>
-    <system:Double x:Key="ToggleSwitchOffStrokeThickness">2</system:Double>
+    <system:Double x:Key="ToggleSwitchOffStrokeThickness">1</system:Double>
     <system:Double x:Key="ToggleSwitchThemeMinWidth">154</system:Double>
 
     <KeyTime x:Key="ToggleSwitchTranslateDuration">0:0:0.500</KeyTime>
 
-    <Style x:Key="MahApps.Styles.ToggleSwitch" TargetType="{x:Type Controls:ToggleSwitch}">
+    <Style x:Key="Vulnerator.Styles.ToggleSwitch" TargetType="{x:Type Controls:ToggleSwitch}">
         <Setter Property="ContentDirection" Value="RightToLeft" />
         <Setter Property="FontFamily" Value="{DynamicResource MahApps.Fonts.Family.ToggleSwitch}" />
         <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.ToggleSwitch}" />
-        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ToggleSwitch.ContentForeground}" />
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Button.Border}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="IsOn" Value="{Binding Path=(vh:DependencyProperties.PrimaryValue), RelativeSource={RelativeSource Self}, Mode=TwoWay, FallbackValue=False}" />
+        <Setter Property="Controls:ControlsHelper.CornerRadius" Value="3"></Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Controls:ToggleSwitch}">
@@ -108,7 +109,7 @@
                                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                                   TextElement.FontFamily="{TemplateBinding FontFamily}"
                                                   TextElement.FontSize="{TemplateBinding FontSize}"
-                                                  TextElement.Foreground="{TemplateBinding Foreground}" />
+                                                  TextElement.Foreground="{StaticResource MahApps.Brushes.ThemeForeground}" />
                                 <ContentPresenter x:Name="OnContentPresenter"
                                                   Grid.Row="0"
                                                   Grid.RowSpan="3"
@@ -125,7 +126,7 @@
                                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                                   TextElement.FontFamily="{TemplateBinding FontFamily}"
                                                   TextElement.FontSize="{TemplateBinding FontSize}"
-                                                  TextElement.Foreground="{TemplateBinding Foreground}" />
+                                                  TextElement.Foreground="{StaticResource MahApps.Brushes.ThemeForeground}" />
                                 <ContentPresenter x:Name="ContentPresenter"
                                                   Grid.Row="0"
                                                   Grid.RowSpan="3"
@@ -140,7 +141,7 @@
                                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                                   TextElement.FontFamily="{TemplateBinding FontFamily}"
                                                   TextElement.FontSize="{TemplateBinding FontSize}"
-                                                  TextElement.Foreground="{TemplateBinding Foreground}"
+                                                  TextElement.Foreground="{StaticResource MahApps.Brushes.ThemeForeground}"
                                                   Visibility="Collapsed" />
 
                                 <Grid x:Name="Switch"
@@ -151,30 +152,32 @@
                                       HorizontalAlignment="Left">
                                     <Rectangle x:Name="OuterBorder"
                                                Fill="{DynamicResource MahApps.Brushes.ToggleSwitch.FillOff}"
-                                               RadiusX="10"
-                                               RadiusY="10"
-                                               Stroke="{DynamicResource MahApps.Brushes.ToggleSwitch.StrokeOff}"
+                                               RadiusX="3"
+                                               RadiusY="3"
+                                               Stroke="{DynamicResource MahApps.Brushes.Button.Border}"
                                                StrokeThickness="{DynamicResource ToggleSwitchOffStrokeThickness}" />
                                     <Rectangle x:Name="SwitchKnobBounds"
                                                Fill="{DynamicResource MahApps.Brushes.ToggleSwitch.FillOn}"
                                                Opacity="0"
-                                               RadiusX="10"
-                                               RadiusY="10"
+                                               RadiusX="3"
+                                               RadiusY="3"
                                                Stroke="{DynamicResource MahApps.Brushes.ToggleSwitch.StrokeOn}"
                                                StrokeThickness="{DynamicResource ToggleSwitchOnStrokeThickness}" />
                                     <Grid x:Name="SwitchKnob"
                                           Width="20"
                                           Height="20"
                                           HorizontalAlignment="Left">
-                                        <Ellipse x:Name="SwitchKnobOn"
-                                                 Width="10"
-                                                 Height="10"
-                                                 Fill="{DynamicResource MahApps.Brushes.ToggleSwitch.KnobFillOn}"
-                                                 Opacity="0" />
-                                        <Ellipse x:Name="SwitchKnobOff"
-                                                 Width="10"
-                                                 Height="10"
-                                                 Fill="{DynamicResource MahApps.Brushes.ToggleSwitch.KnobFillOff}" />
+                                        <Rectangle x:Name="SwitchKnobOn"
+                                                   RadiusX="3"
+                                                   RadiusY="3"
+                                                   Margin="{StaticResource MarginAll5}"
+                                                   Fill="{DynamicResource MahApps.Brushes.ToggleSwitch.KnobFillOn}"
+                                                   Opacity="0" />
+                                        <Rectangle x:Name="SwitchKnobOff"
+                                                   RadiusX="3"
+                                                   RadiusY="3"
+                                                   Margin="{StaticResource MarginAll5}"
+                                                   Fill="{DynamicResource MahApps.Brushes.Button.Border}" />
                                         <Grid.RenderTransform>
                                             <TranslateTransform x:Name="KnobTranslateTransform" />
                                         </Grid.RenderTransform>

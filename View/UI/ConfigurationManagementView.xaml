@@ -230,6 +230,7 @@
                                           Visibility="{Binding SelectedGroup, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <Controls:ToggleSwitch x:Name="groupAccreditationToggleSwitch"
                                                        Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
                                                        vh:DependencyProperties.PrimaryValue="{Binding NewGroup.IsAccreditation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -244,6 +245,7 @@
                                          TextWrapping="Wrap"
                                          Visibility="{Binding ElementName=groupAccreditationToggleSwitch, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
                                                        vh:DependencyProperties.PrimaryValue="{Binding NewGroup.IsPlatform, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -496,6 +498,7 @@
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedHardware.OperatingSystem, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Found 21745"
                                                        FontFamily="Segoe UI"
@@ -503,6 +506,7 @@
                                                        IsOn="{Binding SelectedHardware.Found21745}"
                                                        IsEnabled="False" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Found 26917"
                                                        FontFamily="Segoe UI"
@@ -511,6 +515,7 @@
                                                        IsEnabled="False"
                                                         />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is Virtual Server"
                                                        FontFamily="Segoe UI"
@@ -518,6 +523,7 @@
                                                        IsOn="{Binding SelectedHardware.IsVirtualServer}"
                                                         />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is IA Enabled"
                                                        FontFamily="Segoe UI"
@@ -710,6 +716,7 @@
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedSoftware.DADMS_LastDateAuthorized, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is OS / Firmware"
                                                        FontFamily="Segoe UI"
@@ -717,6 +724,7 @@
                                                        IsOn="{Binding SelectedSoftware.IsOS_OrFirmware, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
                                                         />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Has Custom Code"
                                                        FontFamily="Segoe UI"
@@ -724,6 +732,7 @@
                                                        IsOn="{Binding SelectedSoftware.HasCustomCode, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
                                                         />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is IA / IA Enabled"
                                                        FontFamily="Segoe UI"
@@ -731,6 +740,7 @@
                                                        IsOn="{Binding SelectedSoftware.IA_OrIA_Enabled, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
                                                         />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is FAM Accepted"
                                                        FontFamily="Segoe UI"
@@ -738,6 +748,7 @@
                                                        IsOn="{Binding SelectedSoftware.FAM_Accepted, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
                                                         />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is Externally Authorized"
                                                        FontFamily="Segoe UI"
@@ -745,6 +756,7 @@
                                                        IsOn="{Binding SelectedSoftware.ExternallyAuthorized, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
                                                         />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Report in Accreditation"
                                                        FontFamily="Segoe UI"
@@ -752,6 +764,7 @@
                                                        IsOn="{Binding SelectedSoftware.ReportInAccreditationGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
                                                         />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Approved for Baseline"
                                                        FontFamily="Segoe UI"
