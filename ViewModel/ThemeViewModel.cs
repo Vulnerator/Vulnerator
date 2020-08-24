@@ -152,14 +152,5 @@ namespace Vulnerator.ViewModel
                 LogWriter.LogErrorWithDebug(error, exception);
             }
         }
-
-        public class ThemeDefinition
-        {
-            public string DisplayName { get; set; }
-            public string ActualName { get; set; }
-
-            public ThemeDefinition()
-            { }
-        }
     }
 }
