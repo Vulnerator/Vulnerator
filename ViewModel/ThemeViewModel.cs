@@ -117,7 +117,7 @@ namespace Vulnerator.ViewModel
             }
             catch (Exception exception)
             {
-                LogWriter.LogError($"Unable to set the application theme to '{Settings.Default.Theme}'.");
+                LogWriter.LogError($"Unable to set the application theme to '{Settings.Default.Theme}.{Settings.Default.Accent}'.");
                 throw exception;
             }
         }
