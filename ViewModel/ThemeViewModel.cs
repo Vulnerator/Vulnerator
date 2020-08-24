@@ -127,7 +127,7 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                Settings.Default["Theme"] = SelectedTheme;
+                Settings.Default.Theme = SelectedTheme;
                 SetThemeAndAccent();
             }
             catch (Exception exception)
@@ -143,7 +143,7 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                Settings.Default["Accent"] = parameter.ToString();
+                Settings.Default.Accent = parameter.ToString();
                 SetThemeAndAccent();
             }
             catch (Exception exception)
