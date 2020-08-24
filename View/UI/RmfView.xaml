@@ -38,6 +38,7 @@
                               VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <Expander Margin="5,0,5,5"
+                                  Style="{StaticResource CustomExpander}"
                                   Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
@@ -109,6 +110,7 @@
                             </StackPanel>
                         </Expander>
                         <Expander Margin="5,0,5,5"
+                                  Style="{StaticResource CustomExpander}"
                                   Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
@@ -151,6 +153,7 @@
                             </Grid>
                         </Expander>
                         <Expander Margin="5,0,5,5"
+                                  Style="{StaticResource CustomExpander}"
                                   Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
@@ -175,6 +178,7 @@
                             </Grid>
                         </Expander>
                         <Expander Margin="5,0,5,5"
+                                  Style="{StaticResource CustomExpander}"
                                   Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
@@ -205,6 +209,7 @@
                             </DataGrid>
                         </Expander>
                         <Expander Margin="5,0,5,5"
+                                  Style="{StaticResource CustomExpander}"
                                   Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
@@ -356,6 +361,7 @@
                             </StackPanel>
                         </Expander>
                         <Expander Margin="5,0,5,5"
+                                  Style="{StaticResource CustomExpander}"
                                   Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
@@ -442,6 +448,7 @@
                             </StackPanel>
                         </Expander>
                         <Expander Margin="5,0,5,5"
+                                  Style="{StaticResource CustomExpander}"
                                   Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
@@ -542,6 +549,7 @@
                             </StackPanel>
                         </Expander>
                         <Expander Margin="5,0,5,5"
+                                  Style="{StaticResource CustomExpander}"
                                   Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
@@ -598,6 +606,7 @@
                             </StackPanel>
                         </Expander>
                         <Expander Margin="5,0,5,5"
+                                  Style="{StaticResource CustomExpander}"
                                   Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
@@ -647,6 +656,7 @@
                             </DataGrid>
                         </Expander>
                         <Expander Margin="5,0,5,5"
+                                  Style="{StaticResource CustomExpander}"
                                   Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
@@ -695,6 +705,7 @@
                             </DataGrid>
                         </Expander>
                         <Expander Margin="5,0"
+                                  Style="{StaticResource CustomExpander}"
                                   Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   BorderThickness="0"
                                   IsExpanded="True">
@@ -1295,7 +1306,7 @@
                               BorderThickness="0"
                               ExpandDirection="Right">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelMahApps.Brushes.Text}">
+                            <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -1317,7 +1328,7 @@
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center"
-                                               Foreground="{DynamicResource LabelMahApps.Brushes.Text}"
+                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                Text="Bulk Process"
                                                TextTrimming="CharacterEllipsis" />
                                 </Grid>
@@ -1403,7 +1414,7 @@
                               BorderThickness="0"
                               ExpandDirection="Right">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelMahApps.Brushes.Text}">
+                            <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -1425,7 +1436,7 @@
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center"
-                                               Foreground="{DynamicResource LabelMahApps.Brushes.Text}"
+                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                Text="Bulk Process"
                                                TextTrimming="CharacterEllipsis" />
                                 </Grid>

@@ -27,7 +27,7 @@
     <!--  re-set brushes too  -->
     <SolidColorBrush x:Key="MahApps.Brushes.ThemeForeground" options:Freeze="True" Color="{StaticResource MahApps.Colors.ThemeForeground}" />
     <SolidColorBrush x:Key="MahApps.Brushes.Text" options:Freeze="True" Color="{StaticResource MahApps.Colors.ThemeForeground}" />
-    <SolidColorBrush x:Key="LabelMahApps.Brushes.Text" options:Freeze="True" Color="{StaticResource MahApps.Colors.ThemeForeground}" />
+    <SolidColorBrush x:Key="MahApps.Brushes.Label" options:Freeze="True" Color="{StaticResource MahApps.Colors.ThemeForeground}" />
     <SolidColorBrush x:Key="MahApps.Colors.ThemeForegroundBrush" options:Freeze="True" Color="{StaticResource MahApps.Colors.ThemeForeground}" />
     <SolidColorBrush x:Key="TextBoxMouseOverInnerBorderBrush" options:Freeze="True" Color="{StaticResource MahApps.Colors.ThemeForeground}" />
     <SolidColorBrush x:Key="MahApps.Brushes.TextBox.Border.Focus" options:Freeze="True" Color="{StaticResource MahApps.Colors.ThemeForeground}" />

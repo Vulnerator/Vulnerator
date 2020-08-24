@@ -151,7 +151,7 @@
             <Controls:HamburgerMenu x:Name="hamburgerMenu"
                                     Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                     DisplayMode="CompactInline"
-                                    Foreground="{DynamicResource LabelMahApps.Brushes.Text}"
+                                    Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                     ItemTemplate="{StaticResource HamburgerMenuItem}"
                                     OptionsItemTemplate="{StaticResource HamburgerMenuItem}"
                                     SelectedIndex="0"
@@ -163,7 +163,7 @@
                                    HorizontalAlignment="Left"
                                    VerticalAlignment="Center"
                                    FontSize="16"
-                                   Foreground="{DynamicResource LabelMahApps.Brushes.Text}"
+                                   Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                    Text="Navigation" />
                     </DataTemplate>
                 </Controls:HamburgerMenu.HamburgerMenuHeaderTemplate>
@@ -271,7 +271,7 @@
                         <ContentControl x:Name="Content"
                                         Content="{Binding Tag}"
                                         Focusable="False"
-                                        Foreground="{DynamicResource LabelMahApps.Brushes.Text}" />
+                                        Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
                     </DataTemplate>
                 </Controls:HamburgerMenu.ContentTemplate>
             </Controls:HamburgerMenu>

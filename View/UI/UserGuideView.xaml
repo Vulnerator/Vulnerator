@@ -42,6 +42,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Expander Grid.Column="0"
+                      Style="{StaticResource CustomExpander}"
                       Grid.ColumnSpan="2"
                       Margin="0,10,0,0"
                       Background="{DynamicResource MahApps.Brushes.Window.Background}"
@@ -49,7 +50,7 @@
                       ExpandDirection="Right"
                       IsExpanded="False">
                 <Expander.Header>
-                    <Label Foreground="{DynamicResource LabelMahApps.Brushes.Text}">
+                    <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                         <Label.LayoutTransform>
                             <RotateTransform Angle="90" />
                         </Label.LayoutTransform>
@@ -71,7 +72,7 @@
                                        Margin="5,0"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"
-                                       Foreground="{DynamicResource LabelMahApps.Brushes.Text}"
+                                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                        Text="Table of Contents"
                                        TextTrimming="CharacterEllipsis" />
                         </Grid>

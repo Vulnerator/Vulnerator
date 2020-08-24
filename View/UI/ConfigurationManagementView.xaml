@@ -164,7 +164,7 @@
                               ExpandDirection="Right"
                               Style="{StaticResource CustomExpander}">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelMahApps.Brushes.Text}">
+                            <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -356,7 +356,7 @@
                               ExpandDirection="Right"
                               Style="{StaticResource CustomExpander}">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelMahApps.Brushes.Text}">
+                            <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -638,7 +638,7 @@
                               ExpandDirection="Right"
                               Style="{StaticResource CustomExpander}">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelMahApps.Brushes.Text}">
+                            <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -874,7 +874,7 @@
                               ExpandDirection="Right"
                               Style="{StaticResource CustomExpander}">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelMahApps.Brushes.Text}">
+                            <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -1292,7 +1292,7 @@
                               BorderThickness="0"
                               ExpandDirection="Right">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelMahApps.Brushes.Text}">
+                            <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>

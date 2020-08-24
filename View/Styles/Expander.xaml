@@ -57,7 +57,7 @@
                             <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource LabelMahApps.Brushes.Text}" />
+                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -112,7 +112,7 @@
                             <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource LabelMahApps.Brushes.Text}" />
+                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -166,7 +166,7 @@
                             <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource LabelMahApps.Brushes.Text}" />
+                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -220,7 +220,7 @@
                             <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource LabelMahApps.Brushes.Text}" />
+                            <Setter TargetName="Arrow" Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

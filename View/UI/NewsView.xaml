@@ -47,7 +47,7 @@
                               ExpandDirection="Right"
                               IsExpanded="False">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelMahApps.Brushes.Text}">
+                            <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -69,7 +69,7 @@
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center"
-                                               Foreground="{DynamicResource LabelMahApps.Brushes.Text}"
+                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                Text="Open Issues"
                                                TextTrimming="CharacterEllipsis" />
                                 </Grid>
@@ -287,7 +287,7 @@
                               ExpandDirection="Right"
                               IsExpanded="False">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelMahApps.Brushes.Text}">
+                            <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -309,7 +309,7 @@
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center"
-                                               Foreground="{DynamicResource LabelMahApps.Brushes.Text}"
+                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                Text="Releases"
                                                TextTrimming="CharacterEllipsis" />
                                 </Grid>

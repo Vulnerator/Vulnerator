@@ -28,7 +28,7 @@
 
     <Style x:Key="ExpanderHeaderTextBlockStyle"
            TargetType="{x:Type TextBlock}">
-        <Setter Property="Foreground" Value="{DynamicResource LabelMahApps.Brushes.Text}" />
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="Margin" Value="5,0" />
         <Setter Property="TextTrimming" Value="CharacterEllipsis" />

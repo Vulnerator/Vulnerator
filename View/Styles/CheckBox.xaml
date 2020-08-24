@@ -13,7 +13,7 @@
         <Setter Property="Controls:ControlsHelper.MouseOverBorderBrush" Value="{DynamicResource MahApps.Brushes.CheckBox.MouseOver}" />
         <Setter Property="FontFamily" Value="{DynamicResource MahApps.Fonts.Family.Control}" />
         <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.Content}" />
-        <Setter Property="Foreground" Value="{DynamicResource LabelMahApps.Brushes.Text}" />
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="Padding" Value="6,0,0,0" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
