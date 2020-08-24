@@ -6,6 +6,7 @@ using MahApps.Metro;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.UI;
 using System.Windows;
 using System.Windows.Media;
 using ControlzEx.Theming;
@@ -31,8 +32,8 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private List<ThemeDefinition> _themes { get; set; }
-        public List<ThemeDefinition> Themes
+        private List<string> _themes { get; set; }
+        public List<string> Themes
         {
             get => _themes;
             set
@@ -45,8 +46,8 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private ThemeDefinition _selectedTheme { get; set; }
-        public ThemeDefinition SelectedTheme
+        private string _selectedTheme { get; set; }
+        public string SelectedTheme
         {
             get => _selectedTheme;
             set
@@ -59,14 +60,28 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private string _accent { get; set; }
+
+        public string Accent
+        {
+            get => _accent;
+            set
+            {
+                if (_accent != value)
+                {
+                    _accent = value;
+                    RaisePropertyChanged("Accent");
+                }
+            }
+        }
+
         public ThemeViewModel()
         { 
             try
             {
                 LogWriter.LogStatusUpdate("Begin instantiation of ThemeViewModel.");
                 Themes = PopulateAvailableThemes();
-                SetTheme(Properties.Settings.Default["Theme"].ToString());
-                SetAccent(Properties.Settings.Default["Accent"].ToString());
+                SetThemeAndAccent();
                 LogWriter.LogStatusUpdate("ThemeManagementViewModel instantiated successfully.");
             }
             catch (Exception exception)
@@ -76,31 +91,13 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private List<ThemeDefinition> PopulateAvailableThemes()
+        private List<string> PopulateAvailableThemes()
         { 
             try
             {
-                List<ThemeDefinition> themes = new List<ThemeDefinition>();
-                foreach (Theme theme in ThemeManager.Current.Themes)
-                {
-                    string displayName = string.Empty;
-                    switch (theme.Name)
-                    {
-                        case "BaseDark":
-                            {
-                                displayName = "Dark";
-                                break;
-                            }
-                        case "BaseLight":
-                            {
-                                displayName = "Light";
-                                break;
-                            }
-                        default:
-                            { break; }
-                    }
-                    themes.Add(new ThemeDefinition() { ActualName = theme.Name, DisplayName = displayName });
-                }
+                List<string> themes = new List<string>();
+                themes.Add("Dark");
+                themes.Add("Light");
                 return themes;
             }
             catch (Exception exception)
@@ -110,29 +107,18 @@ namespace Vulnerator.ViewModel
             }
         }
 
-        private void SetTheme(string theme)
+        private void SetThemeAndAccent()
         {
             try
             {
-                ThemeManager.Current.ChangeTheme(Application.Current, theme);
-                SelectedTheme = Themes.FirstOrDefault(t => t.ActualName == theme);
+                ThemeManager.Current.ChangeTheme(Application.Current, $"{Settings.Default.Theme}.{Settings.Default.Accent}");
+                SelectedTheme = Settings.Default.Theme;
+                Accent = Settings.Default.Accent;
             }
             catch (Exception exception)
             {
-                LogWriter.LogError($"Unable to set the application theme to '{theme}'.");
+                LogWriter.LogError($"Unable to set the application theme to '{Settings.Default.Theme}'.");
                 throw exception;
-            }
-        }
-
-        private void SetAccent(string accent)
-        {
-            try
-            {
-                // TODO: Figure this out
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError($"Unable to set the application accent to '{accent}'");
             }
         }
 
@@ -141,14 +127,12 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                string theme = SelectedTheme.ActualName;
-                // Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
-                // ThemeManager.ChangeAppStyle(Application.Current, appStyle.Item2, ThemeManager.GetAppTheme(theme));
-                Settings.Default["Theme"] = theme;
+                Settings.Default["Theme"] = SelectedTheme;
+                SetThemeAndAccent();
             }
             catch (Exception exception)
             {
-                string error = $"Unable to change the application theme to '{SelectedTheme.ActualName}'.";
+                string error = $"Unable to change the application theme to '{SelectedTheme}'.";
                 LogWriter.LogErrorWithDebug(error, exception);
             }
         }
@@ -159,9 +143,8 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                // Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
-                // ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent(parameter.ToString()), appStyle.Item1);
                 Settings.Default["Accent"] = parameter.ToString();
+                SetThemeAndAccent();
             }
             catch (Exception exception)
             {

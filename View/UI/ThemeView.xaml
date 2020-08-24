@@ -35,7 +35,6 @@
                                                    VerticalAlignment="Top"
                                                    Controls:ControlsHelper.CornerRadius="3"
                                                    Command="{Binding ChangeThemeCommand}"
-                                                   DisplayMemberPath="DisplayName"
                                                    ItemsSource="{Binding Themes}"
                                                    SelectedItem="{Binding SelectedTheme}"
                                                    Style="{DynamicResource MahApps.Styles.ComboBox}" />
@@ -442,28 +441,28 @@
                                    Content="Accent Base Color" />
                         </StackPanel>
                         <StackPanel Style="{StaticResource ResponsiveGridThemeStackPanelStyle}">
-                            <Rectangle Fill="{DynamicResource MahApps.Colors.AccentBrush}"
+                            <Rectangle Fill="{DynamicResource MahApps.Brushes.Accent}"
                                        Style="{StaticResource ThemeSwatchStyle}"
                                        ToolTip="Accent Color 1" />
                             <Label HorizontalAlignment="Center"
                                    Content="Accent Color 1" />
                         </StackPanel>
                         <StackPanel Style="{StaticResource ResponsiveGridThemeStackPanelStyle}">
-                            <Rectangle Fill="{DynamicResource MahApps.Colors.AccentBrush2}"
+                            <Rectangle Fill="{DynamicResource MahApps.Brushes.Accent2}"
                                        Style="{StaticResource ThemeSwatchStyle}"
                                        ToolTip="Accent Color 2" />
                             <Label HorizontalAlignment="Center"
                                    Content="Accent Color 2" />
                         </StackPanel>
                         <StackPanel Style="{StaticResource ResponsiveGridThemeStackPanelStyle}">
-                            <Rectangle Fill="{DynamicResource MahApps.Colors.AccentBrush3}"
+                            <Rectangle Fill="{DynamicResource MahApps.Brushes.Accent3}"
                                        Style="{StaticResource ThemeSwatchStyle}"
                                        ToolTip="Accent Color 3" />
                             <Label HorizontalAlignment="Center"
                                    Content="Accent Color 3" />
                         </StackPanel>
                         <StackPanel Style="{StaticResource ResponsiveGridThemeStackPanelStyle}">
-                            <Rectangle Fill="{DynamicResource MahApps.Colors.AccentBrush4}"
+                            <Rectangle Fill="{DynamicResource MahApps.Brushes.Accent4}"
                                        Style="{StaticResource ThemeSwatchStyle}"
                                        ToolTip="Accent Color 4" />
                             <Label HorizontalAlignment="Center"
