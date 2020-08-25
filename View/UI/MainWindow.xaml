@@ -145,8 +145,8 @@
                                   KeyboardNavigation.TabNavigation="Continue">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="38" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Controls:HamburgerMenu x:Name="hamburgerMenu"
                                     Background="{DynamicResource MahApps.Brushes.Window.Background}"
@@ -284,41 +284,43 @@
                 <Notifications:NotificationMessageContainer Grid.Column="1"
                                                             Manager="{Binding NotificationMessageManager}" />
             </Grid>
-            <StatusBar Grid.Row="1"
-                       Height="35"
-                       VerticalAlignment="Top"
-                       Background="{DynamicResource MahApps.Brushes.Control.Background}"
-                       BorderBrush="{DynamicResource MahApps.Colors.AccentBrush}"
-                       BorderThickness="0,1,0,0">
-                <StatusBar.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                        </Grid>
-                    </ItemsPanelTemplate>
-                </StatusBar.ItemsPanel>
-                <StatusBarItem Grid.Column="0">
+            <Grid Grid.Row="1" Height="48">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border Width="48" Background="{DynamicResource MahApps.Brushes.Gray10}">
                     <Controls:ProgressRing Width="30"
                                            Height="30"
                                            Margin="0"
                                            Foreground="{DynamicResource MahApps.Colors.AccentBrush}"
                                            Visibility="{Binding ProgressRingVisibility}" />
-                </StatusBarItem>
-                <StatusBarItem Grid.Column="1"
+                </Border>
+                <StatusBar Grid.Column="1"
+                       Height="35"
+                       VerticalAlignment="Center"
+                       Background="{DynamicResource MahApps.Brushes.Control.Background}">
+                    <StatusBar.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                            </Grid>
+                        </ItemsPanelTemplate>
+                    </StatusBar.ItemsPanel>
+                    <StatusBarItem Grid.Column="0"
                                Height="35"
                                Margin="0"
                                VerticalAlignment="Top"
                                Content="{Binding ProgressLabelText}"
                                Foreground="{DynamicResource MahApps.Brushes.Text}" />
-                <StatusBarItem Width="Auto"
+                    <StatusBarItem Width="Auto" Grid.Column="1"
                                HorizontalAlignment="Stretch" />
-                <StatusBarItem Grid.Column="3"
+                    <StatusBarItem Grid.Column="2"
                                Height="35"
                                Margin="0,0,5,0"
                                HorizontalAlignment="Right"
@@ -326,16 +328,16 @@
                                Content="{Binding NewVersionText}"
                                Foreground="{DynamicResource MahApps.Brushes.Text}"
                                Visibility="Visible" />
-                <StatusBarItem Grid.Column="4">
-                    <Button Margin="0,0,3,0"
+                    <StatusBarItem Grid.Column="3">
+                        <Button Margin="0,0,3,0"
                             Command="{Binding GetLatestVersionCommand}"
                             CommandParameter="{Binding Release.HtmlUrl}"
                             Content="{IconPacks:FontAwesomeLight Download}"
                             ToolTip="Download Now"
                             Visibility="{Binding NewVersionVisibility}" />
-                </StatusBarItem>
-            </StatusBar>
-
+                    </StatusBarItem>
+                </StatusBar>
+            </Grid>
         </Grid>
     </Controls:MetroContentControl>
 </Controls:MetroWindow>
