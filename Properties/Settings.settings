@@ -6,7 +6,7 @@
       <Value Profile="(Default)">alpha1</Value>
     </Setting>
     <Setting Name="Theme" Type="System.String" Scope="User">
-      <Value Profile="(Default)">BaseLight</Value>
+      <Value Profile="(Default)">Light</Value>
     </Setting>
     <Setting Name="Accent" Type="System.String" Scope="User">
       <Value Profile="(Default)">Cobalt</Value>

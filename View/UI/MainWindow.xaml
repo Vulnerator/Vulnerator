@@ -289,7 +289,9 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Border Width="48" Background="{DynamicResource MahApps.Brushes.Gray10}">
+                <Border Width="48" Background="{DynamicResource MahApps.Brushes.Gray10}"
+                        BorderThickness="0,1,0,0"
+                        BorderBrush="{StaticResource MahApps.Brushes.Accent}">
                     <Controls:ProgressRing Width="30"
                                            Height="30"
                                            Margin="0"
@@ -297,9 +299,11 @@
                                            Visibility="{Binding ProgressRingVisibility}" />
                 </Border>
                 <StatusBar Grid.Column="1"
-                       Height="35"
+                       Height="48"
                        VerticalAlignment="Center"
-                       Background="{DynamicResource MahApps.Brushes.Control.Background}">
+                       Background="{DynamicResource MahApps.Brushes.Control.Background}"
+                       BorderThickness="0,1,0,0"
+                       BorderBrush="{StaticResource MahApps.Brushes.Accent}">
                     <StatusBar.ItemsPanel>
                         <ItemsPanelTemplate>
                             <Grid>
@@ -315,7 +319,7 @@
                     <StatusBarItem Grid.Column="0"
                                Height="35"
                                Margin="0"
-                               VerticalAlignment="Top"
+                               VerticalAlignment="Center"
                                Content="{Binding ProgressLabelText}"
                                Foreground="{DynamicResource MahApps.Brushes.Text}" />
                     <StatusBarItem Width="Auto" Grid.Column="1"
@@ -324,7 +328,7 @@
                                Height="35"
                                Margin="0,0,5,0"
                                HorizontalAlignment="Right"
-                               VerticalAlignment="Top"
+                               VerticalAlignment="Center"
                                Content="{Binding NewVersionText}"
                                Foreground="{DynamicResource MahApps.Brushes.Text}"
                                Visibility="Visible" />
@@ -334,7 +338,8 @@
                             CommandParameter="{Binding Release.HtmlUrl}"
                             Content="{IconPacks:FontAwesomeLight Download}"
                             ToolTip="Download Now"
-                            Visibility="{Binding NewVersionVisibility}" />
+                            Visibility="{Binding NewVersionVisibility}"
+                            VerticalAlignment="Center"/>
                     </StatusBarItem>
                 </StatusBar>
             </Grid>
