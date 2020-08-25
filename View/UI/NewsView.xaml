@@ -31,7 +31,7 @@
         <Converters:HtmlToFlowDocumentConverter x:Key="HtmlToFlowDocumentConverter" />
     </UserControl.Resources>
 
-    <Grid Background="{DynamicResource WindowBackgroundBrush}">
+    <Grid Background="{DynamicResource MahApps.Brushes.Window.Background}">
         <Controls:MetroAnimatedSingleRowTabControl Controls:TabControlHelper.Underlined="SelectedTabItem">
             <TabItem Header="Issues"
                      Style="{StaticResource CustomMetroTabItem}">
@@ -40,13 +40,14 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Expander Margin="0,5"
-                              Background="{DynamicResource WindowBackgroundBrush}"
+                    <Expander Margin="{StaticResource MarginTop5}"
+                              Background="{DynamicResource MahApps.Brushes.Window.Background}"
+                              Style="{StaticResource CustomExpander}"
                               BorderThickness="0"
                               ExpandDirection="Right"
                               IsExpanded="False">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                            <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -68,7 +69,7 @@
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center"
-                                               Foreground="{DynamicResource LabelTextBrush}"
+                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                Text="Open Issues"
                                                TextTrimming="CharacterEllipsis" />
                                 </Grid>
@@ -185,7 +186,7 @@
                                                TextTrimming="CharacterEllipsis" />
                                 </Label>
                                 <ListView Grid.Row="1"
-                                          BorderBrush="{DynamicResource TextBoxBorderBrush}"
+                                          BorderBrush="{DynamicResource MahApps.Brushes.TextBox.Border}"
                                           BorderThickness="1"
                                           ItemsSource="{Binding ElementName=issueListBox, Path=SelectedItem.Labels}"
                                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -223,7 +224,7 @@
                                 </Label>
                                 <ListView Grid.Row="3"
                                           Controls:ControlsHelper.CornerRadius="3"
-                                          BorderBrush="{DynamicResource TextBoxBorderBrush}"
+                                          BorderBrush="{DynamicResource MahApps.Brushes.TextBox.Border}"
                                           BorderThickness="1"
                                           ItemsSource="{Binding IssueLabelCategoryList}"
                                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -257,7 +258,7 @@
                             </Grid>
                             <Border Grid.Row="1"
                                     Margin="5,0"
-                                    BorderBrush="{DynamicResource TextBoxBorderBrush}"
+                                    BorderBrush="{DynamicResource MahApps.Brushes.TextBox.Border}"
                                     BorderThickness="1"
                                     CornerRadius="3">
                                 <wpf:MarkdownViewer VerticalAlignment="Stretch"
@@ -279,13 +280,14 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Expander Margin="0,5"
-                              Background="{DynamicResource WindowBackgroundBrush}"
+                    <Expander Margin="{StaticResource MarginTop5}"
+                              Background="{DynamicResource MahApps.Brushes.Window.Background}"
+                              Style="{StaticResource CustomExpander}"
                               BorderThickness="0"
                               ExpandDirection="Right"
                               IsExpanded="False">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                            <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -307,7 +309,7 @@
                                                Margin="5,0"
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center"
-                                               Foreground="{DynamicResource LabelTextBrush}"
+                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                Text="Releases"
                                                TextTrimming="CharacterEllipsis" />
                                 </Grid>
@@ -406,7 +408,7 @@
                         </Grid>
                         <Border Grid.Row="2"
                                 Margin="5,0,0,0"
-                                BorderBrush="{DynamicResource TextBoxBorderBrush}"
+                                BorderBrush="{DynamicResource MahApps.Brushes.TextBox.Border}"
                                 BorderThickness="1"
                                 CornerRadius="3">
                             <wpf:MarkdownViewer VerticalAlignment="Stretch"

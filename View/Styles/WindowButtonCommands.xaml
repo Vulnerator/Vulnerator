@@ -2,8 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                     xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
-                    xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-                    xmlns:local="clr-namespace:Vulnerator.View.Styles">
+                    xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
 
     <!--  WindowButtonCommands control templates  -->
 
@@ -18,6 +17,9 @@
                                                          Height=16,
                                                          Width=16}"
                     Focusable="False"
+                    Command="{x:Static SystemCommands.MinimizeWindowCommand}"
+                    AutomationProperties.AutomationId="Minimize"
+                    AutomationProperties.Name="Minimize"
                     IsEnabled="{Binding IsMinButtonEnabled, RelativeSource={RelativeSource AncestorType={x:Type Controls:MetroWindow}}}"
                     ToolTip="{Binding Minimize, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                     UseLayoutRounding="True">
@@ -44,6 +46,9 @@
                                                          Height=16,
                                                          Width=16}"
                     Focusable="False"
+                    Command="{x:Static SystemCommands.MaximizeWindowCommand}"
+                    AutomationProperties.AutomationId="MaximizeRestore"
+                    AutomationProperties.Name="Maximize"
                     IsEnabled="{Binding IsMaxRestoreButtonEnabled, RelativeSource={RelativeSource AncestorType={x:Type Controls:MetroWindow}}}"
                     ToolTip="{Binding Maximize, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                     UseLayoutRounding="True">
@@ -70,6 +75,9 @@
                                                          Height=16,
                                                          Width=16}"
                     Focusable="False"
+                    Command="{x:Static SystemCommands.CloseWindowCommand}"
+                    AutomationProperties.AutomationId="Close"
+                    AutomationProperties.Name="Close"
                     IsEnabled="{Binding RelativeSource={RelativeSource AncestorType={x:Type Controls:MetroWindow}}, Path=IsCloseButtonEnabled, Mode=OneWay}"
                     ToolTip="{Binding Close, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                     UseLayoutRounding="True">
@@ -90,12 +98,15 @@
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type Controls:MetroWindow}}, Path=IsCloseButtonEnabled}" Value="True" />
+                    <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type Controls:MetroWindow}}, Path=IsAnyDialogOpen}" Value="True" />
                     <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type Controls:MetroWindow}}, Path=IsCloseButtonEnabledWithDialog}" Value="False" />
                 </MultiDataTrigger.Conditions>
                 <Setter TargetName="PART_Close" Property="IsEnabled" Value="False" />
             </MultiDataTrigger>
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type Controls:MetroWindow}}, Path=WindowState}"
                          Value="Maximized">
+                <Setter TargetName="PART_Max" Property="Command" Value="{x:Static SystemCommands.RestoreWindowCommand}" />
+                <Setter TargetName="PART_Max" Property="AutomationProperties.Name" Value="Restore" />
                 <Setter TargetName="PART_Max" Property="Content" Value="{IconPacks:FontAwesomeLight Kind=WindowRestore, Height=16, Width=16}" />
                 <Setter TargetName="PART_Max" Property="ToolTip" Value="{Binding Restore, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
             </DataTrigger>
@@ -113,6 +124,7 @@
     </ControlTemplate>
 
     <Style x:Key="MahApps.Styles.WindowButtonCommands"
+           BasedOn="{StaticResource MahApps.Styles.WindowButtonCommands.Base}"
            TargetType="{x:Type Controls:WindowButtonCommands}">
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.TransparentWhite}" />
         <Setter Property="DarkCloseButtonStyle" Value="{DynamicResource MahApps.Styles.Button.MetroWindow.Dark}" />
@@ -135,21 +147,21 @@
     </Style>
 
     <Style x:Key="MahApps.Styles.WindowButtonCommands.Win10"
-           BasedOn="{StaticResource MahApps.Styles.WindowButtonCommands}"
+           BasedOn="{StaticResource MahApps.Styles.WindowButtonCommands.Base}"
            TargetType="{x:Type Controls:WindowButtonCommands}">
         <Setter Property="DarkCloseButtonStyle" Value="{DynamicResource MahApps.Styles.Button.MetroWindow.Close.Dark.Win10}" />
         <Setter Property="LightCloseButtonStyle" Value="{DynamicResource MahApps.Styles.Button.MetroWindow.Close.Light.Win10}" />
-        <Setter Property="Template" Value="{StaticResource MahApps.Templates.WindowButtonCommands.Win10}" />
+        <Setter Property="Template" Value="{StaticResource Vulnerator.Templates.WindowButtonCommands.Win10}" />
     </Style>
 
     <Style x:Key="CustomCloseWindowButtonStyle"
-           BasedOn="{StaticResource MetroWindowButtonStyle}"
+           BasedOn="{StaticResource MahApps.Styles.Button.MetroWindow.Light}"
            TargetType="{x:Type Button}">
         <Style.Triggers>
 
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="#EB2F2F" />
-                <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
                 <Setter Property="Background" Value="#7C0000" />

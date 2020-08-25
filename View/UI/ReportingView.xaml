@@ -17,6 +17,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch"
              DataContext="{Binding Reporting, Source={StaticResource Locator}}"
@@ -26,7 +27,7 @@
         <Converters:IsNullToCollapsedConverter x:Key="IsNullToCollapsedConverter" />
         <Converters:BooleanToCollapsedConverter x:Key="BooleanToCollapsedConverter" />
     </UserControl.Resources>
-    <Grid Background="{DynamicResource WindowBackgroundBrush}">
+    <Grid Background="{DynamicResource MahApps.Brushes.Window.Background}">
         <Controls:MetroAnimatedSingleRowTabControl Controls:TabControlHelper.Underlined="SelectedTabItem">
             <TabItem Header="Vulnerabilities"
                      Style="{StaticResource CustomMetroTabItem}">
@@ -91,12 +92,12 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding ReportSelectionChangedCommand}"
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="SelectionChanged">
+                                <b:InvokeCommandAction Command="{Binding ReportSelectionChangedCommand}"
                                                        CommandParameter="{Binding Path=SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
                     </DataGrid>
                     <ScrollViewer Grid.Row="0"
                                   Grid.Column="1"

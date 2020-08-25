@@ -8,9 +8,9 @@
                       Title="Vulnerator"
                       Width="250"
                       Height="250"
-                      BorderBrush="{DynamicResource AccentColorBrush}"
+                      BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                       DataContext="{Binding Loading, Source={StaticResource Locator}}"
-                      GlowBrush="{DynamicResource AccentColorBrush}"
+                      GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
                       Icon="/Vulnerator;component/Resources/vulnerator.ico"
                       ResizeMode="NoResize"
                       ShowCloseButton="False"
@@ -30,7 +30,7 @@
                                                      Margin="4"
                                                      HorizontalAlignment="Center"
                                                      Flip="Horizontal"
-                                                     Foreground="{DynamicResource BlackBrush}"
+                                                     Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                      Kind="Vulnerator" />
             </Border>
         </DataTemplate>
@@ -43,8 +43,8 @@
                         Orientation="Horizontal">
                 <TextBlock Margin="5,0"
                            VerticalAlignment="Center"
-                           FontFamily="{DynamicResource HeaderFontFamily}"
-                           FontSize="{DynamicResource WindowTitleFontSize}"
+                           FontFamily="{DynamicResource MahApps.Fonts.Family.Header}"
+                           FontSize="{DynamicResource MahApps.Font.Size.Window.Title}"
                            Text="{TemplateBinding Content}"
                            TextTrimming="CharacterEllipsis" />
             </StackPanel>
@@ -78,7 +78,7 @@
                        TextTrimming="CharacterEllipsis" />
         </Label>
         <ProgressBar Margin="{StaticResource MarginAll5}"
-                     Foreground="{DynamicResource AccentColorBrush}"
+                     Foreground="{DynamicResource MahApps.Brushes.Accent}"
                      IsIndeterminate="True" />
         <Label Margin="{StaticResource MarginBottom10}"
                HorizontalAlignment="Center">

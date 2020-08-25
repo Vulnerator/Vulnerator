@@ -6,11 +6,11 @@
                     xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
 
     <Style x:Key="BlankButtonStyle"
-           BasedOn="{StaticResource MetroButton}"
+           BasedOn="{StaticResource MahApps.Styles.Button}"
            TargetType="{x:Type Button}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="FontFamily" Value="{StaticResource DefaultFont}" />
+        <Setter Property="FontFamily" Value="{StaticResource MahApps.Fonts.Family.Button}" />
         <Setter Property="FontSize" Value="12" />
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="Margin" Value="5" />
@@ -26,27 +26,28 @@
 
     <Style x:Key="SplitButtonStyle"
            TargetType="{x:Type Controls:SplitButton}">
-        <Setter Property="Background" Value="{DynamicResource GrayBrush10}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Controls:ControlsHelper.ContentCharacterCasing" Value="Upper" />
         <Setter Property="Controls:ControlsHelper.CornerRadius" Value="3" />
-        <Setter Property="FontFamily" Value="{DynamicResource DefaultFont}" />
-        <Setter Property="FontSize" Value="{DynamicResource UpperCaseContentFontSize}" />
+        <Setter Property="FontFamily" Value="{DynamicResource MahApps.Fonts.Family.Button}" />
+        <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.Button}" />
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}" />
         <Setter Property="MinHeight" Value="25" />
         <Setter Property="Padding" Value="2,3" />
-        <Setter Property="Template" Value="{DynamicResource SplitButtonHorizontalTemplate}" />
+        <Setter Property="Template" Value="{DynamicResource MahApps.Templates.SplitButton.Horizontal}" />
         <Style.Triggers>
             <Trigger Property="Orientation" Value="Vertical">
-                <Setter Property="Template" Value="{DynamicResource SplitButtonVerticalTemplate}" />
+                <Setter Property="Template" Value="{DynamicResource MahApps.Templates.SplitButton.Vertical}" />
             </Trigger>
             <Trigger Property="IsFocused" Value="True">
-                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Button.Border.Focus}" />
+                <Setter Property="BorderThickness" Value="2" />
             </Trigger>
             <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray7}" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Opacity" Value=".55" />
@@ -54,7 +55,7 @@
         </Style.Triggers>
     </Style>
 
-    <ControlTemplate x:Key="SplitButtonHorizontalTemplate"
+    <ControlTemplate x:Key="MahApps.Templates.SplitButton.Horizontal"
                      TargetType="{x:Type Controls:SplitButton}">
         <Grid UseLayoutRounding="True">
             <Border x:Name="PART_Border"
@@ -105,6 +106,8 @@
                                                            VerticalAlignment="Center"
                                                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                           FontFamily="{TemplateBinding FontFamily}"
+                                                           FontSize="{TemplateBinding FontSize}"
                                                            Content="{Binding SelectedItem, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                                            ContentCharacterCasing="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.ContentCharacterCasing)}"
                                                            ContentStringFormat="{TemplateBinding ItemStringFormat}"
@@ -128,10 +131,6 @@
                             <IconPacks:PackIconFontAwesomeLight Width="8"
                                                                 Height="8"
                                                                 Kind="CaretDown" />
-                            <!--<ContentControl Width="9"
-                                            Height="9"
-                                            Content="{IconPacks:FontAwesomeLight Kind=CaretCircleDown}"
-                                            Style="{DynamicResource MahApps.Styles.ContentControl.PathIcon}" />-->
                         </Button>
                     </Grid>
                 </Controls:ClipBorder>
@@ -139,33 +138,26 @@
             <Popup x:Name="PART_Popup"
                    AllowsTransparency="True"
                    Focusable="False"
-                   IsOpen="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                   PlacementTarget="{Binding ElementName=PART_Border}"
-                   PopupAnimation="Fade"
-                   StaysOpen="True">
-                <ListBox x:Name="PART_ListBox"
-                         MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
-                         Margin="0"
-                         BorderBrush="{TemplateBinding BorderBrush}"
-                         BorderThickness="{TemplateBinding BorderThickness}"
-                         DisplayMemberPath="{TemplateBinding DisplayMemberPath}"
-                         IsSelected="{TemplateBinding IsSelected}"
-                         IsSynchronizedWithCurrentItem="{TemplateBinding IsSynchronizedWithCurrentItem}"
-                         ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
-                         ItemContainerStyleSelector="{TemplateBinding ItemContainerStyleSelector}"
-                         ItemStringFormat="{TemplateBinding ItemStringFormat}"
-                         ItemTemplate="{TemplateBinding ItemTemplate}"
-                         ItemTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                         ItemsPanel="{TemplateBinding ItemsPanel}"
-                         ItemsSource="{TemplateBinding ItemsSource}"
-                         RenderOptions.ClearTypeHint="{TemplateBinding RenderOptions.ClearTypeHint}"
-                         SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                         SelectedItem="{Binding SelectedItem, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                         SelectedValue="{Binding SelectedValue, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                         SelectedValuePath="{TemplateBinding SelectedValuePath}"
-                         SelectionMode="Single"
-                         SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                         Style="{TemplateBinding ListBoxStyle}" />
+                   IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                   Placement="Bottom"
+                   PopupAnimation="Fade">
+                <Grid MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}" MaxHeight="{Binding MaxDropDownHeight, RelativeSource={RelativeSource TemplatedParent}}">
+                    <Border x:Name="PopupBorder"
+                            Height="Auto"
+                            HorizontalAlignment="Stretch"
+                            Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                        <ScrollViewer Padding="1" BorderThickness="0">
+                            <Grid RenderOptions.ClearTypeHint="{TemplateBinding RenderOptions.ClearTypeHint}">
+                                <ItemsPresenter x:Name="ItemsPresenter"
+                                                KeyboardNavigation.DirectionalNavigation="Contained"
+                                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            </Grid>
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
             </Popup>
         </Grid>
         <ControlTemplate.Triggers>
@@ -186,7 +178,7 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
-    <ControlTemplate x:Key="SplitButtonVerticalTemplate"
+    <ControlTemplate x:Key="MahApps.Templates.SplitButton.Vertical"
                      TargetType="{x:Type Controls:SplitButton}">
         <Grid UseLayoutRounding="True">
             <Border x:Name="PART_Border"
@@ -260,10 +252,6 @@
                             <IconPacks:PackIconFontAwesomeLight Width="8"
                                                                 Height="8"
                                                                 Kind="CaretDown" />
-                            <!--<ContentControl Width="9"
-                                            Height="9"
-                                            Content="{IconPacks:FontAwesomeLight Kind=CaretCircleDown}"
-                                            Style="{DynamicResource MahApps.Styles.ContentControl.PathIcon}" />-->
                         </Button>
                     </Grid>
                 </Controls:ClipBorder>
@@ -271,33 +259,26 @@
             <Popup x:Name="PART_Popup"
                    AllowsTransparency="True"
                    Focusable="False"
-                   IsOpen="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                   PlacementTarget="{Binding ElementName=PART_Border}"
-                   PopupAnimation="Fade"
-                   StaysOpen="True">
-                <ListBox x:Name="PART_ListBox"
-                         MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
-                         Margin="0"
-                         BorderBrush="{TemplateBinding BorderBrush}"
-                         BorderThickness="{TemplateBinding BorderThickness}"
-                         DisplayMemberPath="{TemplateBinding DisplayMemberPath}"
-                         IsSelected="{TemplateBinding IsSelected}"
-                         IsSynchronizedWithCurrentItem="{TemplateBinding IsSynchronizedWithCurrentItem}"
-                         ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
-                         ItemContainerStyleSelector="{TemplateBinding ItemContainerStyleSelector}"
-                         ItemStringFormat="{TemplateBinding ItemStringFormat}"
-                         ItemTemplate="{TemplateBinding ItemTemplate}"
-                         ItemTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                         ItemsPanel="{TemplateBinding ItemsPanel}"
-                         ItemsSource="{TemplateBinding ItemsSource}"
-                         RenderOptions.ClearTypeHint="{TemplateBinding RenderOptions.ClearTypeHint}"
-                         SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                         SelectedItem="{Binding SelectedItem, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                         SelectedValue="{Binding SelectedValue, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                         SelectedValuePath="{TemplateBinding SelectedValuePath}"
-                         SelectionMode="Single"
-                         SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                         Style="{TemplateBinding ListBoxStyle}" />
+                   IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                   Placement="Bottom"
+                   PopupAnimation="Fade">
+                <Grid MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}" MaxHeight="{Binding MaxDropDownHeight, RelativeSource={RelativeSource TemplatedParent}}">
+                    <Border x:Name="PopupBorder"
+                            Height="Auto"
+                            HorizontalAlignment="Stretch"
+                            Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                        <ScrollViewer Padding="1" BorderThickness="0">
+                            <Grid RenderOptions.ClearTypeHint="{TemplateBinding RenderOptions.ClearTypeHint}">
+                                <ItemsPresenter x:Name="ItemsPresenter"
+                                                KeyboardNavigation.DirectionalNavigation="Contained"
+                                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            </Grid>
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
             </Popup>
         </Grid>
         <ControlTemplate.Triggers>

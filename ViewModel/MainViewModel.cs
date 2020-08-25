@@ -13,6 +13,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using ControlzEx.Theming;
 using Vulnerator.Helper;
 using Vulnerator.Model.BusinessLogic;
 using Vulnerator.Model.DataAccess;
@@ -316,24 +317,24 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
+                Theme appStyle = ThemeManager.Current.DetectTheme(Application.Current);
                 Notification notification = new Notification
                 {
-                    Accent = appStyle.Item2.Resources["AccentColorBrush"].ToString(),
-                    Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString(),
+                    Accent = appStyle.Resources["MahApps.Colors.AccentBrush"].ToString(),
+                    Background = appStyle.Resources["MahApps.Brushes.Window.Background"].ToString(),
                     Badge = "Info",
-                    Foreground = appStyle.Item1.Resources["TextBrush"].ToString(),
+                    Foreground = appStyle.Resources["MahApps.Brushes.Text"].ToString(),
                     Header = "STIG Library",
                     Message = "Please ingest the latest STIG Compilation Library on the settings page.",
                     AdditionalContentBottom = new Border
                     {
                         BorderThickness = new Thickness(0, 1, 0, 0),
-                        BorderBrush = appStyle.Item1.Resources["GrayBrush7"] as SolidColorBrush,
+                        BorderBrush = appStyle.Resources["MahApps.Brushes.Gray7"] as SolidColorBrush,
                         Child = new CheckBox
                         {
                             Margin = new Thickness(12, 8, 12, 8),
                             HorizontalAlignment = HorizontalAlignment.Left,
-                            Foreground = appStyle.Item1.Resources["TextBrush"] as SolidColorBrush,
+                            Foreground = appStyle.Resources["MahApps.Brushes.Text"] as SolidColorBrush,
                             Content = "Do not display this in the future."
                         }
                     }
@@ -366,12 +367,12 @@ namespace Vulnerator.ViewModel
                     //    new Border
                     //    {
                     //        BorderThickness = new Thickness(0,1,0,0),
-                    //        BorderBrush = ThemeManager.DetectAppStyle(Application.Current).Item1.Resources["GrayBrush7"] as SolidColorBrush,
+                    //        BorderBrush = ThemeManager.DetectAppStyle(Application.Current).Item1.Resources["MahApps.Brushes.Gray7"] as SolidColorBrush,
                     //        Child = new CheckBox
                     //        {
                     //            Margin = new Thickness(12,8,12,8),
                     //            HorizontalAlignment = HorizontalAlignment.Left,
-                    //            Foreground = ThemeManager.DetectAppStyle(Application.Current).Item1.Resources["TextBrush"] as SolidColorBrush,
+                    //            Foreground = ThemeManager.DetectAppStyle(Application.Current).Item1.Resources["MahApps.Brushes.Text"] as SolidColorBrush,
                     //            Content = "Do not display this in the future."
                     //        }
                     //    }

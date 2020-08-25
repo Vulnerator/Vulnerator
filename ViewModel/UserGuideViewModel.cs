@@ -14,13 +14,26 @@ namespace Vulnerator.ViewModel
     public class UserGuideViewModel : ViewModelBase
     {
         private Assembly assembly = Assembly.GetExecutingAssembly();
-        public MarkdownPipeline MarkdownPipeline = new MarkdownPipelineBuilder()
+        private MarkdownPipeline _markdownPipeline = new MarkdownPipelineBuilder()
             .UseAdvancedExtensions()
             .UseEmphasisExtras()
             .UseAutoLinks()
             .UseEmojiAndSmiley()
             .UseTaskLists()
             .Build();
+
+        public MarkdownPipeline MarkdownPipeline
+        {
+            get => _markdownPipeline;
+            set
+            {
+                if (_markdownPipeline != value)
+                {
+                    _markdownPipeline = value;
+                    RaisePropertyChanged("MarkdownPipeline");
+                }
+            }
+        }
 
         private List<UserGuidePage> _userGuidePages = new List<UserGuidePage>();
         public List<UserGuidePage> UserGuidePages

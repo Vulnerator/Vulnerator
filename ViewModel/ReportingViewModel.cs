@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using ControlzEx.Theming;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Vulnerator.Model.Entity;
@@ -406,7 +407,7 @@ namespace Vulnerator.ViewModel
                     .Include(r => r.Group)
                     .FirstOrDefault(r => r.RequiredReport.DisplayedReportName.Equals("Global") &&
                                          r.UserName.Equals(Properties.Settings.Default.ActiveUser));
-                if (GlobalReportRmfOverrideUserSettings.Group != null)
+                if (GlobalReportRmfOverrideUserSettings != null && GlobalReportRmfOverrideUserSettings.Group != null)
                 { GlobalReportRmfOverrideUserSettingsGroup = Groups.FirstOrDefault(x => x.Group_ID.Equals(GlobalReportRmfOverrideUserSettings.Group_ID)); }
                 else
                 { GlobalReportRmfOverrideUserSettingsGroup = null; }
@@ -470,7 +471,7 @@ namespace Vulnerator.ViewModel
                         .Include(r => r.Group)
                         .FirstOrDefault(r => r.RequiredReport_ID.Equals(selection.RequiredReport_ID) &&
                                              r.UserName.Equals(Properties.Settings.Default.ActiveUser));
-                    if (SelectedReportRmfOverrideUserSettings.Group != null)
+                    if (SelectedReportRmfOverrideUserSettings != null && SelectedReportRmfOverrideUserSettings.Group != null)
                     { SelectedReportRmfOverrideUserSettingsGroup = Groups.FirstOrDefault(x => x.Group_ID.Equals(SelectedReportRmfOverrideUserSettings.Group_ID)); }
                     else
                     { SelectedReportRmfOverrideUserSettingsGroup = null; }
@@ -756,10 +757,10 @@ namespace Vulnerator.ViewModel
                 {
                     return;
                 }
-                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(System.Windows.Application.Current);
+                Theme appStyle = ThemeManager.Current.DetectTheme(System.Windows.Application.Current);
                 Notification notification = new Notification();
-                notification.Background = appStyle.Item1.Resources["GrayBrush10"].ToString();
-                notification.Foreground = appStyle.Item1.Resources["TextBrush"].ToString();
+                notification.Background = appStyle.Resources["MahApps.Brushes.Gray10"].ToString();
+                notification.Foreground = appStyle.Resources["MahApps.Brushes.Text"].ToString();
                 if (e.Result != null)
                 {
                     if (e.Result is Exception)
@@ -1240,10 +1241,10 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(System.Windows.Application.Current);
+                Theme appStyle = ThemeManager.Current.DetectTheme(System.Windows.Application.Current);
                 Notification notification = new Notification();
-                notification.Background = appStyle.Item1.Resources["GrayBrush10"].ToString();
-                notification.Foreground = appStyle.Item1.Resources["TextBrush"].ToString();
+                notification.Background = appStyle.Resources["MahApps.Brushes.Gray10"].ToString();
+                notification.Foreground = appStyle.Resources["MahApps.Brushes.Text"].ToString();
                 if (e.Result != null)
                 {
                     if (e.Result is Exception)

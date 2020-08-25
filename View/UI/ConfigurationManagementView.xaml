@@ -27,7 +27,7 @@
         <Converters:IsNullToCollapsedConverter x:Key="IsNullToCollapsedConverter" />
     </UserControl.Resources>
 
-    <Grid Background="{DynamicResource WindowBackgroundBrush}">
+    <Grid Background="{DynamicResource MahApps.Brushes.Window.Background}">
         <Controls:MetroAnimatedSingleRowTabControl Controls:TabControlHelper.Underlined="SelectedTabItem">
             <TabItem Header="Groups"
                      Style="{StaticResource CustomMetroTabItem}">
@@ -64,7 +64,7 @@
                                                     Header="Name"
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                        <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
                                                TargetType="TextBlock">
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
@@ -76,7 +76,7 @@
                                                     Header="Acronym"
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                        <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
                                                TargetType="TextBlock">
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
@@ -88,7 +88,7 @@
                                                     Header="Tier"
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                        <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
                                                TargetType="TextBlock">
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
@@ -100,7 +100,7 @@
                                                     Header="Asset Count"
                                                     HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                        <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
                                                TargetType="TextBlock">
                                             <Setter Property="HorizontalAlignment" Value="Center" />
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
@@ -159,12 +159,12 @@
                         </ScrollViewer>
                     </Grid>
                     <Expander Grid.Column="1"
-                              Background="{DynamicResource WindowBackgroundBrush}"
+                              Background="{DynamicResource MahApps.Brushes.Window.Background}"
                               BorderThickness="0"
                               ExpandDirection="Right"
                               Style="{StaticResource CustomExpander}">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                            <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -230,14 +230,14 @@
                                           Visibility="{Binding SelectedGroup, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <Controls:ToggleSwitch x:Name="groupAccreditationToggleSwitch"
                                                        Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
                                                        vh:DependencyProperties.PrimaryValue="{Binding NewGroup.IsAccreditation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        vh:DependencyProperties.SecondaryValue="{Binding SelectedGroup.IsAccreditation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        Content="Is Accreditation"
                                                        FontFamily="Segoe UI"
-                                                       FontSize="12"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       FontSize="12" />
                                 <TextBox Controls:TextBoxHelper.Watermark="eMASS ID (Digits Only)"
                                          vh:DependencyProperties.FloatingWatermark="eMASS ID"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
@@ -245,14 +245,14 @@
                                          TextWrapping="Wrap"
                                          Visibility="{Binding ElementName=groupAccreditationToggleSwitch, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
                                                        vh:DependencyProperties.PrimaryValue="{Binding NewGroup.IsPlatform, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        vh:DependencyProperties.SecondaryValue="{Binding SelectedGroup.IsPlatform, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        Content="Is Platform"
                                                        FontFamily="Segoe UI"
-                                                       FontSize="12"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       FontSize="12" />
                                 <Button Margin="{StaticResource MarginTop5}"
                                         HorizontalAlignment="Center"
                                         Command="{Binding ModifyGroupCommand}"
@@ -351,12 +351,12 @@
                         </ScrollViewer>
                     </Grid>
                     <Expander Grid.Column="1"
-                              Background="{DynamicResource WindowBackgroundBrush}"
+                              Background="{DynamicResource MahApps.Brushes.Window.Background}"
                               BorderThickness="0"
                               ExpandDirection="Right"
                               Style="{StaticResource CustomExpander}">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                            <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -498,35 +498,38 @@
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedHardware.OperatingSystem, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Found 21745"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedHardware.Found21745}"
-                                                       IsEnabled="False"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedHardware.Found21745}"
+                                                       IsEnabled="False" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Found 26917"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedHardware.Found26917}"
+                                                       IsOn="{Binding SelectedHardware.Found26917}"
                                                        IsEnabled="False"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                        />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is Virtual Server"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedHardware.IsVirtualServer}"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedHardware.IsVirtualServer}"
+                                                        />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is IA Enabled"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedHardware.IsIA_Enabled}"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedHardware.IsIA_Enabled}"
+                                                        />
                                 <TextBox Controls:TextBoxHelper.Watermark="NIAP Level"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedHardware.NIAP_Level, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
@@ -630,12 +633,12 @@
                         </ScrollViewer>
                     </Grid>
                     <Expander Grid.Column="1"
-                              Background="{DynamicResource WindowBackgroundBrush}"
+                              Background="{DynamicResource MahApps.Brushes.Window.Background}"
                               BorderThickness="0"
                               ExpandDirection="Right"
                               Style="{StaticResource CustomExpander}">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                            <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -713,54 +716,61 @@
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedSoftware.DADMS_LastDateAuthorized, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is OS / Firmware"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedSoftware.IsOS_OrFirmware, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedSoftware.IsOS_OrFirmware, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                        />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Has Custom Code"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedSoftware.HasCustomCode, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedSoftware.HasCustomCode, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                        />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is IA / IA Enabled"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedSoftware.IA_OrIA_Enabled, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedSoftware.IA_OrIA_Enabled, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                        />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is FAM Accepted"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedSoftware.FAM_Accepted, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedSoftware.FAM_Accepted, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                        />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is Externally Authorized"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedSoftware.ExternallyAuthorized, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedSoftware.ExternallyAuthorized, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                        />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Report in Accreditation"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedSoftware.ReportInAccreditationGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedSoftware.ReportInAccreditationGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                        />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Approved for Baseline"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsChecked="{Binding SelectedSoftware.ApprovedForBaselineGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                       Style="{StaticResource CustomWin10ToggleSwitchStyle}" />
+                                                       IsOn="{Binding SelectedSoftware.ApprovedForBaselineGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                        />
                                 <TextBox Controls:TextBoxHelper.Watermark="Baseline Approver"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedSoftware.BaselineApproverGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
@@ -859,12 +869,12 @@
                         </ScrollViewer>
                     </Grid>
                     <Expander Grid.Column="1"
-                              Background="{DynamicResource WindowBackgroundBrush}"
+                              Background="{DynamicResource MahApps.Brushes.Window.Background}"
                               BorderThickness="0"
                               ExpandDirection="Right"
                               Style="{StaticResource CustomExpander}">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                            <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>
@@ -968,7 +978,7 @@
                                                     Header="First Name"
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                        <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
                                                TargetType="TextBlock">
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
@@ -988,7 +998,7 @@
                                                     Header="Last Name"
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                        <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
                                                TargetType="TextBlock">
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
@@ -1008,7 +1018,7 @@
                                                     Header="Email"
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                        <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
                                                TargetType="TextBlock">
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
@@ -1028,7 +1038,7 @@
                                                     Header="Title"
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                        <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
                                                TargetType="TextBlock">
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
@@ -1048,7 +1058,7 @@
                                                     Header="Organization"
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
                                     <DataGridTextColumn.ElementStyle>
-                                        <Style BasedOn="{StaticResource MetroTextBlock}"
+                                        <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
                                                TargetType="TextBlock">
                                             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                                             <Setter Property="TextWrapping" Value="NoWrap" />
@@ -1278,11 +1288,11 @@
                         </ScrollViewer>
                     </Grid>
                     <Expander Grid.Column="1"
-                              Background="{DynamicResource WindowBackgroundBrush}"
+                              Background="{DynamicResource MahApps.Brushes.Window.Background}"
                               BorderThickness="0"
                               ExpandDirection="Right">
                         <Expander.Header>
-                            <Label Foreground="{DynamicResource LabelTextBrush}">
+                            <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="90" />
                                 </Label.LayoutTransform>

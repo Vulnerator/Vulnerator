@@ -3,7 +3,6 @@
                     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                     xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
                     xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-                    xmlns:local="clr-namespace:Vulnerator.View.Styles"
                     xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
                     xmlns:vm="clr-namespace:Vulnerator.ViewModel">
@@ -25,23 +24,23 @@
     </DataTemplate>
 
     <Style x:Key="HamburgerMenuCreatorsItemStyle"
-           BasedOn="{StaticResource HamburgerMenuItemStyle}"
+           BasedOn="{StaticResource MahApps.Styles.ListBoxItem.HamburgerMenuItem	}"
            TargetType="{x:Type ListBoxItem}">
         <Setter Property="Controls:ItemHelper.ActiveSelectionBackgroundBrush" Value="Transparent" />
-        <Setter Property="Controls:ItemHelper.ActiveSelectionForegroundBrush" Value="{DynamicResource AccentBaseColorBrush}" />
-        <Setter Property="Controls:ItemHelper.DisabledForegroundBrush" Value="{DynamicResource GrayNormalBrush}" />
+        <Setter Property="Controls:ItemHelper.ActiveSelectionForegroundBrush" Value="{DynamicResource MahApps.Brushes.AccentBase}" />
+        <Setter Property="Controls:ItemHelper.DisabledForegroundBrush" Value="{DynamicResource MahApps.Colors.GrayBrush}" />
         <Setter Property="Controls:ItemHelper.DisabledSelectedBackgroundBrush" Value="Transparent" />
-        <Setter Property="Controls:ItemHelper.DisabledSelectedForegroundBrush" Value="{DynamicResource GrayNormalBrush}" />
-        <Setter Property="Controls:ItemHelper.HoverBackgroundBrush" Value="{DynamicResource GrayBrush9}" />
-        <Setter Property="Controls:ItemHelper.HoverSelectedBackgroundBrush" Value="{DynamicResource GrayBrush9}" />
+        <Setter Property="Controls:ItemHelper.DisabledSelectedForegroundBrush" Value="{DynamicResource MahApps.Colors.GrayBrush}" />
+        <Setter Property="Controls:ItemHelper.HoverBackgroundBrush" Value="{DynamicResource MahApps.Brushes.Gray9}" />
+        <Setter Property="Controls:ItemHelper.HoverSelectedBackgroundBrush" Value="{DynamicResource MahApps.Brushes.Gray9}" />
         <Setter Property="Controls:ItemHelper.SelectedBackgroundBrush" Value="Transparent" />
-        <Setter Property="Controls:ItemHelper.SelectedForegroundBrush" Value="{DynamicResource AccentBaseColorBrush}" />
+        <Setter Property="Controls:ItemHelper.SelectedForegroundBrush" Value="{DynamicResource MahApps.Brushes.AccentBase}" />
     </Style>
 
     <Style x:Key="HamburgerMenuCreatorsStyle"
-           BasedOn="{StaticResource {x:Type Controls:HamburgerMenu}}"
+           BasedOn="{StaticResource MahApps.Styles.HamburgerMenu.CreatorsUpdate}"
            TargetType="{x:Type Controls:HamburgerMenu}">
-        <Setter Property="HamburgerMenuTemplate">
+        <Setter Property="HamburgerButtonTemplate">
             <Setter.Value>
                 <DataTemplate>
                     <ContentControl Width="22"
@@ -52,8 +51,8 @@
         </Setter>
         <Setter Property="ItemContainerStyle" Value="{StaticResource HamburgerMenuCreatorsItemStyle}" />
         <Setter Property="OptionsItemContainerStyle" Value="{StaticResource HamburgerMenuCreatorsItemStyle}" />
-        <Setter Property="PaneBackground" Value="{DynamicResource GrayBrush10}" />
-        <Setter Property="PaneForeground" Value="{DynamicResource TextBrush}" />
+        <Setter Property="PaneBackground" Value="{DynamicResource MahApps.Brushes.Gray10}" />
+        <Setter Property="PaneForeground" Value="{DynamicResource MahApps.Brushes.Text}" />
         <Setter Property="ShowSelectionIndicator" Value="True" />
     </Style>
 

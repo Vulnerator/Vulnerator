@@ -17,6 +17,7 @@
                       xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
                       xmlns:v="clr-namespace:Vulnerator.View"
                       xmlns:vm="clr-namespace:Vulnerator.ViewModel"
+                      xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
                       Title="Vulnerator"
                       MinWidth="750"
                       MinHeight="300"
@@ -24,28 +25,29 @@
                       VerticalContentAlignment="Stretch"
                       d:DesignHeight="800"
                       d:DesignWidth="800"
-                      BorderBrush="{DynamicResource AccentColorBrush}"
+                      BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                       BorderThickness="1"
+                      GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
                       DataContext="{Binding Main, Source={StaticResource Locator}}"
                       Icon="/Vulnerator;component/Resources/vulnerator.ico"
                       KeyboardNavigation.TabNavigation="Continue"
                       ResizeMode="CanResize"
                       Style="{DynamicResource CustomCleanWindowStyleKey}"
-                      TitlebarHeight="48"
+                      TitleBarHeight="48"
                       mc:Ignorable="d">
 
     <!--  Window Icon Template  -->
     <Controls:MetroWindow.IconTemplate>
         <DataTemplate>
             <Border Width="48"
-                    Background="{DynamicResource GrayBrush10}">
+                    Background="{DynamicResource MahApps.Brushes.Gray10}">
                 <IconPacks:PackIconFontAwesomeBrands Width="24"
                                                      Height="24"
                                                      Margin="4"
                                                      HorizontalAlignment="Center"
                                                      VerticalAlignment="Center"
                                                      Flip="Horizontal"
-                                                     Foreground="{DynamicResource BlackBrush}"
+                                                     Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                      Kind="Vulnerator" />
             </Border>
         </DataTemplate>
@@ -58,48 +60,48 @@
                         Orientation="Horizontal">
                 <TextBlock Margin="6,0,5,0"
                            VerticalAlignment="Center"
-                           FontFamily="{DynamicResource HeaderFontFamily}"
-                           FontSize="{DynamicResource WindowTitleFontSize}"
+                           FontFamily="{DynamicResource MahApps.Fonts.Family.Header}"
+                           FontSize="{DynamicResource MahApps.Font.Size.Window.Title}"
                            Text="{TemplateBinding Content}"
                            TextTrimming="CharacterEllipsis" />
                 <Controls:WindowCommands DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=Controls:MetroWindow}}"
-                                         Foreground="{DynamicResource BlackBrush}"
+                                         Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                          ShowLastSeparator="False">
                     <Button x:Name="projectButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
                             Content="{IconPacks:FontAwesomeSolid Home}"
-                            Foreground="{DynamicResource BlackBrush}"
+                            Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                             ToolTip="GitHub Project Page" />
                     <Button x:Name="githubButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
                             Content="{IconPacks:FontAwesomeBrand GithubAlt}"
-                            Foreground="{DynamicResource BlackBrush}"
+                            Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                             ToolTip="GitHub Repository" />
                     <Button x:Name="wikiButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
                             Content="{IconPacks:FontAwesomeSolid GraduationCap}"
-                            Foreground="{DynamicResource BlackBrush}"
+                            Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                             ToolTip="Wiki" />
                     <Button x:Name="issueButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
                             Content="{IconPacks:FontAwesomeSolid Bug}"
-                            Foreground="{DynamicResource BlackBrush}"
+                            Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                             ToolTip="Issues" />
                     <Button x:Name="gitterButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
                             Content="{IconPacks:FontAwesomeBrand Gitter}"
-                            Foreground="{DynamicResource BlackBrush}"
+                            Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                             ToolTip="Gitter Chat" />
                     <Button x:Name="slackButton"
                             Command="{Binding AboutLinksCommand}"
                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"
                             Content="{IconPacks:FontAwesomeBrand Slack}"
-                            Foreground="{DynamicResource BlackBrush}"
+                            Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                             ToolTip="Slack Workspace (Chat)" />
                 </Controls:WindowCommands>
             </StackPanel>
@@ -128,18 +130,18 @@
         <local:UserGuideView x:Key="userGuideView" />
     </Controls:MetroWindow.Resources>
 
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
             <!-- <i:InvokeCommandAction Command="{Binding LaunchStigNotificationCommand}" /> -->
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
 
     <!--  Begin Main Window Layout  -->
     <Controls:MetroContentControl Grid.Row="0"
                                   Margin="0"
                                   HorizontalContentAlignment="Stretch"
                                   VerticalContentAlignment="Stretch"
-                                  Background="{DynamicResource WindowBackgroundBrush}"
+                                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                   KeyboardNavigation.TabNavigation="Continue">
         <Grid>
             <Grid.RowDefinitions>
@@ -147,9 +149,9 @@
                 <RowDefinition Height="38" />
             </Grid.RowDefinitions>
             <Controls:HamburgerMenu x:Name="hamburgerMenu"
-                                    Background="{DynamicResource WindowBackgroundBrush}"
+                                    Background="{DynamicResource MahApps.Brushes.Window.Background}"
                                     DisplayMode="CompactInline"
-                                    Foreground="{DynamicResource LabelTextBrush}"
+                                    Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                     ItemTemplate="{StaticResource HamburgerMenuItem}"
                                     OptionsItemTemplate="{StaticResource HamburgerMenuItem}"
                                     SelectedIndex="0"
@@ -161,7 +163,7 @@
                                    HorizontalAlignment="Left"
                                    VerticalAlignment="Center"
                                    FontSize="16"
-                                   Foreground="{DynamicResource LabelTextBrush}"
+                                   Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                    Text="Navigation" />
                     </DataTemplate>
                 </Controls:HamburgerMenu.HamburgerMenuHeaderTemplate>
@@ -269,7 +271,7 @@
                         <ContentControl x:Name="Content"
                                         Content="{Binding Tag}"
                                         Focusable="False"
-                                        Foreground="{DynamicResource LabelTextBrush}" />
+                                        Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
                     </DataTemplate>
                 </Controls:HamburgerMenu.ContentTemplate>
             </Controls:HamburgerMenu>
@@ -285,8 +287,8 @@
             <StatusBar Grid.Row="1"
                        Height="35"
                        VerticalAlignment="Top"
-                       Background="{DynamicResource ControlBackgroundBrush}"
-                       BorderBrush="{DynamicResource AccentColorBrush}"
+                       Background="{DynamicResource MahApps.Brushes.Control.Background}"
+                       BorderBrush="{DynamicResource MahApps.Colors.AccentBrush}"
                        BorderThickness="0,1,0,0">
                 <StatusBar.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -305,7 +307,7 @@
                     <Controls:ProgressRing Width="30"
                                            Height="30"
                                            Margin="0"
-                                           Foreground="{DynamicResource AccentColorBrush}"
+                                           Foreground="{DynamicResource MahApps.Colors.AccentBrush}"
                                            Visibility="{Binding ProgressRingVisibility}" />
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="1"
@@ -313,7 +315,7 @@
                                Margin="0"
                                VerticalAlignment="Top"
                                Content="{Binding ProgressLabelText}"
-                               Foreground="{DynamicResource TextBrush}" />
+                               Foreground="{DynamicResource MahApps.Brushes.Text}" />
                 <StatusBarItem Width="Auto"
                                HorizontalAlignment="Stretch" />
                 <StatusBarItem Grid.Column="3"
@@ -322,7 +324,7 @@
                                HorizontalAlignment="Right"
                                VerticalAlignment="Top"
                                Content="{Binding NewVersionText}"
-                               Foreground="{DynamicResource TextBrush}"
+                               Foreground="{DynamicResource MahApps.Brushes.Text}"
                                Visibility="Visible" />
                 <StatusBarItem Grid.Column="4">
                     <Button Margin="0,0,3,0"

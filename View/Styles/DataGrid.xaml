@@ -3,21 +3,20 @@
                     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                     xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
                     xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-                    xmlns:local="clr-namespace:Vulnerator.View.Styles"
                     xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
                     xmlns:vm="clr-namespace:Vulnerator.ViewModel">
 
     <Style x:Key="GreyBorderedDataGridStyle"
-           BasedOn="{StaticResource MetroDataGrid}"
+           BasedOn="{StaticResource MahApps.Styles.DataGrid}"
            TargetType="{x:Type DataGrid}">
-        <Setter Property="AlternatingRowBackground" Value="{DynamicResource GrayBrush10}" />
+        <Setter Property="AlternatingRowBackground" Value="{DynamicResource MahApps.Brushes.Gray10}" />
         <Setter Property="AutoGenerateColumns" Value="False" />
-        <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CanUserAddRows" Value="False" />
         <Setter Property="Controls:ControlsHelper.CornerRadius" Value="3" />
-        <Setter Property="Controls:ControlsHelper.FocusBorderBrush" Value="{DynamicResource TextBoxFocusBorderBrush}" />
+        <Setter Property="Controls:ControlsHelper.FocusBorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border.Focus}" />
         <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
         <Setter Property="Template">
             <Setter.Value>
@@ -94,7 +93,7 @@
 
     <Style x:Key="CustomColumnHeaderGripper"
            TargetType="{x:Type Thumb}">
-        <Setter Property="Background" Value="{DynamicResource GrayBrush5}" />
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray5}" />
         <Setter Property="Cursor" Value="SizeWE" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
@@ -112,7 +111,7 @@
     </Style>
 
     <Style x:Key="CustomHeaderBaseStyle"
-           BasedOn="{StaticResource MetroDataGridColumnHeader}"
+           BasedOn="{StaticResource MahApps.Styles.DataGridColumnHeader}"
            TargetType="{x:Type DataGridColumnHeader}">
         <Setter Property="Template">
             <Setter.Value>

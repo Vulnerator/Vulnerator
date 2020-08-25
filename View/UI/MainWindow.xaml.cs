@@ -10,7 +10,7 @@ namespace Vulnerator.View.UI
     /// </summary>
     public partial class MainWindow
     {
-        LoadingWindow loadingWindow;
+        //LoadingWindow loadingWindow;
 
         public MainWindow()
         {
@@ -19,15 +19,15 @@ namespace Vulnerator.View.UI
             //loadingThread.SetApartmentState(ApartmentState.STA);
             //loadingThread.IsBackground = true;
             //loadingThread.Start();
-            InitializeComponent();
+            //InitializeComponent();
             //loadingThread.Abort();
         }
 
         private void ThreadStartingPoint()
         {
-            loadingWindow = new LoadingWindow();
-            loadingWindow.Show();       
-            System.Windows.Threading.Dispatcher.Run();
+            //loadingWindow = new LoadingWindow();
+            //loadingWindow.Show();       
+            //System.Windows.Threading.Dispatcher.Run();
         }
 
         protected override void OnClosed(EventArgs e)
