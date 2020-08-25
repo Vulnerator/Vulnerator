@@ -354,7 +354,7 @@
                               Background="{DynamicResource MahApps.Brushes.Window.Background}"
                               BorderThickness="0"
                               ExpandDirection="Right"
-                              Style="{StaticResource CustomExpander}">
+                              >
                         <Expander.Header>
                             <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
@@ -536,17 +536,19 @@
                                 <TextBox Controls:TextBoxHelper.Watermark="Manufacturer"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedHardware.Manufacturer, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Model Number"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedHardware.ModelNumber, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Serial Number"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedHardware.SerialNumber, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Role"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedHardware.Role, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
-                                <!-- TODO: Incorporate ability to modify HW -->
-                                <!--<Button Margin="{StaticResource MarginTop5}"
+                                <Button Margin="{StaticResource MarginTop5}"
                                         HorizontalAlignment="Center"
                                         Command="{Binding}"
-                                        Content="Update Hardware" />-->
+                                        Content="Update Hardware" />
                             </StackPanel>
                         </ScrollViewer>
                     </Expander>
