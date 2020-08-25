@@ -19,7 +19,7 @@ namespace Vulnerator.View.UI
             //loadingThread.SetApartmentState(ApartmentState.STA);
             //loadingThread.IsBackground = true;
             //loadingThread.Start();
-            //InitializeComponent();
+            InitializeComponent();
             //loadingThread.Abort();
         }
 
