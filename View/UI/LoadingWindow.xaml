@@ -78,7 +78,7 @@
                        TextTrimming="CharacterEllipsis" />
         </Label>
         <ProgressBar Margin="{StaticResource MarginAll5}"
-                     Foreground="{DynamicResource MahApps.Colors.AccentBrush}"
+                     Foreground="{DynamicResource MahApps.Brushes.Accent}"
                      IsIndeterminate="True" />
         <Label Margin="{StaticResource MarginBottom10}"
                HorizontalAlignment="Center">

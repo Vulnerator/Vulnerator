@@ -66,12 +66,10 @@ namespace Vulnerator.Model.DataAccess
                         foreach (string name in resourceNames.Where(x =>
                             x.Contains("Vulnerator.Resources.DdlFiles.Tables.Create.")))
                         {
-                            Messenger.Default.Send(
-                                $"Verifying table '{name.Replace("Vulnerator.Resources.DdlFiles.Tables.Create.", "").Replace(".ddl", "")}'",
-                                MessengerToken.LoadingTextUpdated);
-                            
-                            LogWriter.LogStatusUpdate(
-                                $"Verifying table '{name.Replace("Vulnerator.Resources.DdlFiles.Tables.Create.", "").Replace(".ddl", "")}'.");
+                            string loadingText =
+                                $"Verifying table '{name.Replace("Vulnerator.Resources.DdlFiles.Tables.Create.", "").Replace(".ddl", "")}'";
+                            Messenger.Default.Send(loadingText, MessengerToken.LoadingTextUpdated);
+                            LogWriter.LogStatusUpdate( loadingText);
                             sqliteCommand.CommandText = _ddlReader.ReadDdl(name, assembly);
                             sqliteCommand.ExecuteNonQuery();
                         }
