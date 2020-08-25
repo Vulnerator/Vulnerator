@@ -3,6 +3,7 @@ using log4net;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -60,7 +61,7 @@ namespace Vulnerator.Model.BusinessLogic
                         sqliteCommand.Parameters["Name"].Value = "All";
                         using (TextReader textReader = System.IO.File.OpenText(file.FilePath))
                         {
-                            var csvReader = new CsvReader(textReader);
+                            var csvReader = new CsvReader(textReader, CultureInfo.InvariantCulture);
                             csvReader.Configuration.HasHeaderRecord = true;
 
                             while (csvReader.Read())
