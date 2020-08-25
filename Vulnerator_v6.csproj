@@ -148,8 +148,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\Resources\DllFiles\MahApps.Metro.IconPacks.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Markdig, Version=0.16.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Markdig.0.16.0\lib\net40\Markdig.dll</HintPath>
+    <Reference Include="Markdig, Version=0.18.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Markdig.0.18.0\lib\net40\Markdig.dll</HintPath>
     </Reference>
     <Reference Include="Markdig.SemanticUi, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Markdig.SemanticUi.0.1.0\lib\net45\Markdig.SemanticUi.dll</HintPath>
@@ -159,8 +159,8 @@
       <HintPath>packages\Markdig.SyntaxHighlighting.1.1.7\lib\portable45-net45+win8+wp8+wpa81\Markdig.SyntaxHighlighting.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Markdig.Wpf, Version=0.2.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Markdig.Wpf.0.2.8\lib\net452\Markdig.Wpf.dll</HintPath>
+    <Reference Include="Markdig.Wpf, Version=0.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Markdig.Wpf.0.3.1\lib\net452\Markdig.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Exchange.WebServices, Version=15.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Exchange.WebServices.2.2\lib\40\Microsoft.Exchange.WebServices.dll</HintPath>
