@@ -388,7 +388,9 @@
                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Preferred Host Name"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding SelectedHardware.DisplayedHostName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewHardware.DisplayedHostName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.DisplayedHostName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
                                 <TextBox Controls:TextBoxHelper.Watermark="FQDN (Read Only)"
                                          vh:DependencyProperties.FloatingWatermark="FQDN"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
@@ -496,14 +498,18 @@
                                 </DataGrid>
                                 <TextBox Controls:TextBoxHelper.Watermark="Operating System"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding SelectedHardware.OperatingSystem, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewHardware.OperatingSystem, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding SelectedHardware.OperatingSystem, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Found 21745"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsOn="{Binding SelectedHardware.Found21745}"
+                                                       vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                                       vh:DependencyProperties.PrimaryValue="{Binding NewHardware.Found21745, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                                       vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.Found21745, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                                        IsEnabled="False" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
@@ -511,7 +517,9 @@
                                                        Content="Found 26917"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsOn="{Binding SelectedHardware.Found26917}"
+                                                       vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                                       vh:DependencyProperties.PrimaryValue="{Binding NewHardware.Found26917, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                                       vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.Found26917, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                                        IsEnabled="False"
                                                         />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
@@ -520,7 +528,9 @@
                                                        Content="Is Virtual Server"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsOn="{Binding SelectedHardware.IsVirtualServer}"
+                                                       vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                                       vh:DependencyProperties.PrimaryValue="{Binding NewHardware.IsVirtualServer, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                                       vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.IsVirtualServer, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                                         />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
@@ -528,26 +538,42 @@
                                                        Content="Is IA Enabled"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       IsOn="{Binding SelectedHardware.IsIA_Enabled}"
-                                                        />
+                                                       vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                                       vh:DependencyProperties.PrimaryValue="{Binding NewHardware.IsIA_Enabled, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                                       vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.IsIA_Enabled, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
                                 <TextBox Controls:TextBoxHelper.Watermark="NIAP Level"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding SelectedHardware.NIAP_Level, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewHardware.NIAP_Level, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.NIAP_Level, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Manufacturer"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding SelectedHardware.Manufacturer, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewHardware.Manufacturer, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.Manufacturer, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Model Number"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding SelectedHardware.ModelNumber, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewHardware.ModelNumber, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.ModelNumber, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Serial Number"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding SelectedHardware.SerialNumber, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewHardware.SerialNumber, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.SerialNumber, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Role"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding SelectedHardware.Role, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewHardware.Role, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.Role, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                <ComboBox ItemsSource="{Binding LifecycleStatuses}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}"
+                                          DisplayMemberPath="Lifecycle_Status"
+                                          Controls:TextBoxHelper.Watermark="Lifecycle Status"
+                                          SelectedItem="{Binding LifecycleStatus, Mode=TwoWay}"/>
                                 <Button Margin="{StaticResource MarginTop5}"
                                         HorizontalAlignment="Center"
-                                        Command="{Binding}"
+                                        Command="{Binding ModifyHardwareCommand}"
                                         Content="Update Hardware" />
                             </StackPanel>
                         </ScrollViewer>

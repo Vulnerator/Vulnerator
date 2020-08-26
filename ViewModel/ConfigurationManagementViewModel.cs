@@ -160,6 +160,37 @@ namespace Vulnerator.ViewModel
                 {
                     _selectedHardware = value;
                     RaisePropertyChanged("SelectedHardware");
+                    SetEditableHardware();
+                }
+            }
+        }
+
+        private Hardware _editableHardware;
+
+        public Hardware EditableHardware
+        {
+            get => _editableHardware;
+            set
+            {
+                if (_editableHardware != value)
+                {
+                    _editableHardware = value;
+                    RaisePropertyChanged("EditableHardware");
+                }
+            }
+        }
+
+        private Hardware _newHardware;
+
+        public Hardware NewHardware
+        {
+            get => _newHardware;
+            set
+            {
+                if (_newHardware != value)
+                {
+                    _newHardware = value;
+                    RaisePropertyChanged("NewHardware");
                 }
             }
         }
@@ -179,6 +210,21 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private Software _newSoftware;
+
+        public Software NewSoftware
+        {
+            get => _newSoftware;
+            set
+            {
+                if (_newSoftware != value)
+                {
+                    _newSoftware = value;
+                    RaisePropertyChanged("NewSoftware");
+                }
+            }
+        }
+
         private Software _selectedSoftware;
 
         public Software SelectedSoftware
@@ -190,6 +236,36 @@ namespace Vulnerator.ViewModel
                 {
                     _selectedSoftware = value;
                     RaisePropertyChanged("SelectedSoftware");
+                }
+            }
+        }
+
+        private Software _editableSoftware;
+
+        public Software EditableSoftware
+        {
+            get => _editableSoftware;
+            set
+            {
+                if (_editableSoftware != value)
+                {
+                    _editableSoftware = value;
+                    RaisePropertyChanged("EditableSoftware");
+                }
+            }
+        }
+
+        private PortProtocolService _newPortProtocolService;
+
+        public PortProtocolService NewPortProtocolService
+        {
+            get => _newPortProtocolService;
+            set
+            {
+                if (_newPortProtocolService != value)
+                {
+                    _newPortProtocolService = value;
+                    RaisePropertyChanged("NewPortProtocolService");
                 }
             }
         }
@@ -209,6 +285,21 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private PortProtocolService _editablePortProtocolService;
+
+        public PortProtocolService EditablePortProtocolService
+        {
+            get => _editablePortProtocolService;
+            set
+            {
+                if (_editablePortProtocolService != value)
+                {
+                    _editablePortProtocolService = value;
+                    RaisePropertyChanged("EditablePortProtocolService");
+                }
+            }
+        }
+
         private Group _selectedGroup;
 
         public Group SelectedGroup
@@ -219,6 +310,21 @@ namespace Vulnerator.ViewModel
                 if (_selectedGroup == value) return;
                 _selectedGroup = value;
                 RaisePropertyChanged("SelectedGroup");
+            }
+        }
+
+        private Group _editableGroup;
+
+        public Group EditableGroup
+        {
+            get => _editableGroup;
+            set
+            {
+                if (_editableGroup != value)
+                {
+                    _editableGroup = value;
+                    RaisePropertyChanged("EditableGroup");
+                }
             }
         }
 
@@ -259,6 +365,36 @@ namespace Vulnerator.ViewModel
                 {
                     _selectedVulnerabilitySource = value;
                     RaisePropertyChanged("SelectedVulnerabilitySource");
+                }
+            }
+        }
+
+        private List<LifecycleStatus> _lifecycleStatuses;
+
+        public List<LifecycleStatus> LifecycleStatuses
+        {
+            get => _lifecycleStatuses;
+            set
+            {
+                if (_lifecycleStatuses != value)
+                {
+                    _lifecycleStatuses = value;
+                    RaisePropertyChanged("LifecycleStatuses");
+                }
+            }
+        }
+
+        private LifecycleStatus _lifecycleStatus;
+
+        public LifecycleStatus LifecycleStatus
+        {
+            get => _lifecycleStatus;
+            set
+            {
+                if (_lifecycleStatus != value)
+                {
+                    _lifecycleStatus = value;
+                    RaisePropertyChanged("LifecycleStatus");
                 }
             }
         }
@@ -817,6 +953,68 @@ namespace Vulnerator.ViewModel
             {
                 LogWriter.LogError("Unable to run Group post-modification background worker RunWorkerCompleted tasks.");
                 throw exception;
+            }
+        }
+
+        private void SetEditableHardware()
+        {
+            try
+            {
+                if (SelectedHardware == null)
+                {
+                    EditableHardware = null;
+                    return;
+                }
+
+                EditableHardware = SelectedHardware;
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to clear set editable hardware.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        public RelayCommand ModifyHardwareCommand => new RelayCommand(ModifyHardware);
+
+        private void ModifyHardware()
+        {
+            BackgroundWorker backgroundWorker = new BackgroundWorker();
+            if (SelectedHardware == null)
+            {
+                backgroundWorker.DoWork += AddHardwareBackgroundWorker_DoWork;
+            }
+            else
+            {
+                backgroundWorker.DoWork += UpdateHardwareBackgroundWorker_DoWork;
+            }
+            backgroundWorker.RunWorkerAsync();
+            backgroundWorker.Dispose();
+        }
+
+        private void AddHardwareBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to add a new hardware to the database.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        private void UpdateHardwareBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+
+            }
+            catch (Exception exception)
+            {
+                string error = $"Unable to update hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 
