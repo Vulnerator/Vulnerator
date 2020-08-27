@@ -25,6 +25,28 @@
     <UserControl.Resources>
         <Converters:BooleanToCheckboxConverter x:Key="CheckboxConverter" />
         <Converters:IsNullToCollapsedConverter x:Key="IsNullToCollapsedConverter" />
+
+        <DataTemplate x:Key="PpsItemTemplate">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Protocol}" />
+                <TextBlock Text=" " />
+                <TextBlock Text="{Binding Port}" />
+                <TextBlock Text=": " />
+                <TextBlock Text="{Binding DisplayedServiceName}" />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PpsTemplate">
+            <ContentPresenter x:Name="Presenter"
+                              Content="{Binding}"
+                              ContentTemplate="{StaticResource PpsItemTemplate}" />
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, ComboBoxItem, 1}}"
+                             Value="{x:Null}">
+                    <Setter TargetName="Presenter" Property="ContentTemplate" Value="{StaticResource PpsItemTemplate}" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
     </UserControl.Resources>
 
     <Grid Background="{DynamicResource MahApps.Brushes.Window.Background}">
@@ -230,14 +252,14 @@
                                           Visibility="{Binding SelectedGroup, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <Controls:ToggleSwitch x:Name="groupAccreditationToggleSwitch"
                                                        Margin="{StaticResource MarginTop5}"
-                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
                                                        vh:DependencyProperties.PrimaryValue="{Binding NewGroup.IsAccreditation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        vh:DependencyProperties.SecondaryValue="{Binding SelectedGroup.IsAccreditation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        Content="Is Accreditation"
                                                        FontFamily="Segoe UI"
-                                                       FontSize="12" />
+                                                       FontSize="12"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="eMASS ID (Digits Only)"
                                          vh:DependencyProperties.FloatingWatermark="eMASS ID"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
@@ -245,14 +267,14 @@
                                          TextWrapping="Wrap"
                                          Visibility="{Binding ElementName=groupAccreditationToggleSwitch, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
-                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
                                                        vh:DependencyProperties.PrimaryValue="{Binding NewGroup.IsPlatform, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        vh:DependencyProperties.SecondaryValue="{Binding SelectedGroup.IsPlatform, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        Content="Is Platform"
                                                        FontFamily="Segoe UI"
-                                                       FontSize="12" />
+                                                       FontSize="12"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
                                 <Button Margin="{StaticResource MarginTop5}"
                                         HorizontalAlignment="Center"
                                         Command="{Binding ModifyGroupCommand}"
@@ -341,20 +363,18 @@
                                         HorizontalAlignment="Right"
                                         Command="{Binding}"
                                         Content="Clear Selected Hardware" />
-                                <!-- TODO: Incorporate ability to delete HW -->
-                                <!--<Button Grid.Column="4"
+                                <Button Grid.Column="4"
                                         Margin="{StaticResource MarginLeft5}"
                                         HorizontalAlignment="Right"
-                                        Command="{Binding}"
-                                        Content="Delete Selected Hardware" />-->
+                                        Command="{Binding DeleteHardwareCommand}"
+                                        Content="Delete Selected Hardware" />
                             </Grid>
                         </ScrollViewer>
                     </Grid>
                     <Expander Grid.Column="1"
                               Background="{DynamicResource MahApps.Brushes.Window.Background}"
                               BorderThickness="0"
-                              ExpandDirection="Right"
-                              >
+                              ExpandDirection="Right">
                         <Expander.Header>
                             <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
@@ -387,10 +407,10 @@
                                          Text="{Binding SelectedHardware.DiscoveredHostName, Mode=OneWay}"
                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Preferred Host Name"
-                                         Style="{StaticResource HeaderedTextBoxStyle}"
                                          vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
                                          vh:DependencyProperties.PrimaryValue="{Binding NewHardware.DisplayedHostName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.DisplayedHostName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.DisplayedHostName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="FQDN (Read Only)"
                                          vh:DependencyProperties.FloatingWatermark="FQDN"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
@@ -409,35 +429,49 @@
                                 <DataGrid MinHeight="100"
                                           Margin="{StaticResource MarginTop5}"
                                           ItemsSource="{Binding SelectedHardware.IP_Addresses}"
-                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                          Style="{StaticResource GreyBorderedDataGridStyle}"
+                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding IpAddress}"
                                                             Header="IP Address"
                                                             HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                                     </DataGrid.Columns>
                                 </DataGrid>
-                                <!--  TODO: Add ability to associate IPs to Hardware  -->
-                                <!--<vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
-                                                           Controls:TextBoxHelper.ClearTextButton="True"
-                                                           Controls:TextBoxHelper.Watermark="Add IP"
-                                                           IsEditable="True"
-                                                           Style="{StaticResource HeaderedComboBoxStyle}" />-->
+                                <ComboBox Controls:TextBoxHelper.ButtonCommand="{Binding AssociateIpAddressToHardwareCommand}"
+                                          Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                          Controls:TextBoxHelper.ClearTextButton="True"
+                                          Controls:TextBoxHelper.Watermark="Add IP"
+                                          DisplayMemberPath="IpAddress"
+                                          IsEditable="True"
+                                          IsTextSearchEnabled="True"
+                                          ItemsSource="{Binding IpAddresses}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}"
+                                          Text="{Binding IpAddressForHardwareMapping, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                          TextSearch.TextPath="IpAddress"
+                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <DataGrid MinHeight="100"
                                           Margin="{StaticResource MarginTop5}"
                                           ItemsSource="{Binding SelectedHardware.MAC_Addresses}"
-                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                          Style="{StaticResource GreyBorderedDataGridStyle}"
+                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding MacAddress}"
                                                             Header="MAC Address"
                                                             HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                                     </DataGrid.Columns>
                                 </DataGrid>
-                                <!--  TODO: Add ability to associate MACs to Hardware  -->
-                                <!--<vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
-                                                           Controls:TextBoxHelper.ClearTextButton="True"
-                                                           Controls:TextBoxHelper.Watermark="Add MAC"
-                                                           IsEditable="True"
-                                                           Style="{StaticResource HeaderedComboBoxStyle}" />-->
+                                <ComboBox Controls:TextBoxHelper.ButtonCommand="{Binding AssociateMacAddressToHardwareCommand}"
+                                          Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                          Controls:TextBoxHelper.ClearTextButton="True"
+                                          Controls:TextBoxHelper.Watermark="Add MAC"
+                                          DisplayMemberPath="MacAddress"
+                                          IsEditable="True"
+                                          IsTextSearchEnabled="True"
+                                          ItemsSource="{Binding MacAddresses}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}"
+                                          Text="{Binding MacAddressForHardwareMapping, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                          TextSearch.TextPath="MacAddress"
+                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <DataGrid MinHeight="100"
                                           MaxHeight="300"
                                           Margin="{StaticResource MarginTop5}"
@@ -458,29 +492,34 @@
                                           DisplayMemberPath="GroupName"
                                           ItemsSource="{Binding Groups}"
                                           SelectedItem="{Binding SelectedGroupForHardwareMapping, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"
-                                          Style="{StaticResource HeaderedComboBoxStyle}" />
+                                          Style="{StaticResource HeaderedComboBoxStyle}"
+                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <DataGrid MinHeight="100"
                                           MaxHeight="300"
                                           Margin="{StaticResource MarginTop5}"
                                           ItemsSource="{Binding SelectedHardware.SoftwareHardwares}"
-                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                          Style="{StaticResource GreyBorderedDataGridStyle}"
+                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Software.DisplayedSoftwareName}"
                                                             Header="Installed Software"
                                                             HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                                     </DataGrid.Columns>
                                 </DataGrid>
-                                <!--  TODO: Add ability to associate Software to Hardware  -->
-                                <!--<vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
-                                                           Controls:TextBoxHelper.ClearTextButton="True"
-                                                           Controls:TextBoxHelper.Watermark="Add Software"
-                                                           IsEditable="True"
-                                                           Style="{StaticResource HeaderedComboBoxStyle}" />-->
+                                <ComboBox Controls:TextBoxHelper.ButtonCommand="{Binding AssociateSoftwareToHardwareCommand}"
+                                          Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                          Controls:TextBoxHelper.ClearTextButton="True"
+                                          Controls:TextBoxHelper.Watermark="Add Software"
+                                          ItemsSource="{Binding Softwares}"
+                                          SelectedItem="{Binding SelectedGroupForHardwareMapping, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}"
+                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <DataGrid MinHeight="100"
                                           MaxHeight="300"
                                           Margin="{StaticResource MarginTop5}"
                                           ItemsSource="{Binding SelectedHardware.HardwarePortsProtocolsServices}"
-                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                          Style="{StaticResource GreyBorderedDataGridStyle}"
+                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Width="Auto"
                                                             Binding="{Binding PortProtocolService.Port}"
@@ -496,81 +535,86 @@
                                                             HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                                     </DataGrid.Columns>
                                 </DataGrid>
+                                <ComboBox Controls:TextBoxHelper.ButtonCommand="{Binding AssociatePpsToHardwareCommand}"
+                                          Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                          Controls:TextBoxHelper.ClearTextButton="True"
+                                          Controls:TextBoxHelper.Watermark="Add PPS"
+                                          ItemTemplate="{StaticResource PpsTemplate}"
+                                          ItemsSource="{Binding PortsProtocolsServices}"
+                                          SelectedItem="{Binding PpsForHardwareMapping}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}"
+                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Operating System"
-                                         Style="{StaticResource HeaderedTextBoxStyle}"
                                          vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
                                          vh:DependencyProperties.PrimaryValue="{Binding NewHardware.OperatingSystem, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                         vh:DependencyProperties.SecondaryValue="{Binding SelectedHardware.OperatingSystem, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                         vh:DependencyProperties.SecondaryValue="{Binding SelectedHardware.OperatingSystem, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
-                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Found 21745"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
-                                                       vh:DependencyProperties.PrimaryValue="{Binding NewHardware.Found21745, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                                       vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.Found21745, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                                       IsEnabled="False" />
-                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       IsEnabled="False"
+                                                       IsOn="{Binding EditableHardware.Found21745, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                                        Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
+                                                       Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Found 26917"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
-                                                       vh:DependencyProperties.PrimaryValue="{Binding NewHardware.Found26917, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                                       vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.Found26917, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                                        IsEnabled="False"
-                                                        />
-                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       IsOn="{Binding EditableHardware.Found26917, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                                        Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
+                                                       Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
+                                <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
                                                        HorizontalContentAlignment="Right"
-                                                       Content="Is Virtual Server"
-                                                       FontFamily="Segoe UI"
-                                                       FontSize="12"
                                                        vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
                                                        vh:DependencyProperties.PrimaryValue="{Binding NewHardware.IsVirtualServer, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                                        vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.IsVirtualServer, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                                        />
+                                                       Content="Is Virtual Server"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
-                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
+                                                       vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                                       vh:DependencyProperties.PrimaryValue="{Binding NewHardware.IsIA_Enabled, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                                       vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.IsIA_Enabled, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                                        Content="Is IA Enabled"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
-                                                       vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
-                                                       vh:DependencyProperties.PrimaryValue="{Binding NewHardware.IsIA_Enabled, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                                       vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.IsIA_Enabled, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="NIAP Level"
-                                         Style="{StaticResource HeaderedTextBoxStyle}"
                                          vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
                                          vh:DependencyProperties.PrimaryValue="{Binding NewHardware.NIAP_Level, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.NIAP_Level, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.NIAP_Level, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Manufacturer"
-                                         Style="{StaticResource HeaderedTextBoxStyle}"
                                          vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
                                          vh:DependencyProperties.PrimaryValue="{Binding NewHardware.Manufacturer, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.Manufacturer, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.Manufacturer, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Model Number"
-                                         Style="{StaticResource HeaderedTextBoxStyle}"
                                          vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
                                          vh:DependencyProperties.PrimaryValue="{Binding NewHardware.ModelNumber, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.ModelNumber, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.ModelNumber, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Serial Number"
-                                         Style="{StaticResource HeaderedTextBoxStyle}"
                                          vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
                                          vh:DependencyProperties.PrimaryValue="{Binding NewHardware.SerialNumber, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.SerialNumber, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.SerialNumber, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Role"
-                                         Style="{StaticResource HeaderedTextBoxStyle}"
                                          vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
                                          vh:DependencyProperties.PrimaryValue="{Binding NewHardware.Role, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.Role, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
-                                <ComboBox ItemsSource="{Binding LifecycleStatuses}"
-                                          Style="{StaticResource HeaderedComboBoxStyle}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.Role, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                                <ComboBox Controls:TextBoxHelper.Watermark="Lifecycle Status"
                                           DisplayMemberPath="Lifecycle_Status"
-                                          Controls:TextBoxHelper.Watermark="Lifecycle Status"
-                                          SelectedItem="{Binding LifecycleStatus, Mode=TwoWay}"/>
+                                          ItemsSource="{Binding LifecycleStatuses}"
+                                          SelectedItem="{Binding LifecycleStatus, Mode=TwoWay}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
                                 <Button Margin="{StaticResource MarginTop5}"
                                         HorizontalAlignment="Center"
                                         Command="{Binding ModifyHardwareCommand}"
@@ -651,7 +695,7 @@
                                         HorizontalAlignment="Right"
                                         Command="{Binding}"
                                         Content="Clear Selected Software" />
-                                <!-- TODO: Incorporate ability to delete SW -->
+                                <!--  TODO: Incorporate ability to delete SW  -->
                                 <!--<Button Grid.Column="4"
                                         Margin="{StaticResource MarginLeft5}"
                                         HorizontalAlignment="Right"
@@ -707,15 +751,15 @@
                                          Text="{Binding SelectedSoftware.SoftwareVersion, Mode=OneWay}"
                                          Visibility="{Binding SelectedSoftware, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Software Function"
-                                         Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding SelectedSoftware.SoftwareFunction, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                         vh:DependencyProperties.ShowCharacterCount="True"
                                          MaxLength="500"
-                                         vh:DependencyProperties.ShowCharacterCount="True"/>
-                                <TextBox Controls:TextBoxHelper.Watermark="Software Description"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding SelectedSoftware.SoftwareDescription, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                         Text="{Binding SelectedSoftware.SoftwareFunction, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
+                                <TextBox Controls:TextBoxHelper.Watermark="Software Description"
+                                         vh:DependencyProperties.ShowCharacterCount="True"
                                          MaxLength="1000"
-                                         vh:DependencyProperties.ShowCharacterCount="True"/>
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedSoftware.SoftwareDescription, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
                                 <DataGrid MinHeight="100"
                                           MaxHeight="300"
                                           Margin="{StaticResource MarginTop5}"
@@ -744,65 +788,58 @@
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedSoftware.DADMS_LastDateAuthorized, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
-                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is OS / Firmware"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
                                                        IsOn="{Binding SelectedSoftware.IsOS_OrFirmware, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                        />
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
-                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Has Custom Code"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
                                                        IsOn="{Binding SelectedSoftware.HasCustomCode, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                        />
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
-                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is IA / IA Enabled"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
                                                        IsOn="{Binding SelectedSoftware.IA_OrIA_Enabled, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                        />
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
-                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is FAM Accepted"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
                                                        IsOn="{Binding SelectedSoftware.FAM_Accepted, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                        />
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
-                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Is Externally Authorized"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
                                                        IsOn="{Binding SelectedSoftware.ExternallyAuthorized, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                        />
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
-                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Report in Accreditation"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
                                                        IsOn="{Binding SelectedSoftware.ReportInAccreditationGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                        />
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
                                 <Controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
-                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
                                                        HorizontalContentAlignment="Right"
                                                        Content="Approved for Baseline"
                                                        FontFamily="Segoe UI"
                                                        FontSize="12"
                                                        IsOn="{Binding SelectedSoftware.ApprovedForBaselineGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
-                                                        />
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Baseline Approver"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedSoftware.BaselineApproverGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
-                                <!-- TODO: Incorporate ability to modify SW -->
+                                <!--  TODO: Incorporate ability to modify SW  -->
                                 <!--<Button Margin="{StaticResource MarginTop5}"
                                         HorizontalAlignment="Center"
                                         Command="{Binding}"
@@ -887,7 +924,7 @@
                                         HorizontalAlignment="Right"
                                         Command="{Binding}"
                                         Content="Clear Selected PPS" />
-                                <!-- TODO: Incorporate ability to delete PPS -->
+                                <!--  TODO: Incorporate ability to delete PPS  -->
                                 <!--<Button Grid.Column="4"
                                         Margin="{StaticResource MarginLeft5}"
                                         HorizontalAlignment="Right"

@@ -210,6 +210,66 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private string _ipAddressForHardwareMapping;
+
+        public string IpAddressForHardwareMapping
+        {
+            get => _ipAddressForHardwareMapping;
+            set
+            {
+                if (_ipAddressForHardwareMapping != value)
+                {
+                    _ipAddressForHardwareMapping = value;
+                    RaisePropertyChanged("IpAddressForHardwareMapping");
+                }
+            }
+        }
+
+        private string _macAddressForHardwareMapping;
+
+        public string MacAddressForHardwareMapping
+        {
+            get => _macAddressForHardwareMapping;
+            set
+            {
+                if (_macAddressForHardwareMapping != value)
+                {
+                    _macAddressForHardwareMapping = value;
+                    RaisePropertyChanged("MacAddressForHardwareMapping");
+                }
+            }
+        }
+
+        private Software _softwareForHardwareMapping;
+
+        public Software SoftwareForHardwareMapping
+        {
+            get => _softwareForHardwareMapping;
+            set
+            {
+                if (_softwareForHardwareMapping != value)
+                {
+                    _softwareForHardwareMapping = value;
+                    RaisePropertyChanged("SoftwareForHardwareMapping");
+                }
+            }
+        }
+
+        private PortProtocolService _ppsForHardwareMapping;
+
+        public PortProtocolService PpsForHardwareMapping
+        {
+            get => _ppsForHardwareMapping;
+            set
+            {
+                if (_ppsForHardwareMapping != value)
+                {
+                    _ppsForHardwareMapping = value;
+                    RaisePropertyChanged("PpsForHardwareMapping");
+                }
+            }
+        }
+
         private Software _newSoftware;
 
         public Software NewSoftware
@@ -1014,6 +1074,175 @@ namespace Vulnerator.ViewModel
             catch (Exception exception)
             {
                 string error = $"Unable to update hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        public RelayCommand DeleteHardwareCommand => new RelayCommand(DeleteHardware);
+
+        private void DeleteHardware()
+        {
+            BackgroundWorker backgroundWorker = new BackgroundWorker();
+            backgroundWorker.DoWork += DeleteHardwareBackgroundWorker_DoWork;
+            backgroundWorker.RunWorkerAsync();
+            backgroundWorker.Dispose();
+        }
+
+        private void DeleteHardwareBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (SelectedHardware == null)
+                {
+                    return;
+                }
+
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
+                {
+                    using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                    {
+                        databaseInterface.InsertParameterPlaceholders(sqliteCommand);
+                        sqliteCommand.Parameters["Hardware_ID"].Value = SelectedHardware.Hardware_ID;
+                        if (SelectedHardware.IP_Addresses.Count > 0)
+                        {
+                            sqliteCommand.CommandText = "";
+                            foreach (IP_Address ip in SelectedHardware.IP_Addresses)
+                            {
+                                sqliteCommand.Parameters["IP_Address_ID"].Value = ip.IP_Address_ID;
+                                sqliteCommand.ExecuteNonQuery();
+                            }
+                        }
+                        if (SelectedHardware.MAC_Addresses.Count > 0)
+                        {
+                            sqliteCommand.CommandText = "";
+                            foreach (MAC_Address mac in SelectedHardware.MAC_Addresses)
+                            {
+                                sqliteCommand.Parameters["MAC_Address_ID"].Value = mac.MAC_Address_ID;
+                                sqliteCommand.ExecuteNonQuery();
+                            }
+                        }
+                        if (SelectedHardware.HardwarePortsProtocolsServices.Count > 0)
+                        {
+                            sqliteCommand.CommandText = "";
+                            foreach (HardwarePortProtocolService pps in SelectedHardware.HardwarePortsProtocolsServices)
+                            {
+                                sqliteCommand.Parameters["HardwarePortProtocolService_ID"].Value = pps.HardwarePortProtocolService_ID;
+                                sqliteCommand.ExecuteNonQuery();
+                            }
+                        }
+                        if (SelectedHardware.SoftwareHardwares.Count > 0)
+                        {
+                            sqliteCommand.CommandText = "";
+                            foreach (SoftwareHardware sw in SelectedHardware.SoftwareHardwares)
+                            {
+                                sqliteCommand.Parameters["SoftwareHardware_ID"].Value = sw.SoftwareHardware_ID;
+                                sqliteCommand.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                    sqliteTransaction.Commit();
+                }
+            }
+            catch (Exception exception)
+            {
+                string error = $"Unable to delete hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        public RelayCommand AssociateIpAddressToHardwareCommand => new RelayCommand(AssociateIpAddressToHardware);
+
+        private void AssociateIpAddressToHardware()
+        {
+            BackgroundWorker backgroundWorker = new BackgroundWorker();
+            backgroundWorker.DoWork += AssociateIpAddressToHardwareBackgroundWorker_DoWork;
+            backgroundWorker.RunWorkerAsync();
+            backgroundWorker.Dispose();
+        }
+
+        private void AssociateIpAddressToHardwareBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+
+            }
+            catch (Exception exception)
+            {
+                string error = $"Unable to associate IP Address '{IpAddressForHardwareMapping}' to hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        public RelayCommand AssociateMacAddressToHardwareCommand => new RelayCommand(AssociateMacAddressToHardware);
+
+        private void AssociateMacAddressToHardware()
+        {
+            BackgroundWorker backgroundWorker = new BackgroundWorker();
+            backgroundWorker.DoWork += AssociateMacAddressToHardwareBackgroundWorker_DoWork;
+            backgroundWorker.RunWorkerAsync();
+            backgroundWorker.Dispose();
+        }
+
+        private void AssociateMacAddressToHardwareBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+
+            }
+            catch (Exception exception)
+            {
+                string error = $"Unable to associate MAC Address '{MacAddressForHardwareMapping}' to hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        public RelayCommand AssociateSoftwareToHardwareCommand => new RelayCommand(AssociateSoftwareToHardware);
+
+        private void AssociateSoftwareToHardware()
+        {
+            BackgroundWorker backgroundWorker = new BackgroundWorker();
+            backgroundWorker.DoWork += AssociateSoftwareToHardwareBackgroundWorker_DoWork;
+            backgroundWorker.RunWorkerAsync();
+            backgroundWorker.Dispose();
+        }
+
+        private void AssociateSoftwareToHardwareBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+
+            }
+            catch (Exception exception)
+            {
+                string error = $"Unable to associate Software with 'Software_ID' value '{SoftwareForHardwareMapping.Software_ID}' to hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+        }
+
+        public RelayCommand AssociatePpsToHardwareCommand => new RelayCommand(AssociatePpsToHardware);
+
+        private void AssociatePpsToHardware()
+        {
+            BackgroundWorker backgroundWorker = new BackgroundWorker();
+            backgroundWorker.DoWork += AssociatePpsToHardwareBackgroundWorker_DoWork;
+            backgroundWorker.RunWorkerAsync();
+            backgroundWorker.Dispose();
+        }
+
+        private void AssociatePpsToHardwareBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+
+            }
+            catch (Exception exception)
+            {
+                string error = $"Unable to associate PPS with 'PortProtocolService_ID' value '{PpsForHardwareMapping.PortProtocolService_ID}' to hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
                 LogWriter.LogErrorWithDebug(error, exception);
             }
         }
