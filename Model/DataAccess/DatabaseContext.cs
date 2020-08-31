@@ -351,12 +351,12 @@ namespace Vulnerator.Model.DataAccess
                     .MapRightKey("Hardware_ID"));
 
             modelBuilder.Entity<Hardware>().HasMany(e => e.Locations).WithMany(e => e.Hardwares)
-                .Map(e => e.ToTable("HardwareLocation")
+                .Map(e => e.ToTable("HardwareLocations")
                     .MapLeftKey("Hardware_ID")
                     .MapRightKey("Location_ID"));
 
             modelBuilder.Entity<Location>().HasMany(e => e.Hardwares).WithMany(e => e.Locations)
-                .Map(e => e.ToTable("HardwareLocation")
+                .Map(e => e.ToTable("HardwareLocations")
                     .MapLeftKey("Location_ID")
                     .MapRightKey("Hardware_ID"));
 

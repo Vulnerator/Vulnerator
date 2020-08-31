@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS HardwareLocation (
+CREATE TABLE IF NOT EXISTS HardwareLocations (
     HardwareLocation_ID INTEGER PRIMARY KEY,
     Hardware_ID INTEGER NOT NULL,
     Location_ID INTEGER NOT NULL,

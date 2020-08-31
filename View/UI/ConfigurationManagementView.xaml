@@ -421,11 +421,12 @@
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedHardware.NetBIOS, Mode=OneWay}"
                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
-                                <TextBox Controls:TextBoxHelper.Watermark="Scan IP (Read Only)"
+                                <TextBox Controls:TextBoxHelper.Watermark="Scan IP"
                                          vh:DependencyProperties.FloatingWatermark="Scan IP"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding SelectedHardware.ScanIP, Mode=OneWay}"
-                                         Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewHardware.ScanIP, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding SelectedHardware.ScanIP, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                                 <DataGrid MinHeight="100"
                                           Margin="{StaticResource MarginTop5}"
                                           ItemsSource="{Binding SelectedHardware.IP_Addresses}"

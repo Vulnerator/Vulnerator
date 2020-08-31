@@ -1,0 +1,4 @@
+﻿DELETE FROM
+    HardwareGroups
+WHERE
+    Hardware_ID = @Hardware_ID;

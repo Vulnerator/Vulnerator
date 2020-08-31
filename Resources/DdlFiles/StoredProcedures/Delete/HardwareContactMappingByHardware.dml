@@ -1,0 +1,4 @@
+﻿DELETE FROM
+    HardwareContacts
+WHERE
+    Hardware_ID = @Hardware_ID;

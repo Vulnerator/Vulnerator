@@ -395,6 +395,7 @@
     <Compile Include="Model\Entity\GroupContactTitle.cs" />
     <Compile Include="Model\Entity\GroupMitigationOrConditionVulnerability.cs" />
     <Compile Include="Model\Entity\Hardware.cs" />
+    <Compile Include="Model\Entity\HardwareContact.cs" />
     <Compile Include="Model\Entity\HardwarePortProtocolService.cs" />
     <Compile Include="Model\Entity\HardwareSoftwarePortProtocolServiceBoundary.cs" />
     <Compile Include="Model\Entity\HardwareSoftwarePortProtocolService.cs" />
@@ -802,6 +803,18 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\VulnerabilityVersionAndReleaseAndUniqueFindingId.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\UniqueFindingStatusById.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\VulnerabilityVersionAndReleaseAndUniqueFindingIdByInstanceIdentifier.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwareIpAddressMappingByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwareMacAddressMappingByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwarePortProtocolServiceMappingByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\SoftwareHardwareMappingByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwareContactMappingByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwareGroupMappingByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwareLocationMappingByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwareEnumeratedWindowsGroupMappingByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\Hardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\UniqueFindingsByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\ScapScoresByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\Hardware.dml" />
     <Resource Include="Vulnerator_Logo_Large_Color_SquareBackground_20190805.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
@@ -989,7 +1002,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwareEnumeratedWindowsGroups.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwareGroups.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\Hardware_IP_Addresses.ddl" />
-    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwareLocation.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwareLocations.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\Hardware_MAC_Addresses.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwarePortsProtocolsServices.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Insert\Data\Groups.ddl" />

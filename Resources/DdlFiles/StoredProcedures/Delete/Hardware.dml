@@ -1,0 +1,4 @@
+﻿DELETE FROM
+    Hardware
+WHERE
+    Hardware_ID = @Hardware_ID;

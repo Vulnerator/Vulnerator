@@ -1,0 +1,4 @@
+﻿DELETE FROM
+    Hardware_MAC_Addresses
+WHERE
+    Hardware_ID = @Hardware_ID;

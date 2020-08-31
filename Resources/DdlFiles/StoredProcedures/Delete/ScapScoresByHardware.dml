@@ -1,0 +1,4 @@
+﻿DELETE FROM
+    SCAP_Scores
+WHERE
+    Hardware_ID = @Hardware_ID;

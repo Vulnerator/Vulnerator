@@ -126,12 +126,170 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.UniqueFinding.dml", assembly);;
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.UniqueFinding.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
             {
                 LogWriter.LogError($"Unable to delete the selected UniqueFinding with Unique Finding ID '{sqliteCommand.Parameters["UniqueFinding_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void DeleteHardware(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.Hardware.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to delete Hardware with a 'Hardware_ID' value of '{sqliteCommand.Parameters["Hardware_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void DeleteScapScoresByHardware(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.ScapScoresByHardware.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to delete SCAP Score(s) with a 'Hardware_ID' value of '{sqliteCommand.Parameters["Hardware_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void DeleteUniqueFindingsByHardware(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.UniqueFindingsByHardware.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to delete Unique Finding(s) with a 'Hardware_ID' value of '{sqliteCommand.Parameters["Hardware_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void DeleteSoftwareHardwareMappingByHardware(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.SoftwareHardwareMappingByHardware.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to delete Software to Hardware mapping(s) with a 'Hardware_ID' value of '{sqliteCommand.Parameters["Hardware_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void DeleteHardwareContactsMappingByHardware(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.HardwareContactMappingByHardware.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to delete Hardware to Contacts mapping(s) with a 'Hardware_ID' value of '{sqliteCommand.Parameters["Hardware_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void DeleteHardwareGroupsMappingByHardware(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.HardwareGroupMappingByHardware.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to delete Hardware to Groups mapping(s) with a 'Hardware_ID' value of '{sqliteCommand.Parameters["Hardware_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void DeleteHardwareLocationMappingByHardware(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.HardwareLocationMappingByHardware.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to delete Hardware to Location mapping(s) with a 'Hardware_ID' value of '{sqliteCommand.Parameters["Hardware_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void DeleteHardwareEnumeratedWindowsGroupsMappingByHardware(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.HardwareEnumeratedWindowsGroupMappingByHardware.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to delete Hardware to Enumerated Windows Groups mapping(s) with a 'Hardware_ID' value of '{sqliteCommand.Parameters["Hardware_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void DeleteHardwarePortsProtocolsServicesMappingByHardware(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Delete.HardwarePortProtocolServiceMappingByHardware.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to delete Hardware to Port / Protocol / Service mapping(s) with a 'Hardware_ID' value of '{sqliteCommand.Parameters["Hardware_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void DeleteHardwareIpAddressMappingByHardware(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText =
+                    _ddlReader.ReadDdl(_storedProcedureBase + "Delete.HardwareIpAddressMappingByHardware.dml",
+                        assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to delete Hardware to IP Address mapping(s) with a 'Hardware_ID' value of '{sqliteCommand.Parameters["Hardware_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void DeleteHardwareMacAddressMappingByHardware(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText =
+                    _ddlReader.ReadDdl(_storedProcedureBase + "Delete.HardwareMacAddressMappingByHardware.dml",
+                        assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to delete Hardware to MAC Address mapping(s) with a 'Hardware_ID' value of '{sqliteCommand.Parameters["Hardware_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -820,6 +978,20 @@ namespace Vulnerator.Model.DataAccess
             catch (Exception exception)
             {
                 LogWriter.LogError($"Unable to update the unique finding for '{sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value}', '{sqliteCommand.Parameters["DiscoveredHostName"].Value}', '{sqliteCommand.Parameters["ScanIP"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void UpdateHardware(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.Hardware.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to update the Hardware with a 'Hardware_ID' value of '{sqliteCommand.Parameters["Hardware_ID"].Value}'.");
                 throw exception;
             }
         }

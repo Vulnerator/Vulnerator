@@ -502,8 +502,8 @@ namespace Vulnerator.ViewModel
                         .Include(h => h.SoftwareHardwares.Select(s => s.Software))
                         .Include(h => h.IP_Addresses)
                         .Include(h => h.MAC_Addresses)
-                        .Include(h => h.Groups)
                         .Include(h => h.Contacts)
+                        .Include(h => h.Groups)
                         .Include(h => h.HardwarePortsProtocolsServices.Select(p => p.PortProtocolService))
                         .OrderBy(h => h.DisplayedHostName)
                         .AsNoTracking().ToList();
@@ -971,7 +971,6 @@ namespace Vulnerator.ViewModel
 
         private void addGroupToHardwareBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            Console.WriteLine("GroupToHardware DoWork");
             try
             {
                 if (!DatabaseBuilder.sqliteConnection.State.Equals(ConnectionState.Open))
@@ -1048,6 +1047,8 @@ namespace Vulnerator.ViewModel
             {
                 backgroundWorker.DoWork += UpdateHardwareBackgroundWorker_DoWork;
             }
+
+            backgroundWorker.RunWorkerCompleted += ModifyHardwareBackgroundWorker_RunWorkerCompleted;
             backgroundWorker.RunWorkerAsync();
             backgroundWorker.Dispose();
         }
@@ -1056,12 +1057,47 @@ namespace Vulnerator.ViewModel
         {
             try
             {
+                if (NewHardware == null)
+                {
+                    return;
+                }
 
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    databaseInterface.InsertParameterPlaceholders(sqliteCommand);
+                    sqliteCommand.Parameters["DiscoveredHostName"].Value = NewHardware.DisplayedHostName;
+                    sqliteCommand.Parameters["DisplayedHostName"].Value = NewHardware.DisplayedHostName;
+                    sqliteCommand.Parameters["IsVirtualServer"].Value = NewHardware.IsVirtualServer;
+                    sqliteCommand.Parameters["ScanIp"].Value = NewHardware.ScanIP;
+                    sqliteCommand.Parameters["NIAP_Level"].Value = NewHardware.NIAP_Level;
+                    sqliteCommand.Parameters["Manufacturer"].Value = NewHardware.Manufacturer;
+                    sqliteCommand.Parameters["ModelNumber"].Value = NewHardware.ModelNumber;
+                    sqliteCommand.Parameters["IsIA_Enabled"].Value = NewHardware.IsIA_Enabled;
+                    sqliteCommand.Parameters["SerialNumber"].Value = NewHardware.SerialNumber;
+                    sqliteCommand.Parameters["Role"].Value = NewHardware.Role;
+                    sqliteCommand.Parameters["OperatingSystem"].Value = NewHardware.OperatingSystem;
+                    sqliteCommand.Parameters["Found21745"].Value = "False";
+                    sqliteCommand.Parameters["Found26917"].Value = "False";
+                    if (LifecycleStatus != null)
+                    {
+                        sqliteCommand.Parameters["LifecycleStatus_ID"].Value = LifecycleStatus.LifecycleStatus_ID;
+                    }
+                    databaseInterface.InsertHardware(sqliteCommand);
+                }
             }
             catch (Exception exception)
             {
                 string error = "Unable to add a new hardware to the database.";
                 LogWriter.LogErrorWithDebug(error, exception);
+            }
+            finally
+            {
+                DatabaseBuilder.sqliteConnection.Close();
             }
         }
 
@@ -1069,21 +1105,67 @@ namespace Vulnerator.ViewModel
         {
             try
             {
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
 
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    databaseInterface.InsertParameterPlaceholders(sqliteCommand);
+                    sqliteCommand.Parameters["Hardware_ID"].Value = SelectedHardware.Hardware_ID;
+                    sqliteCommand.Parameters["DiscoveredHostName"].Value = SelectedHardware.DisplayedHostName;
+                    sqliteCommand.Parameters["DisplayedHostName"].Value = SelectedHardware.DisplayedHostName;
+                    sqliteCommand.Parameters["IsVirtualServer"].Value = SelectedHardware.IsVirtualServer;
+                    sqliteCommand.Parameters["ScanIp"].Value = SelectedHardware.ScanIP;
+                    sqliteCommand.Parameters["NIAP_Level"].Value = SelectedHardware.NIAP_Level;
+                    sqliteCommand.Parameters["Manufacturer"].Value = SelectedHardware.Manufacturer;
+                    sqliteCommand.Parameters["ModelNumber"].Value = SelectedHardware.ModelNumber;
+                    sqliteCommand.Parameters["IsIA_Enabled"].Value = SelectedHardware.IsIA_Enabled;
+                    sqliteCommand.Parameters["SerialNumber"].Value = SelectedHardware.SerialNumber;
+                    sqliteCommand.Parameters["Role"].Value = SelectedHardware.Role;
+                    sqliteCommand.Parameters["OperatingSystem"].Value = SelectedHardware.OperatingSystem;
+                    if (LifecycleStatus != null)
+                    {
+                        sqliteCommand.Parameters["LifecycleStatus_ID"].Value = LifecycleStatus.LifecycleStatus_ID;
+                    }
+                    databaseInterface.UpdateHardware(sqliteCommand);
+                }
             }
             catch (Exception exception)
             {
                 string error = $"Unable to update hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
                 LogWriter.LogErrorWithDebug(error, exception);
             }
+            finally
+            {
+                DatabaseBuilder.sqliteConnection.Close();
+            }
         }
 
+
+        private void ModifyHardwareBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            try
+            {
+                Messenger.Default.Send(new NotificationMessage<string>("ModelUpdate", "AllModels"),
+                    MessengerToken.ModelUpdated);
+                SelectedHardware = null;
+                NewHardware = new Hardware();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to run Delete Hardware post-modification background worker RunWorkerCompleted tasks.");
+                throw exception;
+            }
+        }
         public RelayCommand DeleteHardwareCommand => new RelayCommand(DeleteHardware);
 
         private void DeleteHardware()
         {
             BackgroundWorker backgroundWorker = new BackgroundWorker();
             backgroundWorker.DoWork += DeleteHardwareBackgroundWorker_DoWork;
+            backgroundWorker.RunWorkerCompleted += DeleteHardwareBackgroundWorker_RunWorkerCompleted;
             backgroundWorker.RunWorkerAsync();
             backgroundWorker.Dispose();
         }
@@ -1108,43 +1190,19 @@ namespace Vulnerator.ViewModel
                     {
                         databaseInterface.InsertParameterPlaceholders(sqliteCommand);
                         sqliteCommand.Parameters["Hardware_ID"].Value = SelectedHardware.Hardware_ID;
-                        if (SelectedHardware.IP_Addresses.Count > 0)
-                        {
-                            sqliteCommand.CommandText = "";
-                            foreach (IP_Address ip in SelectedHardware.IP_Addresses)
-                            {
-                                sqliteCommand.Parameters["IP_Address_ID"].Value = ip.IP_Address_ID;
-                                sqliteCommand.ExecuteNonQuery();
-                            }
-                        }
-                        if (SelectedHardware.MAC_Addresses.Count > 0)
-                        {
-                            sqliteCommand.CommandText = "";
-                            foreach (MAC_Address mac in SelectedHardware.MAC_Addresses)
-                            {
-                                sqliteCommand.Parameters["MAC_Address_ID"].Value = mac.MAC_Address_ID;
-                                sqliteCommand.ExecuteNonQuery();
-                            }
-                        }
-                        if (SelectedHardware.HardwarePortsProtocolsServices.Count > 0)
-                        {
-                            sqliteCommand.CommandText = "";
-                            foreach (HardwarePortProtocolService pps in SelectedHardware.HardwarePortsProtocolsServices)
-                            {
-                                sqliteCommand.Parameters["HardwarePortProtocolService_ID"].Value = pps.HardwarePortProtocolService_ID;
-                                sqliteCommand.ExecuteNonQuery();
-                            }
-                        }
-                        if (SelectedHardware.SoftwareHardwares.Count > 0)
-                        {
-                            sqliteCommand.CommandText = "";
-                            foreach (SoftwareHardware sw in SelectedHardware.SoftwareHardwares)
-                            {
-                                sqliteCommand.Parameters["SoftwareHardware_ID"].Value = sw.SoftwareHardware_ID;
-                                sqliteCommand.ExecuteNonQuery();
-                            }
-                        }
+                        databaseInterface.DeleteHardwareContactsMappingByHardware(sqliteCommand);
+                        databaseInterface.DeleteHardwareEnumeratedWindowsGroupsMappingByHardware(sqliteCommand);
+                        databaseInterface.DeleteHardwareGroupsMappingByHardware(sqliteCommand);
+                        databaseInterface.DeleteHardwareIpAddressMappingByHardware(sqliteCommand);
+                        databaseInterface.DeleteHardwareMacAddressMappingByHardware(sqliteCommand);
+                        databaseInterface.DeleteHardwarePortsProtocolsServicesMappingByHardware(sqliteCommand);
+                        databaseInterface.DeleteHardwareLocationMappingByHardware(sqliteCommand);
+                        databaseInterface.DeleteSoftwareHardwareMappingByHardware(sqliteCommand);
+                        databaseInterface.DeleteScapScoresByHardware(sqliteCommand);
+                        databaseInterface.DeleteUniqueFindingsByHardware(sqliteCommand);
+                        databaseInterface.DeleteHardware(sqliteCommand);
                     }
+
                     sqliteTransaction.Commit();
                 }
             }
@@ -1152,6 +1210,26 @@ namespace Vulnerator.ViewModel
             {
                 string error = $"Unable to delete hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
                 LogWriter.LogErrorWithDebug(error, exception);
+            }
+            finally
+            {
+                DatabaseBuilder.sqliteConnection.Close();
+            }
+        }
+
+        private void DeleteHardwareBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            try
+            {
+                Messenger.Default.Send(new NotificationMessage<string>("ModelUpdate", "AllModels"),
+                    MessengerToken.ModelUpdated);
+                SelectedHardware = null;
+                NewHardware = new Hardware();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("Unable to run Delete Hardware post-modification background worker RunWorkerCompleted tasks.");
+                throw exception;
             }
         }
 

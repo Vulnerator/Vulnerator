@@ -1,0 +1,17 @@
+﻿UPDATE
+    Hardware
+SET
+    DiscoveredHostName = @DiscoveredHostName,
+    DisplayedHostName = @DisplayedHostName,
+    IsVirtualServer = @IsVirtualServer,
+    ScanIp = @ScanIp,
+    NIAP_Level = @NIAP_Level,
+    Manufacturer = @Manufacturer,
+    ModelNumber = @ModelNumber,
+    IsIA_Enabled = @IsIA_Enabled,
+    SerialNumber = @SerialNumber,
+    Role = @Role,
+    OperatingSystem = @OperatingSystem,
+    LifecycleStatus_ID = @LifecycleStatus_ID
+WHERE
+    Hardware_ID = @Hardware_ID;

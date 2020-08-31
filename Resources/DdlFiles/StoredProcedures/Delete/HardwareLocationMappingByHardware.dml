@@ -1,0 +1,4 @@
+﻿DELETE FROM
+    HardwareLocations
+WHERE
+    Hardware_ID = @Hardware_ID;
