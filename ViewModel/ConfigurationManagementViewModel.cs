@@ -12,6 +12,7 @@ using System.Data.Entity;
 using System.Data.SQLite;
 using System.Linq;
 using System.Reflection;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using Vulnerator.Helper;
 using Vulnerator.Model.BusinessLogic;
 using Vulnerator.Model.DataAccess;
@@ -1255,12 +1256,32 @@ namespace Vulnerator.ViewModel
         {
             try
             {
+                if (SelectedHardware == null || string.IsNullOrWhiteSpace(IpAddressForHardwareMapping))
+                {
+                    return;
+                }
 
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("IP_Address", IpAddressForHardwareMapping));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("DiscoveredHostName", SelectedHardware.DiscoveredHostName));
+                    databaseInterface.InsertAndMapIpAddress(sqliteCommand);
+                }
             }
             catch (Exception exception)
             {
-                string error = $"Unable to associate IP Address '{IpAddressForHardwareMapping}' to hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
+                string error =
+                    $"Unable to associate IP Address '{IpAddressForHardwareMapping}' to hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
                 LogWriter.LogErrorWithDebug(error, exception);
+            }
+            finally
+            {
+                DatabaseBuilder.sqliteConnection.Close();
             }
         }
 
@@ -1278,12 +1299,31 @@ namespace Vulnerator.ViewModel
         {
             try
             {
+                if (SelectedHardware == null || string.IsNullOrWhiteSpace(MacAddressForHardwareMapping))
+                {
+                    return;
+                }
 
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("MAC_Address", MacAddressForHardwareMapping));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("DiscoveredHostName", SelectedHardware.DiscoveredHostName));
+                    databaseInterface.InsertAndMapMacAddress(sqliteCommand);
+                }
             }
             catch (Exception exception)
             {
                 string error = $"Unable to associate MAC Address '{MacAddressForHardwareMapping}' to hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
                 LogWriter.LogErrorWithDebug(error, exception);
+            }
+            finally
+            {
+                DatabaseBuilder.sqliteConnection.Close();
             }
         }
 
@@ -1301,12 +1341,31 @@ namespace Vulnerator.ViewModel
         {
             try
             {
+                if (SelectedHardware == null || SoftwareForHardwareMapping == null)
+                {
+                    return;
+                }
 
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Hardware_ID", SelectedHardware.Hardware_ID));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Software_ID", SoftwareForHardwareMapping.Software_ID));
+                    databaseInterface.MapHardwareToSoftwareById(sqliteCommand);
+                }
             }
             catch (Exception exception)
             {
                 string error = $"Unable to associate Software with 'Software_ID' value '{SoftwareForHardwareMapping.Software_ID}' to hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
                 LogWriter.LogErrorWithDebug(error, exception);
+            }
+            finally
+            {
+                DatabaseBuilder.sqliteConnection.Close();
             }
         }
 
@@ -1324,12 +1383,33 @@ namespace Vulnerator.ViewModel
         {
             try
             {
+                if (SelectedHardware == null || PpsForHardwareMapping == null)
+                {
+                    return;
+                }
 
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Hardware_ID", SelectedHardware.Hardware_ID));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Port", PpsForHardwareMapping.Port));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Protocol", PpsForHardwareMapping.Protocol));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("DiscoveredServiceName", PpsForHardwareMapping.DiscoveredServiceName));
+                    databaseInterface.InsertAndMapPort(sqliteCommand);
+                }
             }
             catch (Exception exception)
             {
                 string error = $"Unable to associate PPS with 'PortProtocolService_ID' value '{PpsForHardwareMapping.PortProtocolService_ID}' to hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
                 LogWriter.LogErrorWithDebug(error, exception);
+            }
+            finally
+            {
+                DatabaseBuilder.sqliteConnection.Close();
             }
         }
 

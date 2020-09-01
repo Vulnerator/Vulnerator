@@ -395,7 +395,6 @@ namespace Vulnerator.Model.DataAccess
                 sqliteCommand.ExecuteNonQuery();
                 sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.HardwarePortProtocolServiceMapping.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
-                sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)
             {
@@ -706,6 +705,23 @@ namespace Vulnerator.Model.DataAccess
                 sqliteCommand.Parameters.Add(new SQLiteParameter("ApprovedForBaseline", "False"));
                 sqliteCommand.Parameters.Add(new SQLiteParameter("BaselineApprover", DBNull.Value));
                 sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.HardwareSoftwareMapping.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to map software '{sqliteCommand.Parameters["DiscoveredSoftwareName"].Value}' to hardware '{sqliteCommand.Parameters["DiscoveredHostName"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void MapHardwareToSoftwareById(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.Parameters.Add(new SQLiteParameter("ReportInAccreditation", "False"));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("ApprovedForBaseline", "False"));
+                sqliteCommand.Parameters.Add(new SQLiteParameter("BaselineApprover", DBNull.Value));
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.HardwareSoftwareMappingWithIds.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
             catch (Exception exception)

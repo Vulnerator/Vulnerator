@@ -1,0 +1,17 @@
+﻿INSERT INTO SoftwareHardware
+VALUES (NULL,
+        (
+        @Software_ID,
+        @Hardware_ID,
+        @InstallDate,
+        (
+            SELECT ReportInAccreditationGlobal
+            FROM Software
+            WHERE DiscoveredSoftwareName = @DiscoveredSoftwareName
+        ),
+        (
+            SELECT ApprovedForBaselineGlobal
+            FROM Software
+            WHERE DiscoveredSoftwareName = @DiscoveredSoftwareName
+        ),
+        @BaselineApprover);
