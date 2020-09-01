@@ -816,6 +816,10 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\ScapScoresByHardware.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\Hardware.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\HardwareSoftwareMappingWithIds.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwareIpAddressMapping.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwareMacAddressMapping.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\SoftwareHardwareMapping.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwarePortProtocolServiceMapping.dml" />
     <Resource Include="Vulnerator_Logo_Large_Color_SquareBackground_20190805.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

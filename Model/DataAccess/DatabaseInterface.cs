@@ -178,6 +178,22 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public void DeleteSoftwareHardwareMapping(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText =
+                    _ddlReader.ReadDdl(_storedProcedureBase + "Delete.SoftwareHardwareMapping.dml",
+                        assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to delete Software mapping with a 'Software_ID' value of '{sqliteCommand.Parameters["Software_ID"].Value}' from the Hardware with a 'Hardware_ID' value of '{sqliteCommand.Parameters["Hardware_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
         public void DeleteSoftwareHardwareMappingByHardware(SQLiteCommand sqliteCommand)
         {
             try
@@ -248,6 +264,22 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public void DeleteHardwarePortProtocolServiceMapping(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText =
+                    _ddlReader.ReadDdl(_storedProcedureBase + "Delete.HardwarePortProtocolServiceMapping.dml",
+                        assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to delete Port / Protocol / Service mapping with a 'PortProtocolService_ID' value of '{sqliteCommand.Parameters["PortProtocolService_ID"].Value}' from the Hardware with a 'Hardware_ID' value of '{sqliteCommand.Parameters["Hardware_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
         public void DeleteHardwarePortsProtocolsServicesMappingByHardware(SQLiteCommand sqliteCommand)
         {
             try
@@ -258,6 +290,22 @@ namespace Vulnerator.Model.DataAccess
             catch (Exception exception)
             {
                 LogWriter.LogError($"Unable to delete Hardware to Port / Protocol / Service mapping(s) with a 'Hardware_ID' value of '{sqliteCommand.Parameters["Hardware_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void DeleteHardwareIpAddressMapping(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText =
+                    _ddlReader.ReadDdl(_storedProcedureBase + "Delete.HardwareIpAddressMapping.dml",
+                        assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to delete IP Address mapping with an 'IP_Address_ID' value of '{sqliteCommand.Parameters["IP_Address_ID"].Value}' from the Hardware with a 'Hardware_ID' value of '{sqliteCommand.Parameters["Hardware_ID"].Value}'.");
                 throw exception;
             }
         }
@@ -274,6 +322,22 @@ namespace Vulnerator.Model.DataAccess
             catch (Exception exception)
             {
                 LogWriter.LogError($"Unable to delete Hardware to IP Address mapping(s) with a 'Hardware_ID' value of '{sqliteCommand.Parameters["Hardware_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void DeleteHardwareMacAddressMapping(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText =
+                    _ddlReader.ReadDdl(_storedProcedureBase + "Delete.HardwareMacAddressMapping.dml",
+                        assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to delete MAC Address mapping with an 'MAC_Address_ID' value of '{sqliteCommand.Parameters["MAC_Address_ID"].Value}' from the Hardware with a 'Hardware_ID' value of '{sqliteCommand.Parameters["Hardware_ID"].Value}'.");
                 throw exception;
             }
         }

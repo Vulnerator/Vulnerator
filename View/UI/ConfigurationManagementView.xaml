@@ -239,6 +239,17 @@
                                                             Binding="{Binding DisplayedHostName}"
                                                             Header="Associated Hardware"
                                                             HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                        <DataGridTemplateColumn>
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Margin="{StaticResource MarginAll5}">
+                                                        <IconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                            Height="14"
+                                                                                            Kind="TrashAlt" />
+                                                    </Button>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <ComboBox Controls:TextBoxHelper.ButtonCommand="{Binding AddHardwareToGroupCommand}"
@@ -374,7 +385,8 @@
                     <Expander Grid.Column="1"
                               Background="{DynamicResource MahApps.Brushes.Window.Background}"
                               BorderThickness="0"
-                              ExpandDirection="Right">
+                              ExpandDirection="Right"
+                              Style="{StaticResource CustomExpander}">
                         <Expander.Header>
                             <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
@@ -422,11 +434,11 @@
                                          Text="{Binding SelectedHardware.NetBIOS, Mode=OneWay}"
                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="Scan IP"
-                                         vh:DependencyProperties.FloatingWatermark="Scan IP"
-                                         Style="{StaticResource HeaderedTextBoxStyle}"
                                          vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                         vh:DependencyProperties.FloatingWatermark="Scan IP"
                                          vh:DependencyProperties.PrimaryValue="{Binding NewHardware.ScanIP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.ScanIP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.ScanIP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
                                 <DataGrid MinHeight="100"
                                           Margin="{StaticResource MarginTop5}"
                                           ItemsSource="{Binding SelectedHardware.IP_Addresses}"
@@ -436,6 +448,19 @@
                                         <DataGridTextColumn Binding="{Binding IpAddress}"
                                                             Header="IP Address"
                                                             HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                        <DataGridTemplateColumn>
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Margin="{StaticResource MarginAll5}"
+                                                            Command="{Binding DataContext.RemoveIpAddressFromHardwareCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
+                                                            CommandParameter="{Binding IP_Address_ID}">
+                                                        <IconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                            Height="14"
+                                                                                            Kind="TrashAlt" />
+                                                    </Button>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <ComboBox Controls:TextBoxHelper.ButtonCommand="{Binding AssociateIpAddressToHardwareCommand}"
@@ -459,6 +484,17 @@
                                         <DataGridTextColumn Binding="{Binding MacAddress}"
                                                             Header="MAC Address"
                                                             HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                        <DataGridTemplateColumn>
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Margin="{StaticResource MarginAll5}">
+                                                        <IconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                            Height="14"
+                                                                                            Kind="TrashAlt" />
+                                                    </Button>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <ComboBox Controls:TextBoxHelper.ButtonCommand="{Binding AssociateMacAddressToHardwareCommand}"
@@ -484,6 +520,19 @@
                                                             Binding="{Binding GroupName}"
                                                             Header="Associated Groups"
                                                             HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                        <DataGridTemplateColumn>
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Margin="{StaticResource MarginAll5}"
+                                                            Command="{Binding DataContext.RemoveMacAddressFromHardwareCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
+                                                            CommandParameter="{Binding MAC_Address_ID}">
+                                                        <IconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                            Height="14"
+                                                                                            Kind="TrashAlt" />
+                                                    </Button>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <ComboBox Controls:TextBoxHelper.ButtonCommand="{Binding AddGroupToHardwareCommand}"
@@ -505,6 +554,19 @@
                                         <DataGridTextColumn Binding="{Binding Software.DisplayedSoftwareName}"
                                                             Header="Installed Software"
                                                             HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                        <DataGridTemplateColumn>
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Margin="{StaticResource MarginAll5}"
+                                                            Command="{Binding DataContext.RemoveSoftwareFromHardwareCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
+                                                            CommandParameter="{Binding Software_ID}">
+                                                        <IconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                            Height="14"
+                                                                                            Kind="TrashAlt" />
+                                                    </Button>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <ComboBox Controls:TextBoxHelper.ButtonCommand="{Binding AssociateSoftwareToHardwareCommand}"
@@ -534,6 +596,19 @@
                                                             Binding="{Binding PortProtocolService.DisplayedServiceName}"
                                                             Header="Service"
                                                             HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                        <DataGridTemplateColumn>
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Margin="{StaticResource MarginAll5}"
+                                                            Command="{Binding DataContext.RemovePpsFromHardwareCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
+                                                            CommandParameter="{Binding PortProtocolService_ID}">
+                                                        <IconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                            Height="14"
+                                                                                            Kind="TrashAlt" />
+                                                    </Button>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <ComboBox Controls:TextBoxHelper.ButtonCommand="{Binding AssociatePpsToHardwareCommand}"
@@ -696,20 +771,18 @@
                                         HorizontalAlignment="Right"
                                         Command="{Binding}"
                                         Content="Clear Selected Software" />
-                                <!--  TODO: Incorporate ability to delete SW  -->
-                                <!--<Button Grid.Column="4"
+                                <Button Grid.Column="4"
                                         Margin="{StaticResource MarginLeft5}"
                                         HorizontalAlignment="Right"
                                         Command="{Binding}"
-                                        Content="Delete Selected Software" />-->
+                                        Content="Delete Selected Software" />
                             </Grid>
                         </ScrollViewer>
                     </Grid>
                     <Expander Grid.Column="1"
                               Background="{DynamicResource MahApps.Brushes.Window.Background}"
                               BorderThickness="0"
-                              ExpandDirection="Right"
-                              Style="{StaticResource CustomExpander}">
+                              ExpandDirection="Right">
                         <Expander.Header>
                             <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                 <Label.LayoutTransform>
@@ -724,11 +797,11 @@
                                                                         Margin="{StaticResource MarginAll5}"
                                                                         HorizontalAlignment="Center"
                                                                         VerticalAlignment="Center"
-                                                                        Kind="Edit"
+                                                                        Kind="PlusSquare"
                                                                         RotationAngle="270" />
                                     <TextBlock Grid.Column="1"
                                                Style="{StaticResource ExpanderHeaderTextBlockStyle}"
-                                               Text="Update" />
+                                               Text="Add / Update" />
                                 </Grid>
                             </Label>
                         </Expander.Header>
@@ -771,14 +844,24 @@
                                                             Binding="{Binding Hardware.DisplayedHostName}"
                                                             Header="Associated Hardware"
                                                             HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                        <DataGridTemplateColumn>
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Margin="{StaticResource MarginAll5}">
+                                                        <IconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                            Height="14"
+                                                                                            Kind="TrashAlt" />
+                                                    </Button>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
-                                <!--  TODO: Enable Hardware-to-software mapping  -->
-                                <!--<vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                <vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
                                                            Controls:TextBoxHelper.ClearTextButton="True"
                                                            Controls:TextBoxHelper.Watermark="Associated Hardware"
                                                            IsEditable="True"
-                                                           Style="{StaticResource HeaderedComboBoxStyle}" />-->
+                                                           Style="{StaticResource HeaderedComboBoxStyle}" />
                                 <TextBox Controls:TextBoxHelper.Watermark="DADMS ID"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedSoftware.DADMS_ID, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
@@ -840,11 +923,10 @@
                                 <TextBox Controls:TextBoxHelper.Watermark="Baseline Approver"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedSoftware.BaselineApproverGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
-                                <!--  TODO: Incorporate ability to modify SW  -->
-                                <!--<Button Margin="{StaticResource MarginTop5}"
+                                <Button Margin="{StaticResource MarginTop5}"
                                         HorizontalAlignment="Center"
                                         Command="{Binding}"
-                                        Content="Update Software" />-->
+                                        Content="Add/Update Software" />
                             </StackPanel>
                         </ScrollViewer>
                     </Expander>
@@ -925,12 +1007,11 @@
                                         HorizontalAlignment="Right"
                                         Command="{Binding}"
                                         Content="Clear Selected PPS" />
-                                <!--  TODO: Incorporate ability to delete PPS  -->
-                                <!--<Button Grid.Column="4"
+                                <Button Grid.Column="4"
                                         Margin="{StaticResource MarginLeft5}"
                                         HorizontalAlignment="Right"
                                         Command="{Binding}"
-                                        Content="Delete PPS" />-->
+                                        Content="Delete PPS" />
                             </Grid>
                         </ScrollViewer>
                     </Grid>
@@ -953,11 +1034,11 @@
                                                                         Margin="{StaticResource MarginAll5}"
                                                                         HorizontalAlignment="Center"
                                                                         VerticalAlignment="Center"
-                                                                        Kind="Edit"
+                                                                        Kind="PlusSquare"
                                                                         RotationAngle="270" />
                                     <TextBlock Grid.Column="1"
                                                Style="{StaticResource ExpanderHeaderTextBlockStyle}"
-                                               Text="Update" />
+                                               Text="Add / Update" />
                                 </Grid>
                             </Label>
                         </Expander.Header>
@@ -994,14 +1075,28 @@
                                                             Binding="{Binding Hardware.DisplayedHostName}"
                                                             Header="Associated Hardware"
                                                             HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                        <DataGridTemplateColumn>
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Margin="{StaticResource MarginAll5}">
+                                                        <IconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                            Height="14"
+                                                                                            Kind="TrashAlt" />
+                                                    </Button>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
-                                <!--  TODO: Add ability to associate HW to PPS  -->
-                                <!--<vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                <vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
                                                            Controls:TextBoxHelper.ClearTextButton="True"
                                                            Controls:TextBoxHelper.Watermark="Add Hardware"
                                                            IsEditable="True"
-                                                           Style="{StaticResource HeaderedComboBoxStyle}" />-->
+                                                           Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <Button Margin="{StaticResource MarginTop5}"
+                                        HorizontalAlignment="Center"
+                                        Command="{Binding}"
+                                        Content="Add/Update PPS" />
                             </StackPanel>
                         </ScrollViewer>
                     </Expander>

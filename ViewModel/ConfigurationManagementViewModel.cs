@@ -1083,6 +1083,7 @@ namespace Vulnerator.ViewModel
                     sqliteCommand.Parameters["DisplayedHostName"].Value = NewHardware.DisplayedHostName;
                     sqliteCommand.Parameters["IsVirtualServer"].Value = NewHardware.IsVirtualServer;
                     sqliteCommand.Parameters["ScanIp"].Value = NewHardware.ScanIP;
+                    sqliteCommand.Parameters["IP_Address"].Value = NewHardware.ScanIP;
                     sqliteCommand.Parameters["NIAP_Level"].Value = NewHardware.NIAP_Level;
                     sqliteCommand.Parameters["Manufacturer"].Value = NewHardware.Manufacturer;
                     sqliteCommand.Parameters["ModelNumber"].Value = NewHardware.ModelNumber;
@@ -1097,6 +1098,7 @@ namespace Vulnerator.ViewModel
                         sqliteCommand.Parameters["LifecycleStatus_ID"].Value = LifecycleStatus.LifecycleStatus_ID;
                     }
                     databaseInterface.InsertHardware(sqliteCommand);
+                    databaseInterface.InsertAndMapIpAddress(sqliteCommand);
                 }
             }
             catch (Exception exception)
@@ -1285,6 +1287,50 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        public RelayCommand<object> RemoveIpAddressFromHardwareCommand => new RelayCommand<object>(RemoveIpAddressFromHardware);
+
+        private void RemoveIpAddressFromHardware(object parameter)
+        {
+            if (SelectedHardware == null || parameter == null)
+            {
+                return;
+            }
+
+            int ipAddressId = int.Parse(parameter.ToString());
+            BackgroundWorker backgroundWorker = new BackgroundWorker();
+            backgroundWorker.DoWork += RemoveIpAddressFromHardwareBackgroundWorker_DoWork;
+            backgroundWorker.RunWorkerCompleted += ModifyHardwareBackgroundWorker_RunWorkerCompleted;
+            backgroundWorker.RunWorkerAsync(ipAddressId);
+        }
+
+        private void RemoveIpAddressFromHardwareBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("IP_Address_ID", e.Argument));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Hardware_ID", SelectedHardware.Hardware_ID));
+                    databaseInterface.DeleteHardwareIpAddressMapping(sqliteCommand);
+                }
+            }
+            catch (Exception exception)
+            {
+                string error =
+                    $"Unable to remove IP Address with 'IP_Address_ID' value '{e.Argument}' from hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+            finally
+            {
+                DatabaseBuilder.sqliteConnection.Close();
+            }
+        }
+
         public RelayCommand AssociateMacAddressToHardwareCommand => new RelayCommand(AssociateMacAddressToHardware);
 
         private void AssociateMacAddressToHardware()
@@ -1319,6 +1365,50 @@ namespace Vulnerator.ViewModel
             catch (Exception exception)
             {
                 string error = $"Unable to associate MAC Address '{MacAddressForHardwareMapping}' to hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+            finally
+            {
+                DatabaseBuilder.sqliteConnection.Close();
+            }
+        }
+
+        public RelayCommand<object> RemoveMacAddressFromHardwareCommand => new RelayCommand<object>(RemoveMacAddressFromHardware);
+
+        private void RemoveMacAddressFromHardware(object parameter)
+        {
+            if (SelectedHardware == null || parameter == null)
+            {
+                return;
+            }
+
+            int macAddressId = int.Parse(parameter.ToString());
+            BackgroundWorker backgroundWorker = new BackgroundWorker();
+            backgroundWorker.DoWork += RemoveMacAddressFromHardwareBackgroundWorker_DoWork;
+            backgroundWorker.RunWorkerCompleted += ModifyHardwareBackgroundWorker_RunWorkerCompleted;
+            backgroundWorker.RunWorkerAsync(macAddressId);
+        }
+
+        private void RemoveMacAddressFromHardwareBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("MAC_Address_ID", e.Argument));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Hardware_ID", SelectedHardware.Hardware_ID));
+                    databaseInterface.DeleteHardwareMacAddressMapping(sqliteCommand);
+                }
+            }
+            catch (Exception exception)
+            {
+                string error =
+                    $"Unable to remove MAC Address with 'MAC_Address_ID' value '{e.Argument}' from hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
                 LogWriter.LogErrorWithDebug(error, exception);
             }
             finally
@@ -1369,6 +1459,50 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        public RelayCommand<object> RemoveSoftwareFromHardwareCommand => new RelayCommand<object>(RemoveSoftwareFromHardware);
+
+        private void RemoveSoftwareFromHardware(object parameter)
+        {
+            if (SelectedHardware == null || parameter == null)
+            {
+                return;
+            }
+
+            int softwareId = int.Parse(parameter.ToString());
+            BackgroundWorker backgroundWorker = new BackgroundWorker();
+            backgroundWorker.DoWork += RemoveSoftwareFromHardwareBackgroundWorker_DoWork;
+            backgroundWorker.RunWorkerCompleted += ModifyHardwareBackgroundWorker_RunWorkerCompleted;
+            backgroundWorker.RunWorkerAsync(softwareId);
+        }
+
+        private void RemoveSoftwareFromHardwareBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Software_ID", e.Argument));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Hardware_ID", SelectedHardware.Hardware_ID));
+                    databaseInterface.DeleteSoftwareHardwareMapping(sqliteCommand);
+                }
+            }
+            catch (Exception exception)
+            {
+                string error =
+                    $"Unable to remove Software with 'Software_ID' value '{e.Argument}' from hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+            finally
+            {
+                DatabaseBuilder.sqliteConnection.Close();
+            }
+        }
+
         public RelayCommand AssociatePpsToHardwareCommand => new RelayCommand(AssociatePpsToHardware);
 
         private void AssociatePpsToHardware()
@@ -1405,6 +1539,50 @@ namespace Vulnerator.ViewModel
             catch (Exception exception)
             {
                 string error = $"Unable to associate PPS with 'PortProtocolService_ID' value '{PpsForHardwareMapping.PortProtocolService_ID}' to hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
+                LogWriter.LogErrorWithDebug(error, exception);
+            }
+            finally
+            {
+                DatabaseBuilder.sqliteConnection.Close();
+            }
+        }
+
+        public RelayCommand<object> RemovePpsFromHardwareCommand => new RelayCommand<object>(RemovePpsFromHardware);
+
+        private void RemovePpsFromHardware(object parameter)
+        {
+            if (SelectedHardware == null || parameter == null)
+            {
+                return;
+            }
+
+            int ppsId = int.Parse(parameter.ToString());
+            BackgroundWorker backgroundWorker = new BackgroundWorker();
+            backgroundWorker.DoWork += RemovePpsFromHardwareBackgroundWorker_DoWork;
+            backgroundWorker.RunWorkerCompleted += ModifyHardwareBackgroundWorker_RunWorkerCompleted;
+            backgroundWorker.RunWorkerAsync(ppsId);
+        }
+
+        private void RemovePpsFromHardwareBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Closed)
+                {
+                    DatabaseBuilder.sqliteConnection.Open();
+                }
+
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("PortProtocolService_ID", e.Argument));
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("Hardware_ID", SelectedHardware.Hardware_ID));
+                    databaseInterface.DeleteHardwarePortProtocolServiceMapping(sqliteCommand);
+                }
+            }
+            catch (Exception exception)
+            {
+                string error =
+                    $"Unable to remove PPS with 'PortProtocolService_ID' value '{e.Argument}' from hardware with 'Hardware_ID' value '{SelectedHardware.Hardware_ID}'.";
                 LogWriter.LogErrorWithDebug(error, exception);
             }
             finally
