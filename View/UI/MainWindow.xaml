@@ -318,8 +318,8 @@
                     </StatusBar.ItemsPanel>
                     <StatusBarItem Grid.Column="0"
                                Height="35"
-                               Margin="0"
                                VerticalAlignment="Center"
+                               Margin="{StaticResource MarginLeft5}"
                                Content="{Binding ProgressLabelText}"
                                Foreground="{DynamicResource MahApps.Brushes.Text}" />
                     <StatusBarItem Width="Auto" Grid.Column="1"

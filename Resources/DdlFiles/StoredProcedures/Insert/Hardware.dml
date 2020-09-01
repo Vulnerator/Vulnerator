@@ -14,9 +14,5 @@ VALUES (NULL,
         @IsIA_Enabled,
         @SerialNumber,
         @Role,
-        (
-            SELECT LifecycleStatus_ID
-            FROM LifecycleStatuses
-            WHERE LifecycleStatus = 'Uncategorized'
-        ),
+        @LifecycleStatus_ID,
         @OperatingSystem);

@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vulnerator.Model.Entity
 {
+    [Table("LifecycleStatuses")]
     public class LifecycleStatus : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;

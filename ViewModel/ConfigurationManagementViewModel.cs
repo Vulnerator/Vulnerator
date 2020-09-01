@@ -505,6 +505,7 @@ namespace Vulnerator.ViewModel
                         .Include(h => h.Contacts)
                         .Include(h => h.Groups)
                         .Include(h => h.HardwarePortsProtocolsServices.Select(p => p.PortProtocolService))
+                        .Include(h => h.LifecycleStatus)
                         .OrderBy(h => h.DisplayedHostName)
                         .AsNoTracking().ToList();
                     Softwares = databaseContext.Softwares
@@ -537,7 +538,11 @@ namespace Vulnerator.ViewModel
                         .OrderBy(m => m.MacAddress)
                         .AsNoTracking()
                         .ToList();
+                    LifecycleStatuses = databaseContext.LifecycleStatuses
+                        .AsNoTracking()
+                        .ToList();
                     NewGroup = new Group();
+                    NewHardware = new Hardware();
                 }
             }
             catch (Exception exception)
@@ -1022,10 +1027,13 @@ namespace Vulnerator.ViewModel
                 if (SelectedHardware == null)
                 {
                     EditableHardware = null;
+                    LifecycleStatus = null;
                     return;
                 }
 
                 EditableHardware = SelectedHardware;
+                LifecycleStatus = LifecycleStatuses.FirstOrDefault(x =>
+                    x.LifecycleStatus_ID.Equals(SelectedHardware.LifecycleStatus_ID));
             }
             catch (Exception exception)
             {
@@ -1113,18 +1121,18 @@ namespace Vulnerator.ViewModel
                 using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
                     databaseInterface.InsertParameterPlaceholders(sqliteCommand);
-                    sqliteCommand.Parameters["Hardware_ID"].Value = SelectedHardware.Hardware_ID;
-                    sqliteCommand.Parameters["DiscoveredHostName"].Value = SelectedHardware.DisplayedHostName;
-                    sqliteCommand.Parameters["DisplayedHostName"].Value = SelectedHardware.DisplayedHostName;
-                    sqliteCommand.Parameters["IsVirtualServer"].Value = SelectedHardware.IsVirtualServer;
-                    sqliteCommand.Parameters["ScanIp"].Value = SelectedHardware.ScanIP;
-                    sqliteCommand.Parameters["NIAP_Level"].Value = SelectedHardware.NIAP_Level;
-                    sqliteCommand.Parameters["Manufacturer"].Value = SelectedHardware.Manufacturer;
-                    sqliteCommand.Parameters["ModelNumber"].Value = SelectedHardware.ModelNumber;
-                    sqliteCommand.Parameters["IsIA_Enabled"].Value = SelectedHardware.IsIA_Enabled;
-                    sqliteCommand.Parameters["SerialNumber"].Value = SelectedHardware.SerialNumber;
-                    sqliteCommand.Parameters["Role"].Value = SelectedHardware.Role;
-                    sqliteCommand.Parameters["OperatingSystem"].Value = SelectedHardware.OperatingSystem;
+                    sqliteCommand.Parameters["Hardware_ID"].Value = EditableHardware.Hardware_ID;
+                    sqliteCommand.Parameters["DiscoveredHostName"].Value = EditableHardware.DisplayedHostName;
+                    sqliteCommand.Parameters["DisplayedHostName"].Value = EditableHardware.DisplayedHostName;
+                    sqliteCommand.Parameters["IsVirtualServer"].Value = EditableHardware.IsVirtualServer;
+                    sqliteCommand.Parameters["ScanIp"].Value = EditableHardware.ScanIP;
+                    sqliteCommand.Parameters["NIAP_Level"].Value = EditableHardware.NIAP_Level;
+                    sqliteCommand.Parameters["Manufacturer"].Value = EditableHardware.Manufacturer;
+                    sqliteCommand.Parameters["ModelNumber"].Value = EditableHardware.ModelNumber;
+                    sqliteCommand.Parameters["IsIA_Enabled"].Value = EditableHardware.IsIA_Enabled;
+                    sqliteCommand.Parameters["SerialNumber"].Value = EditableHardware.SerialNumber;
+                    sqliteCommand.Parameters["Role"].Value = EditableHardware.Role;
+                    sqliteCommand.Parameters["OperatingSystem"].Value = EditableHardware.OperatingSystem;
                     if (LifecycleStatus != null)
                     {
                         sqliteCommand.Parameters["LifecycleStatus_ID"].Value = LifecycleStatus.LifecycleStatus_ID;

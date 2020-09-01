@@ -438,7 +438,15 @@ namespace Vulnerator.Model.DataAccess
         {
             try
             {
-                sqliteCommand.Parameters.Add(new SQLiteParameter("IsVirtualServer", "False"));
+                if (sqliteCommand.Parameters["IsVirtualServer"].Value == DBNull.Value)
+                {
+                    sqliteCommand.Parameters.Add(new SQLiteParameter("IsVirtualServer", "False"));
+                }
+
+                if (sqliteCommand.Parameters["LifecycleStatus_ID"].Value == null)
+                {
+                    sqliteCommand.Parameters["LifecycleStatus_ID"].Value = 1;
+                }
                 sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.Hardware.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
             }
