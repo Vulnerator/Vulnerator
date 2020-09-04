@@ -460,6 +460,36 @@ namespace Vulnerator.ViewModel
             }
         }
 
+        private HardwareSoftwarePortProtocolService _selectedHardwareSoftwarePortProtocolService;
+
+        public HardwareSoftwarePortProtocolService SelectedHardwareSoftwarePortProtocolService
+        {
+            get => _selectedHardwareSoftwarePortProtocolService;
+            set
+            {
+                if (_selectedHardwareSoftwarePortProtocolService != value)
+                {
+                    _selectedHardwareSoftwarePortProtocolService = value;
+                    RaisePropertyChanged("SelectedHardwareSoftwarePortProtocolService");
+                }
+            }
+        }
+
+        private HardwareSoftwarePortProtocolService _editableHardwareSoftwarePortProtocolService;
+
+        public HardwareSoftwarePortProtocolService EditableHardwareSoftwarePortProtocolService
+        {
+            get => _editableHardwareSoftwarePortProtocolService;
+            set
+            {
+                if (_editableHardwareSoftwarePortProtocolService != value)
+                {
+                    _selectedHardwareSoftwarePortProtocolService = value;
+                    RaisePropertyChanged("EditableHardwareSoftwarePortProtocolService");
+                }
+            }
+        }
+
         public ConfigurationManagementViewModel()
         {
             try
@@ -500,17 +530,22 @@ namespace Vulnerator.ViewModel
                 using (DatabaseContext databaseContext = new DatabaseContext())
                 {
                     Hardwares = databaseContext.Hardwares
-                        .Include(h => h.SoftwareHardwares.Select(s => s.Software))
+                        .Include(h => h.SoftwareHardwares
+                            .Select(s => s.Software))
                         .Include(h => h.IP_Addresses)
                         .Include(h => h.MAC_Addresses)
                         .Include(h => h.Contacts)
                         .Include(h => h.Groups)
-                        .Include(h => h.HardwarePortsProtocolsServices.Select(p => p.PortProtocolService))
+                        .Include(h => h.HardwarePortsProtocolsServices
+                            .Select(p => p.PortProtocolService))
                         .Include(h => h.LifecycleStatus)
                         .OrderBy(h => h.DisplayedHostName)
                         .AsNoTracking().ToList();
                     Softwares = databaseContext.Softwares
-                        .Include(s => s.SoftwareHardwares.Select(h => h.Hardware))
+                        .Include(s => s.SoftwareHardwares
+                            .Select(h => h.Hardware))
+                        .Include("HardwareSoftwarePortsProtocolsServices.HardwareSoftwarePortsProtocolsServicesBoundaries.Boundary")
+                        .Include("HardwareSoftwarePortsProtocolsServices.HardwarePortProtocolService")
                         .OrderBy(s => s.DisplayedSoftwareName)
                         .AsNoTracking().ToList();
                     //Contacts = databaseContext.Contacts
@@ -521,7 +556,8 @@ namespace Vulnerator.ViewModel
                     //    .Include(c => c.Softwares)
                     //    .AsNoTracking().ToList();
                     PortsProtocolsServices = databaseContext.PortsProtocolsServices
-                        .Include(p => p.HardwarePortsProtocolsServices.Select(h => h.Hardware))
+                        .Include(p => p.HardwarePortsProtocolsServices
+                            .Select(h => h.Hardware))
                         .AsNoTracking()
                         .ToList();
                     Groups = databaseContext.Groups
@@ -1588,6 +1624,25 @@ namespace Vulnerator.ViewModel
             finally
             {
                 DatabaseBuilder.sqliteConnection.Close();
+            }
+        }
+
+        private void SetEditableHardwareSoftwarePortProtocolService()
+        {
+            try
+            {
+                if (SelectedHardwareSoftwarePortProtocolService == null)
+                {
+                    EditableHardwareSoftwarePortProtocolService = null;
+                    return;
+                }
+
+                EditableHardwareSoftwarePortProtocolService = SelectedHardwareSoftwarePortProtocolService;
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to clear set editable hardware.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
 

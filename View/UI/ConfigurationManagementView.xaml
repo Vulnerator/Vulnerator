@@ -859,9 +859,82 @@
                                 </DataGrid>
                                 <vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
                                                            Controls:TextBoxHelper.ClearTextButton="True"
-                                                           Controls:TextBoxHelper.Watermark="Associated Hardware"
+                                                           Controls:TextBoxHelper.Watermark="Associate Hardware"
                                                            IsEditable="True"
                                                            Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <DataGrid MinHeight="100"
+                                          MaxHeight="300"
+                                          Margin="{StaticResource MarginTop5}"
+                                          ItemsSource="{Binding SelectedSoftware.HardwareSoftwarePortsProtocolsServices}"
+                                          SelectedItem="{Binding SelectedHardwareSoftwarePortProtocolService}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Width="*"
+                                                            Binding="{Binding HardwarePortProtocolService.Hardware.DisplayedHostName}"
+                                                            Header="Hardware"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                        <DataGridTextColumn Width="*"
+                                                            Binding="{Binding HardwarePortProtocolService.PortProtocolService.Port}"
+                                                            Header="Port"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                        <DataGridTextColumn Width="*"
+                                                            Binding="{Binding HardwarePortProtocolService.PortProtocolService.Protocol}"
+                                                            Header="Protocol"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                        <DataGridTextColumn Width="*"
+                                                            Binding="{Binding HardwarePortProtocolService.PortProtocolService.DisplayedServiceName}"
+                                                            Header="Service"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                        <DataGridTemplateColumn>
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Margin="{StaticResource MarginAll5}">
+                                                        <IconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                            Height="14"
+                                                                                            Kind="TrashAlt" />
+                                                    </Button>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                                           Controls:TextBoxHelper.ClearTextButton="True"
+                                                           Controls:TextBoxHelper.Watermark="Associate Hardware/PPS"
+                                                           IsEditable="True"
+                                                           Style="{StaticResource HeaderedComboBoxStyle}" />
+                                <!--<DataGrid MinHeight="100"
+                                          MaxHeight="300"
+                                          Margin="{StaticResource MarginTop5}"
+                                          ItemsSource="{Binding SelectedHardwareSoftwarePortProtocolService}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Width="*"
+                                                            Binding="{Binding HardwareSoftwarePortsProtocolsServicesBoundaries}"
+                                                            Header="Hardware"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                        <DataGridTextColumn Width="*"
+                                                            Binding="{Binding HardwarePortProtocolService.PortProtocolService.Port}"
+                                                            Header="Port"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                        <DataGridTemplateColumn>
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Margin="{StaticResource MarginAll5}">
+                                                        <IconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                            Height="14"
+                                                                                            Kind="TrashAlt" />
+                                                    </Button>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                                           Controls:TextBoxHelper.ClearTextButton="True"
+                                                           Controls:TextBoxHelper.Watermark="Associate Hardware/PPS"
+                                                           IsEditable="True"
+                                                           Style="{StaticResource HeaderedComboBoxStyle}" />-->
                                 <TextBox Controls:TextBoxHelper.Watermark="DADMS ID"
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedSoftware.DADMS_ID, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
