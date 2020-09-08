@@ -1,0 +1,267 @@
+﻿<UserControl x:Class="Vulnerator.View.UI.ConfigurationManagement.Tabs.Groups"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:converters="clr-namespace:Vulnerator.View.Converter"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:local="clr-namespace:Vulnerator.View.UI.ConfigurationManagement.Tabs"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             d:DesignWidth="800"
+             DataContext="{Binding Groups, Source={StaticResource Locator}}"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:BooleanToCheckboxConverter x:Key="CheckboxConverter" />
+        <converters:IsNullToCollapsedConverter x:Key="IsNullToCollapsedConverter" />
+    </UserControl.Resources>
+
+    <Grid Margin="{StaticResource MarginAll5}"
+          Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <DataGrid Grid.Row="0"
+                      ItemsSource="{Binding GroupsList}"
+                      SelectedItem="{Binding SelectedGroup, Mode=TwoWay}"
+                      Style="{StaticResource GreyBorderedDataGridStyle}">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn x:Name="projectsCheckBoxColumn"
+                                            Width="Auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox Margin="{StaticResource MarginLeft5}"
+                                          HorizontalAlignment="Center"
+                                          IsChecked="{Binding IsChecked}"
+                                          Style="{StaticResource CustomCheckBox}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Width="*"
+                                        Binding="{Binding GroupName}"
+                                        Header="Name"
+                                        HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
+                                   TargetType="TextBlock">
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                <Setter Property="TextWrapping" Value="NoWrap" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="*"
+                                        Binding="{Binding GroupAcronym}"
+                                        Header="Acronym"
+                                        HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
+                                   TargetType="TextBlock">
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                <Setter Property="TextWrapping" Value="NoWrap" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="*"
+                                        Binding="{Binding GroupTier}"
+                                        Header="Tier"
+                                        HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
+                                   TargetType="TextBlock">
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                <Setter Property="TextWrapping" Value="NoWrap" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="Auto"
+                                        Binding="{Binding Hardwares.Count}"
+                                        Header="Asset Count"
+                                        HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style BasedOn="{StaticResource MahApps.Styles.TextBlock}"
+                                   TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center" />
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                <Setter Property="TextWrapping" Value="NoWrap" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTemplateColumn Width="Auto"
+                                            Header="Is Accreditation"
+                                            HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}"
+                                            SortMemberPath="IsAccreditation">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <iconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
+                                                                    Kind="{Binding IsAccreditation, Converter={StaticResource CheckboxConverter}}"
+                                                                    ToolTip="{Binding IsAccreditation}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <ScrollViewer Grid.Row="1"
+                          Margin="{StaticResource MarginTop5}"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Disabled">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0"
+                           VerticalAlignment="Center">
+                        <TextBlock Text="Count:"
+                                   TextTrimming="CharacterEllipsis" />
+                    </Label>
+                    <Label Grid.Column="1"
+                           VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Groups.Count}"
+                                   TextTrimming="CharacterEllipsis" />
+                    </Label>
+                    <Button Grid.Column="3"
+                            HorizontalAlignment="Right"
+                            Command="{Binding ClearSelectedGroupCommand}"
+                            Content="Clear Selected Group" />
+                    <Button Grid.Column="4"
+                            Margin="{StaticResource MarginLeft5}"
+                            HorizontalAlignment="Right"
+                            Command="{Binding DeleteGroupCommand}"
+                            Content="Delete Selected Group" />
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+        <Expander Grid.Column="1"
+                  Background="{DynamicResource MahApps.Brushes.Window.Background}"
+                  BorderThickness="0"
+                  ExpandDirection="Right"
+                  Style="{StaticResource CustomExpander}">
+            <Expander.Header>
+                <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
+                    <Label.LayoutTransform>
+                        <RotateTransform Angle="90" />
+                    </Label.LayoutTransform>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <iconPacks:PackIconFontAwesomeLight Grid.Column="0"
+                                                            Margin="{StaticResource MarginAll5}"
+                                                            HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            Kind="PlusSquare" />
+                        <TextBlock Grid.Column="1"
+                                   Style="{StaticResource ExpanderHeaderTextBlockStyle}"
+                                   Text="Add / Update" />
+                    </Grid>
+                </Label>
+            </Expander.Header>
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                          VerticalScrollBarVisibility="Auto">
+                <StackPanel Width="200">
+                    <TextBox controls:TextBoxHelper.Watermark="Group Name"
+                             vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
+                             vh:DependencyProperties.PrimaryValue="{Binding NewGroup.GroupName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             vh:DependencyProperties.SecondaryValue="{Binding EditableGroup.GroupName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource HeaderedTextBoxStyle}"
+                             TextWrapping="Wrap" />
+                    <TextBox controls:TextBoxHelper.Watermark="Group Acronym"
+                             vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
+                             vh:DependencyProperties.PrimaryValue="{Binding NewGroup.GroupAcronym, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             vh:DependencyProperties.SecondaryValue="{Binding EditableGroup.GroupAcronym, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource HeaderedTextBoxStyle}"
+                             TextWrapping="Wrap" />
+                    <TextBox controls:TextBoxHelper.Watermark="Group Tier (Digits Only)"
+                             vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
+                             vh:DependencyProperties.FloatingWatermark="Group Tier"
+                             vh:DependencyProperties.PrimaryValue="{Binding NewGroup.GroupTier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             vh:DependencyProperties.SecondaryValue="{Binding EditableGroup.GroupTier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource HeaderedTextBoxStyle}"
+                             TextWrapping="Wrap" />
+                    <DataGrid MinHeight="100"
+                              MaxHeight="300"
+                              Margin="{StaticResource MarginTop5}"
+                              ItemsSource="{Binding SelectedGroup.Hardwares}"
+                              Style="{StaticResource GreyBorderedDataGridStyle}"
+                              Visibility="{Binding SelectedGroup, Converter={StaticResource IsNullToCollapsedConverter}}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="*"
+                                                Binding="{Binding DisplayedHostName}"
+                                                Header="Associated Hardware"
+                                                HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Margin="{StaticResource MarginAll5}">
+                                            <iconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                Height="14"
+                                                                                Kind="TrashAlt" />
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <ComboBox controls:TextBoxHelper.ButtonCommand="{Binding AddHardwareToGroupCommand}"
+                              controls:TextBoxHelper.ButtonContent="{iconPacks:FontAwesomeLight Kind=PlusSquare}"
+                              controls:TextBoxHelper.ClearTextButton="True"
+                              controls:TextBoxHelper.Watermark="Add Hardware"
+                              DisplayMemberPath="DisplayedHostName"
+                              ItemsSource="{Binding Hardwares}"
+                              SelectedItem="{Binding SelectedHardware, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"
+                              Style="{StaticResource HeaderedComboBoxStyle}"
+                              Visibility="{Binding SelectedGroup, Converter={StaticResource IsNullToCollapsedConverter}}" />
+                    <controls:ToggleSwitch x:Name="groupAccreditationToggleSwitch"
+                                           Margin="{StaticResource MarginTop5}"
+                                           HorizontalContentAlignment="Right"
+                                           vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
+                                           vh:DependencyProperties.PrimaryValue="{Binding NewGroup.IsAccreditation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                           vh:DependencyProperties.SecondaryValue="{Binding EditableGroup.IsAccreditation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                           Content="Is Accreditation"
+                                           FontFamily="Segoe UI"
+                                           FontSize="12"
+                                           Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
+                    <TextBox controls:TextBoxHelper.Watermark="eMASS ID (Digits Only)"
+                             vh:DependencyProperties.FloatingWatermark="eMASS ID"
+                             Style="{StaticResource HeaderedTextBoxStyle}"
+                             vh:DependencyProperties.PrimaryValue="{Binding NewGroup.Accreditation_eMASS_ID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             vh:DependencyProperties.SecondaryValue="{Binding EditableGroup.Accreditation_eMASS_ID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             TextWrapping="Wrap"
+                             Visibility="{Binding ElementName=groupAccreditationToggleSwitch, Path=IsOn, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                           HorizontalContentAlignment="Right"
+                                           vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedGroup}"
+                                           vh:DependencyProperties.PrimaryValue="{Binding NewGroup.IsPlatform, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                           vh:DependencyProperties.SecondaryValue="{Binding EditableGroup.IsPlatform, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                           Content="Is Platform"
+                                           FontFamily="Segoe UI"
+                                           FontSize="12"
+                                           Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
+                    <Button Margin="{StaticResource MarginTop5}"
+                            HorizontalAlignment="Center"
+                            Command="{Binding ModifyGroupCommand}"
+                            Content="Add/Update Group" />
+                </StackPanel>
+            </ScrollViewer>
+        </Expander>
+        <!--  TODO: Implement Bulk Process Expander  -->
+        <!--  TODO: Implement Filter Expander  -->
+    </Grid>
+</UserControl>

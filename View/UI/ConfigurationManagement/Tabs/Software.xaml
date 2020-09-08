@@ -1,0 +1,323 @@
+﻿<UserControl x:Class="Vulnerator.View.UI.ConfigurationManagement.Tabs.Software"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Vulnerator.View.UI.ConfigurationManagement.Tabs"
+             xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
+             xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:converter="clr-namespace:Vulnerator.View.Converter"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             d:DesignWidth="800"
+             DataContext="{Binding Software, Source={StaticResource Locator}}"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converter:IsNullToCollapsedConverter x:Key="IsNullToCollapsedConverter" />
+    </UserControl.Resources>
+
+    <Grid Margin="{StaticResource MarginLeftRightBottom5}" Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <DataGrid Grid.Row="0"
+                                  ItemsSource="{Binding Softwares}"
+                                  SelectedItem="{Binding SelectedSoftware, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn x:Name="softwareCheckBoxColumn"
+                                                        Width="Auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox Margin="{StaticResource MarginLeft5}"
+                                                      HorizontalAlignment="Center"
+                                                      IsChecked="{Binding IsChecked}"
+                                                      Style="{StaticResource CustomCheckBox}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Width="*"
+                                                    Binding="{Binding DisplayedSoftwareName}"
+                                                    Header="Preferred Software Name"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="Auto"
+                                                    Binding="{Binding SoftwareHardwares.Count}"
+                                                    Header="Count"
+                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}"
+                                                    IsReadOnly="True" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <ScrollViewer Grid.Row="1"
+                                      Margin="{StaticResource MarginTop5}"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Disabled">
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0"
+                                       VerticalAlignment="Bottom">
+                        <TextBlock Text="Count:"
+                                               TextTrimming="CharacterEllipsis" />
+                    </Label>
+                    <Label Grid.Column="1"
+                                       VerticalAlignment="Bottom">
+                        <TextBlock Text="{Binding Softwares.Count}"
+                                               TextTrimming="CharacterEllipsis" />
+                    </Label>
+                    <Button Grid.Column="3"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding}"
+                                        Content="Clear Selected Software" />
+                    <Button Grid.Column="4"
+                                        Margin="{StaticResource MarginLeft5}"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding}"
+                                        Content="Delete Selected Software" />
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+        <Expander Grid.Column="1"
+                              Background="{DynamicResource MahApps.Brushes.Window.Background}"
+                              BorderThickness="0"
+                              ExpandDirection="Right">
+            <Expander.Header>
+                <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
+                    <Label.LayoutTransform>
+                        <RotateTransform Angle="90" />
+                    </Label.LayoutTransform>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <iconPacks:PackIconFontAwesomeLight Grid.Column="0"
+                                                                        Margin="{StaticResource MarginAll5}"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        Kind="PlusSquare"
+                                                                        RotationAngle="270" />
+                        <TextBlock Grid.Column="1"
+                                               Style="{StaticResource ExpanderHeaderTextBlockStyle}"
+                                               Text="Add / Update" />
+                    </Grid>
+                </Label>
+            </Expander.Header>
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
+                <StackPanel Width="250">
+                    <TextBox controls:TextBoxHelper.Watermark="Discovered Software Name (Read Only)"
+                                         IsReadOnly="True"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedSoftware.DiscoveredSoftwareName, Mode=OneWay}"
+                                         Visibility="{Binding SelectedSoftware, Converter={StaticResource IsNullToCollapsedConverter}}" />
+                    <TextBox controls:TextBoxHelper.Watermark="Preferred Software Name"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedSoftware.DisplayedSoftwareName, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
+                    <TextBox controls:TextBoxHelper.Watermark="Software Acronym"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedSoftware.SoftwareAcronym, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
+                    <TextBox controls:TextBoxHelper.Watermark="Software Version (Read Only)"
+                                         IsReadOnly="True"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedSoftware.SoftwareVersion, Mode=OneWay}"
+                                         Visibility="{Binding SelectedSoftware, Converter={StaticResource IsNullToCollapsedConverter}}" />
+                    <TextBox controls:TextBoxHelper.Watermark="Software Function"
+                                         vh:DependencyProperties.ShowCharacterCount="True"
+                                         MaxLength="500"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedSoftware.SoftwareFunction, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
+                    <TextBox controls:TextBoxHelper.Watermark="Software Description"
+                                         vh:DependencyProperties.ShowCharacterCount="True"
+                                         MaxLength="1000"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedSoftware.SoftwareDescription, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
+                    <DataGrid MinHeight="100"
+                                          MaxHeight="300"
+                                          Margin="{StaticResource MarginTop5}"
+                                          ItemsSource="{Binding SelectedSoftware.SoftwareHardwares}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="*"
+                                                            Binding="{Binding Hardware.DisplayedHostName}"
+                                                            Header="Associated Hardware"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Margin="{StaticResource MarginAll5}">
+                                            <iconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                            Height="14"
+                                                                                            Kind="TrashAlt" />
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <vh:CommandEnabledComboBox controls:TextBoxHelper.ButtonContent="{iconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                                           controls:TextBoxHelper.ClearTextButton="True"
+                                                           controls:TextBoxHelper.Watermark="Associate Hardware"
+                                                           IsEditable="True"
+                                                           Style="{StaticResource HeaderedComboBoxStyle}" />
+                    <DataGrid MinHeight="100"
+                                          MaxHeight="300"
+                                          Margin="{StaticResource MarginTop5}"
+                                          ItemsSource="{Binding SelectedSoftware.HardwareSoftwarePortsProtocolsServices}"
+                                          SelectedItem="{Binding SelectedHardwareSoftwarePortProtocolService}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="*"
+                                                            Binding="{Binding HardwarePortProtocolService.Hardware.DisplayedHostName}"
+                                                            Header="Hardware"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                            <DataGridTextColumn Width="*"
+                                                            Binding="{Binding HardwarePortProtocolService.PortProtocolService.Port}"
+                                                            Header="Port"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                            <DataGridTextColumn Width="*"
+                                                            Binding="{Binding HardwarePortProtocolService.PortProtocolService.Protocol}"
+                                                            Header="Protocol"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                            <DataGridTextColumn Width="*"
+                                                            Binding="{Binding HardwarePortProtocolService.PortProtocolService.DisplayedServiceName}"
+                                                            Header="Service"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Margin="{StaticResource MarginAll5}">
+                                            <iconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                            Height="14"
+                                                                                            Kind="TrashAlt" />
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <vh:CommandEnabledComboBox controls:TextBoxHelper.ButtonContent="{iconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                                           controls:TextBoxHelper.ClearTextButton="True"
+                                                           controls:TextBoxHelper.Watermark="Associate Hardware/PPS"
+                                                           IsEditable="True"
+                                                           Style="{StaticResource HeaderedComboBoxStyle}" />
+                    <!--<DataGrid MinHeight="100"
+                                          MaxHeight="300"
+                                          Margin="{StaticResource MarginTop5}"
+                                          ItemsSource="{Binding SelectedHardwareSoftwarePortProtocolService}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Width="*"
+                                                            Binding="{Binding HardwareSoftwarePortsProtocolsServicesBoundaries}"
+                                                            Header="Hardware"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                        <DataGridTextColumn Width="*"
+                                                            Binding="{Binding HardwarePortProtocolService.PortProtocolService.Port}"
+                                                            Header="Port"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                                        <DataGridTemplateColumn>
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Margin="{StaticResource MarginAll5}">
+                                                        <IconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                            Height="14"
+                                                                                            Kind="TrashAlt" />
+                                                    </Button>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <vh:CommandEnabledComboBox Controls:TextBoxHelper.ButtonContent="{IconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                                           Controls:TextBoxHelper.ClearTextButton="True"
+                                                           Controls:TextBoxHelper.Watermark="Associate Hardware/PPS"
+                                                           IsEditable="True"
+                                                           Style="{StaticResource HeaderedComboBoxStyle}" />-->
+                    <TextBox controls:TextBoxHelper.Watermark="DADMS ID"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedSoftware.DADMS_ID, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
+                    <TextBox controls:TextBoxHelper.Watermark="DADMS Disposition"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedSoftware.DADMS_Disposition, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
+                    <TextBox controls:TextBoxHelper.Watermark="DADMS Last Date Approved"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedSoftware.DADMS_LastDateAuthorized, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
+                    <controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Is OS / Firmware"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       IsOn="{Binding SelectedSoftware.IsOS_OrFirmware, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
+                    <controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Has Custom Code"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       IsOn="{Binding SelectedSoftware.HasCustomCode, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
+                    <controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Is IA / IA Enabled"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       IsOn="{Binding SelectedSoftware.IA_OrIA_Enabled, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
+                    <controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Is FAM Accepted"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       IsOn="{Binding SelectedSoftware.FAM_Accepted, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
+                    <controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Is Externally Authorized"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       IsOn="{Binding SelectedSoftware.ExternallyAuthorized, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
+                    <controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Report in Accreditation"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       IsOn="{Binding SelectedSoftware.ReportInAccreditationGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
+                    <controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Approved for Baseline"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       IsOn="{Binding SelectedSoftware.ApprovedForBaselineGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
+                    <TextBox controls:TextBoxHelper.Watermark="Baseline Approver"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedSoftware.BaselineApproverGlobal, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" />
+                    <Button Margin="{StaticResource MarginTop5}"
+                                        HorizontalAlignment="Center"
+                                        Command="{Binding}"
+                                        Content="Add/Update Software" />
+                </StackPanel>
+            </ScrollViewer>
+        </Expander>
+        <!--  TODO: Implement Bulk Process Expander  -->
+        <!--  TODO: Implement Filter Expander  -->
+    </Grid>
+</UserControl>

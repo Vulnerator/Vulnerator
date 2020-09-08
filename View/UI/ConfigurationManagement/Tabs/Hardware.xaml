@@ -1,0 +1,445 @@
+﻿<UserControl x:Class="Vulnerator.View.UI.ConfigurationManagement.Tabs.Hardware"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
+             xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:converters="clr-namespace:Vulnerator.View.Converter"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             d:DesignWidth="800"
+             DataContext="{Binding Hardware, Source={StaticResource Locator}}"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:IsNullToCollapsedConverter x:Key="IsNullToCollapsedConverter" />
+
+        <DataTemplate x:Key="PpsItemTemplate">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Protocol}" />
+                <TextBlock Text=" " />
+                <TextBlock Text="{Binding Port}" />
+                <TextBlock Text=": " />
+                <TextBlock Text="{Binding DisplayedServiceName}" />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PpsTemplate">
+            <ContentPresenter x:Name="Presenter"
+                              Content="{Binding}"
+                              ContentTemplate="{StaticResource PpsItemTemplate}" />
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, ComboBoxItem, 1}}"
+                             Value="{x:Null}">
+                    <Setter TargetName="Presenter" Property="ContentTemplate" Value="{StaticResource PpsItemTemplate}" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+    </UserControl.Resources>
+
+
+    <Grid Margin="{StaticResource MarginLeftRightBottom5}" Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <DataGrid Grid.Row="0"
+                                  ItemsSource="{Binding Hardwares}"
+                                  SelectedItem="{Binding SelectedHardware}"
+                                  Style="{StaticResource GreyBorderedDataGridStyle}">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn x:Name="hardwareCheckBoxColumn"
+                                                        Width="Auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox Margin="{StaticResource MarginLeft5}"
+                                                      HorizontalAlignment="Center"
+                                                      IsChecked="{Binding IsChecked}"
+                                                      Style="{StaticResource CustomCheckBox}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Width="*"
+                                                    Binding="{Binding DisplayedHostName}"
+                                                    Header="Preferred Host Name"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    Binding="{Binding FQDN}"
+                                                    Header="FQDN"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    Binding="{Binding NetBIOS}"
+                                                    Header="NetBIOS"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    Binding="{Binding ScanIP}"
+                                                    Header="Last Scan IP"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <ScrollViewer Grid.Row="1"
+                                      Margin="{StaticResource MarginTop5}"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Disabled">
+                <Grid HorizontalAlignment="Stretch"
+                                  DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0"
+                                       VerticalAlignment="Bottom">
+                        <TextBlock Text="Count:"
+                                               TextTrimming="CharacterEllipsis" />
+                    </Label>
+                    <Label Grid.Column="1"
+                                       VerticalAlignment="Bottom">
+                        <TextBlock Text="{Binding Hardwares.Count}"
+                                               TextTrimming="CharacterEllipsis" />
+                    </Label>
+                    <Button Grid.Column="3"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding}"
+                                        Content="Clear Selected Hardware" />
+                    <Button Grid.Column="4"
+                                        Margin="{StaticResource MarginLeft5}"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding DeleteHardwareCommand}"
+                                        Content="Delete Selected Hardware" />
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+        <Expander Grid.Column="1"
+                              Background="{DynamicResource MahApps.Brushes.Window.Background}"
+                              BorderThickness="0"
+                              ExpandDirection="Right"
+                              Style="{StaticResource CustomExpander}">
+            <Expander.Header>
+                <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
+                    <Label.LayoutTransform>
+                        <RotateTransform Angle="90" />
+                    </Label.LayoutTransform>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <iconPacks:PackIconFontAwesomeLight Grid.Column="0"
+                                                                        Margin="{StaticResource MarginAll5}"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        Kind="PlusSquare"
+                                                                        RotationAngle="270" />
+                        <TextBlock Grid.Column="1"
+                                               Style="{StaticResource ExpanderHeaderTextBlockStyle}"
+                                               Text="Add / Update" />
+                    </Grid>
+                </Label>
+            </Expander.Header>
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBox controls:TextBoxHelper.Watermark="Discovered Host Name (Read Only)"
+                                         vh:DependencyProperties.FloatingWatermark="Discovered Host Name"
+                                         IsReadOnly="True"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedHardware.DiscoveredHostName, Mode=OneWay}"
+                                         Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
+                    <TextBox controls:TextBoxHelper.Watermark="Preferred Host Name"
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewHardware.DisplayedHostName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.DisplayedHostName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                    <TextBox controls:TextBoxHelper.Watermark="FQDN (Read Only)"
+                                         vh:DependencyProperties.FloatingWatermark="FQDN"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedHardware.FQDN, Mode=OneWay}"
+                                         Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
+                    <TextBox controls:TextBoxHelper.Watermark="NetBIOS Name (Read Only)"
+                                         vh:DependencyProperties.FloatingWatermark="NetBIOS Name"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedHardware.NetBIOS, Mode=OneWay}"
+                                         Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
+                    <TextBox controls:TextBoxHelper.Watermark="Scan IP"
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                         vh:DependencyProperties.FloatingWatermark="Scan IP"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewHardware.ScanIP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.ScanIP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                    <DataGrid MinHeight="100"
+                                          Margin="{StaticResource MarginTop5}"
+                                          ItemsSource="{Binding SelectedHardware.IP_Addresses}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}"
+                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding IpAddress}"
+                                                            Header="IP Address"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Margin="{StaticResource MarginAll5}"
+                                                            Command="{Binding DataContext.RemoveIpAddressFromHardwareCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
+                                                            CommandParameter="{Binding IP_Address_ID}">
+                                            <iconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                            Height="14"
+                                                                                            Kind="TrashAlt" />
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <ComboBox controls:TextBoxHelper.ButtonCommand="{Binding AssociateIpAddressToHardwareCommand}"
+                                          controls:TextBoxHelper.ButtonContent="{iconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                          controls:TextBoxHelper.ClearTextButton="True"
+                                          controls:TextBoxHelper.Watermark="Add IP"
+                                          DisplayMemberPath="IpAddress"
+                                          IsEditable="True"
+                                          IsTextSearchEnabled="True"
+                                          ItemsSource="{Binding IpAddresses}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}"
+                                          Text="{Binding SelectedIpAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          TextSearch.TextPath="IpAddress"
+                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
+                    <DataGrid MinHeight="100"
+                                          Margin="{StaticResource MarginTop5}"
+                                          ItemsSource="{Binding SelectedHardware.MAC_Addresses}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}"
+                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding MacAddress}"
+                                                            Header="MAC Address"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Margin="{StaticResource MarginAll5}">
+                                            <iconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                            Height="14"
+                                                                                            Kind="TrashAlt" />
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <ComboBox controls:TextBoxHelper.ButtonCommand="{Binding AssociateMacAddressToHardwareCommand}"
+                                          controls:TextBoxHelper.ButtonContent="{iconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                          controls:TextBoxHelper.ClearTextButton="True"
+                                          controls:TextBoxHelper.Watermark="Add MAC"
+                                          DisplayMemberPath="MacAddress"
+                                          IsEditable="True"
+                                          IsTextSearchEnabled="True"
+                                          ItemsSource="{Binding MacAddresses}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}"
+                                          Text="{Binding SelectedMacAddress, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+                                          TextSearch.TextPath="MacAddress"
+                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
+                    <DataGrid MinHeight="100"
+                                          MaxHeight="300"
+                                          Margin="{StaticResource MarginTop5}"
+                                          ItemsSource="{Binding SelectedHardware.Groups}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}"
+                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="Auto"
+                                                            Binding="{Binding GroupName}"
+                                                            Header="Associated Groups"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Margin="{StaticResource MarginAll5}"
+                                                            Command="{Binding DataContext.RemoveMacAddressFromHardwareCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
+                                                            CommandParameter="{Binding MAC_Address_ID}">
+                                            <iconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                            Height="14"
+                                                                                            Kind="TrashAlt" />
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <ComboBox controls:TextBoxHelper.ButtonCommand="{Binding AddGroupToHardwareCommand}"
+                                          controls:TextBoxHelper.ButtonContent="{iconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                          controls:TextBoxHelper.ClearTextButton="True"
+                                          controls:TextBoxHelper.Watermark="Add Group"
+                                          DisplayMemberPath="GroupName"
+                                          ItemsSource="{Binding Groups}"
+                                          SelectedItem="{Binding SelectedGroup, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}"
+                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
+                    <DataGrid MinHeight="100"
+                                          MaxHeight="300"
+                                          Margin="{StaticResource MarginTop5}"
+                                          ItemsSource="{Binding SelectedHardware.SoftwareHardwares}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}"
+                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Software.DisplayedSoftwareName}"
+                                                            Header="Installed Software"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Margin="{StaticResource MarginAll5}"
+                                                            Command="{Binding DataContext.RemoveSoftwareFromHardwareCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
+                                                            CommandParameter="{Binding Software_ID}">
+                                            <iconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                            Height="14"
+                                                                                            Kind="TrashAlt" />
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <ComboBox controls:TextBoxHelper.ButtonCommand="{Binding AssociateSoftwareToHardwareCommand}"
+                                          controls:TextBoxHelper.ButtonContent="{iconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                          controls:TextBoxHelper.ClearTextButton="True"
+                                          controls:TextBoxHelper.Watermark="Add Software"
+                                          ItemsSource="{Binding Softwares}"
+                                          SelectedItem="{Binding SelectedSoftware, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}"
+                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
+                    <DataGrid MinHeight="100"
+                                          MaxHeight="300"
+                                          Margin="{StaticResource MarginTop5}"
+                                          ItemsSource="{Binding SelectedHardware.HardwarePortsProtocolsServices}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}"
+                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="Auto"
+                                                            Binding="{Binding PortProtocolService.Port}"
+                                                            Header="Port"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                            <DataGridTextColumn Width="Auto"
+                                                            Binding="{Binding PortProtocolService.Protocol}"
+                                                            Header="Protocol"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                            <DataGridTextColumn Width="Auto"
+                                                            Binding="{Binding PortProtocolService.DisplayedServiceName}"
+                                                            Header="Service"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Margin="{StaticResource MarginAll5}"
+                                                            Command="{Binding DataContext.RemovePpsFromHardwareCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
+                                                            CommandParameter="{Binding PortProtocolService_ID}">
+                                            <iconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                            Height="14"
+                                                                                            Kind="TrashAlt" />
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <ComboBox controls:TextBoxHelper.ButtonCommand="{Binding AssociatePpsToHardwareCommand}"
+                                          controls:TextBoxHelper.ButtonContent="{iconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                          controls:TextBoxHelper.ClearTextButton="True"
+                                          controls:TextBoxHelper.Watermark="Add PPS"
+                                          ItemTemplate="{StaticResource PpsTemplate}"
+                                          ItemsSource="{Binding PortsProtocolsServices}"
+                                          SelectedItem="{Binding SelectedPps, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}"
+                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
+                    <TextBox controls:TextBoxHelper.Watermark="Operating System"
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewHardware.OperatingSystem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding SelectedHardware.OperatingSystem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                    <controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Found 21745"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       IsEnabled="False"
+                                                       IsOn="{Binding EditableHardware.Found21745, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
+                                                       Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
+                    <controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       Content="Found 26917"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       IsEnabled="False"
+                                                       IsOn="{Binding EditableHardware.Found26917, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}"
+                                                       Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
+                    <controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                                       vh:DependencyProperties.PrimaryValue="{Binding NewHardware.IsVirtualServer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.IsVirtualServer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       Content="Is Virtual Server"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
+                    <controls:ToggleSwitch Margin="{StaticResource MarginTop5}"
+                                                       HorizontalContentAlignment="Right"
+                                                       vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                                       vh:DependencyProperties.PrimaryValue="{Binding NewHardware.IsIA_Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.IsIA_Enabled, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                                       Content="Is IA Enabled"
+                                                       FontFamily="Segoe UI"
+                                                       FontSize="12"
+                                                       Style="{StaticResource Vulnerator.Styles.ToggleSwitch}" />
+                    <TextBox controls:TextBoxHelper.Watermark="NIAP Level"
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewHardware.NIAP_Level, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.NIAP_Level, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                    <TextBox controls:TextBoxHelper.Watermark="Manufacturer"
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewHardware.Manufacturer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.Manufacturer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                    <TextBox controls:TextBoxHelper.Watermark="Model Number"
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewHardware.ModelNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.ModelNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                    <TextBox controls:TextBoxHelper.Watermark="Serial Number"
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewHardware.SerialNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.SerialNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                    <TextBox controls:TextBoxHelper.Watermark="Role"
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewHardware.Role, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.Role, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                    <ComboBox controls:TextBoxHelper.Watermark="Lifecycle Status"
+                                          DisplayMemberPath="Lifecycle_Status"
+                                          ItemsSource="{Binding LifecycleStatuses}"
+                                          SelectedItem="{Binding LifecycleStatus, Mode=TwoWay}"
+                                          Style="{StaticResource HeaderedComboBoxStyle}" />
+                    <Button Margin="{StaticResource MarginTop5}"
+                                        HorizontalAlignment="Center"
+                                        Command="{Binding ModifyHardwareCommand}"
+                                        Content="Add/Update Hardware" />
+                </StackPanel>
+            </ScrollViewer>
+        </Expander>
+        <!--  TODO: Implement Bulk Process Expander  -->
+        <!--  TODO: Implement Filter Expander  -->
+    </Grid>
+</UserControl>

@@ -348,6 +348,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helper\BackgroundWorkerFactory.cs" />
     <Compile Include="Helper\DdlReader.cs" />
     <Compile Include="Helper\Logger.cs" />
     <Compile Include="Helper\LogWriter.cs" />
@@ -454,6 +455,7 @@
     <Compile Include="Model\Object\Cci.cs" />
     <Compile Include="Model\Object\File.cs" />
     <Compile Include="Model\Object\FortifySeverity.cs" />
+    <Compile Include="Model\Object\GroupHardwareMappingDoWorkArguments.cs" />
     <Compile Include="Model\Object\IssueLabelCategory.cs" />
     <Compile Include="Model\Object\Likelihood.cs" />
     <Compile Include="Model\Object\Notification.cs" />
@@ -480,6 +482,10 @@
     <Compile Include="Model\BusinessLogic\OpenXmlReportCreator.cs" />
     <Compile Include="Model\BusinessLogic\PdfReportCreator.cs" />
     <Compile Include="ViewModel\ConfigurationManagementViewModel.cs" />
+    <Compile Include="ViewModel\ConfigurationManagement\Tabs\Groups.cs" />
+    <Compile Include="ViewModel\ConfigurationManagement\Tabs\Hardware.cs" />
+    <Compile Include="ViewModel\ConfigurationManagement\Tabs\PortsProtocolsServices.cs" />
+    <Compile Include="ViewModel\ConfigurationManagement\Tabs\Software.cs" />
     <Compile Include="ViewModel\LoadingViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MessengerToken.cs" />
@@ -521,6 +527,21 @@
     </Compile>
     <Compile Include="View\UI\ConfigurationManagementView.xaml.cs">
       <DependentUpon>ConfigurationManagementView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\ConfigurationManagement\TabControl.xaml.cs">
+      <DependentUpon>TabControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\ConfigurationManagement\Tabs\Groups.xaml.cs">
+      <DependentUpon>Groups.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\ConfigurationManagement\Tabs\Hardware.xaml.cs">
+      <DependentUpon>Hardware.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\ConfigurationManagement\Tabs\PortsProtocolsServces.xaml.cs">
+      <DependentUpon>PortsProtocolsServces.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\ConfigurationManagement\Tabs\Software.xaml.cs">
+      <DependentUpon>Software.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UI\LoadingWindow.xaml.cs">
       <DependentUpon>LoadingWindow.xaml</DependentUpon>
@@ -695,6 +716,26 @@
     <Page Include="View\UI\ConfigurationManagementView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\UI\ConfigurationManagement\TabControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UI\ConfigurationManagement\Tabs\Groups.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UI\ConfigurationManagement\Tabs\Hardware.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UI\ConfigurationManagement\Tabs\PortsProtocolsServces.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UI\ConfigurationManagement\Tabs\Software.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\UI\LoadingWindow.xaml">
       <SubType>Designer</SubType>

@@ -1,0 +1,188 @@
+﻿<UserControl x:Class="Vulnerator.View.UI.ConfigurationManagement.Tabs.PortsProtocolsServces"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Vulnerator.View.UI.ConfigurationManagement.Tabs"
+             xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
+             xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:converter="clr-namespace:Vulnerator.View.Converter"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             d:DesignWidth="800"
+             DataContext="{Binding ConfigurationManagement, Source={StaticResource Locator}}"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converter:IsNullToCollapsedConverter x:Key="IsNullToCollapsedConverter" />
+    </UserControl.Resources>
+
+    <Grid Margin="{StaticResource MarginLeftRightBottom5}" Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <DataGrid Grid.Row="0"
+                                  ItemsSource="{Binding PortsProtocolsServices}"
+                                  SelectedItem="{Binding SelectedPPS, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  Style="{StaticResource GreyBorderedDataGridStyle}"
+                                  VerticalScrollBarVisibility="Auto">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn x:Name="ppsCheckBoxColumn"
+                                                        Width="Auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox Margin="{StaticResource MarginLeft5}"
+                                                      HorizontalAlignment="Center"
+                                                      IsChecked="{Binding IsChecked}"
+                                                      Style="{StaticResource CustomCheckBox}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Width="*"
+                                                    Binding="{Binding Port}"
+                                                    Header="Port"
+                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    Binding="{Binding Protocol}"
+                                                    Header="Protocol"
+                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    Binding="{Binding DisplayedServiceName}"
+                                                    Header="Service"
+                                                    HeaderStyle="{StaticResource CustomCenterAlignedDataGridHeaderStyle}" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <ScrollViewer Grid.Row="1"
+                                      Margin="{StaticResource MarginTop5}"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Disabled">
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0"
+                                       VerticalAlignment="Bottom">
+                        <TextBlock Text="Count:"
+                                               TextTrimming="CharacterEllipsis" />
+                    </Label>
+                    <Label Grid.Column="1"
+                                       VerticalAlignment="Bottom">
+                        <TextBlock Text="{Binding PortsProtocolsServices.Count}"
+                                               TextTrimming="CharacterEllipsis" />
+                    </Label>
+                    <Button Grid.Column="3"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding}"
+                                        Content="Clear Selected PPS" />
+                    <Button Grid.Column="4"
+                                        Margin="{StaticResource MarginLeft5}"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding}"
+                                        Content="Delete PPS" />
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+        <Expander Grid.Column="1"
+                              Background="{DynamicResource MahApps.Brushes.Window.Background}"
+                              BorderThickness="0"
+                              ExpandDirection="Right"
+                              Style="{StaticResource CustomExpander}">
+            <Expander.Header>
+                <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
+                    <Label.LayoutTransform>
+                        <RotateTransform Angle="90" />
+                    </Label.LayoutTransform>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <iconPacks:PackIconFontAwesomeLight Grid.Column="0"
+                                                                        Margin="{StaticResource MarginAll5}"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"
+                                                                        Kind="PlusSquare"
+                                                                        RotationAngle="270" />
+                        <TextBlock Grid.Column="1"
+                                               Style="{StaticResource ExpanderHeaderTextBlockStyle}"
+                                               Text="Add / Update" />
+                    </Grid>
+                </Label>
+            </Expander.Header>
+            <ScrollViewer>
+                <StackPanel Width="200">
+                    <TextBox controls:TextBoxHelper.Watermark="Port (Read Only)"
+                                         vh:DependencyProperties.FloatingWatermark="Port"
+                                         IsReadOnly="True"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedPPS.Port, Mode=OneWay}" />
+                    <TextBox controls:TextBoxHelper.Watermark="Protocol (Read Only)"
+                                         vh:DependencyProperties.FloatingWatermark="Protocol"
+                                         IsReadOnly="True"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedPPS.Protocol, Mode=OneWay}" />
+                    <TextBox controls:TextBoxHelper.Watermark="Discovered Service Name (Read Only)"
+                                         vh:DependencyProperties.FloatingWatermark="Discovered Service Name"
+                                         IsReadOnly="True"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedPPS.DiscoveredServiceName, Mode=OneWay}" />
+                    <TextBox controls:TextBoxHelper.Watermark="Displayed Service Name"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedPPS.DisplayedServiceName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    <TextBox controls:TextBoxHelper.Watermark="Service Acronym"
+                                         Style="{StaticResource HeaderedTextBoxStyle}"
+                                         Text="{Binding SelectedPPS.ServiceAcronym, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    <DataGrid MinHeight="100"
+                                          MaxHeight="300"
+                                          Margin="{StaticResource MarginTop5}"
+                                          ItemsSource="{Binding SelectedPPS.HardwarePortsProtocolsServices}"
+                                          Style="{StaticResource GreyBorderedDataGridStyle}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="Auto"
+                                                            Binding="{Binding Hardware.DisplayedHostName}"
+                                                            Header="Associated Hardware"
+                                                            HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Margin="{StaticResource MarginAll5}">
+                                            <iconPacks:PackIconFontAwesomeLight Width="14"
+                                                                                            Height="14"
+                                                                                            Kind="TrashAlt" />
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <vh:CommandEnabledComboBox controls:TextBoxHelper.ButtonContent="{iconPacks:FontAwesomeLight Kind=PlusSquare}"
+                                                           controls:TextBoxHelper.ClearTextButton="True"
+                                                           controls:TextBoxHelper.Watermark="Add Hardware"
+                                                           IsEditable="True"
+                                                           Style="{StaticResource HeaderedComboBoxStyle}" />
+                    <Button Margin="{StaticResource MarginTop5}"
+                                        HorizontalAlignment="Center"
+                                        Command="{Binding}"
+                                        Content="Add/Update PPS" />
+                </StackPanel>
+            </ScrollViewer>
+        </Expander>
+        <!--  TODO: Implement Bulk Process Expander  -->
+        <!--  TODO: Implement Filter Expander  -->
+    </Grid>
+</UserControl>
