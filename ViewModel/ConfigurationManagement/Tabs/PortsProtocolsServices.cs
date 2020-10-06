@@ -27,16 +27,16 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
         private BackgroundWorkerFactory _backgroundWorkerFactory = new BackgroundWorkerFactory();
         private Assembly assembly = Assembly.GetExecutingAssembly();
 
-        private List<PortProtocolService> _portsProtocolsServices;
+        private List<PortProtocolService> _portsProtocolsServicesList;
 
         public List<PortProtocolService> PortsProtocolsServicesList
         {
-            get => _portsProtocolsServices;
+            get => _portsProtocolsServicesList;
             set
             {
-                if (_portsProtocolsServices != value)
+                if (_portsProtocolsServicesList != value)
                 {
-                    _portsProtocolsServices = value;
+                    _portsProtocolsServicesList = value;
                     RaisePropertyChanged("PortsProtocolsServicesList");
                 }
             }
@@ -83,36 +83,6 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
                 {
                     _editablePortProtocolService = value;
                     RaisePropertyChanged("EditablePortProtocolService");
-                }
-            }
-        }
-
-        private HardwareSoftwarePortProtocolService _selectedHardwareSoftwarePortProtocolService;
-
-        public HardwareSoftwarePortProtocolService SelectedHardwareSoftwarePortProtocolService
-        {
-            get => _selectedHardwareSoftwarePortProtocolService;
-            set
-            {
-                if (_selectedHardwareSoftwarePortProtocolService != value)
-                {
-                    _selectedHardwareSoftwarePortProtocolService = value;
-                    RaisePropertyChanged("SelectedHardwareSoftwarePortProtocolService");
-                }
-            }
-        }
-
-        private HardwareSoftwarePortProtocolService _editableHardwareSoftwarePortProtocolService;
-
-        public HardwareSoftwarePortProtocolService EditableHardwareSoftwarePortProtocolService
-        {
-            get => _editableHardwareSoftwarePortProtocolService;
-            set
-            {
-                if (_editableHardwareSoftwarePortProtocolService != value)
-                {
-                    _selectedHardwareSoftwarePortProtocolService = value;
-                    RaisePropertyChanged("EditableHardwareSoftwarePortProtocolService");
                 }
             }
         }
@@ -166,25 +136,6 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
             catch (Exception exception)
             {
                 string error = "Unable to update the 'Hardware' tab ViewModel.";
-                LogWriter.LogErrorWithDebug(error, exception);
-            }
-        }
-
-        private void SetEditableHardwareSoftwarePortProtocolService()
-        {
-            try
-            {
-                if (SelectedHardwareSoftwarePortProtocolService == null)
-                {
-                    EditableHardwareSoftwarePortProtocolService = null;
-                    return;
-                }
-
-                EditableHardwareSoftwarePortProtocolService = SelectedHardwareSoftwarePortProtocolService;
-            }
-            catch (Exception exception)
-            {
-                string error = "Unable to clear set editable hardware.";
                 LogWriter.LogErrorWithDebug(error, exception);
             }
         }

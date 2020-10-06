@@ -39,7 +39,6 @@ namespace Vulnerator.ViewModel
             SimpleIoc.Default.Register<RmfViewModel>();
             SimpleIoc.Default.Register<SplashViewModel>();
             SimpleIoc.Default.Register<SettingsViewModel>();
-            SimpleIoc.Default.Register<ConfigurationManagementViewModel>();
             SimpleIoc.Default.Register<Groups>();
             SimpleIoc.Default.Register<Hardware>();
             SimpleIoc.Default.Register<PortsProtocolsServices>();
@@ -66,8 +65,6 @@ namespace Vulnerator.ViewModel
         public UserGuideViewModel UserGuide => SimpleIoc.Default.GetInstance<UserGuideViewModel>();
 
         public VulnerabilityViewModel Vulnerability => SimpleIoc.Default.GetInstance<VulnerabilityViewModel>();
-
-        public ConfigurationManagementViewModel ConfigurationManagement => SimpleIoc.Default.GetInstance<ConfigurationManagementViewModel>();
 
         public Groups Groups => SimpleIoc.Default.GetInstance<Groups>();
 

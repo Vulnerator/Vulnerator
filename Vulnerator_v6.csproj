@@ -481,7 +481,6 @@
     <Compile Include="Model\BusinessLogic\MitigationsTextParser.cs" />
     <Compile Include="Model\BusinessLogic\OpenXmlReportCreator.cs" />
     <Compile Include="Model\BusinessLogic\PdfReportCreator.cs" />
-    <Compile Include="ViewModel\ConfigurationManagementViewModel.cs" />
     <Compile Include="ViewModel\ConfigurationManagement\Tabs\Groups.cs" />
     <Compile Include="ViewModel\ConfigurationManagement\Tabs\Hardware.cs" />
     <Compile Include="ViewModel\ConfigurationManagement\Tabs\PortsProtocolsServices.cs" />
@@ -524,9 +523,6 @@
     <Compile Include="View\Converter\SelectedItemToContentConverter.cs" />
     <Compile Include="View\UI\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\UI\ConfigurationManagementView.xaml.cs">
-      <DependentUpon>ConfigurationManagementView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UI\ConfigurationManagement\TabControl.xaml.cs">
       <DependentUpon>TabControl.xaml</DependentUpon>
@@ -712,10 +708,6 @@
     <Page Include="View\UI\CloseReportWorkbook.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\UI\ConfigurationManagementView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\UI\ConfigurationManagement\TabControl.xaml">
       <SubType>Designer</SubType>

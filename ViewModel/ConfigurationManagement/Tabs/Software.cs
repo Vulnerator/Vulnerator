@@ -57,6 +57,21 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
             }
         }
 
+        private List<HardwareSoftwarePortProtocolService> _hardwareSoftwarePortsProtocolsServices;
+
+        public List<HardwareSoftwarePortProtocolService> HardwareSoftwarePortsProtocolsServices
+        {
+            get => _hardwareSoftwarePortsProtocolsServices;
+            set
+            {
+                if (_hardwareSoftwarePortsProtocolsServices != value)
+                {
+                    _hardwareSoftwarePortsProtocolsServices = value;
+                    RaisePropertyChanged("HardwareSoftwarePortsProtocolsServices");
+                }
+            }
+        }
+
         private List<Contact> _contacts;
 
         public List<Contact> Contacts
@@ -113,6 +128,7 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
                 {
                     _selectedSoftware = value;
                     RaisePropertyChanged("SelectedSoftware");
+                    SetEditableSoftware();
                 }
             }
         }
@@ -128,6 +144,52 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
                 {
                     _editableSoftware = value;
                     RaisePropertyChanged("EditableSoftware");
+                }
+            }
+        }
+
+        private Model.Entity.Hardware _selectedHardware;
+
+        public Model.Entity.Hardware SelectedHardware
+        {
+            get => _selectedHardware;
+            set
+            {
+                if (_selectedHardware != value)
+                {
+                    _selectedHardware = value;
+                    RaisePropertyChanged("SelectedHardware");
+                }
+            }
+        }
+
+        private HardwareSoftwarePortProtocolService _selectedHardwareSoftwarePortProtocolService;
+
+        public HardwareSoftwarePortProtocolService SelectedHardwareSoftwarePortProtocolService
+        {
+            get => _selectedHardwareSoftwarePortProtocolService;
+            set
+            {
+                if (_selectedHardwareSoftwarePortProtocolService != value)
+                {
+                    _selectedHardwareSoftwarePortProtocolService = value;
+                    RaisePropertyChanged("SelectedHardwareSoftwarePortProtocolService");
+                    SetEditableHardwareSoftwarePortProtocolService();
+                }
+            }
+        }
+
+        private HardwareSoftwarePortProtocolService _editableHardwareSoftwarePortProtocolService;
+
+        public HardwareSoftwarePortProtocolService EditableHardwareSoftwarePortProtocolService
+        {
+            get => _editableHardwareSoftwarePortProtocolService;
+            set
+            {
+                if (_editableHardwareSoftwarePortProtocolService != value)
+                {
+                    _selectedHardwareSoftwarePortProtocolService = value;
+                    RaisePropertyChanged("EditableHardwareSoftwarePortProtocolService");
                 }
             }
         }
@@ -207,6 +269,30 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
             {
                 LogWriter.LogError("Unable to populate ConfigurationManagementView lists.");
                 throw exception;
+            }
+        }
+
+        private void SetEditableSoftware()
+        {
+
+        }
+
+        private void SetEditableHardwareSoftwarePortProtocolService()
+        {
+            try
+            {
+                if (SelectedHardwareSoftwarePortProtocolService == null)
+                {
+                    EditableHardwareSoftwarePortProtocolService = null;
+                    return;
+                }
+
+                EditableHardwareSoftwarePortProtocolService = SelectedHardwareSoftwarePortProtocolService;
+            }
+            catch (Exception exception)
+            {
+                string error = "Unable to clear set editable hardware.";
+                LogWriter.LogErrorWithDebug(error, exception);
             }
         }
     }

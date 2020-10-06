@@ -11,7 +11,7 @@
              HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch"
              d:DesignWidth="800"
-             DataContext="{Binding ConfigurationManagement, Source={StaticResource Locator}}"
+             DataContext="{Binding PortsProtocolsServices, Source={StaticResource Locator}}"
              mc:Ignorable="d">
 
     <UserControl.Resources>
