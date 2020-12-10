@@ -853,6 +853,9 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwareMacAddressMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\SoftwareHardwareMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwarePortProtocolServiceMapping.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\SoftwareHardwarePortProtocolServiceMappingWithIds.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\BoundaryHardwareSoftwarePortProtocolServiceMappingWithIds.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\Software.dml" />
     <Resource Include="Vulnerator_Logo_Large_Color_SquareBackground_20190805.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

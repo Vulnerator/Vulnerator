@@ -4,6 +4,8 @@ CREATE TABLE IF NOT EXISTS HardwareSoftwarePortsProtocolsServicesBoundaries (
     Boundary_ID INTEGER NOT NULL,
     CAL_Compliant NVARCHAR(5) NOT NULL,
     PPSM_Approved NVARCHAR(5) NOT NULL,
+    Direction NVARCHAR(25),
+    Classification NVARCHAR(100) NOT NULL,
     UNIQUE (HardwareSoftwarePortProtocolService_ID, Boundary_ID ) ON CONFLICT IGNORE,
     FOREIGN KEY (HardwareSoftwarePortProtocolService_ID) REFERENCES HardwareSoftwarePortsProtocolsServices(HardwareSoftwarePortProtocolService_ID),
     FOREIGN KEY (Boundary_ID) REFERENCES Boundaries(Boundary_ID)

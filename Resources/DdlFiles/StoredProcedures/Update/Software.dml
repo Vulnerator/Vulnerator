@@ -1,0 +1,21 @@
+﻿UPDATE
+    Software
+SET
+    DisplayedSoftwareName = @DisplayedSoftwareName,
+    SoftwareAcronym = @SoftwareAcronym,
+    SoftwareVersion = @SoftwareVersion,
+    SoftwareFunction = @SoftwareFunction,
+    SoftwareDescription = @SoftwareDescription,
+    DADMS_ID = @DADMS_ID,
+    DADMS_Disposition = @DADMS_Disposition,
+    DADMS_LastDateAuthorized = @DADMS_LastDateAuthorized,
+    HasCustomCode = @HasCustomCode,
+    IA_OrIA_Enabled = @IA_OrIA_Enabled,
+    IsOS_OrFirmware = @IsOS_OrFirmware,
+    FAM_Accepted = @FAM_Accepted,
+    ExternallyAuthorized = @ExternallyAuthorized,
+    ReportInAccreditationGlobal = @ReportInAccreditationGlobal,
+    ApprovedForBaselineGlobal = @ApprovedForBaselineGlobal,
+    BaselineApproverGlobal = @BaselineApproverGlobal
+WHERE
+    Software_ID = @Software_ID;

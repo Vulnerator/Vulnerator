@@ -31,5 +31,11 @@ namespace Vulnerator.Model.Entity
 
         [StringLength(5)]
         public string PPSM_Approved { get; set; }
+
+        [StringLength(25)]
+        public string Direction { get; set; }
+
+        [StringLength(100)]
+        public string Classification { get; set; }
     }
 }

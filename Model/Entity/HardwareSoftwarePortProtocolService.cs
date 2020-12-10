@@ -33,18 +33,6 @@ namespace Vulnerator.Model.Entity
         [StringLength(5)]
         public string ReportInAccreditation { get; set; }
 
-        [StringLength(25)]
-        public string Direction { get; set; }
-
-        [StringLength(100)]
-        public string BoundariesCrossed { get; set; }
-
-        [StringLength(5)]
-        public string DOD_Compliant { get; set; }
-
-        [StringLength(100)]
-        public string Classification { get; set; }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<HardwareSoftwarePortProtocolServiceBoundary> HardwareSoftwarePortsProtocolsServicesBoundaries { get; set; }
     }

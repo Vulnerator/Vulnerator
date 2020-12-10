@@ -809,6 +809,36 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        public void MapSoftwareToHardwarePortProtocolService(SQLiteCommand sqliteCommand)
+        {
+
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.SoftwareHardwarePortProtocolServiceMappingWithIds.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to map Software with ID value '{sqliteCommand.Parameters["Software_ID"].Value}' to HardwarePortProtocolService with ID value '{sqliteCommand.Parameters["HardwarePortProtocolService_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
+        public void MapBoundaryToHardwareSoftwarePortProtocolService(SQLiteCommand sqliteCommand)
+        {
+
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.BoundaryHardwareSoftwarePortProtocolServiceMappingWithIds.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError($"Unable to map Boundary with ID value '{sqliteCommand.Parameters["Boundary_ID"].Value}' to HardwarePortProtocolService with ID value '{sqliteCommand.Parameters["HardwareSoftwarePortProtocolService_ID"].Value}'.");
+                throw exception;
+            }
+        }
+
         public void MapVulnerabilityToCci(SQLiteCommand sqliteCommand)
         {
             try
@@ -1170,6 +1200,20 @@ namespace Vulnerator.Model.DataAccess
             catch (Exception exception)
             {
                 LogWriter.LogError($"Unable to update the 'Is_Report_Selected' field for Report ID '{sqliteCommand.Parameters["Required_Report_ID"].Value}'");
+                throw exception;
+            }
+        }
+
+        public void UpdateSoftware(SQLiteCommand sqliteCommand)
+        {
+            try
+            {
+                sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Update.Software.dml", assembly);
+                sqliteCommand.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogError("");
                 throw exception;
             }
         }

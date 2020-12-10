@@ -1,0 +1,6 @@
+﻿INSERT INTO SoftwareHardwarePortsProtocolsServices
+VALUES (NULL,
+        (
+        @HardwarePortProtocolService_ID,
+        @Software_ID,
+        @ReportInAccreditation);
