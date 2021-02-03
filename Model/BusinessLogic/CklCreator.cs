@@ -30,7 +30,8 @@ namespace Vulnerator.Model.BusinessLogic
                     sqliteCommand.Parameters.Add(new SQLiteParameter("Hardware_ID", hardware.Hardware_ID));
                     sqliteCommand.Parameters.Add(new SQLiteParameter("VulnerabilitySource_ID", vulnerabilitySource.VulnerabilitySource_ID));
                     sqliteCommand.CommandText = sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.HardwareCklCreationData.dml", assembly);;
-                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                    using (
+                        SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                     {
                         string stigName = vulnerabilitySource.SourceName
                                     .Replace(" ", string.Empty)
