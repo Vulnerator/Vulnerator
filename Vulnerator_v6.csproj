@@ -30,7 +30,7 @@
     </SccProvider>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <PublishUrl>publish\</PublishUrl>
+    <PublishUrl>C:\Users\Alex Kuchta\Desktop\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -43,6 +43,7 @@
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -76,10 +77,16 @@
     <StartupObject>Vulnerator.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>38213BCE33EB5017A79C0C56655FCF360DB26241</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ColorCode, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
@@ -1139,6 +1146,8 @@
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ReportFindingTypeUserSettings.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ReportSeverityUserSettings.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwareSoftwarePortsProtocolsServices.ddl" />
+    <Content Include="Resources\DdlFiles\Tables\Create\Poams.ddl" />
+    <Content Include="Resources\DdlFiles\Tables\Create\PoamsUniqueFindings.ddl" />
     <Content Include="Resources\UserGuide\Images\ThemeFlyout.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -119,7 +119,8 @@
         <Expander Grid.Column="1"
                   Background="{DynamicResource MahApps.Brushes.Window.Background}"
                   BorderThickness="0"
-                  ExpandDirection="Right">
+                  ExpandDirection="Right"
+                  Style="{StaticResource CustomExpander}">
             <Expander.Header>
                 <Label Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                     <Label.LayoutTransform>

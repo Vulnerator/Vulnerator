@@ -186,15 +186,15 @@
                                                                     Kind="FileDownload" />
                             </controls:HamburgerMenuIconItem.Icon>
                         </controls:HamburgerMenuIconItem>
-                        <!--<Controls:HamburgerMenuIconItem Label="RMF"
+                        <!--<controls:HamburgerMenuIconItem Label="RMF"
                                                         Tag="{StaticResource rmfView}"
                                                         ToolTip="RMF">
-                            <Controls:HamburgerMenuIconItem.Icon>
-                                <IconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
+                            <controls:HamburgerMenuIconItem.Icon>
+                                <iconPacks:PackIconFontAwesomeLight HorizontalAlignment="Center"
                                                             VerticalAlignment="Center"
                                                             Kind="FileCertificate" />
-                            </Controls:HamburgerMenuIconItem.Icon>
-                        </Controls:HamburgerMenuIconItem>-->
+                            </controls:HamburgerMenuIconItem.Icon>
+                        </controls:HamburgerMenuIconItem>-->
                         <controls:HamburgerMenuIconItem Label="News"
                                                         Tag="{StaticResource newsView}"
                                                         ToolTip="News">
