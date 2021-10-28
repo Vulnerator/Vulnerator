@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS MitigationsOrConditions
 (
     MitigationOrCondition_ID  INTEGER PRIMARY KEY,
+    UniqueFinding_ID          INTEGER,
     ImpactDescription         NVARCHAR(2000),
     PredisposingConditions    NVARCHAR(2000),
     TechnicalMitigation       NVARCHAR(2000),
@@ -18,5 +19,7 @@ CREATE TABLE IF NOT EXISTS MitigationsOrConditions
     ApprovalDate              DATETIME,
     ExpirationDate            DATETIME,
     IsApproved                NVARCHAR(5),
-    Approver                  NVARCHAR(100)
+    Approver                  NVARCHAR(100),
+    CreatedOn                 DATE NOT NULL,
+    FOREIGN KEY (UniqueFinding_ID) REFERENCES UniqueFindings(UniqueFinding_ID)
 );

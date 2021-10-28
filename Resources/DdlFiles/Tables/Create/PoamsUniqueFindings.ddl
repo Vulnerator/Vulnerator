@@ -1,7 +1,7 @@
 ﻿CREATE TABLE IF NOT EXISTS PoamsUniqueFindings (
-    PoamUniqueFinding_ID INTEGER PRIMARY KEY,
-    Poam_ID INTEGER NOT NULL,
-    UniqueFinding_ID INTEGER NOT NULL,
+    PoamUniqueFinding_ID    INTEGER PRIMARY KEY,
+    Poam_ID                 INTEGER NOT NULL,
+    UniqueFinding_ID        INTEGER NOT NULL,
     UNIQUE (
         Poam_ID,
         UniqueFinding_ID
