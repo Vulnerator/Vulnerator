@@ -1146,8 +1146,10 @@
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ReportFindingTypeUserSettings.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ReportSeverityUserSettings.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwareSoftwarePortsProtocolsServices.ddl" />
-    <Content Include="Resources\DdlFiles\Tables\Create\Poams.ddl" />
-    <Content Include="Resources\DdlFiles\Tables\Create\PoamsUniqueFindings.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\Poams.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\PoamsUniqueFindings.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\Policies.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\UniqueFindingsMitigationsOrConditions.ddl" />
     <Content Include="Resources\UserGuide\Images\ThemeFlyout.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -49,5 +49,4 @@ VALUES (NULL,
         @WebDB_Instance,
         @Classification,
         @CVSS_EnvironmentalScore,
-        @CVSS_EnvironmentalVector,
-        @MitigationOrCondition_ID);
+        @CVSS_EnvironmentalVector);
