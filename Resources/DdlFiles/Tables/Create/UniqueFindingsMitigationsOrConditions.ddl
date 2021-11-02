@@ -4,8 +4,8 @@
     MitigationOrCondition_ID                    INTEGER NOT NULL,
     UNIQUE (
         UniqueFinding_ID,
-        MitigationOrCondition_ID,
+        MitigationOrCondition_ID
     ) ON CONFLICT IGNORE,
     FOREIGN KEY (UniqueFinding_ID) REFERENCES Groups(UniqueFinding_ID),
     FOREIGN KEY (MitigationOrCondition_ID) REFERENCES MitigationsOrConditions(MitigationOrCondition_ID)
-    );
+);

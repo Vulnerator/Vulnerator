@@ -1,6 +1,6 @@
 ﻿CREATE TABLE IF NOT EXISTS Policies (
     Policy_ID               INTEGER PRIMARY KEY,
-    Text                    NVARCHAR (MAX),
+    Text                    NVARCHAR,
     Inheritability          NVARCHAR (20) NOT NULL,
     Group_ID                INTEGER NOT NULL,
     NIST_ControlCCI_ID      INTEGER NOT NULL,
