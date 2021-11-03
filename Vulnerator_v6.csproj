@@ -1041,6 +1041,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\GroupsConnections.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\GroupsContactsTitles.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\UniqueFinding.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\AssessmentProceduresTestResultsPolicySupportingImages.ddl" />
     <Content Include="Resources\DdlFiles\Tables\Create\GroupsIATA_Standards.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\GroupsMitigationsOrConditionsVulnerabilities.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\GroupsOverlays.ddl" />
@@ -1148,8 +1149,9 @@
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwareSoftwarePortsProtocolsServices.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\Poams.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\PoamsUniqueFindings.ddl" />
-    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\Policies.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\AssessmentProcedureTestResults.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\UniqueFindingsMitigationsOrConditions.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\PolicySupportingImages.ddl" />
     <Content Include="Resources\UserGuide\Images\ThemeFlyout.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
