@@ -285,7 +285,7 @@ try {
     $relative = $null
     try { [void]$clientType::CheckAddress('stigman/api', 'API address') } catch { $relative = $_.Exception.InnerException.Message }
     Check ($relative -like '*full URL*') ('a relative address is refused (' + $relative + ')')
-    $challenge = $clientType::CodeChallenge('dBjftJeZ4CVP-mJ92K27uhbUJU1p1r_wW1gFWFOEjXk')
+    $challenge = $clientType::CodeChallenge('dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk')
     Check ($challenge -eq 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM') ('PKCE S256 matches the RFC 7636 test vector (' + $challenge + ')')
     $query = $clientType::ParseRequestQuery('GET /?code=a%2Fb&state=x+y&empty HTTP/1.1')
     Check ($query['code'] -eq 'a/b' -and $query['state'] -eq 'x y' -and $query.ContainsKey('empty')) 'the loopback redirect query is decoded'
