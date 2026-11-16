@@ -86,21 +86,23 @@ for a host, built from the STIG library and that host's findings.
 **Hardware columns:** choose **Columns...** under the Hardware list to show or hide columns. Besides the names and
 scan IP you can show **Operating System** (from ACAS / Nessus scans), **Last ACAS Scan**, **Last Checklist / SCAP**,
 **Last Scan**, **Scan Sources** (ACAS, STIG), **Groups**, **Role**, **Manufacturer**, **Model**, **Serial Number**,
-**Virtual**, **Lifecycle Status**, **Also Known As** and **ACAS Host ID**. Drag a column header to move it; click it
+**Virtual**, **Lifecycle Status**, **Registry No.** and **Also Known As**. Drag a column header to move it; click it
 to sort. Your choice is remembered.
 
 **One record per device.** ACAS and STIG checklists often name the same device differently (for example
 **W01.Contoso.com** in a scan and **W01.Contoso** typed into a checklist), so it can appear twice.
 
-* **ACAS host ID:** .nessus files from Tenable Security Center carry a host ID that stays the same when a device's
-  name or IP changes. Vulnerator reads it from the host property named under **Vulnerability Management > Ingest >
-  ACAS Files > ACAS host ID tag** (**TAG** by default; leave empty to match by name only). A scan of a known ID lands
-  on the same record even after a rename; the new name is remembered as an alias.
+* **Registry number:** every device gets a permanent Vulnerator number, shown as **VUL-000123** in the
+  **Registry No.** column. Numbers are never reused, not even after a device is deleted.
+* **Matching on import:** a scan or checklist lands on an existing device when its host name matches the device's
+  host name, one of its saved aliases, its FQDN or its NetBIOS name (only when exactly one device matches). IP and MAC
+  addresses are not used for matching, because they change and get reused.
 * **Merge:** tick two or more records that are the same device and choose **Merge Ticked Hardware...**. Pick the
   record to keep (the ACAS record is suggested). Its findings, IP and MAC addresses, groups, software, ports and SCAP
   scores move to it; when both records have the same finding, the newest result is kept, with its POA&M and
-  mitigation links. Blank fields (FQDN, OS, ...) are filled from the other records. The other names become aliases
-  (shown under **Also Known As**), so later checklists or scans with those names land on the kept record. A merge
+  mitigation links. Blank fields (FQDN, OS, ...) are filled from the other records. The kept device keeps its
+  registry number; the others' numbers are retired and point to it. The other names become aliases (shown, with the
+  retired numbers, under **Also Known As**), so later checklists or scans with those names land on the kept record. A merge
   cannot be undone: leave **Back up the database first** ticked to keep a copy of the database file next to it.
 
 ## Reporting

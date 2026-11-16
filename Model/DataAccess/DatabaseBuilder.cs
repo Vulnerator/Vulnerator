@@ -142,6 +142,8 @@ namespace Vulnerator.Model.DataAccess
                             LoadReferenceData(sqliteCommand);
                         }
                         InsertUserReportSettings(sqliteCommand);
+                        // Permanent device numbers (VUL-000123) for every hardware record.
+                        DeviceRegistry.Ensure(sqliteCommand);
                     }
 
                     sqliteTransaction.Commit();

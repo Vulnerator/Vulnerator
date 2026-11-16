@@ -15,7 +15,8 @@ namespace Vulnerator.Model.DataAccess
     /// scores, contacts, locations, submitted STIG releases and identifiers. When both records have the same finding
     /// (same rule or plugin, source and instance), the one observed last is kept, with the POA&amp;M and mitigation links
     /// of both. Blank fields of the kept record (FQDN, NetBIOS, OS, ...) are filled from the merged ones. The merged
-    /// records' names become aliases of the kept record, so later imports with those names land on it.
+    /// records' names become aliases of the kept record, so later imports with those names land on it. The kept record
+    /// keeps its registry number (VUL-...); the merged records' numbers are retired and point to it.
     /// All in one transaction; it cannot be undone (back the database up first).
     /// </summary>
     public static class HardwareMerger
@@ -91,6 +92,9 @@ namespace Vulnerator.Model.DataAccess
                 result.Aliases.Add(name);
             }
             Execute(connection, transaction, "UPDATE HardwareIdentifiers SET Hardware_ID = @K WHERE Hardware_ID = @M", keepId, mergeId);
+            // The kept device keeps its registry number; the merged device's numbers are retired and point to it.
+            if (TableExists(connection, transaction, "DeviceRegistry"))
+            { Execute(connection, transaction, "UPDATE DeviceRegistry SET Hardware_ID = @K, Retired = 1 WHERE Hardware_ID = @M", keepId, mergeId); }
             Execute(connection, transaction, "DELETE FROM HardwareIdentifiers WHERE Hardware_ID = @K AND IdentifierType = 'Alias' AND IdentifierValue = @V", keepId, mergeId, keepName);
 
             // Fill the kept record's blank fields.

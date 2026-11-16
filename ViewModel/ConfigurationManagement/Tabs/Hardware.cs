@@ -359,8 +359,8 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
                         HardwareIdentity.Identifiers ids;
                         if (identifiers.TryGetValue(hardware.Hardware_ID, out ids))
                         {
-                            hardware.AlsoKnownAs = string.Join(", ", ids.Aliases);
-                            hardware.AcasHostId = string.Join(", ", ids.AcasHostIds);
+                            hardware.AlsoKnownAs = string.Join(", ", ids.Aliases.Concat(ids.RetiredNumbers));
+                            hardware.RegistryNumber = ids.RegistryNumber.HasValue ? DeviceRegistry.Format(ids.RegistryNumber.Value) : string.Empty;
                         }
                     }
                     Hardwares = hardwares;

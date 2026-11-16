@@ -70,6 +70,11 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
+                    <DataGridTextColumn Width="Auto"
+                                                    IsReadOnly="True"
+                                                    Binding="{Binding RegistryNumber, Mode=OneWay}"
+                                                    Header="Registry No."
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                     <DataGridTextColumn Width="*"
                                                     Binding="{Binding DisplayedHostName}"
                                                     Header="Preferred Host Name"
@@ -155,11 +160,6 @@
                                                     IsReadOnly="True"
                                                     Binding="{Binding AlsoKnownAs, Mode=OneWay}"
                                                     Header="Also Known As"
-                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
-                    <DataGridTextColumn Width="*"
-                                                    IsReadOnly="True"
-                                                    Binding="{Binding AcasHostId, Mode=OneWay}"
-                                                    Header="ACAS Host ID"
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                 </DataGrid.Columns>
             </DataGrid>

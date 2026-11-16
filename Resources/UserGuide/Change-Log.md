@@ -1,4 +1,16 @@
-﻿# Vulnerator 2.0 (7.5.0-beta.3)
+﻿# Vulnerator 2.0 (7.5.0-beta.4)
+###### Version 7.5.0 beta 4, November 2026
+
+| Change Description |
+| :----------------- |
+| Registry numbers: every device gets a permanent Vulnerator number (VUL-000123, column Registry No.); never reused; a merge keeps the kept device's number and retires the others, which point to it |
+| Imports match an existing device by host name, saved alias, FQDN or NetBIOS name (one match only); IP and MAC are not used |
+| The ACAS host ID (TAG host property) from beta 3 is no longer read or stored |
+
+
+----------
+
+# Vulnerator 2.0 (7.5.0-beta.3)
 ###### Version 7.5.0 beta 3, November 2026
 
 | Change Description |

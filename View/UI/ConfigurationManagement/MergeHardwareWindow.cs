@@ -8,7 +8,8 @@ namespace Vulnerator.View.UI.ConfigurationManagement
 {
     /// <summary>
     /// Asks which of the ticked hardware records to keep when merging, and whether to back up the database first.
-    /// The record with ACAS results (or an ACAS host ID) is picked by default, since ACAS knows the device by its ID.
+    /// The record with ACAS results is suggested (ACAS names are the most consistent), else the oldest registry number.
+    /// The kept record keeps its registry number; the others' numbers are retired and point to it.
     /// </summary>
     public sealed class MergeHardwareWindow : Window
     {
@@ -30,12 +31,13 @@ namespace Vulnerator.View.UI.ConfigurationManagement
                 Margin = new Thickness(0, 0, 0, 8),
                 Text = "These records will become one device. Pick the record to keep. Findings, IP and MAC addresses, groups, " +
                        "software and ports move to it; when both have the same finding, the newest result is kept. The other " +
-                       "names are remembered, so later checklists or scans with those names land on the kept record. " +
+                       "names are remembered, so later checklists or scans with those names land on the kept record. The kept record " +
+                       "keeps its registry number (VUL-...); the others' numbers point to it. " +
                        "This cannot be undone."
             });
             Vulnerator.Model.Entity.Hardware suggested = records
-                .OrderByDescending(h => !string.IsNullOrEmpty(h.AcasHostId))
-                .ThenByDescending(h => h.LastAcasScan.HasValue)
+                .OrderByDescending(h => h.LastAcasScan.HasValue)
+                .ThenBy(h => DeviceNumber(h))
                 .ThenByDescending(h => (h.DiscoveredHostName ?? string.Empty).Length)
                 .First();
             foreach (Vulnerator.Model.Entity.Hardware record in records)
@@ -45,6 +47,7 @@ namespace Vulnerator.View.UI.ConfigurationManagement
                 if (!string.IsNullOrWhiteSpace(record.ScanIP)) details.Add(record.ScanIP);
                 if (!string.IsNullOrWhiteSpace(record.OperatingSystem)) details.Add(record.OperatingSystem);
                 if (record.LastScan.HasValue) details.Add("last seen " + record.LastScan.Value.ToString("yyyy-MM-dd"));
+                if (!string.IsNullOrWhiteSpace(record.RegistryNumber)) details.Insert(0, record.RegistryNumber);
                 RadioButton choice = new RadioButton
                 {
                     GroupName = "keep",
@@ -86,6 +89,11 @@ namespace Vulnerator.View.UI.ConfigurationManagement
             buttons.Children.Add(cancel);
             panel.Children.Add(buttons);
             Content = panel;
+        }
+
+        private static long DeviceNumber(Vulnerator.Model.Entity.Hardware record)
+        {
+            return Vulnerator.Model.DataAccess.DeviceRegistry.Parse(record.RegistryNumber) ?? long.MaxValue;
         }
 
         /// <summary>The record to keep (set when the window closes with Merge).</summary>

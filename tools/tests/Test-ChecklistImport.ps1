@@ -690,33 +690,56 @@ try {
     Assert-That ($null -ne $cklDates -and $null -ne $cklDates.LastChecklist -and $null -eq $cklDates.LastAcas) ('Hardware tab: last checklist date, no ACAS date for a checklist-only host (' + $datesText + ')')
     Assert-That ([Vulnerator.Model.DataAccess.HardwareScanDates]::ToDate([long]638000000000000000).Year -eq 2022 -and $null -eq [Vulnerator.Model.DataAccess.HardwareScanDates]::ToDate([long]5)) 'tick values from MAX() are read as dates'
 
-    # --- One record per device: ACAS host ID (Settings: ACAS host ID tag, default TAG), aliases and Merge ---------------
-    Assert-That ([string]$indexer.GetValue($defaultSettings, [object[]]@('AcasHostIdTag')) -eq 'TAG') 'the ACAS host ID tag is TAG by default'
+    # --- One record per device: registry numbers (VUL-000123), matching by name / FQDN / NetBIOS / alias, Merge -------
+    $registry = [Vulnerator.Model.DataAccess.DeviceRegistry]
+    Assert-That ($registry::Format(123) -eq 'VUL-000123' -and $registry::Parse('vul-123') -eq 123 -and $registry::Parse('VUL-000045') -eq 45 -and $null -eq $registry::Parse('W01')) 'registry numbers read and write as VUL-000123'
+    $unnumbered = [int](Get-Scalar 'SELECT COUNT(*) FROM Hardware H WHERE NOT EXISTS (SELECT 1 FROM DeviceRegistry R WHERE R.Hardware_ID = H.Hardware_ID AND R.Retired = 0)')
+    $doubled = [int](Get-Scalar 'SELECT COUNT(*) FROM (SELECT Hardware_ID FROM DeviceRegistry WHERE Retired = 0 GROUP BY Hardware_ID HAVING COUNT(*) > 1)')
+    Assert-That ($unnumbered -eq 0 -and $doubled -eq 0 -and [int](Get-Scalar 'SELECT COUNT(*) FROM Hardware') -gt 0) ('every hardware record has exactly one registry number (unnumbered ' + $unnumbered + ', doubled ' + $doubled + ')')
     $idTemplate = [System.IO.File]::ReadAllText((Join-Path $fixtures 'dashboard-scan.nessus'))
-    function New-IdScan([string]$Name, [string]$HostName, [string]$Ip, [string]$HostId, [string]$Date) {
+    function New-IdScan([string]$Name, [string]$HostName, [string]$Ip, [string]$NetBios) {
         $text = $idTemplate.Replace('10.1.3.9', $Ip).Replace('dashhost01.example.test', $HostName + '.example.test').Replace('<tag name="hostname">dashhost01</tag>', '<tag name="hostname">' + $HostName + '</tag>')
-        $text = $text.Replace('Thu Oct 29 09:05:00 2026', $Date)
-        if ($HostId -ne '') { $text = $text.Replace('<tag name="Credentialed_Scan">', '<tag name="TAG">' + $HostId + '</tag>' + "`n" + '<tag name="Credentialed_Scan">') }
+        if ($NetBios -ne '') { $text = $text.Replace('<tag name="Credentialed_Scan">', '<tag name="netbios-name">' + $NetBios + '</tag>' + "`n" + '<tag name="Credentialed_Scan">') }
         $path = Join-Path $workDir ($Name + '.nessus')
         [System.IO.File]::WriteAllText($path, $text)
         $file = New-Object Vulnerator.Model.Object.File ($Name, 'ACAS - Nessus', 'Ready', $path, 'True')
         return (New-Object Vulnerator.Model.BusinessLogic.AcasNessusReader).ReadAcasNessusFile($file, 'TestGroup')
     }
-    $r1 = New-IdScan 'idscan-1' 'idhost-old' '10.7.7.1' 'SC-REC-1001' 'Mon Oct 26 09:05:00 2026'
-    $r2 = New-IdScan 'idscan-2' 'idhost-renamed' '10.7.7.99' 'SC-REC-1001' 'Thu Oct 29 09:05:00 2026'
-    $idHosts = [int](Get-Scalar "SELECT COUNT(*) FROM Hardware WHERE DiscoveredHostName IN ('idhost-old', 'idhost-renamed')")
-    $idHw = Get-Scalar "SELECT Hardware_ID FROM HardwareIdentifiers WHERE IdentifierType = 'AcasHostId' AND IdentifierValue = 'SC-REC-1001'"
-    $idOwner = Get-Scalar "SELECT DiscoveredHostName FROM Hardware WHERE Hardware_ID = @h" @{ '@h' = $idHw }
-    Assert-That ($r1 -eq 'Processed' -and $r2 -eq 'Processed' -and $idHosts -eq 1 -and $idOwner -eq 'idhost-old') ('the same ACAS host ID stays one record after a rename and new IP (records: ' + $idHosts + ', owner: ' + $idOwner + ')')
-    $renamedAlias = [int](Get-Scalar "SELECT COUNT(*) FROM HardwareIdentifiers WHERE IdentifierType = 'Alias' AND IdentifierValue = 'idhost-renamed' AND Hardware_ID = @h" @{ '@h' = $idHw })
-    $newIp = [int](Get-Scalar ("SELECT COUNT(*) FROM Hardware_IP_Addresses HI JOIN IP_Addresses I ON HI.IP_Address_ID = I.IP_Address_ID WHERE HI.Hardware_ID = @h AND I.IP_Address = '10.7.7.99'") @{ '@h' = $idHw })
-    Assert-That ($renamedAlias -eq 1 -and $newIp -eq 1) ('the new name becomes an alias and the new IP is added to the record (alias ' + $renamedAlias + ', IP ' + $newIp + ')')
-    $r3 = New-IdScan 'idscan-3' 'idhost-other' '10.7.7.2' 'SC-REC-2002' 'Thu Oct 29 09:05:00 2026'
-    $r4 = New-IdScan 'idscan-4' 'idhost-noid' '10.7.7.3' '' 'Thu Oct 29 09:05:00 2026'
-    Assert-That ([int](Get-Scalar "SELECT COUNT(*) FROM Hardware WHERE DiscoveredHostName IN ('idhost-other', 'idhost-noid')") -eq 2) 'another host ID, and a scan without one, are separate records'
+    function Get-Number([string]$HostName) {
+        return [long](Get-Scalar 'SELECT R.RegistryNumber FROM DeviceRegistry R JOIN Hardware H ON R.Hardware_ID = H.Hardware_ID WHERE R.Retired = 0 AND H.DiscoveredHostName = @n' @{ '@n' = $HostName })
+    }
+    $maxBefore = [long](Get-Scalar 'SELECT MAX(RegistryNumber) FROM DeviceRegistry')
+    $r1 = New-IdScan 'idscan-1' 'idhost-old' '10.7.7.1' 'IDHOSTNB'
+    $idNumber = Get-Number 'idhost-old'
+    Assert-That ($r1 -eq 'Processed' -and $idNumber -gt $maxBefore) ('a new device gets the next registry number (' + $registry::Format($idNumber) + ')')
+    $idHw = [long](Get-Scalar "SELECT Hardware_ID FROM Hardware WHERE DiscoveredHostName = 'idhost-old'")
+
+    # A checklist that names the device by its NetBIOS name, and one by its FQDN, land on the existing records.
+    $hwBefore = [int](Get-Scalar 'SELECT COUNT(*) FROM Hardware')
+    $nbPath = Join-Path $workDir 'by-netbios.ckl'
+    [System.IO.File]::WriteAllText($nbPath, ([System.IO.File]::ReadAllText((Join-Path $fixtures 'multi-stig.ckl')).Replace('<HOST_NAME>TESTHOST01</HOST_NAME>', '<HOST_NAME>idhostnb</HOST_NAME>').Replace('testhost01.example.test', 'nb-check.example.test')))
+    $result = Import-Checklist $nbPath 'TestGroup'
+    $nbFindings = [int](Get-Scalar 'SELECT COUNT(*) FROM UniqueFindings WHERE Hardware_ID = @h' @{ '@h' = $idHw })
+    Assert-That ($result -eq 'Processed' -and [int](Get-Scalar 'SELECT COUNT(*) FROM Hardware') -eq $hwBefore -and $nbFindings -gt 2) ('a checklist named by the NetBIOS name lands on the ACAS record (hardware ' + $hwBefore + ', findings ' + $nbFindings + ')')
+    $t1Before = [int](Get-Scalar "SELECT COUNT(*) FROM UniqueFindings UF JOIN Hardware H ON UF.Hardware_ID = H.Hardware_ID WHERE H.DiscoveredHostName = 'TESTHOST01'")
+    $fqdnPath = Join-Path $workDir 'by-fqdn.ckl'
+    [System.IO.File]::WriteAllText($fqdnPath, ([System.IO.File]::ReadAllText((Join-Path $fixtures 'multi-stig.ckl')).Replace('<HOST_NAME>TESTHOST01</HOST_NAME>', '<HOST_NAME>TestHost01.example.test</HOST_NAME>')))
+    $result = Import-Checklist $fqdnPath 'TestGroup'
+    $t1After = [int](Get-Scalar "SELECT COUNT(*) FROM UniqueFindings UF JOIN Hardware H ON UF.Hardware_ID = H.Hardware_ID WHERE H.DiscoveredHostName = 'TESTHOST01'")
+    Assert-That ($result -eq 'Processed' -and [int](Get-Scalar 'SELECT COUNT(*) FROM Hardware') -eq $hwBefore -and $t1After -eq $t1Before) ('a checklist named by the FQDN updates the existing record (findings ' + $t1Before + ' -> ' + $t1After + ')')
+
+    # A deleted device's number is never given out again.
+    $r3 = New-IdScan 'idscan-3' 'idhost-other' '10.7.7.2' ''
+    $otherId = [long](Get-Scalar "SELECT Hardware_ID FROM Hardware WHERE DiscoveredHostName = 'idhost-other'")
+    $otherNumber = Get-Number 'idhost-other'
+    [Vulnerator.Model.DataAccess.AssetEditor]::DeleteHardware($otherId)
+    $r4 = New-IdScan 'idscan-4' 'idhost-next' '10.7.7.3' ''
+    $nextNumber = Get-Number 'idhost-next'
+    Assert-That ($r3 -eq 'Processed' -and $r4 -eq 'Processed' -and $nextNumber -gt $otherNumber -and [int](Get-Scalar 'SELECT COUNT(*) FROM DeviceRegistry WHERE RegistryNumber = @n' @{ '@n' = $otherNumber }) -eq 0) ('registry numbers are not reused after a delete (' + $registry::Format($otherNumber) + ' deleted, next ' + $registry::Format($nextNumber) + ')')
 
     # Merge: the checklist host STIGMAN-HOST01 into the ACAS record idhost-old.
-    $keepId = [long]$idHw
+    $keepId = $idHw
+    $cklNumber = Get-Number 'STIGMAN-HOST01'
     $cklHostId = [long](Get-Scalar "SELECT Hardware_ID FROM Hardware WHERE DiscoveredHostName = 'STIGMAN-HOST01'")
     $keepBefore = [int](Get-Scalar 'SELECT COUNT(*) FROM UniqueFindings WHERE Hardware_ID = @h' @{ '@h' = $keepId })
     $cklBefore = [int](Get-Scalar 'SELECT COUNT(*) FROM UniqueFindings WHERE Hardware_ID = @h' @{ '@h' = $cklHostId })
@@ -727,6 +750,8 @@ try {
     Assert-That ($keepAfter -eq ($keepBefore + $cklBefore) -and $merge.FindingsMoved -eq $cklBefore) ('merge moves the checklist findings to the kept record (' + $keepBefore + ' + ' + $cklBefore + ' -> ' + $keepAfter + ')')
     $mergedAliases = @((Invoke-Sql "SELECT IdentifierValue FROM HardwareIdentifiers WHERE IdentifierType = 'Alias' AND Hardware_ID = @h" @{ '@h' = $keepId }).Rows | ForEach-Object { [string]$_['IdentifierValue'] })
     Assert-That (($mergedAliases -contains 'STIGMAN-HOST01') -and ($mergedAliases -contains 'stigman-host01.example.test')) ('merged names become aliases (' + ($mergedAliases -join ', ') + ')')
+    $retired = Invoke-Sql 'SELECT Hardware_ID, Retired FROM DeviceRegistry WHERE RegistryNumber = @n' @{ '@n' = $cklNumber }
+    Assert-That ((Get-Number 'idhost-old') -eq $idNumber -and $retired.Rows.Count -eq 1 -and [long]$retired.Rows[0]['Hardware_ID'] -eq $keepId -and [long]$retired.Rows[0]['Retired'] -eq 1) ('the kept device keeps ' + $registry::Format($idNumber) + '; ' + $registry::Format($cklNumber) + ' is retired and points to it')
     $keptOs = [string](Get-Scalar 'SELECT FQDN FROM Hardware WHERE Hardware_ID = @h' @{ '@h' = $keepId })
     Assert-That ($keptOs -eq 'idhost-old.example.test') ('the kept record keeps its own values (FQDN ' + $keptOs + ')')
     $submissionHost = [string](Get-Scalar "SELECT DiscoveredHostName FROM StigSubmissions WHERE SourceName LIKE '%Test Application%'")
@@ -738,7 +763,7 @@ try {
 
     # Merge with findings both records have: the newest result is kept, POA&M links follow it.
     $dupPath = Join-Path $workDir 'duphost.ckl'
-    [System.IO.File]::WriteAllText($dupPath, ([System.IO.File]::ReadAllText((Join-Path $fixtures 'multi-stig.ckl')).Replace('<HOST_NAME>TESTHOST01</HOST_NAME>', '<HOST_NAME>DUPHOST01</HOST_NAME>')))
+    [System.IO.File]::WriteAllText($dupPath, ([System.IO.File]::ReadAllText((Join-Path $fixtures 'multi-stig.ckl')).Replace('<HOST_NAME>TESTHOST01</HOST_NAME>', '<HOST_NAME>DUPHOST01</HOST_NAME>').Replace('testhost01.example.test', 'duphost01.example.test')))
     $result = Import-Checklist $dupPath 'TestGroup'
     $t1 = [long](Get-Scalar "SELECT Hardware_ID FROM Hardware WHERE DiscoveredHostName = 'TESTHOST01'")
     $dup = [long](Get-Scalar "SELECT Hardware_ID FROM Hardware WHERE DiscoveredHostName = 'DUPHOST01'")
@@ -759,7 +784,7 @@ try {
     $ids = [Vulnerator.Model.DataAccess.HardwareIdentity]::LoadAll()
     $keepIds = $null
     [void]$ids.TryGetValue($keepId, [ref]$keepIds)
-    Assert-That ($null -ne $keepIds -and ($keepIds.AcasHostIds -contains 'SC-REC-1001') -and ($keepIds.Aliases -contains 'STIGMAN-HOST01')) 'the Hardware list reads aliases and ACAS host IDs'
+    Assert-That ($null -ne $keepIds -and $keepIds.RegistryNumber -eq $idNumber -and ($keepIds.RetiredNumbers -contains $registry::Format($cklNumber)) -and ($keepIds.Aliases -contains 'STIGMAN-HOST01')) 'the Hardware list reads the registry number, retired numbers and aliases'
 
     # --- Reports for a user the database was not built for -------------------------------------------
     $reportsBefore = [int](Get-Scalar 'SELECT COUNT(*) FROM RequiredReportUserSelections WHERE UserName = @u' @{ '@u' = 'second-user' })

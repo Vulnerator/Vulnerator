@@ -24,7 +24,7 @@ namespace Vulnerator.View.UI.ConfigurationManagement.Tabs
         private const string FixedColumn = "Preferred Host Name";
 
         /// <summary>Shown until the user picks columns (Settings key HardwareGridColumns).</summary>
-        public const string DefaultColumns = "FQDN|NetBIOS|Last Scan IP|Operating System|Last ACAS Scan|Last Checklist / SCAP";
+        public const string DefaultColumns = "Registry No.|FQDN|NetBIOS|Last Scan IP|Operating System|Last ACAS Scan|Last Checklist / SCAP";
 
         public Hardware()
         {

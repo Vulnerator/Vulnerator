@@ -87,6 +87,8 @@ namespace Vulnerator.Model.DataAccess
                     "DELETE FROM PoamsUniqueFindings WHERE UniqueFinding_ID IN (SELECT UniqueFinding_ID FROM UniqueFindings WHERE Hardware_ID = @Id);",
                     "DELETE FROM UniqueFindingsMitigationsOrConditions WHERE UniqueFinding_ID IN (SELECT UniqueFinding_ID FROM UniqueFindings WHERE Hardware_ID = @Id);",
                     "DELETE FROM UniqueFindings WHERE Hardware_ID = @Id;",
+                    "DELETE FROM HardwareIdentifiers WHERE Hardware_ID = @Id;",
+                    "DELETE FROM DeviceRegistry WHERE Hardware_ID = @Id;",
                     "DELETE FROM Hardware WHERE Hardware_ID = @Id;");
                 command.ExecuteNonQuery();
                 return 0L;

@@ -39,7 +39,7 @@ reports and the log.
 | **NIST SP 800-53 Rev 5** | Findings mapped to CCIs and Rev 5 controls (DISA CCI list, CNSSI 1253 baselines); eMASS assessment procedures from your own IG/AP export |
 | **Reports** | eMASS POA&M and Hardware / Software workbooks, STIG Details, PDF Summary, Risk Assessment Report, SCAP & STIG Discrepancies, Ports, Protocols & Services, per-host STIG checklists |
 | **Handling** | Classification / handling marking on every export; labeled input files imported only after you confirm the label |
-| **Configuration Management** | Hardware, software, groups and ports, protocols and services; one record per device (ACAS host ID, merge with aliases) |
+| **Configuration Management** | Hardware, software, groups and ports, protocols and services; one record per device (permanent VUL- registry numbers, matching by name / FQDN / NetBIOS, merge with aliases) |
 | **Dashboards** (included add-on) | Offline charts: open findings by severity, top hosts, compliance by control family, POA&M aging, trend, coverage gaps, outdated STIG checklists, active IAVMs |
 
 ## In the release zip

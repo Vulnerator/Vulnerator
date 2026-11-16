@@ -8,75 +8,47 @@ using Vulnerator.Helper;
 namespace Vulnerator.Model.DataAccess
 {
     /// <summary>
-    /// Keeps one hardware record per device across ACAS and STIG imports. Two kinds of identifier are stored in
-    /// HardwareIdentifiers:
+    /// Keeps one hardware record per device across ACAS and STIG imports.
     /// <list type="bullet">
-    /// <item><b>AcasHostId</b> - the Tenable Security Center host ID from the .nessus host properties (the tag named
-    /// in Settings, "TAG" by default). It stays the same when the device's name or IP changes, so ACAS results with
-    /// a known ID always land on the same record.</item>
-    /// <item><b>Alias</b> - another name for the device, saved when records are merged (for example W01.Contoso
-    /// typed in a checklist for the ACAS host W01.Contoso.com). Later imports with that name land on the kept record.</item>
+    /// <item><b>Registry number</b> (DeviceRegistry): every device gets a permanent Vulnerator number, shown as
+    /// VUL-000123. Numbers are never reused. When devices are merged, the kept device keeps its number and the merged
+    /// devices' numbers are retired and point to it.</item>
+    /// <item><b>Aliases</b> (HardwareIdentifiers, type Alias): other names of the device, saved by a merge (for example
+    /// W01.Contoso typed in a checklist for the ACAS host W01.Contoso.com).</item>
     /// </list>
     /// Every import goes through <see cref="DatabaseInterface.InsertHardware"/>, which calls <see cref="ResolveHost"/>
-    /// before the host is inserted: when an identifier is known, the DiscoveredHostName parameter is replaced by the
-    /// existing record's name, so every later statement of the import uses that record.
+    /// first: when the incoming host is a known device, the DiscoveredHostName parameter is replaced by that record's
+    /// name, so every later statement of the import uses it. A host is known by its host name, an alias, or the FQDN /
+    /// NetBIOS name of a record (only when exactly one record matches). IP and MAC addresses are not used: they change
+    /// and get reused.
     /// </summary>
     public static class HardwareIdentity
     {
-        public const string AcasHostIdType = "AcasHostId";
         public const string AliasType = "Alias";
 
-        /// <summary>Rewrites @DiscoveredHostName to the existing record's name when the ACAS host ID or an alias is known.</summary>
+        /// <summary>Rewrites @DiscoveredHostName to the existing record's name when the host is a known device.</summary>
         public static void ResolveHost(SQLiteCommand importCommand)
         {
             string name = Text(importCommand, "DiscoveredHostName");
-            string hostId = Text(importCommand, "AcasHostId");
-            string canonical = null;
-            bool byHostId = false;
-            if (hostId.Length > 0)
-            {
-                canonical = Scalar(importCommand,
-                    "SELECT H.DiscoveredHostName FROM HardwareIdentifiers HI JOIN Hardware H ON H.Hardware_ID = HI.Hardware_ID " +
-                    "WHERE HI.IdentifierType = 'AcasHostId' AND HI.IdentifierValue = @Value LIMIT 1", hostId);
-                byHostId = canonical != null;
-            }
-            if (canonical == null && name.Length > 0 &&
-                Scalar(importCommand, "SELECT DiscoveredHostName FROM Hardware WHERE DiscoveredHostName = @Value LIMIT 1", name) == null)
-            {
-                canonical = Scalar(importCommand,
-                    "SELECT H.DiscoveredHostName FROM HardwareIdentifiers HI JOIN Hardware H ON H.Hardware_ID = HI.Hardware_ID " +
-                    "WHERE HI.IdentifierType = 'Alias' AND HI.IdentifierValue = @Value COLLATE NOCASE LIMIT 1", name);
-            }
-            if (canonical == null || canonical == name)
+            if (name.Length == 0)
             { return; }
-            importCommand.Parameters["DiscoveredHostName"].Value = canonical;
-            // A device ACAS knows by its host ID that now reports another name (renamed): remember the new name too,
-            // so checklists that use it land on the same record.
-            if (byHostId && name.Length > 0)
-            { Save(importCommand, canonical, AliasType, name); }
-        }
-
-        /// <summary>After the host is inserted: ties the ACAS host ID (if any) to the host's record.</summary>
-        public static void RecordAcasHostId(SQLiteCommand importCommand)
-        {
-            string hostId = Text(importCommand, "AcasHostId");
-            string name = Text(importCommand, "DiscoveredHostName");
-            if (hostId.Length > 0 && name.Length > 0)
-            { Save(importCommand, name, AcasHostIdType, hostId); }
-        }
-
-        private static void Save(SQLiteCommand importCommand, string discoveredHostName, string type, string value)
-        {
-            using (SQLiteCommand command = importCommand.Connection.CreateCommand())
+            // 1. A record with exactly this name.
+            if (Scalar(importCommand, "SELECT DiscoveredHostName FROM Hardware WHERE DiscoveredHostName = @Value LIMIT 1", name) != null)
+            { return; }
+            // 2. A saved alias.
+            string canonical = Scalar(importCommand,
+                "SELECT H.DiscoveredHostName FROM HardwareIdentifiers HI JOIN Hardware H ON H.Hardware_ID = HI.Hardware_ID " +
+                "WHERE HI.IdentifierType = 'Alias' AND HI.IdentifierValue = @Value COLLATE NOCASE LIMIT 1", name);
+            // 3. One record whose FQDN or NetBIOS name is this name, or whose FQDN is this host's FQDN.
+            if (canonical == null)
             {
-                command.Transaction = importCommand.Transaction;
-                command.CommandText = "INSERT INTO HardwareIdentifiers (Hardware_ID, IdentifierType, IdentifierValue) " +
-                                      "SELECT Hardware_ID, @Type, @Value FROM Hardware WHERE DiscoveredHostName = @Name LIMIT 1";
-                command.Parameters.AddWithValue("@Type", type);
-                command.Parameters.AddWithValue("@Value", value);
-                command.Parameters.AddWithValue("@Name", discoveredHostName);
-                command.ExecuteNonQuery();
+                string fqdn = Text(importCommand, "FQDN");
+                canonical = Unique(importCommand,
+                    "SELECT DiscoveredHostName FROM Hardware WHERE FQDN = @Value COLLATE NOCASE OR NetBIOS = @Value COLLATE NOCASE " +
+                    "OR (@Fqdn <> '' AND FQDN = @Fqdn COLLATE NOCASE) LIMIT 2", name, fqdn);
             }
+            if (canonical != null && canonical != name)
+            { importCommand.Parameters["DiscoveredHostName"].Value = canonical; }
         }
 
         private static string Scalar(SQLiteCommand importCommand, string sql, string value)
@@ -91,6 +63,25 @@ namespace Vulnerator.Model.DataAccess
             }
         }
 
+        /// <summary>The single matching name, or null when none or more than one record matches.</summary>
+        private static string Unique(SQLiteCommand importCommand, string sql, string value, string fqdn)
+        {
+            using (SQLiteCommand command = importCommand.Connection.CreateCommand())
+            {
+                command.Transaction = importCommand.Transaction;
+                command.CommandText = sql;
+                command.Parameters.AddWithValue("@Value", value);
+                command.Parameters.AddWithValue("@Fqdn", fqdn ?? string.Empty);
+                List<string> names = new List<string>();
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    { if (!reader.IsDBNull(0)) names.Add(Convert.ToString(reader.GetValue(0), CultureInfo.InvariantCulture)); }
+                }
+                return names.Count == 1 ? names[0] : null;
+            }
+        }
+
         private static string Text(SQLiteCommand command, string parameter)
         {
             if (!command.Parameters.Contains(parameter)) return string.Empty;
@@ -98,7 +89,7 @@ namespace Vulnerator.Model.DataAccess
             return value == null || value is DBNull ? string.Empty : Convert.ToString(value, CultureInfo.InvariantCulture).Trim();
         }
 
-        /// <summary>Aliases and ACAS host IDs per hardware record, for the Hardware list. Empty when the database cannot be read.</summary>
+        /// <summary>Registry numbers and aliases per hardware record, for the Hardware list. Empty when the database cannot be read.</summary>
         public static Dictionary<long, Identifiers> LoadAll()
         {
             Dictionary<long, Identifiers> result = new Dictionary<long, Identifiers>();
@@ -112,38 +103,98 @@ namespace Vulnerator.Model.DataAccess
                     connection.Open();
                     using (SQLiteCommand command = connection.CreateCommand())
                     {
-                        command.CommandText = "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'HardwareIdentifiers'";
-                        if (command.ExecuteScalar() == null) return result;
-                        command.CommandText = "SELECT Hardware_ID, IdentifierType, IdentifierValue FROM HardwareIdentifiers ORDER BY IdentifierValue";
+                        command.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name IN ('HardwareIdentifiers', 'DeviceRegistry')";
+                        if (Convert.ToInt64(command.ExecuteScalar(), CultureInfo.InvariantCulture) < 2) return result;
+                        command.CommandText = "SELECT Hardware_ID, IdentifierValue FROM HardwareIdentifiers WHERE IdentifierType = 'Alias' ORDER BY IdentifierValue";
+                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            { For(result, reader.GetValue(0)).Aliases.Add(Convert.ToString(reader.GetValue(1), CultureInfo.InvariantCulture)); }
+                        }
+                        command.CommandText = "SELECT Hardware_ID, RegistryNumber, Retired FROM DeviceRegistry ORDER BY RegistryNumber";
                         using (SQLiteDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                long id = Convert.ToInt64(reader.GetValue(0), CultureInfo.InvariantCulture);
-                                Identifiers identifiers;
-                                if (!result.TryGetValue(id, out identifiers))
-                                {
-                                    identifiers = new Identifiers();
-                                    result[id] = identifiers;
-                                }
-                                string type = Convert.ToString(reader.GetValue(1), CultureInfo.InvariantCulture);
-                                string value = Convert.ToString(reader.GetValue(2), CultureInfo.InvariantCulture);
-                                if (type == AcasHostIdType) identifiers.AcasHostIds.Add(value);
-                                else if (type == AliasType) identifiers.Aliases.Add(value);
+                                Identifiers identifiers = For(result, reader.GetValue(0));
+                                long number = Convert.ToInt64(reader.GetValue(1), CultureInfo.InvariantCulture);
+                                bool retired = !reader.IsDBNull(2) && Convert.ToInt64(reader.GetValue(2), CultureInfo.InvariantCulture) != 0;
+                                if (retired) identifiers.RetiredNumbers.Add(DeviceRegistry.Format(number));
+                                else if (!identifiers.RegistryNumber.HasValue) identifiers.RegistryNumber = number;
                             }
                         }
                     }
                 }
             }
             catch (Exception exception)
-            { LogWriter.LogErrorWithDebug("Unable to read the hardware aliases and ACAS host IDs.", exception); }
+            { LogWriter.LogErrorWithDebug("Unable to read the device registry numbers and aliases.", exception); }
             return result;
+        }
+
+        private static Identifiers For(Dictionary<long, Identifiers> result, object hardwareId)
+        {
+            long id = Convert.ToInt64(hardwareId, CultureInfo.InvariantCulture);
+            Identifiers identifiers;
+            if (!result.TryGetValue(id, out identifiers))
+            {
+                identifiers = new Identifiers();
+                result[id] = identifiers;
+            }
+            return identifiers;
         }
 
         public sealed class Identifiers
         {
-            public List<string> AcasHostIds { get; } = new List<string>();
+            public long? RegistryNumber { get; internal set; }
+            /// <summary>Numbers of devices merged into this one (VUL-...).</summary>
+            public List<string> RetiredNumbers { get; } = new List<string>();
             public List<string> Aliases { get; } = new List<string>();
+        }
+    }
+
+    /// <summary>
+    /// The permanent device registry: VUL-000123 per device. AUTOINCREMENT, so a number is never given out twice, even
+    /// after a device is deleted. A trigger numbers every new hardware record, whichever import or edit adds it.
+    /// </summary>
+    public static class DeviceRegistry
+    {
+        public const string Prefix = "VUL-";
+
+        private static readonly string[] Setup =
+        {
+            "CREATE TABLE IF NOT EXISTS DeviceRegistry (RegistryNumber INTEGER PRIMARY KEY AUTOINCREMENT, Hardware_ID INTEGER NOT NULL, " +
+            "Retired INTEGER NOT NULL DEFAULT 0, AssignedOn DATETIME)",
+            "CREATE INDEX IF NOT EXISTS DeviceRegistry_Hardware_Index ON DeviceRegistry (Hardware_ID)",
+            "CREATE TRIGGER IF NOT EXISTS DeviceRegistry_NewHardware AFTER INSERT ON Hardware BEGIN " +
+            "INSERT INTO DeviceRegistry (Hardware_ID, Retired, AssignedOn) VALUES (NEW.Hardware_ID, 0, strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime')); END",
+            // Records from before the registry, in the order they were added.
+            "INSERT INTO DeviceRegistry (Hardware_ID, Retired, AssignedOn) SELECT H.Hardware_ID, 0, strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime') FROM Hardware H " +
+            "WHERE NOT EXISTS (SELECT 1 FROM DeviceRegistry R WHERE R.Hardware_ID = H.Hardware_ID AND R.Retired = 0) ORDER BY H.Hardware_ID",
+            // 7.5.0-beta.3 stored ACAS host IDs from the TAG host property; matching no longer uses them.
+            "DELETE FROM HardwareIdentifiers WHERE IdentifierType = 'AcasHostId'"
+        };
+
+        /// <summary>Creates the registry and numbers any record without a number (run at every start).</summary>
+        public static void Ensure(SQLiteCommand command)
+        {
+            command.Parameters.Clear();
+            foreach (string sql in Setup)
+            {
+                command.CommandText = sql;
+                command.ExecuteNonQuery();
+            }
+        }
+
+        /// <summary>123 -> "VUL-000123".</summary>
+        public static string Format(long number) => Prefix + number.ToString("D6", CultureInfo.InvariantCulture);
+
+        /// <summary>"VUL-000123", "vul-123" or "123" -> 123; null when it is not a registry number.</summary>
+        public static long? Parse(string text)
+        {
+            string value = (text ?? string.Empty).Trim();
+            if (value.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase)) value = value.Substring(Prefix.Length);
+            long number;
+            return long.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out number) && number > 0 ? number : (long?)null;
         }
     }
 }

@@ -108,13 +108,13 @@ namespace Vulnerator.Model.Entity
         [NotMapped]
         public bool IsChecked { get; set; }
 
-        /// <summary>Other names saved for this device by a merge (filled by the Hardware tab, not stored here).</summary>
+        /// <summary>Other names and the registry numbers of devices merged into this one (filled by the Hardware tab).</summary>
         [NotMapped]
         public string AlsoKnownAs { get; set; }
 
-        /// <summary>Tenable Security Center host ID(s) from ACAS scans (filled by the Hardware tab, not stored here).</summary>
+        /// <summary>The permanent Vulnerator device number, for example VUL-000123 (filled by the Hardware tab).</summary>
         [NotMapped]
-        public string AcasHostId { get; set; }
+        public string RegistryNumber { get; set; }
 
         /// <summary>The lifecycle status name.</summary>
         [NotMapped]
