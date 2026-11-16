@@ -678,6 +678,18 @@ try {
         Assert-That ($result -eq 'Processed') ('a .nessus extracted from a zip imports (got "' + $result + '")')
     }
     Assert-That ([Vulnerator.ViewModel.VulnerabilityViewModel]::IsProcessed([Vulnerator.Model.BusinessLogic.CklReader]::BaselineStatus)) 'a STIG baseline import counts as processed, not failed'
+    # --- Configuration Management > Hardware: last ACAS scan and last checklist per host ---------------
+    $scanDates = [Vulnerator.Model.DataAccess.HardwareScanDates]::Load()
+    $nessusId = [long](Get-Scalar "SELECT Hardware_ID FROM Hardware WHERE DiscoveredHostName = 'nessushost01'")
+    $cklId = [long](Get-Scalar "SELECT Hardware_ID FROM Hardware WHERE DiscoveredHostName = 'STIGMAN-HOST01'")
+    $nessusDates = $null; $cklDates = $null
+    [void]$scanDates.TryGetValue($nessusId, [ref]$nessusDates)
+    [void]$scanDates.TryGetValue($cklId, [ref]$cklDates)
+    $datesText = 'nessushost01 ACAS=' + $(if ($null -ne $nessusDates) { $nessusDates.LastAcas } else { 'none' }) + ', STIGMAN-HOST01 checklist=' + $(if ($null -ne $cklDates) { $cklDates.LastChecklist } else { 'none' })
+    Assert-That ($null -ne $nessusDates -and $null -ne $nessusDates.LastAcas -and $nessusDates.LastAcas.Year -ge 2000) ('Hardware tab: last ACAS scan date per host (' + $datesText + ')')
+    Assert-That ($null -ne $cklDates -and $null -ne $cklDates.LastChecklist -and $null -eq $cklDates.LastAcas) ('Hardware tab: last checklist date, no ACAS date for a checklist-only host (' + $datesText + ')')
+    Assert-That ([Vulnerator.Model.DataAccess.HardwareScanDates]::ToDate([long]638000000000000000).Year -eq 2022 -and $null -eq [Vulnerator.Model.DataAccess.HardwareScanDates]::ToDate([long]5)) 'tick values from MAX() are read as dates'
+
     # --- Reports for a user the database was not built for -------------------------------------------
     $reportsBefore = [int](Get-Scalar 'SELECT COUNT(*) FROM RequiredReportUserSelections WHERE UserName = @u' @{ '@u' = 'second-user' })
     $indexer.SetValue($defaultSettings, 'second-user', [object[]]@('ActiveUser'))

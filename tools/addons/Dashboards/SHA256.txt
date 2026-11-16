@@ -1,1 +1,1 @@
-c367c3b7140ff6e7fcf691268e4290c3c400d576614101a89bac058100b2c912  Vulnerator.Dashboards.AddOn.dll
+472055f35496b33e95363bd50e5089affbc8cd11aaf37f875c1e3b329ad09163  Vulnerator.Dashboards.AddOn.dll

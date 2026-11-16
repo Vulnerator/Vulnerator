@@ -1,4 +1,15 @@
-﻿# Vulnerator 2.0 (7.5.0-beta.1)
+﻿# Vulnerator 2.0 (7.5.0-beta.2)
+###### Version 7.5.0 beta 2, November 2026
+
+| Change Description |
+| :----------------- |
+| Configuration Management > Hardware: Columns... to show or hide columns, including Operating System, Last ACAS Scan, Last Checklist / SCAP, Last Scan, Scan Sources, Groups, Role, Manufacturer, Model, Serial Number, Virtual and Lifecycle Status |
+| Dashboards 1.1.0: IAVMs list the finding titles; Coverage shows each device's operating system and treats records with the same short name (W01.Contoso.com and W01.Contoso) as one device, with links and Keep separate under Device matching |
+
+
+----------
+
+# Vulnerator 2.0 (7.5.0-beta.1)
 ###### Version 7.5.0 beta 1, November 2026
 
 | Change Description |

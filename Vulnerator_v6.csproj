@@ -369,6 +369,7 @@
     <Compile Include="Model\AddOns\AddOnHost.cs" />
     <Compile Include="Model\AddOns\AddOnLicenses.cs" />
     <Compile Include="Model\AddOns\AddOnManager.cs" />
+    <Compile Include="Model\DataAccess\HardwareScanDates.cs" />
     <Compile Include="Model\StigManager\StigManagerClient.cs" />
     <Compile Include="Model\StigManager\StigManagerSettings.cs" />
     <Compile Include="View\UI\AddOnViews.cs" />

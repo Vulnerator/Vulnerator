@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Vulnerator.Model.Entity
 {
@@ -78,6 +79,34 @@ namespace Vulnerator.Model.Entity
 
         [StringLength(100)]
         public string OperatingSystem { get; set; }
+
+        /// <summary>Newest ACAS / Nessus result for this host (filled by the Hardware tab, not stored).</summary>
+        [NotMapped]
+        public System.DateTime? LastAcasScan { get; set; }
+
+        /// <summary>Newest STIG checklist or SCAP (XCCDF) result for this host (filled by the Hardware tab, not stored).</summary>
+        [NotMapped]
+        public System.DateTime? LastChecklistScan { get; set; }
+
+        /// <summary>The newest of <see cref="LastAcasScan"/> and <see cref="LastChecklistScan"/>.</summary>
+        [NotMapped]
+        public System.DateTime? LastScan =>
+            !LastAcasScan.HasValue ? LastChecklistScan : !LastChecklistScan.HasValue ? LastAcasScan :
+            (LastAcasScan.Value > LastChecklistScan.Value ? LastAcasScan : LastChecklistScan);
+
+        /// <summary>"ACAS", "STIG", "ACAS, STIG" or empty: where this host has results.</summary>
+        [NotMapped]
+        public string ScanSources =>
+            string.Join(", ", new[] { LastAcasScan.HasValue ? "ACAS" : null, LastChecklistScan.HasValue ? "STIG" : null }.Where(s => s != null));
+
+        /// <summary>The host's groups, comma separated.</summary>
+        [NotMapped]
+        public string GroupNames =>
+            Groups == null ? string.Empty : string.Join(", ", Groups.Where(g => g != null && g.GroupName != "All").Select(g => g.GroupName).OrderBy(g => g));
+
+        /// <summary>The lifecycle status name.</summary>
+        [NotMapped]
+        public string LifecycleStatusName => LifecycleStatus?.Lifecycle_Status ?? string.Empty;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SCAP_Score> SCAP_Scores { get; set; }

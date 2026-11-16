@@ -83,6 +83,11 @@ Notes:
 The hardware, software and groups found in the imported files. From **Hardware** you can export a STIG checklist (.ckl)
 for a host, built from the STIG library and that host's findings.
 
+**Hardware columns:** choose **Columns...** under the Hardware list to show or hide columns. Besides the names and
+scan IP you can show **Operating System** (from ACAS / Nessus scans), **Last ACAS Scan**, **Last Checklist / SCAP**,
+**Last Scan**, **Scan Sources** (ACAS, STIG), **Groups**, **Role**, **Manufacturer**, **Model**, **Serial Number**,
+**Virtual** and **Lifecycle Status**. Drag a column header to move it; click it to sort. Your choice is remembered.
+
 ## Reporting
 
 Choose the report, the filters (finding type, severity, status, group) and export:
@@ -118,7 +123,11 @@ Add-ons can read findings, hardware, the STIG releases submitted and the eMASS P
 Vulnerator comes with the **Dashboards** add-on (in **Add-ons\Dashboards**); it needs no license. Choose **Dashboards**
 in the menu for offline charts of open findings by severity (CAT or Very High to Very Low), top hosts, compliance by
 NIST control family, POA&M aging, the open/closed trend, assets with no scan or checklist, outdated STIG checklists and
-active IAVMs. Every view carries the classification marking. An ACAS finding the host's newest scan no longer reports is
+active IAVMs (with the titles of the findings behind each). Every view carries the classification marking.
+**Coverage** counts devices and shows each device's operating system. When ACAS and STIG checklists name the same
+device differently (for example **W01.Contoso.com** in a scan and **W01.Contoso** in a checklist), the records with the
+same short name count as one device. Under **Coverage > Device matching** you can turn that off, link other records as
+one device, or keep a match separate. This only changes the dashboards, not the Hardware list or reports. An ACAS finding the host's newest scan no longer reports is
 shown as **Unverified** (neither open nor closed). The trend starts the day Dashboards is first used. To remove it,
 close Vulnerator and delete the **Add-ons\Dashboards** folder. Dashboards is free but not part of the MIT-licensed
 program; see its LICENSE.txt.

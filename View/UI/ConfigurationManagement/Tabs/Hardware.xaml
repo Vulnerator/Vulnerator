@@ -52,7 +52,9 @@
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <DataGrid Grid.Row="0"
+            <DataGrid x:Name="hardwareGrid"
+                                  Grid.Row="0"
+                                  CanUserReorderColumns="True"
                                   ItemsSource="{Binding Hardwares}"
                                   SelectedItem="{Binding SelectedHardware}"
                                   Style="{StaticResource GreyBorderedDataGridStyle}">
@@ -84,6 +86,71 @@
                                                     Binding="{Binding ScanIP}"
                                                     Header="Last Scan IP"
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    IsReadOnly="True"
+                                                    Binding="{Binding DiscoveredHostName, Mode=OneWay}"
+                                                    Header="Discovered Host Name"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    IsReadOnly="True"
+                                                    Binding="{Binding OperatingSystem, Mode=OneWay}"
+                                                    Header="Operating System"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    IsReadOnly="True"
+                                                    Binding="{Binding LastAcasScan, Mode=OneWay, StringFormat=yyyy-MM-dd}"
+                                                    Header="Last ACAS Scan"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    IsReadOnly="True"
+                                                    Binding="{Binding LastChecklistScan, Mode=OneWay, StringFormat=yyyy-MM-dd}"
+                                                    Header="Last Checklist / SCAP"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    IsReadOnly="True"
+                                                    Binding="{Binding LastScan, Mode=OneWay, StringFormat=yyyy-MM-dd}"
+                                                    Header="Last Scan"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    IsReadOnly="True"
+                                                    Binding="{Binding ScanSources, Mode=OneWay}"
+                                                    Header="Scan Sources"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    IsReadOnly="True"
+                                                    Binding="{Binding GroupNames, Mode=OneWay}"
+                                                    Header="Groups"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    IsReadOnly="True"
+                                                    Binding="{Binding Role, Mode=OneWay}"
+                                                    Header="Role"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    IsReadOnly="True"
+                                                    Binding="{Binding Manufacturer, Mode=OneWay}"
+                                                    Header="Manufacturer"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    IsReadOnly="True"
+                                                    Binding="{Binding ModelNumber, Mode=OneWay}"
+                                                    Header="Model"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    IsReadOnly="True"
+                                                    Binding="{Binding SerialNumber, Mode=OneWay}"
+                                                    Header="Serial Number"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    IsReadOnly="True"
+                                                    Binding="{Binding IsVirtualServer, Mode=OneWay}"
+                                                    Header="Virtual"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    IsReadOnly="True"
+                                                    Binding="{Binding LifecycleStatusName, Mode=OneWay}"
+                                                    Header="Lifecycle Status"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                 </DataGrid.Columns>
             </DataGrid>
             <ScrollViewer Grid.Row="1"
@@ -111,6 +178,13 @@
                         <TextBlock Text="{Binding Hardwares.Count}"
                                                TextTrimming="CharacterEllipsis" />
                     </Label>
+                    <Button x:Name="hardwareColumnsButton"
+                                        Grid.Column="2"
+                                        Margin="{StaticResource MarginLeft5}"
+                                        HorizontalAlignment="Left"
+                                        Click="HardwareColumnsButton_Click"
+                                        Content="Columns..."
+                                        ToolTip="Choose the columns shown in the Hardware list (for example Operating System and Last ACAS Scan)" />
                     <Button Grid.Column="3"
                                         HorizontalAlignment="Right"
                                         Command="{Binding ClearSelectedHardwareCommand}"

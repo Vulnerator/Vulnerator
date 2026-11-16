@@ -333,7 +333,7 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
             {
                 using (DatabaseContext databaseContext = new DatabaseContext())
                 {
-                    Hardwares = databaseContext.Hardwares
+                    List<Model.Entity.Hardware> hardwares = databaseContext.Hardwares
                         .Include(h => h.SoftwareHardwares
                             .Select(s => s.Software))
                         .Include(h => h.IP_Addresses)
@@ -345,6 +345,18 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
                         .Include(h => h.LifecycleStatus)
                         .OrderBy(h => h.DisplayedHostName)
                         .AsNoTracking().ToList();
+                    // Last ACAS scan and last checklist / SCAP result per host, for the optional Hardware columns.
+                    Dictionary<long, HardwareScanDates.Dates> scanDates = HardwareScanDates.Load();
+                    foreach (Model.Entity.Hardware hardware in hardwares)
+                    {
+                        HardwareScanDates.Dates dates;
+                        if (scanDates.TryGetValue(hardware.Hardware_ID, out dates))
+                        {
+                            hardware.LastAcasScan = dates.LastAcas;
+                            hardware.LastChecklistScan = dates.LastChecklist;
+                        }
+                    }
+                    Hardwares = hardwares;
                     Softwares = databaseContext.Softwares
                         .Include(s => s.SoftwareHardwares
                             .Select(h => h.Hardware))
