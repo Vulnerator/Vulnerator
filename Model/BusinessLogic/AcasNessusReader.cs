@@ -165,14 +165,23 @@ namespace Vulnerator.Model.BusinessLogic
                 // Each ReportHost starts clean: nothing from the previous host may carry over
                 // (a host without a hostname tag was otherwise filed under the previous host).
                 foreach (string hostParameter in new[] { "DiscoveredHostName", "DisplayedHostName", "FQDN", "NetBIOS",
-                    "ScanIP", "IP_Address", "MAC_Address", "OperatingSystem", "DiscoveredSoftwareName", "DisplayedSoftwareName" })
+                    "ScanIP", "IP_Address", "MAC_Address", "OperatingSystem", "DiscoveredSoftwareName", "DisplayedSoftwareName", "AcasHostId" })
                 { sqliteCommand.Parameters[hostParameter].Value = string.Empty; }
                 ipAddress = string.Empty;
+                // The Tenable Security Center host ID (Settings: ACAS host ID tag, "TAG" by default). It identifies the
+                // device even when its name or IP changes; kept as text and compared exactly.
+                string hostIdTag = (Properties.Settings.Default.AcasHostIdTag ?? string.Empty).Trim();
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
                     {
-                        switch (xmlReader.GetAttribute("name"))
+                        string tagName = xmlReader.GetAttribute("name");
+                        if (hostIdTag.Length > 0 && string.Equals(tagName, hostIdTag, StringComparison.OrdinalIgnoreCase))
+                        {
+                            sqliteCommand.Parameters["AcasHostId"].Value = (xmlReader.ObtainCurrentNodeValue(true)?.ToString() ?? string.Empty).Trim();
+                            continue;
+                        }
+                        switch (tagName)
                         {
                             case "hostname":
                                 {

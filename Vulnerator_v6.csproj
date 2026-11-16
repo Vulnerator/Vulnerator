@@ -341,6 +341,7 @@
     <Compile Include="Helper\DelimitedText.cs" />
     <Compile Include="Helper\ExportMarking.cs" />
     <Compile Include="View\UI\StigManagerWindow.cs" />
+    <Compile Include="View\UI\ConfigurationManagement\MergeHardwareWindow.cs" />
     <Compile Include="Helper\AppVersion.cs" />
     <Compile Include="Helper\BackgroundWorkerFactory.cs" />
     <Compile Include="Helper\DdlReader.cs" />
@@ -370,6 +371,8 @@
     <Compile Include="Model\AddOns\AddOnLicenses.cs" />
     <Compile Include="Model\AddOns\AddOnManager.cs" />
     <Compile Include="Model\DataAccess\HardwareScanDates.cs" />
+    <Compile Include="Model\DataAccess\HardwareIdentity.cs" />
+    <Compile Include="Model\DataAccess\HardwareMerger.cs" />
     <Compile Include="Model\StigManager\StigManagerClient.cs" />
     <Compile Include="Model\StigManager\StigManagerSettings.cs" />
     <Compile Include="View\UI\AddOnViews.cs" />
@@ -930,6 +933,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\StigLibraryImports.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\AcasRiskFactors.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\StigSubmissions.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwareIdentifiers.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\EmassPoamVulnerabilities.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\EmassSoftwareList.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\HardwareCklCreationData.dml" />

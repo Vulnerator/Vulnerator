@@ -678,6 +678,77 @@ try {
         Assert-That ($result -eq 'Processed') ('a .nessus extracted from a zip imports (got "' + $result + '")')
     }
     Assert-That ([Vulnerator.ViewModel.VulnerabilityViewModel]::IsProcessed([Vulnerator.Model.BusinessLogic.CklReader]::BaselineStatus)) 'a STIG baseline import counts as processed, not failed'
+    # --- One record per device: ACAS host ID (Settings: ACAS host ID tag, default TAG), aliases and Merge ---------------
+    Assert-That ([string]$indexer.GetValue($defaultSettings, [object[]]@('AcasHostIdTag')) -eq 'TAG') 'the ACAS host ID tag is TAG by default'
+    $idTemplate = [System.IO.File]::ReadAllText((Join-Path $fixtures 'dashboard-scan.nessus'))
+    function New-IdScan([string]$Name, [string]$HostName, [string]$Ip, [string]$HostId, [string]$Date) {
+        $text = $idTemplate.Replace('10.1.3.9', $Ip).Replace('dashhost01.example.test', $HostName + '.example.test').Replace('<tag name="hostname">dashhost01</tag>', '<tag name="hostname">' + $HostName + '</tag>')
+        $text = $text.Replace('Thu Oct 29 09:05:00 2026', $Date)
+        if ($HostId -ne '') { $text = $text.Replace('<tag name="Credentialed_Scan">', '<tag name="TAG">' + $HostId + '</tag>' + "`n" + '<tag name="Credentialed_Scan">') }
+        $path = Join-Path $workDir ($Name + '.nessus')
+        [System.IO.File]::WriteAllText($path, $text)
+        $file = New-Object Vulnerator.Model.Object.File ($Name, 'ACAS - Nessus', 'Ready', $path, 'True')
+        return (New-Object Vulnerator.Model.BusinessLogic.AcasNessusReader).ReadAcasNessusFile($file, 'TestGroup')
+    }
+    $r1 = New-IdScan 'idscan-1' 'idhost-old' '10.7.7.1' 'SC-REC-1001' 'Mon Oct 26 09:05:00 2026'
+    $r2 = New-IdScan 'idscan-2' 'idhost-renamed' '10.7.7.99' 'SC-REC-1001' 'Thu Oct 29 09:05:00 2026'
+    $idHosts = [int](Get-Scalar "SELECT COUNT(*) FROM Hardware WHERE DiscoveredHostName IN ('idhost-old', 'idhost-renamed')")
+    $idHw = Get-Scalar "SELECT Hardware_ID FROM HardwareIdentifiers WHERE IdentifierType = 'AcasHostId' AND IdentifierValue = 'SC-REC-1001'"
+    $idOwner = Get-Scalar "SELECT DiscoveredHostName FROM Hardware WHERE Hardware_ID = @h" @{ '@h' = $idHw }
+    Assert-That ($r1 -eq 'Processed' -and $r2 -eq 'Processed' -and $idHosts -eq 1 -and $idOwner -eq 'idhost-old') ('the same ACAS host ID stays one record after a rename and new IP (records: ' + $idHosts + ', owner: ' + $idOwner + ')')
+    $renamedAlias = [int](Get-Scalar "SELECT COUNT(*) FROM HardwareIdentifiers WHERE IdentifierType = 'Alias' AND IdentifierValue = 'idhost-renamed' AND Hardware_ID = @h" @{ '@h' = $idHw })
+    $newIp = [int](Get-Scalar ("SELECT COUNT(*) FROM Hardware_IP_Addresses HI JOIN IP_Addresses I ON HI.IP_Address_ID = I.IP_Address_ID WHERE HI.Hardware_ID = @h AND I.IpAddress = '10.7.7.99'") @{ '@h' = $idHw })
+    Assert-That ($renamedAlias -eq 1 -and $newIp -eq 1) ('the new name becomes an alias and the new IP is added to the record (alias ' + $renamedAlias + ', IP ' + $newIp + ')')
+    $r3 = New-IdScan 'idscan-3' 'idhost-other' '10.7.7.2' 'SC-REC-2002' 'Thu Oct 29 09:05:00 2026'
+    $r4 = New-IdScan 'idscan-4' 'idhost-noid' '10.7.7.3' '' 'Thu Oct 29 09:05:00 2026'
+    Assert-That ([int](Get-Scalar "SELECT COUNT(*) FROM Hardware WHERE DiscoveredHostName IN ('idhost-other', 'idhost-noid')") -eq 2) 'another host ID, and a scan without one, are separate records'
+
+    # Merge: the checklist host STIGMAN-HOST01 into the ACAS record idhost-old.
+    $keepId = [long]$idHw
+    $cklHostId = [long](Get-Scalar "SELECT Hardware_ID FROM Hardware WHERE DiscoveredHostName = 'STIGMAN-HOST01'")
+    $keepBefore = [int](Get-Scalar 'SELECT COUNT(*) FROM UniqueFindings WHERE Hardware_ID = @h' @{ '@h' = $keepId })
+    $cklBefore = [int](Get-Scalar 'SELECT COUNT(*) FROM UniqueFindings WHERE Hardware_ID = @h' @{ '@h' = $cklHostId })
+    $hwBefore = [int](Get-Scalar 'SELECT COUNT(*) FROM Hardware')
+    $merge = [Vulnerator.Model.DataAccess.HardwareMerger]::Merge($keepId, [long[]]@($cklHostId))
+    $keepAfter = [int](Get-Scalar 'SELECT COUNT(*) FROM UniqueFindings WHERE Hardware_ID = @h' @{ '@h' = $keepId })
+    Assert-That ([int](Get-Scalar 'SELECT COUNT(*) FROM Hardware') -eq ($hwBefore - 1) -and [int](Get-Scalar 'SELECT COUNT(*) FROM Hardware WHERE Hardware_ID = @h' @{ '@h' = $cklHostId }) -eq 0) 'merge removes the merged record'
+    Assert-That ($keepAfter -eq ($keepBefore + $cklBefore) -and $merge.FindingsMoved -eq $cklBefore) ('merge moves the checklist findings to the kept record (' + $keepBefore + ' + ' + $cklBefore + ' -> ' + $keepAfter + ')')
+    $mergedAliases = @((Invoke-Sql "SELECT IdentifierValue FROM HardwareIdentifiers WHERE IdentifierType = 'Alias' AND Hardware_ID = @h" @{ '@h' = $keepId }).Rows | ForEach-Object { [string]$_['IdentifierValue'] })
+    Assert-That (($mergedAliases -contains 'STIGMAN-HOST01') -and ($mergedAliases -contains 'stigman-host01.example.test')) ('merged names become aliases (' + ($mergedAliases -join ', ') + ')')
+    $keptOs = [string](Get-Scalar 'SELECT FQDN FROM Hardware WHERE Hardware_ID = @h' @{ '@h' = $keepId })
+    Assert-That ($keptOs -eq 'idhost-old.example.test') ('the kept record keeps its own values (FQDN ' + $keptOs + ')')
+    $submissionHost = [string](Get-Scalar "SELECT DiscoveredHostName FROM StigSubmissions WHERE SourceName LIKE '%Test Application%'")
+    Assert-That ($submissionHost -eq 'idhost-old') ('submitted STIG releases follow the merge (' + $submissionHost + ')')
+    $hwBefore = [int](Get-Scalar 'SELECT COUNT(*) FROM Hardware')
+    $result = Import-Checklist (Join-Path $fixtures 'stigman-export.ckl') 'TestGroup'
+    $keepAgain = [int](Get-Scalar 'SELECT COUNT(*) FROM UniqueFindings WHERE Hardware_ID = @h' @{ '@h' = $keepId })
+    Assert-That ($result -eq 'Processed' -and [int](Get-Scalar 'SELECT COUNT(*) FROM Hardware') -eq $hwBefore -and $keepAgain -eq $keepAfter) ('a later checklist for STIGMAN-HOST01 lands on the kept record (hardware ' + $hwBefore + ', findings ' + $keepAfter + ' -> ' + $keepAgain + ')')
+
+    # Merge with findings both records have: the newest result is kept, POA&M links follow it.
+    $dupPath = Join-Path $workDir 'duphost.ckl'
+    [System.IO.File]::WriteAllText($dupPath, ([System.IO.File]::ReadAllText((Join-Path $fixtures 'multi-stig.ckl')).Replace('<HOST_NAME>TESTHOST01</HOST_NAME>', '<HOST_NAME>DUPHOST01</HOST_NAME>')))
+    $result = Import-Checklist $dupPath 'TestGroup'
+    $t1 = [long](Get-Scalar "SELECT Hardware_ID FROM Hardware WHERE DiscoveredHostName = 'TESTHOST01'")
+    $dup = [long](Get-Scalar "SELECT Hardware_ID FROM Hardware WHERE DiscoveredHostName = 'DUPHOST01'")
+    $t1Count = [int](Get-Scalar 'SELECT COUNT(*) FROM UniqueFindings WHERE Hardware_ID = @h' @{ '@h' = $t1 })
+    $dupCount = [int](Get-Scalar 'SELECT COUNT(*) FROM UniqueFindings WHERE Hardware_ID = @h' @{ '@h' = $dup })
+    [void](Invoke-Sql "UPDATE UniqueFindings SET LastObserved = @d, Comments = 'newest' WHERE Hardware_ID = @h" @{ '@d' = (Get-Date '2030-01-01').Ticks; '@h' = $dup })
+    $sample = [long](Get-Scalar 'SELECT UniqueFinding_ID FROM UniqueFindings WHERE Hardware_ID = @h LIMIT 1' @{ '@h' = $t1 })
+    [void](Invoke-Sql 'INSERT INTO PoamsUniqueFindings (Poam_ID, UniqueFinding_ID) VALUES (999, @f)' @{ '@f' = $sample })
+    $merge2 = [Vulnerator.Model.DataAccess.HardwareMerger]::Merge($t1, [long[]]@($dup))
+    $t1After = [int](Get-Scalar 'SELECT COUNT(*) FROM UniqueFindings WHERE Hardware_ID = @h' @{ '@h' = $t1 })
+    $newest = [int](Get-Scalar "SELECT COUNT(*) FROM UniqueFindings WHERE Hardware_ID = @h AND Comments = 'newest'" @{ '@h' = $t1 })
+    $poamLinked = [int](Get-Scalar 'SELECT COUNT(*) FROM PoamsUniqueFindings P JOIN UniqueFindings U ON P.UniqueFinding_ID = U.UniqueFinding_ID WHERE P.Poam_ID = 999 AND U.Hardware_ID = @h' @{ '@h' = $t1 })
+    Assert-That ($result -eq 'Processed' -and $dupCount -gt 0 -and $t1After -eq $t1Count -and $merge2.DuplicateFindingsCombined -eq $dupCount) ('duplicate findings are combined (' + $t1Count + ' + ' + $dupCount + ' -> ' + $t1After + ', combined ' + $merge2.DuplicateFindingsCombined + ')')
+    Assert-That ($newest -eq $dupCount -and $poamLinked -eq 1) ('the newest result is kept and its POA&M link moves with it (newest ' + $newest + ', POA&M ' + $poamLinked + ')')
+    $refused = $null
+    try { [void][Vulnerator.Model.DataAccess.HardwareMerger]::Merge($t1, [long[]]@($t1)) } catch { $refused = $_.Exception.InnerException.Message }
+    Assert-That ($refused -like '*at least two*') ('merging a record with itself is refused (' + $refused + ')')
+    $ids = [Vulnerator.Model.DataAccess.HardwareIdentity]::LoadAll()
+    $keepIds = $null
+    [void]$ids.TryGetValue($keepId, [ref]$keepIds)
+    Assert-That ($null -ne $keepIds -and ($keepIds.AcasHostIds -contains 'SC-REC-1001') -and ($keepIds.Aliases -contains 'STIGMAN-HOST01')) 'the Hardware list reads aliases and ACAS host IDs'
+
     # --- Configuration Management > Hardware: last ACAS scan and last checklist per host ---------------
     $scanDates = [Vulnerator.Model.DataAccess.HardwareScanDates]::Load()
     $nessusId = [long](Get-Scalar "SELECT Hardware_ID FROM Hardware WHERE DiscoveredHostName = 'nessushost01'")

@@ -349,6 +349,18 @@ namespace Vulnerator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("TAG")]
+        public string AcasHostIdTag {
+            get {
+                return ((string)(this["AcasHostIdTag"]));
+            }
+            set {
+                this["AcasHostIdTag"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool CaptureAcasPortInformation {
             get {

@@ -151,6 +151,16 @@
                                                     Binding="{Binding LifecycleStatusName, Mode=OneWay}"
                                                     Header="Lifecycle Status"
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    IsReadOnly="True"
+                                                    Binding="{Binding AlsoKnownAs, Mode=OneWay}"
+                                                    Header="Also Known As"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
+                    <DataGridTextColumn Width="*"
+                                                    IsReadOnly="True"
+                                                    Binding="{Binding AcasHostId, Mode=OneWay}"
+                                                    Header="ACAS Host ID"
+                                                    HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                 </DataGrid.Columns>
             </DataGrid>
             <ScrollViewer Grid.Row="1"
@@ -178,13 +188,19 @@
                         <TextBlock Text="{Binding Hardwares.Count}"
                                                TextTrimming="CharacterEllipsis" />
                     </Label>
-                    <Button x:Name="hardwareColumnsButton"
-                                        Grid.Column="2"
-                                        Margin="{StaticResource MarginLeft5}"
-                                        HorizontalAlignment="Left"
-                                        Click="HardwareColumnsButton_Click"
-                                        Content="Columns..."
-                                        ToolTip="Choose the columns shown in the Hardware list (for example Operating System and Last ACAS Scan)" />
+                    <StackPanel Grid.Column="2"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Left">
+                        <Button x:Name="hardwareColumnsButton"
+                                Margin="{StaticResource MarginLeft5}"
+                                Click="HardwareColumnsButton_Click"
+                                Content="Columns..."
+                                ToolTip="Choose the columns shown in the Hardware list (for example Operating System and Last ACAS Scan)" />
+                        <Button Margin="{StaticResource MarginLeft5}"
+                                Command="{Binding MergeHardwareCommand}"
+                                Content="Merge Ticked Hardware..."
+                                ToolTip="Tick two or more records that are the same device (for example W01.Contoso.com from ACAS and W01.Contoso from a checklist) and merge them into one" />
+                    </StackPanel>
                     <Button Grid.Column="3"
                                         HorizontalAlignment="Right"
                                         Command="{Binding ClearSelectedHardwareCommand}"

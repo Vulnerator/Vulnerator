@@ -584,8 +584,11 @@ namespace Vulnerator.Model.DataAccess
                 {
                     sqliteCommand.Parameters["LifecycleStatus_ID"].Value = 1;
                 }
+                // A known ACAS host ID or alias points the import at the existing record for the device.
+                HardwareIdentity.ResolveHost(sqliteCommand);
                 sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Insert.Hardware.dml", assembly);
                 sqliteCommand.ExecuteNonQuery();
+                HardwareIdentity.RecordAcasHostId(sqliteCommand);
             }
             catch (Exception exception)
             {
@@ -652,7 +655,7 @@ namespace Vulnerator.Model.DataAccess
                     "PIT_Determination_ID",
                     // Hardware Table
                     "Hardware_ID", "DisplayedHostName", "DiscoveredHostName", "FQDN", "NetBIOS", "ScanIP", "Found21745", "Found26917", "IsVirtualServer", "NIAP_Level",
-                    "Manufacturer", "ModelNumber", "IsIA_Enabled", "SerialNumber", "Role", "LifecycleStatus_ID",  "OperatingSystem",
+                    "Manufacturer", "ModelNumber", "IsIA_Enabled", "SerialNumber", "Role", "LifecycleStatus_ID",  "OperatingSystem", "AcasHostId",
                     // IP_Addresses Table
                     "IP_Address_ID", "IP_Address",
                     // MAC_Addresses Table

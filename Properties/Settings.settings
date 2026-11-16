@@ -83,6 +83,9 @@
     <Setting Name="HardwareGridColumns" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="AcasHostIdTag" Type="System.String" Scope="User">
+      <Value Profile="(Default)">TAG</Value>
+    </Setting>
     <Setting Name="CaptureAcasPortInformation" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>

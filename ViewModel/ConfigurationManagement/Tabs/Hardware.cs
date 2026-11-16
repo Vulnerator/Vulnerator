@@ -347,6 +347,7 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
                         .AsNoTracking().ToList();
                     // Last ACAS scan and last checklist / SCAP result per host, for the optional Hardware columns.
                     Dictionary<long, HardwareScanDates.Dates> scanDates = HardwareScanDates.Load();
+                    Dictionary<long, HardwareIdentity.Identifiers> identifiers = HardwareIdentity.LoadAll();
                     foreach (Model.Entity.Hardware hardware in hardwares)
                     {
                         HardwareScanDates.Dates dates;
@@ -354,6 +355,12 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
                         {
                             hardware.LastAcasScan = dates.LastAcas;
                             hardware.LastChecklistScan = dates.LastChecklist;
+                        }
+                        HardwareIdentity.Identifiers ids;
+                        if (identifiers.TryGetValue(hardware.Hardware_ID, out ids))
+                        {
+                            hardware.AlsoKnownAs = string.Join(", ", ids.Aliases);
+                            hardware.AcasHostId = string.Join(", ", ids.AcasHostIds);
                         }
                     }
                     Hardwares = hardwares;
@@ -585,6 +592,47 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
                     "Delete Hardware", System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Warning) != System.Windows.MessageBoxResult.Yes)
             { return; }
             RunEdit("Delete hardware", () => { AssetEditor.DeleteHardware(hardware.Hardware_ID); return 0; }, null);
+        }
+
+        public RelayCommand MergeHardwareCommand => new RelayCommand(MergeHardware);
+
+        /// <summary>
+        /// Merges the ticked hardware records (the same device under different names, e.g. W01.Contoso.com from ACAS and
+        /// W01.Contoso from a checklist) into the one the user keeps, after an optional database backup.
+        /// </summary>
+        private void MergeHardware()
+        {
+            List<Model.Entity.Hardware> ticked = Hardwares?.Where(h => h.IsChecked).ToList() ?? new List<Model.Entity.Hardware>();
+            if (ticked.Count < 2)
+            {
+                System.Windows.MessageBox.Show("Tick two or more hardware records that are the same device, then choose Merge.", "Merge Hardware",
+                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+                return;
+            }
+            Vulnerator.View.UI.ConfigurationManagement.MergeHardwareWindow window = new Vulnerator.View.UI.ConfigurationManagement.MergeHardwareWindow(ticked)
+            {
+                Owner = System.Windows.Application.Current.Windows.OfType<System.Windows.Window>().FirstOrDefault(w => w.IsActive) ?? System.Windows.Application.Current.MainWindow
+            };
+            if (window.ShowDialog() != true || window.Keep == null)
+            { return; }
+            long keepId = window.Keep.Hardware_ID;
+            List<long> mergeIds = ticked.Where(h => h.Hardware_ID != keepId).Select(h => h.Hardware_ID).ToList();
+            if (window.BackUpFirst)
+            {
+                try
+                {
+                    string backup = HardwareMerger.BackUpDatabase();
+                    LogWriter.LogStatusUpdate($"Database backed up before the merge: {backup}");
+                }
+                catch (Exception exception)
+                {
+                    LogWriter.LogErrorWithDebug("The database backup before a merge failed.", exception);
+                    System.Windows.MessageBox.Show("The database could not be backed up, so nothing was merged: " + exception.Message, "Merge Hardware",
+                        System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+                    return;
+                }
+            }
+            RunEdit("Merge hardware", () => { HardwareMerger.Merge(keepId, mergeIds); return keepId; }, keepId);
         }
 
         public RelayCommand AddGroupToHardwareCommand => new RelayCommand(() =>

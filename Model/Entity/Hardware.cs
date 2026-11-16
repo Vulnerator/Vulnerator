@@ -104,6 +104,18 @@ namespace Vulnerator.Model.Entity
         public string GroupNames =>
             Groups == null ? string.Empty : string.Join(", ", Groups.Where(g => g != null && g.GroupName != "All").Select(g => g.GroupName).OrderBy(g => g));
 
+        /// <summary>Ticked in the Hardware list (for Merge).</summary>
+        [NotMapped]
+        public bool IsChecked { get; set; }
+
+        /// <summary>Other names saved for this device by a merge (filled by the Hardware tab, not stored here).</summary>
+        [NotMapped]
+        public string AlsoKnownAs { get; set; }
+
+        /// <summary>Tenable Security Center host ID(s) from ACAS scans (filled by the Hardware tab, not stored here).</summary>
+        [NotMapped]
+        public string AcasHostId { get; set; }
+
         /// <summary>The lifecycle status name.</summary>
         [NotMapped]
         public string LifecycleStatusName => LifecycleStatus?.Lifecycle_Status ?? string.Empty;
