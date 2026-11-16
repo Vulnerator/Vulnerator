@@ -193,21 +193,6 @@ try {
     $sourceFile = Get-Scalar ("SELECT COUNT(*) FROM UniqueFindingsSourceFiles WHERE FindingSourceFileName LIKE '%viewer3%'")
     Assert-That ([int]$sourceFile -ge 1) 'CKLB findings are attributed to the original .cklb file name'
 
-    # --- STIG Manager export (a CKL as STIG Manager's archive/ckl endpoint writes it) ---------------
-    $result = Import-Checklist (Join-Path $fixtures 'stigman-export.ckl') 'TestGroup'
-    Assert-That ($result -eq 'Processed') ('STIG Manager CKL imports (got "' + $result + '")')
-    $smStatus = @{}
-    foreach ($rule in 'SV-3001', 'SV-3002', 'SV-3003', 'SV-3004') { $smStatus[$rule] = [string](Get-Scalar $statusSql @{ '@h' = 'STIGMAN-HOST01'; '@v' = $rule }) }
-    $smText = ($smStatus.Keys | Sort-Object | ForEach-Object { $_ + '=' + $smStatus[$_] }) -join ', '
-    Assert-That ($smStatus['SV-3001'] -eq 'Ongoing' -and $smStatus['SV-3002'] -eq 'Completed' -and $smStatus['SV-3003'] -eq 'Not Applicable' -and $smStatus['SV-3004'] -eq 'Not Reviewed') ('STIG Manager results map to Vulnerator statuses (' + $smText + ')')
-    $smVersion = Invoke-Sql "SELECT SourceVersion, SourceRelease FROM VulnerabilitySources WHERE SourceName LIKE '%Test Application%'"
-    $smRelease = if ($smVersion.Rows.Count -gt 0) { [string]$smVersion.Rows[0]['SourceVersion'] + 'R' + [string]$smVersion.Rows[0]['SourceRelease'] } else { 'none' }
-    Assert-That ($smRelease -eq '1R2') ('STIG Manager CKL gives version 1 release 2 (got ' + $smRelease + ')')
-    $smRow = (Invoke-Sql ("SELECT UF.FindingDetails, UF.Comments FROM UniqueFindings UF JOIN Hardware H ON UF.Hardware_ID = H.Hardware_ID " +
-        "JOIN Vulnerabilities V ON UF.Vulnerability_ID = V.Vulnerability_ID WHERE H.DiscoveredHostName = 'STIGMAN-HOST01' AND V.UniqueVulnerabilityIdentifier = 'SV-3001'")).Rows
-    $smDetail = if ($smRow.Count -gt 0) { [string]$smRow[0]['FindingDetails'] + ' | ' + [string]$smRow[0]['Comments'] } else { 'none' }
-    Assert-That ($smDetail -eq 'Lockout threshold is 10; the STIG requires 3. | Fix scheduled.') ('STIG Manager review detail and comment are kept (got "' + $smDetail + '")')
-
     # --- eMASS exports ------------------------------------------------------------------------
     $builder = [Vulnerator.Model.BusinessLogic.Reports.EmassPoamBuilder]
     Assert-That ($builder::RawRiskToLevel('I') -eq 'High' -and $builder::RawRiskToLevel('II') -eq 'Moderate' -and $builder::RawRiskToLevel('III') -eq 'Low') 'CAT I/II/III map to High/Moderate/Low'
@@ -276,6 +261,22 @@ try {
     finally { $zip.Dispose() }
     Assert-That ($sheetText.Contains('***** CUI//SYNTHETIC *****') -and $sheetText.Contains('oddFooter')) 'export marking printed in every sheet header and footer'
     Assert-That ($customText.Contains('name="Classification"') -and $customText.Contains('CUI//SYNTHETIC')) 'export marking stored as the Classification document property'
+
+    # --- STIG Manager export (a CKL as STIG Manager's archive/ckl endpoint writes it) ---------------
+    # After the sample exports, so their host and POA&M checks stay the same.
+    $result = Import-Checklist (Join-Path $fixtures 'stigman-export.ckl') 'TestGroup'
+    Assert-That ($result -eq 'Processed') ('STIG Manager CKL imports (got "' + $result + '")')
+    $smStatus = @{}
+    foreach ($rule in 'SV-3001', 'SV-3002', 'SV-3003', 'SV-3004') { $smStatus[$rule] = [string](Get-Scalar $statusSql @{ '@h' = 'STIGMAN-HOST01'; '@v' = $rule }) }
+    $smText = ($smStatus.Keys | Sort-Object | ForEach-Object { $_ + '=' + $smStatus[$_] }) -join ', '
+    Assert-That ($smStatus['SV-3001'] -eq 'Ongoing' -and $smStatus['SV-3002'] -eq 'Completed' -and $smStatus['SV-3003'] -eq 'Not Applicable' -and $smStatus['SV-3004'] -eq 'Not Reviewed') ('STIG Manager results map to Vulnerator statuses (' + $smText + ')')
+    $smVersion = Invoke-Sql "SELECT SourceVersion, SourceRelease FROM VulnerabilitySources WHERE SourceName LIKE '%Test Application%'"
+    $smRelease = if ($smVersion.Rows.Count -gt 0) { [string]$smVersion.Rows[0]['SourceVersion'] + 'R' + [string]$smVersion.Rows[0]['SourceRelease'] } else { 'none' }
+    Assert-That ($smRelease -eq '1R2') ('STIG Manager CKL gives version 1 release 2 (got ' + $smRelease + ')')
+    $smRow = (Invoke-Sql ("SELECT UF.FindingDetails, UF.Comments FROM UniqueFindings UF JOIN Hardware H ON UF.Hardware_ID = H.Hardware_ID " +
+        "JOIN Vulnerabilities V ON UF.Vulnerability_ID = V.Vulnerability_ID WHERE H.DiscoveredHostName = 'STIGMAN-HOST01' AND V.UniqueVulnerabilityIdentifier = 'SV-3001'")).Rows
+    $smDetail = if ($smRow.Count -gt 0) { [string]$smRow[0]['FindingDetails'] + ' | ' + [string]$smRow[0]['Comments'] } else { 'none' }
+    Assert-That ($smDetail -eq 'Lockout threshold is 10; the STIG requires 3. | Fix scheduled.') ('STIG Manager review detail and comment are kept (got "' + $smDetail + '")')
 
     # --- Checklists without a host name (e.g. blank STIG baselines) ----------------------------
     $before = Get-Counts
