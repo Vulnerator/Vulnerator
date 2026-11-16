@@ -4,7 +4,7 @@ Vulnerator 2.0 Dashboards add-on
 Offline dashboards inside Vulnerator: open findings by severity, top hosts, compliance by
 NIST SP 800-53 Rev 5 control family, POA&M aging, open vs. closed trend, assets with no scan
 or checklist, STIG checklists submitted (current or outdated) and active IAVMs.
-Nothing is sent anywhere; it needs no server. Free: no license key needed.
+Nothing is sent anywhere; it needs no server. Part of Vulnerator 2.0, under the same MIT license.
 
 Requirements
 - Vulnerator 2.0 version 7.4.0 or later (64-bit Windows, .NET Framework 4.8).
@@ -31,4 +31,5 @@ Notes
 - The trend starts the first day the add-on is used. Its history is kept in the add-on's data
   folder next to the database ("Add-on data\dashboards\trend.json").
 
-Copyright (c) 2026 Hector L. Bones. All rights reserved. See LICENSE.txt.
+Copyright (c) 2026 Hector L. Bones. MIT License (see LICENSE in the Vulnerator folder).
+Source: https://github.com/hbonesctr/Vulnerator (AddOns/Dashboards).

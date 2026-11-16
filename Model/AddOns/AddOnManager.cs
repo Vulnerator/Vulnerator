@@ -255,11 +255,21 @@ namespace Vulnerator.Model.AddOns
             return null;
         }
 
-        /// <summary>Tells the loaded add-ons that a license was added or removed.</summary>
-        public static void NotifyLicensesChanged()
+        /// <summary>The folder add-on data goes in: the database's folder, else %LOCALAPPDATA%\Vulnerator.</summary>
+        public static string BaseFolder()
         {
-            foreach (LoadedAddOn addOn in _addOns.Where(a => a.State == AddOnState.Loaded && a.Host != null))
-            { addOn.Host.RaiseLicensesChanged(); }
+            string baseFolder = null;
+            try
+            {
+                string database = Properties.Settings.Default.Database;
+                if (!string.IsNullOrWhiteSpace(database) && database != "Undefined")
+                { baseFolder = Path.GetDirectoryName(Path.GetFullPath(database)); }
+            }
+            catch (Exception exception)
+            { LogWriter.LogErrorWithDebug("Add-ons: the database folder could not be determined.", exception); }
+            if (string.IsNullOrWhiteSpace(baseFolder))
+            { baseFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Vulnerator"); }
+            return baseFolder;
         }
 
         /// <summary>Tells the loaded add-ons that the data changed (after an import or a database change).</summary>

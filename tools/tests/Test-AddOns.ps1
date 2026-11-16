@@ -3,7 +3,7 @@
 # starting, needs a newer interface, needs a newer Vulnerator, not an add-on, wrong entry type, not a .NET file,
 # duplicate id). Then checks the read-only data the add-ons get, the data-changed event, the menu pages and the
 # Settings > Integrations section (no license section). Last, loads the free Dashboards add-on that ships in the release (Add-ons\Dashboards)
-# against the test database: it must load with no license, build its dashboards from the real data and say "Free".
+# against the test database: it must load, build its dashboards from the real data and have no license handling.
 #
 # Windows PowerShell 5.1, 64-bit (the build is x64), STA. Pure ASCII; no PowerShell 7 syntax.
 # Usage: %SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe -File tools\tests\Test-AddOns.ps1 -BinDir bin\Release
@@ -36,7 +36,7 @@ try {
     Check (Test-Path (Join-Path $shippedFolder 'README.txt')) 'the release has an Add-ons folder with README.txt'
     $shippedAddOns = @(Get-ChildItem $binPath -Recurse -Filter '*.AddOn.dll' | ForEach-Object { $_.FullName.Substring($binPath.Length + 1) })
     Check ($shippedAddOns.Count -eq 1 -and $shippedAddOns[0] -eq 'Add-ons\Dashboards\Vulnerator.Dashboards.AddOn.dll') ('the release ships one add-on, Dashboards (' + ($shippedAddOns -join ', ') + ')')
-    Check ((Test-Path (Join-Path $shippedFolder 'Dashboards\LICENSE.txt')) -and (Test-Path (Join-Path $shippedFolder 'Dashboards\README.txt'))) 'Dashboards ships with its LICENSE.txt and README.txt'
+    Check ((Test-Path (Join-Path $shippedFolder 'Dashboards\README.txt')) -and -not (Test-Path (Join-Path $shippedFolder 'Dashboards\LICENSE.txt'))) 'Dashboards ships with its README.txt (MIT: the release LICENSE.txt covers it)'
 
     # Same set-up as Test-EntityFramework.ps1: the application's configuration, then the program's assemblies.
     [AppDomain]::CurrentDomain.SetData('APP_CONFIG_FILE', (Join-Path $binPath 'Vulnerator.exe.config'))
@@ -285,7 +285,7 @@ namespace __NS__
     $boxes = @($panel.Children | Where-Object { $_ -is [System.Windows.Controls.GroupBox] })
     Check ($panel.Children.Count -eq 12 -and $boxes.Count -eq 1 -and $boxes[0].Header -eq 'Sample settings') ('Settings > Integrations lists every add-on file and the settings section, with no Licenses box (' + $panel.Children.Count + ' items)')
 
-    # Licenses (interface version 2): stored next to the database, handed to add-ons as text, checked by the add-ons.
+    # No licenses since 7.5.0: add-ons built for interface 2-3 still load; Licenses is empty and nothing is shown.
     function Texts($element) {
         $found = New-Object System.Collections.Generic.List[string]
         if ($element -is [System.Windows.Controls.TextBlock]) { $found.Add($element.Text) }
@@ -293,31 +293,13 @@ namespace __NS__
         elseif ($element -is [System.Windows.Controls.ContentControl]) { foreach ($t in (Texts $element.Content)) { $found.Add($t) } }
         return ,$found
     }
-    $licenses = [Vulnerator.Model.AddOns.AddOnLicenses]
-    $licenseFolder = $licenses::Folder
-    Check ($licenseFolder.StartsWith($workDir, [StringComparison]::OrdinalIgnoreCase)) ('licenses are kept next to the database (' + $licenseFolder + ')')
-    Check ($null -ne $licenses::Add('   ')) 'an empty key is refused'
-    Check ($null -ne $licenses::Add("BAD`0KEY")) 'binary data is refused'
-    $added = $licenses::Add('SAMPLE-1234-ABCD')
-    Check ($null -eq $added) ('a pasted key is stored (' + $added + ')')
-    Check ($licenses::Add('SAMPLE-1234-ABCD') -like '*already*') 'the same key twice is refused'
-    $licFile = Join-Path $workDir 'other.lic'
-    [System.IO.File]::WriteAllText($licFile, "OTHER-LICENSE`r`nline 2`r`n")
-    $imported = $licenses::Import($licFile)
-    Check ($null -eq $imported) ('a .lic file is imported (' + $imported + ')')
-    $seen = @($hostApi.Licenses)
-    Check ($seen.Count -eq 2 -and $seen[0] -eq 'SAMPLE-1234-ABCD' -and $seen[1] -eq "OTHER-LICENSE`r`nline 2") ('add-ons see both licenses as trimmed text (' + ($seen -join ' / ') + ')')
-    Check (@(Get-ChildItem $licenseFolder -Filter '*.lic').Count -eq 2) 'two .lic files in the licenses folder'
-    Check ([TestSample.Entry]::LicenseChanges -eq 2) ('LicensesChanged raised for each change (' + [TestSample.Entry]::LicenseChanges + ')')
+    Check (@($hostApi.Licenses).Count -eq 0) 'add-ons get no licenses (Vulnerator 2.0 uses none)'
+    Check ($null -eq [Vulnerator.Model.AddOns.AddOnManager].Assembly.GetType('Vulnerator.Model.AddOns.AddOnLicenses')) 'no license store in Vulnerator'
     [Vulnerator.View.UI.AddOnUi]::FillIntegrations($panel)
     $all = (Texts $panel) -join ' || '
-    Check ($all -notlike '*License:*' -and $all -notlike '*Add license*' -and $all -notlike '*SAMPLE-1234-ABCD*') ('Settings > Integrations shows no license section or keys (' + $all.Length + ' chars)')
-    $first = @($licenses::All())[0]
-    $removed = $licenses::Remove($first)
-    Check ($null -eq $removed -and @($hostApi.Licenses).Count -eq 1 -and @($hostApi.Licenses)[0] -like 'OTHER-LICENSE*') ('a license can be removed (' + $removed + ')')
-    Check ([TestSample.Entry]::LicenseChanges -eq 3) 'LicensesChanged raised on removal'
+    Check ($all -notlike '*License:*' -and $all -notlike '*Add license*') ('Settings > Integrations shows no license section (' + $all.Length + ' chars)')
 
-    # The bundled Dashboards add-on (free), loaded from the release's own Add-ons folder against the test database.
+    # The bundled Dashboards add-on (MIT, built from AddOns/Dashboards), loaded from the release's own Add-ons folder against the test database.
     $shipped = @([Vulnerator.Model.AddOns.AddOnManager]::LoadFrom($shippedFolder))
     $dash = @($shipped | Where-Object { $_.Id -eq 'dashboards' })
     $dashInfo = (@($shipped | ForEach-Object { [System.IO.Path]::GetFileName($_.File) + ': ' + $_.Summary }) -join ' | ')
@@ -326,7 +308,7 @@ namespace __NS__
     if ($dash.Count -eq 1 -and $dash[0].State -eq 'Loaded') {
         Check ($dash[0].Version -like '1.*') ('Dashboards version 1.x (' + $dash[0].Version + ')')
         $instance = [Vulnerator.Model.AddOns.LoadedAddOn].GetProperty('Instance', [System.Reflection.BindingFlags]'NonPublic,Instance').GetValue($dash[0], $null)
-        Check ($instance.LicenseStatus -eq 'Free (no license needed)') ('Dashboards needs no license (' + $instance.LicenseStatus + ')')
+        Check (-not ($instance -is [Vulnerator.AddOns.IAddOnLicensing])) 'Dashboards has no license handling'
         $dashPages = @($dash[0].Pages)
         Check ($dashPages.Count -eq 1 -and $dashPages[0].Title -eq 'Dashboards') 'Dashboards adds its menu page'
         $dashView = $null

@@ -39,12 +39,12 @@ reports and the log.
 | **NIST SP 800-53 Rev 5** | Findings mapped to CCIs and Rev 5 controls (DISA CCI list, CNSSI 1253 baselines); eMASS assessment procedures from your own IG/AP export |
 | **Reports** | eMASS POA&M and Hardware / Software workbooks, STIG Details, PDF Summary, Risk Assessment Report, SCAP & STIG Discrepancies, Ports, Protocols & Services, per-host STIG checklists |
 | **Handling** | Classification / handling marking on every export; labeled input files imported only after you confirm the label |
-| **Configuration Management** | Hardware, software, groups and ports, protocols and services |
-| **Dashboards** (free add-on, included) | Offline charts: open findings by severity, top hosts, compliance by control family, POA&M aging, trend, coverage gaps, outdated STIG checklists, active IAVMs |
+| **Configuration Management** | Hardware, software, groups and ports, protocols and services; one record per device (ACAS host ID, merge with aliases) |
+| **Dashboards** (included add-on) | Offline charts: open findings by severity, top hosts, compliance by control family, POA&M aging, trend, coverage gaps, outdated STIG checklists, active IAVMs |
 
 ## In the release zip
 
-`Vulnerator.exe` and its libraries, `LICENSE.txt`, `THIRD-PARTY-NOTICES.txt`, the free Dashboards add-on in
+`Vulnerator.exe` and its libraries, `LICENSE.txt`, `THIRD-PARTY-NOTICES.txt`, the Dashboards add-on in
 `Add-ons\Dashboards`, and `Test-RealData.ps1`, which imports a
 folder of your own files into a throwaway database and prints one line per file (nothing leaves your machine). Each
 release also carries the zip's SHA-256 and a per-file hash list for application allow-listing.
@@ -60,7 +60,11 @@ with the scripts in [tools/rev5](tools/rev5). The project page is [docs/index.ht
 ## Credits and license
 
 Vulnerator 2.0 application rewrite: **Hector L. Bones**. Based on Vulnerator by Alex Kuchta, Jeff Vanerwegen, Rick
-Murphy, Jeff Purcell and contributors. MIT License (see [LICENSE](LICENSE)); bundled components are listed in
-`THIRD-PARTY-NOTICES.txt` in each release. The Dashboards add-on (`tools/addons/Dashboards`, shipped in
-`Add-ons\Dashboards`) is free but closed-source and not MIT-licensed; see its
-[LICENSE.txt](tools/addons/Dashboards/LICENSE.txt).
+Murphy, Jeff Purcell and contributors. MIT License (see [LICENSE](LICENSE)), including the Dashboards add-on ([AddOns](AddOns)); bundled
+components are listed in `THIRD-PARTY-NOTICES.txt` in each release.
+
+## No licenses, forks welcome
+
+Vulnerator 2.0 is free and open source. It needs no license key, and future versions will not add one. Anyone may
+fork it and carry on their own work under the MIT License. Integrations with outside services (Elastic, LLMs and
+other APIs) are not planned for Vulnerator; forks are welcome to add them.

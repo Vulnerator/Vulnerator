@@ -1,4 +1,17 @@
-﻿# Vulnerator 2.0 (7.5.0-beta.2)
+﻿# Vulnerator 2.0 (7.5.0-beta.3)
+###### Version 7.5.0 beta 3, November 2026
+
+| Change Description |
+| :----------------- |
+| ACAS host ID: .nessus imports read the Tenable Security Center host ID (host property TAG by default, set under Ingest > ACAS Files), so a renamed or re-addressed device stays one hardware record |
+| Configuration Management > Hardware > Merge Ticked Hardware...: merges records that are the same device (for example W01.Contoso.com from ACAS and W01.Contoso from a checklist); the newest result is kept for duplicate findings; the other names become aliases used by later imports; optional database backup first |
+| Hardware columns Also Known As and ACAS Host ID |
+| No licenses: the license storage is removed; the Dashboards add-on is now open source (MIT) and built from AddOns/Dashboards in this repository |
+
+
+----------
+
+# Vulnerator 2.0 (7.5.0-beta.2)
 ###### Version 7.5.0 beta 2, November 2026
 
 | Change Description |

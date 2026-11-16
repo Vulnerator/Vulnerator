@@ -697,7 +697,7 @@ try {
     $idOwner = Get-Scalar "SELECT DiscoveredHostName FROM Hardware WHERE Hardware_ID = @h" @{ '@h' = $idHw }
     Assert-That ($r1 -eq 'Processed' -and $r2 -eq 'Processed' -and $idHosts -eq 1 -and $idOwner -eq 'idhost-old') ('the same ACAS host ID stays one record after a rename and new IP (records: ' + $idHosts + ', owner: ' + $idOwner + ')')
     $renamedAlias = [int](Get-Scalar "SELECT COUNT(*) FROM HardwareIdentifiers WHERE IdentifierType = 'Alias' AND IdentifierValue = 'idhost-renamed' AND Hardware_ID = @h" @{ '@h' = $idHw })
-    $newIp = [int](Get-Scalar ("SELECT COUNT(*) FROM Hardware_IP_Addresses HI JOIN IP_Addresses I ON HI.IP_Address_ID = I.IP_Address_ID WHERE HI.Hardware_ID = @h AND I.IpAddress = '10.7.7.99'") @{ '@h' = $idHw })
+    $newIp = [int](Get-Scalar ("SELECT COUNT(*) FROM Hardware_IP_Addresses HI JOIN IP_Addresses I ON HI.IP_Address_ID = I.IP_Address_ID WHERE HI.Hardware_ID = @h AND I.IP_Address = '10.7.7.99'") @{ '@h' = $idHw })
     Assert-That ($renamedAlias -eq 1 -and $newIp -eq 1) ('the new name becomes an alias and the new IP is added to the record (alias ' + $renamedAlias + ', IP ' + $newIp + ')')
     $r3 = New-IdScan 'idscan-3' 'idhost-other' '10.7.7.2' 'SC-REC-2002' 'Thu Oct 29 09:05:00 2026'
     $r4 = New-IdScan 'idscan-4' 'idhost-noid' '10.7.7.3' '' 'Thu Oct 29 09:05:00 2026'

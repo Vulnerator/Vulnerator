@@ -54,15 +54,17 @@ namespace Vulnerator.Model.AddOns
         {
             get
             {
-                string folder = Path.Combine(AddOnLicenses.BaseFolder(), "Add-on data", SafeName(_owner.Id));
+                string folder = Path.Combine(AddOnManager.BaseFolder(), "Add-on data", SafeName(_owner.Id));
                 Directory.CreateDirectory(folder);
                 return folder;
             }
         }
 
-        public IReadOnlyList<string> Licenses => AddOnLicenses.Texts();
+        /// <summary>Vulnerator 2.0 uses no licenses (since 7.5.0): always empty. Kept for add-ons built for interface 2-3.</summary>
+        public IReadOnlyList<string> Licenses => new string[0];
 
-        public event EventHandler LicensesChanged;
+        /// <summary>Never raised (no licenses since 7.5.0). Kept for add-ons built for interface 2-3.</summary>
+        public event EventHandler LicensesChanged { add { } remove { } }
 
         public event EventHandler DataChanged;
 
@@ -79,8 +81,6 @@ namespace Vulnerator.Model.AddOns
         }
 
         internal void RaiseDataChanged() => Raise(DataChanged, "DataChanged");
-
-        internal void RaiseLicensesChanged() => Raise(LicensesChanged, "LicensesChanged");
 
         private void Raise(EventHandler handler, string name)
         {

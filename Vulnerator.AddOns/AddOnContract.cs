@@ -106,19 +106,18 @@ namespace Vulnerator.AddOns
         event EventHandler DataChanged;
 
         /// <summary>
-        /// (Version 2) Every license the user entered under Settings &gt; Integrations, pasted keys and .lic files alike,
-        /// as text, trimmed. Vulnerator stores them but does not check them: each add-on verifies the signature and expiry
-        /// of the licenses meant for it and ignores the others. Read again after <see cref="LicensesChanged"/>.
+        /// (Version 2) No longer used: Vulnerator 2.0 needs no licenses (since 7.5.0), so this is always empty. Kept so
+        /// add-ons built for interface versions 2 and 3 still load.
         /// </summary>
         IReadOnlyList<string> Licenses { get; }
 
-        /// <summary>(Version 2) Raised on the UI thread after the user adds or removes a license.</summary>
+        /// <summary>(Version 2) No longer raised (no licenses since 7.5.0). Kept for compatibility.</summary>
         event EventHandler LicensesChanged;
     }
 
     /// <summary>
-    /// (Version 2, optional) Implemented by an add-on's entry type (the <see cref="IAddOn"/> class) when it uses licenses.
-    /// Vulnerator shows the answers under Settings &gt; Integrations. Keep both quick: they are called on the UI thread.
+    /// (Version 2, optional) No longer used: Vulnerator 2.0 needs no licenses and does not call it (since 7.5.0).
+    /// Kept so add-ons built for interface versions 2 and 3 still load.
     /// </summary>
     public interface IAddOnLicensing
     {

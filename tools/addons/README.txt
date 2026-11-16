@@ -3,10 +3,10 @@ Vulnerator 2.0 add-ons
 
 Add-ons are optional extensions (for example dashboards or integrations). This release includes one:
 
-  Dashboards (folder "Dashboards") - free, no license key. Offline dashboards: open findings by severity,
-  top hosts, compliance by control family, POA&M aging, trend, coverage gaps, STIG currency and active
-  IAVMs. Open it from the Dashboards item in the menu. It is not part of the MIT-licensed program; see
-  Dashboards\LICENSE.txt. To remove it, close Vulnerator and delete the Dashboards folder.
+  Dashboards (folder "Dashboards") - part of Vulnerator 2.0 (MIT). Offline dashboards: open findings by
+  severity, top hosts, compliance by control family, POA&M aging, trend, coverage gaps, STIG currency and
+  active IAVMs. Open it from the Dashboards item in the menu. Its source is in the Vulnerator repository
+  (AddOns/Dashboards). To remove it, close Vulnerator and delete the Dashboards folder.
 
 To install another add-on, put its files in this folder: the main file ends in .AddOn.dll. An add-on that
 comes with several files can have a folder of its own here. Then restart Vulnerator.

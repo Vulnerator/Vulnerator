@@ -368,7 +368,6 @@
     <Compile Include="Model\BusinessLogic\Reports\ReportFindings.cs" />
     <Compile Include="Model\AddOns\AddOnData.cs" />
     <Compile Include="Model\AddOns\AddOnHost.cs" />
-    <Compile Include="Model\AddOns\AddOnLicenses.cs" />
     <Compile Include="Model\AddOns\AddOnManager.cs" />
     <Compile Include="Model\DataAccess\HardwareScanDates.cs" />
     <Compile Include="Model\DataAccess\HardwareIdentity.cs" />

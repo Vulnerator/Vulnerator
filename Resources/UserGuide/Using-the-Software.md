@@ -86,7 +86,22 @@ for a host, built from the STIG library and that host's findings.
 **Hardware columns:** choose **Columns...** under the Hardware list to show or hide columns. Besides the names and
 scan IP you can show **Operating System** (from ACAS / Nessus scans), **Last ACAS Scan**, **Last Checklist / SCAP**,
 **Last Scan**, **Scan Sources** (ACAS, STIG), **Groups**, **Role**, **Manufacturer**, **Model**, **Serial Number**,
-**Virtual** and **Lifecycle Status**. Drag a column header to move it; click it to sort. Your choice is remembered.
+**Virtual**, **Lifecycle Status**, **Also Known As** and **ACAS Host ID**. Drag a column header to move it; click it
+to sort. Your choice is remembered.
+
+**One record per device.** ACAS and STIG checklists often name the same device differently (for example
+**W01.Contoso.com** in a scan and **W01.Contoso** typed into a checklist), so it can appear twice.
+
+* **ACAS host ID:** .nessus files from Tenable Security Center carry a host ID that stays the same when a device's
+  name or IP changes. Vulnerator reads it from the host property named under **Vulnerability Management > Ingest >
+  ACAS Files > ACAS host ID tag** (**TAG** by default; leave empty to match by name only). A scan of a known ID lands
+  on the same record even after a rename; the new name is remembered as an alias.
+* **Merge:** tick two or more records that are the same device and choose **Merge Ticked Hardware...**. Pick the
+  record to keep (the ACAS record is suggested). Its findings, IP and MAC addresses, groups, software, ports and SCAP
+  scores move to it; when both records have the same finding, the newest result is kept, with its POA&M and
+  mitigation links. Blank fields (FQDN, OS, ...) are filled from the other records. The other names become aliases
+  (shown under **Also Known As**), so later checklists or scans with those names land on the kept record. A merge
+  cannot be undone: leave **Back up the database first** ticked to keep a copy of the database file next to it.
 
 ## Reporting
 
@@ -119,8 +134,8 @@ add-on found and whether it loaded. An add-on that cannot load is skipped and th
 working. If Windows marks the files as downloaded, right-click them, choose **Properties**, tick **Unblock** and restart.
 Add-ons can read findings, hardware, the STIG releases submitted and the eMASS POA&M items, but cannot change the database.
 
-### Dashboards (included, free)
-Vulnerator comes with the **Dashboards** add-on (in **Add-ons\Dashboards**); it needs no license. Choose **Dashboards**
+### Dashboards (included)
+Vulnerator comes with the **Dashboards** add-on (in **Add-ons\Dashboards**). Choose **Dashboards**
 in the menu for offline charts of open findings by severity (CAT or Very High to Very Low), top hosts, compliance by
 NIST control family, POA&M aging, the open/closed trend, assets with no scan or checklist, outdated STIG checklists and
 active IAVMs (with the titles of the findings behind each). Every view carries the classification marking.
@@ -129,5 +144,9 @@ device differently (for example **W01.Contoso.com** in a scan and **W01.Contoso*
 same short name count as one device. Under **Coverage > Device matching** you can turn that off, link other records as
 one device, or keep a match separate. This only changes the dashboards, not the Hardware list or reports. An ACAS finding the host's newest scan no longer reports is
 shown as **Unverified** (neither open nor closed). The trend starts the day Dashboards is first used. To remove it,
-close Vulnerator and delete the **Add-ons\Dashboards** folder. Dashboards is free but not part of the MIT-licensed
-program; see its LICENSE.txt.
+close Vulnerator and delete the **Add-ons\Dashboards** folder. Dashboards is part of Vulnerator 2.0 and under the
+same MIT license; its source is in the repository (AddOns/Dashboards).
+
+### No licenses
+Vulnerator 2.0 is free and open source (MIT). It needs no license key, and future versions will not add one. Anyone
+may fork it and carry on their own work.

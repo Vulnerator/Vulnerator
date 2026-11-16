@@ -63,21 +63,35 @@ jobs:
         shell: powershell
         run: tools/ci/Write-ThirdPartyNotices.ps1 -BinDir bin/Release
 
-      - name: Add the Add-ons folder with the free Dashboards add-on
+      - name: Build the Dashboards add-on and add the Add-ons folder
         shell: pwsh
-        # tools/addons/Dashboards holds the compiled free Dashboards add-on (built in the private add-ons repo; not MIT,
-        # see its LICENSE.txt). Its SHA-256 must match SHA256.txt.
+        # AddOns/Dashboards (MIT) is built against the add-on contract project; only its own DLL is shipped.
         run: |
+          if (-not (Test-Path bin/Release/Vulnerator.AddOns.dll)) { Write-Host '::error::Vulnerator.AddOns.dll (add-on contract) is not in the build'; exit 1 }
+          $output = & dotnet build AddOns/Dashboards/Vulnerator.Dashboards.AddOn.csproj -c Release -o out/dashboards 2>&1
+          $code = $LASTEXITCODE
+          $output | ForEach-Object { Write-Host $_ }
+          $output | Where-Object { $_ -match ': error ' } | Select-Object -Unique -First 20 | ForEach-Object { Write-Host ('::error::' + $_) }
+          if ($code) { exit $code }
+          $extra = @(Get-ChildItem out/dashboards -Filter *.dll | Where-Object { $_.Name -ne 'Vulnerator.Dashboards.AddOn.dll' -and $_.Name -ne 'Vulnerator.AddOns.dll' })
+          if ($extra.Count) { Write-Host "::error::Unexpected DLLs in the Dashboards output: $($extra.Name -join ', ')"; exit 1 }
           New-Item -ItemType Directory -Force bin/Release/Add-ons/Dashboards | Out-Null
           Copy-Item tools/addons/README.txt bin/Release/Add-ons/README.txt
-          if (-not (Test-Path bin/Release/Vulnerator.AddOns.dll)) { Write-Host '::error::Vulnerator.AddOns.dll (add-on contract) is not in the build'; exit 1 }
-          $src = 'tools/addons/Dashboards'
-          $dll = "$src/Vulnerator.Dashboards.AddOn.dll"
-          $expected = ((Get-Content "$src/SHA256.txt" -Raw).Trim() -split '\s+')[0].ToLowerInvariant()
-          $actual = (Get-FileHash $dll -Algorithm SHA256).Hash.ToLowerInvariant()
-          if ($actual -ne $expected) { Write-Host "::error::Dashboards add-on hash $actual does not match SHA256.txt ($expected)"; exit 1 }
-          Copy-Item $dll, "$src/README.txt", "$src/LICENSE.txt" bin/Release/Add-ons/Dashboards/
-          Write-Host ('::notice::Bundled Dashboards add-on ' + (Get-Item $dll).VersionInfo.ProductVersion + ', SHA-256 ' + $actual)
+          Copy-Item out/dashboards/Vulnerator.Dashboards.AddOn.dll, AddOns/Dashboards/README.txt bin/Release/Add-ons/Dashboards/
+          $dll = 'bin/Release/Add-ons/Dashboards/Vulnerator.Dashboards.AddOn.dll'
+          Write-Host ('::notice::Bundled Dashboards add-on ' + (Get-Item $dll).VersionInfo.ProductVersion + ', SHA-256 ' + (Get-FileHash $dll -Algorithm SHA256).Hash.ToLowerInvariant())
+
+      - name: Metrics and Dashboards tests (AddOns/Tests)
+        shell: pwsh
+        run: |
+          dotnet build AddOns/Tests/Metrics.Tests/Metrics.Tests.csproj -c Release -o out/metrics-tests
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          & out/metrics-tests/Metrics.Tests.exe
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          dotnet build AddOns/Tests/Dashboards.Tests/Dashboards.Tests.csproj -c Release -o out/dashboards-tests
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          & out/dashboards-tests/Dashboards.Tests.exe
+          exit $LASTEXITCODE
 
       - name: Launch test (window appears)
         shell: cmd
