@@ -1,57 +1,15 @@
-﻿# Vulnerator 2.0 (7.5.0-beta.5)
-###### Version 7.5.0 beta 5, November 2026
-
-| Change Description |
-| :----------------- |
-| Hardware: Find box above the list (name, other name, FQDN, NetBIOS, OS, IP or registry number such as VUL-000123 or 123; merged numbers find the kept device) |
-| Hardware side panel: registry number and other names; Add Name saves another name for imports, Remove forgets a wrong one |
-
-
-----------
-
-# Vulnerator 2.0 (7.5.0-beta.4)
-###### Version 7.5.0 beta 4, November 2026
-
-| Change Description |
-| :----------------- |
-| Registry numbers: every device gets a permanent Vulnerator number (VUL-000123, column Registry No.); never reused; a merge keeps the kept device's number and retires the others, which point to it |
-| Imports match an existing device by host name, saved alias, FQDN or NetBIOS name (one match only); IP and MAC are not used |
-| The ACAS host ID (TAG host property) from beta 3 is no longer read or stored |
-
-
-----------
-
-# Vulnerator 2.0 (7.5.0-beta.3)
-###### Version 7.5.0 beta 3, November 2026
-
-| Change Description |
-| :----------------- |
-| ACAS host ID: .nessus imports read the Tenable Security Center host ID (host property TAG by default, set under Ingest > ACAS Files), so a renamed or re-addressed device stays one hardware record |
-| Configuration Management > Hardware > Merge Ticked Hardware...: merges records that are the same device (for example W01.Contoso.com from ACAS and W01.Contoso from a checklist); the newest result is kept for duplicate findings; the other names become aliases used by later imports; optional database backup first |
-| Hardware columns Also Known As and ACAS Host ID |
-| No licenses: the license storage is removed; the Dashboards add-on is now open source (MIT) and built from AddOns/Dashboards in this repository |
-
-
-----------
-
-# Vulnerator 2.0 (7.5.0-beta.2)
-###### Version 7.5.0 beta 2, November 2026
-
-| Change Description |
-| :----------------- |
-| Configuration Management > Hardware: Columns... to show or hide columns, including Operating System, Last ACAS Scan, Last Checklist / SCAP, Last Scan, Scan Sources, Groups, Role, Manufacturer, Model, Serial Number, Virtual and Lifecycle Status |
-| Dashboards 1.1.0: IAVMs list the finding titles; Coverage shows each device's operating system and treats records with the same short name (W01.Contoso.com and W01.Contoso) as one device, with links and Keep separate under Device matching |
-
-
-----------
-
-# Vulnerator 2.0 (7.5.0-beta.1)
-###### Version 7.5.0 beta 1, November 2026
+﻿# Vulnerator 2.0 (7.5.0)
+###### Version 7.5.0, November 2026
 
 | Change Description |
 | :----------------- |
 | Pull from STIG Manager: sign in to your STIG Manager server (browser/CAC or service account), pick a Collection and Assets, and add their checklists to the ingestion list (Ingest > Pull from STIG Manager..., turned on in Settings > STIG Manager) |
-| Settings > Integrations no longer has a Licenses box; add-ons are listed with their settings only |
+| One record per device: every device gets a permanent registry number (VUL-000123, never reused); imports match an existing device by host name, other name, FQDN or NetBIOS name (IP and MAC are not used) |
+| Hardware > Merge Ticked Hardware...: merges records that are the same device (for example W01.Contoso.com from ACAS and W01.Contoso from a checklist); the newest result is kept for duplicate findings; the other names become aliases; the kept device keeps its registry number; optional database backup first |
+| Hardware: Find box (name, other name, FQDN, NetBIOS, OS, IP or registry number); side panel shows the registry number and other names (Add Name / Remove) |
+| Hardware > Columns...: show or hide Registry No., Operating System, Last ACAS Scan, Last Checklist / SCAP, Last Scan, Scan Sources, Groups, Role, Manufacturer, Model, Serial Number, Virtual, Lifecycle Status and Also Known As |
+| Dashboards 1.2.0: IAVMs list the finding titles; Coverage shows each device's operating system and treats records with the same short name as one device (links and Keep separate under Device matching) |
+| No licenses: Vulnerator 2.0 needs no license key and future versions will not add one; the Dashboards add-on is open source (MIT) and built from AddOns/ in the repository; forks are welcome |
 
 
 ----------
@@ -61,43 +19,10 @@
 
 | Change Description |
 | :----------------- |
-| Includes the free Dashboards add-on (Add-ons\Dashboards, no license needed): severity, top hosts, compliance by control family, POA&M aging, trend, coverage gaps, outdated STIG checklists and active IAVMs |
-| Add-on support (menu pages, Settings > Integrations, add-on licenses) and the dashboard data from the 7.4.0 betas are now in a full release |
-
-
-----------
-
-# Vulnerator 2.0 (7.4.0-beta.3)
-###### Version 7.4.0 beta 3, November 2026
-
-| Change Description |
-| :----------------- |
+| Add-on support: optional add-ons in the Add-ons folder add menu pages and Settings > Integrations options; they read findings and hardware read-only, and a broken or incompatible add-on is skipped and logged |
+| Includes the Dashboards add-on: severity, top hosts, compliance by control family, POA&M aging, trend, coverage gaps, outdated STIG checklists and active IAVMs |
 | ACAS imports keep the Nessus risk factor, so Critical and High can be told apart (both stay CAT I in reports) |
 | Checklist and SCAP imports keep the STIG release each file was submitted with, even when a newer release is loaded |
-| Add-ons can read more about findings (severity level, first seen, IAVA/IAVB/IAVT and CVE references, hardware), the STIG releases submitted, the eMASS POA&M items and the STIG library import date |
-
-
-----------
-
-# Vulnerator 2.0 (7.4.0-beta.2)
-###### Version 7.4.0 beta 2, November 2026
-
-| Change Description |
-| :----------------- |
-| Settings > Integrations: a Licenses box to paste an add-on license key or import a .lic file, and remove one |
-| Each add-on shows its license status, and what it says about each entered license |
-| Licenses are checked by the add-ons on this computer; nothing is sent anywhere |
-
-
-----------
-
-# Vulnerator 2.0 (7.4.0-beta.1)
-###### Version 7.4.0 beta 1, November 2026
-
-| Change Description |
-| :----------------- |
-| Add-on support: optional add-ons in the Add-ons folder add menu pages and Settings > Integrations options |
-| Add-ons read findings and hardware read-only; a broken or incompatible add-on is skipped and logged |
 
 
 ----------

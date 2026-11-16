@@ -117,7 +117,7 @@
       <p class="note">Requirements: 64-bit Windows with .NET Framework 4.8. No installation and no administrator rights.
         Works on hardened DoD workstations: the database engine is <code>winsqlite3.dll</code>, part of Windows, and the
         program runs with .NET strong-name bypass disabled. It works offline; nothing contacts the internet unless you
-        turn on Settings &gt; Online Checks. The release zip also holds <code>LICENSE.txt</code>,
+        turn on Settings &gt; Online Checks, and STIG Manager pulls contact only the server you enter. The release zip also holds <code>LICENSE.txt</code>,
         <code>THIRD-PARTY-NOTICES.txt</code>, a per-file hash list for application allow-listing and
         <code>Test-RealData.ps1</code>, which checks a folder of your own files against a throwaway database.</p>
     </section>
@@ -131,6 +131,7 @@
             <li>STIG checklists: .ckl, STIG Viewer 3 .cklb and Evaluate-STIG output (older results in <em>Previous</em> folders are skipped)</li>
             <li>ACAS / Nessus: .nessus and CSV, from files, zips or folders of zips</li>
             <li>SCAP / SCC XCCDF results and the DISA STIG library</li>
+            <li>Checklists pulled from your STIG Manager server (optional, off by default)</li>
           </ul>
         </div>
         <div class="card">
@@ -162,7 +163,8 @@
           <ul>
             <li>Open findings by severity, top hosts and compliance by NIST control family</li>
             <li>POA&amp;M aging, open/closed trend, assets with no scan or checklist</li>
-            <li>Outdated STIG checklists and active IAVMs - offline, with the classification marking</li>
+            <li>Outdated STIG checklists and active IAVMs with finding titles - offline, with the classification marking</li>
+            <li>Device matching across ACAS and STIG names; open source (MIT)</li>
           </ul>
         </div>
       </div>

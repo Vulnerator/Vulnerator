@@ -20,7 +20,7 @@ _Is the feature request the result of an issue (e.g. a bug or an outdated compon
 
 #### System Information
  - _**OS:**_ [e.g. Windows 11]
- - _**Version:**_ [e.g. 7.4.0-beta.3]
+ - _**Version:**_ [e.g. 7.5.0]
 
 
 #### Additional Context

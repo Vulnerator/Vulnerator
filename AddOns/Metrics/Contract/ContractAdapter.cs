@@ -1,5 +1,5 @@
 // Copyright (c) 2026 Hector L. Bones. MIT License (see LICENSE in the repository root).
-// Fills the metrics model from the Vulnerator add-on contract (interface version 3, Vulnerator 7.4.0-beta.3+).
+// Fills the metrics model from the Vulnerator add-on contract (interface version 3, Vulnerator 7.4.0 and later).
 using System.Collections.Generic;
 using System.Linq;
 using Vulnerator.AddOns;

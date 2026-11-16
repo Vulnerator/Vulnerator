@@ -380,7 +380,7 @@ namespace Vulnerator.Dashboards
             panel.Children.Add(Charts.Text(report.LibraryNote, 12, report.LibraryStale));
             if (report.Rows.Count == 0)
             {
-                panel.Children.Add(Charts.Text("No checklists or SCAP results recorded yet. Releases are recorded for files imported with Vulnerator 7.4.0-beta.3 or later; import older files again to list them."));
+                panel.Children.Add(Charts.Text("No checklists or SCAP results recorded yet. Releases are recorded for files imported with Vulnerator 7.4.0 or later; import older files again to list them."));
                 return panel;
             }
             panel.Children.Add(Charts.Text(Charts.Number(report.Rows.Count) + " host/STIG pairs: " + Charts.Number(report.Outdated) + " outdated, " +

@@ -72,6 +72,11 @@
                                TextWrapping="Wrap">
                         To automate and streamline vulnerability continuous monitoring and RMF activities throughout the cybersecurity lifecycle of information systems
                     </TextBlock>
+                    <TextBlock Margin="5,0,5,5"
+                               TextWrapping="Wrap">
+                        Free and open source under the MIT License. No license key is needed, and forks are welcome.
+                        Source and releases: https://github.com/hbonesctr/Vulnerator
+                    </TextBlock>
                     <Label Style="{StaticResource TopLevelHeaderStyle}">
                         <TextBlock Text="Contributors"
                                    TextTrimming="CharacterEllipsis" />

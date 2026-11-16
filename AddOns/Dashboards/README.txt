@@ -19,7 +19,7 @@ Install
 
 Notes
 - Severity "Very High" (Nessus Critical) and the STIG release each checklist was submitted with
-  are recorded by Vulnerator 7.4.0-beta.3 and later. Import older scans and checklists again to
+  are recorded by Vulnerator 7.4.0 and later. Import older scans and checklists again to
   include them.
 - An ACAS finding that the host's newest scan no longer reports is shown as "Unverified". It is
   not counted as open or as closed.
