@@ -101,12 +101,20 @@ namespace Vulnerator.Model.DataAccess
             }
 
             // Findings both records have: keep the one observed last, with both records' POA&M and mitigation links.
+            // Instance identifiers start with the host name ("W01.Contoso_V-1001r2_CKL"); on the kept record they must
+            // start with its name, both to find the same finding and so later imports update it instead of adding a copy.
+            string mergeName = (merged["DiscoveredHostName"] ?? string.Empty);
+            const string movedInstance = "CASE WHEN @MN <> '' AND substr(M.InstanceIdentifier, 1, length(@MN) + 1) = @MN || '_' " +
+                                         "THEN @KN || substr(M.InstanceIdentifier, length(@MN) + 1) ELSE M.InstanceIdentifier END";
             List<long[]> pairs = new List<long[]>();
             using (SQLiteCommand command = Command(connection, transaction,
                        "SELECT K.UniqueFinding_ID, M.UniqueFinding_ID, K.LastObserved, M.LastObserved FROM UniqueFindings K " +
                        "JOIN UniqueFindings M ON M.Hardware_ID = @M AND K.Vulnerability_ID = M.Vulnerability_ID AND K.VulnerabilitySource_ID = M.VulnerabilitySource_ID " +
-                       "AND K.FindingType_ID = M.FindingType_ID AND K.InstanceIdentifier IS M.InstanceIdentifier " +
+                       "AND K.FindingType_ID = M.FindingType_ID AND K.InstanceIdentifier IS (" + movedInstance + ") " +
                        "WHERE K.Hardware_ID = @K", keepId, mergeId))
+            {
+                command.Parameters.AddWithValue("@MN", mergeName);
+                command.Parameters.AddWithValue("@KN", keepName);
             using (SQLiteDataReader reader = command.ExecuteReader())
             {
                 while (reader.Read())
@@ -117,6 +125,7 @@ namespace Vulnerator.Model.DataAccess
                     bool mergeIsNewer = mergeSeen.HasValue && (!keepSeen.HasValue || mergeSeen.Value > keepSeen.Value);
                     pairs.Add(mergeIsNewer ? new[] { mergeFinding, keepFinding } : new[] { keepFinding, mergeFinding });
                 }
+            }
             }
             HashSet<long> removed = new HashSet<long>();
             foreach (long[] pair in pairs)
@@ -134,7 +143,14 @@ namespace Vulnerator.Model.DataAccess
                 removed.Add(loser);
                 result.DuplicateFindingsCombined++;
             }
-            result.FindingsMoved += Execute(connection, transaction, "UPDATE OR IGNORE UniqueFindings SET Hardware_ID = @K WHERE Hardware_ID = @M", keepId, mergeId);
+            using (SQLiteCommand command = Command(connection, transaction,
+                       "UPDATE OR IGNORE UniqueFindings SET Hardware_ID = @K, InstanceIdentifier = (" + movedInstance.Replace("M.InstanceIdentifier", "InstanceIdentifier") + ") " +
+                       "WHERE Hardware_ID = @M", keepId, mergeId))
+            {
+                command.Parameters.AddWithValue("@MN", mergeName);
+                command.Parameters.AddWithValue("@KN", keepName);
+                result.FindingsMoved += command.ExecuteNonQuery();
+            }
             if (Count(connection, transaction, "SELECT COUNT(*) FROM UniqueFindings WHERE Hardware_ID = @M", keepId, mergeId) > 0)
             { throw new InvalidOperationException("Some findings could not be moved to the kept record."); }
 
