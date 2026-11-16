@@ -112,6 +112,10 @@ namespace Vulnerator.Model.Entity
         [NotMapped]
         public string AlsoKnownAs { get; set; }
 
+        /// <summary>The device's saved aliases, for the Hardware side panel (filled by the Hardware tab).</summary>
+        [NotMapped]
+        public List<string> Aliases { get; set; } = new List<string>();
+
         /// <summary>The permanent Vulnerator device number, for example VUL-000123 (filled by the Hardware tab).</summary>
         [NotMapped]
         public string RegistryNumber { get; set; }

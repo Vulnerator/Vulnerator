@@ -1,4 +1,15 @@
-﻿# Vulnerator 2.0 (7.5.0-beta.4)
+﻿# Vulnerator 2.0 (7.5.0-beta.5)
+###### Version 7.5.0 beta 5, November 2026
+
+| Change Description |
+| :----------------- |
+| Hardware: Find box above the list (name, other name, FQDN, NetBIOS, OS, IP or registry number such as VUL-000123 or 123; merged numbers find the kept device) |
+| Hardware side panel: registry number and other names; Add Name saves another name for imports, Remove forgets a wrong one |
+
+
+----------
+
+# Vulnerator 2.0 (7.5.0-beta.4)
 ###### Version 7.5.0 beta 4, November 2026
 
 | Change Description |

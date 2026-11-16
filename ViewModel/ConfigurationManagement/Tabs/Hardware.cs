@@ -360,6 +360,7 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
                         if (identifiers.TryGetValue(hardware.Hardware_ID, out ids))
                         {
                             hardware.AlsoKnownAs = string.Join(", ", ids.Aliases.Concat(ids.RetiredNumbers));
+                            hardware.Aliases = ids.Aliases.ToList();
                             hardware.RegistryNumber = ids.RegistryNumber.HasValue ? DeviceRegistry.Format(ids.RegistryNumber.Value) : string.Empty;
                         }
                     }
@@ -593,6 +594,42 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
             { return; }
             RunEdit("Delete hardware", () => { AssetEditor.DeleteHardware(hardware.Hardware_ID); return 0; }, null);
         }
+
+        private string _newAlias;
+
+        /// <summary>The name typed in the side panel's "Add another name" box.</summary>
+        public string NewAlias
+        {
+            get => _newAlias;
+            set
+            {
+                if (_newAlias != value)
+                {
+                    _newAlias = value;
+                    RaisePropertyChanged("NewAlias");
+                }
+            }
+        }
+
+        public RelayCommand AddAliasCommand => new RelayCommand(() =>
+        {
+            long? hardwareId = SelectedHardware?.Hardware_ID;
+            string alias = NewAlias;
+            if (hardwareId == null) return;
+            RunEdit("Add name", () => { AssetEditor.AddAlias(hardwareId.Value, alias); return 0; }, hardwareId);
+            NewAlias = string.Empty;
+        });
+
+        public RelayCommand<object> RemoveAliasCommand => new RelayCommand<object>(parameter =>
+        {
+            long? hardwareId = SelectedHardware?.Hardware_ID;
+            string alias = parameter as string;
+            if (hardwareId == null || string.IsNullOrEmpty(alias)) return;
+            if (System.Windows.MessageBox.Show($"Forget the name '{alias}' for this device? Later imports with that name will no longer land on it.",
+                    "Remove Name", System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Question) != System.Windows.MessageBoxResult.Yes)
+            { return; }
+            RunEdit("Remove name", () => { AssetEditor.RemoveAlias(hardwareId.Value, alias); return 0; }, hardwareId);
+        });
 
         public RelayCommand MergeHardwareCommand => new RelayCommand(MergeHardware);
 

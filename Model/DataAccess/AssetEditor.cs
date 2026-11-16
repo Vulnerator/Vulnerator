@@ -105,6 +105,50 @@ namespace Vulnerator.Model.DataAccess
         public static void RemoveIpAddress(long hardwareId, long ipAddressId)
         { Delete("DELETE FROM Hardware_IP_Addresses WHERE Hardware_ID = @A AND IP_Address_ID = @B", hardwareId, ipAddressId); }
 
+        /// <summary>
+        /// Saves another name for the device, so imports with that name land on it. Refused when another record already
+        /// has that name (merge the records instead) or the name is the device's own.
+        /// </summary>
+        public static void AddAlias(long hardwareId, string alias)
+        {
+            string name = (alias ?? string.Empty).Trim();
+            if (name.Length == 0)
+            { throw new InvalidOperationException("Enter the other name first."); }
+            if (name.Length > 500)
+            { throw new InvalidOperationException("The name is too long."); }
+            Run(command =>
+            {
+                command.Parameters.AddWithValue("@Id", hardwareId);
+                command.Parameters.AddWithValue("@Name", name);
+                command.CommandText = "SELECT DiscoveredHostName FROM Hardware WHERE Hardware_ID = @Id";
+                object own = command.ExecuteScalar();
+                if (own == null || own is DBNull)
+                { throw new InvalidOperationException("The hardware record no longer exists; refresh the list."); }
+                if (string.Equals(Convert.ToString(own), name, StringComparison.OrdinalIgnoreCase))
+                { throw new InvalidOperationException("That is already this device's name."); }
+                command.CommandText = "SELECT DisplayedHostName FROM Hardware WHERE Hardware_ID <> @Id AND DiscoveredHostName = @Name COLLATE NOCASE LIMIT 1";
+                object other = command.ExecuteScalar();
+                if (other != null && !(other is DBNull))
+                { throw new InvalidOperationException($"Another hardware record ('{other}') has the name '{name}'. Tick both records and use Merge Ticked Hardware instead."); }
+                command.CommandText = "INSERT INTO HardwareIdentifiers (Hardware_ID, IdentifierType, IdentifierValue) VALUES (@Id, 'Alias', @Name)";
+                command.ExecuteNonQuery();
+                return 0L;
+            });
+        }
+
+        /// <summary>Forgets one saved name of the device; later imports with that name are matched as usual again.</summary>
+        public static void RemoveAlias(long hardwareId, string alias)
+        {
+            Run(command =>
+            {
+                command.Parameters.AddWithValue("@Id", hardwareId);
+                command.Parameters.AddWithValue("@Name", alias ?? string.Empty);
+                command.CommandText = "DELETE FROM HardwareIdentifiers WHERE Hardware_ID = @Id AND IdentifierType = 'Alias' AND IdentifierValue = @Name";
+                command.ExecuteNonQuery();
+                return 0L;
+            });
+        }
+
         public static void AddMacAddress(long hardwareId, string macAddress)
         {
             if (string.IsNullOrWhiteSpace(macAddress))

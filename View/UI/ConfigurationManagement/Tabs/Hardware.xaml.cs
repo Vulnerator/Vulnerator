@@ -30,6 +30,49 @@ namespace Vulnerator.View.UI.ConfigurationManagement.Tabs
         {
             InitializeComponent();
             ApplyColumnChoice(Vulnerator.Properties.Settings.Default.HardwareGridColumns);
+            // The list is replaced after every edit or import; keep the search applied to the new list.
+            System.ComponentModel.DependencyPropertyDescriptor.FromProperty(ItemsControl.ItemsSourceProperty, typeof(DataGrid))
+                .AddValueChanged(hardwareGrid, (sender, e) => ApplySearch());
+        }
+
+        private void HardwareSearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        { ApplySearch(); }
+
+        /// <summary>Shows only the hardware matching the search box (all of it when the box is empty).</summary>
+        private void ApplySearch()
+        {
+            if (hardwareGrid.ItemsSource == null) return;
+            System.ComponentModel.ICollectionView view = CollectionViewSource.GetDefaultView(hardwareGrid.ItemsSource);
+            if (view == null) return;
+            string text = (hardwareSearchBox.Text ?? string.Empty).Trim();
+            view.Filter = text.Length == 0 ? null : (Predicate<object>)(item => Matches(item as Vulnerator.Model.Entity.Hardware, text));
+        }
+
+        /// <summary>
+        /// True when the device has the registry number (its own, or one of a device merged into it), or when the text is
+        /// part of its names, other names, FQDN, NetBIOS name, operating system or IP addresses.
+        /// </summary>
+        public static bool Matches(Vulnerator.Model.Entity.Hardware hardware, string text)
+        {
+            if (hardware == null) return false;
+            long? number = Vulnerator.Model.DataAccess.DeviceRegistry.Parse(text);
+            if (number.HasValue)
+            {
+                string formatted = Vulnerator.Model.DataAccess.DeviceRegistry.Format(number.Value);
+                if (string.Equals(hardware.RegistryNumber, formatted, StringComparison.OrdinalIgnoreCase) ||
+                    (hardware.AlsoKnownAs ?? string.Empty).IndexOf(formatted, StringComparison.OrdinalIgnoreCase) >= 0)
+                { return true; }
+                if (text.StartsWith(Vulnerator.Model.DataAccess.DeviceRegistry.Prefix, StringComparison.OrdinalIgnoreCase))
+                { return false; }
+            }
+            IEnumerable<string> values = new[]
+            {
+                hardware.DisplayedHostName, hardware.DiscoveredHostName, hardware.FQDN, hardware.NetBIOS, hardware.ScanIP,
+                hardware.RegistryNumber, hardware.AlsoKnownAs, hardware.OperatingSystem
+            };
+            if (hardware.IP_Addresses != null)
+            { values = values.Concat(hardware.IP_Addresses.Where(i => i != null).Select(i => i.IpAddress)); }
+            return values.Any(v => !string.IsNullOrEmpty(v) && v.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
         /// <summary>The optional columns (header text), in the order they are defined.</summary>

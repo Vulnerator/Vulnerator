@@ -52,8 +52,15 @@
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
+            <DockPanel Grid.Row="0">
+            <TextBox x:Name="hardwareSearchBox"
+                     DockPanel.Dock="Top"
+                     Margin="0,0,0,5"
+                     controls:TextBoxHelper.ClearTextButton="True"
+                     controls:TextBoxHelper.Watermark="Find hardware: name, VUL- number, other name, FQDN or IP"
+                     TextChanged="HardwareSearchBox_TextChanged"
+                     ToolTip="Type part of a name or address, or a registry number such as VUL-000123 or 123 (also finds devices merged into another)" />
             <DataGrid x:Name="hardwareGrid"
-                                  Grid.Row="0"
                                   CanUserReorderColumns="True"
                                   ItemsSource="{Binding Hardwares}"
                                   SelectedItem="{Binding SelectedHardware}"
@@ -163,6 +170,7 @@
                                                     HeaderStyle="{StaticResource CustomLeftAlignedDataGridHeaderStyle}" />
                 </DataGrid.Columns>
             </DataGrid>
+            </DockPanel>
             <ScrollViewer Grid.Row="1"
                                       Margin="{StaticResource MarginTop5}"
                                       HorizontalAlignment="Stretch"
@@ -264,6 +272,41 @@
                                          Style="{StaticResource HeaderedTextBoxStyle}"
                                          Text="{Binding SelectedHardware.NetBIOS, Mode=OneWay}"
                                          Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
+                    <StackPanel Margin="{StaticResource MarginLeftRightBottom5}"
+                                Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}">
+                        <TextBlock Margin="0,0,0,3"
+                                   FontWeight="SemiBold"
+                                   Text="{Binding SelectedHardware.RegistryNumber, StringFormat='Registry No. {0}'}" />
+                        <TextBlock Margin="0,0,0,3"
+                                   Text="Other names (imports with these names land on this device):"
+                                   TextWrapping="Wrap" />
+                        <ItemsControl ItemsSource="{Binding SelectedHardware.Aliases}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <DockPanel Margin="0,0,0,2">
+                                        <Button DockPanel.Dock="Right"
+                                                Margin="{StaticResource MarginLeft5}"
+                                                Command="{Binding DataContext.RemoveAliasCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Content="Remove"
+                                                ToolTip="Forget this name for the device" />
+                                        <TextBlock VerticalAlignment="Center"
+                                                   Text="{Binding}"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <DockPanel Margin="0,3,0,0">
+                            <Button DockPanel.Dock="Right"
+                                    Margin="{StaticResource MarginLeft5}"
+                                    Command="{Binding AddAliasCommand}"
+                                    Content="Add Name"
+                                    ToolTip="Save another name for this device, for example the host name typed in its STIG checklists" />
+                            <TextBox controls:TextBoxHelper.Watermark="Another name for this device"
+                                     Text="{Binding NewAlias, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DockPanel>
+                    </StackPanel>
                     <TextBox controls:TextBoxHelper.Watermark="Scan IP"
                                          vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
                                          vh:DependencyProperties.FloatingWatermark="Scan IP"

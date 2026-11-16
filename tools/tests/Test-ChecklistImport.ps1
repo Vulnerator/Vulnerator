@@ -786,6 +786,32 @@ try {
     [void]$ids.TryGetValue($keepId, [ref]$keepIds)
     Assert-That ($null -ne $keepIds -and $keepIds.RegistryNumber -eq $idNumber -and ($keepIds.RetiredNumbers -contains $registry::Format($cklNumber)) -and ($keepIds.Aliases -contains 'STIGMAN-HOST01')) 'the Hardware list reads the registry number, retired numbers and aliases'
 
+    # --- Hardware side panel: other names added and removed by hand; the search box ---------------------------
+    $editor = [Vulnerator.Model.DataAccess.AssetEditor]
+    $refusedOwn = $null; $refusedOther = $null
+    try { $editor::AddAlias($keepId, 'idhost-old') } catch { $refusedOwn = $_.Exception.InnerException.Message }
+    try { $editor::AddAlias($keepId, 'testhost01') } catch { $refusedOther = $_.Exception.InnerException.Message }
+    Assert-That ($refusedOwn -like '*already*' -and $refusedOther -like '*Merge*') ('a name that is the device''s own or another record''s is refused (' + $refusedOwn + ' / ' + $refusedOther + ')')
+    $editor::AddAlias($keepId, 'W01-HANDTYPED')
+    $hwBefore = [int](Get-Scalar 'SELECT COUNT(*) FROM Hardware')
+    $handPath = Join-Path $workDir 'handtyped.ckl'
+    [System.IO.File]::WriteAllText($handPath, ([System.IO.File]::ReadAllText((Join-Path $fixtures 'multi-stig.ckl')).Replace('<HOST_NAME>TESTHOST01</HOST_NAME>', '<HOST_NAME>w01-handtyped</HOST_NAME>').Replace('testhost01.example.test', 'hand.example.test')))
+    $result = Import-Checklist $handPath 'TestGroup'
+    Assert-That ($result -eq 'Processed' -and [int](Get-Scalar 'SELECT COUNT(*) FROM Hardware') -eq $hwBefore) 'a checklist with a name added by hand lands on the device'
+    $editor::RemoveAlias($keepId, 'W01-HANDTYPED')
+    $handPath2 = Join-Path $workDir 'handtyped2.ckl'
+    [System.IO.File]::WriteAllText($handPath2, ([System.IO.File]::ReadAllText($handPath)))
+    $result = Import-Checklist $handPath2 'TestGroup'
+    Assert-That ($result -eq 'Processed' -and [int](Get-Scalar "SELECT COUNT(*) FROM Hardware WHERE DiscoveredHostName = 'w01-handtyped'") -eq 1) 'after the name is removed, a checklist with it becomes a new record'
+
+    Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase
+    $sample = New-Object Vulnerator.Model.Entity.Hardware
+    $sample.DisplayedHostName = 'W01'; $sample.FQDN = 'w01.contoso.test'; $sample.RegistryNumber = 'VUL-000123'; $sample.AlsoKnownAs = 'W01.Contoso, VUL-000045'; $sample.ScanIP = '10.1.2.3'
+    $find = { param($t) [Vulnerator.View.UI.ConfigurationManagement.Tabs.Hardware]::Matches($sample, $t) }
+    $hits = @('VUL-000123', 'vul-123', '123', 'VUL-000045', 'contoso', '10.1.2', 'w01') | ForEach-Object { & $find $_ }
+    $misses = @('VUL-000124', 'fabrikam', '10.9') | ForEach-Object { & $find $_ }
+    Assert-That (-not ($hits -contains $false) -and -not ($misses -contains $true)) ('the search finds registry numbers (own and merged), names and addresses (hits ' + ($hits -join ',') + '; misses ' + ($misses -join ',') + ')')
+
     # --- Reports for a user the database was not built for -------------------------------------------
     $reportsBefore = [int](Get-Scalar 'SELECT COUNT(*) FROM RequiredReportUserSelections WHERE UserName = @u' @{ '@u' = 'second-user' })
     $indexer.SetValue($defaultSettings, 'second-user', [object[]]@('ActiveUser'))

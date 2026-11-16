@@ -97,6 +97,13 @@ to sort. Your choice is remembered.
 * **Matching on import:** a scan or checklist lands on an existing device when its host name matches the device's
   host name, one of its saved aliases, its FQDN or its NetBIOS name (only when exactly one device matches). IP and MAC
   addresses are not used for matching, because they change and get reused.
+* **Find:** type in the box above the Hardware list to show only matching devices: part of a name, other name,
+  FQDN, NetBIOS name, operating system or IP address, or a registry number (**VUL-000123** or just **123**). A
+  number of a device merged into another finds the device it was merged into.
+* **Other names:** select a device to see its registry number and its other names in the side panel. **Add Name**
+  saves another name (for example the host name admins type in its checklists), so imports with that name land on
+  the device without a merge. **Remove** forgets a name, for example one saved by a wrong merge. A name that another
+  record already has is refused: merge the two records instead.
 * **Merge:** tick two or more records that are the same device and choose **Merge Ticked Hardware...**. Pick the
   record to keep (the ACAS record is suggested). Its findings, IP and MAC addresses, groups, software, ports and SCAP
   scores move to it; when both records have the same finding, the newest result is kept, with its POA&M and
