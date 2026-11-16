@@ -16,6 +16,8 @@ The left menu holds the main pages: **Vulnerability Management**, **Configuratio
    * **Add Files / Zips...** - pick one or more files, or zip files that contain them
    * **Add Folder...** - pick one or more folders; every subfolder and every zip file inside is searched, including
      zips inside zips. A folder of zip files, each holding a .nessus file, is read in one step.
+   * **Pull from STIG Manager...** - download checklists straight from your organization's STIG Manager server (see
+     below). They are added as **Import CKL / CKLB** files.
 3. Optionally choose an **Ingestion Group** (the system or enclave the files belong to).
 4. Select **Execute Ingestion**. The status bar shows progress; the list shows each file's result.
 
@@ -33,6 +35,41 @@ Notes:
   services appear only when the scan covered UDP. Nessus marks guessed service names with "?". Review and name them
   under Configuration Management > Ports, Protocols, Services.
 * Without a STIG library you are asked before checklists or SCAP results are imported (see Getting Started).
+
+### Pulling checklists from STIG Manager
+
+Vulnerator can read checklists from a STIG Manager server (NUWCDIVNPT/stig-manager) on your network.
+
+1. In **Settings > STIG Manager**, tick **Allow connections to STIG Manager** (off by default).
+2. Under **Vulnerability Management > Ingest**, choose **Pull from STIG Manager...** and fill in what your STIG Manager
+   administrator gives you:
+   * **API address** - usually `https://<server>/api` (the address of the STIG Manager page plus `/api`)
+   * **OIDC provider address** - for Keycloak, `https://<server>/realms/<realm>`
+   * **Client ID** - the client registered for Vulnerator in the OIDC provider
+   * **Scope** - `openid stig-manager:collection:read` (read-only) unless told otherwise
+3. Sign in:
+   * **Browser sign-in** - your browser opens the sign-in page (CAC works); when it says sign-in is complete, return
+     to Vulnerator. The provider sends you back to `http://127.0.0.1:<port>/` on this computer; if the provider only
+     accepts one registered port, enter it as the **Sign-in port**. No administrator rights are needed.
+   * **Service account** - enter the client secret. Tick **Remember the secret** to keep it on this computer, encrypted
+     for your Windows account; otherwise it is asked for each time.
+4. Pick the **Collection** and the **Assets** (all STIGs assigned to each Asset, at their default revisions), then
+   **Add to ingestion list**. Choose **Execute Ingestion** as for any other file.
+
+Notes:
+
+* Only the API and OIDC provider addresses you enter are contacted, over HTTPS (plain HTTP only for this computer).
+  The server's certificate must be trusted by Windows, and Windows' proxy settings are used.
+* Addresses, client ID and scope are remembered after a successful sign-in; the sign-in itself is not kept.
+* STIG Manager adds every checklist to one zip. If it could not export some Assets, Vulnerator lists them and asks
+  before adding the rest.
+* Checklists do not carry STIG Manager's review status (saved, submitted, accepted, rejected): every result is
+  imported. STIG Manager writes results it calls Informational, Unknown, Error or Not Selected as Not Reviewed, and
+  Fixed as Not a Finding.
+* For your administrator: register a public client with the Authorization Code flow and PKCE (S256) and the redirect
+  `http://127.0.0.1:<port>/` (if the provider needs an exact match, agree on a port and enter it as the Sign-in port),
+  or a confidential client with the client credentials flow for a service account. The account needs the
+  `stig-manager:collection:read` scope and a grant to each Collection.
 
 ## Reviewing findings
 
@@ -85,9 +122,3 @@ active IAVMs. Every view carries the classification marking. An ACAS finding the
 shown as **Unverified** (neither open nor closed). The trend starts the day Dashboards is first used. To remove it,
 close Vulnerator and delete the **Add-ons\Dashboards** folder. Dashboards is free but not part of the MIT-licensed
 program; see its LICENSE.txt.
-
-### Add-on licenses
-Some add-ons need a license. Under **Settings > Integrations > Licenses**, paste the key and choose **Add license**,
-or choose **Import .lic file...**. Each add-on shows its license status (for example the expiry date) and what it says
-about each license entered. Licenses are kept in an **Add-on licenses** folder next to the database and are checked on
-this computer only; nothing is sent anywhere. **Remove** deletes a license from this computer.

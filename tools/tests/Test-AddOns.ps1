@@ -2,7 +2,7 @@
 # subfolder with its own dependency, and add-ons that must be skipped without stopping Vulnerator (throws while
 # starting, needs a newer interface, needs a newer Vulnerator, not an add-on, wrong entry type, not a .NET file,
 # duplicate id). Then checks the read-only data the add-ons get, the data-changed event, the menu pages and the
-# Settings > Integrations section. Last, loads the free Dashboards add-on that ships in the release (Add-ons\Dashboards)
+# Settings > Integrations section (no license section). Last, loads the free Dashboards add-on that ships in the release (Add-ons\Dashboards)
 # against the test database: it must load with no license, build its dashboards from the real data and say "Free".
 #
 # Windows PowerShell 5.1, 64-bit (the build is x64), STA. Pure ASCII; no PowerShell 7 syntax.
@@ -283,7 +283,7 @@ namespace __NS__
     $panel = New-Object System.Windows.Controls.StackPanel
     [Vulnerator.View.UI.AddOnUi]::FillIntegrations($panel)
     $boxes = @($panel.Children | Where-Object { $_ -is [System.Windows.Controls.GroupBox] })
-    Check ($panel.Children.Count -eq 13 -and $boxes.Count -eq 2 -and $boxes[0].Header -eq 'Sample settings' -and $boxes[1].Header -eq 'Licenses') ('Settings > Integrations lists every add-on file, the settings section and the Licenses box (' + $panel.Children.Count + ' items)')
+    Check ($panel.Children.Count -eq 12 -and $boxes.Count -eq 1 -and $boxes[0].Header -eq 'Sample settings') ('Settings > Integrations lists every add-on file and the settings section, with no Licenses box (' + $panel.Children.Count + ' items)')
 
     # Licenses (interface version 2): stored next to the database, handed to add-ons as text, checked by the add-ons.
     function Texts($element) {
@@ -311,8 +311,7 @@ namespace __NS__
     Check ([TestSample.Entry]::LicenseChanges -eq 2) ('LicensesChanged raised for each change (' + [TestSample.Entry]::LicenseChanges + ')')
     [Vulnerator.View.UI.AddOnUi]::FillIntegrations($panel)
     $all = (Texts $panel) -join ' || '
-    Check ($all -like '*License: 2 license(s)*') 'the add-on license status is shown'
-    Check ($all -like '*SAMPLE-1234-ABCD*Sample: valid*' -and $all -like '*OTHER-LICENSE*Not recognized by any installed add-on*') ('each license shows what the add-ons say about it')
+    Check ($all -notlike '*License:*' -and $all -notlike '*Add license*' -and $all -notlike '*SAMPLE-1234-ABCD*') ('Settings > Integrations shows no license section or keys (' + $all.Length + ' chars)')
     $first = @($licenses::All())[0]
     $removed = $licenses::Remove($first)
     Check ($null -eq $removed -and @($hostApi.Licenses).Count -eq 1 -and @($hostApi.Licenses)[0] -like 'OTHER-LICENSE*') ('a license can be removed (' + $removed + ')')
@@ -350,7 +349,7 @@ namespace __NS__
         Check ($trend.Count -eq 1) 'Dashboards keeps its trend in its data folder next to the database'
         [Vulnerator.View.UI.AddOnUi]::FillIntegrations($panel)
         $dashTexts = (Texts $panel) -join ' || '
-        Check ($dashTexts -like '*Dashboards*Free (no license needed)*') 'Settings > Integrations shows Dashboards as free'
+        Check ($dashTexts -like '*Dashboards*' -and $dashTexts -notlike '*License:*') 'Settings > Integrations lists Dashboards without a license line'
     }
 
     # No add-ons folder at all: nothing loaded, no error.

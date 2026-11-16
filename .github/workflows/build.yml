@@ -124,6 +124,11 @@ jobs:
         timeout-minutes: 5
         run: '%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\tests\Test-AddOns.ps1 -BinDir bin\Release'
 
+      - name: Test the STIG Manager pull (fake STIG Manager server on 127.0.0.1)
+        shell: cmd
+        timeout-minutes: 5
+        run: '%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\tests\Test-StigManager.ps1 -BinDir bin\Release'
+
       - name: Verify eMASS exports against the templates
         run: |
           python -m pip install --quiet openpyxl

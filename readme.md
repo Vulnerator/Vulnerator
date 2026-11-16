@@ -27,14 +27,15 @@ runs offline on hardened DoD workstations without administrator rights.
 
 **Requirements:** 64-bit Windows, .NET Framework 4.8. No installation, no administrator rights. The database engine is
 `winsqlite3.dll` (part of Windows), and the program runs with .NET strong-name bypass disabled. Nothing contacts the
-internet unless you turn on Settings > Online Checks. The program's **Help** page covers setup, importing, findings,
+internet unless you turn on Settings > Online Checks; STIG Manager pulls (Settings > STIG Manager, off by
+default) contact only the server you enter. The program's **Help** page covers setup, importing, findings,
 reports and the log.
 
 ## What it does
 
 | | |
 | :-- | :-- |
-| **Imports** | STIG checklists (.ckl, STIG Viewer 3 .cklb, Evaluate-STIG output - older results in *Previous* folders skipped); ACAS / Nessus (.nessus, CSV) from files, zips or folders of zips; SCAP / SCC XCCDF results; the DISA STIG library |
+| **Imports** | STIG checklists (.ckl, STIG Viewer 3 .cklb, Evaluate-STIG output - older results in *Previous* folders skipped); ACAS / Nessus (.nessus, CSV) from files, zips or folders of zips; SCAP / SCC XCCDF results; the DISA STIG library; checklists pulled from a STIG Manager server (opt-in) |
 | **NIST SP 800-53 Rev 5** | Findings mapped to CCIs and Rev 5 controls (DISA CCI list, CNSSI 1253 baselines); eMASS assessment procedures from your own IG/AP export |
 | **Reports** | eMASS POA&M and Hardware / Software workbooks, STIG Details, PDF Summary, Risk Assessment Report, SCAP & STIG Discrepancies, Ports, Protocols & Services, per-host STIG checklists |
 | **Handling** | Classification / handling marking on every export; labeled input files imported only after you confirm the label |

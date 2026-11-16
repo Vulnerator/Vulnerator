@@ -229,6 +229,114 @@ namespace Vulnerator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool StigManagerEnabled {
+            get {
+                return ((bool)(this["StigManagerEnabled"]));
+            }
+            set {
+                this["StigManagerEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string StigManagerApiAddress {
+            get {
+                return ((string)(this["StigManagerApiAddress"]));
+            }
+            set {
+                this["StigManagerApiAddress"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string StigManagerAuthority {
+            get {
+                return ((string)(this["StigManagerAuthority"]));
+            }
+            set {
+                this["StigManagerAuthority"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string StigManagerClientId {
+            get {
+                return ((string)(this["StigManagerClientId"]));
+            }
+            set {
+                this["StigManagerClientId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("openid stig-manager:collection:read")]
+        public string StigManagerScope {
+            get {
+                return ((string)(this["StigManagerScope"]));
+            }
+            set {
+                this["StigManagerScope"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool StigManagerUseServiceAccount {
+            get {
+                return ((bool)(this["StigManagerUseServiceAccount"]));
+            }
+            set {
+                this["StigManagerUseServiceAccount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string StigManagerClientSecret {
+            get {
+                return ((string)(this["StigManagerClientSecret"]));
+            }
+            set {
+                this["StigManagerClientSecret"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int StigManagerRedirectPort {
+            get {
+                return ((int)(this["StigManagerRedirectPort"]));
+            }
+            set {
+                this["StigManagerRedirectPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool StigManagerCklb {
+            get {
+                return ((bool)(this["StigManagerCklb"]));
+            }
+            set {
+                this["StigManagerCklb"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool CaptureAcasPortInformation {
             get {

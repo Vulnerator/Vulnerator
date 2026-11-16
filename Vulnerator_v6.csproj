@@ -340,6 +340,7 @@
     </ApplicationDefinition>
     <Compile Include="Helper\DelimitedText.cs" />
     <Compile Include="Helper\ExportMarking.cs" />
+    <Compile Include="View\UI\StigManagerWindow.cs" />
     <Compile Include="Helper\AppVersion.cs" />
     <Compile Include="Helper\BackgroundWorkerFactory.cs" />
     <Compile Include="Helper\DdlReader.cs" />
@@ -368,6 +369,8 @@
     <Compile Include="Model\AddOns\AddOnHost.cs" />
     <Compile Include="Model\AddOns\AddOnLicenses.cs" />
     <Compile Include="Model\AddOns\AddOnManager.cs" />
+    <Compile Include="Model\StigManager\StigManagerClient.cs" />
+    <Compile Include="Model\StigManager\StigManagerSettings.cs" />
     <Compile Include="View\UI\AddOnViews.cs" />
     <Compile Include="Model\BusinessLogic\Reports\OpenXmlStylesheetCreator.cs" />
     <Compile Include="Model\DataAccess\AssetEditor.cs" />

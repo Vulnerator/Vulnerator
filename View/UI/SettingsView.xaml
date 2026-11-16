@@ -284,6 +284,17 @@
                                   IsChecked="{Binding Default.AllowOnlineChecks, Mode=TwoWay, Source={StaticResource Settings}}"
                                   Style="{StaticResource CustomCheckBox}" />
                         <Label Style="{StaticResource SecondLevelHeaderStyle}">
+                            <TextBlock Text="STIG Manager"
+                                       TextTrimming="CharacterEllipsis" />
+                        </Label>
+                        <CheckBox Margin="{StaticResource MarginLeftRightBottom5}"
+                                  Content="Allow connections to STIG Manager (off by default; only the server address you enter is contacted)"
+                                  IsChecked="{Binding Default.StigManagerEnabled, Mode=TwoWay, Source={StaticResource Settings}}"
+                                  Style="{StaticResource CustomCheckBox}" />
+                        <TextBlock Margin="{StaticResource MarginLeftRightBottom5}"
+                                   TextWrapping="Wrap"
+                                   Text="Then use Vulnerability Management &gt; Ingest &gt; Pull from STIG Manager... The server address and sign-in details are entered there." />
+                        <Label Style="{StaticResource SecondLevelHeaderStyle}">
                             <TextBlock Text="Assessment Procedures"
                                        TextTrimming="CharacterEllipsis" />
                         </Label>

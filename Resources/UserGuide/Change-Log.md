@@ -1,4 +1,15 @@
-﻿# Vulnerator 2.0 (7.4.0)
+﻿# Vulnerator 2.0 (7.5.0-beta.1)
+###### Version 7.5.0 beta 1, November 2026
+
+| Change Description |
+| :----------------- |
+| Pull from STIG Manager: sign in to your STIG Manager server (browser/CAC or service account), pick a Collection and Assets, and add their checklists to the ingestion list (Ingest > Pull from STIG Manager..., turned on in Settings > STIG Manager) |
+| Settings > Integrations no longer has a Licenses box; add-ons are listed with their settings only |
+
+
+----------
+
+# Vulnerator 2.0 (7.4.0)
 ###### Version 7.4.0, November 2026
 
 | Change Description |
