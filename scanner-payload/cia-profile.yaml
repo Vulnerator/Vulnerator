@@ -1,0 +1,70 @@
+# cia-profile.yaml
+# Open Source Sofware (OSS) Security Scanner — CIA Impact Profile
+# Place this file in the ROOT of the repository being scanned.
+#
+# ============================================================
+# DISCLAIMER — READ BEFORE USE
+# ============================================================
+# Default CIA values (Medium/Medium/Medium) reflect the CVSS v3.1
+# specification baseline — a neutral starting position ONLY.
+# These values DO NOT reflect actual system classification or
+# mission criticality. System owners MUST review and update
+# these values prior to operational use.
+#
+# Environmental scoring generated with default values requires
+# additional analysis by the ISSO/ISSM before inclusion in
+# Authorization To Operate (ATO) packages or formal risk
+# assessments.
+#
+# References:
+#   CVSS v3.1 Specification: https://www.first.org/cvss/v3-1/specification-document
+#   NIST SP 800-53 Rev 5:    RA-2 (Security Categorization)
+#   DoDI 8510.01:            RMF Step 1 (Categorize)
+# ============================================================
+
+profile:
+  name: "DEFAULT"             # Change to system name when values are reviewed
+  version: "1.0"
+  last_modified: ""           # ISO 8601 date when values were last reviewed
+  modified_by: ""             # ISSO/ISSM who reviewed/approved these values
+  system_name: ""             # System or application name
+  system_owner: ""            # System owner POC
+
+scanner:
+  version: "2.3"
+  tools:
+    sbom: "syft"
+    sca:
+      - "snyk"
+      - "grype"
+    sast:
+      - "semgrep"
+    sast_supplemental:
+      - "codeql"              # Runs as separate workflow_run triggered workflow
+
+cia_weights:
+  confidentiality: "MEDIUM"  # Options: LOW | MEDIUM | HIGH
+  integrity:       "MEDIUM"  # Options: LOW | MEDIUM | HIGH
+  availability:    "MEDIUM"  # Options: LOW | MEDIUM | HIGH
+  #
+  # LOW    = Limited adverse effect on operations, assets, or individuals
+  # MEDIUM = Serious adverse effect
+  # HIGH   = Severe or catastrophic adverse effect (mission-critical systems)
+
+pipeline:
+  artifact_retention_days: 90   # Range: 1–90 (GitHub free tier max, auto-capped)
+  report_formats:
+    - docx
+    - html
+    - markdown
+
+remediation_sla_days:
+  critical: 3     # CAT I — immediate action required
+  high:     30    # CAT I — urgent remediation
+  medium:   90    # CAT II — standard remediation cycle
+  low:      180   # CAT III — scheduled remediation
+
+disclaimer:
+  cia_default: true       # Auto-set false when profile.name != DEFAULT
+  reviewed_by: ""
+  review_date: ""
