@@ -7,6 +7,11 @@ on:
     tags: [ "v*" ]
   pull_request:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Scan an already-published release (e.g. v7.5.0) and attach the scan zip to it. Leave empty for a normal build.'
+        required: false
+        default: ''
 
 jobs:
   build:
@@ -240,6 +245,8 @@ jobs:
       VERSION: ${{ needs.build.outputs.version }}
       RAW: scanner-payload/reports
       OUT: security-reports
+      RELEASE_TAG: ${{ inputs.release_tag }}   # set only by a manual run for an existing release
+      SRC: .
     steps:
       # By commit, not branch name: the build job deletes release/v* branches after publishing.
       - uses: actions/checkout@v4
@@ -247,11 +254,30 @@ jobs:
           ref: ${{ github.sha }}
 
       - name: Download the build
+        if: env.RELEASE_TAG == ''
         uses: actions/download-artifact@v4
         with:
           pattern: Vulnerator-*-${{ github.sha }}
           path: scan-target
           merge-multiple: true
+
+      - name: Source of the published release
+        if: env.RELEASE_TAG != ''
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.release_tag }}
+          path: release-src
+
+      - name: Download the published release (the zip people install)
+        if: env.RELEASE_TAG != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download "$RELEASE_TAG" -R "$GITHUB_REPOSITORY" -p "Vulnerator-$RELEASE_TAG.zip*" -D "$RUNNER_TEMP"
+          (cd "$RUNNER_TEMP" && tr -d '\r' < "Vulnerator-$RELEASE_TAG.zip.sha256" | sha256sum -c -)
+          mkdir -p scan-target && unzip -q "$RUNNER_TEMP/Vulnerator-$RELEASE_TAG.zip" -d scan-target
+          echo "VERSION=${RELEASE_TAG#v}" >> "$GITHUB_ENV"
+          echo "SRC=release-src" >> "$GITHUB_ENV"
 
       - uses: actions/setup-python@v5
         with:
@@ -289,18 +315,19 @@ jobs:
 
       - name: Static analysis of the source (Semgrep)
         run: |
-          semgrep scan --metrics=off --config p/ci --config p/csharp --config p/secrets \
+          # Run inside the source folder, so a release's tag checkout is scanned like the repo itself.
+          (cd "$SRC" && semgrep scan --metrics=off --config p/ci --config p/csharp --config p/secrets \
             --exclude scan-target --exclude tools/tests/fixtures \
-            --json-output="$RAW/semgrep-results.json" --sarif-output="$RAW/semgrep.sarif" .
+            --json-output="$GITHUB_WORKSPACE/$RAW/semgrep-results.json" --sarif-output="$GITHUB_WORKSPACE/$RAW/semgrep.sarif" .)
           echo "$SEMGREP_VERSION" > "$RAW/semgrep-version.txt"
           echo "not run (no Snyk account configured)" > "$RAW/snyk-version.txt"
 
       - name: Reports (Developer, Analyst, Leadership) and summary
         run: |
           python scanner-payload/scripts/generate_reports.py --reports-dir "$RAW" --profile-path scanner-payload/cia-profile.yaml --output-dir "$OUT"
-          tag="${GITHUB_REF_NAME#release/}"
+          tag="${RELEASE_TAG:-${GITHUB_REF_NAME#release/}}"
           asset=""
-          if [[ "$GITHUB_REF" == refs/tags/v* || "$GITHUB_REF" == refs/heads/release/v* ]]; then asset="Vulnerator-$tag-security-scan.zip"; fi
+          if [[ -n "$RELEASE_TAG" || "$GITHUB_REF" == refs/tags/v* || "$GITHUB_REF" == refs/heads/release/v* ]]; then asset="Vulnerator-$tag-security-scan.zip"; fi
           python scanner-payload/scripts/write_summary.py --reports-dir "$RAW" --out "$OUT/summary.json" --version "$VERSION" --release-asset "$asset"
           cat "$OUT/leadership-report.md" >> "$GITHUB_STEP_SUMMARY"
           python - <<'PY'
@@ -310,7 +337,7 @@ jobs:
           PY
 
       - name: Semgrep results to the Security tab
-        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        if: env.RELEASE_TAG == '' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
         continue-on-error: true
         uses: github/codeql-action/upload-sarif@v4
         with:
@@ -319,7 +346,7 @@ jobs:
 
       - name: Package the scan evidence
         run: |
-          tag="${GITHUB_REF_NAME#release/}"; tag="${tag//\//-}"
+          tag="${RELEASE_TAG:-${GITHUB_REF_NAME#release/}}"; tag="${tag//\//-}"
           pkg="Vulnerator-$tag-security-scan"
           mkdir -p "pkg/$pkg/raw"
           cp "$OUT"/* "pkg/$pkg/"
@@ -339,17 +366,17 @@ jobs:
           if-no-files-found: error
           retention-days: 90
 
-      - name: Attach the scan to the release (v* tag or release/v* branch)
-        if: startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/release/v')
+      - name: Attach the scan to the release (v* tag, release/v* branch, or a manual run for an existing release)
+        if: env.RELEASE_TAG != '' || startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/release/v')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          tag="${GITHUB_REF_NAME#release/}"
+          tag="${RELEASE_TAG:-${GITHUB_REF_NAME#release/}}"
           gh release upload "$tag" "$SCAN_PKG.zip" "$SCAN_PKG.zip.sha256" --clobber -R "$GITHUB_REPOSITORY"
           echo "::notice::Attached $SCAN_PKG.zip to release $tag"
 
       - name: Publish the results to the project page (master)
-        if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && env.RELEASE_TAG == ''
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
