@@ -4,8 +4,8 @@
 | Field | Value |
 |---|---|
 | Repository | `hbonesctr/Vulnerator` |
-| Scan Date | 2026-11-17 16:46 UTC |
-| Run Number | #169 |
+| Scan Date | 2026-11-17 20:05 UTC |
+| Run Number | #174 |
 | Analyst Reference | SCA-20261117 |
 
 > 📋 **REPORT USE NOTICE**
@@ -35,7 +35,7 @@
 | DISA CAT I findings | 0 |
 | DISA CAT II findings | 1 |
 | DISA CAT III findings | 0 |
-| SAST findings | 193 |
+| SAST findings | 195 |
 
 ## Vulnerability Analysis
 

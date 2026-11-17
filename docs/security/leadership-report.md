@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Date** | 2026-11-17 16:46 UTC |
+| **Date** | 2026-11-17 20:05 UTC |
 | **Repository** | hbonesctr/Vulnerator |
 | **Overall Posture** | ⚠️ ATTENTION NEEDED |
 | **Risk Level** | Moderate Risk |
@@ -27,7 +27,7 @@
 | CAT II (Standard Remediation) | 1 |
 | CAT III (Low Priority) | 0 |
 | CISA KEV (Active Exploits) | 0 |
-| SAST Findings | 193 |
+| SAST Findings | 195 |
 | Scanner Cost | $0 (Free Tier) |
 
 ## Compliance Scorecard

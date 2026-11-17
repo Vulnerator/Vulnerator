@@ -4,9 +4,9 @@
 |---|---|
 | Repository | `hbonesctr/Vulnerator` |
 | Branch | `master` |
-| Commit | `1d9e89a` |
-| Scan Date | 2026-11-17 16:46 UTC |
-| Run Number | #169 |
+| Commit | `45595b2` |
+| Scan Date | 2026-11-17 20:05 UTC |
+| Run Number | #174 |
 | Scanner Version | Open Source Software (OSS) Security Scanner v2.3 |
 
 > 📋 **REPORT USE NOTICE**
@@ -35,7 +35,7 @@
 | Vulnerabilities — High | 0 |
 | Vulnerabilities — Medium | 1 |
 | Vulnerabilities — Low | 0 |
-| SAST Findings (Semgrep) | 193 |
+| SAST Findings (Semgrep) | 195 |
 
 ## Vulnerability Findings
 
@@ -488,19 +488,31 @@
 
 ### csharp.lang.security.sqli.csharp-sqli.csharp-sqli
 
-- **File:** `Model/DataAccess/AssetEditor.cs:74`
+- **File:** `Model/DataAccess/AssetEditor.cs:79`
 - **Severity:** ERROR
 - **Message:** Detected a formatted string in a SQL statement. This could lead to SQL injection if variables in the SQL statement are not properly sanitized. Use a prepared statements instead. You can obtain a PreparedStatement using 'SqlCommand' and 'SqlParameter'.
 
 ### csharp.lang.security.sqli.csharp-sqli.csharp-sqli
 
-- **File:** `Model/DataAccess/AssetEditor.cs:253`
+- **File:** `Model/DataAccess/AssetEditor.cs:258`
 - **Severity:** ERROR
 - **Message:** Detected a formatted string in a SQL statement. This could lead to SQL injection if variables in the SQL statement are not properly sanitized. Use a prepared statements instead. You can obtain a PreparedStatement using 'SqlCommand' and 'SqlParameter'.
 
 ### csharp.lang.security.sqli.csharp-sqli.csharp-sqli
 
-- **File:** `Model/DataAccess/AssetEditor.cs:329`
+- **File:** `Model/DataAccess/AssetEditor.cs:330`
+- **Severity:** ERROR
+- **Message:** Detected a formatted string in a SQL statement. This could lead to SQL injection if variables in the SQL statement are not properly sanitized. Use a prepared statements instead. You can obtain a PreparedStatement using 'SqlCommand' and 'SqlParameter'.
+
+### csharp.lang.security.sqli.csharp-sqli.csharp-sqli
+
+- **File:** `Model/DataAccess/AssetEditor.cs:338`
+- **Severity:** ERROR
+- **Message:** Detected a formatted string in a SQL statement. This could lead to SQL injection if variables in the SQL statement are not properly sanitized. Use a prepared statements instead. You can obtain a PreparedStatement using 'SqlCommand' and 'SqlParameter'.
+
+### csharp.lang.security.sqli.csharp-sqli.csharp-sqli
+
+- **File:** `Model/DataAccess/AssetEditor.cs:436`
 - **Severity:** ERROR
 - **Message:** Detected a formatted string in a SQL statement. This could lead to SQL injection if variables in the SQL statement are not properly sanitized. Use a prepared statements instead. You can obtain a PreparedStatement using 'SqlCommand' and 'SqlParameter'.
 
@@ -1202,7 +1214,7 @@
 
 ### csharp.lang.security.sqli.csharp-sqli.csharp-sqli
 
-- **File:** `Model/DataAccess/HardwareMerger.cs:240`
+- **File:** `Model/DataAccess/HardwareMerger.cs:301`
 - **Severity:** ERROR
 - **Message:** Detected a formatted string in a SQL statement. This could lead to SQL injection if variables in the SQL statement are not properly sanitized. Use a prepared statements instead. You can obtain a PreparedStatement using 'SqlCommand' and 'SqlParameter'.
 
