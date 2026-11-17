@@ -1,8 +1,8 @@
 {
-  "scanned_at": "2026-11-17T16:18:08Z",
-  "version": "7.5.0-dev.f4d9f76",
-  "commit": "f4d9f76",
-  "run_url": "https://github.com/hbonesctr/Vulnerator/actions/runs/44123334652",
+  "scanned_at": "2026-11-17T16:46:33Z",
+  "version": "7.5.0-dev.1d9e89a",
+  "commit": "1d9e89a",
+  "run_url": "https://github.com/hbonesctr/Vulnerator/actions/runs/44128619927",
   "release_asset": "",
   "components": 63,
   "dependency_findings": 1,
@@ -16,10 +16,10 @@
   },
   "kev": 0,
   "fixable": 1,
-  "code_findings": 192,
+  "code_findings": 193,
   "code_by_severity": {
     "ERROR": 182,
-    "WARNING": 10,
+    "WARNING": 11,
     "INFO": 0
   },
   "semgrep_errors": 7,

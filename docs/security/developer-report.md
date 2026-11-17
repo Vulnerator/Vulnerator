@@ -4,9 +4,9 @@
 |---|---|
 | Repository | `hbonesctr/Vulnerator` |
 | Branch | `master` |
-| Commit | `f4d9f76` |
-| Scan Date | 2026-11-17 16:18 UTC |
-| Run Number | #168 |
+| Commit | `1d9e89a` |
+| Scan Date | 2026-11-17 16:46 UTC |
+| Run Number | #169 |
 | Scanner Version | Open Source Software (OSS) Security Scanner v2.3 |
 
 > 📋 **REPORT USE NOTICE**
@@ -35,7 +35,7 @@
 | Vulnerabilities — High | 0 |
 | Vulnerabilities — Medium | 1 |
 | Vulnerabilities — Low | 0 |
-| SAST Findings (Semgrep) | 192 |
+| SAST Findings (Semgrep) | 193 |
 
 ## Vulnerability Findings
 
@@ -68,67 +68,73 @@
 
 ### yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag
 
-- **File:** `.github/workflows/build.yml:19`
+- **File:** `.github/workflows/build.yml:24`
 - **Severity:** WARNING
 - **Message:** GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.
 
 ### yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag
 
-- **File:** `.github/workflows/build.yml:28`
+- **File:** `.github/workflows/build.yml:33`
 - **Severity:** WARNING
 - **Message:** GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.
 
 ### yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag
 
-- **File:** `.github/workflows/build.yml:31`
+- **File:** `.github/workflows/build.yml:36`
 - **Severity:** WARNING
 - **Message:** GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.
 
 ### yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag
 
-- **File:** `.github/workflows/build.yml:162`
+- **File:** `.github/workflows/build.yml:167`
 - **Severity:** WARNING
 - **Message:** GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.
 
 ### yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag
 
-- **File:** `.github/workflows/build.yml:186`
+- **File:** `.github/workflows/build.yml:191`
 - **Severity:** WARNING
 - **Message:** GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.
 
 ### yaml.github-actions.security.run-shell-injection.run-shell-injection
 
-- **File:** `.github/workflows/build.yml:198`
+- **File:** `.github/workflows/build.yml:203`
 - **Severity:** ERROR
 - **Message:** Using variable interpolation `${{...}}` with `github` context data in a `run:` step could allow an attacker to inject their own code into the runner. This would allow them to steal secrets and code. `github` context data can have arbitrary user input and should be treated as untrusted. Instead, use an intermediate environment variable with `env:` to store the data and use the environment variable in the `run:` script. Be sure to use double-quotes the environment variable, like this: "$ENVVAR".
 
 ### yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag
 
-- **File:** `.github/workflows/build.yml:245`
+- **File:** `.github/workflows/build.yml:252`
 - **Severity:** WARNING
 - **Message:** GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.
 
 ### yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag
 
-- **File:** `.github/workflows/build.yml:250`
+- **File:** `.github/workflows/build.yml:258`
 - **Severity:** WARNING
 - **Message:** GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.
 
 ### yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag
 
-- **File:** `.github/workflows/build.yml:256`
+- **File:** `.github/workflows/build.yml:266`
 - **Severity:** WARNING
 - **Message:** GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.
 
 ### yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag
 
-- **File:** `.github/workflows/build.yml:315`
+- **File:** `.github/workflows/build.yml:282`
 - **Severity:** WARNING
 - **Message:** GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.
 
 ### yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag
 
-- **File:** `.github/workflows/build.yml:333`
+- **File:** `.github/workflows/build.yml:342`
+- **Severity:** WARNING
+- **Message:** GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.
+
+### yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag
+
+- **File:** `.github/workflows/build.yml:360`
 - **Severity:** WARNING
 - **Message:** GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.
 
