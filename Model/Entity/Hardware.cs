@@ -120,6 +120,20 @@ namespace Vulnerator.Model.Entity
         [NotMapped]
         public string RegistryNumber { get; set; }
 
+        /// <summary>Registry numbers of devices merged into this one, for the Device Profile (filled by the Hardware tab).</summary>
+        [NotMapped]
+        public List<string> MergedNumbers { get; set; } = new List<string>();
+
+        /// <summary>"Merged from VUL-000045, VUL-000051", or empty, for the Device Profile.</summary>
+        [NotMapped]
+        public string MergedFrom => MergedNumbers == null || MergedNumbers.Count == 0 ? string.Empty : "Merged from " + string.Join(", ", MergedNumbers);
+
+        /// <summary>Scan summary for the Device Profile: last ACAS scan, last checklist / SCAP result, scan IP.</summary>
+        [NotMapped]
+        public string ScanSummary =>
+            "Last ACAS scan: " + (LastAcasScan.HasValue ? LastAcasScan.Value.ToString("yyyy-MM-dd") : "none") +
+            "   Last checklist / SCAP: " + (LastChecklistScan.HasValue ? LastChecklistScan.Value.ToString("yyyy-MM-dd") : "none");
+
         /// <summary>The lifecycle status name.</summary>
         [NotMapped]
         public string LifecycleStatusName => LifecycleStatus?.Lifecycle_Status ?? string.Empty;

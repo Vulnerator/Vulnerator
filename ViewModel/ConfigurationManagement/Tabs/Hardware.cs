@@ -361,6 +361,7 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
                         {
                             hardware.AlsoKnownAs = string.Join(", ", ids.Aliases.Concat(ids.RetiredNumbers));
                             hardware.Aliases = ids.Aliases.ToList();
+                            hardware.MergedNumbers = ids.RetiredNumbers.ToList();
                             hardware.RegistryNumber = ids.RegistryNumber.HasValue ? DeviceRegistry.Format(ids.RegistryNumber.Value) : string.Empty;
                         }
                     }
@@ -634,8 +635,9 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
         public RelayCommand MergeHardwareCommand => new RelayCommand(MergeHardware);
 
         /// <summary>
-        /// Merges the ticked hardware records (the same device under different names, e.g. W01.Contoso.com from ACAS and
-        /// W01.Contoso from a checklist) into the one the user keeps, after an optional database backup.
+        /// Combines the ticked hardware records (the same device under different names, e.g. W01.Contoso.com from ACAS and
+        /// W01.Contoso from a checklist) into one device, which keeps the oldest registry number, after an optional
+        /// database backup.
         /// </summary>
         private void MergeHardware()
         {
@@ -646,13 +648,22 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
                     System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
                 return;
             }
-            Vulnerator.View.UI.ConfigurationManagement.MergeHardwareWindow window = new Vulnerator.View.UI.ConfigurationManagement.MergeHardwareWindow(ticked)
+            long keepId;
+            try
+            { keepId = HardwareMerger.ChooseKeep(ticked.Select(h => h.Hardware_ID)); }
+            catch (Exception exception)
+            {
+                LogWriter.LogErrorWithDebug("Unable to prepare the hardware merge.", exception);
+                System.Windows.MessageBox.Show("The records could not be merged (nothing was changed): " + exception.Message, "Merge Hardware",
+                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+                return;
+            }
+            Vulnerator.View.UI.ConfigurationManagement.MergeHardwareWindow window = new Vulnerator.View.UI.ConfigurationManagement.MergeHardwareWindow(ticked, keepId)
             {
                 Owner = System.Windows.Application.Current.Windows.OfType<System.Windows.Window>().FirstOrDefault(w => w.IsActive) ?? System.Windows.Application.Current.MainWindow
             };
-            if (window.ShowDialog() != true || window.Keep == null)
+            if (window.ShowDialog() != true)
             { return; }
-            long keepId = window.Keep.Hardware_ID;
             List<long> mergeIds = ticked.Where(h => h.Hardware_ID != keepId).Select(h => h.Hardware_ID).ToList();
             if (window.BackUpFirst)
             {
@@ -669,7 +680,12 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
                     return;
                 }
             }
-            RunEdit("Merge hardware", () => { HardwareMerger.Merge(keepId, mergeIds); return keepId; }, keepId);
+            RunEdit("Merge hardware", () =>
+            {
+                HardwareMerger.Result result = HardwareMerger.Merge(keepId, mergeIds);
+                LogWriter.LogStatusUpdate($"Merge complete: {result.RecordsMerged + 1} records are now one device.");
+                return keepId;
+            }, keepId);
         }
 
         public RelayCommand AddGroupToHardwareCommand => new RelayCommand(() =>

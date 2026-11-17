@@ -62,6 +62,7 @@
                      ToolTip="Type part of a name or address, or a registry number such as VUL-000123 or 123 (also finds devices merged into another)" />
             <DataGrid x:Name="hardwareGrid"
                                   CanUserReorderColumns="True"
+                                  MouseDoubleClick="HardwareGrid_MouseDoubleClick"
                                   ItemsSource="{Binding Hardwares}"
                                   SelectedItem="{Binding SelectedHardware}"
                                   Style="{StaticResource GreyBorderedDataGridStyle}">
@@ -221,7 +222,8 @@
                 </Grid>
             </ScrollViewer>
         </Grid>
-        <Expander Grid.Column="1"
+        <Expander x:Name="profileExpander"
+                              Grid.Column="1"
                               Background="{DynamicResource MahApps.Brushes.Window.Background}"
                               BorderThickness="0"
                               ExpandDirection="Right"
@@ -244,13 +246,32 @@
                                                                         RotationAngle="270" />
                         <TextBlock Grid.Column="1"
                                                Style="{StaticResource ExpanderHeaderTextBlockStyle}"
-                                               Text="Add / Update" />
+                                               Text="Device Profile / Add" />
                     </Grid>
                 </Label>
             </Expander.Header>
             <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                                       VerticalScrollBarVisibility="Auto">
                 <StackPanel>
+                    <StackPanel Margin="{StaticResource MarginLeftRightBottom5}"
+                                Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}">
+                        <TextBlock FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Text="{Binding SelectedHardware.RegistryNumber}"
+                                   ToolTip="The device's permanent Vulnerator number. Imports and merges update this device; numbers are never reused." />
+                        <TextBlock FontWeight="SemiBold"
+                                   Text="{Binding SelectedHardware.DisplayedHostName}"
+                                   TextTrimming="CharacterEllipsis" />
+                        <TextBlock Margin="0,2,0,0"
+                                   Text="{Binding SelectedHardware.MergedFrom}"
+                                   TextWrapping="Wrap" />
+                        <TextBlock Margin="0,2,0,0"
+                                   Text="{Binding SelectedHardware.ScanSummary}"
+                                   TextWrapping="Wrap" />
+                        <TextBlock Margin="0,2,0,0"
+                                   Text="Edit the device below and choose Add/Update Hardware to save."
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
                     <TextBox controls:TextBoxHelper.Watermark="Discovered Host Name (Read Only)"
                                          vh:DependencyProperties.FloatingWatermark="Discovered Host Name"
                                          IsReadOnly="True"
@@ -262,21 +283,20 @@
                                          vh:DependencyProperties.PrimaryValue="{Binding NewHardware.DisplayedHostName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.DisplayedHostName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          Style="{StaticResource HeaderedTextBoxStyle}" />
-                    <TextBox controls:TextBoxHelper.Watermark="FQDN (Read Only)"
+                    <TextBox controls:TextBoxHelper.Watermark="FQDN"
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
                                          vh:DependencyProperties.FloatingWatermark="FQDN"
-                                         Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding SelectedHardware.FQDN, Mode=OneWay}"
-                                         Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
-                    <TextBox controls:TextBoxHelper.Watermark="NetBIOS Name (Read Only)"
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewHardware.FQDN, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.FQDN, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
+                    <TextBox controls:TextBoxHelper.Watermark="NetBIOS Name"
+                                         vh:DependencyProperties.AlternateValueTrigger="{Binding SelectedHardware}"
                                          vh:DependencyProperties.FloatingWatermark="NetBIOS Name"
-                                         Style="{StaticResource HeaderedTextBoxStyle}"
-                                         Text="{Binding SelectedHardware.NetBIOS, Mode=OneWay}"
-                                         Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}" />
+                                         vh:DependencyProperties.PrimaryValue="{Binding NewHardware.NetBIOS, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         vh:DependencyProperties.SecondaryValue="{Binding EditableHardware.NetBIOS, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource HeaderedTextBoxStyle}" />
                     <StackPanel Margin="{StaticResource MarginLeftRightBottom5}"
                                 Visibility="{Binding SelectedHardware, Converter={StaticResource IsNullToCollapsedConverter}}">
-                        <TextBlock Margin="0,0,0,3"
-                                   FontWeight="SemiBold"
-                                   Text="{Binding SelectedHardware.RegistryNumber, StringFormat='Registry No. {0}'}" />
                         <TextBlock Margin="0,0,0,3"
                                    Text="Other names (imports with these names land on this device):"
                                    TextWrapping="Wrap" />

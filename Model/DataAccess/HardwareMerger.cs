@@ -17,6 +17,8 @@ namespace Vulnerator.Model.DataAccess
     /// of both. Blank fields of the kept record (FQDN, NetBIOS, OS, ...) are filled from the merged ones. The merged
     /// records' names become aliases of the kept record, so later imports with those names land on it. The kept record
     /// keeps its registry number (VUL-...); the merged records' numbers are retired and point to it.
+    /// <see cref="MergeAll"/> combines all ticked records into the one with the oldest registry number, so the device
+    /// keeps the number it was first known by.
     /// All in one transaction; it cannot be undone (back the database up first).
     /// </summary>
     public static class HardwareMerger
@@ -36,6 +38,55 @@ namespace Vulnerator.Model.DataAccess
             "HardwareContacts", "HardwareEnumeratedWindowsGroups", "HardwareGroups", "Hardware_IP_Addresses", "Hardware_MAC_Addresses",
             "HardwareLocations", "SoftwareHardware", "SCAP_Scores"
         };
+
+        /// <summary>
+        /// The record that survives when <paramref name="hardwareIds"/> are combined: the one with the oldest (lowest)
+        /// registry number, else the oldest record.
+        /// </summary>
+        public static long ChooseKeep(IEnumerable<long> hardwareIds)
+        {
+            List<long> ids = (hardwareIds ?? new long[0]).Distinct().ToList();
+            if (ids.Count == 0)
+            { throw new InvalidOperationException("Pick at least two hardware records to merge."); }
+            SQLiteConnection connection = DatabaseBuilder.sqliteConnection;
+            bool wasOpen = connection.State == ConnectionState.Open;
+            if (!wasOpen) connection.Open();
+            try
+            {
+                long? best = null;
+                long bestNumber = long.MaxValue;
+                foreach (long id in ids)
+                {
+                    long number = long.MaxValue;
+                    if (TableExists(connection, null, "DeviceRegistry"))
+                    {
+                        string value = Scalar(connection, null, "SELECT MIN(RegistryNumber) FROM DeviceRegistry WHERE Hardware_ID = @K AND Retired = 0", id, 0);
+                        if (value != null) number = Convert.ToInt64(value, CultureInfo.InvariantCulture);
+                    }
+                    if (!best.HasValue || number < bestNumber || (number == bestNumber && id < best.Value))
+                    {
+                        best = id;
+                        bestNumber = number;
+                    }
+                }
+                return best.Value;
+            }
+            finally
+            {
+                if (!wasOpen) connection.Close();
+            }
+        }
+
+        /// <summary>Combines all <paramref name="hardwareIds"/> into one device (the one <see cref="ChooseKeep"/> picks). Returns the kept record.</summary>
+        public static long MergeAll(IEnumerable<long> hardwareIds)
+        {
+            List<long> ids = (hardwareIds ?? new long[0]).Distinct().ToList();
+            if (ids.Count < 2)
+            { throw new InvalidOperationException("Tick two or more hardware records to merge."); }
+            long keepId = ChooseKeep(ids);
+            Merge(keepId, ids);
+            return keepId;
+        }
 
         /// <summary>Merges <paramref name="mergeIds"/> into <paramref name="keepId"/>, using the shared database connection.</summary>
         public static Result Merge(long keepId, IEnumerable<long> mergeIds)
@@ -199,18 +250,28 @@ namespace Vulnerator.Model.DataAccess
             Execute(connection, transaction, "DELETE FROM Hardware WHERE Hardware_ID = @M", keepId, mergeId);
         }
 
-        /// <summary>Copies the database file next to it ("&lt;name&gt;.before-merge-yyyyMMdd-HHmmss.sqlite"). Returns the copy's path.</summary>
+        /// <summary>
+        /// Copies the database next to it ("&lt;name&gt;.before-merge-yyyyMMdd-HHmmss.sqlite") with SQLite's online
+        /// backup, which takes a consistent copy even while Vulnerator has the database open. Returns the copy's path.
+        /// </summary>
         public static string BackUpDatabase()
         {
             string database = Properties.Settings.Default.Database;
             if (string.IsNullOrWhiteSpace(database) || !File.Exists(database))
             { throw new InvalidOperationException("The database file was not found, so it could not be backed up."); }
-            if (DatabaseBuilder.sqliteConnection.State == ConnectionState.Open)
-            { throw new InvalidOperationException("The database is busy; wait for the current task to finish and try again."); }
             string folder = Path.GetDirectoryName(Path.GetFullPath(database));
             string backup = Path.Combine(folder, Path.GetFileNameWithoutExtension(database) + ".before-merge-" +
                                                  DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture) + Path.GetExtension(database));
-            File.Copy(database, backup, false);
+            if (File.Exists(backup))
+            { throw new InvalidOperationException("A backup with this name already exists; wait a second and try again."); }
+            using (SQLiteConnection source = new SQLiteConnection(DatabaseBuilder.ConnectionStringFor(database)))
+            using (SQLiteConnection destination = new SQLiteConnection("Data Source=" + backup + ";Version=3;"))
+            {
+                source.Open();
+                destination.Open();
+                // All pages in one step; wait up to 250 ms between retries while another task is writing.
+                source.BackupDatabase(destination, "main", "main", -1, null, 250);
+            }
             return backup;
         }
 

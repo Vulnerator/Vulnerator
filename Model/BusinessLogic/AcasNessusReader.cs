@@ -182,10 +182,13 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "operating-system":
                                 {
+                                    // When ACAS is not sure, it lists every possible operating system on its own line:
+                                    // the host keeps them on one line ("A / B"), and each becomes its own software entry.
                                     object operatingSystem = xmlReader.ObtainCurrentNodeValue(true);
-                                    sqliteCommand.Parameters["DiscoveredSoftwareName"].Value = operatingSystem;
-                                    sqliteCommand.Parameters["DisplayedSoftwareName"].Value = operatingSystem;
-                                    sqliteCommand.Parameters["OperatingSystem"].Value = operatingSystem;
+                                    List<string> systems = AssetEditor.SplitSoftwareName(Convert.ToString(operatingSystem));
+                                    sqliteCommand.Parameters["DiscoveredSoftwareName"].Value = string.Join("\n", systems);
+                                    sqliteCommand.Parameters["DisplayedSoftwareName"].Value = string.Join("\n", systems);
+                                    sqliteCommand.Parameters["OperatingSystem"].Value = string.Join(" / ", systems);
                                     sqliteCommand.Parameters["IsOS_OrFirmware"].Value = "True";
                                     break;
                                 }
@@ -259,9 +262,15 @@ namespace Vulnerator.Model.BusinessLogic
                         }
                         if (!string.IsNullOrWhiteSpace(sqliteCommand.Parameters["DiscoveredSoftwareName"].Value.ToString()))
                         {
-                            databaseInterface.InsertSoftware(sqliteCommand);
-                            databaseInterface.MapHardwareToSoftware(sqliteCommand);
+                            foreach (string system in AssetEditor.SplitSoftwareName(sqliteCommand.Parameters["DiscoveredSoftwareName"].Value.ToString()))
+                            {
+                                sqliteCommand.Parameters["DiscoveredSoftwareName"].Value = system;
+                                sqliteCommand.Parameters["DisplayedSoftwareName"].Value = system;
+                                databaseInterface.InsertSoftware(sqliteCommand);
+                                databaseInterface.MapHardwareToSoftware(sqliteCommand);
+                            }
                             sqliteCommand.Parameters["DiscoveredSoftwareName"].Value = string.Empty;
+                            sqliteCommand.Parameters["DisplayedSoftwareName"].Value = string.Empty;
                         }
                         return;
                     }

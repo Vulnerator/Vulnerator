@@ -336,6 +336,23 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
             RunEdit("Delete software", () => { AssetEditor.DeleteSoftware(software.Software_ID); return 0; }, null);
         });
 
+        /// <summary>Splits entries that hold several programs on separate lines into one entry per program.</summary>
+        public RelayCommand SplitCombinedSoftwareCommand => new RelayCommand(() =>
+        {
+            int combined = Softwares?.Count(s => (s.DiscoveredSoftwareName ?? string.Empty).IndexOfAny(new[] { '\r', '\n' }) >= 0) ?? 0;
+            if (combined == 0)
+            {
+                System.Windows.MessageBox.Show("No software entries hold several programs; nothing to split.", "Split Combined Entries",
+                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+                return;
+            }
+            if (System.Windows.MessageBox.Show(
+                    $"Split {combined} combined software entr{(combined == 1 ? "y" : "ies")} into one entry per program? Each new entry keeps the original's details and hardware links.",
+                    "Split Combined Entries", System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Question) != System.Windows.MessageBoxResult.Yes)
+            { return; }
+            RunEdit("Split combined entries", () => { AssetEditor.SplitCombinedSoftware(); return 0; }, null);
+        });
+
         public RelayCommand AddHardwareToSoftwareCommand => new RelayCommand(() =>
         {
             long? softwareId = SelectedSoftware?.Software_ID;

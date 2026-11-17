@@ -104,6 +104,12 @@
                         <TextBlock Text="{Binding Softwares.Count}"
                                    TextTrimming="CharacterEllipsis" />
                     </Label>
+                    <Button Grid.Column="2"
+                            Margin="{StaticResource MarginLeft5}"
+                            HorizontalAlignment="Left"
+                            Command="{Binding SplitCombinedSoftwareCommand}"
+                            Content="Split Combined Entries"
+                            ToolTip="Entries that hold several programs on separate lines (for example the operating systems ACAS was unsure between) become one entry per program, linked to the same hardware" />
                     <Button Grid.Column="3"
                             HorizontalAlignment="Right"
                             Command="{Binding ClearSelectedSoftwareCommand}"

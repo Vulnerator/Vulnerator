@@ -38,6 +38,20 @@ namespace Vulnerator.View.UI.ConfigurationManagement.Tabs
         private void HardwareSearchBox_TextChanged(object sender, TextChangedEventArgs e)
         { ApplySearch(); }
 
+        /// <summary>Double-clicking a device opens its Device Profile (the side panel).</summary>
+        private void HardwareGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DependencyObject source = e.OriginalSource as DependencyObject;
+            while (source != null && !(source is DataGridRow))
+            {
+                source = source is System.Windows.Media.Visual || source is System.Windows.Media.Media3D.Visual3D
+                    ? System.Windows.Media.VisualTreeHelper.GetParent(source)
+                    : LogicalTreeHelper.GetParent(source);
+            }
+            if (source != null)
+            { profileExpander.IsExpanded = true; }
+        }
+
         /// <summary>Shows only the hardware matching the search box (all of it when the box is empty).</summary>
         private void ApplySearch()
         {

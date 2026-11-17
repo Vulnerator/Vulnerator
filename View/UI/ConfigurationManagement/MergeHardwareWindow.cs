@@ -7,64 +7,51 @@ using System.Windows.Controls;
 namespace Vulnerator.View.UI.ConfigurationManagement
 {
     /// <summary>
-    /// Asks which of the ticked hardware records to keep when merging, and whether to back up the database first.
-    /// The record with ACAS results is suggested (ACAS names are the most consistent), else the oldest registry number.
-    /// The kept record keeps its registry number; the others' numbers are retired and point to it.
+    /// Confirms a merge of the ticked hardware records. Nothing to pick: all of them are combined into one device, which
+    /// keeps the oldest registry number (VUL-...). The other records' names become its other names and their numbers
+    /// point to it. When records have the same finding, the newest result is kept. Offers a database backup first.
     /// </summary>
     public sealed class MergeHardwareWindow : Window
     {
-        private readonly List<RadioButton> choices = new List<RadioButton>();
         private readonly CheckBox backUp = new CheckBox { Content = "Back up the database first (recommended)", IsChecked = true, Margin = new Thickness(0, 8, 0, 8) };
 
-        public MergeHardwareWindow(IList<Vulnerator.Model.Entity.Hardware> records)
+        public MergeHardwareWindow(IList<Vulnerator.Model.Entity.Hardware> records, long keepId)
         {
             Title = "Merge Hardware";
-            Width = 560;
+            Width = 600;
             SizeToContent = SizeToContent.Height;
             ResizeMode = ResizeMode.NoResize;
             WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
+            Vulnerator.Model.Entity.Hardware keep = records.FirstOrDefault(r => r.Hardware_ID == keepId) ?? records.First();
             StackPanel panel = new StackPanel { Margin = new Thickness(12) };
             panel.Children.Add(new TextBlock
             {
                 TextWrapping = TextWrapping.Wrap,
                 Margin = new Thickness(0, 0, 0, 8),
-                Text = "These records will become one device. Pick the record to keep. Findings, IP and MAC addresses, groups, " +
-                       "software and ports move to it; when both have the same finding, the newest result is kept. The other " +
-                       "names are remembered, so later checklists or scans with those names land on the kept record. The kept record " +
-                       "keeps its registry number (VUL-...); the others' numbers point to it. " +
-                       "This cannot be undone."
+                Text = $"These {records.Count} records will be combined into one device:"
             });
-            Vulnerator.Model.Entity.Hardware suggested = records
-                .OrderByDescending(h => h.LastAcasScan.HasValue)
-                .ThenBy(h => DeviceNumber(h))
-                .ThenByDescending(h => (h.DiscoveredHostName ?? string.Empty).Length)
-                .First();
-            foreach (Vulnerator.Model.Entity.Hardware record in records)
+            panel.Children.Add(new TextBlock
             {
-                List<string> details = new List<string>();
-                if (!string.IsNullOrWhiteSpace(record.ScanSources)) details.Add(record.ScanSources);
-                if (!string.IsNullOrWhiteSpace(record.ScanIP)) details.Add(record.ScanIP);
-                if (!string.IsNullOrWhiteSpace(record.OperatingSystem)) details.Add(record.OperatingSystem);
-                if (record.LastScan.HasValue) details.Add("last seen " + record.LastScan.Value.ToString("yyyy-MM-dd"));
-                if (!string.IsNullOrWhiteSpace(record.RegistryNumber)) details.Insert(0, record.RegistryNumber);
-                RadioButton choice = new RadioButton
-                {
-                    GroupName = "keep",
-                    Tag = record,
-                    IsChecked = ReferenceEquals(record, suggested),
-                    Margin = new Thickness(0, 2, 0, 2),
-                    Content = new TextBlock
-                    {
-                        TextWrapping = TextWrapping.Wrap,
-                        Text = "Keep " + (record.DisplayedHostName ?? record.DiscoveredHostName) +
-                               (string.Equals(record.DisplayedHostName, record.DiscoveredHostName, StringComparison.Ordinal) ? string.Empty : " (" + record.DiscoveredHostName + ")") +
-                               (details.Count > 0 ? "  -  " + string.Join(", ", details) : string.Empty)
-                    }
-                };
-                choices.Add(choice);
-                panel.Children.Add(choice);
+                TextWrapping = TextWrapping.Wrap,
+                FontWeight = FontWeights.SemiBold,
+                Margin = new Thickness(12, 0, 0, 8),
+                Text = Describe(keep, true)
+            });
+            panel.Children.Add(new TextBlock { Text = "Combined into it:", Margin = new Thickness(0, 0, 0, 4) });
+            foreach (Vulnerator.Model.Entity.Hardware record in records.Where(r => !ReferenceEquals(r, keep)))
+            {
+                panel.Children.Add(new TextBlock { TextWrapping = TextWrapping.Wrap, Margin = new Thickness(12, 0, 0, 2), Text = Describe(record, false) });
             }
+            panel.Children.Add(new TextBlock
+            {
+                TextWrapping = TextWrapping.Wrap,
+                Margin = new Thickness(0, 8, 0, 0),
+                Text = "The device keeps the oldest registry number. Findings, checklists, IP and MAC addresses, groups, software and ports " +
+                       "from all records move to it; when records have the same finding, the newest result is kept. The other records' names " +
+                       "become its other names, so later checklists or scans with those names update this device, and their registry numbers " +
+                       "point to it. You can rename the device and edit its details in its Device Profile afterwards. This cannot be undone."
+            });
             panel.Children.Add(backUp);
             panel.Children.Add(new TextBlock
             {
@@ -77,9 +64,7 @@ namespace Vulnerator.View.UI.ConfigurationManagement
             Button cancel = new Button { Content = "Cancel", IsCancel = true, MinWidth = 90 };
             merge.Click += (sender, e) =>
             {
-                Keep = choices.Where(c => c.IsChecked == true).Select(c => (Vulnerator.Model.Entity.Hardware)c.Tag).FirstOrDefault();
                 BackUpFirst = backUp.IsChecked == true;
-                if (Keep == null) return;
                 if (!BackUpFirst && MessageBox.Show(this, "Merge without a backup? This cannot be undone.", "Merge Hardware",
                         MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
                 { return; }
@@ -91,13 +76,19 @@ namespace Vulnerator.View.UI.ConfigurationManagement
             Content = panel;
         }
 
-        private static long DeviceNumber(Vulnerator.Model.Entity.Hardware record)
+        private static string Describe(Vulnerator.Model.Entity.Hardware record, bool kept)
         {
-            return Vulnerator.Model.DataAccess.DeviceRegistry.Parse(record.RegistryNumber) ?? long.MaxValue;
+            List<string> details = new List<string>();
+            if (!string.IsNullOrWhiteSpace(record.ScanSources)) details.Add(record.ScanSources);
+            if (!string.IsNullOrWhiteSpace(record.ScanIP)) details.Add(record.ScanIP);
+            if (!string.IsNullOrWhiteSpace(record.OperatingSystem)) details.Add(record.OperatingSystem.Split('\n')[0].Trim());
+            if (record.LastScan.HasValue) details.Add("last seen " + record.LastScan.Value.ToString("yyyy-MM-dd"));
+            string name = record.DisplayedHostName ?? record.DiscoveredHostName;
+            if (!string.Equals(record.DisplayedHostName, record.DiscoveredHostName, StringComparison.Ordinal))
+            { name += " (" + record.DiscoveredHostName + ")"; }
+            string number = string.IsNullOrWhiteSpace(record.RegistryNumber) ? string.Empty : record.RegistryNumber + "  ";
+            return number + name + (details.Count > 0 ? "  -  " + string.Join(", ", details) : string.Empty) + (kept ? "  (keeps this number)" : string.Empty);
         }
-
-        /// <summary>The record to keep (set when the window closes with Merge).</summary>
-        public Vulnerator.Model.Entity.Hardware Keep { get; private set; }
 
         public bool BackUpFirst { get; private set; } = true;
     }

@@ -786,6 +786,80 @@ try {
     [void]$ids.TryGetValue($keepId, [ref]$keepIds)
     Assert-That ($null -ne $keepIds -and $keepIds.RegistryNumber -eq $idNumber -and ($keepIds.RetiredNumbers -contains $registry::Format($cklNumber)) -and ($keepIds.Aliases -contains 'STIGMAN-HOST01')) 'the Hardware list reads the registry number, retired numbers and aliases'
 
+    # Merge all ticked records at once (no picking): three records of one device, named in different cases and with
+    # a domain, each with the same checklist. One device remains, with the oldest registry number; the other names
+    # become its other names; the newest result of each finding is kept.
+    $triIds = @(); $triIndex = 0
+    foreach ($triName in @('TRIHOST01', 'trihost01', 'trihost01.example.test')) {
+        $triIndex++
+        $triPath = Join-Path $workDir ($triName + '.ckl')
+        [System.IO.File]::WriteAllText($triPath, ([System.IO.File]::ReadAllText((Join-Path $fixtures 'multi-stig.ckl')).Replace('<HOST_NAME>TESTHOST01</HOST_NAME>', '<HOST_NAME>' + $triName + '</HOST_NAME>').Replace('testhost01.example.test', 'tri-fqdn-' + $triIndex + '.example.test')))
+        $r = Import-Checklist $triPath 'TestGroup'
+        $triIds += [long](Get-Scalar 'SELECT Hardware_ID FROM Hardware WHERE DiscoveredHostName = @n' @{ '@n' = $triName })
+    }
+    $triFindings = [int](Get-Scalar ('SELECT COUNT(*) FROM UniqueFindings WHERE Hardware_ID = ' + $triIds[0]))
+    [void](Invoke-Sql "UPDATE UniqueFindings SET LastObserved = @d, Comments = 'tri-newest' WHERE Hardware_ID = @h" @{ '@d' = (Get-Date '2031-01-01').Ticks; '@h' = $triIds[2] })
+    $triNumbers = @($triIds | ForEach-Object { [long](Get-Scalar 'SELECT RegistryNumber FROM DeviceRegistry WHERE Hardware_ID = @h AND Retired = 0' @{ '@h' = $_ }) })
+    $oldest = ($triNumbers | Measure-Object -Minimum).Minimum
+    $chosen = [Vulnerator.Model.DataAccess.HardwareMerger]::ChooseKeep([long[]]$triIds)
+    $kept = [Vulnerator.Model.DataAccess.HardwareMerger]::MergeAll([long[]]$triIds)
+    $left = [int](Get-Scalar ('SELECT COUNT(*) FROM Hardware WHERE Hardware_ID IN (' + ($triIds -join ',') + ')'))
+    $keptNumber = [long](Get-Scalar 'SELECT RegistryNumber FROM DeviceRegistry WHERE Hardware_ID = @h AND Retired = 0' @{ '@h' = $kept })
+    $triAliases = @((Invoke-Sql "SELECT IdentifierValue FROM HardwareIdentifiers WHERE IdentifierType = 'Alias' AND Hardware_ID = @h" @{ '@h' = $kept }).Rows | ForEach-Object { [string]$_['IdentifierValue'] })
+    $triAfter = [int](Get-Scalar 'SELECT COUNT(*) FROM UniqueFindings WHERE Hardware_ID = @h' @{ '@h' = $kept })
+    $triNewest = [int](Get-Scalar "SELECT COUNT(*) FROM UniqueFindings WHERE Hardware_ID = @h AND Comments = 'tri-newest'" @{ '@h' = $kept })
+    $triRetired = [int](Get-Scalar 'SELECT COUNT(*) FROM DeviceRegistry WHERE Hardware_ID = @h AND Retired = 1' @{ '@h' = $kept })
+    Assert-That ($chosen -eq $kept -and $left -eq 1 -and $keptNumber -eq $oldest -and $triRetired -eq 2) ('three records with the same name become one device with the oldest number (' + $registry::Format($keptNumber) + ', ' + $left + ' left, ' + $triRetired + ' numbers retired)')
+    Assert-That (($triAliases -contains 'trihost01') -and ($triAliases -contains 'trihost01.example.test')) ('the other records'' names become the device''s other names (' + ($triAliases -join ', ') + ')')
+    Assert-That ($triFindings -gt 0 -and $triAfter -eq $triFindings -and $triNewest -eq $triFindings) ('the same checklist on three records is one set of findings, newest result kept (' + $triFindings + ' -> ' + $triAfter + ', newest ' + $triNewest + ')')
+
+    # The backup before a merge works while Vulnerator has the database open.
+    $shared = [Vulnerator.Model.DataAccess.DatabaseBuilder]::sqliteConnection
+    $wasOpen = $shared.State -eq [System.Data.ConnectionState]::Open
+    if (-not $wasOpen) { $shared.Open() }
+    $backupPath = $null; $backupError = $null
+    try { $backupPath = [Vulnerator.Model.DataAccess.HardwareMerger]::BackUpDatabase() } catch { $backupError = $_.Exception.ToString() }
+    finally { if (-not $wasOpen) { $shared.Close() } }
+    $backupHardware = $null
+    if ($backupPath -and (Test-Path $backupPath)) {
+        $bc = New-Object System.Data.SQLite.SQLiteConnection ('Data Source=' + $backupPath + ';Version=3;Read Only=True;')
+        $bc.Open()
+        try { $cmd = $bc.CreateCommand(); try { $cmd.CommandText = 'SELECT COUNT(*) FROM Hardware'; $backupHardware = [int]$cmd.ExecuteScalar() } finally { $cmd.Dispose() } }
+        finally { $bc.Dispose() }
+        [GC]::Collect(); [GC]::WaitForPendingFinalizers()
+        try { Remove-Item $backupPath -Force -ErrorAction Stop } catch { Write-Host ('Note: the backup copy stays in the test folder (' + $_.Exception.Message + ')') }
+    }
+    Assert-That ($null -eq $backupError -and $backupHardware -eq [int](Get-Scalar 'SELECT COUNT(*) FROM Hardware')) ('the database is backed up while it is open (' + $backupHardware + ' hardware records' + $(if ($backupError) { '; ' + $backupError } else { '' }) + ')')
+
+    # --- Software: one entry per program -----------------------------------------------------------------
+    # ACAS lists every operating system it considers possible on its own line: each becomes its own software entry.
+    $multiOsPath = Join-Path $workDir 'multi-os.nessus'
+    $multiOsText = [System.IO.File]::ReadAllText((Join-Path $fixtures 'scan.nessus'))
+    $multiOsText = $multiOsText.Replace('<tag name="operating-system">Linux Kernel 5.14 on Red Hat Enterprise Linux 9.4</tag>', "<tag name=`"operating-system`">Microsoft Windows 10 Enterprise`nMicrosoft Windows Server 2019 Standard</tag>")
+    $multiOsText = $multiOsText.Replace('<tag name="hostname">nessushost01</tag>', '<tag name="hostname">multios01</tag>').Replace('nessushost01.example.test', 'multios01.example.test')
+    [System.IO.File]::WriteAllText($multiOsPath, $multiOsText)
+    $multiOsFile = New-Object Vulnerator.Model.Object.File ('multi-os', 'ACAS - Nessus', 'Ready', $multiOsPath, 'True')
+    $result = (New-Object Vulnerator.Model.BusinessLogic.AcasNessusReader).ReadAcasNessusFile($multiOsFile, 'TestGroup')
+    $osRows = @((Invoke-Sql "SELECT S.DiscoveredSoftwareName FROM Software S JOIN SoftwareHardware SH ON SH.Software_ID = S.Software_ID JOIN Hardware H ON H.Hardware_ID = SH.Hardware_ID WHERE H.DiscoveredHostName = 'multios01' AND S.IsOS_OrFirmware = 'True'").Rows | ForEach-Object { [string]$_[0] })
+    $multiOs = [string](Get-Scalar "SELECT OperatingSystem FROM Hardware WHERE DiscoveredHostName = 'multios01'")
+    Assert-That ($result -eq 'Processed' -and ($osRows -contains 'Microsoft Windows 10 Enterprise') -and ($osRows -contains 'Microsoft Windows Server 2019 Standard') -and -not ($osRows | Where-Object { $_ -match "`n" })) ('each operating system ACAS lists is its own software entry (' + ($osRows -join ' | ') + ')')
+    Assert-That ($multiOs -eq 'Microsoft Windows 10 Enterprise / Microsoft Windows Server 2019 Standard') ('the host''s operating system is one line (' + $multiOs + ')')
+
+    # Entries combined by an earlier version are split by Split Combined Entries.
+    $splitHost = [long](Get-Scalar "SELECT Hardware_ID FROM Hardware WHERE DiscoveredHostName = 'multios01'")
+    [void](Invoke-Sql "INSERT INTO Software (DiscoveredSoftwareName, DisplayedSoftwareName, SoftwareVersion, IsOS_OrFirmware) VALUES (@n, @n, '1.0', 'True')" @{ '@n' = "Alpha Program 1`r`nBeta Program 2`nAlpha Program 1" })
+    $combinedId = [long](Get-Scalar "SELECT Software_ID FROM Software WHERE DiscoveredSoftwareName LIKE 'Alpha Program 1%Beta%'")
+    [void](Invoke-Sql 'INSERT INTO SoftwareHardware (Software_ID, Hardware_ID, ReportInAccreditation) VALUES (@s, @h, ''True'')' @{ '@s' = $combinedId; '@h' = $splitHost })
+    [void](Invoke-Sql "UPDATE Hardware SET OperatingSystem = @o WHERE Hardware_ID = @h" @{ '@o' = "Old OS A`nOld OS B"; '@h' = $splitHost })
+    $split = [Vulnerator.Model.DataAccess.AssetEditor]::SplitCombinedSoftware()
+    $splitRows = @((Invoke-Sql "SELECT S.DiscoveredSoftwareName, S.SoftwareVersion, SH.ReportInAccreditation FROM Software S JOIN SoftwareHardware SH ON SH.Software_ID = S.Software_ID WHERE SH.Hardware_ID = @h AND S.DiscoveredSoftwareName IN ('Alpha Program 1', 'Beta Program 2')" @{ '@h' = $splitHost }).Rows)
+    $combinedLeft = [int](Get-Scalar "SELECT COUNT(*) FROM Software WHERE instr(DiscoveredSoftwareName, char(10)) > 0 OR instr(DiscoveredSoftwareName, char(13)) > 0")
+    $linksLeft = [int](Get-Scalar 'SELECT COUNT(*) FROM SoftwareHardware WHERE Software_ID = @s' @{ '@s' = $combinedId })
+    $tidyOs = [string](Get-Scalar 'SELECT OperatingSystem FROM Hardware WHERE Hardware_ID = @h' @{ '@h' = $splitHost })
+    Assert-That ($split -ge 1 -and $splitRows.Count -eq 2 -and -not ($splitRows | Where-Object { [string]$_['SoftwareVersion'] -ne '1.0' -or [string]$_['ReportInAccreditation'] -ne 'True' }) -and $combinedLeft -eq 0 -and $linksLeft -eq 0) ('combined software entries are split into one per program with the same details and hardware links (split ' + $split + ', rows ' + $splitRows.Count + ', combined left ' + $combinedLeft + ')')
+    Assert-That ($tidyOs -eq 'Old OS A / Old OS B') ('operating systems on several lines become one line (' + $tidyOs + ')')
+    Assert-That ([Vulnerator.Model.DataAccess.AssetEditor]::SplitCombinedSoftware() -eq 0) 'splitting again finds nothing to split'
+
     # --- Hardware side panel: other names added and removed by hand; the search box ---------------------------
     $editor = [Vulnerator.Model.DataAccess.AssetEditor]
     $refusedOwn = $null; $refusedOther = $null

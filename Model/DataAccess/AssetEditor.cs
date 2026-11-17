@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Data.SQLite;
 using Vulnerator.Helper;
 
@@ -27,9 +29,9 @@ namespace Vulnerator.Model.DataAccess
                 if (Convert.ToInt64(command.ExecuteScalar()) > 0)
                 { throw new InvalidOperationException($"A host named '{name}' already exists."); }
                 command.CommandText =
-                    "INSERT INTO Hardware (DisplayedHostName, DiscoveredHostName, ScanIP, Found21745, Found26917, IsVirtualServer, NIAP_Level, " +
+                    "INSERT INTO Hardware (DisplayedHostName, DiscoveredHostName, FQDN, NetBIOS, ScanIP, Found21745, Found26917, IsVirtualServer, NIAP_Level, " +
                     "Manufacturer, ModelNumber, IsIA_Enabled, SerialNumber, Role, LifecycleStatus_ID, OperatingSystem) " +
-                    "VALUES (@Name, @Name, @ScanIP, 'False', 'False', @IsVirtualServer, @NIAP_Level, @Manufacturer, @ModelNumber, @IsIA_Enabled, " +
+                    "VALUES (@Name, @Name, @FQDN, @NetBIOS, @ScanIP, 'False', 'False', @IsVirtualServer, @NIAP_Level, @Manufacturer, @ModelNumber, @IsIA_Enabled, " +
                     "@SerialNumber, @Role, @LifecycleStatus_ID, @OperatingSystem)";
                 AddHardwareFields(command, hardware, lifecycleStatusId);
                 command.ExecuteNonQuery();
@@ -44,7 +46,10 @@ namespace Vulnerator.Model.DataAccess
             });
         }
 
-        /// <summary>Saves a host's editable fields. The discovered host name (how imports find the host) is not changed.</summary>
+        /// <summary>
+        /// Saves a device's editable fields (its Device Profile). The discovered host name (how imports find the device)
+        /// is not changed; to have another name land on the device, add it as an other name.
+        /// </summary>
         public static void UpdateHardware(Entity.Hardware hardware, long? lifecycleStatusId)
         {
             if (hardware == null || hardware.Hardware_ID == 0)
@@ -54,7 +59,7 @@ namespace Vulnerator.Model.DataAccess
             Run(command =>
             {
                 command.CommandText =
-                    "UPDATE Hardware SET DisplayedHostName = @Name, ScanIP = @ScanIP, IsVirtualServer = @IsVirtualServer, NIAP_Level = @NIAP_Level, " +
+                    "UPDATE Hardware SET DisplayedHostName = @Name, FQDN = @FQDN, NetBIOS = @NetBIOS, ScanIP = @ScanIP, IsVirtualServer = @IsVirtualServer, NIAP_Level = @NIAP_Level, " +
                     "Manufacturer = @Manufacturer, ModelNumber = @ModelNumber, IsIA_Enabled = @IsIA_Enabled, SerialNumber = @SerialNumber, " +
                     "Role = @Role, LifecycleStatus_ID = @LifecycleStatus_ID, OperatingSystem = @OperatingSystem WHERE Hardware_ID = @Hardware_ID";
                 command.Parameters.AddWithValue("@Name", hardware.DisplayedHostName.Trim());
@@ -265,6 +270,106 @@ namespace Vulnerator.Model.DataAccess
             });
         }
 
+        /// <summary>
+        /// The separate entries in a software name that holds several, one per line (ACAS reports every operating system
+        /// it considers possible on its own line). Trimmed, without blanks or repeats. One item for an ordinary name.
+        /// </summary>
+        public static List<string> SplitSoftwareName(string name)
+        {
+            return (name ?? string.Empty).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
+                .Select(line => line.Trim()).Where(line => line.Length > 0)
+                .Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+        }
+
+        /// <summary>
+        /// Splits software entries that hold several programs on separate lines into one entry per program. Each new
+        /// entry keeps the original's details and is linked to the same hardware, contacts and DADMS networks; port and
+        /// finding links go to the first one. Hardware operating systems with several lines become one line
+        /// ("A / B"). Returns the number of combined entries split.
+        /// </summary>
+        public static long SplitCombinedSoftware()
+        {
+            return Run(command =>
+            {
+                List<KeyValuePair<long, string>> combined = new List<KeyValuePair<long, string>>();
+                command.CommandText = "SELECT Software_ID, DiscoveredSoftwareName FROM Software " +
+                                      "WHERE instr(DiscoveredSoftwareName, char(10)) > 0 OR instr(DiscoveredSoftwareName, char(13)) > 0";
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    { combined.Add(new KeyValuePair<long, string>(reader.GetInt64(0), Convert.ToString(reader.GetValue(1)))); }
+                }
+                foreach (KeyValuePair<long, string> entry in combined)
+                {
+                    List<string> names = SplitSoftwareName(entry.Value);
+                    List<long> newIds = new List<long>();
+                    foreach (string name in names)
+                    {
+                        command.Parameters.Clear();
+                        command.Parameters.AddWithValue("@Old", entry.Key);
+                        command.Parameters.AddWithValue("@Name", name);
+                        // An entry with this name may exist already (from another host); then that one is used.
+                        command.CommandText =
+                            "INSERT INTO Software (DiscoveredSoftwareName, DisplayedSoftwareName, SoftwareAcronym, SoftwareVersion, SoftwareDescription, " +
+                            "SoftwareFunction, DADMS_ID, DADMS_Disposition, DADMS_LastDateAuthorized, HasCustomCode, IA_OrIA_Enabled, IsOS_OrFirmware, " +
+                            "FAM_Accepted, ExternallyAuthorized, ReportInAccreditationGlobal, ApprovedForBaselineGlobal, BaselineApproverGlobal, Instance) " +
+                            "SELECT @Name, @Name, SoftwareAcronym, SoftwareVersion, SoftwareDescription, SoftwareFunction, DADMS_ID, DADMS_Disposition, " +
+                            "DADMS_LastDateAuthorized, HasCustomCode, IA_OrIA_Enabled, IsOS_OrFirmware, FAM_Accepted, ExternallyAuthorized, " +
+                            "ReportInAccreditationGlobal, ApprovedForBaselineGlobal, BaselineApproverGlobal, Instance FROM Software WHERE Software_ID = @Old";
+                        command.ExecuteNonQuery();
+                        command.CommandText = "SELECT Software_ID FROM Software WHERE DiscoveredSoftwareName = @Name";
+                        newIds.Add(Convert.ToInt64(command.ExecuteScalar()));
+                    }
+                    command.Parameters.Clear();
+                    command.Parameters.AddWithValue("@Old", entry.Key);
+                    command.Parameters.AddWithValue("@First", newIds.Count > 0 ? newIds[0] : entry.Key);
+                    SQLiteParameter newParameter = command.Parameters.AddWithValue("@New", 0L);
+                    foreach (long newId in newIds)
+                    {
+                        newParameter.Value = newId;
+                        command.CommandText = string.Join(" ",
+                            "INSERT INTO SoftwareHardware (Software_ID, Hardware_ID, InstallDate, ReportInAccreditation, ApprovedForBaseline, BaselineApprover) " +
+                            "SELECT @New, Hardware_ID, InstallDate, ReportInAccreditation, ApprovedForBaseline, BaselineApprover FROM SoftwareHardware WHERE Software_ID = @Old;",
+                            "INSERT INTO SoftwareContacts (Software_ID, Contact_ID) SELECT @New, Contact_ID FROM SoftwareContacts WHERE Software_ID = @Old;",
+                            "INSERT INTO SoftwareDADMS_Networks (Software_ID, DADMS_Network_ID) SELECT @New, DADMS_Network_ID FROM SoftwareDADMS_Networks WHERE Software_ID = @Old;");
+                        command.ExecuteNonQuery();
+                    }
+                    if (newIds.Count == 0) continue;
+                    command.CommandText = string.Join(" ",
+                        "UPDATE OR IGNORE HardwareSoftwarePortsProtocolsServices SET Software_ID = @First WHERE Software_ID = @Old;",
+                        "DELETE FROM HardwareSoftwarePortsProtocolsServicesBoundaries WHERE HardwareSoftwarePortProtocolService_ID IN (SELECT HardwareSoftwarePortProtocolService_ID FROM HardwareSoftwarePortsProtocolsServices WHERE Software_ID = @Old);",
+                        "DELETE FROM HardwareSoftwarePortsProtocolsServices WHERE Software_ID = @Old;",
+                        "UPDATE OR IGNORE UniqueFindings SET Software_ID = @First WHERE Software_ID = @Old;",
+                        "UPDATE UniqueFindings SET Software_ID = NULL WHERE Software_ID = @Old;",
+                        "DELETE FROM SoftwareHardware WHERE Software_ID = @Old;",
+                        "DELETE FROM SoftwareContacts WHERE Software_ID = @Old;",
+                        "DELETE FROM SoftwareDADMS_Networks WHERE Software_ID = @Old;",
+                        "DELETE FROM Software WHERE Software_ID = @Old;");
+                    command.ExecuteNonQuery();
+                }
+                // Operating systems with several lines: one line, "A / B".
+                List<KeyValuePair<long, string>> systems = new List<KeyValuePair<long, string>>();
+                command.Parameters.Clear();
+                command.CommandText = "SELECT Hardware_ID, OperatingSystem FROM Hardware WHERE instr(OperatingSystem, char(10)) > 0 OR instr(OperatingSystem, char(13)) > 0";
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    { systems.Add(new KeyValuePair<long, string>(reader.GetInt64(0), Convert.ToString(reader.GetValue(1)))); }
+                }
+                foreach (KeyValuePair<long, string> system in systems)
+                {
+                    command.Parameters.Clear();
+                    command.Parameters.AddWithValue("@Id", system.Key);
+                    command.Parameters.AddWithValue("@Os", string.Join(" / ", SplitSoftwareName(system.Value)));
+                    command.CommandText = "UPDATE Hardware SET OperatingSystem = @Os WHERE Hardware_ID = @Id";
+                    command.ExecuteNonQuery();
+                }
+                if (combined.Count > 0 || systems.Count > 0)
+                { LogWriter.LogStatusUpdate($"Split {combined.Count} combined software entries; tidied {systems.Count} operating system names."); }
+                return combined.Count;
+            });
+        }
+
         // ----- Helpers ------------------------------------------------------------------------------------------
 
         private static void MapIp(SQLiteCommand command, long hardwareId, string ip)
@@ -280,6 +385,8 @@ namespace Vulnerator.Model.DataAccess
         private static void AddHardwareFields(SQLiteCommand command, Entity.Hardware h, long? lifecycleStatusId)
         {
             command.Parameters.AddWithValue("@Name", (h.DisplayedHostName ?? string.Empty).Trim());
+            command.Parameters.AddWithValue("@FQDN", Value(h.FQDN));
+            command.Parameters.AddWithValue("@NetBIOS", Value(h.NetBIOS));
             command.Parameters.AddWithValue("@ScanIP", Value(h.ScanIP));
             command.Parameters.AddWithValue("@IsVirtualServer", Value(h.IsVirtualServer));
             command.Parameters.AddWithValue("@NIAP_Level", Value(h.NIAP_Level));
