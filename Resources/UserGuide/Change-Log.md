@@ -1,4 +1,17 @@
-﻿# Vulnerator 2.0 (7.5.0)
+﻿# Vulnerator 2.0 (7.5.1)
+###### Version 7.5.1, November 2026
+
+| Change Description |
+| :----------------- |
+| Merge Ticked Hardware works again: the database backup before a merge no longer refuses while the database is open (which stopped every merge) |
+| Merge combines all ticked records into one device, nothing to pick: it keeps the oldest registry number, the newest result of each finding, and the other names as aliases |
+| Hardware: the side panel is the Device Profile (double-click a device): registry number, merged numbers, last ACAS scan and last checklist / SCAP at the top; FQDN and NetBIOS name can be edited |
+| ACAS: when a scan lists several possible operating systems, each becomes its own software entry and the host's operating system is one line ("A / B"); Software > Split Combined Entries splits entries combined by earlier versions |
+
+
+----------
+
+# Vulnerator 2.0 (7.5.0)
 ###### Version 7.5.0, November 2026
 
 | Change Description |

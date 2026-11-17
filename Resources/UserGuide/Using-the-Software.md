@@ -100,17 +100,26 @@ to sort. Your choice is remembered.
 * **Find:** type in the box above the Hardware list to show only matching devices: part of a name, other name,
   FQDN, NetBIOS name, operating system or IP address, or a registry number (**VUL-000123** or just **123**). A
   number of a device merged into another finds the device it was merged into.
-* **Other names:** select a device to see its registry number and its other names in the side panel. **Add Name**
+* **Device Profile:** double-click a device (or open the **Device Profile / Add** panel on the right) to see its
+  registry number, the numbers merged into it, its last ACAS scan and last checklist / SCAP result, and to edit its
+  name, FQDN, NetBIOS name, scan IP, IP and MAC addresses, groups, software and ports. Choose **Add/Update Hardware**
+  to save.
+* **Other names:** the Device Profile also lists the device's other names. **Add Name**
   saves another name (for example the host name admins type in its checklists), so imports with that name land on
   the device without a merge. **Remove** forgets a name, for example one saved by a wrong merge. A name that another
   record already has is refused: merge the two records instead.
-* **Merge:** tick two or more records that are the same device and choose **Merge Ticked Hardware...**. Pick the
-  record to keep (the ACAS record is suggested). Its findings, IP and MAC addresses, groups, software, ports and SCAP
-  scores move to it; when both records have the same finding, the newest result is kept, with its POA&M and
-  mitigation links. Blank fields (FQDN, OS, ...) are filled from the other records. The kept device keeps its
-  registry number; the others' numbers are retired and point to it. The other names become aliases (shown, with the
+* **Merge:** tick two or more records that are the same device and choose **Merge Ticked Hardware...**. There is
+  nothing to pick: all of them are combined into one device, which keeps the oldest registry number. The window shows
+  that device and the records combined into it. Their findings, IP and MAC addresses, groups, software, ports and SCAP
+  scores move to it; when records have the same finding, the newest result is kept, with its POA&M and
+  mitigation links. Blank fields (FQDN, OS, ...) are filled from the other records. The others' registry numbers are
+  retired and point to the device. The other names become aliases (shown, with the
   retired numbers, under **Also Known As**), so later checklists or scans with those names land on the kept record. A merge
   cannot be undone: leave **Back up the database first** ticked to keep a copy of the database file next to it.
+
+* **Software, one entry per program:** when ACAS is not sure of a host's operating system it lists every possible
+  one on its own line; each becomes its own software entry, and the host's operating system shows them on one line
+  ("A / B"). Entries combined by an earlier version: choose **Split Combined Entries** on the Software tab.
 
 ## Reporting
 
