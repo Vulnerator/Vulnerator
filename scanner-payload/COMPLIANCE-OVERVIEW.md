@@ -1,6 +1,6 @@
-# Open Source Sofware (OSS) Security Scanner — Compliance Overview
+# Open Source Software (OSS) Security Scanner — Compliance Overview
 
-**Project:** Open Source Sofware (OSS) Security Scanner  
+**Project:** Open Source Software (OSS) Security Scanner  
 **Author:** Hector L. Bones  
 **Last Reviewed:** 2026-05-09  
 **Version:** 1.0  
@@ -11,7 +11,7 @@ ISSOs, Auditors
 
 ## What This Is
 
-The Open Source Sofware (OSS) Security Scanner is an automated inspection system for open source
+The Open Source Software (OSS) Security Scanner is an automated inspection system for open source
 and customer-provided software. Every time a software package is submitted
 for evaluation, the scanner runs a structured series of security checks and
 produces documented evidence of those checks — automatically, with no manual

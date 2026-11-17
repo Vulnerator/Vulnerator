@@ -53,6 +53,12 @@
   .card h3 { margin-top: 0; }
   .release { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 16px 18px; }
   .release .tag { font-size: 20px; font-weight: 700; }
+  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 12px 0; }
+  .stat { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 10px 12px; }
+  .stat .n { font-size: 24px; font-weight: 700; line-height: 1.2; }
+  .stat .l { font-size: 13px; color: var(--muted); }
+  .stat.crit .n { color: #c0392b; } .stat.high .n { color: #e36c09; } .stat.kev .n { color: #c0392b; }
+  .sev { font-size: 14px; color: var(--muted); }
   .note { font-size: 14px; color: var(--muted); }
   footer { color: var(--muted); font-size: 14px; border-top: 1px solid var(--rule); padding-top: 18px; }
   @media (max-width: 860px) {
@@ -62,6 +68,7 @@
     aside img { width: 84px; height: 84px; }
     main { padding: 28px 16px 48px; }
     .grid { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 </style>
 </head>
@@ -76,6 +83,7 @@
       <a class="btn" href="https://github.com/hbonesctr/Vulnerator/archive/refs/heads/master.zip">Get the source .zip file<small>Latest source code</small></a>
       <a class="btn" href="https://github.com/hbonesctr/Vulnerator/archive/refs/heads/master.tar.gz">Get the source .tar.gz file<small>Latest source code</small></a>
       <a class="btn" href="https://github.com/hbonesctr/Vulnerator">View project on GitHub<small>hbonesctr/Vulnerator</small></a>
+      <a class="btn" href="#security-scan">Security scan results<small>SBOM, dependencies and code</small></a>
     </div>
     <p class="meta">MIT License &middot; Application rewrite by Hector L. Bones &middot; Based on <a href="https://github.com/Vulnerator/Vulnerator">Vulnerator</a> by Alex Kuchta and contributors.</p>
   </aside>
@@ -170,6 +178,33 @@
       </div>
     </section>
 
+    <section id="security-scan">
+      <h2>Security Scan</h2>
+      <p>Every build is scanned automatically: an SBOM of the shipped program (Syft, SPDX 2.3 and CycloneDX),
+        dependency vulnerabilities with CVSS, EPSS and CISA KEV (Grype), and static analysis of the source (Semgrep).
+        The results below are from the latest scan of <code>master</code>; each release carries its own
+        <code>-security-scan.zip</code> with the full evidence package.</p>
+      <div id="scan-status" class="note">Scan results appear here after the first scan of <code>master</code> finishes.</div>
+      <div id="scan-results" hidden>
+        <div class="stats">
+          <div class="stat"><div class="n" id="scan-components">-</div><div class="l">Components in the SBOM</div></div>
+          <div class="stat high"><div class="n" id="scan-deps">-</div><div class="l">Dependency findings</div></div>
+          <div class="stat kev"><div class="n" id="scan-kev">-</div><div class="l">Known exploited (CISA KEV)</div></div>
+          <div class="stat"><div class="n" id="scan-code">-</div><div class="l">Code findings (Semgrep)</div></div>
+        </div>
+        <p class="sev" id="scan-sev"></p>
+        <p>Reports: <a href="security/leadership-report.html">Leadership</a> &middot;
+          <a href="security/analyst-report.html">Analyst</a> &middot;
+          <a href="security/developer-report.html">Developer</a> &middot;
+          <a href="security/sbom-spdx.json">SBOM (SPDX JSON)</a> &middot;
+          <a href="https://github.com/hbonesctr/Vulnerator/tree/master/docs/security">All scan files</a></p>
+        <p class="note" id="scan-meta"></p>
+      </div>
+      <p class="note">Scan method and control mapping: <a href="https://github.com/hbonesctr/Vulnerator/blob/master/scanner-payload/COMPLIANCE-OVERVIEW.md">Compliance overview</a>
+        &middot; <a href="https://github.com/hbonesctr/Vulnerator/blob/master/scanner-payload/REFERENCES.md">References</a>.
+        Automated scanning does not replace manual review or your ISSO/ISSM's risk decisions.</p>
+    </section>
+
     <section>
       <h2>Latest Release</h2>
       <div class="release" id="release">
@@ -206,8 +241,11 @@
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (release) {
         if (!release || !release.tag_name) return;
-        var zip = (release.assets || []).filter(function (a) { return /\.zip$/i.test(a.name); })[0];
-        var sha = (release.assets || []).filter(function (a) { return /\.sha256$/i.test(a.name); })[0];
+        var assets = release.assets || [];
+        var isScan = function (a) { return /-security-scan\./i.test(a.name); };
+        var zip = assets.filter(function (a) { return /\.zip$/i.test(a.name) && !isScan(a); })[0];
+        var sha = assets.filter(function (a) { return /\.zip\.sha256$/i.test(a.name) && !isScan(a); })[0];
+        var scan = assets.filter(function (a) { return /-security-scan\.zip$/i.test(a.name); })[0];
         var title = release.name || 'Vulnerator 2.0';
         document.getElementById('release-tag').textContent = title.indexOf(release.tag_name) >= 0 ? title : title + ' (' + release.tag_name + ')';
         if (release.published_at) {
@@ -222,11 +260,37 @@
         }
         if (zip) add(zip.browser_download_url, 'Download ' + zip.name);
         if (sha) add(sha.browser_download_url, 'SHA-256');
+        if (scan) add(scan.browser_download_url, 'Security scan');
         add(release.html_url, 'Release notes');
         if (zip) {
           document.getElementById('dl-release').href = zip.browser_download_url;
           document.getElementById('dl-release-note').textContent = release.tag_name + ' · ' + zip.name;
         }
+      })
+      .catch(function () { });
+  })();
+
+  // Latest security scan of master (docs/security/summary.json, written by the Build workflow).
+  (function () {
+    if (!window.fetch) return;
+    fetch('security/summary.json', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (s) {
+        if (!s) return;
+        function set(id, v) { document.getElementById(id).textContent = v; }
+        set('scan-components', s.components);
+        set('scan-deps', s.dependency_findings);
+        set('scan-kev', s.kev);
+        set('scan-code', s.code_findings);
+        var b = s.by_severity || {};
+        set('scan-sev', 'Dependency findings by severity: Critical ' + (b.Critical || 0) + ' · High ' + (b.High || 0) +
+          ' · Medium ' + (b.Medium || 0) + ' · Low ' + (b.Low || 0) + ' · ' + (s.fixable || 0) + ' with a fix available.');
+        var meta = document.getElementById('scan-meta');
+        meta.textContent = 'Scanned ' + new Date(s.scanned_at).toLocaleString() + ' · version ' + s.version + ' · commit ' + s.commit +
+          ' · Syft ' + s.tools.syft + ', Grype ' + s.tools.grype + ', Semgrep ' + s.tools.semgrep + ' · ';
+        if (s.run_url) { var a = document.createElement('a'); a.href = s.run_url; a.textContent = 'scan run'; meta.appendChild(a); }
+        document.getElementById('scan-status').hidden = true;
+        document.getElementById('scan-results').hidden = false;
       })
       .catch(function () { });
   })();

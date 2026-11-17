@@ -13,6 +13,8 @@ jobs:
     runs-on: windows-2022
     permissions:
       contents: write   # publish the release on a v* tag
+    outputs:
+      version: ${{ steps.stamp.outputs.version }}
     steps:
       - uses: actions/checkout@v4
 
@@ -32,6 +34,7 @@ jobs:
         run: nuget restore Vulnerator_v6.sln
 
       - name: Stamp the release version
+        id: stamp
         shell: pwsh
         # The version people see (About, Help): the release tag for release/v* branches and v* tags, else "<file version>-dev.<commit>".
         run: |
@@ -43,6 +46,7 @@ jobs:
           $text = [regex]::Replace($text, '(?m)^\[assembly: AssemblyInformationalVersion\(.*\)\]\s*$', '')
           Set-Content $info ($text.TrimEnd() + "`r`n[assembly: AssemblyInformationalVersion(`"$display`")]`r`n") -Encoding utf8
           "VULNERATOR_VERSION=$display" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          "version=$display" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
           Write-Host "::notice::Version shown in the program: $display"
 
       - name: Build (Release)
@@ -214,3 +218,151 @@ jobs:
           if ($LASTEXITCODE -ne 0) { Write-Host ('::error::release publish failed: ' + ($output -replace "`r?`n", ' ')); exit 1 }
           Write-Host "::notice::Published $tag ($hash)"
           if ('${{ github.ref }}' -like 'refs/heads/release/*') { git push origin --delete '${{ github.ref_name }}' }
+
+  # Security scan of what the build job produced: SBOM of the shipped program (Syft), dependency vulnerabilities
+  # with CVSS, EPSS and CISA KEV (Grype), static analysis of the source (Semgrep), then the Developer, Analyst and
+  # Leadership reports (scanner-payload/scripts/generate_reports.py).
+  #   every run:          results in the run summary, the security-scan-<sha> artifact, Semgrep in the Security tab
+  #   master:             latest results committed to docs/security/ (project page "Security Scan" section)
+  #   release/v*, v* tag: Vulnerator-<tag>-security-scan.zip (+ .sha256) attached to the published release
+  security-scan:
+    name: Security scan
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write          # commit docs/security on master; attach the scan to the release
+      security-events: write   # Semgrep SARIF to the Security tab (code scanning)
+      pages: write             # ask Pages to rebuild after docs/security changes
+    env:
+      SYFT_VERSION: 1.44.0
+      GRYPE_VERSION: 0.112.0
+      SEMGREP_VERSION: 1.162.0
+      VERSION: ${{ needs.build.outputs.version }}
+      RAW: scanner-payload/reports
+      OUT: security-reports
+    steps:
+      # By commit, not branch name: the build job deletes release/v* branches after publishing.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Download the build
+        uses: actions/download-artifact@v4
+        with:
+          pattern: Vulnerator-*-${{ github.sha }}
+          path: scan-target
+          merge-multiple: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Syft, Grype and Semgrep (pinned, checksums verified)
+        run: |
+          mkdir -p "$RUNNER_TEMP/bin" "$RUNNER_TEMP/dl"
+          cd "$RUNNER_TEMP/dl"
+          for tool in "syft $SYFT_VERSION" "grype $GRYPE_VERSION"; do
+            set -- $tool
+            file="${1}_${2}_linux_amd64.tar.gz"
+            base="https://github.com/anchore/$1/releases/download/v$2"
+            curl -sSfLO "$base/$file"
+            curl -sSfL "$base/${1}_${2}_checksums.txt" | grep " $file\$" | sha256sum -c -
+            tar -xzf "$file" -C "$RUNNER_TEMP/bin" "$1"
+          done
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+          cd "$GITHUB_WORKSPACE"
+          python -m pip install --quiet "semgrep==$SEMGREP_VERSION" -r scanner-payload/scripts/requirements-reports.txt
+
+      - name: SBOM of the shipped program (Syft)
+        run: |
+          mkdir -p "$RAW"
+          syft scan dir:scan-target --source-name Vulnerator --source-version "$VERSION" \
+            -o spdx-json="$RAW/sbom-spdx.json" -o cyclonedx-json="$RAW/sbom-cyclonedx.json" -o syft-json="$RAW/sbom.syft.json"
+          echo "syft $SYFT_VERSION" > "$RAW/syft-version.txt"
+
+      - name: Dependency vulnerabilities (Grype, with EPSS and CISA KEV)
+        run: |
+          grype db update
+          grype "sbom:$RAW/sbom.syft.json" -o json --file "$RAW/grype-results.json"
+          grype "sbom:$RAW/sbom.syft.json" -o table --file "$RAW/grype-results.txt"
+          echo "grype $GRYPE_VERSION" > "$RAW/grype-version.txt"
+
+      - name: Static analysis of the source (Semgrep)
+        run: |
+          semgrep scan --metrics=off --config p/ci --config p/csharp --config p/secrets \
+            --exclude scan-target --exclude tools/tests/fixtures \
+            --json-output="$RAW/semgrep-results.json" --sarif-output="$RAW/semgrep.sarif" .
+          echo "$SEMGREP_VERSION" > "$RAW/semgrep-version.txt"
+          echo "not run (no Snyk account configured)" > "$RAW/snyk-version.txt"
+
+      - name: Reports (Developer, Analyst, Leadership) and summary
+        run: |
+          python scanner-payload/scripts/generate_reports.py --reports-dir "$RAW" --profile-path scanner-payload/cia-profile.yaml --output-dir "$OUT"
+          tag="${GITHUB_REF_NAME#release/}"
+          asset=""
+          if [[ "$GITHUB_REF" == refs/tags/v* || "$GITHUB_REF" == refs/heads/release/v* ]]; then asset="Vulnerator-$tag-security-scan.zip"; fi
+          python scanner-payload/scripts/write_summary.py --reports-dir "$RAW" --out "$OUT/summary.json" --version "$VERSION" --release-asset "$asset"
+          cat "$OUT/leadership-report.md" >> "$GITHUB_STEP_SUMMARY"
+          python - <<'PY'
+          import json; s = json.load(open('security-reports/summary.json'))
+          print(f"::notice title=Security scan::{s['components']} components, {s['dependency_findings']} dependency findings "
+                f"({s['by_severity']['Critical']} critical, {s['by_severity']['High']} high, {s['kev']} KEV), {s['code_findings']} code findings")
+          PY
+
+      - name: Semgrep results to the Security tab
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: scanner-payload/reports/semgrep.sarif
+          category: semgrep
+
+      - name: Package the scan evidence
+        run: |
+          tag="${GITHUB_REF_NAME#release/}"; tag="${tag//\//-}"
+          pkg="Vulnerator-$tag-security-scan"
+          mkdir -p "pkg/$pkg/raw"
+          cp "$OUT"/* "pkg/$pkg/"
+          cp "$RAW"/*.json "$RAW"/*.sarif "$RAW"/*.txt "pkg/$pkg/raw/"
+          cp scanner-payload/COMPLIANCE-OVERVIEW.md scanner-payload/REFERENCES.md scanner-payload/cia-profile.yaml "pkg/$pkg/"
+          (cd pkg && zip -qr "../$pkg.zip" "$pkg")
+          sha256sum "$pkg.zip" > "$pkg.zip.sha256"
+          echo "SCAN_PKG=$pkg" >> "$GITHUB_ENV"
+
+      - name: Upload the scan
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-scan-${{ github.sha }}
+          path: |
+            ${{ env.SCAN_PKG }}.zip
+            ${{ env.SCAN_PKG }}.zip.sha256
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Attach the scan to the release (v* tag or release/v* branch)
+        if: startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/release/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${GITHUB_REF_NAME#release/}"
+          gh release upload "$tag" "$SCAN_PKG.zip" "$SCAN_PKG.zip.sha256" --clobber -R "$GITHUB_REPOSITORY"
+          echo "::notice::Attached $SCAN_PKG.zip to release $tag"
+
+      - name: Publish the results to the project page (master)
+        if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          rm -rf docs/security && mkdir -p docs/security
+          cp "$OUT"/*.html "$OUT"/*.md "$OUT/summary.json" "$RAW/sbom-spdx.json" "$RAW/grype-results.txt" docs/security/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add -A docs/security
+          if git diff --cached --quiet; then echo "No change to docs/security"; exit 0; fi
+          git commit -q -m "Security scan results for ${GITHUB_SHA::7} ($VERSION)"
+          for i in 1 2 3; do
+            git fetch -q origin master && git rebase -q origin/master && git push -q origin HEAD:master && break
+            sleep 5
+          done
+          gh api -X POST "repos/$GITHUB_REPOSITORY/pages/builds" >/dev/null || echo "Pages rebuild request not accepted; Pages will pick up the commit on its own"
+          echo "::notice::Security scan results published to docs/security"

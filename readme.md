@@ -49,6 +49,15 @@ reports and the log.
 folder of your own files into a throwaway database and prints one line per file (nothing leaves your machine). Each
 release also carries the zip's SHA-256 and a per-file hash list for application allow-listing.
 
+## Security scan
+
+Every build is scanned by the `security-scan` job in the Build workflow: an SBOM of the shipped program (Syft, SPDX 2.3 and CycloneDX), dependency vulnerabilities with CVSS, EPSS and CISA KEV (Grype), and static analysis of the source (Semgrep). It writes Developer, Analyst and Leadership reports.
+
+- **Latest results:** the [project page](https://hbonesctr.github.io/Vulnerator/#security-scan) and [`docs/security/`](docs/security/), updated on every push to `master`.
+- **Per release:** `Vulnerator-<version>-security-scan.zip` (with `.sha256`) is attached to each release and holds the reports, SBOMs and raw scanner output.
+- **Code findings:** the repository's Security tab (code scanning).
+- **Method and control mapping:** [`scanner-payload/COMPLIANCE-OVERVIEW.md`](scanner-payload/COMPLIANCE-OVERVIEW.md) and [`REFERENCES.md`](scanner-payload/REFERENCES.md).
+
 ## Building
 
 There is no local development environment: builds and tests run in GitHub Actions on Windows

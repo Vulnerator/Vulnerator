@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Open Source Sofware (OSS) Security Scanner — Report Generator
+Open Source Software (OSS) Security Scanner — Report Generator
 Author: Hector L. Bones
 Version: 1.1
-Compatible with: Open Source Sofware (OSS) Security Scanner v2.4
+Compatible with: Open Source Software (OSS) Security Scanner v2.4
 
 Generates three report types (Developer, Analyst, Leadership)
 in three formats each (DOCX, HTML, Markdown) = 9 output files.
@@ -191,7 +191,7 @@ def parse_grype(grype_data):
         epss_pct   = f"{epss_score*100:.3f}%" if epss_score is not None else "N/A"
 
         # KEV
-        kev = v.get("kev")
+        kev = v.get("kev") or v.get("knownExploited")
         kev_flag = "YES — Active Exploitation Confirmed" if kev else "No"
 
         # Fix
@@ -355,7 +355,7 @@ def generate_markdown_developer(ctx, profile, packages, findings, semgrep, tool_
         f"| Commit | `{ctx['sha']}` |",
         f"| Scan Date | {ctx['scan_date']} |",
         f"| Run Number | #{ctx['run_number']} |",
-        f"| Scanner Version | Open Source Sofware (OSS) Security Scanner v2.3 |",
+        f"| Scanner Version | Open Source Software (OSS) Security Scanner v2.3 |",
         f"",
         DISCLAIMER_USE,
         "",
@@ -689,7 +689,7 @@ def generate_markdown_leadership(ctx, profile, packages, findings, semgrep, tool
         "",
         f"| Metric | Value |",
         f"|---|---|",
-        f"| Scanner Version | Open Source Sofware (OSS) Security Scanner v2.3 |",
+        f"| Scanner Version | Open Source Software (OSS) Security Scanner v2.3 |",
         f"| Syft | {tool_versions.get('syft','unknown')} |",
         f"| Grype | {tool_versions.get('grype','unknown')} |",
         f"| Semgrep | {tool_versions.get('semgrep','unknown')} |",
@@ -905,7 +905,7 @@ def generate_html(report_type, ctx, profile, packages, findings, semgrep, tool_v
 
     body += f"""
     <footer>
-      Open Source Sofware (OSS) Security Scanner v2.3 &nbsp;|&nbsp; Run #{ctx['run_number']} &nbsp;|&nbsp;
+      Open Source Software (OSS) Security Scanner v2.3 &nbsp;|&nbsp; Run #{ctx['run_number']} &nbsp;|&nbsp;
       {ctx['scan_date']} &nbsp;|&nbsp; UNCLASSIFIED
     </footer>
     """
@@ -1196,7 +1196,7 @@ def generate_docx(report_type, ctx, profile, packages, findings, semgrep, tool_v
     footer_p = doc.add_paragraph()
     footer_p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     fr = footer_p.add_run(
-        f"Open Source Sofware (OSS) Security Scanner v2.3  |  Run #{ctx['run_number']}  |  "
+        f"Open Source Software (OSS) Security Scanner v2.3  |  Run #{ctx['run_number']}  |  "
         f"{ctx['scan_date']}  |  UNCLASSIFIED"
     )
     fr.font.size  = Pt(9)
@@ -1210,7 +1210,7 @@ def generate_docx(report_type, ctx, profile, packages, findings, semgrep, tool_v
 # ---------------------------------------------------------------------------
 
 def main():
-    parser = argparse.ArgumentParser(description="Open Source Sofware (OSS) Security Report Generator")
+    parser = argparse.ArgumentParser(description="Open Source Software (OSS) Security Report Generator")
     parser.add_argument("--reports-dir", default="reports",   help="Path to scanner reports folder")
     parser.add_argument("--profile-path",default="cia-profile.yaml", help="Path to CIA profile YAML")
     parser.add_argument("--output-dir",  default="security-reports", help="Output directory for generated reports")
