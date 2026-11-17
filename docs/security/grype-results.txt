@@ -1,0 +1,2 @@
+NAME     INSTALLED          FIXED IN  TYPE    VULNERABILITY        SEVERITY  EPSS         RISK  
+log4net  2.0.17.0-.NET 4.5  3.3.0     dotnet  GHSA-4f7c-pmjv-c25w  Medium    0.8% (57th)  0.4   
