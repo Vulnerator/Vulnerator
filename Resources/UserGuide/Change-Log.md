@@ -1,4 +1,14 @@
-﻿# Vulnerator 2.0 (7.5.1)
+﻿# Vulnerator 2.0 (7.5.2)
+###### Version 7.5.2, November 2026
+
+| Change Description |
+| :----------------- |
+| Hardware > Merge Hardware... opens the whole hardware inventory: Find a device's records by name, other name, registry number, IP or operating system, tick the ones that are the same device (records ticked or selected in the Hardware list start ticked), and see which device they combine into before merging (it no longer stops with "Tick two or more hardware records") |
+
+
+----------
+
+# Vulnerator 2.0 (7.5.1)
 ###### Version 7.5.1, November 2026
 
 | Change Description |

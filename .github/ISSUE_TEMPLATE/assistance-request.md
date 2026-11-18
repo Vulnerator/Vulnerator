@@ -16,7 +16,7 @@ _Please provide a brief synopsis of the request or the help needed._
 
 #### System Information
  - _**OS:**_ [e.g. Windows 11]
- - _**Version:**_ [e.g. 7.5.1]
+ - _**Version:**_ [e.g. 7.5.2]
 
 
 #### Additional Context
