@@ -108,9 +108,10 @@ to sort. Your choice is remembered.
   saves another name (for example the host name admins type in its checklists), so imports with that name land on
   the device without a merge. **Remove** forgets a name, for example one saved by a wrong merge. A name that another
   record already has is refused: merge the two records instead.
-* **Merge:** tick two or more records that are the same device and choose **Merge Ticked Hardware...**. There is
-  nothing to pick: all of them are combined into one device, which keeps the oldest registry number. The window shows
-  that device and the records combined into it. Their findings, IP and MAC addresses, groups, software, ports and SCAP
+* **Merge:** choose **Merge Hardware...**. It shows the whole hardware inventory with a **Find** box (name, other
+  name, registry number, IP address or operating system); records ticked or selected in the Hardware list start
+  ticked. Tick the records that are the same device (clicking a row ticks it); the window shows, as you tick, the
+  device they will be combined into: the one with the oldest registry number. Choose **Merge**. Their findings, IP and MAC addresses, groups, software, ports and SCAP
   scores move to it; when records have the same finding, the newest result is kept, with its POA&M and
   mitigation links. Blank fields (FQDN, OS, ...) are filled from the other records. The others' registry numbers are
   retired and point to the device. The other names become aliases (shown, with the

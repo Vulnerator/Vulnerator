@@ -860,6 +860,40 @@ try {
     Assert-That ($tidyOs -eq 'Old OS A / Old OS B') ('operating systems on several lines become one line (' + $tidyOs + ')')
     Assert-That ([Vulnerator.Model.DataAccess.AssetEditor]::SplitCombinedSoftware() -eq 0) 'splitting again finds nothing to split'
 
+    # --- Merge Hardware window: whole inventory, pre-ticked rows, live "combined into" (built off-screen) -------
+    Add-Type -AssemblyName PresentationFramework
+    $mkHw = {
+        param($id, $name, $number)
+        $h = New-Object Vulnerator.Model.Entity.Hardware
+        $h.Hardware_ID = $id; $h.DisplayedHostName = $name; $h.DiscoveredHostName = $name; $h.RegistryNumber = $number
+        $h
+    }
+    $inventory = @(
+        (& $mkHw 101 'WIN01.contoso.test' 'VUL-000040'),
+        (& $mkHw 102 'win01' 'VUL-000007'),
+        (& $mkHw 103 'WIN01' 'VUL-000052'),
+        (& $mkHw 104 'other01' 'VUL-000003'))
+    $mergeWindowError = $null
+    try {
+        $mw = [Vulnerator.View.UI.ConfigurationManagement.MergeHardwareWindow]::new([Vulnerator.Model.Entity.Hardware[]]$inventory, [long[]]@(101))
+        $flags = [System.Reflection.BindingFlags]'NonPublic, Instance'
+        $type = $mw.GetType()
+        $cands = $type.GetField('candidates', $flags).GetValue($mw)
+        $view = $type.GetField('view', $flags).GetValue($mw)
+        $summaryText = { $type.GetField('summary', $flags).GetValue($mw).Text }
+        $mergeButton = $type.GetField('merge', $flags).GetValue($mw)
+        $findBox = $type.GetField('find', $flags).GetValue($mw)
+        $visible = { @($view | ForEach-Object { $_ }).Count }
+        $one = (& $summaryText)
+        Assert-That ($cands.Count -eq 4 -and $findBox.Text -eq 'WIN01' -and (& $visible) -eq 3 -and -not $mergeButton.IsEnabled) ('Merge Hardware lists the inventory and finds the picked record''s other records by short name (' + (& $visible) + ' shown, Find "' + $findBox.Text + '", ' + $one + ')')
+        foreach ($c in $cands) { if ($c.Hardware.Hardware_ID -in 102, 103) { $c.Include = $true } }
+        $three = (& $summaryText)
+        Assert-That ($mergeButton.IsEnabled -and $three -match '3 records' -and $three -match 'VUL-000007 win01') ('ticking shows the device they combine into, the oldest registry number (' + $three + ')')
+        $findBox.Text = 'other'
+        Assert-That ((& $visible) -eq 4) 'Find shows matching records and keeps ticked ones in view'
+    } catch { $mergeWindowError = $_.Exception.ToString() }
+    Assert-That ($null -eq $mergeWindowError) ('the Merge Hardware window opens without errors' + $(if ($mergeWindowError) { ': ' + $mergeWindowError } else { '' }))
+
     # --- Hardware side panel: other names added and removed by hand; the search box ---------------------------
     $editor = [Vulnerator.Model.DataAccess.AssetEditor]
     $refusedOwn = $null; $refusedOther = $null

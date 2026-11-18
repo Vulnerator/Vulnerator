@@ -207,8 +207,9 @@
                                 ToolTip="Choose the columns shown in the Hardware list (for example Operating System and Last ACAS Scan)" />
                         <Button Margin="{StaticResource MarginLeft5}"
                                 Command="{Binding MergeHardwareCommand}"
-                                Content="Merge Ticked Hardware..."
-                                ToolTip="Tick two or more records that are the same device (for example W01.Contoso.com from ACAS and W01.Contoso from a checklist) and merge them into one" />
+                                CommandParameter="{Binding SelectedItems, ElementName=hardwareGrid}"
+                                Content="Merge Hardware..."
+                                ToolTip="Opens the hardware inventory: tick the records that are the same device (for example W01.Contoso.com from ACAS and W01.Contoso from a checklist) and combine them into one. Records ticked or selected here start ticked." />
                     </StackPanel>
                     <Button Grid.Column="3"
                                         HorizontalAlignment="Right"

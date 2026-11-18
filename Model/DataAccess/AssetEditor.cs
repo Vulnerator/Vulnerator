@@ -134,7 +134,7 @@ namespace Vulnerator.Model.DataAccess
                 command.CommandText = "SELECT DisplayedHostName FROM Hardware WHERE Hardware_ID <> @Id AND DiscoveredHostName = @Name COLLATE NOCASE LIMIT 1";
                 object other = command.ExecuteScalar();
                 if (other != null && !(other is DBNull))
-                { throw new InvalidOperationException($"Another hardware record ('{other}') has the name '{name}'. Tick both records and use Merge Ticked Hardware instead."); }
+                { throw new InvalidOperationException($"Another hardware record ('{other}') has the name '{name}'. Use Merge Hardware to combine the two records instead."); }
                 command.CommandText = "INSERT INTO HardwareIdentifiers (Hardware_ID, IdentifierType, IdentifierValue) VALUES (@Id, 'Alias', @Name)";
                 command.ExecuteNonQuery();
                 return 0L;

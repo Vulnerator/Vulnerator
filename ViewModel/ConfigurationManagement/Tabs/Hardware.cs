@@ -632,38 +632,39 @@ namespace Vulnerator.ViewModel.ConfigurationManagement.Tabs
             RunEdit("Remove name", () => { AssetEditor.RemoveAlias(hardwareId.Value, alias); return 0; }, hardwareId);
         });
 
-        public RelayCommand MergeHardwareCommand => new RelayCommand(MergeHardware);
+        /// <summary>Merge Hardware...: the parameter is the Hardware list's selected rows (they start ticked).</summary>
+        public RelayCommand<object> MergeHardwareCommand => new RelayCommand<object>(MergeHardware);
 
         /// <summary>
-        /// Combines the ticked hardware records (the same device under different names, e.g. W01.Contoso.com from ACAS and
-        /// W01.Contoso from a checklist) into one device, which keeps the oldest registry number, after an optional
-        /// database backup.
+        /// Opens Merge Hardware with the whole inventory: the user ticks the records that are the same device (records
+        /// ticked or selected in the Hardware list start ticked), and they are combined into one device, which keeps the
+        /// oldest registry number, after an optional database backup.
         /// </summary>
-        private void MergeHardware()
+        private void MergeHardware(object selectedRows)
         {
-            List<Model.Entity.Hardware> ticked = Hardwares?.Where(h => h.IsChecked).ToList() ?? new List<Model.Entity.Hardware>();
-            if (ticked.Count < 2)
+            List<Model.Entity.Hardware> inventory = Hardwares?.ToList() ?? new List<Model.Entity.Hardware>();
+            if (inventory.Count < 2)
             {
-                System.Windows.MessageBox.Show("Tick two or more hardware records that are the same device, then choose Merge.", "Merge Hardware",
+                System.Windows.MessageBox.Show("There are fewer than two hardware records, so there is nothing to merge.", "Merge Hardware",
                     System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
                 return;
             }
-            long keepId;
-            try
-            { keepId = HardwareMerger.ChooseKeep(ticked.Select(h => h.Hardware_ID)); }
-            catch (Exception exception)
+            HashSet<long> preTicked = new HashSet<long>(inventory.Where(h => h.IsChecked).Select(h => h.Hardware_ID));
+            if (selectedRows is System.Collections.IEnumerable rows && !(selectedRows is string))
             {
-                LogWriter.LogErrorWithDebug("Unable to prepare the hardware merge.", exception);
-                System.Windows.MessageBox.Show("The records could not be merged (nothing was changed): " + exception.Message, "Merge Hardware",
-                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
-                return;
+                foreach (Model.Entity.Hardware row in rows.OfType<Model.Entity.Hardware>())
+                { preTicked.Add(row.Hardware_ID); }
             }
-            Vulnerator.View.UI.ConfigurationManagement.MergeHardwareWindow window = new Vulnerator.View.UI.ConfigurationManagement.MergeHardwareWindow(ticked, keepId)
+            if (preTicked.Count < 2 && SelectedHardware != null)
+            { preTicked.Add(SelectedHardware.Hardware_ID); }
+            Vulnerator.View.UI.ConfigurationManagement.MergeHardwareWindow window = new Vulnerator.View.UI.ConfigurationManagement.MergeHardwareWindow(inventory, preTicked)
             {
                 Owner = System.Windows.Application.Current.Windows.OfType<System.Windows.Window>().FirstOrDefault(w => w.IsActive) ?? System.Windows.Application.Current.MainWindow
             };
-            if (window.ShowDialog() != true)
+            if (window.ShowDialog() != true || window.SelectedIds.Count < 2)
             { return; }
+            long keepId = window.KeepId;
+            List<Model.Entity.Hardware> ticked = inventory.Where(h => window.SelectedIds.Contains(h.Hardware_ID)).ToList();
             List<long> mergeIds = ticked.Where(h => h.Hardware_ID != keepId).Select(h => h.Hardware_ID).ToList();
             if (window.BackUpFirst)
             {
