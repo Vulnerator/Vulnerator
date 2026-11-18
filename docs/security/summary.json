@@ -1,8 +1,8 @@
 {
-  "scanned_at": "2026-11-17T20:17:45Z",
-  "version": "7.5.1-dev.f67356b",
-  "commit": "f67356b",
-  "run_url": "https://github.com/hbonesctr/Vulnerator/actions/runs/44166519557",
+  "scanned_at": "2026-11-18T17:34:10Z",
+  "version": "7.5.2-dev.140ca54",
+  "commit": "140ca54",
+  "run_url": "https://github.com/hbonesctr/Vulnerator/actions/runs/44359145348",
   "release_asset": "",
   "components": 63,
   "dependency_findings": 1,
