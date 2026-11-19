@@ -1,0 +1,6 @@
+Synthetic assessment procedure list (no real system data)
+Assessment Procedure,CCI Number,Control,AP
+"Determine if: generic procedure
+line two, with ""quotes"", and a comma",CCI-15,AC-02(01),
+Determine if: configuration procedure,"CCI-000366; CCI-000367",CM-06,CM-06b.01
+,CCI-NA,AC-01,AC-01.00

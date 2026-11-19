@@ -15,7 +15,7 @@ namespace Vulnerator.View.Converter
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new InvalidOperationException("IsNullConverter can only be used OneWay.");
+            return bool.Parse(value.ToString());
         }
     }
 }

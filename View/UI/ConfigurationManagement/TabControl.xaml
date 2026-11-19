@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="Vulnerator.View.UI.ConfigurationManagement.TabControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:tabs="clr-namespace:Vulnerator.View.UI.ConfigurationManagement.Tabs"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             mc:Ignorable="d" 
+             d:DesignWidth="800">
+    <Grid Background="{DynamicResource MahApps.Brushes.Window.Background}">
+        <controls:MetroAnimatedSingleRowTabControl controls:TabControlHelper.Underlined="SelectedTabItem">
+            <TabItem Header="Groups"
+                     Style="{StaticResource CustomMetroTabItem}">
+                <tabs:Groups />
+            </TabItem>
+            <TabItem Header="Hardware"
+                     Style="{StaticResource CustomMetroTabItem}">
+                <tabs:Hardware />
+            </TabItem>
+            <TabItem Header="Software"
+                     Style="{StaticResource CustomMetroTabItem}">
+                <tabs:Software />
+            </TabItem>
+            <TabItem Header="PPS"
+                     Style="{StaticResource CustomMetroTabItem}">
+                <tabs:PortsProtocolsServces />
+            </TabItem>
+        </controls:MetroAnimatedSingleRowTabControl>
+    </Grid>
+</UserControl>

@@ -2,14 +2,14 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                     xmlns:Notifications="clr-namespace:Enterwell.Clients.Wpf.Notifications.Controls;assembly=Enterwell.Clients.Wpf.Notifications"
-                    xmlns:local="clr-namespace:Vulnerator.View.Styles">
+                    xmlns:notifications="clr-namespace:Enterwell.Clients.Wpf.Notifications;assembly=Enterwell.Clients.Wpf.Notifications">
 
     <Style x:Key="NotificationBadgeBaseStyle"
            TargetType="{x:Type TextBlock}">
         <Setter Property="Controls:ControlsHelper.CornerRadius" Value="5" />
         <Setter Property="FontSize" Value="11" />
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="Foreground" Value="{DynamicResource IdealForegroundColorBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Colors.IdealForegroundBrush}" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="Margin" Value="10,2,0,2" />
         <Setter Property="Padding" Value="4,2" />
@@ -36,7 +36,7 @@
     <Style x:Key="NotificationMessageButtonStyle"
            TargetType="{x:Type Button}">
         <Setter Property="Controls:ControlsHelper.CornerRadius" Value="5" />
-        <Setter Property="Foreground" Value="{DynamicResource IdealForegroundColorBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Colors.IdealForegroundBrush}" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="Padding" Value="12,2" />
         <Setter Property="Template">
@@ -93,7 +93,7 @@
                             Margin="0,0,0,5"
                             VerticalAlignment="Top"
                             Background="{TemplateBinding Background}"
-                            BorderBrush="{DynamicResource TextBoxBorderBrush}"
+                            BorderBrush="{DynamicResource MahApps.Brushes.TextBox.Border}"
                             BorderThickness="1"
                             CornerRadius="5"
                             SnapsToDevicePixels="True"
@@ -230,7 +230,7 @@
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
-                                    <DataTemplate DataType="local:INotificationMessageButton">
+                                    <DataTemplate DataType="notifications:INotificationMessageButton">
                                         <Button Content="{Binding Content}"
                                                 IsEnabled="{Binding IsEnabled}" />
                                     </DataTemplate>

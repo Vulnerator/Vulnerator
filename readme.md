@@ -1,51 +1,79 @@
 ﻿<div align="center">
-    <img width="25%" src="Vulnerator_Logo_Large_Color_SquareBackground_20190805.png">
-	<h1>Vulnerator</h1>
-	<h2>Vulnerability Continuous Monitoring Made Easy</h2>
-		<a href="https://gitter.im/Vulnerator/Vulnerator">
-			<img src="https://img.shields.io/badge/Gitter-Join%20Chat-green.svg?style=flat-square&colorB=5523ed">
-		</a>
-        <a href="https://join.slack.com/t/vulnerator-chat/shared_invite/enQtMzQxMzc2MTE0NTI4LWQ1MTVmOGRmZjU4M2UzODU4ZDBhZDk1NGNlY2ZmMjgxNGEzNjUxMmE4OTkwNjQ3NTBhYzU3NmQ2OGI4YjViYzM">
-			<img src="https://img.shields.io/badge/Slack-Join%20Chat-green.svg?style=flat-square&colorB=5523ed">
-		</a>
-		<a href="https://github.com/Vulnerator/Vulnerator/releases/latest">
-			<img src="https://img.shields.io/github/release/Vulnerator/Vulnerator.svg?style=flat-square">
-		</a>
-		<a href="https://github.com/Vulnerator/Vulnerator/issues">
-			<img src="https://img.shields.io/github/issues-raw/Vulnerator/Vulnerator.svg?style=flat-square">
-		</a>
-		<a href="https://github.com/Vulnerator/Vulnerator/issues">
-			<img src="https://img.shields.io/github/issues-closed-raw/Vulnerator/Vulnerator.svg?style=flat-square&colorB=green">
-		</a>
-        <a href="https://github.com/Vulnerator/Vulnerator/blob/testing/LICENSE">
-			<img src="https://img.shields.io/github/license/Vulnerator/Vulnerator.svg?style=flat-square&colorB=f77a1b">
-		</a>
+    <img width="70%" alt="Vulnerator 2.0" src="docs/logo/vulnerator-2.0-wordmark.png">
+    <h3>Vulnerability and STIG data consolidation for DoD RMF and eMASS</h3>
+    <p>
+        <a href="https://github.com/hbonesctr/Vulnerator/releases/latest"><b>Download the latest release</b></a> &middot;
+        <a href="https://hbonesctr.github.io/Vulnerator/">Project page</a> &middot;
+        <a href="docs/release-notes">Release notes</a> &middot;
+        <a href="https://github.com/hbonesctr/Vulnerator/issues">Issues</a>
+    </p>
 </div>
 
-### Software Security
-With the move from SoftwareForge to the public domain, the integrity of the application has recently been thrust into the limelight.  To ensure the application is secure, please note the following measures:
-* [Alex Kuchta](https://github.com/amkuchta "Alex Kuchta's GitHub Page") has personally had his hand in every line of code in the application - there is not a single file that has not been touched, modified, or updated by him
-* Only four GitHub users have the power to update the application.  This means that although anybody can fork the repository and change their personal repo, only one of the four "gatekeepers" can authorize a change to the ```master``` branch
-* Each release is listed with both an ```MD5``` and ```SHA256``` checksum value - after you download the application, I encourage you to check the hash yourself to ensure that you downloaded what you expected
-* If the above measures are not enough, please feel free to create your own fork of the repository and compile the application yourself - this will allow you to do a manual code review to ensure that no malicious lines exist before creating an executable.
+Vulnerator 2.0 is a maintained rewrite of [Vulnerator](https://github.com/Vulnerator/Vulnerator). It brings the tool to
+NIST SP 800-53 Rev 5, current DISA checklist and scan formats, and eMASS POA&M and hardware / software exports, and it
+runs offline on hardened DoD workstations without administrator rights.
 
-### Helpful Links:
-To get started, please check out (and bookmark!) the following locations - they are a treasure trove of knowledge (which I am told is power, and who doesn't want to be all-powerful?)!  
+## Get started
 
-* **Vulnerator Project Page:** https://vulnerator.github.io/Vulnerator/
-* **Software Releases:**  https://github.com/Vulnerator/Vulnerator/releases
-* **Wiki Page(s):** https://github.com/Vulnerator/Vulnerator/wiki
-* **Issue Tracker:** https://github.com/Vulnerator/Vulnerator/issues  
-* **Change Log:** https://github.com/Vulnerator/Vulnerator/wiki/Change-Log  
+1. Download `Vulnerator-<version>.zip` from [Releases](https://github.com/hbonesctr/Vulnerator/releases/latest) and
+   check its SHA-256 against the release page: `Get-FileHash .\Vulnerator-<version>.zip`.
+2. If Windows marks the zip as downloaded from the internet, right-click it > **Properties** > **Unblock**, then extract
+   it. **Extract all of the files.**
+3. Run `Vulnerator.exe` from inside the folder (desktop shortcut: right-click > **Send to** > **Desktop (create
+   shortcut)**).
+4. Choose **Portable** (database next to the program) or **Persistent** (a database file you pick), then complete the
+   one-time setup under **Settings**: your details, eMASS export values and marking, the DISA STIG library and your
+   eMASS IG/AP export.
 
-### QuickStart Guide
-Now that you have familiarized yourself with the available resources (you did click the links, didn't you?), jump in to using the software!  
+**Requirements:** 64-bit Windows, .NET Framework 4.8. No installation, no administrator rights. The database engine is
+`winsqlite3.dll` (part of Windows), and the program runs with .NET strong-name bypass disabled. Nothing contacts the
+internet unless you turn on Settings > Online Checks; STIG Manager pulls (Settings > STIG Manager, off by
+default) contact only the server you enter. The program's **Help** page covers setup, importing, findings,
+reports and the log.
 
-1. Download the software from the [Releases](https://github.com/Vulnerator/Vulnerator/releases) page
-  * **Note:** Chances are, unless you are a coder or interested in seeing "under the hood", you want the compiled release (the download without the word "Source" in it)
-2. Extract the entire folder from the "*.zip" file you just downloaded
-3. Launch the "Vulnerator.exe" file _from within the folder you just extracted_
-  * The executable has hidden files that it depends on to run - they are shipped with the application.  If Vulnerator does not find these files in the directory it is in, it will yell at you, which will make you yell at me... and I don't like being yelled at.
-4. Enjoy!
+## What it does
 
-For a more detailed user guide, be sure to check out the [Wiki](https://github.com/Vulnerator/Vulnerator/wiki), and if you have any bugs or suggestions to report, post them on the [Issues](https://github.com/Vulnerator/Vulnerator/issues) page.
+| | |
+| :-- | :-- |
+| **Imports** | STIG checklists (.ckl, STIG Viewer 3 .cklb, Evaluate-STIG output - older results in *Previous* folders skipped); ACAS / Nessus (.nessus, CSV) from files, zips or folders of zips; SCAP / SCC XCCDF results; the DISA STIG library; checklists pulled from a STIG Manager server (opt-in) |
+| **NIST SP 800-53 Rev 5** | Findings mapped to CCIs and Rev 5 controls (DISA CCI list, CNSSI 1253 baselines); eMASS assessment procedures from your own IG/AP export |
+| **Reports** | eMASS POA&M and Hardware / Software workbooks, STIG Details, PDF Summary, Risk Assessment Report, SCAP & STIG Discrepancies, Ports, Protocols & Services, per-host STIG checklists |
+| **Handling** | Classification / handling marking on every export; labeled input files imported only after you confirm the label |
+| **Configuration Management** | Hardware, software, groups and ports, protocols and services; one record per device (permanent VUL- registry numbers, matching by name / FQDN / NetBIOS, merge with aliases) |
+| **Dashboards** (included add-on) | Offline charts: open findings by severity, top hosts, compliance by control family, POA&M aging, trend, coverage gaps, outdated STIG checklists, active IAVMs |
+
+## In the release zip
+
+`Vulnerator.exe` and its libraries, `LICENSE.txt`, `THIRD-PARTY-NOTICES.txt`, the Dashboards add-on in
+`Add-ons\Dashboards`, and `Test-RealData.ps1`, which imports a
+folder of your own files into a throwaway database and prints one line per file (nothing leaves your machine). Each
+release also carries the zip's SHA-256 and a per-file hash list for application allow-listing.
+
+## Security scan
+
+Every build is scanned by the `security-scan` job in the Build workflow: an SBOM of the shipped program (Syft, SPDX 2.3 and CycloneDX), dependency vulnerabilities with CVSS, EPSS and CISA KEV (Grype), and static analysis of the source (Semgrep). It writes Developer, Analyst and Leadership reports.
+
+- **Latest results:** the [project page](https://hbonesctr.github.io/Vulnerator/#security-scan) and [`docs/security/`](docs/security/), updated on every push to `master`.
+- **Per release:** `Vulnerator-<version>-security-scan.zip` (with `.sha256`) is attached to each release and holds the reports, SBOMs and raw scanner output.
+- **Code findings:** the repository's Security tab (code scanning).
+- **Method and control mapping:** [`scanner-payload/COMPLIANCE-OVERVIEW.md`](scanner-payload/COMPLIANCE-OVERVIEW.md) and [`REFERENCES.md`](scanner-payload/REFERENCES.md).
+
+## Building
+
+There is no local development environment: builds and tests run in GitHub Actions on Windows
+([.github/workflows/build.yml](.github/workflows/build.yml)) - reference-data and SQL checks, the Release build, a
+launch test with strong-name bypass disabled, end-to-end import / export / edit tests on synthetic files, and eMASS
+template checks. Pushing a `release/v*` branch (or a `v*` tag) publishes that release. Reference data is regenerated
+with the scripts in [tools/rev5](tools/rev5). The project page is [docs/index.html](docs/index.html) (GitHub Pages).
+
+## Credits and license
+
+Vulnerator 2.0 application rewrite: **Hector L. Bones**. Based on Vulnerator by Alex Kuchta, Jeff Vanerwegen, Rick
+Murphy, Jeff Purcell and contributors. MIT License (see [LICENSE](LICENSE)), including the Dashboards add-on ([AddOns](AddOns)); bundled
+components are listed in `THIRD-PARTY-NOTICES.txt` in each release.
+
+## No licenses, forks welcome
+
+Vulnerator 2.0 is free and open source. It needs no license key, and future versions will not add one. Anyone may
+fork it and carry on their own work under the MIT License. Integrations with outside services (Elastic, LLMs and
+other APIs) are not planned for Vulnerator; forks are welcome to add them.

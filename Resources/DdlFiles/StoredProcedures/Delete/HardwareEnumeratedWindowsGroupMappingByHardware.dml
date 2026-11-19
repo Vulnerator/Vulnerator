@@ -1,0 +1,4 @@
+﻿DELETE FROM
+    HardwareEnumeratedWindowsGroups
+WHERE
+    Hardware_ID = @Hardware_ID;

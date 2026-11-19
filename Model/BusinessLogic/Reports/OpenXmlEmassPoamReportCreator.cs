@@ -1,76 +1,61 @@
-﻿using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
-using log4net;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SQLite;
-using System.IO;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Vulnerator.Helper;
 using Vulnerator.Model.DataAccess;
-using Vulnerator.Model.Object;
-using Vulnerator.ViewModel;
-using File = Vulnerator.Model.Object.File;
 
 namespace Vulnerator.Model.BusinessLogic.Reports
 {
+    /// <summary>
+    /// Writes an eMASS-importable POA&amp;M laid out like the eMASS "POAMImportTemplate_RMF_Standard"
+    /// template: header block in rows 2-6, the 32 template columns in row 7 (column A hidden), items from
+    /// row 8, with each additional milestone on its own row. Items are built by <see cref="EmassPoamBuilder"/>.
+    /// </summary>
     public class OpenXmlEmassPoamReportCreator
     {
-        private Dictionary<string, int> sharedStringDictionary = new Dictionary<string, int>();
-        private int sharedStringMaxIndex;
-        private string ContactOrganization = Properties.Settings.Default.Organization;
-        private string ContactName = Properties.Settings.Default.Name;
-        private string ContactNumber = Properties.Settings.Default.Phone;
-        private string ContactEmail = Properties.Settings.Default.Email;
-        private int poamRowCounterIndex = 1;
-        private UInt32Value sheetIndex = 1;
-        string doubleCarriageReturn = Environment.NewLine + Environment.NewLine;
-        private DdlReader _ddlReader = new DdlReader();
-        private Assembly assembly = Assembly.GetExecutingAssembly();
-        private string _storedProcedureBase = "Vulnerator.Resources.DdlFiles.StoredProcedures.";
-        private OpenXmlWriter _openXmlWriter;
-        private readonly OpenXmlStylesheetCreator _openXmlStylesheetCreator = new OpenXmlStylesheetCreator();
-        private readonly OpenXmlCellDataHandler _openXmlCellDataHandler = new OpenXmlCellDataHandler();
-        private readonly string[] mitigatedStatuses = { "Ongoing", "Completed", "Not Applicable", "Not Reviewed" };
-        private readonly string[] levels = {"Very High", "High", "Moderate", "Low", "Very Low"};
+        public const string ReportName = "eMASS-Importable POA&M";
+
+        /// <summary>Row 7 headers, columns B through AG, exactly as in the eMASS template.</summary>
+        public static readonly string[] ColumnHeaders =
+        {
+            "POA&M Item ID", "POA&M Status", "Summary", "Vulnerability Description", "Controls / APs",
+            "Security Checks", "Date Identified", "POA&M Scheduled Completion Date",
+            "POA&M Requested Risk Accepted Expiration Date", "POA&M Completion Date", "Milestone ID",
+            "Milestone Status", "Milestone Description", "Milestone Status Comments",
+            "Milestone Scheduled Completion Date", "Milestone Completion Date", "Identification Source",
+            "Identification Source Details", "Office/Org", "Comments", "Raw Severity", "Devices Affected",
+            "Mitigations", "Severity", "Relevance of Threat", "Likelihood", "Impact", "Impact Description",
+            "Residual Risk Level", "Recommendations", "Resources", "Actual Cost"
+        };
+
+        private const int FirstColumn = 2;   // column B
+        private const int HeaderRow = 7;
+
+        private readonly DdlReader _ddlReader = new DdlReader();
+        private readonly Assembly _assembly = Assembly.GetExecutingAssembly();
+        private const string StoredProcedureBase = "Vulnerator.Resources.DdlFiles.StoredProcedures.";
 
         public string CreateEmassPoam(string fileName)
         {
             try
             {
                 if (!DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
-                {
-                    DatabaseBuilder.sqliteConnection.Open();
-                }
+                { DatabaseBuilder.sqliteConnection.Open(); }
 
-                using (SpreadsheetDocument spreadsheetDocument =
-                    SpreadsheetDocument.Create(fileName, SpreadsheetDocumentType.Workbook))
-                {
-                    LogWriter.LogStatusUpdate("Creating POA&M workbook framework.");
-                    WorkbookPart workbookPart = spreadsheetDocument.AddWorkbookPart();
-                    WorkbookStylesPart workbookStylesPart = workbookPart.AddNewPart<WorkbookStylesPart>();
-                    workbookStylesPart.Stylesheet = _openXmlStylesheetCreator.CreateStylesheet();
-                    Workbook workbook = workbookPart.Workbook = new Workbook();
-                    Sheets sheets = workbook.AppendChild(new Sheets());
-                    StartPoam(workbookPart, sheets);
-                    LogWriter.LogStatusUpdate("Writing POA&M findings.");
-                    WriteFindingsToPoam();
-                    LogWriter.LogStatusUpdate("Finalizing POA&M workbook.");
-                    EndPoam();
-                    _openXmlCellDataHandler.CreateSharedStringPart(workbookPart, sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-
+                LogWriter.LogStatusUpdate("Reading POA&M findings.");
+                List<EmassPoamFinding> findings = ReadFindings();
+                List<EmassPoamItem> items = EmassPoamBuilder.Build(findings, CreateOptions());
+                LogWriter.LogStatusUpdate($"Writing {items.Count} POA&M item(s) from {findings.Count} finding row(s).");
+                Write(fileName, items);
                 return "Excel report creation successful";
             }
             catch (Exception exception)
             {
-                string error = $"Unable to create '{fileName}' (Excel Report).";
-                LogWriter.LogErrorWithDebug(error, exception);
+                LogWriter.LogErrorWithDebug($"Unable to create '{fileName}' (eMASS POA&M).", exception);
                 return "Excel report creation failed - see log for details";
             }
             finally
@@ -79,767 +64,302 @@ namespace Vulnerator.Model.BusinessLogic.Reports
             }
         }
 
-        private void StartPoam(WorkbookPart workbookPart, Sheets sheets)
+        public static EmassPoamOptions CreateOptions()
         {
-            try
+            Properties.Settings settings = Properties.Settings.Default;
+            EmassPoamOptions options = new EmassPoamOptions { ExportDate = DateTime.Today };
+            // Office/Org: the setting, else "Organization, Name, Phone, Email" from the contact settings,
+            // else the processor's placeholder (PD-03).
+            string officeOrg = string.IsNullOrWhiteSpace(settings.EmassOfficeOrg)
+                ? EmassPoamBuilder.ComposeOfficeOrg(settings.Organization, settings.Name, settings.Phone, settings.Email)
+                : settings.EmassOfficeOrg.Trim();
+            if (!string.IsNullOrWhiteSpace(officeOrg))
+            { options.OfficeOrg = officeOrg; }
+            if (!string.IsNullOrWhiteSpace(settings.EmassResourcesRequired))
+            { options.Resources = settings.EmassResourcesRequired.Trim(); }
+            if (!string.IsNullOrWhiteSpace(settings.EmassIdentificationSource))
+            { options.IdentificationSource = settings.EmassIdentificationSource.Trim(); }
+            if (!string.IsNullOrWhiteSpace(settings.EmassMitigationPlaceholder))
+            { options.MitigationPlaceholder = settings.EmassMitigationPlaceholder.Trim(); }
+            options.DefaultMilestone = settings.EmassDefaultMilestone ?? string.Empty;
+            options.SetCompletionDays(settings.EmassScheduledCompletionDays);
+            return options;
+        }
+
+        public static void Write(string fileName, List<EmassPoamItem> items)
+        {
+            Properties.Settings settings = Properties.Settings.Default;
+            double[] widths = new double[33];
+            for (int i = 0; i < widths.Length; i++)
+            { widths[i] = 18; }
+            widths[0] = 2;      // A (hidden)
+            widths[3] = 40;     // D Summary
+            widths[4] = 60;     // E Vulnerability Description
+            widths[13] = 40;    // N Milestone Description
+            widths[20] = 50;    // U Comments
+            widths[22] = 30;    // W Devices Affected
+            widths[23] = 40;    // X Mitigations
+            widths[30] = 40;    // AE Recommendations
+
+            using (EmassWorkbookWriter workbook = new EmassWorkbookWriter(fileName, settings.EmassClassificationMarking))
             {
-                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
-                Sheet sheet = new Sheet()
-                    {Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = sheetIndex, Name = "POA&M"};
-                sheetIndex++;
-                sheets.Append(sheet);
-                _openXmlWriter = OpenXmlWriter.Create(worksheetPart);
-                _openXmlWriter.WriteStartElement(new Worksheet());
-                WritePoamColumns();
-                _openXmlWriter.WriteStartElement(new SheetData());
-                _openXmlWriter.WriteElement(new Row() {Hidden = true});
-                WritePoamHeaderRowOne();
-                WritePoamHeaderRowTwo();
-                WritePoamHeaderRowThree();
-                WritePoamHeaderRowFour();
-                WritePoamHeaderRowFive();
-                WritePoamHeaderRowSix();
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to initialize 'POA&M' tab.");
-                throw exception;
+                EmassSheet sheet = workbook.AddSheet("POA&M", widths, new[] { 1 });
+                sheet.HideRow(1);
+                WriteHeaderBlock(sheet, settings);
+                for (int i = 0; i < ColumnHeaders.Length; i++)
+                { sheet.Text(HeaderRow, FirstColumn + i, ColumnHeaders[i], EmassWorkbookWriter.StyleColumnHeader); }
+
+                int row = HeaderRow + 1;
+                foreach (EmassPoamItem item in items)
+                { row = WriteItem(sheet, row, item); }
+                sheet.Save();
             }
         }
 
-        private void WritePoamColumns()
+        private static void WriteHeaderBlock(EmassSheet sheet, Properties.Settings settings)
         {
-            try
+            // Labels in A:E, values in F:M; right-hand blocks at N/O:P and Q/R:T, as in the template.
+            string[,] left =
             {
-                _openXmlWriter.WriteStartElement(new Columns());
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 4.43, Max = 1, Min = 1});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 2, Min = 2});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 3, Min = 3});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 4, Min = 4});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 10.57, Max = 5, Min = 5});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 10.57, Max = 6, Min = 6});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 7, Min = 7});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 10.57, Max = 8, Min = 8});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 9, Min = 9});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 10, Min = 10});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 11, Min = 11});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 12, Min = 12});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 24.43, Max = 13, Min = 13});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 10.57, Max = 14, Min = 14});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 15, Min = 15});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 16, Min = 16});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 17, Min = 17});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 18, Min = 18});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 19, Min = 19});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 20, Min = 20});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 21, Min = 21});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 22, Min = 22});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 23, Min = 23});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 24, Min = 24});
-                _openXmlWriter.WriteElement(new Column() {CustomWidth = true, Width = 32.29, Max = 25, Min = 25});
-                _openXmlWriter.WriteEndElement();
+                { "Date Exported:", DateTime.Today.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) },
+                { "Exported By:", settings.Name },
+                { "CC/S/A/FA:", settings.EmassCcsafa },
+                { "System / Project Name:", settings.EmassSystemName },
+                { "DoW IT Registration No:", settings.EmassItRegistrationNumber }
+            };
+            for (int i = 0; i < left.GetLength(0); i++)
+            {
+                int row = 2 + i;
+                sheet.Text(row, 1, left[i, 0], EmassWorkbookWriter.StyleLabel);
+                sheet.Text(row, 6, left[i, 1], EmassWorkbookWriter.StyleHeaderValue);
+                sheet.Merge("A" + row + ":E" + row);
+                sheet.Merge("F" + row + ":M" + row);
             }
-            catch (Exception exception)
+
+            sheet.Text(2, 14, "System Type:", EmassWorkbookWriter.StyleLabel);
+            sheet.Text(2, 15, settings.EmassSystemType, EmassWorkbookWriter.StyleHeaderValue);
+            sheet.Merge("O2:P3");
+            sheet.Text(2, 17, "OMB Project ID:", EmassWorkbookWriter.StyleLabel);
+            sheet.Text(2, 18, settings.EmassOmbProjectId, EmassWorkbookWriter.StyleHeaderValue);
+            sheet.Merge("R2:T3");
+            sheet.Text(4, 14, "POC Name:", EmassWorkbookWriter.StyleLabel);
+            sheet.Text(4, 15, settings.Name, EmassWorkbookWriter.StyleHeaderValue);
+            sheet.Merge("O4:P4");
+            sheet.Text(5, 14, "POC Phone:", EmassWorkbookWriter.StyleLabel);
+            sheet.Text(5, 15, settings.Phone, EmassWorkbookWriter.StyleHeaderValue);
+            sheet.Merge("O5:P5");
+            sheet.Text(6, 14, "POC E-Mail:", EmassWorkbookWriter.StyleLabel);
+            sheet.Text(6, 15, settings.Email, EmassWorkbookWriter.StyleHeaderValue);
+            sheet.Merge("O6:P6");
+            sheet.Text(5, 17, "Security Costs:", EmassWorkbookWriter.StyleLabel);
+            sheet.Text(5, 18, settings.EmassSecurityCosts, EmassWorkbookWriter.StyleHeaderValue);
+            sheet.Merge("R5:T5");
+        }
+
+        /// <summary>Writes one item and its milestones; returns the next free row.</summary>
+        private static int WriteItem(EmassSheet sheet, int row, EmassPoamItem item)
+        {
+            // Column numbers: B=2 ... AG=33. POA&M Item ID (B) and Milestone ID (L) are left for eMASS.
+            sheet.Text(row, 2, string.Empty);
+            sheet.Text(row, 3, item.Status);
+            sheet.Text(row, 4, item.Summary);
+            sheet.Text(row, 5, item.Description);
+            sheet.Text(row, 6, string.Join(EmassPoamBuilder.ListSeparator, item.Controls));
+            sheet.Text(row, 7, string.Join(EmassPoamBuilder.ListSeparator, item.SecurityChecks));
+            sheet.Date(row, 8, item.DateIdentified);
+            sheet.Date(row, 9, item.ScheduledCompletion);
+            sheet.Date(row, 10, null);
+            sheet.Date(row, 11, item.CompletionDate);
+            sheet.Text(row, 18, item.IdentificationSource);
+            sheet.Text(row, 19, item.IdentificationSourceDetails);
+            sheet.Text(row, 20, item.OfficeOrg);
+            sheet.Text(row, 21, item.Comments);
+            sheet.Text(row, 22, item.RawSeverity);
+            sheet.Text(row, 23, string.Join(EmassPoamBuilder.ListSeparator, item.DevicesAffected));
+            sheet.Text(row, 24, item.Mitigations);
+            sheet.Text(row, 25, item.Severity);
+            sheet.Text(row, 26, item.RelevanceOfThreat);
+            sheet.Text(row, 27, item.Likelihood);
+            sheet.Text(row, 28, item.Impact);
+            sheet.Text(row, 29, item.ImpactDescription);
+            sheet.Text(row, 30, item.ResidualRiskLevel);
+            sheet.Text(row, 31, item.Recommendations);
+            sheet.Text(row, 32, item.Resources);
+            sheet.Text(row, 33, string.Empty);
+
+            if (item.Milestones.Count == 0)
             {
-                LogWriter.LogError("Unable to generate 'POA&M' columns.");
-                throw exception;
+                for (int column = 12; column <= 17; column++)
+                { sheet.Text(row, column, string.Empty); }
+                return row + 1;
+            }
+            foreach (EmassMilestone milestone in item.Milestones)
+            {
+                sheet.Text(row, 12, string.Empty);
+                sheet.Text(row, 13, milestone.Status);
+                sheet.Text(row, 14, milestone.Description);
+                sheet.Text(row, 15, string.Empty);
+                sheet.Date(row, 16, milestone.ScheduledCompletion);
+                sheet.Date(row, 17, milestone.CompletionDate);
+                row++;
+            }
+            return row;
+        }
+
+        private List<EmassPoamFinding> ReadFindings()
+        {
+            using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+            {
+                BuildFilteredCommand(sqliteCommand);
+                return ReadFindings(sqliteCommand);
             }
         }
 
-        private void WritePoamHeaderRowOne()
+        /// <summary>The POA&amp;M query without the Reporting filters (add-ons, interface version 3).</summary>
+        public static string UnfilteredQuery()
         {
-            try
-            {
-                _openXmlWriter.WriteStartElement(new Row());
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Date Exported:", 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, DateTime.Now.ToLongDateString(), 20,
-                    ref sharedStringMaxIndex, sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "System Type:", 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "OMB Project ID:", 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                WritePoamEmptyHeaderCells();
-                _openXmlWriter.WriteEndElement();
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to generate first 'POA&M' header row.");
-                throw exception;
-            }
+            return new DdlReader().ReadDdl(StoredProcedureBase + "Select.EmassPoamVulnerabilities.dml", Assembly.GetExecutingAssembly());
         }
 
-        private void WritePoamHeaderRowTwo()
+        /// <summary>Reads the POA&amp;M finding rows of a prepared command (filtered for the export, unfiltered for add-ons).</summary>
+        public static List<EmassPoamFinding> ReadFindings(SQLiteCommand sqliteCommand)
         {
-            try
+            List<EmassPoamFinding> findings = new List<EmassPoamFinding>();
             {
-                _openXmlWriter.WriteStartElement(new Row());
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Exported By:", 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, ContactName, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                WritePoamEmptyHeaderCells();
-                _openXmlWriter.WriteEndElement();
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to generate second 'POA&M' header row.");
-                throw exception;
-            }
-        }
-
-        private void WritePoamHeaderRowThree()
-        {
-            try
-            {
-                _openXmlWriter.WriteStartElement(new Row());
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "DoD Component:", 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "POC Name:", 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, ContactName, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                WritePoamEmptyHeaderCells();
-                _openXmlWriter.WriteEndElement();
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to generate third 'POA&M' header row.");
-                throw exception;
-            }
-        }
-
-        private void WritePoamHeaderRowFour()
-        {
-            try
-            {
-                _openXmlWriter.WriteStartElement(new Row());
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, @"System / Project Name:", 19,
-                    ref sharedStringMaxIndex, sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, ContactName, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "POC Phone:", 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, ContactNumber, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Security Costs:", 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                WritePoamEmptyHeaderCells();
-                _openXmlWriter.WriteEndElement();
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to generate fourth 'POA&M' header row.");
-                throw exception;
-            }
-        }
-
-        private void WritePoamHeaderRowFive()
-        {
-            try
-            {
-                _openXmlWriter.WriteStartElement(new Row());
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "DoD IT Registration No:", 19,
-                    ref sharedStringMaxIndex, sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "POC Email:", 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, ContactEmail, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                WritePoamEmptyHeaderCells();
-                _openXmlWriter.WriteEndElement();
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to generate fifth POA&M header row.");
-                throw exception;
-            }
-        }
-
-        private void WritePoamEmptyHeaderCells()
-        {
-            try
-            {
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 19, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to generate POA&M header row empty cell placeholders.");
-                throw exception;
-            }
-        }
-
-        private void WritePoamHeaderRowSix()
-        {
-            try
-            {
-                _openXmlWriter.WriteStartElement(new Row());
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Control Vulnerability Description", 16,
-                    ref sharedStringMaxIndex, sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 16, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter,
-                    "Security Control Number (NC/NA controls only)", 16, ref sharedStringMaxIndex, sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Office/Org", 16, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Security Checks", 16, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Resources Required", 16, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Scheduled Completion Date", 16,
-                    ref sharedStringMaxIndex, sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Milestone with Completion Dates", 16,
-                    ref sharedStringMaxIndex, sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Milestone Changes", 16, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Source Identifying Control Vulnerability",
-                    16, ref sharedStringMaxIndex, sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Status", 16, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Comments", 16, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Raw Severity", 16,
-                    ref sharedStringMaxIndex, sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Devices Affected", 16, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter,
-                    "Mitigations (in-house and in conjunction with the Navy CSSP)", 16, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Predisposing Conditions", 16,
-                    ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Severity", 16, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Relevance of Threat", 16, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Threat Description", 16, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Likelihood", 16, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Impact", 16, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Impact Description", 16, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Residual Risk Level", 16, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "Recommendations", 16, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter,
-                    "Resulting Residual Risk after Proposed Mitigations", 16, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlWriter.WriteEndElement();
-
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, "", 16, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to generate sixth 'POA&M' header row.");
-                throw exception;
-            }
-        }
-
-        private void WriteFindingsToPoam()
-        {
-            try
-            {
-                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                using (SQLiteDataReader reader = sqliteCommand.ExecuteReader())
                 {
-                    sqliteCommand.Parameters.Add(new SQLiteParameter("UserName",
-                        Properties.Settings.Default.ActiveUser));
-                    FilterTextCreator filterTextCreator = new FilterTextCreator();
-                    string findingTypeFilter = filterTextCreator.FindingType(sqliteCommand, "eMASS-Importable POA&M");
-                    string groupFilter = filterTextCreator.Group(sqliteCommand, "eMASS-Importable POA&M");
-                    string severityFilter = filterTextCreator.Severity(sqliteCommand, "eMASS-Importable POA&M");
-                    string statusFilter = filterTextCreator.Status(sqliteCommand, "eMASS-Importable POA&M");
-                    string rmfOverrideFilter = filterTextCreator.RmfOverride(sqliteCommand, "eMASS-Importable POA&M");
-                    sqliteCommand.CommandText =
-                        _ddlReader.ReadDdl(_storedProcedureBase + "Select.EmassPoamVulnerabilities.dml", assembly);
-
-                    if (!string.IsNullOrWhiteSpace(findingTypeFilter) ||
-                        !string.IsNullOrWhiteSpace(groupFilter) ||
-                        !string.IsNullOrWhiteSpace(severityFilter) ||
-                        !string.IsNullOrWhiteSpace(statusFilter))
+                    bool hasGroupColumns = reader.HasColumn("GroupMitigatedStatus");
+                    while (reader.Read())
                     {
-                        
-                        Regex regex = new Regex(Properties.Resources.RegexSqlGroupBy);
-                        sqliteCommand.CommandText =
-                            sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, "WHERE ");
-                        if (!string.IsNullOrWhiteSpace(findingTypeFilter))
+                        string identifier = Text(reader, "UniqueVulnerabilityIdentifier");
+                        if (identifier.Equals("Plugin"))
+                        { continue; }
+                        EmassPoamFinding finding = new EmassPoamFinding
                         {
-                            sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, findingTypeFilter);
-                        }
-                        if (!string.IsNullOrWhiteSpace(groupFilter))
-                        {
-                            if (!string.IsNullOrWhiteSpace(findingTypeFilter))
-                            {
-                                sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"AND {Environment.NewLine}");
-                            }
-                            sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, groupFilter);
-                        }
-                        if (!string.IsNullOrWhiteSpace(severityFilter))
-                        {
-                            if (!string.IsNullOrWhiteSpace(findingTypeFilter) || !string.IsNullOrWhiteSpace(groupFilter))
-                            {
-                                sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"AND {Environment.NewLine}");
-                            }
-                            sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"(PrimaryRawRiskIndicator {severityFilter}) ");
-                        }
-                        if (!string.IsNullOrWhiteSpace(statusFilter))
-                        {
-                            if (!string.IsNullOrWhiteSpace(findingTypeFilter) || !string.IsNullOrWhiteSpace(groupFilter) || !string.IsNullOrWhiteSpace(severityFilter))
-                            {
-                                sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"AND {Environment.NewLine}");
-                            }
-
-                            sqliteCommand.CommandText = string.IsNullOrWhiteSpace(rmfOverrideFilter) ? 
-                                sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"(RawStatus {statusFilter} OR UniqueMitigatedStatus {statusFilter}) ") : 
-                                sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"(RawStatus {statusFilter} OR UniqueMitigatedStatus {statusFilter} OR GroupMitigatedStatus {statusFilter}) ");
-                            regex = new Regex(Properties.Resources.RegexGroupsMitigationsOrConditionsVulnerabilities);
-                            sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"{Environment.NewLine}WHERE (MitigatedStatus {statusFilter}) ");
-                        }
-                        sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, Environment.NewLine);
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(rmfOverrideFilter))
-                    {
-                        Regex regex = new Regex(Properties.Resources.RegexSqlFindingTypes);
-                        sqliteCommand.CommandText =
-                            sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index,
-                                rmfOverrideFilter);
-                        regex = new Regex(Properties.Resources.RegexSqlFromUniqueFindings);
-                        sqliteCommand.CommandText =
-                            sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index,
-                                Properties.Resources.StringGroupRmfFields);
-                    }
-
-                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
-                    {
-                        while (sqliteDataReader.Read())
-                        {
-                            if (sqliteDataReader["UniqueVulnerabilityIdentifier"].ToString().Equals("Plugin"))
-                            {
-                                continue;
-                            }
-                            WriteFindingToPoam(sqliteDataReader);
-                        }
+                            SourceName = Text(reader, "VulnSourceName"),
+                            SourceVersion = Text(reader, "VulnSourceVersion"),
+                            SourceRelease = Text(reader, "VulnSourceRelease"),
+                            VulnerabilityIdentifier = identifier,
+                            VulnerabilityVersion = Text(reader, "VulnVerison"),
+                            Title = Text(reader, "VulnerabilityTitle"),
+                            Description = Text(reader, "VulnerabilityDescription"),
+                            Controls = Text(reader, "NIST_Controls"),
+                            RawStatus = Text(reader, "RawStatus"),
+                            MitigatedStatus = Prefer(reader, hasGroupColumns, "GroupMitigatedStatus", "UniqueMitigatedStatus"),
+                            RawRisk = Text(reader, "PrimaryRawRiskIndicator"),
+                            Hosts = Text(reader, "HostName"),
+                            Software = Text(reader, "DisplayedSoftwareName"),
+                            Comments = Text(reader, "Comments"),
+                            FindingDetails = Text(reader, "FindingDetails"),
+                            TechnicalMitigation = Combine(Text(reader, "GroupTechnicalMitigations"), Text(reader, "UniqueTechnicalMitigation")),
+                            PredisposingConditions = Combine(Text(reader, "GroupPredisposingConditions"), Text(reader, "UniquePredisposingConditions")),
+                            Severity = Prefer(reader, hasGroupColumns, "GroupSeverityPervasiveness", "UniqueSeverityPervasiveness"),
+                            ThreatRelevance = Prefer(reader, hasGroupColumns, "GroupThreatRelevance", "UniqueThreatRelevance"),
+                            ThreatDescription = Combine(Text(reader, "GroupThreatDescription"), Text(reader, "UniqueThreatDescription")),
+                            Likelihood = Prefer(reader, hasGroupColumns, "GroupLikelihood", "UniqueLikelihood"),
+                            Impact = Prefer(reader, hasGroupColumns, "GroupImpact", "UniqueImpact"),
+                            ImpactDescription = Combine(Text(reader, "GroupImpactDescription"), Text(reader, "UniqueImpactDescription")),
+                            ResidualRisk = Prefer(reader, hasGroupColumns, "GroupResidualRisk", "UniqueResidualRisk"),
+                            ProposedMitigation = Combine(Text(reader, "GroupProposedMitigations"), Text(reader, "UniqueProposedMitigation")),
+                            FixText = Text(reader, "FixText"),
+                            SeverityOverride = Text(reader, "SeverityOverride"),
+                            SeverityJustification = Text(reader, "SeverityOverrideJustification"),
+                            FirstDiscovered = EmassPoamBuilder.ToDate(reader["FirstDiscovered"]),
+                            LastObserved = EmassPoamBuilder.ToDate(reader["LastObserved"]),
+                            EstimatedCompletion = EmassPoamBuilder.ToDate(
+                                hasGroupColumns && !string.IsNullOrWhiteSpace(Text(reader, "GroupEstimatedCompletionDate"))
+                                    ? reader["GroupEstimatedCompletionDate"]
+                                    : reader["UniqueEstimatedCompletionDate"])
+                        };
+                        findings.Add(finding);
                     }
                 }
             }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to write findings to the 'POA&M' workbook.");
-                throw exception;
-            }
+            return findings;
         }
 
-        private void WriteFindingToPoam(SQLiteDataReader sqliteDataReader)
+        private static string Text(SQLiteDataReader reader, string column)
         {
-            try
-            {
-                _openXmlWriter.WriteStartElement(new Row());
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, poamRowCounterIndex.ToString(), 16,
-                    ref sharedStringMaxIndex, sharedStringDictionary);
-                string descriptionCellValue =
-                    $"Title: {Environment.NewLine}{sqliteDataReader["VulnerabilityTitle"]}{doubleCarriageReturn}" +
-                    $"Description:{Environment.NewLine}{sqliteDataReader["VulnerabilityDescription"]}";
-
-                _openXmlCellDataHandler.WriteCellValue(
-                    _openXmlWriter,
-                    descriptionCellValue,
-                    20, ref sharedStringMaxIndex, sharedStringDictionary);
-
-                if (!string.IsNullOrWhiteSpace(sqliteDataReader["NIST_Controls"].ToString()))
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter,
-                        sqliteDataReader["NIST_Controls"].ToString().Replace(",", Environment.NewLine), 24, ref sharedStringMaxIndex, sharedStringDictionary);
-                }
-                else
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 24, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter,
-                    ContactOrganization + ", " + ContactName + ", " + ContactNumber + ", " + ContactEmail, 20,
-                    ref sharedStringMaxIndex, sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter,
-                    sqliteDataReader["UniqueVulnerabilityIdentifier"].ToString(), 24, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                if (sqliteDataReader.HasColumn("GroupEstimatedCompletionDate") && !string.IsNullOrWhiteSpace(sqliteDataReader["GroupEstimatedCompletionDate"].ToString()))
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, DateTime.Parse(sqliteDataReader["GroupEstimatedCompletionDate"].ToString()).ToShortDateString(), 20, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueEstimatedCompletionDate"].ToString()))
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["UniqueEstimatedCompletionDate"].ToString(), 20, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                else
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 20, ref sharedStringMaxIndex,
-                    sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["VulnSourceName"] + " :: " +
-                                                                       sqliteDataReader["VulnSourceVersion"] + "." +
-                                                                       sqliteDataReader["VulnSourceRelease"], 24,
-                    ref sharedStringMaxIndex, sharedStringDictionary);
-                if (sqliteDataReader.HasColumn("GroupMitigatedStatus") && !string.IsNullOrWhiteSpace(sqliteDataReader["GroupMitigatedStatus"].ToString()))
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["GroupMitigatedStatus"].ToString(), 24,
-                        ref sharedStringMaxIndex, sharedStringDictionary);
-                }
-                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueMitigatedStatus"].ToString()))
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["UniqueMitigatedStatus"].ToString(), 24,
-                        ref sharedStringMaxIndex, sharedStringDictionary);
-                }
-                else
-                {
-                    {
-                        _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["RawStatus"].ToString(), 24,
-                            ref sharedStringMaxIndex, sharedStringDictionary);
-                    }
-                }
-                // TODO: Parameterize this to make using comments and/or finding details optional
-                string comments = sqliteDataReader["Comments"] + doubleCarriageReturn + sqliteDataReader["FindingDetails"];
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, comments, 20,
-                    ref sharedStringMaxIndex, sharedStringDictionary);
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["PrimaryRawRiskIndicator"].ToString(), 24,
-                    ref sharedStringMaxIndex, sharedStringDictionary);
-                if (!string.IsNullOrWhiteSpace(sqliteDataReader["DisplayedSoftwareName"].ToString()))
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter,
-                        sqliteDataReader["DisplayedSoftwareName"].ToString().Replace(",", Environment.NewLine), 20, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                else
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter,
-                        sqliteDataReader["HostName"].ToString().Replace(",", Environment.NewLine), 20, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                string technicalMitigation = sqliteDataReader["UniqueTechnicalMitigation"].ToString();
-                if (!string.IsNullOrWhiteSpace(sqliteDataReader["GroupTechnicalMitigations"].ToString()))
-                {
-                    technicalMitigation = technicalMitigation.Insert(0, sqliteDataReader["GroupTechnicalMitigations"].ToString().Replace(",", doubleCarriageReturn) + doubleCarriageReturn);
-                }
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, technicalMitigation, 20,
-                    ref sharedStringMaxIndex, sharedStringDictionary);
-                string predisposingConditions = sqliteDataReader["UniquePredisposingConditions"].ToString();
-                if (!string.IsNullOrWhiteSpace(sqliteDataReader["GroupPredisposingConditions"].ToString()))
-                {
-                    predisposingConditions = predisposingConditions.Insert(0, sqliteDataReader["GroupPredisposingConditions"].ToString().Replace(",", doubleCarriageReturn) + doubleCarriageReturn);
-                }
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, predisposingConditions, 20,
-                    ref sharedStringMaxIndex, sharedStringDictionary);
-                if (sqliteDataReader.HasColumn("GroupSeverityPervasiveness") && !string.IsNullOrWhiteSpace(sqliteDataReader["GroupSeverityPervasiveness"].ToString()))
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["GroupSeverityPervasiveness"].ToString(), 24, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueSeverityPervasiveness"].ToString()))
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["UniqueSeverityPervasiveness"].ToString(), 24, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                else
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 24, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                if (sqliteDataReader.HasColumn("GroupThreatRelevance") && !string.IsNullOrWhiteSpace(sqliteDataReader["GroupThreatRelevance"].ToString()))
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["GroupThreatRelevance"].ToString(), 24, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                    
-                }
-                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueThreatRelevance"].ToString()))
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["UniqueThreatRelevance"].ToString(), 24, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                else
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 24, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                string threatDescription = sqliteDataReader["UniqueThreatDescription"].ToString();
-                if (!string.IsNullOrWhiteSpace(sqliteDataReader["GroupThreatDescription"].ToString()))
-                {
-                    threatDescription = threatDescription.Insert(0,
-                        sqliteDataReader["GroupThreatDescription"].ToString().Replace(",", doubleCarriageReturn) +
-                        doubleCarriageReturn);
-                }
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, threatDescription, 20,
-                    ref sharedStringMaxIndex, sharedStringDictionary);
-                if (sqliteDataReader.HasColumn("GroupLikelihood") && !string.IsNullOrWhiteSpace(sqliteDataReader["GroupLikelihood"].ToString()))
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["GroupLikelihood"].ToString(), 24, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueLikelihood"].ToString()))
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["UniqueLikelihood"].ToString(), 24, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                else
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 24, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                if (sqliteDataReader.HasColumn("GroupImpact") && !string.IsNullOrWhiteSpace(sqliteDataReader["GroupImpact"].ToString()))
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["GroupImpact"].ToString(), 24, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueImpact"].ToString()))
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["UniqueImpact"].ToString(), 24, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                else
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 24, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                string impactDescription = sqliteDataReader["UniqueImpactDescription"].ToString();
-                if (!string.IsNullOrWhiteSpace(sqliteDataReader["GroupImpactDescription"].ToString()))
-                {
-                    impactDescription = impactDescription.Insert(0,
-                        sqliteDataReader["GroupImpactDescription"].ToString().Replace(",", doubleCarriageReturn) +
-                        doubleCarriageReturn);
-                }
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, impactDescription, 20,
-                    ref sharedStringMaxIndex, sharedStringDictionary);
-                if (sqliteDataReader.HasColumn("GroupResidualRisk") && !string.IsNullOrWhiteSpace(sqliteDataReader["GroupResidualRisk"].ToString()))
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["GroupResidualRisk"].ToString(), 24, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueResidualRisk"].ToString()))
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["UniqueResidualRisk"].ToString(), 24, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                else
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 24, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                string proposedMitigations = sqliteDataReader["UniqueProposedMitigation"].ToString();
-                if (!string.IsNullOrWhiteSpace(sqliteDataReader["GroupProposedMitigations"].ToString()))
-                {
-                    proposedMitigations = proposedMitigations.Insert(0,
-                        sqliteDataReader["GroupProposedMitigations"].ToString().Replace(",", doubleCarriageReturn) +
-                        doubleCarriageReturn);
-                }
-                _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, proposedMitigations, 20,
-                    ref sharedStringMaxIndex, sharedStringDictionary);
-                if (sqliteDataReader.HasColumn("GroupResidualRiskAfterProposed") && !string.IsNullOrWhiteSpace(sqliteDataReader["GroupResidualRiskAfterProposed"].ToString()))
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["GroupResidualRiskAfterProposed"].ToString(), 24, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                else if (!string.IsNullOrWhiteSpace(sqliteDataReader["UniqueResidualRiskAfterProposed"].ToString()))
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, sqliteDataReader["UniqueResidualRiskAfterProposed"].ToString(), 24, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                else
-                {
-                    _openXmlCellDataHandler.WriteCellValue(_openXmlWriter, string.Empty, 24, ref sharedStringMaxIndex,
-                        sharedStringDictionary);
-                }
-                _openXmlWriter.WriteEndElement();
-                poamRowCounterIndex++;
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to write finding to 'POA&M'.");
-                throw exception;
-            }
+            if (!reader.HasColumn(column))
+            { return string.Empty; }
+            object value = reader[column];
+            return value == null || value == DBNull.Value ? string.Empty : value.ToString();
         }
 
-        private void EndPoam()
+        private static string Prefer(SQLiteDataReader reader, bool hasGroupColumns, string groupColumn, string uniqueColumn)
         {
-            try
+            if (hasGroupColumns)
             {
-                _openXmlWriter.WriteEndElement();
-                WritePoamMergeCells();
-                _openXmlWriter.WriteEndElement();
-                _openXmlWriter.Dispose();
+                string group = Text(reader, groupColumn);
+                if (!string.IsNullOrWhiteSpace(group))
+                { return group; }
             }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to finalize 'POA&M' tab.");
-                throw exception;
-            }
+            return Text(reader, uniqueColumn);
         }
 
-        private void WritePoamMergeCells()
+        private static string Combine(string groupValue, string uniqueValue)
         {
-            try
-            {
-                string[] mergeCellArray = new string[]
-                {
-                    "A1:O1", "A2:B2", "A3:B3", "A4:B4", "A5:B5", "A6:B6", "A7:B7", "C2:H2", "C3:H3",
-                    "C4:H4", "C5:H5", "C6:H6", "I2:I3", "J2:K3", "J4:K4", "J5:K5", "J6:K6", "L2:L3",
-                    "M2:O3", "M5:O5", "L4:O4", "L6:O6"
-                };
-                _openXmlWriter.WriteStartElement(new MergeCells());
-                foreach (string mergeCell in mergeCellArray)
-                {
-                    _openXmlWriter.WriteElement(new MergeCell() {Reference = mergeCell});
-                }
+            // Group-level values arrive as a comma-joined GROUP_CONCAT; keep each on its own paragraph.
+            string group = string.IsNullOrWhiteSpace(groupValue)
+                ? string.Empty
+                : string.Join(Environment.NewLine + Environment.NewLine, groupValue.Split(',').Select(v => v.Trim()).Where(v => v.Length > 0));
+            if (string.IsNullOrWhiteSpace(group))
+            { return uniqueValue ?? string.Empty; }
+            if (string.IsNullOrWhiteSpace(uniqueValue))
+            { return group; }
+            return group + Environment.NewLine + Environment.NewLine + uniqueValue;
+        }
 
-                _openXmlWriter.WriteEndElement();
-            }
-            catch (Exception exception)
+        /// <summary>The POA&amp;M query with the user's report filters applied (finding type, group, severity, status, RMF override).</summary>
+        private void BuildFilteredCommand(SQLiteCommand sqliteCommand)
+        {
+            sqliteCommand.Parameters.Add(new SQLiteParameter("UserName", Properties.Settings.Default.ActiveUser));
+            FilterTextCreator filterTextCreator = new FilterTextCreator();
+            string findingTypeFilter = filterTextCreator.FindingType(sqliteCommand, ReportName);
+            string groupFilter = filterTextCreator.Group(sqliteCommand, ReportName);
+            string severityFilter = filterTextCreator.Severity(sqliteCommand, ReportName);
+            string statusFilter = filterTextCreator.Status(sqliteCommand, ReportName);
+            string rmfOverrideFilter = filterTextCreator.RmfOverride(sqliteCommand, ReportName);
+            sqliteCommand.CommandText = _ddlReader.ReadDdl(StoredProcedureBase + "Select.EmassPoamVulnerabilities.dml", _assembly);
+
+            if (!string.IsNullOrWhiteSpace(findingTypeFilter) || !string.IsNullOrWhiteSpace(groupFilter) ||
+                !string.IsNullOrWhiteSpace(severityFilter) || !string.IsNullOrWhiteSpace(statusFilter))
             {
-                LogWriter.LogError("Unable to generate 'POA&M' 'MergeCells' element.");
-                throw exception;
+                Regex regex = new Regex(Properties.Resources.RegexSqlGroupBy);
+                sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, "WHERE ");
+                if (!string.IsNullOrWhiteSpace(findingTypeFilter))
+                { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, findingTypeFilter); }
+                if (!string.IsNullOrWhiteSpace(groupFilter))
+                {
+                    if (!string.IsNullOrWhiteSpace(findingTypeFilter))
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"AND {Environment.NewLine}"); }
+                    sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, groupFilter);
+                }
+                if (!string.IsNullOrWhiteSpace(severityFilter))
+                {
+                    if (!string.IsNullOrWhiteSpace(findingTypeFilter) || !string.IsNullOrWhiteSpace(groupFilter))
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"AND {Environment.NewLine}"); }
+                    sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"(PrimaryRawRiskIndicator {severityFilter}) ");
+                }
+                if (!string.IsNullOrWhiteSpace(statusFilter))
+                {
+                    if (!string.IsNullOrWhiteSpace(findingTypeFilter) || !string.IsNullOrWhiteSpace(groupFilter) || !string.IsNullOrWhiteSpace(severityFilter))
+                    { sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"AND {Environment.NewLine}"); }
+                    sqliteCommand.CommandText = string.IsNullOrWhiteSpace(rmfOverrideFilter)
+                        ? sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"(RawStatus {statusFilter} OR UniqueMitigatedStatus {statusFilter}) ")
+                        : sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"(RawStatus {statusFilter} OR UniqueMitigatedStatus {statusFilter} OR GroupMitigatedStatus {statusFilter}) ");
+                    regex = new Regex(Properties.Resources.RegexGroupsMitigationsOrConditionsVulnerabilities);
+                    sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, $"{Environment.NewLine}WHERE (MitigatedStatus {statusFilter}) ");
+                }
+                sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, Environment.NewLine);
+            }
+
+            if (!string.IsNullOrWhiteSpace(rmfOverrideFilter))
+            {
+                Regex regex = new Regex(Properties.Resources.RegexSqlFindingTypes);
+                sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, rmfOverrideFilter);
+                regex = new Regex(Properties.Resources.RegexSqlFromUniqueFindings);
+                sqliteCommand.CommandText = sqliteCommand.CommandText.Insert(regex.Match(sqliteCommand.CommandText).Index, Properties.Resources.StringGroupRmfFields);
             }
         }
     }

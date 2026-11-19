@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='STIG_unclass.xsl'?>
+<!-- Synthetic STIG benchmark for Vulnerator import tests. Contains no real DISA content. -->
+<Benchmark xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cpe="http://cpe.mitre.org/language/2.0" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:dc="http://purl.org/dc/elements/1.1/" id="Library_Test_STIG" xml:lang="en" xmlns="http://checklists.nist.gov/xccdf/1.1">
+  <status date="2026-01-01">accepted</status>
+  <title>Library Test Security Technical Implementation Guide</title>
+  <description>Synthetic benchmark for tests.</description>
+  <notice id="terms-of-use" xml:lang="en"></notice>
+  <front-matter xml:lang="en"></front-matter>
+  <rear-matter xml:lang="en"></rear-matter>
+  <reference href="https://example.test"><dc:publisher>Synthetic</dc:publisher><dc:source>STIG.DOD.MIL</dc:source></reference>
+  <plain-text id="release-info">Release: 4 Benchmark Date: 01 May 2026</plain-text>
+  <plain-text id="generator">3.4.1.22916</plain-text>
+  <plain-text id="conventionsVersion">1.10.0</plain-text>
+  <version>2</version>
+  <Profile id="MAC-1_Classified"><title>I - Mission Critical Classified</title><description>&lt;ProfileDescription&gt;&lt;/ProfileDescription&gt;</description><select idref="V-5001" selected="true" /></Profile>
+  <Group id="V-5001">
+    <title>SRG-OS-000001</title>
+    <description>&lt;GroupDescription&gt;&lt;/GroupDescription&gt;</description>
+    <Rule id="SV-5001r3_rule" weight="10.0" severity="high">
+      <version>LIB-00-000010</version>
+      <title>Library rule one must be enforced (revised).</title>
+      <description>&lt;VulnDiscussion&gt;Rule one discussion, revised.&lt;/VulnDiscussion&gt;&lt;FalsePositives&gt;&lt;/FalsePositives&gt;&lt;FalseNegatives&gt;&lt;/FalseNegatives&gt;&lt;Documentable&gt;false&lt;/Documentable&gt;&lt;Mitigations&gt;&lt;/Mitigations&gt;&lt;SeverityOverrideGuidance&gt;&lt;/SeverityOverrideGuidance&gt;&lt;PotentialImpacts&gt;&lt;/PotentialImpacts&gt;&lt;ThirdPartyTools&gt;&lt;/ThirdPartyTools&gt;&lt;MitigationControl&gt;&lt;/MitigationControl&gt;&lt;Responsibility&gt;System Administrator&lt;/Responsibility&gt;&lt;IAControls&gt;&lt;/IAControls&gt;</description>
+      <reference><dc:title>DPMS Target Library Test</dc:title><dc:publisher>Synthetic</dc:publisher><dc:type>DPMS Target</dc:type><dc:identifier>0000</dc:identifier></reference>
+      <ident system="http://cyber.mil/legacy">V-95001</ident>
+      <ident system="http://cyber.mil/cci">CCI-000015</ident><ident system="http://cyber.mil/cci">CCI-000366</ident>
+      <fixtext fixref="F-1_fix">Enforce rule one.</fixtext>
+      <fix id="F-1_fix" />
+      <check system="C-1_chk"><check-content-ref href="Synthetic" name="M" /><check-content>Verify rule one, revised.</check-content></check>
+    </Rule>
+  </Group>
+  <Group id="V-5003">
+    <title>SRG-OS-000003</title>
+    <description>&lt;GroupDescription&gt;&lt;/GroupDescription&gt;</description>
+    <Rule id="SV-5003r1_rule" weight="10.0" severity="low">
+      <version>LIB-00-000030</version>
+      <title>Library rule three must be enforced.</title>
+      <description>&lt;VulnDiscussion&gt;Rule three discussion.&lt;/VulnDiscussion&gt;&lt;FalsePositives&gt;&lt;/FalsePositives&gt;&lt;FalseNegatives&gt;&lt;/FalseNegatives&gt;&lt;Documentable&gt;false&lt;/Documentable&gt;&lt;Mitigations&gt;&lt;/Mitigations&gt;&lt;SeverityOverrideGuidance&gt;&lt;/SeverityOverrideGuidance&gt;&lt;PotentialImpacts&gt;&lt;/PotentialImpacts&gt;&lt;ThirdPartyTools&gt;&lt;/ThirdPartyTools&gt;&lt;MitigationControl&gt;&lt;/MitigationControl&gt;&lt;Responsibility&gt;System Administrator&lt;/Responsibility&gt;&lt;IAControls&gt;&lt;/IAControls&gt;</description>
+      <reference><dc:title>DPMS Target Library Test</dc:title><dc:publisher>Synthetic</dc:publisher><dc:type>DPMS Target</dc:type><dc:identifier>0000</dc:identifier></reference>
+      <ident system="http://cyber.mil/legacy">V-95003</ident>
+      <ident system="http://cyber.mil/cci">CCI-000366</ident>
+      <fixtext fixref="F-1_fix">Enforce rule three.</fixtext>
+      <fix id="F-1_fix" />
+      <check system="C-1_chk"><check-content-ref href="Synthetic" name="M" /><check-content>Verify rule three.</check-content></check>
+    </Rule>
+  </Group>
+  <Group id="V-5004">
+    <title>SRG-OS-000004</title>
+    <description>&lt;GroupDescription&gt;&lt;/GroupDescription&gt;</description>
+    <Rule id="SV-5004r1_rule" weight="10.0" severity="medium">
+      <version>LIB-00-000040</version>
+      <title>Library rule four must be enforced.</title>
+      <description>&lt;VulnDiscussion&gt;Rule four discussion.&lt;/VulnDiscussion&gt;&lt;FalsePositives&gt;&lt;/FalsePositives&gt;&lt;FalseNegatives&gt;&lt;/FalseNegatives&gt;&lt;Documentable&gt;false&lt;/Documentable&gt;&lt;Mitigations&gt;&lt;/Mitigations&gt;&lt;SeverityOverrideGuidance&gt;&lt;/SeverityOverrideGuidance&gt;&lt;PotentialImpacts&gt;&lt;/PotentialImpacts&gt;&lt;ThirdPartyTools&gt;&lt;/ThirdPartyTools&gt;&lt;MitigationControl&gt;&lt;/MitigationControl&gt;&lt;Responsibility&gt;System Administrator&lt;/Responsibility&gt;&lt;IAControls&gt;&lt;/IAControls&gt;</description>
+      <reference><dc:title>DPMS Target Library Test</dc:title><dc:publisher>Synthetic</dc:publisher><dc:type>DPMS Target</dc:type><dc:identifier>0000</dc:identifier></reference>
+      <ident system="http://cyber.mil/legacy">V-95004</ident>
+      <ident system="http://cyber.mil/cci">CCI-000366</ident>
+      <fixtext fixref="F-1_fix">Enforce rule four.</fixtext>
+      <fix id="F-1_fix" />
+      <check system="C-1_chk"><check-content-ref href="Synthetic" name="M" /><check-content>Verify rule four.</check-content></check>
+    </Rule>
+  </Group>
+</Benchmark>

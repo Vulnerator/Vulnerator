@@ -19,8 +19,8 @@ _Is the feature request the result of an issue (e.g. a bug or an outdated compon
 
 
 #### System Information
- - _**OS:**_ [e.g. Windows 10]
- - _**Version:**_ [e.g. v6.1.9]
+ - _**OS:**_ [e.g. Windows 11]
+ - _**Version:**_ [e.g. 7.5.2]
 
 
 #### Additional Context
@@ -28,9 +28,8 @@ _Add any other context about the problem here, if applicable._
 
 
 #### Attachments
-_Please provide any relevant attachments, as you see fit (e.g. screenshots); if supplying vulnerability data (e.g. CKL/Nessus files or reports), please ensure that they are sanitized of IP addresses and host names and **email** them to alex.kuchta@navy.mil - **DO NOT POST VULNERABILITY FILES HERE**_
+_Please provide any relevant attachments, as you see fit (e.g. screenshots); if supplying vulnerability data (e.g. CKL/Nessus files or reports), do not attach them here: vulnerability data is sensitive and must stay on the network it came from - **DO NOT POST VULNERABILITY FILES HERE**_
 
-- [ ] Vulnerator Log (required for bugs) - this can be found at ```C:\Users\%UserName%\AppData\Roaming\Vulnerator\V6Log.txt```, where ```%UserName%``` is the user profile used to run the application
+- [ ] Log extract (required for bugs) - `V6Log.txt` in the **Logs** folder next to Vulnerator.exe (Portable mode) or `%LOCALAPPDATA%\Vulnerator\Logs` (Persistent mode); the exact path appears in Vulnerator's error messages. **Remove host names and IP addresses first.**
 - [ ] Examples of applications currently using the feature
-- [ ] Screenshots (optional, _**SANITIZED AND EMAILED**_)
-- [ ] Vulnerability Files (_**SANITIZED AND EMAILED**_)
+- [ ] Screenshots (optional, _**SANITIZED/REDACTED**_)

@@ -1,0 +1,5 @@
+﻿SELECT MAX(V.PublishedDate)
+FROM Vulnerabilities V
+         JOIN VulnerabilitiesVulnerabilitySources VVS ON V.Vulnerability_ID = VVS.Vulnerability_ID
+         JOIN VulnerabilitySources VS ON VVS.VulnerabilitySource_ID = VS.VulnerabilitySource_ID
+WHERE VS.SourceName = @SourceName;

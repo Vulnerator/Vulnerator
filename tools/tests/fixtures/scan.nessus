@@ -1,0 +1,92 @@
+<?xml version="1.0" ?>
+<!-- Synthetic ACAS/Nessus scan for Vulnerator import tests. Contains no real system data. -->
+<NessusClientData_v2>
+<Policy><policyName>Synthetic Test Policy</policyName></Policy>
+<Report name="Synthetic Test Scan" xmlns:cm="http://www.nessus.org/cm">
+<ReportHost name="10.1.3.1"><HostProperties>
+<tag name="HOST_END">Wed Oct 28 10:05:00 2026</tag>
+<tag name="operating-system">Linux Kernel 5.14 on Red Hat Enterprise Linux 9.4</tag>
+<tag name="host-ip">10.1.3.1</tag>
+<tag name="host-fqdn">nessushost01.example.test</tag>
+<tag name="hostname">nessushost01</tag>
+<tag name="mac-address">00:50:56:aa:bb:01</tag>
+<tag name="Credentialed_Scan">true</tag>
+<tag name="HOST_START">Wed Oct 28 10:00:00 2026</tag>
+</HostProperties>
+<ReportItem port="0" svc_name="general" protocol="tcp" severity="0" pluginID="19506" pluginName="Nessus Scan Information" pluginFamily="Settings">
+<description>Information about this scan.</description>
+<fname>scan_info.nasl</fname>
+<plugin_modification_date>2026/01/05</plugin_modification_date>
+<plugin_name>Nessus Scan Information</plugin_name>
+<plugin_publication_date>2005/08/26</plugin_publication_date>
+<plugin_type>summary</plugin_type>
+<risk_factor>None</risk_factor>
+<script_version>1.120</script_version>
+<solution>n/a</solution>
+<synopsis>This plugin displays information about the Nessus scan.</synopsis>
+<plugin_output>Information about this scan : 
+
+Nessus version : 10.8.3
+Plugin feed version : 202610280000
+Scanner edition used : Nessus
+Credentialed checks : yes
+</plugin_output>
+</ReportItem>
+<ReportItem port="0" svc_name="general" protocol="tcp" severity="0" pluginID="22869" pluginName="Software Enumeration (SSH)" pluginFamily="General">
+<description>Lists the software installed on the remote host.</description>
+<fname>ssh_get_info.nasl</fname>
+<plugin_modification_date>2026/01/05</plugin_modification_date>
+<plugin_name>Software Enumeration (SSH)</plugin_name>
+<plugin_publication_date>2007/10/15</plugin_publication_date>
+<plugin_type>local</plugin_type>
+<risk_factor>None</risk_factor>
+<script_version>1.80</script_version>
+<solution>Remove any software that is not in compliance.</solution>
+<synopsis>It was possible to enumerate installed software on the remote host via SSH.</synopsis>
+<plugin_output>
+Here is the list of packages installed on the remote Red Hat Linux system :
+
+  bash-5.1.8-9.el9|(none) Wed Sep 25 08:19:35 2024|Red Hat, Inc.|Red Hat, Inc. &lt;http://bugzilla.redhat.com/bugzilla&gt;
+  python3-libs-3.9.18-3.el9|(none) Wed Sep 25 08:19:40 2024|Red Hat, Inc.|Red Hat, Inc. &lt;http://bugzilla.redhat.com/bugzilla&gt;
+  openssl-3.0.7-27.el9|1 Wed Sep 25 08:19:41 2024|Red Hat, Inc.|Red Hat, Inc. &lt;http://bugzilla.redhat.com/bugzilla&gt;
+</plugin_output>
+</ReportItem>
+<ReportItem port="22" svc_name="ssh" protocol="tcp" severity="3" pluginID="500001" pluginName="Synthetic OpenSSH Vulnerability" pluginFamily="Red Hat Local Security Checks">
+<cvss3_base_score>8.1</cvss3_base_score>
+<description>A synthetic high-severity vulnerability.</description>
+<fname>synthetic_500001.nasl</fname>
+<iava>2026-A-0001</iava>
+<plugin_modification_date>2026/10/01</plugin_modification_date>
+<plugin_name>Synthetic OpenSSH Vulnerability</plugin_name>
+<plugin_publication_date>2026/09/15</plugin_publication_date>
+<plugin_type>local</plugin_type>
+<risk_factor>High</risk_factor>
+<script_version>1.3</script_version>
+<solution>Update the affected package.</solution>
+<stig_severity>I</stig_severity>
+<synopsis>The remote host is missing a security update.</synopsis>
+<xref>IAVA:2026-A-0001</xref>
+<plugin_output>Remote package installed : openssh-8.7p1-38.el9</plugin_output>
+</ReportItem>
+</ReportHost>
+<ReportHost name="10.1.3.2"><HostProperties>
+<tag name="HOST_END">Wed Oct 28 10:15:00 2026</tag>
+<tag name="host-ip">10.1.3.2</tag>
+<tag name="host-fqdn">nessushost02.example.test</tag>
+<tag name="HOST_START">Wed Oct 28 10:10:00 2026</tag>
+</HostProperties>
+<ReportItem port="443" svc_name="www" protocol="tcp" severity="2" pluginID="500002" pluginName="Synthetic TLS Weakness" pluginFamily="General">
+<description>A synthetic medium-severity weakness.</description>
+<fname>synthetic_500002.nasl</fname>
+<plugin_modification_date>2026/10/01</plugin_modification_date>
+<plugin_name>Synthetic TLS Weakness</plugin_name>
+<plugin_publication_date>2026/09/16</plugin_publication_date>
+<plugin_type>remote</plugin_type>
+<risk_factor>Medium</risk_factor>
+<script_version>12</script_version>
+<solution>Reconfigure the service.</solution>
+<synopsis>The remote service accepts weak settings.</synopsis>
+</ReportItem>
+</ReportHost>
+</Report>
+</NessusClientData_v2>

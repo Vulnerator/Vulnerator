@@ -2,11 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                     xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
-                    xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-                    xmlns:local="clr-namespace:Vulnerator.View.Styles">
+                    xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
 
     <Style x:Key="CustomListView"
-           BasedOn="{StaticResource MetroListView}"
+           BasedOn="{StaticResource MahApps.Styles.ListView}"
            TargetType="{x:Type ListView}">
         <Setter Property="Template">
             <Setter.Value>
@@ -21,7 +20,7 @@
                                       CanContentScroll="{TemplateBinding ScrollViewer.CanContentScroll}"
                                       Focusable="False"
                                       SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                      Style="{DynamicResource MetroGridViewScrollViewerStyle}"
+                                      Style="{DynamicResource MahApps.Styles.ScrollViewer.GridView}"
                                       HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                                       VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
                             <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
@@ -32,7 +31,7 @@
                             <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource GrayBrush9}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray9}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

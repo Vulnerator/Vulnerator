@@ -15,7 +15,15 @@ namespace Vulnerator.View.UI
 
         private void OpenHyperlink(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
         {
-            Process.Start(e.Parameter.ToString());
+            // Only open web links; in-page anchors and relative paths have nothing to open.
+            string target = e.Parameter?.ToString() ?? string.Empty;
+            if (!target.StartsWith("https://", System.StringComparison.OrdinalIgnoreCase) &&
+                !target.StartsWith("http://", System.StringComparison.OrdinalIgnoreCase))
+            { return; }
+            try
+            { Process.Start(target); }
+            catch (System.Exception exception)
+            { Vulnerator.Helper.LogWriter.LogErrorWithDebug($"Unable to open link '{target}'.", exception); }
         }
     }
 }

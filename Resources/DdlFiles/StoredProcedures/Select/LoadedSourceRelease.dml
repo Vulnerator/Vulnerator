@@ -1,0 +1,5 @@
+﻿SELECT SourceVersion, SourceRelease
+FROM VulnerabilitySources
+WHERE SourceName = @SourceName
+ORDER BY VulnerabilitySource_ID DESC
+LIMIT 1;

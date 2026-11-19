@@ -26,6 +26,12 @@ namespace Vulnerator.Model.BusinessLogic
         private List<string> ccis = new List<string>();
         private DateTime dateTimeNow = DateTime.Now;
         string _groupName = null;
+
+        /// <summary>CKL STIG_DATA attribute CklbReader writes with a CKLB rule's own date (yyyy-MM-dd).</summary>
+        public const string RuleDateAttribute = "Vulnerator_Rule_Date";
+        public const string BaselineStatus = "Processed; STIG Baseline (no host)";
+        private DateTime? _ruleDate;
+        private bool _baselineOnly;
         private string[] persistentParameters =  {
             "GroupName", "FindingSourceFileName", "SourceName", "SourceVersion", "SourceRelease", "DiscoveredHostName", "ScanIP", "FQDN", "NetBIOS", "FindingType", "VulnerabilityRelease", "PublishedDate"
         };
@@ -41,6 +47,8 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
+                _groupName = groupName;
+                _baselineOnly = false;
                 if (file.FilePath.IsFileInUse())
                 {
                     LogWriter.LogError($"'{file.FileName}' is in use; please close any open instances and try again.");
@@ -85,9 +93,16 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             }
                         }
-                        databaseInterface.DeleteRemovedVulnerabilities(sqliteCommand);
+                        // No DeleteRemovedVulnerabilities here: a checklist is one host's results, not the
+                        // authoritative STIG library, so it must not remove library entries.
                     }
                     sqliteTransaction.Commit();
+                }
+                if (_baselineOnly)
+                {
+                    LogWriter.LogStatusUpdate($"'{file.FileName}' has no host name, FQDN or IP address; imported as a STIG baseline " +
+                        "(rule content only, no findings). Fill in the asset in STIG Viewer to import it as an assessment.");
+                    return BaselineStatus;
                 }
                 return "Processed";
             }
@@ -107,6 +122,7 @@ namespace Vulnerator.Model.BusinessLogic
             {
                 object ip = string.Empty;
                 object mac = string.Empty;
+                object fqdn = string.Empty;
                 while (xmlReader.Read())
                 {
                     if (xmlReader.IsStartElement())
@@ -121,7 +137,7 @@ namespace Vulnerator.Model.BusinessLogic
                             case "HOST_NAME":
                                 {
                                     object hostName = xmlReader.ObtainCurrentNodeValue(true);
-                                    if (!string.IsNullOrWhiteSpace(hostName.ToString()) && !hostName.Equals("HOST NAME"))
+                                    if (!ExtensionMethods.IsAssetPlaceholder(hostName))
                                     {
                                         sqliteCommand.Parameters["DiscoveredHostName"].Value = hostName;
                                         sqliteCommand.Parameters["DisplayedHostName"].Value = hostName;
@@ -140,7 +156,8 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "HOST_FQDN":
                                 {
-                                    sqliteCommand.Parameters["FQDN"].Value = xmlReader.ObtainCurrentNodeValue(true);
+                                    fqdn = xmlReader.ObtainCurrentNodeValue(true);
+                                    sqliteCommand.Parameters["FQDN"].Value = fqdn;
                                     break;
                                 }
                             case "TECH_AREA":
@@ -162,6 +179,24 @@ namespace Vulnerator.Model.BusinessLogic
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("ASSET"))
                     {
+                        // Findings must belong to a host. Blank checklists (e.g. a STIG baseline set) have no
+                        // host name; fall back to the FQDN, then the IP address, and otherwise stop cleanly
+                        // instead of failing on the host-to-group mapping.
+                        if (ExtensionMethods.IsAssetPlaceholder(sqliteCommand.Parameters["DiscoveredHostName"].Value))
+                        {
+                            string firstIp = ip?.ToString().Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+                            string fallback = !ExtensionMethods.IsAssetPlaceholder(fqdn) ? fqdn.ToString().Trim()
+                                : (!ExtensionMethods.IsAssetPlaceholder(firstIp) ? firstIp.Trim() : null);
+                            if (fallback == null)
+                            {
+                                // No host at all: a blank checklist such as a STIG baseline. Import its rules into
+                                // the STIG library without creating a host or findings (CKL-CKLB-Processor R-11).
+                                _baselineOnly = true;
+                                return;
+                            }
+                            sqliteCommand.Parameters["DiscoveredHostName"].Value = fallback;
+                            sqliteCommand.Parameters["DisplayedHostName"].Value = fallback;
+                        }
                         sqliteCommand.Parameters["IsVirtualServer"].Value = "False";
                         databaseInterface.InsertHardware(sqliteCommand);
                         databaseInterface.MapHardwareToGroup(sqliteCommand);
@@ -244,6 +279,10 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
+                foreach (string sourceParameter in new[] { "SourceName", "SourceVersion", "SourceRelease",
+                    "SourceSecondaryIdentifier", "SourceDescription", "VulnerabilitySourceFileName" })
+                { sqliteCommand.Parameters[sourceParameter].Value = string.Empty; }
+                sqliteCommand.Parameters["PublishedDate"].Value = DBNull.Value;
                 xmlReader.Read();
                 if (xmlReader.Name.Equals("STIG_TITLE"))
                 {
@@ -289,13 +328,14 @@ namespace Vulnerator.Model.BusinessLogic
                                 case "releaseinfo":
                                     {
                                         string release = ObtainStigInfoSubNodeValue(xmlReader);
-                                        Regex regex = new Regex(Properties.Resources.RegexStigDate);
-                                        sqliteCommand.Parameters.Add(new SQLiteParameter("PublishedDate", DateTime
-                                            .ParseExact(regex.Match(release).ToString(), "dd MMM yyyy", CultureInfo.InvariantCulture)
-                                            .ToShortDateString()));
-                                        if (string.IsNullOrWhiteSpace(sqliteCommand.Parameters["SourceRelease"].Value
-                                            .ToString()))
-                                        { sqliteCommand.Parameters["SourceRelease"].Value = release.Contains(" ") ? release.Split(' ')[1] : release; }
+                                        sqliteCommand.Parameters["PublishedDate"].Value = release.ToStigBenchmarkDate();
+                                        if (string.IsNullOrWhiteSpace(sqliteCommand.Parameters["SourceRelease"].Value?.ToString()))
+                                        {
+                                            Match releaseNumber = Regex.Match(release, @"Release:\s*(\d+)", RegexOptions.IgnoreCase);
+                                            sqliteCommand.Parameters["SourceRelease"].Value = releaseNumber.Success
+                                                ? releaseNumber.Groups[1].Value
+                                                : (release.Contains(" ") ? release.Split(' ')[1] : release);
+                                        }
                                         break;
                                     }
                                 case "stigid":
@@ -319,8 +359,22 @@ namespace Vulnerator.Model.BusinessLogic
                         }
                         else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("STIG_INFO"))
                         {
-                            databaseInterface.UpdateVulnerabilitySource(sqliteCommand);
-                            databaseInterface.InsertVulnerabilitySource(sqliteCommand);
+                            // Keep the release as submitted before an older one is moved onto the loaded release.
+                            ImportFacts.RecordStigSubmission(sqliteCommand, "CKL", sqliteCommand.Parameters["SourceName"].Value,
+                                sqliteCommand.Parameters["SourceVersion"].Value, sqliteCommand.Parameters["SourceRelease"].Value,
+                                sqliteCommand.Parameters["PublishedDate"].Value, ImportFacts.Parameter(sqliteCommand, "DiscoveredHostName"),
+                                ImportFacts.Parameter(sqliteCommand, "FindingSourceFileName"));
+                            if (databaseInterface.SourceHasNewerRelease(sqliteCommand))
+                            {
+                                // A checklist from an older release: keep the newer release already loaded (its
+                                // rules are where this checklist's results attach) instead of moving the STIG back.
+                                databaseInterface.UseLoadedSourceRelease(sqliteCommand);
+                            }
+                            else
+                            {
+                                databaseInterface.UpdateVulnerabilitySource(sqliteCommand);
+                                databaseInterface.InsertVulnerabilitySource(sqliteCommand);
+                            }
                             return;
                         }
                     }
@@ -337,6 +391,7 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
+                _ruleDate = null;
                 sqliteCommand.Parameters["ModifiedDate"].Value = DateTime.Now.ToShortDateString();
                 while (xmlReader.Read())
                 {
@@ -494,6 +549,14 @@ namespace Vulnerator.Model.BusinessLogic
                                     classification = ObtainAttributeDataNodeValue(xmlReader);
                                     break;
                                 }
+                            case RuleDateAttribute:
+                                {
+                                    DateTime ruleDate;
+                                    if (DateTime.TryParseExact(ObtainAttributeDataNodeValue(xmlReader), "yyyy-MM-dd",
+                                        CultureInfo.InvariantCulture, DateTimeStyles.None, out ruleDate))
+                                    { _ruleDate = ruleDate; }
+                                    break;
+                                }
                         }
                     }
                     else if (xmlReader.IsStartElement() && xmlReader.Name.Equals("STATUS"))
@@ -530,7 +593,7 @@ namespace Vulnerator.Model.BusinessLogic
                                 }
                             case "Existing Version Is Newer":
                                 {
-                                    databaseInterface.UpdateVulnerabilityDates(sqliteCommand);
+                                    // The finding attaches to the newer rule; its benchmark date is left as it is.
                                     sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "True";
                                     databaseInterface.UpdateDeltaAnalysisFlags(sqliteCommand);
                                     break;
@@ -622,7 +685,8 @@ namespace Vulnerator.Model.BusinessLogic
                     }
                     else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("VULN"))
                     {
-                        PrepareUniqueFinding(sqliteCommand);
+                        if (!_baselineOnly)
+                        { PrepareUniqueFinding(sqliteCommand); }
                         return;
                     }
                 }
@@ -644,7 +708,7 @@ namespace Vulnerator.Model.BusinessLogic
                 sqliteCommand.Parameters["LastObserved"].Value = DateTime.Now;
                 if (string.IsNullOrWhiteSpace(sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value.ToString()))
                 { sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "False"; }
-                sqliteCommand.Parameters["FirstDiscovered"].Value = DateTime.Now;
+                sqliteCommand.Parameters["FirstDiscovered"].Value = _ruleDate ?? DateTime.Now;
                 sqliteCommand.Parameters["Classification"].Value = classification;
                 sqliteCommand.Parameters["FindingType"].Value = "CKL";
                 databaseInterface.UpdateUniqueFinding(sqliteCommand);
@@ -665,9 +729,9 @@ namespace Vulnerator.Model.BusinessLogic
                 XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
                 xmlReaderSettings.IgnoreWhitespace = true;
                 xmlReaderSettings.IgnoreComments = true;
-                xmlReaderSettings.ValidationType = ValidationType.Schema;
-                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessInlineSchema;
-                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessSchemaLocation;
+                xmlReaderSettings.DtdProcessing = DtdProcessing.Prohibit;
+                xmlReaderSettings.XmlResolver = null;
+                xmlReaderSettings.ValidationType = ValidationType.None;
                 return xmlReaderSettings;
             }
             catch (Exception exception)
@@ -691,7 +755,7 @@ namespace Vulnerator.Model.BusinessLogic
                     if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("SI_DATA"))
                     { return string.Empty; }
                 }
-                return "Read too far!";
+                return string.Empty;
             }
             catch (Exception exception)
             {
@@ -704,9 +768,19 @@ namespace Vulnerator.Model.BusinessLogic
         {
             try
             {
-                while (!xmlReader.Name.Equals("ATTRIBUTE_DATA"))
-                { xmlReader.Read(); }
+                // Advance to ATTRIBUTE_DATA, but never past the end of this STIG_DATA block or the file
+                // (a truncated checklist previously looped forever here).
+                while (!(xmlReader.NodeType == XmlNodeType.Element && xmlReader.Name.Equals("ATTRIBUTE_DATA")))
+                {
+                    if (!xmlReader.Read() ||
+                        (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("STIG_DATA")))
+                    { return string.Empty; }
+                }
+                if (xmlReader.IsEmptyElement)
+                { return string.Empty; }
                 xmlReader.Read();
+                if (xmlReader.NodeType == XmlNodeType.EndElement)
+                { return string.Empty; }
                 string value = xmlReader.Value;
                 value = value.Replace("&gt", ">");
                 value = value.Replace("&lt", "<");

@@ -1,0 +1,4 @@
+﻿DELETE FROM
+    UniqueFindings
+WHERE
+    Hardware_ID = @Hardware_ID;

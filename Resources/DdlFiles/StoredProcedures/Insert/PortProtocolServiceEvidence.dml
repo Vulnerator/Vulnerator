@@ -1,0 +1,9 @@
+INSERT INTO PortProtocolServiceEvidence (HardwarePortProtocolService_ID, PluginId, PluginName)
+SELECT HPPS.HardwarePortProtocolService_ID, @UniqueVulnerabilityIdentifier, @VulnerabilityTitle
+FROM HardwarePortsProtocolsServices HPPS
+         JOIN Hardware H ON HPPS.Hardware_ID = H.Hardware_ID
+         JOIN PortsProtocolsServices PPS ON HPPS.PortProtocolService_ID = PPS.PortProtocolService_ID
+WHERE H.DiscoveredHostName = @DiscoveredHostName
+  AND PPS.Port = @Port
+  AND PPS.Protocol = @Protocol
+  AND PPS.DiscoveredServiceName = @DiscoveredServiceName;

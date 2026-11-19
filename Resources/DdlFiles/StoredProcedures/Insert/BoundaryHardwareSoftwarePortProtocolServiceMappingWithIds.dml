@@ -1,0 +1,9 @@
+﻿INSERT INTO SoftwareHardwarePortsProtocolsServices
+VALUES (NULL,
+        (
+        @HardwareSoftwarePortProtocolService_ID,
+        @Boundary_ID,
+        @CAL_Compliant,
+        @PPSM_Approved,
+        @Direction,
+        @Classification);

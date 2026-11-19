@@ -1,0 +1,91 @@
+{
+  "title": "Synthetic STIG Viewer 3 checklist for Vulnerator import tests (no real system data)",
+  "id": "22222222-2222-2222-2222-222222222222",
+  "cklb_version": "1.0",
+  "target_data": {
+    "target_type": "Computing",
+    "host_name": "TESTHOST02",
+    "ip_address": "10.1.2.4",
+    "mac_address": "00:11:22:33:44:66",
+    "fqdn": "testhost02.example.test",
+    "comments": "Synthetic CKLB asset",
+    "role": "Member Server",
+    "is_web_database": false,
+    "technology_area": "",
+    "web_db_site": "",
+    "web_db_instance": ""
+  },
+  "stigs": [
+    {
+      "stig_name": "Test Server Security Technical Implementation Guide",
+      "display_name": "Test Server",
+      "stig_id": "Test_Server_STIG",
+      "release_info": "Release: 5 Benchmark Date: 4 Jan 2026",
+      "version": "2",
+      "uuid": "33333333-3333-3333-3333-333333333333",
+      "reference_identifier": "0000",
+      "size": 2,
+      "rules": [
+        {
+          "uuid": "bbbbbbbb-0000-0000-0000-000000001001",
+          "group_id": "V-1001",
+          "rule_id": "SV-1001r2",
+          "rule_id_src": "SV-1001r2_rule",
+          "rule_version": "TEST-SV-000010",
+          "group_title": "SRG-OS-000001",
+          "rule_title": "Automated account management must be used.",
+          "severity": "high",
+          "weight": 10.0,
+          "classification": "Unclass",
+          "discussion": "Discussion & text with <angle> brackets.",
+          "check_content": "Verify automated account management.",
+          "fix_text": "Configure automated account management.",
+          "false_positives": null,
+          "documentable": false,
+          "responsibility": "System Administrator",
+          "ccis": [
+            "CCI-000015"
+          ],
+          "legacy_ids": [
+            "V-91001",
+            "SV-101001"
+          ],
+          "status": "not_a_finding",
+          "finding_details": "Automated via script.",
+          "comments": "Verified.",
+          "overrides": {},
+          "createdAt": "2026-01-10T15:00:00.000Z",
+          "updatedAt": "2026-01-12T15:00:00.000Z"
+        },
+        {
+          "uuid": "bbbbbbbb-0000-0000-0000-000000001002",
+          "group_id": "V-1002",
+          "rule_id": "SV-1002r1",
+          "rule_id_src": "",
+          "rule_version": "TEST-SV-000020",
+          "group_title": "SRG-OS-000002",
+          "rule_title": "Security configuration settings must be applied.",
+          "severity": "medium",
+          "discussion": "Configuration discussion.",
+          "check_content": "Verify settings.",
+          "fix_text": "Apply settings.",
+          "ccis": [
+            "CCI-000366"
+          ],
+          "legacy_ids": [],
+          "status": "open",
+          "finding_details": "Two settings differ.",
+          "comments": null,
+          "overrides": {
+            "severity": {
+              "severity": "low",
+              "reason": "Compensating control in place."
+            }
+          },
+          "createdAt": "2026-02-05T15:00:00.000Z",
+          "updatedAt": "2026-02-03T15:00:00.000Z"
+        }
+      ]
+    }
+  ]
+}

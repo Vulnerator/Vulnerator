@@ -1,0 +1,31 @@
+{
+  "scanned_at": "2026-11-18T17:34:10Z",
+  "version": "7.5.2-dev.140ca54",
+  "commit": "140ca54",
+  "run_url": "https://github.com/hbonesctr/Vulnerator/actions/runs/44359145348",
+  "release_asset": "",
+  "components": 63,
+  "dependency_findings": 1,
+  "by_severity": {
+    "Critical": 0,
+    "High": 0,
+    "Medium": 1,
+    "Low": 0,
+    "Negligible": 0,
+    "Unknown": 0
+  },
+  "kev": 0,
+  "fixable": 1,
+  "code_findings": 195,
+  "code_by_severity": {
+    "ERROR": 184,
+    "WARNING": 11,
+    "INFO": 0
+  },
+  "semgrep_errors": 7,
+  "tools": {
+    "syft": "1.44.0",
+    "grype": "0.112.0",
+    "semgrep": "1.162.0"
+  }
+}

@@ -1,0 +1,6 @@
+﻿DELETE FROM
+    Hardware_IP_Addresses
+WHERE
+    Hardware_ID = @Hardware_ID
+AND
+    IP_Address_ID = @IP_Address_ID;

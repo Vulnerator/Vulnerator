@@ -1,7 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:Notifications="clr-namespace:Enterwell.Clients.Wpf.Notifications.Controls;assembly=Enterwell.Clients.Wpf.Notifications"
-                    xmlns:local="clr-namespace:Vulnerator.View.Styles">
+                    xmlns:Notifications="clr-namespace:Enterwell.Clients.Wpf.Notifications.Controls;assembly=Enterwell.Clients.Wpf.Notifications">
 
     <Style TargetType="{x:Type Notifications:NotificationMessageContainer}">
         <Setter Property="ItemsPanel">
@@ -28,7 +27,7 @@
                                     <DropShadowEffect BlurRadius="10"
                                                       Direction="270"
                                                       Opacity="0.3"
-                                                      Color="{DynamicResource BlackColor}" />
+                                                      Color="{DynamicResource MahApps.Colors.ThemeForeground}" />
                                 </ItemsPresenter.Effect>
                             </ItemsPresenter>
                         </Border>

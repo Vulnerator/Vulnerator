@@ -74,26 +74,6 @@ namespace Vulnerator.ViewModel
 
             switch (p)
             {
-                case "emailAlexTextBox":
-                    {
-                        EmailDeveloper("alex.kuchta@navy.mil");
-                        break;
-                    }
-                case "emailJeffvTextBox":
-                    {
-                        EmailDeveloper("Jeff.Vanerwegen@Vencore.com");
-                        break;
-                    }
-                case "emailRickTextBox":
-                    {
-                        EmailDeveloper("rick.murphy@navy.mil");
-                        break;
-                    }
-                case "emailJeffpTextBox":
-                    {
-                        EmailDeveloper("jeffrey.a.purcell@navy.mil");
-                        break;
-                    }
                 default:
                     { break; }
             }

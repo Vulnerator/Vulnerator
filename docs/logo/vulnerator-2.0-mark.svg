@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="trace" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5EC8E5"/>
+      <stop offset="1" stop-color="#9273E6"/>
+    </linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#14233A"/>
+      <stop offset="1" stop-color="#0B1424"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="104" fill="url(#bg)"/>
+  <g transform="translate(-30,-12)" fill="none" stroke="url(#trace)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="112,118 214,118 252,236"/>
+    <polyline points="292,118 404,118 312,404 218,404"/>
+    <line x1="182" y1="170" x2="240" y2="352"/>
+    <line x1="282" y1="322" x2="336" y2="156"/>
+    <polyline points="112,118 184,350"/>
+    <line x1="276" y1="176" x2="292" y2="118"/>
+    <circle cx="182" cy="170" r="21" stroke-width="13" fill="#132139"/>
+    <circle cx="276" cy="176" r="21" stroke-width="13" fill="#132139"/>
+    <circle cx="186" cy="352" r="21" stroke-width="13" fill="#0E192B"/>
+    <circle cx="282" cy="322" r="21" stroke-width="13" fill="#0E192B"/>
+  </g>
+  <text x="324" y="424" font-family="Inter, 'DejaVu Sans', sans-serif" font-weight="800" font-size="92" letter-spacing="-3" fill="#FFFFFF">2.0</text>
+</svg>

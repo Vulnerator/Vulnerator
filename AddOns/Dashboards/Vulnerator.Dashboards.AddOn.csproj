@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Dashboards add-on (MIT, part of Vulnerator 2.0; ships in the release zip under Add-ons\Dashboards). One file,
+    Vulnerator.Dashboards.AddOn.dll, with the metrics code compiled in. It uses only .NET Framework/WPF and
+    Vulnerator.AddOns.dll, which Vulnerator ships, so the contract is referenced but not copied.
+    Build: dotnet build AddOns/Dashboards/Vulnerator.Dashboards.AddOn.csproj -c Release
+  -->
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Vulnerator.Dashboards.AddOn</AssemblyName>
+    <RootNamespace>Vulnerator.Dashboards</RootNamespace>
+    <LangVersion>7.3</LangVersion>
+    <Version>1.2.0</Version>
+    <Product>Vulnerator 2.0 Dashboards add-on</Product>
+    <Company>Hector L. Bones</Company>
+    <Copyright>MIT License</Copyright>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <Import Project="..\Metrics\Metrics.props" />
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="System.Xaml" />
+    <ProjectReference Include="..\..\Vulnerator.AddOns\Vulnerator.AddOns.csproj">
+      <Private>false</Private>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

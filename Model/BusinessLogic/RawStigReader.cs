@@ -1,471 +1,295 @@
-﻿using log4net;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SQLite;
-using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Linq;
 using Vulnerator.Helper;
 using Vulnerator.Model.DataAccess;
-using Vulnerator.Model.Object;
 
 namespace Vulnerator.Model.BusinessLogic
 {
+    /// <summary>
+    /// Loads DISA STIG benchmarks (XCCDF 1.1 or 1.2: a manual "-xccdf.xml", or a SCAP 1.2/1.3 data stream holding one)
+    /// into the vulnerability library, so rules and their CCIs are known before any checklist or scan is imported.
+    /// Adds no hosts and no findings.
+    /// </summary>
     public class RawStigReader
     {
-        readonly DatabaseInterface databaseInterface = new DatabaseInterface();
-        private bool sourceUpdated = true;
-        private List<string> iaControls = new List<string>();
-        private readonly List<string> ccis = new List<string>();
-        private List<string> responsibilities = new List<string>();
-        private readonly Dictionary<string, string> replaceDictionary = PopulateReplaceDictionary();
-        private readonly string[] persistentParameters = new string[] {
-            "VulnerabilitySourceFileName", "SourceDescription", "SourceSecondaryIdentifier",
-            "SourceName", "SourceVersion", "SourceRelease", "DiscoveredHostName", "ScanIP", "FindingType",
-            "PublishedDate"
+        public const string Parsed = "Parsed";
+        public const string Skipped = "Skipped";
+        public const string Failed = "Failed";
+        public const string Older = "Skipped; older than the release already loaded";
+
+        private static readonly string[] DescriptionTags =
+        {
+            "VulnDiscussion", "FalsePositives", "FalseNegatives", "Documentable", "Mitigations", "SeverityOverrideGuidance",
+            "PotentialImpacts", "ThirdPartyTools", "MitigationControl", "Responsibility", "IAControls"
         };
+
+        private static readonly string[] SourceParameters =
+        {
+            "SourceName", "SourceVersion", "SourceRelease", "SourceSecondaryIdentifier", "SourceDescription",
+            "VulnerabilitySourceFileName", "PublishedDate", "VulnerabilityRelease", "FindingType", "ModifiedDate"
+        };
+
+        private readonly DatabaseInterface databaseInterface = new DatabaseInterface();
+
+        /// <summary>Last rule-level result, for callers that report counts.</summary>
+        public int RulesRead { get; private set; }
 
         public string ReadRawStig(ZipArchiveEntry rawStig)
         {
+            using (Stream stream = rawStig.Open())
+            { return ReadRawStig(stream, rawStig.Name); }
+        }
+
+        /// <summary>Loads one benchmark file; returns <see cref="Parsed"/>, <see cref="Skipped"/> (not a benchmark), <see cref="Older"/> or <see cref="Failed"/>.</summary>
+        public string ReadRawStig(Stream stream, string fileName)
+        {
+            RulesRead = 0;
+            XElement benchmark;
             try
             {
-                LogWriter.LogStatusUpdate($"Begin ingestion of raw STIG file '{rawStig.Name}'.");
-                if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
-                { DatabaseBuilder.sqliteConnection.Open(); }
-                using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
-                {
-                    using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
-                    {
-                        databaseInterface.InsertParameterPlaceholders(sqliteCommand);
-                        sqliteCommand.Parameters["FindingType"].Value = "CKL";
-                        using (XmlReader xmlReader = XmlReader.Create(rawStig.Open(), GenerateXmlReaderSettings()))
-                        {
-                            while (xmlReader.Read() && sourceUpdated)
-                            {
-                                if (xmlReader.IsStartElement())
-                                {
-                                    switch (xmlReader.Name)
-                                    {
-                                        case "Benchmark":
-                                            {
-                                                sqliteCommand.Parameters.Add(new SQLiteParameter("VulnerabilitySourceFileName", rawStig.Name));
-                                                ReadBenchmarkNode(sqliteCommand, xmlReader);
-                                                break;
-                                            }
-                                        case "Group":
-                                            {
-                                                ReadGroupNode(sqliteCommand, xmlReader);
-                                                if (!sourceUpdated)
-                                                { return "Parsed"; }
-                                                break;
-                                            }
-                                        default:
-                                            { break; }
-                                    }
-                                }
-                            }
-                        }
-                        databaseInterface.DeleteRemovedVulnerabilities(sqliteCommand);
-                    }
-                    sqliteTransaction.Commit();
-                    return "Parsed";
-                }
+                XmlReaderSettings settings = new XmlReaderSettings { DtdProcessing = DtdProcessing.Ignore, XmlResolver = null, IgnoreComments = true };
+                using (XmlReader xmlReader = XmlReader.Create(stream, settings))
+                { benchmark = XDocument.Load(xmlReader).Descendants().FirstOrDefault(e => e.Name.LocalName == "Benchmark"); }
             }
             catch (Exception exception)
             {
-                string error = $"Unable to process STIG file '{rawStig.Name}'.";
-                LogWriter.LogErrorWithDebug(error, exception);
-                return "Failed";
+                LogWriter.LogErrorWithDebug($"Unable to read STIG file '{fileName}' as XML.", exception);
+                return Failed;
+            }
+            if (benchmark == null)
+            { return Skipped; }
+
+            try
+            {
+                LogWriter.LogStatusUpdate($"Begin ingestion of raw STIG file '{fileName}'.");
+                if (DatabaseBuilder.sqliteConnection.State.ToString().Equals("Closed"))
+                { DatabaseBuilder.sqliteConnection.Open(); }
+                using (SQLiteTransaction sqliteTransaction = DatabaseBuilder.sqliteConnection.BeginTransaction())
+                using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
+                {
+                    databaseInterface.InsertParameterPlaceholders(sqliteCommand);
+                    if (!LoadBenchmark(sqliteCommand, benchmark, fileName, "CKL", true))
+                    {
+                        LogWriter.LogStatusUpdate($"Skipped '{fileName}': a newer release of this STIG is already loaded.");
+                        return Older;
+                    }
+                    sqliteTransaction.Commit();
+                }
+                LogWriter.LogStatusUpdate($"Ingested {RulesRead} rule(s) from '{fileName}'.");
+                return Parsed;
+            }
+            catch (Exception exception)
+            {
+                LogWriter.LogErrorWithDebug($"Unable to process STIG file '{fileName}'.", exception);
+                return Failed;
             }
             finally
             { DatabaseBuilder.sqliteConnection.Close(); }
         }
 
-        private void ReadBenchmarkNode(SQLiteCommand sqliteCommand, XmlReader xmlReader)
+        /// <summary>Rule id ("SV-254239") to the library revision its findings attach to, filled by <see cref="LoadBenchmark"/>.</summary>
+        public Dictionary<string, string> Revisions { get; } = new Dictionary<string, string>();
+
+        /// <summary>The benchmark's name, version, release and date as the file has them (before an older release is
+        /// moved onto the loaded one), filled by <see cref="LoadBenchmark"/>.</summary>
+        public string SubmittedSourceName { get; private set; }
+        public string SubmittedVersion { get; private set; }
+        public string SubmittedRelease { get; private set; }
+        public object SubmittedBenchmarkDate { get; private set; }
+
+        /// <summary>
+        /// Writes the benchmark's source and rules using an open command (placeholders inserted). As the library
+        /// (<paramref name="isLibrary"/>), an older release is refused (returns false) and superseded rules are pruned;
+        /// for scan results the rules are only added or refreshed.
+        /// </summary>
+        public bool LoadBenchmark(SQLiteCommand sqliteCommand, XElement benchmark, string fileName, string findingType, bool isLibrary)
         {
-            try
+            RulesRead = 0;
+            Revisions.Clear();
+            SetSource(sqliteCommand, benchmark, fileName);
+            SubmittedSourceName = sqliteCommand.Parameters["SourceName"].Value?.ToString() ?? string.Empty;
+            SubmittedVersion = sqliteCommand.Parameters["SourceVersion"].Value?.ToString() ?? string.Empty;
+            SubmittedRelease = sqliteCommand.Parameters["SourceRelease"].Value?.ToString() ?? string.Empty;
+            SubmittedBenchmarkDate = sqliteCommand.Parameters["PublishedDate"].Value;
+            sqliteCommand.Parameters["FindingType"].Value = findingType;
+            if (databaseInterface.SourceHasNewerRelease(sqliteCommand))
             {
-                sqliteCommand.Parameters["SourceSecondaryIdentifier"].Value = xmlReader.GetAttribute("id");
-                while (xmlReader.Read())
+                if (isLibrary)
+                { return false; }
+                // Older scan results: keep the newer release; findings attach to its rules.
+                databaseInterface.UseLoadedSourceRelease(sqliteCommand);
+            }
+            else
+            {
+                databaseInterface.UpdateVulnerabilitySource(sqliteCommand);
+                databaseInterface.InsertVulnerabilitySource(sqliteCommand);
+            }
+            foreach (XElement group in Children(benchmark, "Group").SelectMany(SelfAndNestedGroups))
+            {
+                foreach (XElement rule in Children(group, "Rule"))
                 {
-                    if (!xmlReader.IsStartElement()) continue;
-                    switch (xmlReader.Name)
-                    {
-                        case "title":
-                            {
-                                string sourceName = xmlReader.ObtainCurrentNodeValue(false).ToString().Replace('_', ' ');
-                                sourceName = sourceName.ToSanitizedSource();
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("SourceName", sourceName));
-                                break;
-                            }
-                        case "description":
-                            {
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("SourceDescription", xmlReader.ObtainCurrentNodeValue(false)));
-                                break;
-                            }
-                        case "plain-text":
-                            {
-                                string release = xmlReader.ObtainCurrentNodeValue(false).ToString();
-                                if (release.Contains(" "))
-                                {
-                                    Regex regex = new Regex(Properties.Resources.RegexRawStigRelease);
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("SourceRelease", regex.Match(release)));
-                                    regex = new Regex(Properties.Resources.RegexStigDate);
-                                    sqliteCommand.Parameters.Add(new SQLiteParameter("PublishedDate", DateTime
-                                        .ParseExact(regex.Match(release).ToString(), "dd MMM yyyy", CultureInfo.InvariantCulture)
-                                        .ToShortDateString()));
-                                }
-                                else
-                                { sqliteCommand.Parameters.Add(new SQLiteParameter("SourceRelease", release)); }
-                                break;
-                            }
-                        case "version":
-                            {
-                                sqliteCommand.Parameters.Add(new SQLiteParameter("SourceVersion", xmlReader.ObtainCurrentNodeValue(false)));
-                                break;
-                            }
-                        case "Profile":
-                            {
-                                databaseInterface.UpdateVulnerabilitySource(sqliteCommand);
-                                databaseInterface.InsertVulnerabilitySource(sqliteCommand);
-                                return;
-                            }
-                        default:
-                            { break; }
-                    }
+                    ReadRule(sqliteCommand, group, rule);
+                    RulesRead++;
                 }
             }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to process 'Benchmark' node.");
-                throw exception;
-            }
+            if (isLibrary)
+            { databaseInterface.DeleteRemovedVulnerabilities(sqliteCommand); }
+            return true;
         }
 
-        private void ReadGroupNode(SQLiteCommand sqliteCommand, XmlReader xmlReader)
+        private static IEnumerable<XElement> SelfAndNestedGroups(XElement group)
+        { return new[] { group }.Concat(Children(group, "Group").SelectMany(SelfAndNestedGroups)); }
+
+        public static IEnumerable<XElement> Children(XElement parent, string localName)
+        { return parent.Elements().Where(e => e.Name.LocalName == localName); }
+
+        public static string ChildText(XElement parent, string localName)
+        { return Children(parent, localName).FirstOrDefault()?.Value.Trim() ?? string.Empty; }
+
+        private static void SetSource(SQLiteCommand sqliteCommand, XElement benchmark, string fileName)
         {
-            try
+            // A parameter keeps the type of the first value it is given: the date is cleared with null, never "", or
+            // every later date would be stored as text instead of the ticks used everywhere else.
+            foreach (string parameter in SourceParameters.Where(p => p != "PublishedDate"))
+            { sqliteCommand.Parameters[parameter].Value = string.Empty; }
+            sqliteCommand.Parameters["PublishedDate"].DbType = System.Data.DbType.DateTime;
+            sqliteCommand.Parameters["PublishedDate"].Value = DBNull.Value;
+            sqliteCommand.Parameters["FindingType"].Value = "CKL";
+            sqliteCommand.Parameters["ModifiedDate"].Value = DateTime.Now.ToShortDateString();
+            sqliteCommand.Parameters["SourceName"].Value = ChildText(benchmark, "title").Replace('_', ' ').ToSanitizedSource();
+            sqliteCommand.Parameters["SourceDescription"].Value = ChildText(benchmark, "description");
+            sqliteCommand.Parameters["SourceVersion"].Value = ChildText(benchmark, "version");
+            sqliteCommand.Parameters["SourceSecondaryIdentifier"].Value =
+                Regex.Replace(benchmark.Attribute("id")?.Value ?? string.Empty, @"^xccdf_[^_]+_benchmark_", string.Empty);
+            sqliteCommand.Parameters["VulnerabilitySourceFileName"].Value = fileName;
+
+            // DISA puts "Release: 5 Benchmark Date: 04 Jan 2026" in plain-text id="release-info"; other plain-text
+            // elements (generator, conventionsVersion) must not be read as the release.
+            XElement releaseInfo = Children(benchmark, "plain-text").FirstOrDefault(p => (string)p.Attribute("id") == "release-info")
+                                   ?? Children(benchmark, "plain-text").FirstOrDefault(p => p.Value.Contains("Release:"));
+            string release = releaseInfo?.Value.Trim() ?? string.Empty;
+            Match releaseNumber = Regex.Match(release, @"Release:\s*(\d+)", RegexOptions.IgnoreCase);
+            sqliteCommand.Parameters["SourceRelease"].Value = releaseNumber.Success ? releaseNumber.Groups[1].Value : release;
+            sqliteCommand.Parameters["PublishedDate"].Value = release.ToStigBenchmarkDate();
+        }
+
+        private void ReadRule(SQLiteCommand sqliteCommand, XElement group, XElement rule)
+        {
+            foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
             {
-                sqliteCommand.Parameters["VulnerabilityGroup_ID"].Value = xmlReader.GetAttribute("id");
-                while (xmlReader.Read())
+                if (!SourceParameters.Contains(parameter.ParameterName))
+                { parameter.Value = DBNull.Value; }
+            }
+
+            string groupId = group.Attribute("id")?.Value ?? string.Empty;
+            Match vulnId = Regex.Match(groupId, @"V-\d+");
+            sqliteCommand.Parameters["VulnerabilityGroupIdentifier"].Value = vulnId.Success ? vulnId.Value : groupId;
+            sqliteCommand.Parameters["VulnerabilityGroupTitle"].Value = ChildText(group, "title");
+
+            string ruleId;
+            string ruleRevision;
+            SplitRuleId(rule.Attribute("id")?.Value, out ruleId, out ruleRevision);
+            sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value = ruleId;
+            sqliteCommand.Parameters["VulnerabilityVersion"].Value = ruleRevision;
+            sqliteCommand.Parameters["PrimaryRawRiskIndicator"].Value = (rule.Attribute("severity")?.Value ?? string.Empty).ToRawRisk();
+            sqliteCommand.Parameters["SecondaryVulnerabilityIdentifier"].Value = ChildText(rule, "version");
+            sqliteCommand.Parameters["VulnerabilityTitle"].Value = ChildText(rule, "title");
+            sqliteCommand.Parameters["FixText"].Value = ChildText(rule, "fixtext");
+            sqliteCommand.Parameters["CheckContent"].Value =
+                Children(rule, "check").SelectMany(c => Children(c, "check-content")).FirstOrDefault()?.Value.Trim() ?? string.Empty;
+            sqliteCommand.Parameters["IsActive"].Value = "True";
+
+            Dictionary<string, string> description = ParseDescription(ChildText(rule, "description"));
+            sqliteCommand.Parameters["VulnerabilityDescription"].Value = description["VulnDiscussion"];
+            sqliteCommand.Parameters["FalsePositives"].Value = description["FalsePositives"];
+            sqliteCommand.Parameters["FalseNegatives"].Value = description["FalseNegatives"];
+            sqliteCommand.Parameters["IsDocumentable"].Value = description["Documentable"];
+            sqliteCommand.Parameters["Mitigations"].Value = description["Mitigations"];
+            sqliteCommand.Parameters["SeverityOverrideGuidance"].Value = description["SeverityOverrideGuidance"];
+            sqliteCommand.Parameters["PotentialImpacts"].Value = description["PotentialImpacts"];
+            sqliteCommand.Parameters["ThirdPartyTools"].Value = description["ThirdPartyTools"];
+            sqliteCommand.Parameters["MitigationControl"].Value = description["MitigationControl"];
+
+            switch (databaseInterface.CompareVulnerabilityVersions(sqliteCommand))
+            {
+                case "Record Not Found":
+                case "Ingested Version Is Newer":
+                    {
+                        // A revised rule is a new library row; the old one stays while findings still point to it.
+                        databaseInterface.InsertVulnerability(sqliteCommand);
+                        databaseInterface.MapVulnerabilityToSource(sqliteCommand);
+                        break;
+                    }
+                case "Identical Versions":
+                    {
+                        databaseInterface.UpdateVulnerabilityDates(sqliteCommand);
+                        databaseInterface.MapVulnerabilityToSource(sqliteCommand);
+                        break;
+                    }
+                default:
+                    { break; } // the library already holds a newer revision of this rule
+            }
+
+            Revisions[ruleId] = sqliteCommand.Parameters["VulnerabilityVersion"].Value?.ToString() ?? string.Empty;
+
+            List<string> ccis = Children(rule, "ident")
+                .Where(i => ExtensionMethods.IsCciIdentSystem(i.Attribute("system")?.Value))
+                .Select(i => i.Value.Trim().Replace("CCI-", string.Empty))
+                .Where(c => !string.IsNullOrWhiteSpace(c))
+                .Distinct()
+                .ToList();
+            foreach (string cci in ccis)
+            {
+                sqliteCommand.Parameters["CCI_Number"].Value = cci;
+                databaseInterface.MapVulnerabilityToCci(sqliteCommand);
+            }
+            sqliteCommand.Parameters["CCI_Number"].Value = DBNull.Value;
+        }
+
+        /// <summary>
+        /// "SV-254239r958396_rule" (manual) or "xccdf_mil.disa.stig_rule_SV-254239r958396_rule" (SCAP) becomes
+        /// "SV-254239" and "958396", matching how checklists record the same rule.
+        /// </summary>
+        public static void SplitRuleId(string id, out string ruleId, out string revision)
+        {
+            id = id ?? string.Empty;
+            Match match = Regex.Match(id, @"(SV-\d+)r(\d+)");
+            if (match.Success)
+            {
+                ruleId = match.Groups[1].Value;
+                revision = match.Groups[2].Value;
+                return;
+            }
+            string stripped = Regex.Replace(Regex.Replace(id, @"^xccdf_[^_]+_rule_", string.Empty), @"_rule$", string.Empty);
+            match = Regex.Match(stripped, @"^(.+?)r(\d+)$");
+            ruleId = match.Success ? match.Groups[1].Value : stripped;
+            revision = match.Success ? match.Groups[2].Value : string.Empty;
+        }
+
+        /// <summary>The DISA rule description is escaped markup: &lt;VulnDiscussion&gt;...&lt;/VulnDiscussion&gt;&lt;FalsePositives&gt;... .</summary>
+        public static Dictionary<string, string> ParseDescription(string text)
+        {
+            Dictionary<string, string> values = DescriptionTags.ToDictionary(t => t, t => string.Empty);
+            bool tagged = false;
+            foreach (string tag in DescriptionTags)
+            {
+                Match match = Regex.Match(text ?? string.Empty, $"<{tag}>(.*?)</{tag}>", RegexOptions.Singleline);
+                if (match.Success)
                 {
-                    if (xmlReader.IsStartElement())
-                    {
-                        switch (xmlReader.Name)
-                        {
-                            case "title":
-                                {
-                                    sqliteCommand.Parameters["VulnerabilityGroup_Title"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                    break;
-                                }
-                            case "Rule":
-                                {
-                                    ProcessRuleNode(sqliteCommand, xmlReader);
-                                    break;
-                                }
-                        }
-                    }
-                    else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Group"))
-                    {
-                        switch (databaseInterface.CompareVulnerabilityVersions(sqliteCommand))
-                        {
-                            case "Record Not Found":
-                                {
-                                    databaseInterface.InsertVulnerability(sqliteCommand);
-                                    databaseInterface.MapVulnerabilityToSource(sqliteCommand);
-                                    break;
-                                }
-                            case "Ingested Version Is Newer":
-                                {
-                                    databaseInterface.UpdateVulnerability(sqliteCommand);
-                                    databaseInterface.UpdateDeltaAnalysisFlags(sqliteCommand);
-                                    break;
-                                }
-                            case "Existing Version Is Newer":
-                                {
-                                    databaseInterface.UpdateVulnerabilityDates(sqliteCommand);
-                                    sqliteCommand.Parameters["DeltaAnalysisIsRequired"].Value = "True";
-                                    break;
-                                }
-                            case "Identical Versions":
-                                {
-                                    databaseInterface.UpdateVulnerabilityDates(sqliteCommand);
-                                    break;
-                                }
-                            default:
-                                { break; }
-                        }
-                        if (ccis.Count > 0)
-                        {
-                            foreach (string cci in ccis)
-                            {
-                                sqliteCommand.Parameters["CCI"].Value = cci;
-                                databaseInterface.MapVulnerabilityToCci(sqliteCommand);
-                                sqliteCommand.Parameters["CCI"].Value = string.Empty;
-                            }
-                        }
-                        ccis.Clear();
-                        foreach (SQLiteParameter parameter in sqliteCommand.Parameters)
-                        {
-                            if (!persistentParameters.Contains(parameter.ParameterName))
-                            { parameter.Value = string.Empty; }
-                        }
-                        return;
-                    }
+                    values[tag] = System.Net.WebUtility.HtmlDecode(match.Groups[1].Value).Trim();
+                    tagged = true;
                 }
             }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to process 'Group' node.");
-                throw exception;
-            }
-        }
-
-        private void ProcessRuleNode(SQLiteCommand sqliteCommand, XmlReader xmlReader)
-        {
-            try
-            {
-                string rule = xmlReader.GetAttribute("id");
-                string ruleVersion = string.Empty;
-                if (rule.Contains("_"))
-                { rule = rule.Split('_')[0]; }
-                if (rule.Contains("r"))
-                {
-                    ruleVersion = rule.Split('r')[1];
-                    rule = rule.Split('r')[0];
-                }
-                sqliteCommand.Parameters["ModifiedDate"].Value = DateTime.Now.ToShortDateString();
-                sqliteCommand.Parameters["UniqueVulnerabilityIdentifier"].Value = rule;
-                sqliteCommand.Parameters["VulnerabilityVersion"].Value = ruleVersion;
-                sqliteCommand.Parameters["RawRisk"].Value = xmlReader.GetAttribute("severity").ToRawRisk();
-                while (xmlReader.Read())
-                {
-                    if (xmlReader.IsStartElement())
-                    {
-                        switch (xmlReader.Name)
-                        {
-                            case "version":
-                                {
-                                    sqliteCommand.Parameters["SecondaryVulnerabilityIdentifier"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                    break;
-                                }
-                            case "title":
-                                {
-                                    sqliteCommand.Parameters["VulnerabilityTitle"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                    break;
-                                }
-                            case "description":
-                                {
-                                    ProcessRuleDescriptionNode(sqliteCommand, ObtainRuleDescriptionNodeValue(xmlReader));
-                                    break;
-                                }
-                            case "dc:identifier":
-                                {
-                                    sqliteCommand.Parameters["Overflow"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                    break;
-                                }
-                            case "ident":
-                                {
-                                    if (xmlReader.GetAttribute("system").Equals("http://iase.disa.mil/cci"))
-                                    { ccis.Add(xmlReader.ObtainCurrentNodeValue(false).ToString().Replace("CCI-", string.Empty)); }
-                                    break;
-                                }
-                            case "fixtext":
-                                {
-                                    sqliteCommand.Parameters["FixText"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                    break;
-                                }
-                            case "check-content":
-                                {
-                                    sqliteCommand.Parameters["CheckContent"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                    break;
-                                }
-                            default:
-                                { break; }
-                        }
-                    }
-                    else if (xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name.Equals("Rule"))
-                    { return; }
-                }
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to process 'Rule' node.");
-                throw exception;
-            }
-        }
-
-        private void ProcessRuleDescriptionNode(SQLiteCommand sqliteCommand, string descriptionNodeValue)
-        {
-            try
-            {
-                string rootNode = @"<root></root>";
-                descriptionNodeValue = rootNode.Insert(6, descriptionNodeValue);
-                using (XmlReader xmlReader = XmlReader.Create(GenerateStreamFromString(descriptionNodeValue)))
-                {
-                    while (xmlReader.Read())
-                    {
-                        if (xmlReader.IsStartElement())
-                        {
-                            switch (xmlReader.Name)
-                            {
-                                case "VulnDiscussion":
-                                    {
-                                        sqliteCommand.Parameters["VulnerabilityDescription"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                        break;
-                                    }
-                                case "FalsePositives":
-                                    {
-                                        sqliteCommand.Parameters["FalsePositives"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                        break;
-                                    }
-                                case "FalseNegatives":
-                                    {
-                                        sqliteCommand.Parameters["FalseNegatives"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                        break;
-                                    }
-                                case "Documentable":
-                                    {
-                                        sqliteCommand.Parameters["Documentable"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                        break;
-                                    }
-                                case "Mitigations":
-                                    {
-                                        sqliteCommand.Parameters["Mitigations"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                        break;
-                                    }
-                                case "SeverityOverrideGuidance":
-                                    {
-                                        sqliteCommand.Parameters["Severity_Override_Guidance"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                        break;
-                                    }
-                                case "PotentialImpacts":
-                                    {
-                                        sqliteCommand.Parameters["PotentialImpacts"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                        break;
-                                    }
-                                case "ThirdPartyTools":
-                                    {
-                                        sqliteCommand.Parameters["ThirdPartyTools"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                        break;
-                                    }
-                                case "MitigationControl":
-                                    {
-                                        sqliteCommand.Parameters["MitigationControl"].Value = xmlReader.ObtainCurrentNodeValue(false);
-                                        break;
-                                    }
-                                case "Responsibility":
-                                    {
-                                        responsibilities.Add(xmlReader.ObtainCurrentNodeValue(false).ToString());
-                                        break;
-                                    }
-                                case "IAControls":
-                                    {
-                                        iaControls.Add(xmlReader.ObtainCurrentNodeValue(false).ToString());
-                                        break;
-                                    }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to process Rule 'description' node.");
-                throw exception;
-            }
-        }
-
-        private XmlReaderSettings GenerateXmlReaderSettings()
-        {
-            try
-            {
-                XmlReaderSettings xmlReaderSettings = new XmlReaderSettings
-                {
-                    IgnoreWhitespace = true,
-                    IgnoreComments = true,
-                    ValidationType = ValidationType.Schema,
-                    ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessInlineSchema
-                };
-                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.ProcessSchemaLocation;
-                xmlReaderSettings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.AllowXmlAttributes;
-                return xmlReaderSettings;
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to generate XmlReaderSettings.");
-                throw exception;
-            }
-        }
-
-        private string ObtainRuleDescriptionNodeValue(XmlReader xmlReader)
-        {
-            try
-            {
-                xmlReader.Read();
-                string value = xmlReader.Value;
-                value = value.Replace("&", "&amp;");
-                value = value.Replace("<", "&lt;");
-                value = value.Replace(">", "&gt;");
-                foreach (string key in replaceDictionary.Keys)
-                { value = value.Replace(key, replaceDictionary[key]); }
-                return value;
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to obtain currently accessed node value.");
-                throw exception;
-            }
-        }
-
-        private Stream GenerateStreamFromString(string streamString)
-        {
-            try
-            {
-                MemoryStream memoryStream = new MemoryStream();
-                StreamWriter streamWriter = new StreamWriter(memoryStream);
-                streamWriter.Write(streamString);
-                streamWriter.Flush();
-                memoryStream.Position = 0;
-                return memoryStream;
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to generate a Stream from the provided string.");
-                throw exception;
-            }
-        }
-
-        private static Dictionary<string, string> PopulateReplaceDictionary()
-        {
-            Dictionary<string, string> dictionary = new Dictionary<string, string>();
-            dictionary.Add("&lt;VulnDiscussion&gt;", "<VulnDiscussion>");
-            dictionary.Add("&lt;/VulnDiscussion&gt;", "</VulnDiscussion>");
-            dictionary.Add("&lt;FalsePositives&gt;", "<FalsePositives>");
-            dictionary.Add("&lt;/FalsePositives&gt;", "</FalsePositives>");
-            dictionary.Add("&lt;FalseNegatives&gt;", "<FalseNegatives>");
-            dictionary.Add("&lt;/FalseNegatives&gt;", "</FalseNegatives>");
-            dictionary.Add("&lt;Documentable&gt;", "<Documentable>");
-            dictionary.Add("&lt;/Documentable&gt;", "</Documentable>");
-            dictionary.Add("&lt;Mitigations&gt;", "<Mitigations>");
-            dictionary.Add("&lt;/Mitigations&gt;", "</Mitigations>");
-            dictionary.Add("&lt;SeverityOverrideGuidance&gt;", "<SeverityOverrideGuidance>");
-            dictionary.Add("&lt;/SeverityOverrideGuidance&gt;", "</SeverityOverrideGuidance>");
-            dictionary.Add("&lt;PotentialImpacts&gt;", "<PotentialImpacts>");
-            dictionary.Add("&lt;/PotentialImpacts&gt;", "</PotentialImpacts>");
-            dictionary.Add("&lt;ThirdPartyTools&gt;", "<ThirdPartyTools>");
-            dictionary.Add("&lt;/ThirdPartyTools&gt;", "</ThirdPartyTools>");
-            dictionary.Add("&lt;MitigationControl&gt;", "<MitigationControl>");
-            dictionary.Add("&lt;/MitigationControl&gt;", "</MitigationControl>");
-            dictionary.Add("&lt;Responsibility&gt;", "<Responsibility>");
-            dictionary.Add("&lt;/Responsibility&gt;", "</Responsibility>");
-            dictionary.Add("&lt;IAControls&gt;", "<IAControls>");
-            dictionary.Add("&lt;/IAControls&gt;", "</IAControls>");
-            return dictionary;
+            if (!tagged)
+            { values["VulnDiscussion"] = System.Net.WebUtility.HtmlDecode(text ?? string.Empty).Trim(); }
+            return values;
         }
     }
 }

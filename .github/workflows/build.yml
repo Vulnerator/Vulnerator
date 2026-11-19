@@ -1,0 +1,395 @@
+name: Build
+
+on:
+  push:
+    # release/<tag> (e.g. release/v7.0.0-beta.1) builds, tests and publishes that release, then removes the branch.
+    branches: [ "v2/**", master, "release/**" ]
+    tags: [ "v*" ]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Scan an already-published release (e.g. v7.5.0) and attach the scan zip to it. Leave empty for a normal build.'
+        required: false
+        default: ''
+
+jobs:
+  build:
+    runs-on: windows-2022
+    permissions:
+      contents: write   # publish the release on a v* tag
+    outputs:
+      version: ${{ steps.stamp.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify NIST / CCI reference data
+        run: python tools/rev5/verify_reference_data.py .
+
+      - name: Compile every SQL statement against the schema
+        run: python tools/tests/verify_sql.py .
+
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Set up NuGet
+        uses: NuGet/setup-nuget@v2
+
+      - name: Restore NuGet packages
+        run: nuget restore Vulnerator_v6.sln
+
+      - name: Stamp the release version
+        id: stamp
+        shell: pwsh
+        # The version people see (About, Help): the release tag for release/v* branches and v* tags, else "<file version>-dev.<commit>".
+        run: |
+          $info = 'Properties/AssemblyInfo.cs'
+          $text = Get-Content $info -Raw
+          $file = [regex]::Match($text, 'AssemblyFileVersion\("([^"]+)"\)').Groups[1].Value
+          if ($env:GITHUB_REF -match '^refs/(heads/release|tags)/v?(.+)$') { $display = $Matches[2] -replace '^v', '' }
+          else { $display = $file + '-dev.' + $env:GITHUB_SHA.Substring(0, 7) }
+          $text = [regex]::Replace($text, '(?m)^\[assembly: AssemblyInformationalVersion\(.*\)\]\s*$', '')
+          Set-Content $info ($text.TrimEnd() + "`r`n[assembly: AssemblyInformationalVersion(`"$display`")]`r`n") -Encoding utf8
+          "VULNERATOR_VERSION=$display" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          "version=$display" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
+          Write-Host "::notice::Version shown in the program: $display"
+
+      - name: Build (Release)
+        shell: pwsh
+        # Compiler errors are re-emitted as annotations so they show on the run page and through the checks API.
+        run: |
+          $output = & msbuild Vulnerator_v6.sln /p:Configuration=Release /p:Platform="Any CPU" /m /v:minimal 2>&1
+          $code = $LASTEXITCODE
+          $output | ForEach-Object { Write-Host $_ }
+          $output | Where-Object { $_ -match ': error ' } | Select-Object -Unique -First 20 | ForEach-Object { Write-Host ('::error::' + ($_ -replace '^.*\\([^\\]+\.cs)', '$1')) }
+          exit $code
+
+      - name: Use Windows' SQLite (winsqlite3) in System.Data.SQLite
+        shell: powershell
+        run: tools/ci/Use-WindowsSqlite.ps1 -BinDir bin/Release
+
+      - name: License and third-party notices
+        shell: powershell
+        run: tools/ci/Write-ThirdPartyNotices.ps1 -BinDir bin/Release
+
+      - name: Build the Dashboards add-on and add the Add-ons folder
+        shell: pwsh
+        # AddOns/Dashboards (MIT) is built against the add-on contract project; only its own DLL is shipped.
+        run: |
+          if (-not (Test-Path bin/Release/Vulnerator.AddOns.dll)) { Write-Host '::error::Vulnerator.AddOns.dll (add-on contract) is not in the build'; exit 1 }
+          $output = & dotnet build AddOns/Dashboards/Vulnerator.Dashboards.AddOn.csproj -c Release -o out/dashboards 2>&1
+          $code = $LASTEXITCODE
+          $output | ForEach-Object { Write-Host $_ }
+          $output | Where-Object { $_ -match ': error ' } | Select-Object -Unique -First 20 | ForEach-Object { Write-Host ('::error::' + $_) }
+          if ($code) { exit $code }
+          $extra = @(Get-ChildItem out/dashboards -Filter *.dll | Where-Object { $_.Name -ne 'Vulnerator.Dashboards.AddOn.dll' -and $_.Name -ne 'Vulnerator.AddOns.dll' })
+          if ($extra.Count) { Write-Host "::error::Unexpected DLLs in the Dashboards output: $($extra.Name -join ', ')"; exit 1 }
+          New-Item -ItemType Directory -Force bin/Release/Add-ons/Dashboards | Out-Null
+          Copy-Item tools/addons/README.txt bin/Release/Add-ons/README.txt
+          Copy-Item out/dashboards/Vulnerator.Dashboards.AddOn.dll, AddOns/Dashboards/README.txt bin/Release/Add-ons/Dashboards/
+          $dll = 'bin/Release/Add-ons/Dashboards/Vulnerator.Dashboards.AddOn.dll'
+          Write-Host ('::notice::Bundled Dashboards add-on ' + (Get-Item $dll).VersionInfo.ProductVersion + ', SHA-256 ' + (Get-FileHash $dll -Algorithm SHA256).Hash.ToLowerInvariant())
+
+      - name: Metrics and Dashboards tests (AddOns/Tests)
+        shell: pwsh
+        run: |
+          dotnet build AddOns/Tests/Metrics.Tests/Metrics.Tests.csproj -c Release -o out/metrics-tests
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          & out/metrics-tests/Metrics.Tests.exe
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          dotnet build AddOns/Tests/Dashboards.Tests/Dashboards.Tests.csproj -c Release -o out/dashboards-tests
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          & out/dashboards-tests/Dashboards.Tests.exe
+          exit $LASTEXITCODE
+
+      - name: Launch test (window appears)
+        shell: cmd
+        timeout-minutes: 5
+        # 64-bit Windows PowerShell, like the x64 build, so the follow-up probe can load the program.
+        run: '%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\tests\Test-Launch.ps1 -BinDir bin\Release'
+
+      - name: Turn strong-name bypass off, as DoD .NET hardening does
+        shell: powershell
+        # AllowStrongNameBypass = 0 (.NET Framework STIG): signed assemblies are validated on every load.
+        run: |
+          foreach ($key in 'HKLM:\SOFTWARE\Microsoft\.NETFramework', 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework') {
+            New-ItemProperty -Path $key -Name AllowStrongNameBypass -PropertyType DWord -Value 0 -Force | Out-Null
+          }
+          Write-Host '::notice::AllowStrongNameBypass = 0 for the tests'
+
+      - name: Check SQLite comes from Windows; log4net
+        shell: pwsh
+        # Locked-down machines block native DLLs in user folders: the program folder must carry none for SQLite.
+        run: |
+          $bin = 'bin/Release'
+          $bad = 0
+          foreach ($dll in Get-ChildItem $bin -Recurse -Include 'e_sqlite3.dll', 'SQLite.Interop.dll', 'sqlite3.dll', 'System.Data.SQLite.Linq.dll') { Write-Host ('::error::native SQLite file shipped: ' + $dll.FullName); $bad++ }
+          $sds = [IO.File]::ReadAllBytes((Resolve-Path "$bin/System.Data.SQLite.dll"))
+          if (-not [Text.Encoding]::ASCII.GetString($sds).Contains('winsqlite3')) { Write-Host '::error::System.Data.SQLite.dll does not reference winsqlite3'; $bad++ }
+          $win = Get-Item "$env:SystemRoot\System32\winsqlite3.dll"
+          Write-Host ('::notice::System.Data.SQLite ' + (Get-Item "$bin/System.Data.SQLite.dll").VersionInfo.ProductVersion + ' -> Windows winsqlite3.dll ' + $win.VersionInfo.ProductVersion + '; log4net ' + (Get-Item "$bin/log4net.dll").VersionInfo.ProductVersion)
+          if ((Get-Item "$bin/log4net.dll").VersionInfo.FileVersion -notlike '2.0.17*') { Write-Host '::error::log4net is not 2.0.17'; $bad++ }
+          exit $bad
+
+      - name: Test checklist import (CKL and CKLB)
+        shell: cmd
+        timeout-minutes: 5
+        # Release builds target x64, so the test host is 64-bit Windows PowerShell 5.1.
+        run: '%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\tests\Test-ChecklistImport.ps1 -BinDir bin\Release -OutDir sample-exports'
+
+      - name: Test Entity Framework data loading (screens)
+        shell: cmd
+        timeout-minutes: 5
+        run: '%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\tests\Test-EntityFramework.ps1 -BinDir bin\Release'
+
+      - name: Test the add-on mechanism (throw-away test add-ons and the bundled Dashboards add-on)
+        shell: cmd
+        timeout-minutes: 5
+        run: '%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\tests\Test-AddOns.ps1 -BinDir bin\Release'
+
+      - name: Test the STIG Manager pull (fake STIG Manager server on 127.0.0.1)
+        shell: cmd
+        timeout-minutes: 5
+        run: '%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\tests\Test-StigManager.ps1 -BinDir bin\Release'
+
+      - name: Verify eMASS exports against the templates
+        run: |
+          python -m pip install --quiet openpyxl
+          python tools/tests/verify_emass_exports.py sample-exports/sample-eMASS-POAM.xlsx sample-exports/sample-eMASS-HW-SW-List.xlsx
+
+      - name: Verify STIG Details and PDF Summary
+        run: |
+          python -m pip install --quiet openpyxl pypdf
+          python tools/tests/verify_summary_reports.py sample-exports/sample-STIG-Details.xlsx sample-exports/sample-PDF-Summary.pdf sample-exports/sample-Ports-Protocols-Services.xlsx
+
+      - name: Upload sample eMASS exports (synthetic data)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sample-eMASS-exports-${{ github.sha }}
+          path: sample-exports/
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Smoke-test Test-RealData.ps1 on the synthetic files
+        shell: cmd
+        timeout-minutes: 5
+        run: |
+          mkdir realdata-smoke
+          copy tools\tests\fixtures\multi-stig.ckl realdata-smoke\
+          copy tools\tests\fixtures\viewer3.cklb realdata-smoke\
+          copy tools\tests\fixtures\scan.nessus realdata-smoke\
+          copy tools\tests\fixtures\acas-vulnerability-detail.csv realdata-smoke\
+          copy tools\tests\fixtures\xccdf\scc5-results.xml realdata-smoke\
+          copy tools\tests\fixtures\stig\U_Library_Test_STIG_V2R4_Manual-xccdf.xml realdata-smoke\
+          powershell -NoProfile -ExecutionPolicy Bypass -File tools\tests\Test-RealData.ps1 -InputDir realdata-smoke -BinDir bin\Release -IgApFile tools\tests\fixtures\igap-sample.xlsx
+
+      - name: Add the real-data test script to the build
+        run: Copy-Item tools/tests/Test-RealData.ps1 bin/Release/
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Vulnerator-${{ github.ref_name == 'master' && 'master' || 'branch' }}-${{ github.sha }}
+          path: bin/Release/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish release (v* tag or release/v* branch)
+        if: startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/release/v')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = '${{ github.ref_name }}' -replace '^release/', ''
+          $zip = "Vulnerator-$tag.zip"
+          Get-ChildItem bin/Release -Recurse -Include '*.pdb' | Remove-Item
+          Compress-Archive -Path bin/Release/* -DestinationPath $zip
+          $hash = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLowerInvariant()
+          Set-Content "$zip.sha256" "$hash  $zip" -Encoding ascii
+          # Hashes of every program file, for administrators who allow software by hash (application control).
+          $hashFile = "Vulnerator-$tag-file-hashes.txt"
+          $root = (Resolve-Path bin/Release).Path
+          Get-ChildItem bin/Release -Recurse -File | Sort-Object FullName | ForEach-Object { (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant() + '  ' + $_.FullName.Substring($root.Length + 1) } | Set-Content $hashFile -Encoding ascii
+          $exeHash = (Get-FileHash bin/Release/Vulnerator.exe -Algorithm SHA256).Hash.ToLowerInvariant()
+          $notesFile = "docs/release-notes/$tag.md"
+          $notes = if (Test-Path $notesFile) { Get-Content $notesFile -Raw } else { "Vulnerator $tag" }
+          $allow = "`n`n**For application control (allow by hash):** ``Vulnerator.exe`` ``$exeHash``. Vulnerator ships no native DLLs (SQLite comes from Windows); every file's hash is in ``$hashFile``."
+          Set-Content notes.md ($notes.TrimEnd() + "`n`n**SHA-256** ``$zip``: ``$hash``" + $allow) -Encoding utf8
+          $arguments = @('release', 'create', $tag, $zip, "$zip.sha256", $hashFile, '--title', "Vulnerator 2.0 ($tag)", '--notes-file', 'notes.md', '--target', '${{ github.sha }}')
+          if ($tag -match '-') { $arguments += '--prerelease' }
+          $output = & gh @arguments 2>&1 | Out-String
+          Write-Host $output
+          if ($LASTEXITCODE -ne 0) { Write-Host ('::error::release publish failed: ' + ($output -replace "`r?`n", ' ')); exit 1 }
+          Write-Host "::notice::Published $tag ($hash)"
+          if ('${{ github.ref }}' -like 'refs/heads/release/*') { git push origin --delete '${{ github.ref_name }}' }
+
+  # Security scan of what the build job produced: SBOM of the shipped program (Syft), dependency vulnerabilities
+  # with CVSS, EPSS and CISA KEV (Grype), static analysis of the source (Semgrep), then the Developer, Analyst and
+  # Leadership reports (scanner-payload/scripts/generate_reports.py).
+  #   every run:          results in the run summary, the security-scan-<sha> artifact, Semgrep in the Security tab
+  #   master:             latest results committed to docs/security/ (project page "Security Scan" section)
+  #   release/v*, v* tag: Vulnerator-<tag>-security-scan.zip (+ .sha256) attached to the published release
+  security-scan:
+    name: Security scan
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write          # commit docs/security on master; attach the scan to the release
+      security-events: write   # Semgrep SARIF to the Security tab (code scanning)
+      pages: write             # ask Pages to rebuild after docs/security changes
+    env:
+      SYFT_VERSION: 1.44.0
+      GRYPE_VERSION: 0.112.0
+      SEMGREP_VERSION: 1.162.0
+      VERSION: ${{ needs.build.outputs.version }}
+      RAW: scanner-payload/reports
+      OUT: security-reports
+      RELEASE_TAG: ${{ inputs.release_tag }}   # set only by a manual run for an existing release
+      SRC: .
+    steps:
+      # By commit, not branch name: the build job deletes release/v* branches after publishing.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Download the build
+        if: env.RELEASE_TAG == ''
+        uses: actions/download-artifact@v4
+        with:
+          pattern: Vulnerator-*-${{ github.sha }}
+          path: scan-target
+          merge-multiple: true
+
+      - name: Source of the published release
+        if: env.RELEASE_TAG != ''
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.release_tag }}
+          path: release-src
+
+      - name: Download the published release (the zip people install)
+        if: env.RELEASE_TAG != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download "$RELEASE_TAG" -R "$GITHUB_REPOSITORY" -p "Vulnerator-$RELEASE_TAG.zip*" -D "$RUNNER_TEMP"
+          (cd "$RUNNER_TEMP" && tr -d '\r' < "Vulnerator-$RELEASE_TAG.zip.sha256" | sha256sum -c -)
+          mkdir -p scan-target && unzip -q "$RUNNER_TEMP/Vulnerator-$RELEASE_TAG.zip" -d scan-target
+          echo "VERSION=${RELEASE_TAG#v}" >> "$GITHUB_ENV"
+          echo "SRC=release-src" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Syft, Grype and Semgrep (pinned, checksums verified)
+        run: |
+          mkdir -p "$RUNNER_TEMP/bin" "$RUNNER_TEMP/dl"
+          cd "$RUNNER_TEMP/dl"
+          for tool in "syft $SYFT_VERSION" "grype $GRYPE_VERSION"; do
+            set -- $tool
+            file="${1}_${2}_linux_amd64.tar.gz"
+            base="https://github.com/anchore/$1/releases/download/v$2"
+            curl -sSfLO "$base/$file"
+            curl -sSfL "$base/${1}_${2}_checksums.txt" | grep " $file\$" | sha256sum -c -
+            tar -xzf "$file" -C "$RUNNER_TEMP/bin" "$1"
+          done
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+          cd "$GITHUB_WORKSPACE"
+          python -m pip install --quiet "semgrep==$SEMGREP_VERSION" -r scanner-payload/scripts/requirements-reports.txt
+
+      - name: SBOM of the shipped program (Syft)
+        run: |
+          mkdir -p "$RAW"
+          syft scan dir:scan-target --source-name Vulnerator --source-version "$VERSION" \
+            -o spdx-json="$RAW/sbom-spdx.json" -o cyclonedx-json="$RAW/sbom-cyclonedx.json" -o syft-json="$RAW/sbom.syft.json"
+          echo "syft $SYFT_VERSION" > "$RAW/syft-version.txt"
+
+      - name: Dependency vulnerabilities (Grype, with EPSS and CISA KEV)
+        run: |
+          grype db update
+          grype "sbom:$RAW/sbom.syft.json" -o json --file "$RAW/grype-results.json"
+          grype "sbom:$RAW/sbom.syft.json" -o table --file "$RAW/grype-results.txt"
+          echo "grype $GRYPE_VERSION" > "$RAW/grype-version.txt"
+
+      - name: Static analysis of the source (Semgrep)
+        run: |
+          # Run inside the source folder, so a release's tag checkout is scanned like the repo itself.
+          (cd "$SRC" && semgrep scan --metrics=off --config p/ci --config p/csharp --config p/secrets \
+            --exclude scan-target --exclude tools/tests/fixtures \
+            --json-output="$GITHUB_WORKSPACE/$RAW/semgrep-results.json" --sarif-output="$GITHUB_WORKSPACE/$RAW/semgrep.sarif" .)
+          echo "$SEMGREP_VERSION" > "$RAW/semgrep-version.txt"
+          echo "not run (no Snyk account configured)" > "$RAW/snyk-version.txt"
+
+      - name: Reports (Developer, Analyst, Leadership) and summary
+        run: |
+          python scanner-payload/scripts/generate_reports.py --reports-dir "$RAW" --profile-path scanner-payload/cia-profile.yaml --output-dir "$OUT"
+          tag="${RELEASE_TAG:-${GITHUB_REF_NAME#release/}}"
+          asset=""
+          if [[ -n "$RELEASE_TAG" || "$GITHUB_REF" == refs/tags/v* || "$GITHUB_REF" == refs/heads/release/v* ]]; then asset="Vulnerator-$tag-security-scan.zip"; fi
+          python scanner-payload/scripts/write_summary.py --reports-dir "$RAW" --out "$OUT/summary.json" --version "$VERSION" --release-asset "$asset"
+          cat "$OUT/leadership-report.md" >> "$GITHUB_STEP_SUMMARY"
+          python - <<'PY'
+          import json; s = json.load(open('security-reports/summary.json'))
+          print(f"::notice title=Security scan::{s['components']} components, {s['dependency_findings']} dependency findings "
+                f"({s['by_severity']['Critical']} critical, {s['by_severity']['High']} high, {s['kev']} KEV), {s['code_findings']} code findings")
+          PY
+
+      - name: Semgrep results to the Security tab
+        if: env.RELEASE_TAG == '' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: scanner-payload/reports/semgrep.sarif
+          category: semgrep
+
+      - name: Package the scan evidence
+        run: |
+          tag="${RELEASE_TAG:-${GITHUB_REF_NAME#release/}}"; tag="${tag//\//-}"
+          pkg="Vulnerator-$tag-security-scan"
+          mkdir -p "pkg/$pkg/raw"
+          cp "$OUT"/* "pkg/$pkg/"
+          cp "$RAW"/*.json "$RAW"/*.sarif "$RAW"/*.txt "pkg/$pkg/raw/"
+          cp scanner-payload/COMPLIANCE-OVERVIEW.md scanner-payload/REFERENCES.md scanner-payload/cia-profile.yaml "pkg/$pkg/"
+          (cd pkg && zip -qr "../$pkg.zip" "$pkg")
+          sha256sum "$pkg.zip" > "$pkg.zip.sha256"
+          echo "SCAN_PKG=$pkg" >> "$GITHUB_ENV"
+
+      - name: Upload the scan
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-scan-${{ github.sha }}
+          path: |
+            ${{ env.SCAN_PKG }}.zip
+            ${{ env.SCAN_PKG }}.zip.sha256
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Attach the scan to the release (v* tag, release/v* branch, or a manual run for an existing release)
+        if: env.RELEASE_TAG != '' || startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/release/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${RELEASE_TAG:-${GITHUB_REF_NAME#release/}}"
+          gh release upload "$tag" "$SCAN_PKG.zip" "$SCAN_PKG.zip.sha256" --clobber -R "$GITHUB_REPOSITORY"
+          echo "::notice::Attached $SCAN_PKG.zip to release $tag"
+
+      - name: Publish the results to the project page (master)
+        if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && env.RELEASE_TAG == ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          rm -rf docs/security && mkdir -p docs/security
+          cp "$OUT"/*.html "$OUT"/*.md "$OUT/summary.json" "$RAW/sbom-spdx.json" "$RAW/grype-results.txt" docs/security/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add -A docs/security
+          if git diff --cached --quiet; then echo "No change to docs/security"; exit 0; fi
+          git commit -q -m "Security scan results for ${GITHUB_SHA::7} ($VERSION)"
+          for i in 1 2 3; do
+            git fetch -q origin master && git rebase -q origin/master && git push -q origin HEAD:master && break
+            sleep 5
+          done
+          gh api -X POST "repos/$GITHUB_REPOSITORY/pages/builds" >/dev/null || echo "Pages rebuild request not accepted; Pages will pick up the commit on its own"
+          echo "::notice::Security scan results published to docs/security"

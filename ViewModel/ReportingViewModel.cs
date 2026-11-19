@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using ControlzEx.Theming;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Vulnerator.Model.Entity;
@@ -344,9 +345,21 @@ namespace Vulnerator.ViewModel
         {
             try
             {
+                DatabaseBuilder.CurrentUser();
                 using (DatabaseContext databaseContext = new DatabaseContext())
                 {
                     Groups = databaseContext.Groups.AsNoTracking().ToList();
+                    PopulateReports(databaseContext);
+                }
+                if (VulnerabilityReports == null || VulnerabilityReports.Count == 0)
+                {
+                    // Databases built before the user name was known (or used by another account) have no report
+                    // rows for this user: create them, then load again.
+                    LogWriter.LogStatusUpdate($"No report settings for '{Properties.Settings.Default.ActiveUser}'; creating them.");
+                    DatabaseBuilder.EnsureUserReportSettings();
+                }
+                using (DatabaseContext databaseContext = new DatabaseContext())
+                {
                     PopulateReports(databaseContext);
                     PopulateGlobalLists(databaseContext);
                 }
@@ -406,7 +419,7 @@ namespace Vulnerator.ViewModel
                     .Include(r => r.Group)
                     .FirstOrDefault(r => r.RequiredReport.DisplayedReportName.Equals("Global") &&
                                          r.UserName.Equals(Properties.Settings.Default.ActiveUser));
-                if (GlobalReportRmfOverrideUserSettings.Group != null)
+                if (GlobalReportRmfOverrideUserSettings != null && GlobalReportRmfOverrideUserSettings.Group != null)
                 { GlobalReportRmfOverrideUserSettingsGroup = Groups.FirstOrDefault(x => x.Group_ID.Equals(GlobalReportRmfOverrideUserSettings.Group_ID)); }
                 else
                 { GlobalReportRmfOverrideUserSettingsGroup = null; }
@@ -470,7 +483,7 @@ namespace Vulnerator.ViewModel
                         .Include(r => r.Group)
                         .FirstOrDefault(r => r.RequiredReport_ID.Equals(selection.RequiredReport_ID) &&
                                              r.UserName.Equals(Properties.Settings.Default.ActiveUser));
-                    if (SelectedReportRmfOverrideUserSettings.Group != null)
+                    if (SelectedReportRmfOverrideUserSettings != null && SelectedReportRmfOverrideUserSettings.Group != null)
                     { SelectedReportRmfOverrideUserSettingsGroup = Groups.FirstOrDefault(x => x.Group_ID.Equals(SelectedReportRmfOverrideUserSettings.Group_ID)); }
                     else
                     { SelectedReportRmfOverrideUserSettingsGroup = null; }
@@ -756,10 +769,10 @@ namespace Vulnerator.ViewModel
                 {
                     return;
                 }
-                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(System.Windows.Application.Current);
+                Theme appStyle = ThemeManager.Current.DetectTheme(System.Windows.Application.Current);
                 Notification notification = new Notification();
-                notification.Background = appStyle.Item1.Resources["GrayBrush10"].ToString();
-                notification.Foreground = appStyle.Item1.Resources["TextBrush"].ToString();
+                notification.Background = appStyle.Resources["MahApps.Brushes.Gray10"].ToString();
+                notification.Foreground = appStyle.Resources["MahApps.Brushes.Text"].ToString();
                 if (e.Result != null)
                 {
                     if (e.Result is Exception)
@@ -826,8 +839,13 @@ namespace Vulnerator.ViewModel
                 {
                     if ((bool)GetExcelReportName())
                     {
-                        OpenXmlReportCreator openXmlReportCreator = new OpenXmlReportCreator();
-                        openXmlReportCreator.CreateExcelReport(saveExcelFile.FileName);
+                        string exportMarking = ExportMarking.Confirm("Excel report");
+                        if (exportMarking != null)
+                        {
+                            OpenXmlReportCreator openXmlReportCreator = new OpenXmlReportCreator();
+                            openXmlReportCreator.CreateExcelReport(saveExcelFile.FileName);
+                            ExportMarking.ApplyToWorkbook(saveExcelFile.FileName, exportMarking);
+                        }
                     }
                 }
                 guiFeedback.SetFields("Report creation complete", "Collapsed", true);
@@ -1102,11 +1120,15 @@ namespace Vulnerator.ViewModel
                     {
                         if ((bool) GetExcelReportName())
                         {
+                            string exportMarking = ExportMarking.Confirm("eMASS POA&M");
+                            if (exportMarking == null)
+                            { e.Result = "Cancelled"; return; }
                             
                             guiFeedback.SetFields("Creating eMASS POA&M...", "Visible", false);
                             Messenger.Default.Send(guiFeedback);
                             OpenXmlEmassPoamReportCreator openXmlEmassPoamReportCreator = new OpenXmlEmassPoamReportCreator();
                             openXmlEmassPoamReportCreator.CreateEmassPoam(saveExcelFile.FileName);
+                            ExportMarking.ApplyToWorkbook(saveExcelFile.FileName, exportMarking);
                             e.Result = "Success";
                             guiFeedback.SetFields("eMASS POA&M creation completed...", "Collapsed", false);
                             Messenger.Default.Send(guiFeedback);
@@ -1121,12 +1143,104 @@ namespace Vulnerator.ViewModel
                     {
                         if ((bool) GetExcelReportName())
                         {
-                            guiFeedback.SetFields("Creating Navy RAR...", "Visible", false);
+                            string exportMarking = ExportMarking.Confirm("Risk Assessment Report");
+                            if (exportMarking == null)
+                            { e.Result = "Cancelled"; return; }
+                            guiFeedback.SetFields("Creating Risk Assessment Report...", "Visible", false);
                             Messenger.Default.Send(guiFeedback);
-                            OpenXmlNavyRarReportCreator openXmlNavyRarReportCreator = new OpenXmlNavyRarReportCreator();
-                            openXmlNavyRarReportCreator.CreateNavyRar(saveExcelFile.FileName);
+                            new OpenXmlRiskAssessmentReportCreator().CreateRiskAssessmentReport(saveExcelFile.FileName);
+                            ExportMarking.ApplyToWorkbook(saveExcelFile.FileName, exportMarking);
                             e.Result = "Success";
-                            guiFeedback.SetFields("Navy RAR creation completed...", "Collapsed", false);
+                            guiFeedback.SetFields("Risk Assessment Report creation completed...", "Collapsed", false);
+                            Messenger.Default.Send(guiFeedback);
+                        }
+                        else
+                        {
+                            e.Result = "Cancelled";
+                        }
+                        return;
+                    }
+                    case "5":
+                    {
+                        if ((bool) GetExcelReportName())
+                        {
+                            string exportMarking = ExportMarking.Confirm("eMASS Hardware / Software list");
+                            if (exportMarking == null)
+                            { e.Result = "Cancelled"; return; }
+                            guiFeedback.SetFields("Creating eMASS Hardware/Software list...", "Visible", false);
+                            Messenger.Default.Send(guiFeedback);
+                            new OpenXmlEmassHardwareSoftwareReportCreator().CreateHardwareSoftwareList(saveExcelFile.FileName);
+                            ExportMarking.ApplyToWorkbook(saveExcelFile.FileName, exportMarking);
+                            e.Result = "Success";
+                            guiFeedback.SetFields("eMASS Hardware/Software list creation completed...", "Collapsed", false);
+                            Messenger.Default.Send(guiFeedback);
+                        }
+                        else
+                        {
+                            e.Result = "Cancelled";
+                        }
+                        return;
+                    }
+                    case "6":
+                    {
+                        if ((bool) GetExcelReportName())
+                        {
+                            string exportMarking = ExportMarking.Confirm("STIG Details report");
+                            if (exportMarking == null)
+                            { e.Result = "Cancelled"; return; }
+                            guiFeedback.SetFields("Creating STIG Details report...", "Visible", false);
+                            Messenger.Default.Send(guiFeedback);
+                            string result = new OpenXmlStigDetailsReportCreator().CreateStigDetailsReport(saveExcelFile.FileName);
+                            if (!result.Contains("successful"))
+                            { throw new InvalidOperationException(result); }
+                            ExportMarking.ApplyToWorkbook(saveExcelFile.FileName, exportMarking);
+                            e.Result = "Success";
+                            guiFeedback.SetFields("STIG Details report creation completed...", "Collapsed", false);
+                            Messenger.Default.Send(guiFeedback);
+                        }
+                        else
+                        {
+                            e.Result = "Cancelled";
+                        }
+                        return;
+                    }
+                    case "8":
+                    {
+                        if ((bool) GetExcelReportName())
+                        {
+                            string exportMarking = ExportMarking.Confirm("Ports, Protocols & Services");
+                            if (exportMarking == null)
+                            { e.Result = "Cancelled"; return; }
+                            guiFeedback.SetFields("Creating Ports, Protocols & Services report...", "Visible", false);
+                            Messenger.Default.Send(guiFeedback);
+                            string result = new OpenXmlPortsProtocolsServicesReportCreator().CreatePortsProtocolsServicesReport(saveExcelFile.FileName);
+                            if (!result.Contains("successful"))
+                            { throw new InvalidOperationException(result); }
+                            ExportMarking.ApplyToWorkbook(saveExcelFile.FileName, exportMarking);
+                            e.Result = "Success";
+                            guiFeedback.SetFields("Ports, Protocols & Services report creation completed...", "Collapsed", false);
+                            Messenger.Default.Send(guiFeedback);
+                        }
+                        else
+                        {
+                            e.Result = "Cancelled";
+                        }
+                        return;
+                    }
+                    case "7":
+                    {
+                        if ((bool) GetPdfReportName())
+                        {
+                            string exportMarking = ExportMarking.Confirm("PDF Summary");
+                            if (exportMarking == null)
+                            { e.Result = "Cancelled"; return; }
+                            guiFeedback.SetFields("Creating PDF Summary...", "Visible", false);
+                            Messenger.Default.Send(guiFeedback);
+                            string result = new PdfSummaryReportCreator().CreatePdfSummary(savePdfFile.FileName, exportMarking);
+                            if (!result.Contains("successful"))
+                            { throw new InvalidOperationException(result); }
+                            e.Result = "Success";
+                            guiFeedback.SetFields("PDF Summary creation completed...", "Collapsed", false);
                             Messenger.Default.Send(guiFeedback);
                         }
                         else
@@ -1139,10 +1253,14 @@ namespace Vulnerator.ViewModel
                     {
                         if ((bool) GetExcelReportName())
                         {
+                            string exportMarking = ExportMarking.Confirm("STIG Discrepancies report");
+                            if (exportMarking == null)
+                            { e.Result = "Cancelled"; return; }
                             guiFeedback.SetFields("Creating STIG Discrepancies Report...", "Visible", false);
                             Messenger.Default.Send(guiFeedback);
                             OpenXmlStigDiscrepanciesReportCreator openXmlStigDiscrepanciesReportCreator = new OpenXmlStigDiscrepanciesReportCreator();
                             openXmlStigDiscrepanciesReportCreator.CreateDiscrepanciesReport(saveExcelFile.FileName);
+                            ExportMarking.ApplyToWorkbook(saveExcelFile.FileName, exportMarking);
                             e.Result = "Success";
                             guiFeedback.SetFields("STIG Discrepancies report creation completed...", "Collapsed", false);
                             Messenger.Default.Send(guiFeedback);
@@ -1195,6 +1313,14 @@ namespace Vulnerator.ViewModel
                     return;
                 }
 
+                string exportMarking = ExportMarking.Confirm("reports");
+                if (exportMarking == null)
+                {
+                    e.Result = "Cancelled";
+                    return;
+                }
+                string stamp = DateTime.Now.ToString("yyyyMMdd-HHmmss", new CultureInfo("en-US"));
+
                 foreach (RequiredReportUserSelection report in VulnerabilityReports)
                 {
                     if (report.IsReportSelected.Equals("False"))
@@ -1202,24 +1328,56 @@ namespace Vulnerator.ViewModel
                         continue;
                     }
 
-                    switch (report.RequiredReportUserSelection_ID)
+                    // Dispatch on the report, not the per-user selection row (their IDs only coincide for the first user).
+                    switch (report.RequiredReport_ID)
                     {
                         case 1:
                         {
-                            OpenXmlNavyRarReportCreator openXmlNavyRarReportCreator = new OpenXmlNavyRarReportCreator();
-                            openXmlNavyRarReportCreator.CreateNavyRar($"{location}\\eMASS-POA&M_{DateTime.Now.ToString("yyyyMMdd-HHmmss", new CultureInfo("en-US"))}.xlsx");
+                            string eMASSPOAMPath = $"{location}\\eMASS-POA&M_{stamp}.xlsx";
+                            new OpenXmlEmassPoamReportCreator().CreateEmassPoam(eMASSPOAMPath);
+                            ExportMarking.ApplyToWorkbook(eMASSPOAMPath, exportMarking);
+                            break;
+                        }
+                        case 5:
+                        {
+                            string eMASSHWSWListPath = $"{location}\\eMASS-HW-SW-List_{stamp}.xlsx";
+                            new OpenXmlEmassHardwareSoftwareReportCreator().CreateHardwareSoftwareList(eMASSHWSWListPath);
+                            ExportMarking.ApplyToWorkbook(eMASSHWSWListPath, exportMarking);
                             break;
                         }
                         case 2:
                         {
-                            OpenXmlNavyRarReportCreator openXmlNavyRarReportCreator = new OpenXmlNavyRarReportCreator();
-                            openXmlNavyRarReportCreator.CreateNavyRar($"{location}\\Navy-RAR_{DateTime.Now.ToString("yyyyMMdd-HHmmss", new CultureInfo("en-US"))}.xlsx");
+                            string RiskAssessmentReportPath = $"{location}\\Risk-Assessment-Report_{stamp}.xlsx";
+                            new OpenXmlRiskAssessmentReportCreator().CreateRiskAssessmentReport(RiskAssessmentReportPath);
+                            ExportMarking.ApplyToWorkbook(RiskAssessmentReportPath, exportMarking);
+                            break;
+                        }
+                        case 6:
+                        {
+                            string stigDetailsPath = $"{location}\\STIG-Details_{stamp}.xlsx";
+                            new OpenXmlStigDetailsReportCreator().CreateStigDetailsReport(stigDetailsPath);
+                            ExportMarking.ApplyToWorkbook(stigDetailsPath, exportMarking);
+                            break;
+                        }
+                        case 8:
+                        {
+                            string ppsPath = $"{location}\\Ports-Protocols-Services_{stamp}.xlsx";
+                            new OpenXmlPortsProtocolsServicesReportCreator().CreatePortsProtocolsServicesReport(ppsPath);
+                            ExportMarking.ApplyToWorkbook(ppsPath, exportMarking);
+                            break;
+                        }
+                        case 7:
+                        {
+                            string pdfSummaryPath = $"{location}\\Vulnerability-Summary_{stamp}.pdf";
+                            new PdfSummaryReportCreator().CreatePdfSummary(pdfSummaryPath, exportMarking);
                             break;
                         }
                         case 3:
                         {
                             OpenXmlStigDiscrepanciesReportCreator openXmlStigDiscrepanciesReportCreator = new OpenXmlStigDiscrepanciesReportCreator();
-                            openXmlStigDiscrepanciesReportCreator.CreateDiscrepanciesReport($"{location}\\STIG-Discrepancies_{DateTime.Now.ToString("yyyyMMdd-HHmmss", new CultureInfo("en-US"))}.xlsx");
+                            string STIGDiscrepanciesPath = $"{location}\\STIG-Discrepancies_{stamp}.xlsx";
+                            openXmlStigDiscrepanciesReportCreator.CreateDiscrepanciesReport(STIGDiscrepanciesPath);
+                            ExportMarking.ApplyToWorkbook(STIGDiscrepanciesPath, exportMarking);
                             break;
                         }
                     }
@@ -1240,10 +1398,10 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(System.Windows.Application.Current);
+                Theme appStyle = ThemeManager.Current.DetectTheme(System.Windows.Application.Current);
                 Notification notification = new Notification();
-                notification.Background = appStyle.Item1.Resources["GrayBrush10"].ToString();
-                notification.Foreground = appStyle.Item1.Resources["TextBrush"].ToString();
+                notification.Background = appStyle.Resources["MahApps.Brushes.Gray10"].ToString();
+                notification.Foreground = appStyle.Resources["MahApps.Brushes.Text"].ToString();
                 if (e.Result != null)
                 {
                     if (e.Result is Exception)
@@ -1377,7 +1535,7 @@ namespace Vulnerator.ViewModel
                 savePdfFile = new Microsoft.Win32.SaveFileDialog();
                 savePdfFile.AddExtension = true;
                 savePdfFile.Filter = "PDF Files (*.pdf)|*.pdf";
-                savePdfFile.DefaultExt = "xls";
+                savePdfFile.DefaultExt = "pdf";
                 savePdfFile.Title = "Save PDF Report";
                 savePdfFile.OverwritePrompt = true;
                 savePdfFile.CheckPathExists = true;

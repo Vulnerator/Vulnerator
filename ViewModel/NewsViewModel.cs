@@ -13,13 +13,27 @@ namespace Vulnerator.ViewModel
     public class NewsViewModel : ViewModelBase
     {
         private GitHubActions githubActions = new GitHubActions();
-        public MarkdownPipeline MarkdownPipeline = new MarkdownPipelineBuilder()
+        
+        private MarkdownPipeline _markdownPipeline = new MarkdownPipelineBuilder()
             .UseAdvancedExtensions()
             .UseEmphasisExtras()
             .UseAutoLinks()
             .UseEmojiAndSmiley()
             .UseTaskLists()
             .Build();
+
+        public MarkdownPipeline MarkdownPipeline
+        {
+            get => _markdownPipeline;
+            set
+            {
+                if (_markdownPipeline != value)
+                {
+                    _markdownPipeline = value;
+                    RaisePropertyChanged("MarkdownPipeline");
+                }
+            }
+        }
 
         private AsyncObservableCollection<Issue> _issueList;
         public AsyncObservableCollection<Issue> IssueList

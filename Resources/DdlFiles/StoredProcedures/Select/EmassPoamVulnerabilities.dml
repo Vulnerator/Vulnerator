@@ -2,11 +2,16 @@
        V.VulnerabilityGroupTitle,
        V.VulnerabilityTitle,
        V.VulnerabilityDescription,
+       V.FixText,
+       GROUP_CONCAT(DISTINCT UF.SeverityOverride)                              as SeverityOverride,
+       GROUP_CONCAT(DISTINCT UF.SeverityOverrideJustification)                 as SeverityOverrideJustification,
        GROUP_CONCAT(DISTINCT
-                    NC.ControlFamily || '-' || NC.ControlNumber || '.' ||
-                    NC.ControlEnhancement)                                    as NIST_Controls,
+                    NC.ControlFamily || '-' || NC.ControlNumber ||
+                    COALESCE('(' || NC.ControlEnhancement || ')', ''))                                    as NIST_Controls,
        GROUP_CONCAT(DISTINCT CI.CCI_Number)                                   as CCIs,
        GROUP_CONCAT(DISTINCT UF.InstanceIdentifier)                           as InstanceIdentifier,
+       MIN(UF.FirstDiscovered)                                                as FirstDiscovered,
+       MAX(UF.LastObserved)                                                   as LastObserved,
        V.UniqueVulnerabilityIdentifier,
        V.SecondaryVulnerabilityIdentifier,
        V.VulnerabilityGroupIdentifier,

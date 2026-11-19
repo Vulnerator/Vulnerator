@@ -1,4 +1,4 @@
-﻿using log4net;
+using log4net;
 using Markdig;
 using Octokit;
 using System;
@@ -11,14 +11,26 @@ namespace Vulnerator.Model.Object
 {
     public class GitHubActions
     {
+        // Vulnerator 2.0 is published from this repository; online checks contact it only when allowed in Settings.
+        public const string Owner = "hbonesctr";
+        public const string Repository = "Vulnerator";
+        public const string RepositoryUrl = "https://github.com/" + Owner + "/" + Repository;
+
+        /// <summary>
+        /// Online checks are off unless turned on in Settings: on closed or air-gapped networks a connection
+        /// "exists" but GitHub is unreachable, and the tool should not contact the internet unasked.
+        /// </summary>
+        public static bool OnlineChecksAllowed
+        { get { return Properties.Settings.Default.AllowOnlineChecks && NetworkInterface.GetIsNetworkAvailable(); } }
+
         public async void GetGitHubIssues(AsyncObservableCollection<Issue> issueList)
         {
             try
             {
-                if (NetworkInterface.GetIsNetworkAvailable())
+                if (OnlineChecksAllowed)
                 {
                     GitHubClient githubClient = new GitHubClient(new ProductHeaderValue("Vulnerator"));
-                    var issues = await githubClient.Issue.GetAllForRepository("Vulnerator", "Vulnerator");
+                    var issues = await githubClient.Issue.GetAllForRepository(Owner, Repository);
                     for (int i = 0; i < issues.Count; i++)
                     {
                         if (issues[i].HtmlUrl.Contains(@"/pull/"))
@@ -45,9 +57,9 @@ namespace Vulnerator.Model.Object
                 }
                 else
                 {
-                    LogWriter.LogWarning("Github issues are only available if an internet connection is present.");
+                    LogWriter.LogStatusUpdate("GitHub issues not retrieved: online checks are off (Settings) or no network.");
                     Issue issue = new Issue();
-                    issue.Title = "Network connection unavailable";
+                    issue.Title = "Online checks are off; turn them on in Settings to list GitHub issues";
                     issueList.Add(issue);
                 }
             }
@@ -62,10 +74,10 @@ namespace Vulnerator.Model.Object
         {
             try
             {
-                if (NetworkInterface.GetIsNetworkAvailable())
+                if (OnlineChecksAllowed)
                 {
                     GitHubClient githubClient = new GitHubClient(new ProductHeaderValue("Vulnerator"));
-                    var releases = await githubClient.Repository.Release.GetAll("Vulnerator", "Vulnerator");
+                    var releases = await githubClient.Repository.Release.GetAll(Owner, Repository);
                     for (int i = 0; i < releases.Count; i++)
                     {
                         Release release = new Release();
@@ -77,12 +89,12 @@ namespace Vulnerator.Model.Object
                         release.HtmlUrl = releases[i].HtmlUrl;
                         release.Body = releases[i].Body;
                         release.CreatedAt = releases[i].CreatedAt.Date.ToLongDateString();
-                        release.Downloads = releases[i].Assets[0].DownloadCount;
+                        release.Downloads = releases[i].Assets.Count > 0 ? releases[i].Assets[0].DownloadCount : 0;
                         releaseList.Add(release);
                     }
                 }
                 else
-                { LogWriter.LogWarning("GitHub releases are only available if an internet connection is available."); }
+                { LogWriter.LogStatusUpdate("GitHub releases not retrieved: online checks are off (Settings) or no network."); }
             }
             catch (Exception exception)
             {
@@ -97,10 +109,10 @@ namespace Vulnerator.Model.Object
 
             try
             {
-                if (NetworkInterface.GetIsNetworkAvailable())
+                if (OnlineChecksAllowed)
                 {
                     GitHubClient githubClient = new GitHubClient(new ProductHeaderValue("Vulnerator"));
-                    Octokit.Release release = await githubClient.Repository.Release.GetLatest("Vulnerator", "Vulnerator");
+                    Octokit.Release release = await githubClient.Repository.Release.GetLatest(Owner, Repository).ConfigureAwait(false);
                     _release.TagName = release.TagName;
                     _release.HtmlUrl = release.HtmlUrl;
                 }

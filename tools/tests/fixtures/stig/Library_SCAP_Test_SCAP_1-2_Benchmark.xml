@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic SCAP 1.2 data stream for Vulnerator import tests. Contains no real DISA content. -->
+<ds:data-stream-collection xmlns:ds="http://scap.nist.gov/schema/scap/source/1.2" xmlns:xlink="http://www.w3.org/1999/xlink" id="scap_mil.disa.stig_collection_Library_SCAP_Test" schematron-version="1.2">
+  <ds:data-stream id="scap_mil.disa.stig_datastream_Library_SCAP_Test" scap-version="1.2" use-case="CONFIGURATION">
+    <ds:checklists><ds:component-ref id="scap_mil.disa.stig_cref_xccdf" xlink:href="#scap_mil.disa.stig_comp_xccdf" /></ds:checklists>
+  </ds:data-stream>
+  <ds:component id="scap_mil.disa.stig_comp_xccdf" timestamp="2026-03-01T00:00:00">
+    <Benchmark xmlns="http://checklists.nist.gov/xccdf/1.2" xmlns:dc="http://purl.org/dc/elements/1.1/" id="xccdf_mil.disa.stig_benchmark_Library_SCAP_Test" resolved="1" xml:lang="en-US" style="SCAP_1.2">
+      <status date="2026-03-01">accepted</status>
+      <title>Library SCAP Test STIG SCAP Benchmark</title>
+      <description>Synthetic SCAP benchmark for tests.</description>
+      <plain-text id="release-info">Release: 1 Benchmark Date: 01 Mar 2026</plain-text>
+      <plain-text id="generator">DISA Synthetic</plain-text>
+      <version>1</version>
+      <Profile id="xccdf_mil.disa.stig_profile_MAC-1_Classified"><title>I - Mission Critical Classified</title><select idref="xccdf_mil.disa.stig_rule_SV-6001r7_rule" selected="true" /></Profile>
+      <Group id="xccdf_mil.disa.stig_group_V-6001">
+        <title>SRG-OS-000006</title>
+        <Rule id="xccdf_mil.disa.stig_rule_SV-6001r7_rule" weight="10.0" severity="medium">
+          <version>SCAP-00-000010</version>
+          <title>Automated rule must be enforced.</title>
+          <description>&lt;VulnDiscussion&gt;Automated rule discussion.&lt;/VulnDiscussion&gt;&lt;FalsePositives&gt;&lt;/FalsePositives&gt;&lt;Documentable&gt;false&lt;/Documentable&gt;</description>
+          <ident system="http://cyber.mil/cci">CCI-000366</ident>
+          <fixtext fixref="F-6001r7_fix">Enforce the automated rule.</fixtext>
+          <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5"><check-content-ref href="#scap_mil.disa.stig_comprefoval" name="oval:mil.disa.stig.test:def:1" /></check>
+        </Rule>
+      </Group>
+    </Benchmark>
+  </ds:component>
+</ds:data-stream-collection>

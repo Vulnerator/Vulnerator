@@ -50,4 +50,4 @@ VALUES (NULL,
         @Classification,
         @CVSS_EnvironmentalScore,
         @CVSS_EnvironmentalVector,
-        @MitigationOrCondition_ID);
+        NULL);

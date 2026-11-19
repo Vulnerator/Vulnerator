@@ -1,246 +1,272 @@
-﻿using log4net;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using Vulnerator.Helper;
 using Vulnerator.Model.DataAccess;
 using Vulnerator.Model.Entity;
-using Vulnerator.Model.Object;
 
 namespace Vulnerator.Model.BusinessLogic
 {
+    /// <summary>
+    /// Writes a DISA STIG Viewer checklist (.ckl) for one host and one STIG: every rule of the STIG, with the host's
+    /// status, details and comments where Vulnerator has a result, and Not_Reviewed elsewhere.
+    /// </summary>
     public class CklCreator
     {
-        private DdlReader _ddlReader = new DdlReader();
-        private Assembly assembly = Assembly.GetExecutingAssembly();
-        private string _storedProcedureBase = "Vulnerator.Resources.DdlFiles.StoredProcedures.";
-        public void CreateCklFromHardware(Hardware hardware, VulnerabilitySource vulnerabilitySource, string saveDirectory)
+        private readonly DdlReader _ddlReader = new DdlReader();
+        private readonly Assembly assembly = Assembly.GetExecutingAssembly();
+        private const string StoredProcedureBase = "Vulnerator.Resources.DdlFiles.StoredProcedures.";
+
+        /// <summary>The checklist's MARKING (classification / handling); from Settings when not set.</summary>
+        public string Marking { get; set; }
+
+        /// <summary>Writes the checklist into <paramref name="saveDirectory"/>; returns the file's path.</summary>
+        public string CreateCklFromHardware(Hardware hardware, VulnerabilitySource vulnerabilitySource, string saveDirectory)
         {
             try
             {
+                Dictionary<string, string> asset;
+                List<Dictionary<string, object>> rules;
                 if (!DatabaseBuilder.sqliteConnection.State.ToString().Equals("Open"))
                 { DatabaseBuilder.sqliteConnection.Open(); }
                 using (SQLiteCommand sqliteCommand = DatabaseBuilder.sqliteConnection.CreateCommand())
                 {
                     sqliteCommand.Parameters.Add(new SQLiteParameter("Hardware_ID", hardware.Hardware_ID));
                     sqliteCommand.Parameters.Add(new SQLiteParameter("VulnerabilitySource_ID", vulnerabilitySource.VulnerabilitySource_ID));
-                    sqliteCommand.CommandText = sqliteCommand.CommandText = _ddlReader.ReadDdl(_storedProcedureBase + "Select.HardwareCklCreationData.dml", assembly);;
-                    using (SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
-                    {
-                        string stigName = vulnerabilitySource.SourceName
-                                    .Replace(" ", string.Empty)
-                                    .Replace("Security Technical Implentation Guide", "_STIG");
-                        string saveFile =
-                            $"{saveDirectory}\\U_{stigName}_v{vulnerabilitySource.SourceVersion}_r{vulnerabilitySource.SourceRelease}_{hardware.DisplayedHostName}.ckl";
-                        using (XmlWriter xmlWriter = XmlWriter.Create(saveFile, GenerateXmlWriterSettings()))
-                        {
-                            xmlWriter.WriteStartDocument(true);
-                            xmlWriter.WriteStartElement("CHECKLIST");
-                            int i = 0;
-                            while (sqliteDataReader.Read())
-                            {
-                                if (i == 0)
-                                {
-                                    WriteAssetInformation(sqliteDataReader, xmlWriter, "Computing");
-                                    WriteStigInformation(sqliteDataReader, xmlWriter);
-                                    i++;
-                                }
-                                WriteVulnerabilityInformation(sqliteDataReader, xmlWriter);
-                            }
-                            xmlWriter.WriteEndElement();
-                            xmlWriter.WriteEndElement();
-                            xmlWriter.WriteEndElement();
-                        }
-                    }
+                    sqliteCommand.CommandText = _ddlReader.ReadDdl(StoredProcedureBase + "Select.HardwareCklAsset.dml", assembly);
+                    asset = ReadRows(sqliteCommand).Select(r => r.ToDictionary(c => c.Key, c => Text(c.Value))).FirstOrDefault()
+                            ?? new Dictionary<string, string>();
+                    sqliteCommand.CommandText = _ddlReader.ReadDdl(StoredProcedureBase + "Select.HardwareCklCreationData.dml", assembly);
+                    rules = ReadRows(sqliteCommand);
                 }
+                if (rules.Count == 0)
+                { throw new InvalidOperationException($"'{vulnerabilitySource.SourceName}' has no rules in the library."); }
+
+                // One VULN per rule: the revision this host has a result for, else the newest revision.
+                List<Dictionary<string, object>> vulns = rules
+                    .GroupBy(r => Text(r["UniqueVulnerabilityIdentifier"]))
+                    .Select(g => g.OrderByDescending(r => !string.IsNullOrWhiteSpace(Text(r["Status"])))
+                        .ThenByDescending(r => Revision(Text(r["VulnerabilityVersion"]))).First())
+                    .OrderBy(r => GroupNumber(Text(r["VulnerabilityGroupIdentifier"])))
+                    .ToList();
+
+                string hostName = Value(asset, "DisplayedHostName", Value(asset, "DiscoveredHostName", hardware.DisplayedHostName));
+                string stigId = Text(rules[0]["SourceSecondaryIdentifier"]);
+                string fileStem = $"{(string.IsNullOrWhiteSpace(stigId) ? vulnerabilitySource.SourceName : stigId)}_V{Text(rules[0]["SourceVersion"])}R{Text(rules[0]["SourceRelease"])}_{hostName}";
+                string saveFile = Path.Combine(saveDirectory, SafeFileName(fileStem) + ".ckl");
+
+                using (XmlWriter xmlWriter = XmlWriter.Create(saveFile, GenerateXmlWriterSettings()))
+                {
+                    xmlWriter.WriteStartDocument();
+                    xmlWriter.WriteComment("DISA STIG Viewer :: 2.18");
+                    xmlWriter.WriteComment("Written by Vulnerator");
+                    xmlWriter.WriteStartElement("CHECKLIST");
+                    WriteAsset(xmlWriter, asset, hostName, Marking ?? Properties.Settings.Default.EmassClassificationMarking ?? string.Empty);
+                    xmlWriter.WriteStartElement("STIGS");
+                    xmlWriter.WriteStartElement("iSTIG");
+                    WriteStigInformation(xmlWriter, rules);
+                    foreach (Dictionary<string, object> vuln in vulns)
+                    { WriteVulnerability(xmlWriter, vuln, rules[0]); }
+                    xmlWriter.WriteEndElement();
+                    xmlWriter.WriteEndElement();
+                    xmlWriter.WriteEndElement();
+                    xmlWriter.WriteEndDocument();
+                }
+                LogWriter.LogStatusUpdate($"Wrote '{saveFile}' ({vulns.Count} rules).");
+                return saveFile;
             }
             catch (Exception exception)
             {
-                LogWriter.LogError(
-                    $"Unable to generate a CKL for '{hardware.DisplayedHostName}' - '{vulnerabilitySource.SourceName}'.");
+                LogWriter.LogError($"Unable to generate a CKL for '{hardware.DisplayedHostName}' - '{vulnerabilitySource.SourceName}'.");
                 throw exception;
             }
             finally
             { DatabaseBuilder.sqliteConnection.Close(); }
         }
 
-        private void WriteAssetInformation(SQLiteDataReader sqliteDataReader, XmlWriter xmlWriter, string assetType)
+        private static List<Dictionary<string, object>> ReadRows(SQLiteCommand sqliteCommand)
         {
-            try
+            List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+            using (SQLiteDataReader reader = sqliteCommand.ExecuteReader())
             {
-                xmlWriter.WriteStartElement("ASSET");
-                xmlWriter.WriteElementString("ROLE", sqliteDataReader["Role"].ToString());
-                xmlWriter.WriteElementString("ASSET_TYPE", assetType);
-                xmlWriter.WriteElementString("HOST_NAME", sqliteDataReader["DisplayedHostName"].ToString());
-                xmlWriter.WriteElementString("HOST_IP", sqliteDataReader["IpAddresses"].ToString());
-                xmlWriter.WriteElementString("HOST_MAC", sqliteDataReader["MacAddresses"].ToString());
-                xmlWriter.WriteElementString("HOST_GUID", string.Empty);
-                xmlWriter.WriteElementString("HOST_FQDN", sqliteDataReader["FQDN"].ToString());
-                xmlWriter.WriteElementString("TECH_AREA", sqliteDataReader["TechnologyArea"].ToString());
-                xmlWriter.WriteElementString("TARGET_KEY", string.Empty);
-                xmlWriter.WriteElementString("ROLE", sqliteDataReader["Role"].ToString());
-                if (string.IsNullOrWhiteSpace(sqliteDataReader["WebDB_Site"].ToString()) || string.IsNullOrWhiteSpace(sqliteDataReader["WebDB_Instance"].ToString()))
-                { xmlWriter.WriteElementString("WEB_OR_DATABASE", "false"); }
-                else
-                { xmlWriter.WriteElementString("WEB_OR_DATABASE", "true"); }
-                xmlWriter.WriteElementString("WEB_DB_SITE", sqliteDataReader["WebDB_Site"].ToString());
-                xmlWriter.WriteElementString("WEB_DB_INSTANCE", sqliteDataReader["WebDB_Instance"].ToString());
-                xmlWriter.WriteEndElement();
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to write CKL asset information.");
-                throw exception;
-            }
-        }
-
-        private void WriteStigInformation(SQLiteDataReader sqliteDataReader, XmlWriter xmlWriter)
-        {
-            try
-            {
-                xmlWriter.WriteStartElement("STIGS");
-                xmlWriter.WriteStartElement("iSTIG");
-                xmlWriter.WriteStartElement("STIG_INFO");
-                WriteSiDataNode(xmlWriter, "version", sqliteDataReader["SourceVersion"].ToString());
-                WriteSiDataNode(xmlWriter, "classification", sqliteDataReader["Classification"].ToString());
-                WriteSiDataNode(xmlWriter, "customname", string.Empty);
-                WriteSiDataNode(xmlWriter, "stigid", sqliteDataReader["SourceSecondaryIdentifier"].ToString());
-                WriteSiDataNode(xmlWriter, "description", sqliteDataReader["SourceDescription"].ToString());
-                WriteSiDataNode(xmlWriter, "filename", sqliteDataReader["VulnerabilitySourceFileName"].ToString());
-                WriteSiDataNode(xmlWriter, "releaseinfo", sqliteDataReader["SourceRelease"].ToString());
-                WriteSiDataNode(xmlWriter, "title", sqliteDataReader["SourceName"].ToString());
-                xmlWriter.WriteEndElement();
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to write CKL STIG information.");
-                throw exception;
-            }
-        }
-
-        private void WriteSiDataNode(XmlWriter xmlWriter, string sidName, string sidData)
-        {
-            try
-            {
-                xmlWriter.WriteStartElement("SI_DATA");
-                xmlWriter.WriteElementString("SID_NAME", sidName);
-                xmlWriter.WriteElementString("SID_DATA", sidData);
-                xmlWriter.WriteEndElement();
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to generate 'SI_DATA' node.");
-                throw exception;
-            }
-        }
-
-        private void WriteVulnerabilityInformation(SQLiteDataReader sqliteDataReader, XmlWriter xmlWriter)
-        {
-            try
-            {
-                xmlWriter.WriteStartElement("VULN");
-                WriteStigDataNode(xmlWriter, "Vuln_Num", sqliteDataReader["VulnerabilityGroup_ID"].ToString());
-                WriteStigDataNode(xmlWriter, "Severity", sqliteDataReader["PrimaryRawRiskIndicator"].ToString().ToSeverity());
-                WriteStigDataNode(xmlWriter, "Group_Title", sqliteDataReader["VulnerabilityGroup_Title"].ToString());
-                string ruleId =
-                    $"{sqliteDataReader["UniqueVulnerabilityIdentifier"]}r{sqliteDataReader["VulnerabilityVersion"]}_rule";
-                WriteStigDataNode(xmlWriter, "Rule_ID", ruleId);
-                WriteStigDataNode(xmlWriter, "Rule_Ver", sqliteDataReader["SecondaryVulnerabilityIdentifier"].ToString());
-                WriteStigDataNode(xmlWriter, "Rule_Title", sqliteDataReader["VulnerabilityTitle"].ToString());
-                WriteStigDataNode(xmlWriter, "Vuln_Discuss", sqliteDataReader["VulnerabilityDescription"].ToString());
-                WriteStigDataNode(xmlWriter, "IA_Controls", string.Empty);
-                WriteStigDataNode(xmlWriter, "CheckContent", sqliteDataReader["CheckContent"].ToString());
-                WriteStigDataNode(xmlWriter, "FixText", sqliteDataReader["FixText"].ToString());
-                WriteStigDataNode(xmlWriter, "FalsePositives", sqliteDataReader["FalsePositives"].ToString());
-                WriteStigDataNode(xmlWriter, "FalseNegatives", sqliteDataReader["FalseNegatives"].ToString());
-                WriteStigDataNode(xmlWriter, "Documentable", sqliteDataReader["Documentable"].ToString());
-                WriteStigDataNode(xmlWriter, "Mitigations", sqliteDataReader["Mitigations"].ToString());
-                WriteStigDataNode(xmlWriter, "Potential_Impact", sqliteDataReader["PotentialImpacts"].ToString());
-                WriteStigDataNode(xmlWriter, "ThirdPartyTools", sqliteDataReader["ThirdPartyTools"].ToString());
-                WriteStigDataNode(xmlWriter, "MitigationControl", sqliteDataReader["MitigationControl"].ToString());
-                WriteStigDataNode(xmlWriter, "Responsibility", string.Empty);
-                WriteStigDataNode(xmlWriter, "Severity_Override_Guidance", sqliteDataReader["SecurityOverrideGuidance"].ToString());
-                WriteStigDataNode(xmlWriter, "Check_Content_Ref", string.Empty);
-                WriteStigDataNode(xmlWriter, "Weight", "10.0");
-                WriteStigDataNode(xmlWriter, "Class", sqliteDataReader["Classification"].ToString());
-                string stigRef =
-                    $"{sqliteDataReader["SourceName"].ToString()} v{sqliteDataReader["SourceVersion"].ToString()} r{sqliteDataReader["SourceRelease"].ToString()}";
-                WriteStigDataNode(xmlWriter, "STIGRef", stigRef);
-                WriteStigDataNode(xmlWriter, "TargetKey", string.Empty);
-                foreach (string cci in sqliteDataReader["CCIs"].ToString().Split(',').ToArray())
-                { WriteStigDataNode(xmlWriter, "CCI_REF", string.Concat("CCI-", cci)); }
-                xmlWriter.WriteElementString("STATUS", sqliteDataReader["Status"].ToString().ToCklStatus());
-                string toolGenerated;
-                if (string.IsNullOrWhiteSpace(sqliteDataReader["ToolGeneratedOutput"].ToString()))
-                { toolGenerated = string.Empty; }
-                else
+                while (reader.Read())
                 {
-                    toolGenerated =
-                        $"Tool Generated Output:{Environment.NewLine}{sqliteDataReader["ToolGeneratedOutput"].ToString()}{Environment.NewLine + Environment.NewLine}";
+                    Dictionary<string, object> row = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    { row[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i); }
+                    rows.Add(row);
                 }
-                string findingDetails;
-                if (string.IsNullOrWhiteSpace(sqliteDataReader["FindingDetails"].ToString()))
-                { findingDetails = string.Empty; }
-                else
-                {
-                    findingDetails =
-                        $"Manual Finding Details:{Environment.NewLine}{sqliteDataReader["FindingDetails"].ToString()}";
-                }
-                xmlWriter.WriteElementString("FINDING_DETAILS", toolGenerated + findingDetails);
-                xmlWriter.WriteElementString("COMMENTS", sqliteDataReader["Comments"].ToString());
-                xmlWriter.WriteElementString("SEVERITY_OVERRIDE", sqliteDataReader["SeverityOverride"].ToString());
-                xmlWriter.WriteElementString("SEVERITY_JUSTIFICATION", sqliteDataReader["SeverityOverrideJustification"].ToString());
-                xmlWriter.WriteEndElement();
             }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to write CKL 'vulnerability' node.");
-                throw exception;
-            }
+            return rows;
         }
 
-        private void WriteStigDataNode(XmlWriter xmlWriter, string vulnAttribute, string attributeData)
+        private static void WriteAsset(XmlWriter xmlWriter, Dictionary<string, string> asset, string hostName, string marking)
         {
-            try
-            {
-                xmlWriter.WriteStartElement("STIG_DATA");
-                xmlWriter.WriteElementString("VULN_ATTRIBUTE", vulnAttribute);
-                xmlWriter.WriteElementString("ATTRIBUTE_DATA", attributeData);
-                xmlWriter.WriteEndElement();
-            }
-            catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to generate 'STIG_DATA' node.");
-                throw exception;
-            }
+            string site = Value(asset, "WebDB_Site", string.Empty);
+            string instance = Value(asset, "WebDB_Instance", string.Empty);
+            xmlWriter.WriteStartElement("ASSET");
+            xmlWriter.WriteElementString("ROLE", Value(asset, "Role", "None"));
+            xmlWriter.WriteElementString("ASSET_TYPE", "Computing");
+            xmlWriter.WriteElementString("MARKING", marking.Trim());
+            xmlWriter.WriteElementString("HOST_NAME", hostName);
+            xmlWriter.WriteElementString("HOST_IP", FirstOf(Value(asset, "IpAddresses", string.Empty)));
+            xmlWriter.WriteElementString("HOST_MAC", FirstOf(Value(asset, "MacAddresses", string.Empty)));
+            xmlWriter.WriteElementString("HOST_FQDN", Value(asset, "FQDN", string.Empty));
+            xmlWriter.WriteElementString("TARGET_COMMENT", string.Empty);
+            xmlWriter.WriteElementString("TECH_AREA", Value(asset, "TechnologyArea", string.Empty));
+            xmlWriter.WriteElementString("TARGET_KEY", string.Empty);
+            xmlWriter.WriteElementString("WEB_OR_DATABASE", (site != string.Empty || instance != string.Empty) ? "true" : "false");
+            xmlWriter.WriteElementString("WEB_DB_SITE", site);
+            xmlWriter.WriteElementString("WEB_DB_INSTANCE", instance);
+            xmlWriter.WriteEndElement();
         }
 
-        private XmlWriterSettings GenerateXmlWriterSettings()
+        private static void WriteStigInformation(XmlWriter xmlWriter, List<Dictionary<string, object>> rules)
         {
-            try
-            {
-                XmlWriterSettings xmlWriterSettings = new XmlWriterSettings()
-                {
-                    Encoding = Encoding.UTF8,
-                    Indent = true,
-                    NewLineOnAttributes = true,
-                    IndentChars = "\t",
-                    NewLineChars = Environment.NewLine,
-                    NewLineHandling = NewLineHandling.Replace
-                };
+            Dictionary<string, object> first = rules[0];
+            string classification = rules.Select(r => Text(r["Classification"])).FirstOrDefault(c => c != string.Empty) ?? string.Empty;
+            xmlWriter.WriteStartElement("STIG_INFO");
+            WriteSiData(xmlWriter, "version", Text(first["SourceVersion"]));
+            WriteSiData(xmlWriter, "classification", classification);
+            WriteSiData(xmlWriter, "customname", string.Empty);
+            WriteSiData(xmlWriter, "stigid", Text(first["SourceSecondaryIdentifier"]));
+            WriteSiData(xmlWriter, "description", Text(first["SourceDescription"]));
+            WriteSiData(xmlWriter, "filename", Text(first["VulnerabilitySourceFileName"]));
+            WriteSiData(xmlWriter, "releaseinfo", ReleaseInfo(rules));
+            WriteSiData(xmlWriter, "title", Text(first["SourceName"]));
+            WriteSiData(xmlWriter, "uuid", Guid.NewGuid().ToString());
+            WriteSiData(xmlWriter, "notice", "terms-of-use");
+            WriteSiData(xmlWriter, "source", string.Empty);
+            xmlWriter.WriteEndElement();
+        }
 
-                return xmlWriterSettings;
-            }
-            catch (Exception exception)
+        /// <summary>"Release: 4 Benchmark Date: 01 May 2026", the form STIG Viewer writes and Vulnerator reads back.</summary>
+        private static string ReleaseInfo(List<Dictionary<string, object>> rules)
+        {
+            string release = $"Release: {Text(rules[0]["SourceRelease"])}";
+            long ticks = rules.Select(r => r["PublishedTicks"]).OfType<long>().DefaultIfEmpty(0).Max();
+            return ticks > 0
+                ? $"{release} Benchmark Date: {new DateTime(ticks).ToString("dd MMM yyyy", CultureInfo.InvariantCulture)}"
+                : release;
+        }
+
+        private static void WriteVulnerability(XmlWriter xmlWriter, Dictionary<string, object> vuln, Dictionary<string, object> source)
+        {
+            xmlWriter.WriteStartElement("VULN");
+            WriteStigData(xmlWriter, "Vuln_Num", Text(vuln["VulnerabilityGroupIdentifier"]));
+            WriteStigData(xmlWriter, "Severity", Text(vuln["PrimaryRawRiskIndicator"]).ToSeverity());
+            WriteStigData(xmlWriter, "Group_Title", Text(vuln["VulnerabilityGroupTitle"]));
+            string revision = Text(vuln["VulnerabilityVersion"]);
+            WriteStigData(xmlWriter, "Rule_ID", $"{Text(vuln["UniqueVulnerabilityIdentifier"])}{(revision == string.Empty ? string.Empty : "r" + revision)}_rule");
+            WriteStigData(xmlWriter, "Rule_Ver", Text(vuln["SecondaryVulnerabilityIdentifier"]));
+            WriteStigData(xmlWriter, "Rule_Title", Text(vuln["VulnerabilityTitle"]));
+            WriteStigData(xmlWriter, "Vuln_Discuss", Text(vuln["VulnerabilityDescription"]));
+            WriteStigData(xmlWriter, "IA_Controls", string.Empty);
+            WriteStigData(xmlWriter, "Check_Content", Text(vuln["CheckContent"]));
+            WriteStigData(xmlWriter, "Fix_Text", Text(vuln["FixText"]));
+            WriteStigData(xmlWriter, "False_Positives", Text(vuln["FalsePositives"]));
+            WriteStigData(xmlWriter, "False_Negatives", Text(vuln["FalseNegatives"]));
+            WriteStigData(xmlWriter, "Documentable", Text(vuln["IsDocumentable"]) == string.Empty ? "false" : Text(vuln["IsDocumentable"]));
+            WriteStigData(xmlWriter, "Mitigations", Text(vuln["Mitigations"]));
+            WriteStigData(xmlWriter, "Potential_Impact", Text(vuln["PotentialImpacts"]));
+            WriteStigData(xmlWriter, "Third_Party_Tools", Text(vuln["ThirdPartyTools"]));
+            WriteStigData(xmlWriter, "Mitigation_Control", Text(vuln["MitigationControl"]));
+            WriteStigData(xmlWriter, "Responsibility", string.Empty);
+            string overrideGuidance = Text(vuln["SeverityOverrideGuidance"]);
+            WriteStigData(xmlWriter, "Security_Override_Guidance", overrideGuidance != string.Empty ? overrideGuidance : Text(vuln["SecurityOverrideGuidance"]));
+            WriteStigData(xmlWriter, "Check_Content_Ref", "M");
+            WriteStigData(xmlWriter, "Weight", "10.0");
+            WriteStigData(xmlWriter, "Class", "Unclass");
+            WriteStigData(xmlWriter, "STIGRef",
+                $"{Text(source["SourceName"])} :: Version {Text(source["SourceVersion"])}, Release: {Text(source["SourceRelease"])}");
+            WriteStigData(xmlWriter, "TargetKey", string.Empty);
+            WriteStigData(xmlWriter, "STIG_UUID", string.Empty);
+            foreach (string cci in Text(vuln["CCIs"]).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            { WriteStigData(xmlWriter, "CCI_REF", "CCI-" + cci.Trim()); }
+
+            string status = Text(vuln["Status"]);
+            xmlWriter.WriteElementString("STATUS", status == string.Empty ? "Not_Reviewed" : status.ToCklStatus());
+            StringBuilder details = new StringBuilder(Text(vuln["FindingDetails"]));
+            string toolOutput = Text(vuln["ToolGeneratedOutput"]);
+            if (toolOutput != string.Empty)
             {
-                LogWriter.LogError("Unable to generate XmlWriterSettings.");
-                throw exception;
+                if (details.Length > 0)
+                { details.AppendLine().AppendLine(); }
+                details.Append("Tool Generated Output:").AppendLine().Append(toolOutput);
             }
+            xmlWriter.WriteElementString("FINDING_DETAILS", Clean(details.ToString()));
+            xmlWriter.WriteElementString("COMMENTS", Clean(Text(vuln["Comments"])));
+            xmlWriter.WriteElementString("SEVERITY_OVERRIDE", Text(vuln["SeverityOverride"]));
+            xmlWriter.WriteElementString("SEVERITY_JUSTIFICATION", Clean(Text(vuln["SeverityOverrideJustification"])));
+            xmlWriter.WriteEndElement();
+        }
+
+        private static void WriteSiData(XmlWriter xmlWriter, string name, string data)
+        {
+            xmlWriter.WriteStartElement("SI_DATA");
+            xmlWriter.WriteElementString("SID_NAME", name);
+            if (data != string.Empty)
+            { xmlWriter.WriteElementString("SID_DATA", Clean(data)); }
+            xmlWriter.WriteEndElement();
+        }
+
+        private static void WriteStigData(XmlWriter xmlWriter, string attribute, string data)
+        {
+            xmlWriter.WriteStartElement("STIG_DATA");
+            xmlWriter.WriteElementString("VULN_ATTRIBUTE", attribute);
+            xmlWriter.WriteElementString("ATTRIBUTE_DATA", Clean(data));
+            xmlWriter.WriteEndElement();
+        }
+
+        private static string Text(object value)
+        { return value == null || value == DBNull.Value ? string.Empty : value.ToString().Trim(); }
+
+        private static string Value(Dictionary<string, string> row, string key, string fallback)
+        {
+            string value;
+            return row.TryGetValue(key, out value) && !string.IsNullOrWhiteSpace(value) ? value : fallback;
+        }
+
+        private static string FirstOf(string list)
+        { return list.Split(',').Select(v => v.Trim()).FirstOrDefault(v => v != string.Empty) ?? string.Empty; }
+
+        private static int Revision(string revision)
+        {
+            int value;
+            return int.TryParse(revision, out value) ? value : -1;
+        }
+
+        private static long GroupNumber(string groupId)
+        {
+            long value;
+            return long.TryParse(new string(groupId.Where(char.IsDigit).ToArray()), out value) ? value : long.MaxValue;
+        }
+
+        private static string Clean(string value)
+        { return new string((value ?? string.Empty).Where(c => XmlConvert.IsXmlChar(c) || char.IsSurrogate(c)).ToArray()); }
+
+        private static string SafeFileName(string name)
+        {
+            char[] invalid = Path.GetInvalidFileNameChars();
+            return new string(name.Select(c => invalid.Contains(c) || c == ' ' ? '_' : c).ToArray());
+        }
+
+        private static XmlWriterSettings GenerateXmlWriterSettings()
+        {
+            return new XmlWriterSettings
+            {
+                Encoding = new UTF8Encoding(false),
+                Indent = true,
+                IndentChars = "\t",
+                NewLineChars = "\r\n",
+                NewLineHandling = NewLineHandling.Entitize
+            };
         }
     }
 }

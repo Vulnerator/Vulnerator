@@ -1,4 +1,4 @@
-using Enterwell.Clients.Wpf.Notifications;
+﻿using Enterwell.Clients.Wpf.Notifications;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
@@ -6,6 +6,7 @@ using log4net;
 using MahApps.Metro;
 using Microsoft.Win32;
 using System;
+using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
@@ -13,6 +14,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using ControlzEx.Theming;
 using Vulnerator.Helper;
 using Vulnerator.Model.BusinessLogic;
 using Vulnerator.Model.DataAccess;
@@ -44,6 +46,9 @@ namespace Vulnerator.ViewModel
         private GitHubActions githubActions;
         public INotificationMessageManager NotificationMessageManager { get; set; } = new NotificationMessageManager();
         public Logger logger = new Logger();
+
+        /// <summary>The release version shown on the About page (for example "7.3.0" or "7.3.0-beta.1").</summary>
+        public string DisplayVersion => AppVersion.Display;
 
         public string ApplicationVersion
         {
@@ -153,9 +158,10 @@ namespace Vulnerator.ViewModel
                 LogWriter.LogStatusUpdate("'Logger' successfully initialized.");
                 LogWriter.LogStatusUpdate("Initializing 'MainViewModel'.");
                 githubActions = new GitHubActions();
+                // The user must be known before the database is checked: report settings are created for this user.
+                Properties.Settings.Default.ActiveUser = Environment.UserName;
                 databaseBuilder = new DatabaseBuilder();
                 VersionTest();
-                Properties.Settings.Default.ActiveUser = Environment.UserName;
                 Messenger.Default.Register<GuiFeedback>(this, (guiFeedback) => UpdateGui(guiFeedback));
                 LogWriter.LogStatusUpdate("'UpdateGui' Messenger registered.");
                 Messenger.Default.Register<string>(this, (databaseLocation) => InstantiateNewDatabase(databaseLocation));
@@ -192,7 +198,7 @@ namespace Vulnerator.ViewModel
             {
                 LogWriter.LogStatusUpdate($"Instantiating new database at '{databaseLocation}'.");
                 Properties.Settings.Default.Database = databaseLocation;
-                DatabaseBuilder.databaseConnection = string.Format(@"Data Source = {0}; Version=3;", Properties.Settings.Default.Database);
+                DatabaseBuilder.databaseConnection = DatabaseBuilder.ConnectionStringFor(Properties.Settings.Default.Database);
                 DatabaseBuilder.sqliteConnection = new System.Data.SQLite.SQLiteConnection(DatabaseBuilder.databaseConnection);
                 databaseBuilder = new DatabaseBuilder();
                 LogWriter.LogStatusUpdate($"Database instantiated at '{databaseLocation}'.");
@@ -206,47 +212,47 @@ namespace Vulnerator.ViewModel
 
         private void VersionTest()
         {
-            try
+            if (!GitHubActions.OnlineChecksAllowed)
             {
-                backgroundWorker = new BackgroundWorker();
-                backgroundWorker.DoWork += versionTestBackgroundWorker_DoWork;
-                backgroundWorker.RunWorkerAsync();
-                backgroundWorker.Dispose();
+                NewVersionText = string.Empty;
+                LogWriter.LogStatusUpdate("Update check skipped: online checks are off (Settings).");
+                return;
             }
-            catch (Exception exception)
-            {
-                string error = "Unable to generate 'VersionTest' BackgroundWorker.";
-                LogWriter.LogErrorWithDebug(error, exception);
-            }
+            Task.Run(CheckForNewerReleaseAsync);
         }
 
-        private async void versionTestBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        /// <summary>Compares the latest GitHub release with this build; never throws (it runs unattended).</summary>
+        private async Task CheckForNewerReleaseAsync()
         {
             try
             {
                 LogWriter.LogStatusUpdate("Obtaining latest available release information.");
-                Release = await githubActions.GetLatestGitHubRelease();
-                if (Release.TagName == "Unavailable")
+                Release = await githubActions.GetLatestGitHubRelease().ConfigureAwait(false);
+                Version latest;
+                Version current;
+                if (Release.TagName == "Unavailable" || !TryParseVersion(Release.TagName, out latest) || !TryParseVersion(ApplicationVersion, out current))
                 { return; }
-                else
+                if (latest > current)
                 {
-                    int releaseVersion = int.Parse(Release.TagName.Replace("v", "").Replace(".", ""));
-                    int currentVersion = int.Parse(ApplicationVersion.Replace(".", ""));
-                    if (releaseVersion > currentVersion)
-                    {
-                        NewVersionText = "New Version Available: " + Release.TagName;
-                        NewVersionVisibility = "Visible";
-                    }
-                    else
-                    { NewVersionText = "Running Latest Version"; }
+                    NewVersionText = "New Version Available: " + Release.TagName;
+                    NewVersionVisibility = "Visible";
                 }
-                LogWriter.LogStatusUpdate("Latest available release information obtained, parsed, and presented successfully.");
+                else
+                { NewVersionText = "Running Latest Version"; }
             }
             catch (Exception exception)
-            {
-                LogWriter.LogError("Unable to obtain application version update information.");
-                throw exception;
-            }
+            { LogWriter.LogErrorWithDebug("Unable to obtain application version update information.", exception); }
+        }
+
+        /// <summary>"v2.1.0-beta" or "2.1.0.0" as a Version (digits and dots only).</summary>
+        private static bool TryParseVersion(string text, out Version version)
+        {
+            version = null;
+            System.Text.RegularExpressions.Match match = System.Text.RegularExpressions.Regex.Match(text ?? string.Empty, @"\d+(\.\d+){0,3}");
+            if (!match.Success)
+            { return false; }
+            string value = match.Value.Contains(".") ? match.Value : match.Value + ".0";
+            return Version.TryParse(value, out version);
         }
 
         public RelayCommand<object> GetLatestVersionCommand => new RelayCommand<object>(GetLatestVersion);
@@ -264,32 +270,32 @@ namespace Vulnerator.ViewModel
             {
                 case "projectButton":
                     {
-                        WebNavigate("https://vulnerator.github.io/Vulnerator");
+                        WebNavigate(GitHubActions.RepositoryUrl);
                         break;
                     }
                 case "wikiButton":
                     {
-                        WebNavigate("https://github.com/Vulnerator/Vulnerator/wiki");
+                        WebNavigate(GitHubActions.RepositoryUrl);
                         break;
                     }
                 case "githubButton":
                     {
-                        WebNavigate("https://github.com/Vulnerator/Vulnerator");
+                        WebNavigate(GitHubActions.RepositoryUrl);
                         break;
                     }
                 case "issueButton":
                     {
-                        WebNavigate("https://github.com/Vulnerator/Vulnerator/issues");
+                        WebNavigate(GitHubActions.RepositoryUrl + "/issues");
                         break;
                     }
                 case "gitterButton":
                     {
-                        WebNavigate("https://gitter.im/Vulnerator/Vulnerator");
+                        WebNavigate(GitHubActions.RepositoryUrl + "/issues");
                         break;
                     }
                 case "slackButton":
                     {
-                        WebNavigate("https://join.slack.com/t/vulnerator-chat/shared_invite/enQtODcwMTkxMzI2NjQ3LTg0YzFjMjg0NjJkODkzMTIyNTgyN2I0ZDczYmQwMmFhODQyOWI4MDEyODU2MjJmM2ZkNDZiYzNmZjM0NzQ1ODQ");
+                        WebNavigate(GitHubActions.RepositoryUrl + "/issues");
                         break;
                     }
                 default:
@@ -316,24 +322,24 @@ namespace Vulnerator.ViewModel
         {
             try
             {
-                Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
+                Theme appStyle = ThemeManager.Current.DetectTheme(Application.Current);
                 Notification notification = new Notification
                 {
-                    Accent = appStyle.Item2.Resources["AccentColorBrush"].ToString(),
-                    Background = appStyle.Item1.Resources["WindowBackgroundBrush"].ToString(),
+                    Accent = appStyle.Resources["MahApps.Colors.AccentBrush"].ToString(),
+                    Background = appStyle.Resources["MahApps.Brushes.Window.Background"].ToString(),
                     Badge = "Info",
-                    Foreground = appStyle.Item1.Resources["TextBrush"].ToString(),
+                    Foreground = appStyle.Resources["MahApps.Brushes.Text"].ToString(),
                     Header = "STIG Library",
                     Message = "Please ingest the latest STIG Compilation Library on the settings page.",
                     AdditionalContentBottom = new Border
                     {
                         BorderThickness = new Thickness(0, 1, 0, 0),
-                        BorderBrush = appStyle.Item1.Resources["GrayBrush7"] as SolidColorBrush,
+                        BorderBrush = appStyle.Resources["MahApps.Brushes.Gray7"] as SolidColorBrush,
                         Child = new CheckBox
                         {
                             Margin = new Thickness(12, 8, 12, 8),
                             HorizontalAlignment = HorizontalAlignment.Left,
-                            Foreground = appStyle.Item1.Resources["TextBrush"] as SolidColorBrush,
+                            Foreground = appStyle.Resources["MahApps.Brushes.Text"] as SolidColorBrush,
                             Content = "Do not display this in the future."
                         }
                     }
@@ -366,12 +372,12 @@ namespace Vulnerator.ViewModel
                     //    new Border
                     //    {
                     //        BorderThickness = new Thickness(0,1,0,0),
-                    //        BorderBrush = ThemeManager.DetectAppStyle(Application.Current).Item1.Resources["GrayBrush7"] as SolidColorBrush,
+                    //        BorderBrush = ThemeManager.DetectAppStyle(Application.Current).Item1.Resources["MahApps.Brushes.Gray7"] as SolidColorBrush,
                     //        Child = new CheckBox
                     //        {
                     //            Margin = new Thickness(12,8,12,8),
                     //            HorizontalAlignment = HorizontalAlignment.Left,
-                    //            Foreground = ThemeManager.DetectAppStyle(Application.Current).Item1.Resources["TextBrush"] as SolidColorBrush,
+                    //            Foreground = ThemeManager.DetectAppStyle(Application.Current).Item1.Resources["MahApps.Brushes.Text"] as SolidColorBrush,
                     //            Content = "Do not display this in the future."
                     //        }
                     //    }

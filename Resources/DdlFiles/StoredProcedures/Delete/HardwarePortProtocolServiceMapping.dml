@@ -1,0 +1,6 @@
+﻿DELETE FROM
+    HardwarePortsProtocolsServices
+WHERE
+    Hardware_ID = @Hardware_ID
+AND
+    PortProtocolService_ID = @PortProtocolService_ID;

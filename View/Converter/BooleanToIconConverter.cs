@@ -13,7 +13,7 @@ namespace Vulnerator.View.Converter
                 if (System.Convert.ToBoolean(value))
                 { return "Check"; }
                 else
-                { return "ExclamationTriangle"; }
+                { return "AlertOutline"; }
             }
             return null;
         }

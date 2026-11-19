@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic XCCDF 1.1 results (default namespace) for Vulnerator import tests. No real system data. -->
+<Benchmark xmlns="http://checklists.nist.gov/xccdf/1.1" id="Legacy_Results_STIG" resolved="1" xml:lang="en">
+  <status date="2025-01-01">accepted</status>
+  <title>Legacy Results Test STIG</title>
+  <description>Synthetic legacy benchmark.</description>
+  <plain-text id="release-info">Release: 7 Benchmark Date: 01 Jan 2025</plain-text>
+  <version>3</version>
+  <Group id="V-7001">
+    <title>SRG-OS-000700</title>
+    <Rule id="SV-7001r1_rule" severity="high">
+      <version>LEG-00-000010</version>
+      <title>Legacy rule one</title>
+      <description>&lt;VulnDiscussion&gt;Legacy discussion.&lt;/VulnDiscussion&gt;</description>
+      <ident system="http://iase.disa.mil/cci">CCI-000366</ident>
+      <fixtext>Fix legacy rule.</fixtext>
+    </Rule>
+  </Group>
+  <TestResult id="legacy_result" end-time="2025-03-01T08:00:00">
+    <target>LEGACYHOST</target>
+    <target-address>10.9.8.6</target-address>
+    <rule-result idref="SV-7001r1_rule" time="2025-03-01T08:00:00"><result>fail</result></rule-result>
+    <rule-result idref="SV-7999r1_rule" time="2025-03-01T08:00:00"><result>fail</result></rule-result>
+  </TestResult>
+</Benchmark>

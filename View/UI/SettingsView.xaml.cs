@@ -10,6 +10,7 @@ namespace Vulnerator.View.UI
         public SettingsView()
         {
             InitializeComponent();
+            AddOnUi.FillIntegrations(IntegrationsPanel);
         }
     }
 }

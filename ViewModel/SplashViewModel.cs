@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using MahApps.Metro.Controls;
 using Microsoft.Win32;
@@ -131,8 +131,10 @@ namespace Vulnerator.ViewModel
                 else if (IsPortable)
                 {
                     Properties.Settings.Default["Environment"] = "Portable";
-                    Properties.Settings.Default["Database"] = Path.Combine(Environment.CurrentDirectory, "Vulnerator.sqlite");
-                    Properties.Settings.Default["LogPath"] = Path.Combine(Environment.CurrentDirectory, "Logs", "V6Log.txt");
+                    // Next to Vulnerator.exe (not the shortcut's "Start in" folder); per-user folder if that is read-only.
+                    string folder = PortableFolder();
+                    Properties.Settings.Default["Database"] = Path.Combine(folder, "Vulnerator.sqlite");
+                    Properties.Settings.Default["LogPath"] = Path.Combine(folder, "Logs", "V6Log.txt");
                 }
                 else
                 {
@@ -146,6 +148,24 @@ namespace Vulnerator.ViewModel
                 metroWindow.Close();
                 View.UI.MainWindow devWindow = new View.UI.MainWindow();
                 devWindow.Show();
+            }
+        }
+
+        private static string PortableFolder()
+        {
+            string folder = AppDomain.CurrentDomain.BaseDirectory;
+            try
+            {
+                string probe = Path.Combine(folder, ".vulnerator-write-test");
+                File.WriteAllText(probe, string.Empty);
+                File.Delete(probe);
+                return folder;
+            }
+            catch (Exception)
+            {
+                string fallback = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Vulnerator");
+                Directory.CreateDirectory(fallback);
+                return fallback;
             }
         }
     }

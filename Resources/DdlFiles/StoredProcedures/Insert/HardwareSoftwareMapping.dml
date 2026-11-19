@@ -8,10 +8,7 @@ VALUES (NULL,
         (
             SELECT Hardware_ID
             FROM Hardware
-            WHERE ScanIP = @ScanIP
-              AND DiscoveredHostName = @DiscoveredHostName
-              AND NetBIOS = @NetBIOS
-              AND FQDN = @FQDN
+            WHERE DiscoveredHostName = @DiscoveredHostName
         ),
         @InstallDate,
         (

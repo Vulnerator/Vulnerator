@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -67,15 +66,12 @@ namespace Vulnerator.Model.Entity
         public virtual SystemCategorization SystemCategorization { get; set; }
 
         [StringLength(25)]
-        [CanBeNull]
         public string AccreditationVersion { get; set; }
 
         [StringLength(1)]
-        [CanBeNull]
         public string CybersafeGrade { get; set; }
 
         [StringLength(5)]
-        [CanBeNull]
         public string FISCAM_Applies { get; set; }
 
         public long? ControlSelection_ID { get; set; }
@@ -83,18 +79,14 @@ namespace Vulnerator.Model.Entity
         public virtual ControlSelection ControlSelection { get; set; }
 
         [StringLength(5)]
-        [CanBeNull]
         public string HasForeignNationals { get; set; }
 
         [StringLength(25)]
-        [CanBeNull]
         public string SystemType { get; set; }
 
         [StringLength(1)]
-        [CanBeNull]
         public string RDTE_Zone { get; set; }
 
-        [CanBeNull]
         public long? StepOneQuestionnaire_ID { get; set; }
         
         public virtual StepOneQuestionnaire StepOneQuestionnaire { get; set; }

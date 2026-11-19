@@ -2,18 +2,18 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                     xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-                    xmlns:local="clr-namespace:Vulnerator.View.Styles">
+                    xmlns:vsm ="clr-namespace:System.Windows;assembly=PresentationFramework">
 
     <Style x:Key="CustomCheckBox"
            TargetType="CheckBox">
-        <Setter Property="Background" Value="{DynamicResource WhiteBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxBrush}" />
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.CheckBox}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Controls:ControlsHelper.FocusBorderBrush" Value="{DynamicResource HighlightBrush}" />
-        <Setter Property="Controls:ControlsHelper.MouseOverBorderBrush" Value="{DynamicResource CheckBoxMouseOverBrush}" />
-        <Setter Property="FontFamily" Value="{DynamicResource ContentFontFamily}" />
-        <Setter Property="FontSize" Value="{DynamicResource ContentFontSize}" />
-        <Setter Property="Foreground" Value="{DynamicResource LabelTextBrush}" />
+        <Setter Property="Controls:ControlsHelper.FocusBorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}" />
+        <Setter Property="Controls:ControlsHelper.MouseOverBorderBrush" Value="{DynamicResource MahApps.Brushes.CheckBox.MouseOver}" />
+        <Setter Property="FontFamily" Value="{DynamicResource MahApps.Fonts.Family.Control}" />
+        <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.Content}" />
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="Padding" Value="6,0,0,0" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -29,7 +29,7 @@
                         </Grid.ColumnDefinitions>
                         <Grid x:Name="PART_CHECKBOX">
                             <Rectangle Margin="-6,0"
-                                       Fill="{DynamicResource TransparentWhiteBrush}" />
+                                       Fill="{DynamicResource TransparentMahApps.Brushes.ThemeBackground}" />
                             <Border x:Name="normal"
                                     Width="18"
                                     Height="18"
@@ -42,19 +42,19 @@
                                   Width="12"
                                   Height="10"
                                   Data="M 1145.607177734375,430 C1145.607177734375,430 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1138,434.5538330078125 1138,434.5538330078125 1138,434.5538330078125 1141.482177734375,438 1141.482177734375,438 1141.482177734375,438 1141.96875,437.9375 1141.96875,437.9375 1141.96875,437.9375 1147,431.34619140625 1147,431.34619140625 1147,431.34619140625 1145.607177734375,430 1145.607177734375,430 z"
-                                  Fill="{DynamicResource HighlightBrush}"
+                                  Fill="{DynamicResource MahApps.Brushes.Highlight}"
                                   Opacity="0"
                                   Stretch="Fill"
                                   UseLayoutRounding="False" />
                             <Rectangle x:Name="IndeterminateCheck"
                                        Width="8"
                                        Height="3"
-                                       Fill="{DynamicResource GrayBrush3}"
+                                       Fill="{DynamicResource MahApps.Brushes.Gray3}"
                                        Opacity="0" />
                             <Border x:Name="disabled"
                                     Width="18"
                                     Height="18"
-                                    Background="{DynamicResource SemiTransparentWhiteBrush}"
+                                    Background="{DynamicResource SemiTransparentMahApps.Brushes.ThemeBackground}"
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     Opacity="0"
                                     SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
@@ -69,10 +69,10 @@
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
                                           ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
                                           RecognizesAccessKey="True" />
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal" />
-                                <VisualState x:Name="Disabled">
+                        <vsm:VisualStateManager.VisualStateGroups>
+                            <vsm:VisualStateGroup x:Name="CommonStates">
+                                <vsm:VisualState x:Name="Normal" />
+                                <vsm:VisualState x:Name="Disabled">
                                     <Storyboard>
                                         <DoubleAnimation Storyboard.TargetName="contentPresenter"
                                                          Storyboard.TargetProperty="(UIElement.Opacity)"
@@ -83,35 +83,35 @@
                                                          To="1"
                                                          Duration="0" />
                                     </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-                            <VisualStateGroup x:Name="CheckStates">
-                                <VisualState x:Name="Checked">
+                                </vsm:VisualState>
+                            </vsm:VisualStateGroup>
+                            <vsm:VisualStateGroup x:Name="CheckStates">
+                                <vsm:VisualState x:Name="Checked">
                                     <Storyboard>
                                         <DoubleAnimation Storyboard.TargetName="checkBox"
                                                          Storyboard.TargetProperty="(UIElement.Opacity)"
                                                          To="1"
                                                          Duration="0" />
                                     </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Unchecked" />
-                                <VisualState x:Name="Indeterminate">
+                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="Unchecked" />
+                                <vsm:VisualState x:Name="Indeterminate">
                                     <Storyboard>
                                         <DoubleAnimation Storyboard.TargetName="IndeterminateCheck"
                                                          Storyboard.TargetProperty="(UIElement.Opacity)"
                                                          To="1"
                                                          Duration="0" />
                                     </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
+                                </vsm:VisualState>
+                            </vsm:VisualStateGroup>
+                        </vsm:VisualStateManager.VisualStateGroups>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="normal" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.MouseOverBorderBrush)}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="normal" Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
+                            <Setter TargetName="normal" Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}" />
                         </Trigger>
                         <Trigger Property="IsFocused" Value="True">
                             <Setter TargetName="normal" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.FocusBorderBrush)}" />

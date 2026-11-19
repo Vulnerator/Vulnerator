@@ -1,0 +1,26 @@
+﻿SELECT H.DisplayedHostName,
+       H.DiscoveredHostName,
+       H.FQDN,
+       H.Role,
+       (SELECT GROUP_CONCAT(IP_Address)
+        FROM Hardware_IP_Addresses HI
+                 JOIN IP_Addresses IP ON HI.IP_Address_ID = IP.IP_Address_ID
+        WHERE HI.Hardware_ID = H.Hardware_ID)                   AS IpAddresses,
+       (SELECT GROUP_CONCAT(MAC_Address)
+        FROM Hardware_MAC_Addresses HM
+                 JOIN MAC_Addresses M ON HM.MAC_Address_ID = M.MAC_Address_ID
+        WHERE HM.Hardware_ID = H.Hardware_ID)                   AS MacAddresses,
+       (SELECT TechnologyArea
+        FROM UniqueFindings
+        WHERE Hardware_ID = H.Hardware_ID
+          AND COALESCE(TechnologyArea, '') <> '' LIMIT 1)       AS TechnologyArea,
+       (SELECT WebDB_Site
+        FROM UniqueFindings
+        WHERE Hardware_ID = H.Hardware_ID
+          AND COALESCE(WebDB_Site, '') <> '' LIMIT 1)           AS WebDB_Site,
+       (SELECT WebDB_Instance
+        FROM UniqueFindings
+        WHERE Hardware_ID = H.Hardware_ID
+          AND COALESCE(WebDB_Instance, '') <> '' LIMIT 1)       AS WebDB_Instance
+FROM Hardware H
+WHERE H.Hardware_ID = @Hardware_ID;

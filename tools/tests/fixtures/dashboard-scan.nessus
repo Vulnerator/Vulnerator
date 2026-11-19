@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<!-- Synthetic ACAS/Nessus scan for the add-on data test (Critical risk, IAVB/IAVT references). Contains no real system data. -->
+<NessusClientData_v2>
+<Policy><policyName>Synthetic Test Policy</policyName></Policy>
+<Report name="Synthetic Dashboard Scan" xmlns:cm="http://www.nessus.org/cm">
+<ReportHost name="10.1.3.9"><HostProperties>
+<tag name="HOST_END">Thu Oct 29 09:05:00 2026</tag>
+<tag name="host-ip">10.1.3.9</tag>
+<tag name="host-fqdn">dashhost01.example.test</tag>
+<tag name="hostname">dashhost01</tag>
+<tag name="Credentialed_Scan">true</tag>
+<tag name="HOST_START">Thu Oct 29 09:00:00 2026</tag>
+</HostProperties>
+<ReportItem port="445" svc_name="cifs" protocol="tcp" severity="4" pluginID="500101" pluginName="Synthetic Critical Remote Vulnerability" pluginFamily="Windows">
+<cvss3_base_score>9.8</cvss3_base_score>
+<cve>CVE-2026-0001</cve>
+<description>A synthetic critical vulnerability.</description>
+<fname>synthetic_500101.nasl</fname>
+<plugin_modification_date>2026/10/20</plugin_modification_date>
+<plugin_name>Synthetic Critical Remote Vulnerability</plugin_name>
+<plugin_publication_date>2026/10/14</plugin_publication_date>
+<plugin_type>remote</plugin_type>
+<risk_factor>Critical</risk_factor>
+<script_version>1.0</script_version>
+<solution>Apply the vendor update.</solution>
+<stig_severity>I</stig_severity>
+<synopsis>The remote host is affected by a critical vulnerability.</synopsis>
+<xref>IAVB:2026-B-0002</xref>
+<xref>IAVT:2026-T-0003</xref>
+<plugin_output>Synthetic output.</plugin_output>
+</ReportItem>
+<ReportItem port="0" svc_name="general" protocol="tcp" severity="1" pluginID="500102" pluginName="Synthetic Low Finding" pluginFamily="General">
+<description>A synthetic low-severity finding.</description>
+<fname>synthetic_500102.nasl</fname>
+<plugin_modification_date>2026/10/20</plugin_modification_date>
+<plugin_name>Synthetic Low Finding</plugin_name>
+<plugin_publication_date>2026/10/14</plugin_publication_date>
+<plugin_type>local</plugin_type>
+<risk_factor>Low</risk_factor>
+<script_version>1.0</script_version>
+<solution>Reconfigure.</solution>
+<synopsis>A low-severity setting.</synopsis>
+</ReportItem>
+</ReportHost>
+</Report>
+</NessusClientData_v2>

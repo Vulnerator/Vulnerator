@@ -47,8 +47,9 @@ namespace Vulnerator.Helper
         {
             try
             {
-                log.Error(message);
-                log.Debug($"Exception Details: {ex}");
+                // The exception goes in at Error level: release builds log Info and above, and a failure report is
+                // only useful with the reason.
+                log.Error(message, ex);
             }
             catch (Exception exception)
             {

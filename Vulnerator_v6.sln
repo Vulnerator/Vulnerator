@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vulnerator_v6", "Vulnerator_v6.csproj", "{ACB51B18-6A76-48F4-8D03-10504B892593}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vulnerator.AddOns", "Vulnerator.AddOns\Vulnerator.AddOns.csproj", "{6F1C2A57-3B0E-4C8E-9D41-7A2E5B9C0D11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,10 @@ Global
 		{ACB51B18-6A76-48F4-8D03-10504B892593}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACB51B18-6A76-48F4-8D03-10504B892593}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACB51B18-6A76-48F4-8D03-10504B892593}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F1C2A57-3B0E-4C8E-9D41-7A2E5B9C0D11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F1C2A57-3B0E-4C8E-9D41-7A2E5B9C0D11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F1C2A57-3B0E-4C8E-9D41-7A2E5B9C0D11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F1C2A57-3B0E-4C8E-9D41-7A2E5B9C0D11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

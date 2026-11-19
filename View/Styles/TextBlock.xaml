@@ -3,17 +3,16 @@
                     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                     xmlns:Converters="clr-namespace:Vulnerator.View.Converter"
                     xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-                    xmlns:local="clr-namespace:Vulnerator.View.Styles"
                     xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:vh="clr-namespace:Vulnerator.View.ViewHelper"
                     xmlns:vm="clr-namespace:Vulnerator.ViewModel">
 
     <Style x:Key="HyperlinkTextBlockStyle"
-           BasedOn="{StaticResource MetroTextBlock}"
+           BasedOn="{StaticResource MahApps.Styles.TextBlock}"
            TargetType="TextBlock">
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Foreground" Value="{DynamicResource AccentColorBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Colors.AccentBrush}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -22,14 +21,14 @@
            TargetType="StatusBarItem">
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Foreground" Value="{DynamicResource AccentColorBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Colors.AccentBrush}" />
             </Trigger>
         </Style.Triggers>
     </Style>
 
     <Style x:Key="ExpanderHeaderTextBlockStyle"
            TargetType="{x:Type TextBlock}">
-        <Setter Property="Foreground" Value="{DynamicResource LabelTextBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="Margin" Value="5,0" />
         <Setter Property="TextTrimming" Value="CharacterEllipsis" />

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="packages\PropertyChanged.Fody.3.1.3\build\PropertyChanged.Fody.props" Condition="Exists('packages\PropertyChanged.Fody.3.1.3\build\PropertyChanged.Fody.props')" />
-  <Import Project="packages\SQLite.3.13.0\build\net45\SQLite.props" Condition="Exists('packages\SQLite.3.13.0\build\net45\SQLite.props')" />
+  <Import Project="packages\PropertyChanged.Fody.3.2.8\build\PropertyChanged.Fody.props" Condition="Exists('packages\PropertyChanged.Fody.3.2.8\build\PropertyChanged.Fody.props')" />
+  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -11,7 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Vulnerator</RootNamespace>
     <AssemblyName>Vulnerator</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -29,7 +29,7 @@
     </SccProvider>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <PublishUrl>publish\</PublishUrl>
+    <PublishUrl>C:\Users\Alex Kuchta\Desktop\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -42,6 +42,7 @@
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -59,7 +60,8 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <!-- 64-bit: SQLite comes from Windows (winsqlite3.dll, System32); see tools/ci/Use-WindowsSqlite.ps1. -->
+    <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -75,37 +77,38 @@
     <StartupObject>Vulnerator.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>38213BCE33EB5017A79C0C56655FCF360DB26241</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ColorCode, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\ColorCode.Portable.1.0.3\lib\portable45-net45+win8+wp8+wpa81\ColorCode.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="CommonServiceLocator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
-      <HintPath>packages\CommonServiceLocator.2.0.4\lib\net45\CommonServiceLocator.dll</HintPath>
+    <Reference Include="CommonServiceLocator, Version=2.0.5.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>packages\CommonServiceLocator.2.0.5\lib\net47\CommonServiceLocator.dll</HintPath>
     </Reference>
-    <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\ControlzEx.3.0.2.4\lib\net45\ControlzEx.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="ControlzEx, Version=4.0.0.0, Culture=neutral, PublicKeyToken=69f1c32f803d307e, processorArchitecture=MSIL">
+      <HintPath>packages\ControlzEx.4.3.2\lib\net462\ControlzEx.dll</HintPath>
     </Reference>
-    <Reference Include="CsvHelper, Version=12.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
-      <HintPath>packages\CsvHelper.12.1.2\lib\net45\CsvHelper.dll</HintPath>
-    </Reference>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.9.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
-      <HintPath>packages\DocumentFormat.OpenXml.2.9.1\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.11.3.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>packages\DocumentFormat.OpenXml.2.11.3\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
     <Reference Include="Enterwell.Clients.Wpf.Notifications, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Enterwell.Clients.Wpf.Notifications.1.4.2\lib\net451\Enterwell.Clients.Wpf.Notifications.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="GalaSoft.MvvmLight, Version=5.4.1.0, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
       <HintPath>packages\MvvmLightLibs.5.4.1.1\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
@@ -121,69 +124,57 @@
     </Reference>
     <Reference Include="HtmlToXamlConverter, Version=1.0.5727.24510, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\HtmlToXamlConverter.1.0.5727.24510\lib\net45\HtmlToXamlConverter.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="JetBrains.Annotations">
-      <HintPath>.\Resources\DllFiles\JetBrains.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="LiveCharts, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
       <HintPath>packages\LiveCharts.0.9.7\lib\net45\LiveCharts.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="LiveCharts.Wpf, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
       <HintPath>packages\LiveCharts.Wpf.0.9.7\lib\net45\LiveCharts.Wpf.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=2.0.17.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>packages\log4net.2.0.17\lib\net45\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="MahApps.Metro, Version=1.6.5.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\MahApps.Metro.1.6.5\lib\net45\MahApps.Metro.dll</HintPath>
+    <Reference Include="MahApps.Metro, Version=2.0.0.0, Culture=neutral, PublicKeyToken=51482d6f650b2b3f, processorArchitecture=MSIL">
+      <HintPath>packages\MahApps.Metro.2.2.0\lib\net47\MahApps.Metro.dll</HintPath>
     </Reference>
-    <Reference Include="MahApps.Metro.IconPacks, Version=3.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Resources\DllFiles\MahApps.Metro.IconPacks.dll</HintPath>
+    <Reference Include="MahApps.Metro.IconPacks.Core">
+      <HintPath>packages\MahApps.Metro.IconPacks.Material.4.11.0\lib\net47\MahApps.Metro.IconPacks.Core.dll</HintPath>
     </Reference>
-    <Reference Include="MahApps.Metro.IconPacks.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Resources\DllFiles\MahApps.Metro.IconPacks.Core.dll</HintPath>
+    <Reference Include="MahApps.Metro.IconPacks.Material">
+      <HintPath>packages\MahApps.Metro.IconPacks.Material.4.11.0\lib\net47\MahApps.Metro.IconPacks.Material.dll</HintPath>
     </Reference>
-    <Reference Include="Markdig, Version=0.16.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Markdig.0.16.0\lib\net40\Markdig.dll</HintPath>
+    <Reference Include="Markdig, Version=0.18.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Markdig.0.18.0\lib\net40\Markdig.dll</HintPath>
     </Reference>
     <Reference Include="Markdig.SemanticUi, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Markdig.SemanticUi.0.1.0\lib\net45\Markdig.SemanticUi.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Markdig.SyntaxHighlighting, Version=1.1.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Markdig.SyntaxHighlighting.1.1.7\lib\portable45-net45+win8+wp8+wpa81\Markdig.SyntaxHighlighting.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="Markdig.Wpf, Version=0.2.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Markdig.Wpf.0.2.8\lib\net452\Markdig.Wpf.dll</HintPath>
+    <Reference Include="Markdig.Wpf, Version=0.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Markdig.Wpf.0.3.1\lib\net452\Markdig.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Exchange.WebServices, Version=15.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Exchange.WebServices.2.2\lib\40\Microsoft.Exchange.WebServices.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Exchange.WebServices.Auth, Version=15.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Exchange.WebServices.2.2\lib\40\Microsoft.Exchange.WebServices.Auth.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.1.1.1\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\WindowsAPICodePack.1.1.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+      <HintPath>packages\WindowsAPICodePack.1.1.1\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack.ExtendedLinguisticServices, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\WindowsAPICodePack.1.1.0\lib\Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll</HintPath>
+      <HintPath>packages\WindowsAPICodePack.1.1.1\lib\Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack.Sensors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\WindowsAPICodePack.1.1.0\lib\Microsoft.WindowsAPICodePack.Sensors.dll</HintPath>
+      <HintPath>packages\WindowsAPICodePack.1.1.1\lib\Microsoft.WindowsAPICodePack.Sensors.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\WindowsAPICodePack.1.1.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+      <HintPath>packages\WindowsAPICodePack.1.1.1\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack.ShellExtensions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\WindowsAPICodePack.1.1.0\lib\Microsoft.WindowsAPICodePack.ShellExtensions.dll</HintPath>
+      <HintPath>packages\WindowsAPICodePack.1.1.1\lib\Microsoft.WindowsAPICodePack.ShellExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Xaml.Behaviors.Wpf.1.1.19\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
     <Reference Include="MigraDoc.DocumentObjectModel-wpf, Version=1.50.5147.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <HintPath>packages\PDFsharp-MigraDoc-wpf.1.50.5147\lib\net30\MigraDoc.DocumentObjectModel-wpf.dll</HintPath>
@@ -194,8 +185,8 @@
     <Reference Include="MigraDoc.RtfRendering-wpf, Version=1.50.5147.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <HintPath>packages\PDFsharp-MigraDoc-wpf.1.50.5147\lib\net30\MigraDoc.RtfRendering-wpf.dll</HintPath>
     </Reference>
-    <Reference Include="Octokit, Version=0.32.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Octokit.0.32.0\lib\net45\Octokit.dll</HintPath>
+    <Reference Include="Octokit, Version=0.48.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Octokit.0.48.0\lib\net46\Octokit.dll</HintPath>
     </Reference>
     <Reference Include="PdfSharp, Version=1.50.5147.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <HintPath>packages\PDFsharp.1.50.5147\lib\net20\PdfSharp.dll</HintPath>
@@ -209,8 +200,8 @@
     <Reference Include="PdfSharp.Charting-wpf, Version=1.50.5147.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <HintPath>packages\PDFsharp-MigraDoc-wpf.1.50.5147\lib\net30\PdfSharp.Charting-wpf.dll</HintPath>
     </Reference>
-    <Reference Include="PropertyChanged, Version=3.1.3.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
-      <HintPath>packages\PropertyChanged.Fody.3.1.3\lib\net40\PropertyChanged.dll</HintPath>
+    <Reference Include="PropertyChanged, Version=3.2.8.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
+      <HintPath>packages\PropertyChanged.Fody.3.2.8\lib\net40\PropertyChanged.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
@@ -218,45 +209,87 @@
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data.SQLite, Version=1.0.111.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>packages\System.Data.SQLite.Core.1.0.111.0\lib\net451\System.Data.SQLite.dll</HintPath>
+    <Reference Include="System.Data.SQLite, Version=2.0.4.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>packages\System.Data.SQLite.2.0.4\lib\net471\System.Data.SQLite.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.SQLite.EF6, Version=1.0.111.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>packages\System.Data.SQLite.EF6.1.0.111.0\lib\net451\System.Data.SQLite.EF6.dll</HintPath>
+    <Reference Include="System.Data.SQLite.EF6, Version=2.0.3.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>packages\System.Data.SQLite.EF6.2.0.3\lib\net471\System.Data.SQLite.EF6.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.SQLite.Linq, Version=1.0.111.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>packages\System.Data.SQLite.Linq.1.0.111.0\lib\net451\System.Data.SQLite.Linq.dll</HintPath>
+    <Reference Include="System.Diagnostics.Tracing, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Diagnostics.Tracing.4.3.0\lib\net462\System.Diagnostics.Tracing.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Interactive.Async, Version=3.2.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
-      <HintPath>packages\System.Interactive.Async.3.2.0\lib\net45\System.Interactive.Async.dll</HintPath>
+    <Reference Include="System.Interactive.Async, Version=4.1.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>packages\System.Interactive.Async.4.1.1\lib\net461\System.Interactive.Async.dll</HintPath>
     </Reference>
-    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
+    </Reference>
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Packaging, Version=4.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.IO.Packaging.4.7.0\lib\net46\System.IO.Packaging.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Linq.4.3.0\lib\net463\System.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq.Async, Version=4.1.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>packages\System.Linq.Async.4.1.1\lib\net461\System.Linq.Async.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq.Expressions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Linq.Expressions.4.3.0\lib\net463\System.Linq.Expressions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net">
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Reflection, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Reflection.4.3.0\lib\net462\System.Reflection.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime, Version=4.1.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.4.3.1\lib\net462\System.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.7.1\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Extensions, Version=4.1.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.Extensions.4.3.1\lib\net462\System.Runtime.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.InteropServices.4.3.0\lib\net463\System.Runtime.InteropServices.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Text.RegularExpressions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Text.RegularExpressions.4.3.1\lib\net463\System.Text.RegularExpressions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+      <HintPath>packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Controls.Input.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\WPFToolkit.3.5.50211.1\lib\System.Windows.Controls.Input.Toolkit.dll</HintPath>
     </Reference>
@@ -305,23 +338,49 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helper\DelimitedText.cs" />
+    <Compile Include="Helper\ExportMarking.cs" />
+    <Compile Include="View\UI\StigManagerWindow.cs" />
+    <Compile Include="View\UI\ConfigurationManagement\MergeHardwareWindow.cs" />
+    <Compile Include="Helper\AppVersion.cs" />
+    <Compile Include="Helper\BackgroundWorkerFactory.cs" />
     <Compile Include="Helper\DdlReader.cs" />
     <Compile Include="Helper\Logger.cs" />
     <Compile Include="Helper\LogWriter.cs" />
     <Compile Include="Model\BusinessLogic\AcasNessusReader.cs" />
     <Compile Include="Model\BusinessLogic\AcasCsvReader.cs" />
     <Compile Include="Model\BusinessLogic\CklCreator.cs" />
+    <Compile Include="Model\BusinessLogic\IngestionFileCollector.cs" />
+    <Compile Include="Model\BusinessLogic\Reports\EmassPoamBuilder.cs" />
+    <Compile Include="Model\BusinessLogic\Reports\EmassWorkbookWriter.cs" />
     <Compile Include="Model\BusinessLogic\Reports\FilterTextCreator.cs" />
+    <Compile Include="Model\BusinessLogic\Reports\OpenXmlEmassHardwareSoftwareReportCreator.cs" />
     <Compile Include="Model\BusinessLogic\Reports\OpenXmlCellDataHandler.cs" />
     <Compile Include="Model\BusinessLogic\Reports\OpenXmlEmassPoamReportCreator.cs" />
     <Compile Include="Model\BusinessLogic\RawStigReader.cs" />
+    <Compile Include="Model\BusinessLogic\StigLibraryImporter.cs" />
     <Compile Include="Model\BusinessLogic\AssociateStig.cs" />
-    <Compile Include="Model\BusinessLogic\Reports\OpenXmlNavyRarReportCreator.cs" />
+    <Compile Include="Model\BusinessLogic\Reports\OpenXmlRiskAssessmentReportCreator.cs" />
     <Compile Include="Model\BusinessLogic\Reports\OpenXmlStigDiscrepanciesReportCreator.cs" />
+    <Compile Include="Model\BusinessLogic\Reports\OpenXmlStigDetailsReportCreator.cs" />
+    <Compile Include="Model\BusinessLogic\Reports\PdfSummaryReportCreator.cs" />
+    <Compile Include="Model\BusinessLogic\Reports\OpenXmlPortsProtocolsServicesReportCreator.cs" />
+    <Compile Include="Model\BusinessLogic\Reports\ReportFindings.cs" />
+    <Compile Include="Model\AddOns\AddOnData.cs" />
+    <Compile Include="Model\AddOns\AddOnHost.cs" />
+    <Compile Include="Model\AddOns\AddOnManager.cs" />
+    <Compile Include="Model\DataAccess\HardwareScanDates.cs" />
+    <Compile Include="Model\DataAccess\HardwareIdentity.cs" />
+    <Compile Include="Model\DataAccess\HardwareMerger.cs" />
+    <Compile Include="Model\StigManager\StigManagerClient.cs" />
+    <Compile Include="Model\StigManager\StigManagerSettings.cs" />
+    <Compile Include="View\UI\AddOnViews.cs" />
     <Compile Include="Model\BusinessLogic\Reports\OpenXmlStylesheetCreator.cs" />
+    <Compile Include="Model\DataAccess\AssetEditor.cs" />
     <Compile Include="Model\DataAccess\DatabaseBuilder.cs" />
     <Compile Include="Model\DataAccess\DatabaseContext.cs" />
     <Compile Include="Model\DataAccess\DatabaseInterface.cs" />
+    <Compile Include="Model\DataAccess\ImportFacts.cs" />
     <Compile Include="Model\Entity\AdditionalTestConsideration.cs" />
     <Compile Include="Model\Entity\AuthorizationToConnectOrInterim_ATC_PendingItem.cs" />
     <Compile Include="Model\Entity\AuthorizationCondition.cs" />
@@ -349,7 +408,6 @@
     <Compile Include="Model\Entity\FindingType.cs" />
     <Compile Include="Model\Entity\GoverningPolicy.cs" />
     <Compile Include="Model\Entity\Group.cs" />
-    <Compile Include="Model\Entity\GroupContactTitle.cs" />
     <Compile Include="Model\Entity\GroupMitigationOrConditionVulnerability.cs" />
     <Compile Include="Model\Entity\Hardware.cs" />
     <Compile Include="Model\Entity\HardwarePortProtocolService.cs" />
@@ -393,7 +451,6 @@
     <Compile Include="Model\Entity\SoftwareHardware.cs" />
     <Compile Include="Model\Entity\StepOneQuestionnaire.cs" />
     <Compile Include="Model\Entity\SystemCategorization.cs" />
-    <Compile Include="Model\Entity\SystemCategorizationInformationTypesImpactAdjustment.cs" />
     <Compile Include="Model\Entity\TestReference.cs" />
     <Compile Include="Model\Entity\TestScheduleItem.cs" />
     <Compile Include="Model\Entity\Title.cs" />
@@ -410,6 +467,7 @@
     <Compile Include="Model\Object\Cci.cs" />
     <Compile Include="Model\Object\File.cs" />
     <Compile Include="Model\Object\FortifySeverity.cs" />
+    <Compile Include="Model\Object\GroupHardwareMappingDoWorkArguments.cs" />
     <Compile Include="Model\Object\IssueLabelCategory.cs" />
     <Compile Include="Model\Object\Likelihood.cs" />
     <Compile Include="Model\Object\Notification.cs" />
@@ -419,9 +477,9 @@
     <Compile Include="Settings.cs" />
     <Compile Include="ViewModel\AboutViewModel.cs" />
     <Compile Include="ViewModel\AsyncObservableCollection.cs" />
-    <Compile Include="Model\Object\CciToNist.cs" />
+    <Compile Include="Model\BusinessLogic\CklbReader.cs" />
+    <Compile Include="Model\BusinessLogic\EmassAssessmentProcedureImporter.cs" />
     <Compile Include="Model\BusinessLogic\CklReader.cs" />
-    <Compile Include="Model\BusinessLogic\DiacapToRmf.cs" />
     <Compile Include="Model\Object\DiscrepancyItem.cs" />
     <Compile Include="Helper\ExtensionMethods.cs" />
     <Compile Include="Helper\FileNameNoPathConverter.cs" />
@@ -430,12 +488,13 @@
     <Compile Include="Model\Object\GitHubActions.cs" />
     <Compile Include="Model\Object\Issue.cs" />
     <Compile Include="Model\Object\Release.cs" />
-    <Compile Include="Model\Object\FormattedCell.cs" />
     <Compile Include="Model\BusinessLogic\HTMLtoXML.cs" />
-    <Compile Include="Model\BusinessLogic\MitigationsTextParser.cs" />
     <Compile Include="Model\BusinessLogic\OpenXmlReportCreator.cs" />
     <Compile Include="Model\BusinessLogic\PdfReportCreator.cs" />
-    <Compile Include="ViewModel\ConfigurationManagementViewModel.cs" />
+    <Compile Include="ViewModel\ConfigurationManagement\Tabs\Groups.cs" />
+    <Compile Include="ViewModel\ConfigurationManagement\Tabs\Hardware.cs" />
+    <Compile Include="ViewModel\ConfigurationManagement\Tabs\PortsProtocolsServices.cs" />
+    <Compile Include="ViewModel\ConfigurationManagement\Tabs\Software.cs" />
     <Compile Include="ViewModel\LoadingViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MessengerToken.cs" />
@@ -451,22 +510,15 @@
     <Compile Include="ViewModel\VulnerabilityViewModel.cs" />
     <Compile Include="View\Converter\BooleanToCheckboxConverter.cs" />
     <Compile Include="View\Converter\BooleanToCollapsedConverter.cs" />
-    <Compile Include="View\Converter\BooleanToHiddenConverter.cs" />
     <Compile Include="View\Converter\BooleanToIconConverter.cs" />
     <Compile Include="View\Converter\BooleanToVisibilityConverter.cs" />
-    <Compile Include="View\Converter\DateTimeConverter.cs" />
-    <Compile Include="View\Converter\DebugDataBindingConverter.cs" />
     <Compile Include="View\Converter\IsNullConverter.cs" />
     <Compile Include="View\Converter\IsNullToCollapsedConverter.cs" />
     <Compile Include="View\Converter\IsNullToVisibleConverter.cs" />
     <Compile Include="View\Converter\MarkupConverter.cs" />
     <Compile Include="View\Converter\MathConverter.cs" />
-    <Compile Include="View\Converter\MitigationsSelectedItemConverter.cs" />
     <Compile Include="View\Converter\FileTypeToVisibilityConverter.cs" />
     <Compile Include="View\Converter\HtmlToFlowDocumentConverter.cs" />
-    <Compile Include="View\Converter\ImportButtonTextAppendingConverter.cs" />
-    <Compile Include="View\Converter\InverseBooleanConverter.cs" />
-    <Compile Include="View\Converter\MaxLengthToRemainingCharactersConverter.cs" />
     <Compile Include="View\Converter\MultiValueConverter.cs" />
     <Compile Include="View\Converter\NullToBooleanConverter.cs" />
     <Compile Include="View\Converter\RemainingCharactersConverter.cs" />
@@ -475,8 +527,20 @@
     <Compile Include="View\UI\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\UI\ConfigurationManagementView.xaml.cs">
-      <DependentUpon>ConfigurationManagementView.xaml</DependentUpon>
+    <Compile Include="View\UI\ConfigurationManagement\TabControl.xaml.cs">
+      <DependentUpon>TabControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\ConfigurationManagement\Tabs\Groups.xaml.cs">
+      <DependentUpon>Groups.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\ConfigurationManagement\Tabs\Hardware.xaml.cs">
+      <DependentUpon>Hardware.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\ConfigurationManagement\Tabs\PortsProtocolsServces.xaml.cs">
+      <DependentUpon>PortsProtocolsServces.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UI\ConfigurationManagement\Tabs\Software.xaml.cs">
+      <DependentUpon>Software.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UI\LoadingWindow.xaml.cs">
       <DependentUpon>LoadingWindow.xaml</DependentUpon>
@@ -508,27 +572,16 @@
     <Compile Include="View\UI\VulnerabilityManagementView.xaml.cs">
       <DependentUpon>VulnerabilityManagementView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Validation\NumericValidationRule.cs" />
     <Compile Include="View\ViewHelper\CommandEnabledComboBox.cs" />
-    <Compile Include="View\Converter\EmailPersonnelLabelJoiner.cs" />
-    <Compile Include="View\Converter\EmailTextLabelStringJoiner.cs" />
     <Compile Include="View\ViewHelper\DependencyProperties.cs" />
-    <Compile Include="View\ViewHelper\MyXmlDataProvider.cs" />
     <Compile Include="Model\BusinessLogic\WasspReader.cs" />
     <Compile Include="Model\BusinessLogic\XccdfReader.cs" />
     <Compile Include="Model\BusinessLogic\XmlWasspReader.cs" />
-    <Compile Include="ViewModel\EventCommand.cs" />
-    <Compile Include="View\Converter\ObtainThirdSplitStringValueConverter.cs" />
-    <Compile Include="View\Converter\StringJoiningConverter.cs" />
-    <Compile Include="View\Converter\ObtainSecondSplitStringValueConverter.cs" />
-    <Compile Include="View\Converter\ObtainFirstSplitStringValueConverter.cs" />
     <Compile Include="View\ViewHelper\AutoRefreshCollectionViewSource.cs" />
-    <Compile Include="View\Validation\BlankFieldValidationRule.cs" />
     <Compile Include="View\UI\CloseReportWorkbook.xaml.cs">
       <DependentUpon>CloseReportWorkbook.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Validation\EmailValidationRule.cs" />
-    <Compile Include="View\Validation\MitigationDatabaseValidationRule.cs" />
     <Compile Include="View\UI\NoEmailApplication.xaml.cs">
       <DependentUpon>NoEmailApplication.xaml</DependentUpon>
     </Compile>
@@ -648,9 +701,25 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\UI\ConfigurationManagementView.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="View\UI\ConfigurationManagement\TabControl.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UI\ConfigurationManagement\Tabs\Groups.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UI\ConfigurationManagement\Tabs\Hardware.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UI\ConfigurationManagement\Tabs\PortsProtocolsServces.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UI\ConfigurationManagement\Tabs\Software.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\UI\LoadingWindow.xaml">
       <SubType>Designer</SubType>
@@ -664,9 +733,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ViewModel\BaseInpc.cs" />
-    <Compile Include="ViewModel\DelegateCommand.cs" />
-    <Compile Include="View\Converter\StringToBoolConverter.cs" />
     <Page Include="View\UI\NewsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -722,7 +788,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\NavyRarVulnerabilities.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\RiskAssessmentReportVulnerabilities.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\LatestPublishedDateBySource.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\LoadedSourceRelease.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\HardwareCklAsset.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\VulnerabilityCCI_MappingByVulnerability.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\VulnerabilitySourceMappingByVulnerability.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserFindingTypes.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserSeverities.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\RequiredReportUserSelections.dml" />
@@ -759,12 +830,29 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\VulnerabilityVersionAndReleaseAndUniqueFindingId.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\UniqueFindingStatusById.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\VulnerabilityVersionAndReleaseAndUniqueFindingIdByInstanceIdentifier.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwareIpAddressMappingByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwareMacAddressMappingByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwarePortProtocolServiceMappingByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\SoftwareHardwareMappingByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwareContactMappingByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwareGroupMappingByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwareLocationMappingByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwareEnumeratedWindowsGroupMappingByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\Hardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\UniqueFindingsByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\ScapScoresByHardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\Hardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\HardwareSoftwareMappingWithIds.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwareIpAddressMapping.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwareMacAddressMapping.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\SoftwareHardwareMapping.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\HardwarePortProtocolServiceMapping.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\SoftwareHardwarePortProtocolServiceMappingWithIds.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\BoundaryHardwareSoftwarePortProtocolServiceMappingWithIds.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\Software.dml" />
     <Resource Include="Vulnerator_Logo_Large_Color_SquareBackground_20190805.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\AcasUniqueFinding.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\CklUniqueFinding.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\XccdfUniqueFinding.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\AdditionalTestConsiderations.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\AuthorizationConditions.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\AuthorizationToConnectOrInterim_ATC_PendingItems.ddl" />
@@ -779,12 +867,6 @@
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\Contacts.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ContactsCertifications.ddl" />
     <EmbeddedResource Include="Resources\DiacapToRmf.xml" />
-    <EmbeddedResource Include="x64\SQLite.Interop.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="x86\SQLite.Interop.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -806,7 +888,6 @@
     <EmbeddedResource Include="Resources\UserGuide\Looking-Ahead.md" />
     <EmbeddedResource Include="Resources\UserGuide\Using-the-Software.md" />
     <EmbeddedResource Include="Resources\DdlFiles\v6-2-0_CreateVulnerabilityRelatedIndices.ddl" />
-    <EmbeddedResource Include="Resources\DdlFiles\v6-2-0_DropVulnerabilityRelatedIndices.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\IP_Address.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\MAC_Address.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\Hardware.dml" />
@@ -814,7 +895,6 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\Group.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\GroupIATA_StandardMappingByGroup.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\GroupCCI_MappingByGroup.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\GroupConnectedSystemMappingByGroup.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\GroupConnectionMappingByGroup.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\GroupContactMappingByGroup.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Delete\GroupMitigationOrConditionVulnerabilityMappingByGroup.dml" />
@@ -829,6 +909,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\MitigationOrCondition.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\EmptyMitigationOrCondition.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\PortProtocolService.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\PortProtocolServiceEvidence.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\ScapScore.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\Software.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\UniqueFinding.dml" />
@@ -843,19 +924,23 @@
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\HardwarePortProtocolServiceMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\VulnerabilityReferenceVulnerabilityMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\VulnerabilityCCI_Mapping.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\VulnerabilityIA_ControlMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Insert\VulnerabilitySourceVulnerabilityMapping.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\Hardware.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\EmassHardwareList.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\NistControlsCcisFromEmassAssessmentProcedures.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\EmassAssessmentProcedures.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\StigLibraryImports.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\AcasRiskFactors.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\StigSubmissions.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwareIdentifiers.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\EmassPoamVulnerabilities.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\EmassSoftwareList.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\HardwareCklCreationData.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\Indices.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\UngroupedVulnerabilities.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\UniqueVulnerabilityIdentifiersBySource.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\VulnerabilitiesForDeletion.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\VulnerabilityIdentifiersAndVersions.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\VulnerabilitySourceName.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\VulnerabilitySourceVersionAndRelease.dml" />
-    <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Select\VulnerabilityIndexes.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\CredentialedScanStatus.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\DeltaAnalysisFlag.dml" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\Group.dml" />
@@ -904,15 +989,8 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\vulnerator.ico" />
-    <Resource Include="Resources\DllFiles\MahApps.Metro.IconPacks.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\DllFiles\JetBrains.Annotations.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\DllFiles\MahApps.Metro.IconPacks.Core.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="Resources\Logo\vulnerator-icon.png" />
+    <Resource Include="Resources\Logo\vulnerator-2.0-mark.png" />
     <Resource Include="FodyWeavers.xml" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ControlApplicabilityAssessment.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ControlSelection.ddl" />
@@ -936,6 +1014,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\GroupsConnections.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\GroupsContactsTitles.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\StoredProcedures\Update\UniqueFinding.dml" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\AssessmentProceduresTestResultsPolicySupportingImages.ddl" />
     <Content Include="Resources\DdlFiles\Tables\Create\GroupsIATA_Standards.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\GroupsMitigationsOrConditionsVulnerabilities.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\GroupsOverlays.ddl" />
@@ -945,7 +1024,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwareEnumeratedWindowsGroups.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwareGroups.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\Hardware_IP_Addresses.ddl" />
-    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwareLocation.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwareLocations.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\Hardware_MAC_Addresses.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwarePortsProtocolsServices.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Insert\Data\Groups.ddl" />
@@ -956,6 +1035,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Insert\Data\Overlays.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Insert\Data\LifecycleStatuses.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Insert\Data\RequiredReports.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Insert\Data\PortsProtocolsServicesCleanup.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\IA_Controls.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\IATA_Standards.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ImpactAdjustments.ddl" />
@@ -986,6 +1066,7 @@
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\Overlays.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\PIT_Determination.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\PortsProtocolsServices.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\PortProtocolServiceEvidence.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\RelatedDocuments.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\RelatedTesting.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ResponsibilityRoles.ddl" />
@@ -1041,18 +1122,16 @@
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ReportFindingTypeUserSettings.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\ReportSeverityUserSettings.ddl" />
     <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\HardwareSoftwarePortsProtocolsServices.ddl" />
-    <Content Include="Resources\UserGuide\Images\ThemeFlyout.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\UserGuide\Images\VulneratorMain.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\Poams.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\PoamsUniqueFindings.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\AssessmentProcedureTestResults.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\UniqueFindingsMitigationsOrConditions.ddl" />
+    <EmbeddedResource Include="Resources\DdlFiles\Tables\Create\PolicySupportingImages.ddl" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\RawData\NIST_800-53_CCI_Mapping.xml" />
-    <EmbeddedResource Include="Resources\RawData\NIST_800-53_CNSS-Overlay_Mapping.xml" />
-    <EmbeddedResource Include="Resources\RawData\NIST_800-53_CNSS_Mapping.xml" />
-    <EmbeddedResource Include="Resources\RawData\NIST_800-53_MonitoringFrequency_Mapping.xml" />
+    <EmbeddedResource Include="Resources\RawData\NIST_800-53r5_CCI_Mapping.xml" />
+    <EmbeddedResource Include="Resources\RawData\NIST_800-53r5_Controls.xml" />
+    <EmbeddedResource Include="Resources\RawData\NIST_800-53r5_MonitoringFrequency.xml" />
     <EmbeddedResource Include="Resources\RawData\U_CCI_List.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -1065,6 +1144,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".github\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Vulnerator.AddOns\Vulnerator.AddOns.csproj">
+      <Project>{6F1C2A57-3B0E-4C8E-9D41-7A2E5B9C0D11}</Project>
+      <Name>Vulnerator.AddOns</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -1079,13 +1164,13 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('packages\SQLite.3.13.0\build\net45\SQLite.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SQLite.3.13.0\build\net45\SQLite.props'))" />
-    <Error Condition="!Exists('packages\System.Data.SQLite.Core.1.0.111.0\build\net451\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\System.Data.SQLite.Core.1.0.111.0\build\net451\System.Data.SQLite.Core.targets'))" />
-    <Error Condition="!Exists('packages\Fody.6.0.0\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Fody.6.0.0\build\Fody.targets'))" />
-    <Error Condition="!Exists('packages\PropertyChanged.Fody.3.1.3\build\PropertyChanged.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\PropertyChanged.Fody.3.1.3\build\PropertyChanged.Fody.props'))" />
+    <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('packages\Fody.6.2.4\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Fody.6.2.4\build\Fody.targets'))" />
+    <Error Condition="!Exists('packages\PropertyChanged.Fody.3.2.8\build\PropertyChanged.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\PropertyChanged.Fody.3.2.8\build\PropertyChanged.Fody.props'))" />
   </Target>
-  <Import Project="packages\System.Data.SQLite.Core.1.0.111.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('packages\System.Data.SQLite.Core.1.0.111.0\build\net451\System.Data.SQLite.Core.targets')" />
-  <Import Project="packages\Fody.6.0.0\build\Fody.targets" Condition="Exists('packages\Fody.6.0.0\build\Fody.targets')" />
+  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <Import Project="packages\Fody.6.2.4\build\Fody.targets" Condition="Exists('packages\Fody.6.2.4\build\Fody.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

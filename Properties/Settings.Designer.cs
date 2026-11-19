@@ -12,7 +12,7 @@ namespace Vulnerator.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.2.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -37,7 +37,7 @@ namespace Vulnerator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("BaseLight")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Light")]
         public string Theme {
             get {
                 return ((string)(this["Theme"]));
@@ -200,6 +200,150 @@ namespace Vulnerator.Properties {
             }
             set {
                 this["DropIncompleteCklfiles"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ConfirmExportMarking {
+            get {
+                return ((bool)(this["ConfirmExportMarking"]));
+            }
+            set {
+                this["ConfirmExportMarking"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AllowOnlineChecks {
+            get {
+                return ((bool)(this["AllowOnlineChecks"]));
+            }
+            set {
+                this["AllowOnlineChecks"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool StigManagerEnabled {
+            get {
+                return ((bool)(this["StigManagerEnabled"]));
+            }
+            set {
+                this["StigManagerEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string StigManagerApiAddress {
+            get {
+                return ((string)(this["StigManagerApiAddress"]));
+            }
+            set {
+                this["StigManagerApiAddress"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string StigManagerAuthority {
+            get {
+                return ((string)(this["StigManagerAuthority"]));
+            }
+            set {
+                this["StigManagerAuthority"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string StigManagerClientId {
+            get {
+                return ((string)(this["StigManagerClientId"]));
+            }
+            set {
+                this["StigManagerClientId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("openid stig-manager:collection:read")]
+        public string StigManagerScope {
+            get {
+                return ((string)(this["StigManagerScope"]));
+            }
+            set {
+                this["StigManagerScope"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool StigManagerUseServiceAccount {
+            get {
+                return ((bool)(this["StigManagerUseServiceAccount"]));
+            }
+            set {
+                this["StigManagerUseServiceAccount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string StigManagerClientSecret {
+            get {
+                return ((string)(this["StigManagerClientSecret"]));
+            }
+            set {
+                this["StigManagerClientSecret"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int StigManagerRedirectPort {
+            get {
+                return ((int)(this["StigManagerRedirectPort"]));
+            }
+            set {
+                this["StigManagerRedirectPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool StigManagerCklb {
+            get {
+                return ((bool)(this["StigManagerCklb"]));
+            }
+            set {
+                this["StigManagerCklb"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string HardwareGridColumns {
+            get {
+                return ((string)(this["HardwareGridColumns"]));
+            }
+            set {
+                this["HardwareGridColumns"] = value;
             }
         }
         
@@ -596,6 +740,174 @@ namespace Vulnerator.Properties {
             }
             set {
                 this["CklMitigationHandling"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EmassSystemName {
+            get {
+                return ((string)(this["EmassSystemName"]));
+            }
+            set {
+                this["EmassSystemName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EmassCcsafa {
+            get {
+                return ((string)(this["EmassCcsafa"]));
+            }
+            set {
+                this["EmassCcsafa"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EmassItRegistrationNumber {
+            get {
+                return ((string)(this["EmassItRegistrationNumber"]));
+            }
+            set {
+                this["EmassItRegistrationNumber"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EmassSystemType {
+            get {
+                return ((string)(this["EmassSystemType"]));
+            }
+            set {
+                this["EmassSystemType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EmassOmbProjectId {
+            get {
+                return ((string)(this["EmassOmbProjectId"]));
+            }
+            set {
+                this["EmassOmbProjectId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EmassSecurityCosts {
+            get {
+                return ((string)(this["EmassSecurityCosts"]));
+            }
+            set {
+                this["EmassSecurityCosts"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EmassInformationSystemOwner {
+            get {
+                return ((string)(this["EmassInformationSystemOwner"]));
+            }
+            set {
+                this["EmassInformationSystemOwner"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EmassOfficeOrg {
+            get {
+                return ((string)(this["EmassOfficeOrg"]));
+            }
+            set {
+                this["EmassOfficeOrg"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Organizationally Defined")]
+        public string EmassResourcesRequired {
+            get {
+                return ((string)(this["EmassResourcesRequired"]));
+            }
+            set {
+                this["EmassResourcesRequired"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Security Control Deficiencies")]
+        public string EmassIdentificationSource {
+            get {
+                return ((string)(this["EmassIdentificationSource"]));
+            }
+            set {
+                this["EmassIdentificationSource"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30;60;180")]
+        public string EmassScheduledCompletionDays {
+            get {
+                return ((string)(this["EmassScheduledCompletionDays"]));
+            }
+            set {
+                this["EmassScheduledCompletionDays"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EmassDefaultMilestone {
+            get {
+                return ((string)(this["EmassDefaultMilestone"]));
+            }
+            set {
+                this["EmassDefaultMilestone"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EmassClassificationMarking {
+            get {
+                return ((string)(this["EmassClassificationMarking"]));
+            }
+            set {
+                this["EmassClassificationMarking"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Analyst Must Complete")]
+        public string EmassMitigationPlaceholder {
+            get {
+                return ((string)(this["EmassMitigationPlaceholder"]));
+            }
+            set {
+                this["EmassMitigationPlaceholder"] = value;
             }
         }
     }

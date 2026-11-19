@@ -17,4 +17,5 @@ VALUES (NULL,
         @ApprovalDate,
         @ExpirationDate,
         @IsApproved,
-        @Approver);
+        @Approver,
+        date('now'));

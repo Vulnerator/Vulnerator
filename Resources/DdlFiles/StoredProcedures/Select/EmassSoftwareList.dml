@@ -1,0 +1,10 @@
+SELECT S.Software_ID,
+       S.DisplayedSoftwareName,
+       S.DiscoveredSoftwareName,
+       S.SoftwareVersion,
+       S.SoftwareFunction
+FROM Software S
+         LEFT JOIN SoftwareHardware SH ON S.Software_ID = SH.Software_ID
+         LEFT JOIN HardwareGroups HG ON SH.Hardware_ID = HG.Hardware_ID
+GROUP BY S.Software_ID
+ORDER BY S.DisplayedSoftwareName, S.SoftwareVersion;

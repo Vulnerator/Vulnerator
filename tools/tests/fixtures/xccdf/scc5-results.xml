@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic SCC 5-style XCCDF 1.2 results for Vulnerator import tests. No real system data. -->
+<cdf:Benchmark xmlns:cdf="http://checklists.nist.gov/xccdf/1.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xhtml="http://www.w3.org/1999/xhtml" id="xccdf_mil.disa.stig_benchmark_Results_Test_STIG" resolved="1" xml:lang="en">
+  <cdf:status date="2026-06-01">accepted</cdf:status>
+  <cdf:title>Results Test STIG SCAP Benchmark</cdf:title>
+  <cdf:description>Synthetic results benchmark.</cdf:description>
+  <cdf:plain-text id="release-info">Release: 2 Benchmark Date: 01 Jun 2026</cdf:plain-text>
+  <cdf:version>1</cdf:version>
+  <cdf:Profile id="xccdf_mil.disa.stig_profile_MAC-1_Classified"><cdf:title>I - Mission Critical Classified</cdf:title></cdf:Profile>
+    <cdf:Group id="xccdf_mil.disa.stig_group_V-8001">
+      <cdf:title>SRG-APP-000001</cdf:title>
+      <cdf:Rule id="xccdf_mil.disa.stig_rule_SV-8001r2_rule" weight="10.0" severity="high">
+        <cdf:version>RES-00-8001</cdf:version>
+        <cdf:title>Results rule one</cdf:title>
+        <cdf:description>&lt;VulnDiscussion&gt;Results rule one discussion.&lt;/VulnDiscussion&gt;&lt;Documentable&gt;false&lt;/Documentable&gt;</cdf:description>
+        <cdf:ident system="http://cyber.mil/cci">CCI-000366</cdf:ident>
+        <cdf:fixtext fixref="F-8001_fix">Fix SV-8001.</cdf:fixtext>
+        <cdf:check system="http://oval.mitre.org/XMLSchema/oval-definitions-5"><cdf:check-content-ref href="#oval" name="oval:test:def:8001" /></cdf:check>
+      </cdf:Rule>
+    </cdf:Group>
+    <cdf:Group id="xccdf_mil.disa.stig_group_V-8002">
+      <cdf:title>SRG-APP-000002</cdf:title>
+      <cdf:Rule id="xccdf_mil.disa.stig_rule_SV-8002r1_rule" weight="10.0" severity="medium">
+        <cdf:version>RES-00-8002</cdf:version>
+        <cdf:title>Results rule two</cdf:title>
+        <cdf:description>&lt;VulnDiscussion&gt;Results rule two discussion.&lt;/VulnDiscussion&gt;&lt;Documentable&gt;false&lt;/Documentable&gt;</cdf:description>
+        <cdf:ident system="http://cyber.mil/cci">CCI-000366</cdf:ident>
+        <cdf:fixtext fixref="F-8002_fix">Fix SV-8002.</cdf:fixtext>
+        <cdf:check system="http://oval.mitre.org/XMLSchema/oval-definitions-5"><cdf:check-content-ref href="#oval" name="oval:test:def:8002" /></cdf:check>
+      </cdf:Rule>
+    </cdf:Group>
+    <cdf:Group id="xccdf_mil.disa.stig_group_V-8003">
+      <cdf:title>SRG-APP-000003</cdf:title>
+      <cdf:Rule id="xccdf_mil.disa.stig_rule_SV-8003r1_rule" weight="10.0" severity="low">
+        <cdf:version>RES-00-8003</cdf:version>
+        <cdf:title>Results rule three</cdf:title>
+        <cdf:description>&lt;VulnDiscussion&gt;Results rule three discussion.&lt;/VulnDiscussion&gt;&lt;Documentable&gt;false&lt;/Documentable&gt;</cdf:description>
+        <cdf:ident system="http://cyber.mil/cci">CCI-000366</cdf:ident>
+        <cdf:fixtext fixref="F-8003_fix">Fix SV-8003.</cdf:fixtext>
+        <cdf:check system="http://oval.mitre.org/XMLSchema/oval-definitions-5"><cdf:check-content-ref href="#oval" name="oval:test:def:8003" /></cdf:check>
+      </cdf:Rule>
+    </cdf:Group>
+    <cdf:Group id="xccdf_mil.disa.stig_group_V-8004">
+      <cdf:title>SRG-APP-000004</cdf:title>
+      <cdf:Rule id="xccdf_mil.disa.stig_rule_SV-8004r1_rule" weight="10.0" severity="medium">
+        <cdf:version>RES-00-8004</cdf:version>
+        <cdf:title>Results rule four</cdf:title>
+        <cdf:description>&lt;VulnDiscussion&gt;Results rule four discussion.&lt;/VulnDiscussion&gt;&lt;Documentable&gt;false&lt;/Documentable&gt;</cdf:description>
+        <cdf:ident system="http://cyber.mil/cci">CCI-000366</cdf:ident>
+        <cdf:fixtext fixref="F-8004_fix">Fix SV-8004.</cdf:fixtext>
+        <cdf:check system="http://oval.mitre.org/XMLSchema/oval-definitions-5"><cdf:check-content-ref href="#oval" name="oval:test:def:8004" /></cdf:check>
+      </cdf:Rule>
+    </cdf:Group>
+  <cdf:TestResult id="xccdf_mil.disa.stig_testresult_scap_mil.disa_comp_Results_Test" start-time="2026-09-15T09:58:00" end-time="2026-09-15T10:00:30" test-system="cpe:/a:spawar:scc:5.10" version="1">
+    <cdf:benchmark href="#scap_mil.disa.stig_comp_xccdf" id="xccdf_mil.disa.stig_benchmark_Results_Test_STIG" />
+    <cdf:title>SCAP SCC Scan Results</cdf:title>
+    <cdf:identity authenticated="true" privileged="true">TESTDOMAIN\scanner</cdf:identity>
+    <cdf:profile idref="xccdf_mil.disa.stig_profile_MAC-1_Classified" />
+    <cdf:target>SCCHOST01</cdf:target>
+    <cdf:target-address>10.9.8.7</cdf:target-address>
+    <cdf:target-facts>
+      <cdf:fact name="urn:scap:fact:asset:identifier:host_name" type="string">SCCHOST01</cdf:fact>
+      <cdf:fact name="urn:scap:fact:asset:identifier:fqdn" type="string">scchost01.example.test</cdf:fact>
+      <cdf:fact name="urn:scap:fact:asset:identifier:ipv4" type="string">10.9.8.7</cdf:fact>
+      <cdf:fact name="urn:scap:fact:asset:identifier:ipv4" type="string">127.0.0.1</cdf:fact>
+      <cdf:fact name="urn:scap:fact:asset:identifier:mac" type="string">00:AA:BB:CC:DD:EE</cdf:fact>
+    </cdf:target-facts>
+      <cdf:rule-result idref="xccdf_mil.disa.stig_rule_SV-8001r2_rule" role="full" time="2026-09-15T10:00:00" severity="medium" weight="10.0">
+        <cdf:result>fail</cdf:result>
+        <cdf:message severity="info">Value found: 0</cdf:message>
+        <cdf:ident system="http://cyber.mil/cci">CCI-000366</cdf:ident>
+        <cdf:check system="http://oval.mitre.org/XMLSchema/oval-definitions-5"><cdf:check-content-ref href="#oval" name="oval:test:def:1" /></cdf:check>
+      </cdf:rule-result>
+      <cdf:rule-result idref="xccdf_mil.disa.stig_rule_SV-8002r1_rule" role="full" time="2026-09-15T10:00:00" severity="medium" weight="10.0">
+        <cdf:result>pass</cdf:result>
+        
+        <cdf:ident system="http://cyber.mil/cci">CCI-000366</cdf:ident>
+        <cdf:check system="http://oval.mitre.org/XMLSchema/oval-definitions-5"><cdf:check-content-ref href="#oval" name="oval:test:def:1" /></cdf:check>
+      </cdf:rule-result>
+      <cdf:rule-result idref="xccdf_mil.disa.stig_rule_SV-8003r1_rule" role="full" time="2026-09-15T10:00:00" severity="medium" weight="10.0">
+        <cdf:result>notselected</cdf:result>
+        
+        <cdf:ident system="http://cyber.mil/cci">CCI-000366</cdf:ident>
+        <cdf:check system="http://oval.mitre.org/XMLSchema/oval-definitions-5"><cdf:check-content-ref href="#oval" name="oval:test:def:1" /></cdf:check>
+      </cdf:rule-result>
+      <cdf:rule-result idref="xccdf_mil.disa.stig_rule_SV-8004r1_rule" role="full" time="2026-09-15T10:00:00" severity="medium" weight="10.0">
+        <cdf:result>notchecked</cdf:result>
+        
+        <cdf:ident system="http://cyber.mil/cci">CCI-000366</cdf:ident>
+        <cdf:check system="http://oval.mitre.org/XMLSchema/oval-definitions-5"><cdf:check-content-ref href="#oval" name="oval:test:def:1" /></cdf:check>
+      </cdf:rule-result>
+    <cdf:score system="urn:xccdf:scoring:spawar-original" maximum="100">25.00</cdf:score>
+    <cdf:score system="urn:xccdf:scoring:default" maximum="100">50.00</cdf:score>
+  </cdf:TestResult>
+</cdf:Benchmark>

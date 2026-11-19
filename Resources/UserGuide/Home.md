@@ -1,23 +1,31 @@
-# Welcome to the Vulnerator wiki!
+﻿# Vulnerator 2.0
 
-In addition to shipping the user guide for the software with the software itself, this will be kept up to date with how-to information and all of the latest and greatest features and enhancements.  If, while reading here, you come across an issue or a feature enhancement that you would like to see, please feel free to head over to the [Issues](https://github.com/Vulnerator/Vulnerator/issues) page to drop us a note; alternatively, if you are code-inclined, you can always feel free to fork the repository and muddle through the mess that [Alex](https://github.com/amkuchta) has made of the application.
+**Version {{VERSION}}** - see the Change Log page for what is new.
 
-## The Mission
+Vulnerator 2.0 consolidates vulnerability and STIG compliance data for DoD Risk Management Framework (RMF) work and
+produces eMASS-ready outputs. It is a maintained rewrite of the original Vulnerator, updated for NIST SP 800-53 Rev 5,
+current DISA checklist and scan formats, and closed networks.
 
-Vulnerator has been designed to assist U.S. Department of Defense (DoD) cybersecurity analysts with the daunting task of consolidating vulnerability data from the numerous sources that have been mandated:
+## What it does
 
-* The Assured Compliance Assessment Solution (ACAS)
-* Defense Information Systems Agency (DISA) Security Technical Implementation Guides (STIGs)
-* Security Content Automation Protocol (SCAP) content parsed via ACAS or the SCAP Compliance Checker (SCC)<sup>1</sup>
-* Windows Automated Security Scanning Program (WASSP)  
+* Imports STIG checklists (.ckl and STIG Viewer 3 .cklb), including zip files and Evaluate-STIG output folders
+* Imports ACAS / Nessus scans (.nessus and CSV), including folders of zip files
+* Imports SCAP / SCC XCCDF results and the DISA STIG library
+* Maps findings to CCIs and NIST SP 800-53 Rev 5 controls, with eMASS assessment procedures from your own IG/AP export
+* Pulls checklists from your organization's STIG Manager server (optional, off by default)
+* Keeps one record per device across ACAS and STIG data: permanent registry numbers (VUL-000123), matching by name,
+  FQDN or NetBIOS name, and Merge with remembered other names
+* Exports the eMASS POA&M, the eMASS hardware / software list, reports, and per-host STIG checklists, each with the
+  classification / handling marking you confirm
+* Shows offline Dashboards (severity, top hosts, compliance, POA&M aging, trend, coverage, STIG currency, IAVMs)
 
----
-<sup>1</sup>Parsing from additional sources is envisaged 
- 
----
+## Where to start
 
-The above having been said, many more features are imagined and currently in development for later releases of the software; for a full detail of what lies ahead, please refer to the [Looking Ahead](https://github.com/Vulnerator/Vulnerator/wiki/Looking-Ahead) page.
+1. **Getting Started** - first launch, database choice and one-time setup
+2. **Using the Software** - importing files, reviewing findings and exporting
+3. **Error Reporting** - where the log is and what to send when something fails
 
-## Next Steps
+Vulnerator runs offline. It only contacts GitHub when "Online checks" is turned on in Settings, and your STIG Manager
+server when "Allow connections to STIG Manager" is turned on.
 
-To get started, please read through the wiki, beginning with the [Getting Started](https://github.com/Vulnerator/Vulnerator/wiki/Getting-Started) page.  Enjoy!
+Vulnerator 2.0 is free and open source (MIT). It needs no license key, and forks are welcome.

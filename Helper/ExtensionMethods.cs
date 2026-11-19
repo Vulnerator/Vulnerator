@@ -18,7 +18,11 @@ namespace Vulnerator.Helper
         {
             { "notafinding", "Completed" },
             { "not a finding", "Completed" },
+            { "not_a_finding", "Completed" },
             { "not_reviewed", "Not Reviewed" },
+            { "notreviewed", "Not Reviewed" },
+            { "not reviewed", "Not Reviewed" },
+            { "not applicable", "Not Applicable" },
             { "open", "Ongoing" },
             { "not_applicable", "Not Applicable" },
             { "pass", "Completed" },
@@ -57,7 +61,11 @@ namespace Vulnerator.Helper
             { "critical", "I" },
             { "high", "I" },
             { "medium", "II" },
+            { "moderate", "II" },
             { "low", "III" },
+            { "cat i", "I" }, { "cat_i", "I" }, { "cati", "I" }, { "i", "I" },
+            { "cat ii", "II" }, { "cat_ii", "II" }, { "catii", "II" }, { "ii", "II" },
+            { "cat iii", "III" }, { "cat_iii", "III" }, { "catiii", "III" }, { "iii", "III" },
             { "informational", "IV" },
             { "unknown", "?" },
             { "\nhigh\n", "I" },
@@ -200,7 +208,7 @@ namespace Vulnerator.Helper
         public static string ToRawRisk(this string _string)
         {
             try
-            { return severityDictionary.TryGetValue(_string.ToLower(), out string rawRisk) ? rawRisk : "?"; }
+            { return severityDictionary.TryGetValue((_string ?? string.Empty).Trim().ToLowerInvariant(), out string rawRisk) ? rawRisk : "?"; }
             catch (Exception exception)
             {
                 LogWriter.LogError($"Unable to convert severity '{_string}' to a raw risk value.");
@@ -244,7 +252,16 @@ namespace Vulnerator.Helper
         public static string ToVulneratorStatus(this string _string)
         {
             try
-            { return rawStatusDictionary.TryGetValue(_string.ToLower(), out string sanitizedStatus) ? sanitizedStatus : _string; }
+            {
+                string key = (_string ?? string.Empty).Trim().ToLowerInvariant();
+                if (key.Length == 0)
+                { return "Not Reviewed"; }
+                if (rawStatusDictionary.TryGetValue(key, out string sanitizedStatus))
+                { return sanitizedStatus; }
+                // Unrecognized statuses are treated as not reviewed rather than stored verbatim (CKL-CKLB-Processor rule).
+                LogWriter.LogStatusUpdate($"Unrecognized status '{_string}'; treated as Not Reviewed.");
+                return "Not Reviewed";
+            }
             catch (Exception exception)
             {
                 LogWriter.LogError($"Unable to convert raw status '{_string}' to a Vulnerator-acceptable status.");
@@ -307,6 +324,62 @@ namespace Vulnerator.Helper
                 LogWriter.LogError($"Unable to convert '{source}' to an ObservableCollection.");
                 throw exception;
             }
+        }
+
+        private static readonly HashSet<string> AssetPlaceholders = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        { "n/a", "na", "none", "tbd", "unknown", "-", "x", "null", "localhost", "localhost.localdomain", "host name", "ip", "mac",
+          "0.0.0.0", "127.0.0.1", "::1", "255.255.255.255" };
+
+        /// <summary>
+        /// True when a checklist asset value is blank or a filler (N/A, TBD, localhost, 127.0.0.1, STIG Viewer's
+        /// "HOST NAME" / "IP" / "MAC" defaults, ...) and so does not identify a host. Same list as the
+        /// CKL-CKLB-Processor asset check (AD-922).
+        /// </summary>
+        public static bool IsAssetPlaceholder(object value)
+        {
+            if (value == null || value == DBNull.Value)
+            { return true; }
+            string text = value.ToString().Trim();
+            return text.Length == 0 || AssetPlaceholders.Contains(text);
+        }
+
+        private static readonly Regex StigBenchmarkDateRegex =
+            new Regex(@"\b\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4}\b", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Extracts the benchmark date from STIG release text such as
+        /// "Release: 4 Benchmark Date: 24 Jul 2025". Returns a DateTime, or DBNull.Value when the
+        /// text carries no recognizable date, so callers never throw on missing or odd release info.
+        /// Parsing is culture-invariant.
+        /// </summary>
+        public static object ToStigBenchmarkDate(this string releaseInfo)
+        {
+            if (string.IsNullOrWhiteSpace(releaseInfo))
+            { return DBNull.Value; }
+            Match match = StigBenchmarkDateRegex.Match(releaseInfo);
+            if (!match.Success)
+            { return DBNull.Value; }
+            string candidate = Regex.Replace(match.Value, @"\s+", " ");
+            string[] formats = { "d MMM yyyy", "dd MMM yyyy", "d MMMM yyyy", "dd MMMM yyyy" };
+            DateTime parsed;
+            if (DateTime.TryParseExact(candidate, formats, System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None, out parsed))
+            { return parsed; }
+            return DBNull.Value;
+        }
+
+        /// <summary>
+        /// True when an XCCDF ident "system" URI denotes a DISA CCI. DISA moved from
+        /// http://iase.disa.mil/cci to http://cyber.mil/cci; both are accepted. Null-safe.
+        /// </summary>
+        public static bool IsCciIdentSystem(string system)
+        {
+            if (string.IsNullOrWhiteSpace(system))
+            { return false; }
+            string normalized = system.Trim().TrimEnd('/');
+            return normalized.Equals("http://iase.disa.mil/cci", StringComparison.OrdinalIgnoreCase) ||
+                   normalized.Equals("http://cyber.mil/cci", StringComparison.OrdinalIgnoreCase) ||
+                   normalized.Equals("https://cyber.mil/cci", StringComparison.OrdinalIgnoreCase);
         }
 
         public static string InsertStartingBullet(this string _string)

@@ -18,5 +18,6 @@ CREATE TABLE IF NOT EXISTS MitigationsOrConditions
     ApprovalDate              DATETIME,
     ExpirationDate            DATETIME,
     IsApproved                NVARCHAR(5),
-    Approver                  NVARCHAR(100)
+    Approver                  NVARCHAR(100),
+    CreatedOn                 DATE NOT NULL
 );

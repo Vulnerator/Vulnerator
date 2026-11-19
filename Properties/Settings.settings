@@ -6,7 +6,7 @@
       <Value Profile="(Default)">alpha1</Value>
     </Setting>
     <Setting Name="Theme" Type="System.String" Scope="User">
-      <Value Profile="(Default)">BaseLight</Value>
+      <Value Profile="(Default)">Light</Value>
     </Setting>
     <Setting Name="Accent" Type="System.String" Scope="User">
       <Value Profile="(Default)">Cobalt</Value>
@@ -46,6 +46,42 @@
     </Setting>
     <Setting Name="DropIncompleteCklfiles" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ConfirmExportMarking" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="AllowOnlineChecks" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="StigManagerEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="StigManagerApiAddress" Type="System.String" Scope="User">
+      <Value Profile="(Default)"></Value>
+    </Setting>
+    <Setting Name="StigManagerAuthority" Type="System.String" Scope="User">
+      <Value Profile="(Default)"></Value>
+    </Setting>
+    <Setting Name="StigManagerClientId" Type="System.String" Scope="User">
+      <Value Profile="(Default)"></Value>
+    </Setting>
+    <Setting Name="StigManagerScope" Type="System.String" Scope="User">
+      <Value Profile="(Default)">openid stig-manager:collection:read</Value>
+    </Setting>
+    <Setting Name="StigManagerUseServiceAccount" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="StigManagerClientSecret" Type="System.String" Scope="User">
+      <Value Profile="(Default)"></Value>
+    </Setting>
+    <Setting Name="StigManagerRedirectPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="StigManagerCklb" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="HardwareGridColumns" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="CaptureAcasPortInformation" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -145,6 +181,48 @@
     </Setting>
     <Setting Name="CklMitigationHandling" Type="System.String" Scope="User">
       <Value Profile="(Default)">Append</Value>
+    </Setting>
+    <Setting Name="EmassSystemName" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmassCcsafa" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmassItRegistrationNumber" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmassSystemType" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmassOmbProjectId" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmassSecurityCosts" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmassInformationSystemOwner" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmassOfficeOrg" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmassResourcesRequired" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Organizationally Defined</Value>
+    </Setting>
+    <Setting Name="EmassIdentificationSource" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Security Control Deficiencies</Value>
+    </Setting>
+    <Setting Name="EmassScheduledCompletionDays" Type="System.String" Scope="User">
+      <Value Profile="(Default)">30;60;180</Value>
+    </Setting>
+    <Setting Name="EmassDefaultMilestone" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmassClassificationMarking" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmassMitigationPlaceholder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Analyst Must Complete</Value>
     </Setting>
   </Settings>
 </SettingsFile>

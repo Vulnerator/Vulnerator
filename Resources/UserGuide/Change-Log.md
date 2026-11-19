@@ -1,3 +1,109 @@
+﻿# Vulnerator 2.0 (7.5.2)
+###### Version 7.5.2, November 2026
+
+| Change Description |
+| :----------------- |
+| Hardware > Merge Hardware... opens the whole hardware inventory: Find a device's records by name, other name, registry number, IP or operating system, tick the ones that are the same device (records ticked or selected in the Hardware list start ticked), and see which device they combine into before merging (it no longer stops with "Tick two or more hardware records") |
+
+
+----------
+
+# Vulnerator 2.0 (7.5.1)
+###### Version 7.5.1, November 2026
+
+| Change Description |
+| :----------------- |
+| Merge Ticked Hardware works again: the database backup before a merge no longer refuses while the database is open (which stopped every merge) |
+| Merge combines all ticked records into one device, nothing to pick: it keeps the oldest registry number, the newest result of each finding, and the other names as aliases |
+| Hardware: the side panel is the Device Profile (double-click a device): registry number, merged numbers, last ACAS scan and last checklist / SCAP at the top; FQDN and NetBIOS name can be edited |
+| ACAS: when a scan lists several possible operating systems, each becomes its own software entry and the host's operating system is one line ("A / B"); Software > Split Combined Entries splits entries combined by earlier versions |
+
+
+----------
+
+# Vulnerator 2.0 (7.5.0)
+###### Version 7.5.0, November 2026
+
+| Change Description |
+| :----------------- |
+| Pull from STIG Manager: sign in to your STIG Manager server (browser/CAC or service account), pick a Collection and Assets, and add their checklists to the ingestion list (Ingest > Pull from STIG Manager..., turned on in Settings > STIG Manager) |
+| One record per device: every device gets a permanent registry number (VUL-000123, never reused); imports match an existing device by host name, other name, FQDN or NetBIOS name (IP and MAC are not used) |
+| Hardware > Merge Ticked Hardware...: merges records that are the same device (for example W01.Contoso.com from ACAS and W01.Contoso from a checklist); the newest result is kept for duplicate findings; the other names become aliases; the kept device keeps its registry number; optional database backup first |
+| Hardware: Find box (name, other name, FQDN, NetBIOS, OS, IP or registry number); side panel shows the registry number and other names (Add Name / Remove) |
+| Hardware > Columns...: show or hide Registry No., Operating System, Last ACAS Scan, Last Checklist / SCAP, Last Scan, Scan Sources, Groups, Role, Manufacturer, Model, Serial Number, Virtual, Lifecycle Status and Also Known As |
+| Dashboards 1.2.0: IAVMs list the finding titles; Coverage shows each device's operating system and treats records with the same short name as one device (links and Keep separate under Device matching) |
+| No licenses: Vulnerator 2.0 needs no license key and future versions will not add one; the Dashboards add-on is open source (MIT) and built from AddOns/ in the repository; forks are welcome |
+
+
+----------
+
+# Vulnerator 2.0 (7.4.0)
+###### Version 7.4.0, November 2026
+
+| Change Description |
+| :----------------- |
+| Add-on support: optional add-ons in the Add-ons folder add menu pages and Settings > Integrations options; they read findings and hardware read-only, and a broken or incompatible add-on is skipped and logged |
+| Includes the Dashboards add-on: severity, top hosts, compliance by control family, POA&M aging, trend, coverage gaps, outdated STIG checklists and active IAVMs |
+| ACAS imports keep the Nessus risk factor, so Critical and High can be told apart (both stay CAT I in reports) |
+| Checklist and SCAP imports keep the STIG release each file was submitted with, even when a newer release is loaded |
+
+
+----------
+
+# Vulnerator 2.0 (7.3.0)
+###### Version 7.3.0, November 2026
+
+| Change Description |
+| :----------------- |
+| Configuration Management > Hardware: every button works (clear, add / update, delete, IP / MAC / group / software / port links) |
+| Configuration Management > Software: clear, add / update, delete, add / remove hardware |
+| About and Help show the release version (for example 7.3.0) |
+
+
+----------
+
+# Vulnerator 2.0 (7.2.0)
+###### Version 7.2.0, November 2026
+
+| Change Description |
+| :----------------- |
+| New report: Ports, Protocols & Services (from ACAS / Nessus scans, with the detecting plugins) |
+| Nessus port 0 ("general") results are no longer stored as services; existing entries are removed |
+| Configuration Management > Ports, Protocols, Services tab lists the services; save name / acronym, delete |
+
+
+----------
+
+# Vulnerator 2.0 (7.1.0)
+###### Version 7.1.0, November 2026
+
+| Change Description |
+| :----------------- |
+| New report: STIG Details (successor of the Vulnerator 6 STIG Details tab), with a Summary by STIG sheet |
+| New report: PDF Summary (printable overview with STIG compliance, top assets and most widespread findings) |
+
+
+----------
+
+# Vulnerator 2.0 (7.0.0)
+###### Version 7.0.0, November 2026
+
+Application rewrite by Hector L. Bones.
+
+| Change Description |
+| :----------------- |
+| NIST SP 800-53 Rev 5 controls, DISA CCI list and CNSSI 1253 baselines; eMASS assessment procedures from your own IG/AP export |
+| eMASS POA&M and hardware / software exports; classification / handling marking on every export |
+| STIG Viewer 3 (.cklb) checklists, Evaluate-STIG output (zips and folders, "Previous" folders skipped), STIG baselines |
+| ACAS imports from .nessus, CSV, zip files and folders of zips |
+| SCAP / SCC XCCDF 1.1 and 1.2 results and the DISA STIG library (zip or extracted benchmark files) |
+| Per-host STIG checklist (.ckl) export from the STIG library |
+| Runs offline by default; Windows built-in SQLite engine; 64-bit; works where strong-name bypass is disabled |
+| Help pages rewritten |
+
+
+----------
+
 # Version 6.1.7
 ###### Release Date: 05 January 2017
 

@@ -1,0 +1,13 @@
+<Project>
+  <!--
+    Import from an add-on project to compile the shared metrics layer into the add-on:
+      <Import Project="..\Metrics\Metrics.props" />
+    Includes the adapter (Contract\ContractAdapter.cs), so the project must reference Vulnerator.AddOns.dll
+    (interface version 3, Vulnerator 7.4.0-beta.3 or later).
+  -->
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)*.cs" Link="Metrics\%(Filename)%(Extension)" />
+    <Compile Include="$(MSBuildThisFileDirectory)Contract\*.cs" Link="Metrics\Contract\%(Filename)%(Extension)" />
+    <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup>
+</Project>

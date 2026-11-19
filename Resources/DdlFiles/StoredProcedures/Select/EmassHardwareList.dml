@@ -1,0 +1,20 @@
+SELECT H.Hardware_ID,
+       H.DisplayedHostName,
+       H.DiscoveredHostName,
+       H.FQDN,
+       H.ScanIP,
+       H.IsVirtualServer,
+       H.Manufacturer,
+       H.ModelNumber,
+       H.SerialNumber,
+       H.OperatingSystem,
+       GROUP_CONCAT(DISTINCT IP.IP_Address)   AS IpAddresses,
+       GROUP_CONCAT(DISTINCT MAC.MAC_Address) AS MacAddresses
+FROM Hardware H
+         LEFT JOIN HardwareGroups HG ON H.Hardware_ID = HG.Hardware_ID
+         LEFT JOIN Hardware_IP_Addresses HIP ON H.Hardware_ID = HIP.Hardware_ID
+         LEFT JOIN IP_Addresses IP ON HIP.IP_Address_ID = IP.IP_Address_ID
+         LEFT JOIN Hardware_MAC_Addresses HMAC ON H.Hardware_ID = HMAC.Hardware_ID
+         LEFT JOIN MAC_Addresses MAC ON HMAC.MAC_Address_ID = MAC.MAC_Address_ID
+GROUP BY H.Hardware_ID
+ORDER BY COALESCE(H.DisplayedHostName, H.DiscoveredHostName, H.FQDN, H.ScanIP);

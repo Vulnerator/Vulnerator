@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS AcasRiskFactors (
+    UniqueVulnerabilityIdentifier NVARCHAR (100) PRIMARY KEY ON CONFLICT REPLACE,
+    RiskFactor NVARCHAR (25) NOT NULL
+);

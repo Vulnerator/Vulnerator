@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The add-on contract: the only Vulnerator assembly an add-on needs to compile against. It has no dependencies
+    beyond .NET Framework 4.8, so it can be referenced from a separate (private) add-on repository using the copy that
+    ships in every Vulnerator release. Keep it small and change it only in backward-compatible ways; a breaking change
+    raises AddOnApi.Version.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyName>Vulnerator.AddOns</AssemblyName>
+    <RootNamespace>Vulnerator.AddOns</RootNamespace>
+    <LangVersion>7.3</LangVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <!-- AssemblyVersion stays 1.0.0.0 so add-ons built against any earlier contract still bind without redirects;
+         compatibility is decided by AddOnApi.Version. FileVersion/Version follow the contract version. -->
+    <Version>3.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+    <Product>Vulnerator 2.0 add-on contract</Product>
+    <Copyright>MIT License</Copyright>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,20 @@
+UPDATE NIST_ControlsCCIs
+SET DOD_AssessmentProcedureMapping = COALESCE((SELECT NULLIF(E.AP_Acronym, '')
+                                               FROM EmassAssessmentProcedures E
+                                                        JOIN CCIs C ON C.CCI_Number = E.CCI_Number
+                                               WHERE C.CCI_ID = NIST_ControlsCCIs.CCI_ID),
+                                              DOD_AssessmentProcedureMapping),
+    AssessmentProcedureText        = COALESCE((SELECT NULLIF(E.AssessmentProcedure, '') ||
+                                                      CASE
+                                                          WHEN COALESCE(E.AssessmentMethods, '') <> ''
+                                                              THEN char(10) || char(10) || 'Potential assessment methods and objectives:' ||
+                                                                   char(10) || E.AssessmentMethods
+                                                          ELSE '' END
+                                               FROM EmassAssessmentProcedures E
+                                                        JOIN CCIs C ON C.CCI_Number = E.CCI_Number
+                                               WHERE C.CCI_ID = NIST_ControlsCCIs.CCI_ID),
+                                              AssessmentProcedureText)
+WHERE EXISTS (SELECT 1
+              FROM EmassAssessmentProcedures E
+                       JOIN CCIs C ON C.CCI_Number = E.CCI_Number
+              WHERE C.CCI_ID = NIST_ControlsCCIs.CCI_ID);
